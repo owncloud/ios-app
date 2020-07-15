@@ -35,7 +35,7 @@ extension UIViewController {
 		}
 	}
 
-	var topMostViewController: UIViewController {
+	public var topMostViewController: UIViewController {
 
 		if let presented = self.presentedViewController, presented.isBeingDismissed == false {
 			 return presented.topMostViewController

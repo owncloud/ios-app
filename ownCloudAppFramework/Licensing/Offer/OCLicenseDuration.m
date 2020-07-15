@@ -118,7 +118,69 @@
 		return ([NSString stringWithFormat:format, _length]);
 	}
 
-	return (nil);
+	return (@"unknown");
+}
+
+- (NSString *)localizedDescriptionSingular
+{
+	NSString *format = nil;
+
+	switch (_unit)
+	{
+		case OCLicenseDurationUnitDay:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"day");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu day");
+			}
+		break;
+
+		case OCLicenseDurationUnitWeek:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"week");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu week");
+			}
+		break;
+
+		case OCLicenseDurationUnitMonth:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"month");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu month");
+			}
+		break;
+
+		case OCLicenseDurationUnitYear:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"year");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu year");
+			}
+		break;
+
+		case OCLicenseDurationUnitNone:
+		break;
+	}
+
+	if (format != nil)
+	{
+		return ([NSString stringWithFormat:format, _length]);
+	}
+
+	return (@"unknown");
 }
 
 - (NSDate *)dateWithDurationAddedTo:(NSDate *)date

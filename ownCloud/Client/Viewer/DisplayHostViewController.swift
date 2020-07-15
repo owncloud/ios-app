@@ -80,12 +80,14 @@ public class DisplayHostViewController: UIPageViewController {
 	}
 
 	deinit {
+		queryObservation?.invalidate()
+		queryObservation = nil
+
 		if queryStarted {
 			core?.stop(query)
 			queryStarted = false
 		}
 
-		queryObservation?.invalidate()
 		Theme.shared.unregister(client: self)
 	}
 
@@ -242,14 +244,7 @@ public class DisplayHostViewController: UIPageViewController {
 	}
 
 	private func configurationFor(_ item: OCItem, viewController: UIViewController) -> DisplayViewConfiguration {
-		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
-		var configuration: DisplayViewConfiguration
-		if !shouldDownload {
-			configuration = DisplayViewConfiguration(item: item, core: core, state: .notSupportedMimeType)
-		} else {
-			configuration = DisplayViewConfiguration(item: item, core: core, state: .hasNetworkConnection)
-		}
-		return configuration
+		return DisplayViewConfiguration(item: item, core: core)
 	}
 
 	// MARK: - Filters

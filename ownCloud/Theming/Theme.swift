@@ -227,6 +227,16 @@ public class Theme: NSObject {
 			for (_, applier) in appliers {
 				applier(self, collection, .update)
 			}
+
+			// Globally change color values for UI elements
+			if #available(iOS 13, *) {
+			} else {
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchBarColors.backgroundColor
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: collection.searchBarColors.secondaryLabelColor]
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchBarColors.tintColor
+			}
+			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
+			UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
 		}
 	}
 

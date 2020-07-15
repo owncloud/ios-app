@@ -135,7 +135,12 @@ class ReleaseNotesHostViewController: UIViewController {
 	}
 
 	@objc func rateApp() {
-		SKStoreReviewController.requestReview()
+		guard let appStoreLink =  FeedbackSettings.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
+
+		guard let reviewURL = URL(string: "\(appStoreLink)&action=write-review") else { return }
+
+		guard UIApplication.shared.canOpenURL(reviewURL) else { return }
+		UIApplication.shared.open(reviewURL)
 	}
 }
 
@@ -144,7 +149,7 @@ extension ReleaseNotesHostViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
 		self.view.backgroundColor = collection.tableBackgroundColor
-		titleLabel.applyThemeCollection(collection, itemStyle: .logo)
+		titleLabel.applyThemeCollection(collection, itemStyle: .title)
 		proceedButton.backgroundColor = collection.neutralColors.normal.background
 		proceedButton.setTitleColor(collection.neutralColors.normal.foreground, for: .normal)
 		footerButton.setTitleColor(collection.tableRowColors.labelColor, for: .normal)
@@ -181,7 +186,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 				   return true
 			}
 			return false
-		} else if OCBookmarkManager.shared.bookmarks.count > 0 {
+		} else if OCBookmarkManager.shared.bookmarks.count > 0 && !VendorServices.shared.isBranded {
 			// Fallback, if app was previously installed, because we cannot check for an user defaults key, we have to check if accounts was previously configured
 			return true
 		}

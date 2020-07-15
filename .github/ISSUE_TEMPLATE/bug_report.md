@@ -9,9 +9,9 @@ assignees: ''
 
 
 <!--
-Thanks for reporting issues back to this repository, you contributons are much appriciated! This is the issue tracker of the ownCloud iOS app.
+Thanks for reporting issues back to this repository, your contributions are much appreciated! This is the issue tracker of the ownCloud iOS app.
 
-To make it possible for us to help you please fill out below information carefully.
+To make it possible for us to help you please fill out the below information carefully.
 --> 
 <!--
 ## If you found a bug:
@@ -21,10 +21,10 @@ To make it possible for us to help you please fill out below information careful
 2.
 3.
 
-### Expected behaviour
+### Expected behavior
 Tell us what should happen
 
-### Actual behaviour
+### Actual behavior
 Tell us what happens instead
 
 ### Client

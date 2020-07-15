@@ -23,7 +23,7 @@ public class MakeUnavailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeUnavailableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Available Offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
@@ -79,7 +79,7 @@ public class MakeUnavailableOfflineAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(named: "available-offline")
 		}
 

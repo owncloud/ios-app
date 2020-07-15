@@ -47,25 +47,39 @@ extension UserDefaults {
 
 	public static let MediaUploadSettingsChangedNotification = NSNotification.Name("settings.media-upload-settings-changed")
 
+	enum MediaExportKeys : String {
+		case ConvertHEICtoJPEGKey = "convert-heic-to-jpeg"
+		case ConvertVideosToMP4Key = "convert-videos-to-mp4"
+		case PreserveOriginalFilenames = "preserve-original-filenames"
+	}
+
 	public var convertHeic: Bool {
 		set {
-			self.set(newValue, forKey: MediaUploadKeys.ConvertHEICtoJPEGKey.rawValue)
+			self.set(newValue, forKey: MediaExportKeys.ConvertHEICtoJPEGKey.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: MediaUploadKeys.ConvertHEICtoJPEGKey.rawValue)
+			return self.bool(forKey: MediaExportKeys.ConvertHEICtoJPEGKey.rawValue)
 		}
 	}
 
 	public var convertVideosToMP4: Bool {
 		set {
-			self.set(newValue, forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
+			self.set(newValue, forKey: MediaExportKeys.ConvertVideosToMP4Key.rawValue)
 		}
 
 		get {
-            // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
-            //return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
-            return false
+            return self.bool(forKey: MediaExportKeys.ConvertVideosToMP4Key.rawValue)
+		}
+	}
+
+	public var preserveOriginalMediaFileNames: Bool {
+		set {
+			self.set(newValue, forKey: MediaExportKeys.PreserveOriginalFilenames.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: MediaExportKeys.PreserveOriginalFilenames.rawValue)
 		}
 	}
 
@@ -141,3 +155,4 @@ extension UserDefaults {
 		self.instantUploadVideos = false
 	}
 }
+

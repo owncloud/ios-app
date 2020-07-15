@@ -84,7 +84,12 @@ public class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 						filename = nil
 					}
 
-					core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)).pdf", atPath: itemPath, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+					let currentDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium) // Use localized date
+								.replacingOccurrences(of: ":", with: "-")  // Remove reserved character (":" not usable under Windows)
+								.replacingOccurrences(of: "/", with: "-")  // Remove reserved character ("/" used to delimit paths on macOS, iOS, Linux, …)
+								.replacingOccurrences(of: "\\", with: "-") // Remove reserved character ("\" used to delimit paths on Windows)
+
+					core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(currentDate).pdf", atPath: itemPath, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
 						guard let suggestedName = suggestedName else { return }
 
 						OnMainThread {

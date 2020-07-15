@@ -19,6 +19,7 @@
 import UIKit
 import Photos
 import PhotosUI
+import ownCloudApp
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
@@ -343,6 +344,14 @@ public class PhotoSelectionViewController: UICollectionViewController, Themeable
 		}
 	}
 
+}
+
+// MARK: - iOS13 gesture based multiple selection
+
+@available(iOS 13, *) extension PhotoSelectionViewController {
+	public override func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+		return !DisplaySettings.shared.preventDraggingFiles
+	}
 }
 
 // MARK: - PHPhotoLibraryChangeObserver

@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "39B1F3702417965F0093939A"
-               BuildableName = "ownCloud Share Extension.appex"
+               BuildableName = "ownCloud.appex"
                BlueprintName = "ownCloud Share Extension"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>

@@ -445,10 +445,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 				offer.subscriptionTermDuration = storeProduct.subscriptionPeriod.licenseDuration;
 			}
 
-			if (@available(iOS 12, *))
-			{
-				offer.groupIdentifier = storeProduct.subscriptionGroupIdentifier;
-			}
+			offer.groupIdentifier = storeProduct.subscriptionGroupIdentifier;
 
 			// Compute state
 			[self _updateStateForOffer:offer withAppStoreProductIdentifier:appStoreProductIdentifier];
@@ -674,6 +671,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 			case SKPaymentTransactionStateRestored:
 				OCLogWarning(@"Restored App Store transaction without original? %@ %@", transaction, transaction.originalTransaction);
+				finishTransaction = YES;
 			break;
 		}
 

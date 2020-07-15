@@ -32,6 +32,7 @@ enum ActionPosition : Int {
 	case none = -1
 
 	case first = 100
+	case nearFirst = 150
 	case beforeMiddle = 200
 	case middle = 300
 	case afterMiddle = 400
@@ -61,6 +62,8 @@ extension OCExtensionLocationIdentifier {
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 	public static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
+	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
+	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
 }
 
 public class ActionExtension: OCExtension {
@@ -363,6 +366,17 @@ public class Action : NSObject {
 		})
 	}
 
+	@available(iOS 13.0, *)
+	func provideUIMenuAction() -> UIAction? {
+		var attribute = UIMenuElement.Attributes(rawValue: 0)
+		if actionExtension.category == .destructive {
+			attribute = .destructive
+		}
+		return UIAction(title: self.actionExtension.name, image: self.icon, attributes: attribute) { _ in
+			self.perform()
+		}
+	}
+
 	func provideAlertAction() -> UIAlertAction? {
 		var name = actionExtension.name
 
@@ -459,28 +473,28 @@ private extension Action {
 		}
 
 		if hasUserGroupSharing {
-			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+			let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
 				if let context = context, let presentingController = presentingController, let core = context.core {
 					let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 					sharingViewController.shares = shares
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: userTitle, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if item.isShareable {
 			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
 		}
 
 		if hasLinkSharing, let core = context.core, core.connection.capabilities?.publicSharingEnabled == true {
-			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+			let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
 				if let context = context, let presentingController = presentingController {
 					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 					sharingViewController.shares = shares
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: linkTitle, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
 			shareRows.append(publicLinkRow)

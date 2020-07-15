@@ -23,6 +23,8 @@ public class ThemeWindow : UIWindow {
 	static let themeWindowListChangedNotification: NSNotification.Name = NSNotification.Name(rawValue: "ThemeWindowListChanged")
 	static private let _themeWindows : NSHashTable<ThemeWindow> = NSHashTable<ThemeWindow>.weakObjects()
 
+	public var themeWindowInForeground : Bool = false
+
 	private static func addThemeWindow(_ window: ThemeWindow) {
 		OCSynchronized(self) {
 			_themeWindows.add(window)

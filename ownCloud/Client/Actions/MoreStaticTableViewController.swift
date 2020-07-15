@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 open class MoreStaticTableViewController: StaticTableViewController {
 

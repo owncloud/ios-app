@@ -18,6 +18,12 @@
 
 import UIKit
 
+public enum ThemeButtonCornerRadiusStyle : CGFloat {
+	case round = -1
+	case small = 5
+	case medium = 10
+}
+
 @IBDesignable
 open class ThemeButton : UIButton {
 	internal var _themeColorCollection : ThemeColorPairCollection?
@@ -101,14 +107,14 @@ open class ThemeButton : UIButton {
 		       invalidateIntrinsicContentSize()
 	       }
 	}
-	public var buttonCornerRadius : CGFloat = 5 {
+	public var buttonCornerRadius : ThemeButtonCornerRadiusStyle = .medium {
 		didSet {
 			adjustCornerRadius()
 		}
 	}
 
 	public func adjustCornerRadius() {
-		self.layer.cornerRadius = (buttonCornerRadius < 0) ? bounds.size.height/2 : buttonCornerRadius
+		self.layer.cornerRadius = (buttonCornerRadius == .round) ? bounds.size.height/2 : buttonCornerRadius.rawValue
 	}
 
 	override public var bounds: CGRect {

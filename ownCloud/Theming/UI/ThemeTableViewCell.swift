@@ -21,8 +21,15 @@ import UIKit
 open class ThemeTableViewCell: UITableViewCell, Themeable {
 	private var themeRegistered = false
 
+	var updateLabelColors : Bool = true
+
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
+	}
+
+	convenience init(withLabelColorUpdates labelColorUpdates: Bool, style: UITableViewCell.CellStyle = .default, reuseIdentifier: String? = nil) {
+		self.init(style: style, reuseIdentifier: reuseIdentifier)
+		updateLabelColors = labelColorUpdates
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
@@ -48,8 +55,10 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 	open func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let state = ThemeItemState(selected: self.isSelected)
 
-		self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
-		self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
+		if updateLabelColors {
+			self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
+			self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
+		}
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

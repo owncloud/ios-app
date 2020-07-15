@@ -23,19 +23,12 @@ public let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAcc
 public let ownCloudOpenAccountPath               = "openAccount"
 public let ownCloudOpenAccountAccountUuidKey     = "accountUuid"
 
+extension OCBookmarkUserInfoKey {
+	static var scanForAuthenticationMethodsRequired : OCBookmarkUserInfoKey { OCBookmarkUserInfoKey(rawValue: "OCBookmarkScanForAuthenticationMethodsRequired") }
+}
+
 extension OCBookmark {
 	static public let OCBookmarkDisplayName : OCBookmarkUserInfoKey = OCBookmarkUserInfoKey(rawValue: "OCBookmarkDisplayName")
-
-	public var userName : String? {
-		if let authenticationData = self.authenticationData,
-		   let authenticationMethodIdentifier = self.authenticationMethodIdentifier,
-		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier),
-		   let userName = authenticationMethod.userName(fromAuthenticationData: authenticationData) {
-			return userName
-		}
-
-		return nil
-	}
 
 	public var displayName : String? {
 		get {
@@ -79,6 +72,16 @@ extension OCBookmark {
 		}
 
 		return nil
+	}
+
+	public var scanForAuthenticationMethodsRequired : Bool? {
+		get {
+			return self.userInfo.object(forKey: OCBookmarkUserInfoKey.scanForAuthenticationMethodsRequired ) as? Bool
+		}
+
+		set {
+			self.userInfo[OCBookmarkUserInfoKey.scanForAuthenticationMethodsRequired] = newValue
+		}
 	}
 
 	public var openAccountUserActivity: NSUserActivity {

@@ -20,7 +20,7 @@ import UIKit
 
 class MessageView: UIView {
 
-	var masterView : UIView
+	var mainView : UIView
 	var messageView : UIView?
 	var messageContainerView : UIView?
 	var messageImageView : VectorImageView?
@@ -33,7 +33,7 @@ class MessageView: UIView {
 	var keyboardHeight : CGFloat = 0
 
 	init(add to: UIView) {
-		masterView = to
+		mainView = to
 		super.init(frame: to.frame)
 
 		// Observe keyboard change
@@ -166,17 +166,17 @@ class MessageView: UIView {
 
 				rootView.alpha = 0
 
-				self.masterView.addSubview(rootView)
+				self.mainView.addSubview(rootView)
 
-				self.composeViewBottomConstraint = rootView.bottomAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.bottomAnchor)
+				self.composeViewBottomConstraint = rootView.bottomAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.bottomAnchor)
 				if keyboardHeight > 0 {
-					self.composeViewBottomConstraint.constant = self.masterView.safeAreaInsets.bottom - keyboardHeight
+					self.composeViewBottomConstraint.constant = self.mainView.safeAreaInsets.bottom - keyboardHeight
 				}
 
 				NSLayoutConstraint.activate([
-					rootView.leftAnchor.constraint(equalTo: self.masterView.leftAnchor),
-					rootView.widthAnchor.constraint(equalTo: self.masterView.widthAnchor),
-					rootView.topAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.topAnchor),
+					rootView.leftAnchor.constraint(equalTo: self.mainView.leftAnchor),
+					rootView.widthAnchor.constraint(equalTo: self.mainView.widthAnchor),
+					rootView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor),
 					self.composeViewBottomConstraint
 				])
 
@@ -224,10 +224,10 @@ class MessageView: UIView {
 		keyboardHeight = keyboardSize?.height ?? 0
 
 		if self.composeViewBottomConstraint != nil {
-			self.composeViewBottomConstraint.constant = self.masterView.safeAreaInsets.bottom - keyboardHeight
+			self.composeViewBottomConstraint.constant = self.mainView.safeAreaInsets.bottom - keyboardHeight
 
 			UIView.animate(withDuration: 0.5) {
-				self.masterView.layoutIfNeeded()
+				self.mainView.layoutIfNeeded()
 			}
 		}
 	}
@@ -237,7 +237,7 @@ class MessageView: UIView {
 			self.composeViewBottomConstraint.constant =  0
 
 			UIView.animate(withDuration: 0.5) {
-				self.masterView.layoutIfNeeded()
+				self.mainView.layoutIfNeeded()
 			}
 		}
 	}

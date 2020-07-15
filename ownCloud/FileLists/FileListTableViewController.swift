@@ -79,6 +79,13 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 	}
 
+	func messageButtonTapped(cell: ClientItemCell) {
+	}
+
+	func hasMessage(for item: OCItem) -> Bool {
+		return false
+	}
+
 	// MARK: - Visibility handling
 	private var viewControllerVisible : Bool = false
 
@@ -226,6 +233,23 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 	}
 
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
+			return nil
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
+		})
+
+		let contextualActions = actions.compactMap({$0.provideContextualAction()})
+		let configuration = UISwipeActionsConfiguration(actions: contextualActions)
+		return configuration
+	}
+
 	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
 		if let core = self.core {
 			if #available(iOS 13.0, *) {
@@ -259,6 +283,51 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		return nil
+	}
+
+	@available(iOS 13.0, *)
+	open override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
+			return nil
+		}
+
+		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+			return self.makeContextMenu(for: indexPath, core: core, item: item, with: cell)
+		})
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, core: OCCore, item: OCItem, with cell: UITableViewCell) -> UIMenu {
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuItem)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
+		})
+
+		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
+		let mainMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: menuItems)
+
+		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
+			// Share Items
+			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
+			let sharingActionContext = ActionContext(viewController: self, core: core, items: [item], location: sharingActionsLocation, sender: cell)
+			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
+			sharingActions.forEach({
+				$0.progressHandler = makeActionProgressHandler()
+			})
+
+			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
+			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
+
+			return UIMenu(title: "", children: [shareMenu, mainMenu])
+		}
+
+		return UIMenu(title: "", children: [mainMenu])
 	}
 
 	// MARK: - Themable

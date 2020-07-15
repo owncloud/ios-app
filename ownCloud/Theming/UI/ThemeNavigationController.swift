@@ -31,6 +31,7 @@ open class ThemeNavigationController: UINavigationController {
 		themeToken = Theme.shared.add(applier: {[weak self] (_, themeCollection, event) in
 			self?.applyThemeCollection(themeCollection)
 			self?.toolbar.applyThemeCollection(themeCollection)
+			self?.view.backgroundColor = .clear
 
 			if event == .update {
 				self?.setNeedsStatusBarAppearanceUpdate()

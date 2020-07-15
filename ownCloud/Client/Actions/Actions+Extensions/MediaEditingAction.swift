@@ -26,7 +26,7 @@ class MediaEditingAction : DocumentEditingAction {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {
-			return UIImage(systemName: "crop.rotate")?.tinted(with: Theme.shared.activeCollection.tintColor)
+			return UIImage(systemName: "crop.rotate")?.withRenderingMode(.alwaysTemplate)
 		}
 
 		return nil

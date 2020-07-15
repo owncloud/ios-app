@@ -114,6 +114,8 @@ public class ProgressHUDViewController: UIViewController {
 					})
 				}
 			}
+		} else {
+			completion?()
 		}
 	}
 
@@ -170,6 +172,7 @@ internal class ProgressHUDViewControllerAnimator : NSObject, UIViewControllerTra
 
 				UIView.animate(withDuration: duration, animations: {
 					fromView.alpha = 0
+					fromView.frame.origin.y = -100
 					hudViewController?.progressContainer?.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
 				}, completion: { (_) in
 					transitionContext.completeTransition(true)
@@ -187,10 +190,12 @@ internal class ProgressHUDViewControllerAnimator : NSObject, UIViewControllerTra
 				containerView.addSubview(toView)
 
 				toView.alpha = 0
+				toView.frame.origin.y = -100
 				hudViewController?.progressContainer?.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
 
 				UIView.animate(withDuration: duration, animations: {
 					toView.alpha = 1
+					toView.frame.origin.y = 0
 					hudViewController?.progressContainer?.transform = .identity
 				}, completion: { (_) in
 					transitionContext.completeTransition(true)

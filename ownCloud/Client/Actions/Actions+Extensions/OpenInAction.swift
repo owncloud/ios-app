@@ -22,7 +22,7 @@ public class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -30,7 +30,7 @@ public class OpenInAction: Action {
 		if forContext.items.contains(where: {$0.type == .collection}) {
 			return .none
 		}
-		return .first
+		return .nearFirst
 	}
 
 	var interactionControllerDispatchGroup : DispatchGroup?
@@ -121,7 +121,11 @@ public class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)
+			}
+
 			return UIImage(named: "open-in")
 		}
 

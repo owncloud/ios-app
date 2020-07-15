@@ -136,9 +136,19 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "MTC_MAX_HIT_COUNT"
+            value = "9999"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
+            value = "10"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:authentication-oauth2.oa2-browser-session-class"
@@ -201,8 +211,38 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.log-single-lined"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-maximum-message-size"
+            value = "100000"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-format"
+            value = "string:json"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-format"
+            value = "string:json-composed"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:connection.allow-background-url-sessions"
             value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.openid-connect,com.owncloud.oauth2]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.basicauth]"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

@@ -132,7 +132,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellStyle = UITableViewCell.CellStyle.subtitle
 		}
 
-		self.cell = ThemeTableViewCell(style: cellStyle, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
 		if subtitle != nil {
 			self.cell?.detailTextLabel?.text = subtitle
 			self.cell?.detailTextLabel?.numberOfLines = 0
@@ -143,6 +143,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.imageView?.image = image
 		if accessoryView != nil {
 			self.cell?.accessoryView = accessoryView
+		}
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
@@ -165,11 +169,15 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(withLabelColorUpdates: false)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryView = accessoryView
 		self.cell?.accessibilityIdentifier = identifier
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
@@ -210,7 +218,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 
 		guard let cell = self.cell else { return }
 
@@ -240,6 +248,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			])
 		}
 
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
+
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
 		})
@@ -257,6 +269,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessoryType = accessoryType
 
 		self.cell?.accessibilityIdentifier = identifier
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
 
 		self.action = subtitleRowWithAction
 
@@ -292,6 +308,9 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		if let accessibilityIdentifier : String = identifier {
 			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
+			if #available(iOS 13.4, *), let cell = self.cell {
+				PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+			}
 		}
 
 		self.groupIdentifier = groupIdentifier
@@ -312,10 +331,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.init()
 		type = .toggle
 
-		var tableViewStyle = UITableViewCell.CellStyle.default
+		var tableViewStyle : UITableViewCell.CellStyle = .default
 		self.identifier = identifier
 		if subtitle != nil {
-			tableViewStyle = UITableViewCell.CellStyle.subtitle
+			tableViewStyle = .subtitle
 		}
 
 		self.cell = ThemeTableViewCell(style: tableViewStyle, reuseIdentifier: nil)
@@ -325,12 +344,16 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.detailTextLabel?.numberOfLines = 0
 		}
 
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
+
 		if let accessibilityIdentifier : String = identifier {
 			self.cell?.accessibilityIdentifier = accessibilityIdentifier
 		}
 
 		if selected {
-			self.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
+			self.cell?.accessoryType = .checkmark
 			self.value = true
 		} else {
 			self.value = false
@@ -340,10 +363,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			guard let value = row.value as? Bool else { return }
 			if value {
-				row.cell?.accessoryType = UITableViewCell.AccessoryType.none
+				row.cell?.accessoryType = .none
 				row.value = false
 			} else {
-				row.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
+				row.cell?.accessoryType = .checkmark
 				row.value = true
 			}
 
@@ -354,14 +377,19 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience public init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+	convenience public init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = .default, autocorrectionType: UITextAutocorrectionType = .default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = .default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = .editingChanged, clearButtonMode : UITextField.ViewMode = .never ) {
 		self.init()
-		type = .text
+
+		if secureTextEntry {
+			type = .secureText
+		} else {
+			type = .text
+		}
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
-		self.cell?.selectionStyle = UITableViewCell.SelectionStyle.none
+		self.cell = ThemeTableViewCell(withLabelColorUpdates: true)
+		self.cell?.selectionStyle = .none
 
 		self.textFieldAction = action
 		self.value = textValue
@@ -381,6 +409,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.inputAccessoryView = inputAccessoryView
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
+		cellTextField.clearButtonMode = clearButtonMode
 
 		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: actionEvent)
 
@@ -425,7 +454,6 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				identifier : identifier,
 				accessibilityLabel: accessibilityLabel,
 				actionEvent: actionEvent)
-		type = .secureText
 	}
 
 	@objc public func textFieldContentChanged(_ sender: UITextField) {
@@ -455,7 +483,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
 		self.cell?.textLabel?.numberOfLines = 0
 		self.cell?.textLabel?.textAlignment = alignment
@@ -478,7 +506,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Switches
-	convenience public init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
+	convenience public init(switchWithAction action: StaticTableViewRowAction?, title: String, subtitle: String? = nil, value switchValue: Bool = false, identifier: String? = nil) {
 		self.init()
 		type = .switchButton
 
@@ -486,7 +514,14 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		let switchView = UISwitch()
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		if let subtitle = subtitle {
+			self.cell = ThemeTableViewCell(style: .subtitle, reuseIdentifier: nil)
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		} else {
+			self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		}
+
 		self.cell?.selectionStyle = .none
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView
@@ -519,7 +554,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Buttons
 
-	convenience public init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil, accessoryType: UITableViewCell.AccessoryType = .none) {
 		self.init()
 		type = .button
 
@@ -530,15 +565,22 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			image = image?.paddedTo(width: imageWidth)
 		}
 
-		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(withLabelColorUpdates: false)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.imageView?.image = image
 		if accessoryView != nil {
 			self.cell?.accessoryView = accessoryView
 		}
+		if accessoryType != .none {
+			self.cell?.accessoryType = accessoryType
+		}
 
 		self.cell?.accessibilityIdentifier = identifier
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
@@ -568,6 +610,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				selectedBackgroundColor = customSelectedBackgroundColor
 			}
 
+			self?.cell?.textLabel?.tintColor = textColor
 			self?.cell?.textLabel?.textColor = textColor
 			self?.cell?.imageView?.tintColor = (imageTintColorKey != nil) ? themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey!) as? UIColor : textColor
 			self?.cell?.accessoryView?.tintColor = textColor
@@ -613,7 +656,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		datePickerView.translatesAutoresizingMaskIntoConstraints = false
 		datePickerView.setValue(Theme.shared.activeCollection.tableRowColors.labelColor, forKey: "textColor")
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = .none
 		self.cell?.addSubview(datePickerView)
 

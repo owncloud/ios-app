@@ -28,6 +28,9 @@ open class StaticTableViewSection: NSObject {
 	public var headerTitle : String?
 	public var footerTitle : String?
 
+	public var headerView : UIView?
+	public var footerView : UIView?
+
 	public var index : Int? {
 		return self.viewController?.sections.index(of: self)
 	}

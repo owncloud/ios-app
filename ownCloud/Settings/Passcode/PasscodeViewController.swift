@@ -160,6 +160,14 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
+
+		if #available(iOS 13.4, *) {
+			for button in keypadButtons! {
+				PointerEffect.install(on: button, effectStyle: .highlight)
+			}
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+		}
 	}
 
 	override public func viewWillAppear(_ animated: Bool) {
@@ -267,7 +275,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			button.applyThemeCollection(collection, itemStyle: .bigTitle)
 		}
 
-		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.tintColor, background: collection.tableBackgroundColor))
+		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: collection.neutralColors.normal.foreground))
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 	}

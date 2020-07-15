@@ -213,8 +213,7 @@ class LibraryTableViewController: StaticTableViewController {
 					var badgeLabel : RoundedLabel?
 
 					if view.showBadge, let badge = badge, badge > 0 {
-						badgeLabel = RoundedLabel()
-						badgeLabel?.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
+						badgeLabel = RoundedLabel(text: "\(badge)", style: .token)
 					}
 
 					view.row = StaticTableViewRow(rowWithAction: { [weak self, weak view] (_, _) in
@@ -254,7 +253,7 @@ class LibraryTableViewController: StaticTableViewController {
 					}
 				} else if view.showBadge, let badge = badge, badge > 0 {
 					guard let accessoryView = view.row?.additionalAccessoryView as? RoundedLabel else { return }
-					accessoryView.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
+					accessoryView.labelText = "\(badge)"
 				}
 			} else {
 				if let row = view.row {
