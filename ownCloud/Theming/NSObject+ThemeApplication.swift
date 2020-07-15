@@ -117,7 +117,8 @@ extension NSObject {
 
 		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
-			tabBar.tintColor = collection.toolbarColors.tintColor
+			tabBar.tintColor =  collection.toolbarColors.tintColor
+			tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
 		}
 
 		if let tableView = self as? UITableView {
@@ -134,19 +135,27 @@ extension NSObject {
 		}
 
 		if let collectionView = self as? UICollectionView {
-
 			collectionView.backgroundColor = collection.tableBackgroundColor
 		}
 
 		if let searchBar = self as? UISearchBar {
-
-			searchBar.tintColor = collection.tintColor
+			searchBar.tintColor = collection.searchBarColors.tintColor
 			searchBar.barStyle = collection.barStyle
 
 			if #available(iOS 13, *) {
-				searchBar.searchTextField.textColor = collection.navigationBarColors.labelColor
+				searchBar.searchTextField.textColor = collection.searchBarColors.secondaryLabelColor
 				// Ensure search bar icon color is correct
 				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+				searchBar.searchTextField.backgroundColor = collection.searchBarColors.backgroundColor
+
+				if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
+					glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+					glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
+				}
+				if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
+					clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+					clearButton.tintColor = collection.navigationBarColors.labelColor
+				}
 			}
 		}
 
@@ -163,6 +172,10 @@ extension NSObject {
 				case .message, .bigMessage:
 					normalColor = collection.tableRowColors.secondaryLabelColor
 					highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
+
+				case .logo:
+					normalColor = collection.navigationBarColors.labelColor
+					highlightColor = collection.navigationBarColors.secondaryLabelColor
 
 				default:
 					normalColor = collection.tableRowColors.labelColor

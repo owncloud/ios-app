@@ -50,8 +50,9 @@ class MoreSettingsSection: SettingsSection {
 	private func createRows() {
 
 		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = URL(string: "https://www.owncloud.com/help")
-			self?.openSFWebViewWithConfirmation(for: url!)
+			if let url = VendorServices.shared.helpURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
 		}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -67,8 +68,9 @@ class MoreSettingsSection: SettingsSection {
 		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
 		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = URL(string: "https://owncloud.org/privacy-policy/")
-			self?.openSFWebViewWithConfirmation(for: url!)
+			if let url = VendorServices.shared.privacyURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
 		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
 
 		termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -140,7 +142,11 @@ class MoreSettingsSection: SettingsSection {
 
 	// MARK: - Update UI
 	func updateUI() {
-		var rows = [helpRow!]
+		var rows : [StaticTableViewRow] = []
+
+		if VendorServices.shared.helpURL != nil {
+			rows.append(helpRow!)
+		}
 
 		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
 			rows.append(sendFeedbackRow!)
@@ -148,6 +154,10 @@ class MoreSettingsSection: SettingsSection {
 
 		if let recommendToFriend = self.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
 			rows.append(recommendRow!)
+		}
+
+		if VendorServices.shared.privacyURL != nil {
+			rows.append(privacyPolicyRow!)
 		}
 
 		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
@@ -189,8 +199,8 @@ extension MoreSettingsSection : OCClassSettingsSupport {
 		if identifier == .feedback {
 			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 					 .feedbackEmail: "ios-app@owncloud.com",
-					 .recommendToFriendEnabled: true,
-					 .sendFeedbackEnabled: true
+					 .recommendToFriendEnabled: !VendorServices.shared.isBranded,
+					 .sendFeedbackEnabled: (VendorServices.shared.feedbackMailEnabled)
 			]
 		}
 

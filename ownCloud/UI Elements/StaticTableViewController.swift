@@ -218,6 +218,22 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return sections[section].footerTitle
 	}
 
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if sections[section].headerTitle != nil || sections[section].headerView != nil {
+			return UITableView.automaticDimension
+		}
+
+		return 0.0
+	}
+
+	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		if sections[section].footerTitle != nil || sections[section].footerView != nil {
+			return UITableView.automaticDimension
+		}
+
+		return 0.0
+	}
+
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		let cell = staticRowForIndexPath(indexPath)
 		if cell.type == .datePicker {
@@ -225,6 +241,14 @@ class StaticTableViewController: UITableViewController, Themeable {
 		}
 
 		return UITableView.automaticDimension
+	}
+
+	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		return sections[section].headerView
+	}
+
+	override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		return sections[section].footerView
 	}
 
 	// MARK: - Theme support

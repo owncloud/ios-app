@@ -157,7 +157,7 @@ extension ThemeStyle {
 
 	}
 
-	static func forIdentifier(_ identifier: String) -> ThemeStyle? {
+	static func forIdentifier(_ identifier: ThemeStyleIdentifier) -> ThemeStyle? {
 		let matchContext = OCExtensionContext(location: OCExtensionLocation(ofType: .themeStyle, identifier: OCExtensionLocationIdentifier(rawValue: identifier)), requirements: nil, preferences: nil)
 
 		if let matches : [OCExtensionMatch] = try? OCExtensionManager.shared.provideExtensions(for: matchContext),
@@ -189,9 +189,20 @@ extension ThemeStyle {
 	}
 
 	static func registerDefaultStyles() {
-		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
-		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
-		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+		if VendorServices.shared.isBranded, let brandingURL = VendorServices.shared.brandingURL {
+			let themeProvider = ThemeProvider(plist: brandingURL)
+
+			var isDefault = true
+			for theme in themeProvider.themes {
+				let themeExtension = theme.themeStyleExtension(isDefault: isDefault)
+				OCExtensionManager.shared.addExtension(themeExtension)
+				isDefault = false
+			}
+		} else {
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+		}
 	}
 
 	static func availableStyles(for styles: [ThemeCollectionStyle]) -> [ThemeStyle]? {

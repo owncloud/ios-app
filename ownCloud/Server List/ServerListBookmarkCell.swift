@@ -47,6 +47,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		infoView.translatesAutoresizingMaskIntoConstraints = false
 
 		iconView.contentMode = .scaleAspectFit
+		iconView.image = UIImage(named: "bookmark-icon")
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
@@ -161,8 +162,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
-
-		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
+		self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
@@ -172,5 +172,6 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
+		self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
 	}
 }

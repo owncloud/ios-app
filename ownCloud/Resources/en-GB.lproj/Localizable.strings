@@ -61,6 +61,9 @@
 "Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Logout" = "Logout";
 
 /* Client */
 "Browse" = "Browse";
@@ -124,9 +127,11 @@
 "'%@' is currently locked" = "'%@' is currently locked";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
 "Really delete '%@'?" = "Really delete '%@'?";
+"Really logout from '%@'?" = "Really logout from '%@'?";
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Logout of '%@' failed" = "Logout of '%@' failed";
 "Accounts" = "Accounts";
 
 "Help" = "Help";

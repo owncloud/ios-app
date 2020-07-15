@@ -289,7 +289,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		searchController?.searchResultsUpdater = self
 		searchController?.obscuresBackgroundDuringPresentation = false
 		searchController?.hidesNavigationBarDuringPresentation = true
-		searchController?.searchBar.placeholder = "Search this folder".localized
 		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 
 		navigationItem.searchController = searchController
@@ -332,6 +331,20 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
 		openMultipleBarButtonItem?.accessibilityLabel = "Open in".localized
 		openMultipleBarButtonItem?.isEnabled = false
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
+		if #available(iOS 13.0, *) {
+			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
+			let attributedString = NSAttributedString(string: "Search this folder", attributes: attributedStringColor)
+			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
+		} else {
+			// Fallback on earlier versions
+			searchController?.searchBar.placeholder = "Search this folder".localized
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

@@ -380,7 +380,12 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	convenience init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = .default, autocorrectionType: UITextAutocorrectionType = .default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = .default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = .editingChanged, clearButtonMode : UITextField.ViewMode = .never ) {
 		self.init()
-		type = .text
+
+		if secureTextEntry {
+			type = .secureText
+		} else {
+			type = .text
+		}
 
 		self.identifier = identifier
 
@@ -450,7 +455,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				identifier : identifier,
 				accessibilityLabel: accessibilityLabel,
 				actionEvent: actionEvent)
-		type = .secureText
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
