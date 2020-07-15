@@ -119,10 +119,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				Migration.shared.wipeLegacyData()
 			}
 			navigationController.modalPresentationStyle = .fullScreen
+			self.present(navigationController, animated: false)
 		}
 
-		self.present(navigationController, animated: false)
-		
 		messageCountByBookmarkUUID = [:] // Initial update of app badge icon
 
 		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages, _, _) in

@@ -396,8 +396,10 @@ class Migration {
 			postAccountMigrationNotification(activity: activityName, type: .settings)
 
 			func setupInstantUpload() {
-				userDefaults.instantUploadPath = Migration.legacyInstantUploadFolder
-				userDefaults.instantUploadBookmarkUUID = bookmark.uuid
+				userDefaults.instantPhotoUploadPath = Migration.legacyInstantUploadFolder
+				userDefaults.instantVideoUploadPath = Migration.legacyInstantUploadFolder
+				userDefaults.instantPhotoUploadBookmarkUUID = bookmark.uuid
+				userDefaults.instantVideoUploadBookmarkUUID = bookmark.uuid
 
 				userDefaults.instantUploadPhotos = legacyInstantPhotoUploadActive > 0 ? true : false
 				userDefaults.instantUploadVideos = legacyInstantVideoUploadActive > 0 ? true : false
