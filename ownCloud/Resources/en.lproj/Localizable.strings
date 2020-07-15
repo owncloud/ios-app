@@ -632,6 +632,8 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+"Photo Pro Features" = "Photo Pro Features";
+"Image metadata, extended upload options" = "Image metadata, extended upload options";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";

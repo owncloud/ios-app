@@ -24,7 +24,7 @@ class DisplayExifMetadataAction : Action {
 	override class var name : String? { return "Image Metadata".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .contextMenuItem] }
 	class var supportedMimeTypes : [String] { return ["image"] }
-	//override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
+	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .photoProFeatures) }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -52,11 +52,9 @@ class DisplayExifMetadataAction : Action {
 			return
 		}
 
-		/*
 		guard self.proceedWithLicensing(from: hostViewController) else {
 			return
 		}
-		*/
 
 		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, files) in
 			if let error = error {
