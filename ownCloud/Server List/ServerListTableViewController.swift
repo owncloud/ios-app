@@ -93,8 +93,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 		}
 
+		// This view is nil, when branded app version
 		if welcomeOverlayView != nil {
 			welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+			Theme.shared.add(tvgResourceFor: "owncloud-logo")
+			welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 		}
 
 		self.navigationItem.title = VendorServices.shared.appName

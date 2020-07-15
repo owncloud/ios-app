@@ -162,7 +162,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
-		self.iconView.image = self.iconView.image?.tinted(with: collection.tintColor)
+		self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
@@ -172,6 +172,6 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
-		self.iconView.image = self.iconView.image?.tinted(with: collection.tintColor)
+		self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
 	}
 }

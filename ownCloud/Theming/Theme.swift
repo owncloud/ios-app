@@ -232,7 +232,7 @@ class Theme: NSObject {
 			if #available(iOS 13, *) {
 			} else {
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchBarColors.backgroundColor
-				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: collection.searchBarColors.labelColor]
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: collection.searchBarColors.secondaryLabelColor]
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchBarColors.tintColor
 			}
 			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance

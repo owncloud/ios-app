@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_0" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,7 +12,7 @@
             <connections>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="welcomeAddServerButton" destination="Jaa-D8-ghC" id="Iid-HX-Csw"/>
-                <outlet property="welcomeLogoImageView" destination="x7I-De-RhT" id="OFY-LF-9ev"/>
+                <outlet property="welcomeLogoTVGView" destination="x7I-De-RhT" id="z9p-VL-Tpo"/>
                 <outlet property="welcomeMessageLabel" destination="IEC-5d-Hb5" id="Fyk-Hb-TSl"/>
                 <outlet property="welcomeOverlayView" destination="PJc-v9-DYn" id="U6Q-QQ-nIk"/>
                 <outlet property="welcomeTitleLabel" destination="c8n-gy-7HF" id="Yqh-Kn-Mgb"/>
@@ -37,7 +35,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
-                    <rect key="frame" x="39.5" y="125.5" width="241.5" height="317"/>
+                    <rect key="frame" x="39.5" y="121" width="241.5" height="326"/>
                     <subviews>
                         <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="bookmark-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
                             <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
@@ -52,7 +50,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jaa-D8-ghC" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="283" width="241.5" height="34"/>
+                            <rect key="frame" x="0.0" y="283" width="241.5" height="43"/>
                             <color key="backgroundColor" red="0.27450980390000002" green="0.54901960780000003" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
                             <accessibility key="accessibilityConfiguration" identifier="addServer"/>
                             <constraints>
@@ -74,7 +72,7 @@ Start by adding your server.</string>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7I-De-RhT" customClass="UIImageView">
+                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7I-De-RhT" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" notEnabled="YES"/>
