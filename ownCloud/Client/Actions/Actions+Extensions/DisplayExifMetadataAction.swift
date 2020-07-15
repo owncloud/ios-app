@@ -24,7 +24,7 @@ class DisplayExifMetadataAction : Action {
 	override class var name : String? { return "Image Metadata".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .contextMenuItem] }
 	class var supportedMimeTypes : [String] { return ["image"] }
-	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
+	//override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -74,7 +74,10 @@ class DisplayExifMetadataAction : Action {
 				if let item = self.context.items.first, let sourceURL = files.first?.url {
 					let metadataViewController = ImageMetadataViewController(core: core, item: item, url: sourceURL)
 					let navigationController = ThemeNavigationController(rootViewController: metadataViewController)
-					navigationController.modalPresentationStyle = .overFullScreen
+					navigationController.modalPresentationStyle = .formSheet
+					if #available(iOS 13, *) {
+						navigationController.modalPresentationStyle = .automatic
+					}
 					viewController.present(navigationController, animated: true)
 				}
 			}
