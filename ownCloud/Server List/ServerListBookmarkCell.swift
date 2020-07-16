@@ -48,6 +48,7 @@ public class ServerListBookmarkCell : ThemeTableViewCell {
 		infoView.translatesAutoresizingMaskIntoConstraints = false
 
 		iconView.contentMode = .scaleAspectFit
+		iconView.image = UIImage(named: "bookmark-icon")
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
@@ -86,8 +87,6 @@ public class ServerListBookmarkCell : ThemeTableViewCell {
 		iconView.setContentHuggingPriority(.required, for: .vertical)
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 
 		NotificationCenter.default.addObserver(self, selector: #selector(ServerListBookmarkCell.updateMessageBadgeFrom(notification:)), name: .BookmarkMessageCountChanged, object: nil)
 	}
