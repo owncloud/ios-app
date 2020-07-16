@@ -247,15 +247,15 @@ class ImageMetadataParser {
 
 			if let programType = value as? Int {
 				switch programType {
-				case 0: program = "Not defined"
-				case 1: program = "Manual"
-				case 2: program = "Normal"
-				case 3: program = "Aperture priority"
-				case 4: program = "Shutter priority"
-				case 5: program = "Creative"
-				case 6: program = "Action"
-				case 7: program = "Portrait"
-				case 8: program = "Landscape"
+				case 0: program = "Not defined".localized
+				case 1: program = "Manual".localized
+				case 2: program = "Normal".localized
+				case 3: program = "Aperture priority".localized
+				case 4: program = "Shutter priority".localized
+				case 5: program = "Creative".localized
+				case 6: program = "Action".localized
+				case 7: program = "Portrait".localized
+				case 8: program = "Landscape".localized
 
 				default: break
 				}
@@ -266,19 +266,19 @@ class ImageMetadataParser {
 
 		transformers[kCGImagePropertyExifMeteringMode] = {(value)
 				in
-			var item = MetadataItem(name: "Metering".localized, value: "")
-
-			guard let mode = value as? Int else { return item }
+			guard let mode = value as? Int else {
+				return MetadataItem(name: "Metering".localized, value: "")
+			}
 
 			var modeString = "unknown".localized
 			switch mode {
-			case 1: modeString = "Average"
-			case 2: modeString = "CenterWeightedAverage"
-			case 3: modeString = "Spot"
-			case 4: modeString = "MultiSpot"
-			case 5: modeString = "Pattern"
-			case 6: modeString = "Partial"
-			case 255: modeString = "CenterWeightedAverage"
+			case 1: modeString = "Average".localized
+			case 2: modeString = "CenterWeightedAverage".localized
+			case 3: modeString = "Spot".localized
+			case 4: modeString = "MultiSpot".localized
+			case 5: modeString = "Pattern".localized
+			case 6: modeString = "Partial".localized
+			case 255: modeString = "CenterWeightedAverage".localized
 			default: break
 			}
 
@@ -305,31 +305,31 @@ class ImageMetadataParser {
 				if flashPresent {
 					// Did flash fire?
 					if flashBitMask & 0b01 != 0 {
-						flashInfo.append("Fired")
+						flashInfo.append("Fired".localized)
 					} else {
-						flashInfo.append("Didn't fire")
+						flashInfo.append("Didn't fire".localized)
 					}
 
 					switch (flashBitMask >> 1) & 0b11 {
-					case 0b00: flashInfo.append("No strobe return detection")
-					case 0b10: flashInfo.append("Strobe return light not detected")
-					case 0b11: flashInfo.append("Strobe return light detected")
+					case 0b00: flashInfo.append("No strobe return detection".localized)
+					case 0b10: flashInfo.append("Strobe return light not detected".localized)
+					case 0b11: flashInfo.append("Strobe return light detected".localized)
 					default: break
 					}
 
 					switch (flashBitMask >> 3) & 0b11 {
-					case 0b01: flashInfo.append("Compulsory flash firing")
-					case 0b10: flashInfo.append("Compulsory flash supression")
-					case 0b11: flashInfo.append("Auto mode")
+					case 0b01: flashInfo.append("Compulsory flash firing".localized)
+					case 0b10: flashInfo.append("Compulsory flash supression".localized)
+					case 0b11: flashInfo.append("Auto mode".localized)
 					default: break
 					}
 
 					if flashBitMask  & 0b1000000 != 0 {
-						flashInfo.append("Red eye detection supported")
+						flashInfo.append("Red eye detection supported".localized)
 					}
 
 				} else {
-					flashInfo.append("not present")
+					flashInfo.append("not present".localized)
 				}
 
 			}
@@ -343,8 +343,8 @@ class ImageMetadataParser {
 			var wbMode = ""
 			if let wb = value as? Int {
 				switch wb {
-				case 0: wbMode = "Auto"
-				case 1: wbMode = "Manual"
+				case 0: wbMode = "Auto".localized
+				case 1: wbMode = "Manual".localized
 				default: break
 				}
 			}
@@ -353,7 +353,7 @@ class ImageMetadataParser {
 
 		transformers[kCGImagePropertyExifColorSpace] = {(value) in
 
-			var space = "Uncalibrated"
+			var space = "Uncalibrated".localized
 			if let value = value as? Int, value == 1 {
 				space = "sRGB"
 			}
@@ -385,7 +385,7 @@ class ImageMetadataParser {
 		transformers[kCGImagePropertyExifAuxLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxLensID] = {(value) in return MetadataItem(name: "Lens ID".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxLensSerialNumber] = {(value) in return MetadataItem(name: "Lens serial".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxSerialNumber] = {(value) in return MetadataItem(name: "Serial Nr.".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxSerialNumber] = {(value) in return MetadataItem(name: "Serial number".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxFlashCompensation] = {(value) in return MetadataItem(name: "Flash compensation".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxOwnerName] = {(value) in return MetadataItem(name: "Owner".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxFirmware] = {(value) in return MetadataItem(name: "Firmware".localized, value: "\(value)") }
@@ -423,13 +423,13 @@ class ImageMetadataParser {
 
 		// TIFF
 		transformers[kCGImagePropertyTIFFPhotometricInterpretation] = {(value) in
-			var textValue = "none"
+			var textValue = "none".localized
 			if let piValue = value as? Int {
 				switch piValue {
 				case 2:
-					textValue = "RGB"
+					textValue = "RGB".localized
 				case 6:
-					textValue = "YCbCr"
+					textValue = "YCbCr".localized
 				default:
 					break
 				}
@@ -646,7 +646,7 @@ class ImageMetadataViewController: StaticTableViewController {
 					}
 
 					if let colorModel = result.colorModel, let depth = result.depth {
-						let colorInfo = "\(colorModel) (\(depth) bits/channel)"
+						let colorInfo = String(format: "%@ (%@ bits/channel)".localized, colorModel, depth)
 						let colorInfoRow = ImageMetadataViewController.createMetadataRow(with: "Color model".localized, subtitle: colorInfo, identifier: "image-color-info")
 						imageDetailsSection.add(row: colorInfoRow)
 					}
@@ -671,7 +671,7 @@ class ImageMetadataViewController: StaticTableViewController {
 
 				if let histogram = self.histogramImage(for: self.imageURL) {
 					OnMainThread {
-						let section = StaticTableViewSection(headerTitle: "Histogram")
+						let section = StaticTableViewSection(headerTitle: "Histogram".localized)
 						let imageView = UIImageView(image: histogram)
 						let row = StaticTableViewRow(customView: imageView)
 
