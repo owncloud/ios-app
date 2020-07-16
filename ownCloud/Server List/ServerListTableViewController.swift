@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
@@ -407,7 +408,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	func delete(bookmark: OCBookmark, at indexPath: IndexPath, completion: (() -> Void)? = nil) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			presentationStyle = .alert
 		}
 
@@ -625,7 +626,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func makeContextMenu(for indexPath: IndexPath, with bookmark: OCBookmark) -> UIMenu {
 		var menuItems : [UIAction] = []
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: 	"uiwindow.split.2x1")) { _ in
 				self.openAccountInWindow(at: indexPath)
 			}
@@ -732,7 +733,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		})
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if #available(iOS 13.0, *), UIDevice.current.isIpad {
 			let openAccountAction = UITableViewRowAction(style: .normal,
 														 title: "Open in Window".localized,
 														 handler: { (_, indexPath) in

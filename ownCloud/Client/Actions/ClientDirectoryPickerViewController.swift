@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
 typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void

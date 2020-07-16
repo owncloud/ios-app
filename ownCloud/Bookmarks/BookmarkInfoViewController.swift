@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudUI
+import ownCloudAppShared
 
 class BookmarkInfoViewController: StaticTableViewController {
 	var offlineStorageInfoRow: StaticTableViewRow?

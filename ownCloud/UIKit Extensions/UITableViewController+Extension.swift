@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudAppShared
 
 extension UITableViewController {
 	func addThemableBackgroundView() {
@@ -26,7 +27,7 @@ extension UITableViewController {
 		self.tableView.backgroundView = backgroundView
 
 		// This view is needed to stop flickering when scrolling (white line between UINavigationBar and UITableView header
-		let coloredView = ThemeableColoredView.init(frame: CGRect(x: 0, y: -self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.size.height + 1))
+		let coloredView = ThemeableColoredView(frame: CGRect(x: 0, y: -self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.size.height + 1))
 		coloredView.translatesAutoresizingMaskIntoConstraints = false
 
 		self.tableView.insertSubview(coloredView, aboveSubview: self.tableView.backgroundView!)

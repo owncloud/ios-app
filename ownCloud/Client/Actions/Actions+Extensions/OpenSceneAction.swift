@@ -31,7 +31,7 @@ class OpenSceneAction: Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			if forContext.items.count == 1 {
 				return .beforeMiddle
 			}
@@ -47,7 +47,7 @@ class OpenSceneAction: Action {
 			return
 		}
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
 				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
 				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)

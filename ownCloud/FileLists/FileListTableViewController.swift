@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	weak var core : OCCore?

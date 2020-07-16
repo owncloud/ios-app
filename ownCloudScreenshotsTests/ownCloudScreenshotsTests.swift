@@ -72,7 +72,7 @@ class ScreenshotsTests: XCTestCase {
 		preparePhotos(app: app)
 		prepareQuickAccess(app: app)
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			prepareMultipleWindows(app: app)
 		}
 

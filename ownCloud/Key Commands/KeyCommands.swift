@@ -37,7 +37,7 @@ extension ServerListTableViewController {
 			shortcuts.append(editSettingsCommand)
 			shortcuts.append(manageSettingsCommand)
 			shortcuts.append(deleteSettingsCommand)
-			if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+			if #available(iOS 13.0, *), UIDevice.current.isIpad {
 				let openWindowCommand = UIKeyCommand(input: "W", modifierFlags: [.command, .shift], action: #selector(openSelectedBookmarkInWindow), discoverabilityTitle: "Open in new Window".localized)
 				shortcuts.append(openWindowCommand)
 			}
@@ -199,7 +199,7 @@ extension BookmarkInfoViewController {
 }
 
 extension ThemeNavigationController {
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -211,7 +211,7 @@ extension ThemeNavigationController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 
@@ -412,7 +412,7 @@ extension PublicLinkEditTableViewController {
 
 extension StaticTableViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
@@ -448,7 +448,7 @@ extension StaticTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 
@@ -962,7 +962,7 @@ extension PhotoSelectionViewController {
 
 extension PasscodeViewController {
 
-    override var keyCommands: [UIKeyCommand]? {
+    public override var keyCommands: [UIKeyCommand]? {
         var keyCommands : [UIKeyCommand] = []
         for i in 0 ..< 10 {
             keyCommands.append(

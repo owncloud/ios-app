@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class StaticLoginServerListViewController: ServerListTableViewController {
 	var headerView : UIView?

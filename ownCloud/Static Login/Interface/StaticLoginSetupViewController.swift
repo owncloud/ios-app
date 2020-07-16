@@ -18,6 +18,7 @@
 
 import ownCloudSDK
 import UIKit
+import ownCloudAppShared
 
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile

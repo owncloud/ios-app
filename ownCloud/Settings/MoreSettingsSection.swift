@@ -23,6 +23,7 @@ import MessageUI
 import SafariServices
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
@@ -148,11 +149,11 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(helpRow!)
 		}
 
-		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
+		if let sendFeedbackEnabled = VendorServices.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
 			rows.append(sendFeedbackRow!)
 		}
 
-		if let recommendToFriend = self.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
+		if let recommendToFriend = VendorServices.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
 			rows.append(recommendRow!)
 		}
 
@@ -177,33 +178,5 @@ class MoreSettingsSection: SettingsSection {
 		alert.addAction(okAction)
 		alert.addAction(cancelAction)
 		self.viewController?.present(alert, animated: true)
-	}
-}
-
-// MARK: - OCClassSettings support
-extension OCClassSettingsIdentifier {
-	static let feedback = OCClassSettingsIdentifier("feedback")
-}
-
-extension OCClassSettingsKey {
-	static let appStoreLink = OCClassSettingsKey("app-store-link")
-	static let feedbackEmail = OCClassSettingsKey("feedback-email")
-	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
-	static let sendFeedbackEnabled = OCClassSettingsKey("send-feedback-enabled")
-}
-
-extension MoreSettingsSection : OCClassSettingsSupport {
-	static let classSettingsIdentifier : OCClassSettingsIdentifier = .feedback
-
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .feedback {
-			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
-					 .feedbackEmail: "ios-app@owncloud.com",
-					 .recommendToFriendEnabled: !VendorServices.shared.isBranded,
-					 .sendFeedbackEnabled: (VendorServices.shared.feedbackMailEnabled)
-			]
-		}
-
-		return nil
 	}
 }

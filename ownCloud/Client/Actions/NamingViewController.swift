@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 typealias StringValidatorResult = (Bool, String?, String?)
 typealias StringValidatorHandler = (String) -> StringValidatorResult

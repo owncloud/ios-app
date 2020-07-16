@@ -20,6 +20,7 @@ import Foundation
 import ownCloudSDK
 import Photos
 import AVFoundation
+import ownCloudAppShared
 
 extension OCCellularSwitchIdentifier {
     static let photoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "cellular-photo-upload")

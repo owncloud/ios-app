@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		if #available(iOS 13.0, *) {
-			if UIDevice.current.isIpad() {
+			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only
 				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
@@ -149,7 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
 		if url.matchesAppScheme {
-			guard let window = app.currentWindow() else { return false }
+			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 			openPrivateLink(url: url, in: window)
 
@@ -183,18 +183,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-            let url = userActivity.webpageURL else {
-                return false
-        }
+	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+			let url = userActivity.webpageURL else {
+				return false
+		}
 
-		guard let window = application.currentWindow() else { return false }
+		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 		openPrivateLink(url: url, in: window)
 
-        return true
-    }
+		return true
+	}
 
 	// MARK: UISceneSession Lifecycle
 	@available(iOS 13.0, *)
@@ -219,5 +219,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				url.resolveAndPresent(in: window)
 			}
 		}
+	}
+}
+
+extension UserInterfaceContext : UserInterfaceContextProvider {
+	public func provideMainWindow() -> ThemeWindow? {
+		return (UIApplication.shared.delegate as? AppDelegate)?.window
+	}
+
+	public func provideCurrentWindow() -> ThemeWindow? {
+		return UIApplication.shared.windows.first as? ThemeWindow
 	}
 }

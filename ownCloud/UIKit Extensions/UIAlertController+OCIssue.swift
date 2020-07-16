@@ -52,7 +52,7 @@ extension UIAlertController {
 	}
 
 	convenience init(with title: String, message: String, okLabel: String = "OK".localized, action: (() -> Void)? = nil) {
-		self.init(title: title, message: message, preferredStyle: UIDevice.current.isIpad() ? .alert : .actionSheet)
+		self.init(title: title, message: message, preferredStyle: UIDevice.current.isIpad ? .alert : .actionSheet)
 
 		let okAction: UIAlertAction = UIAlertAction(title: okLabel, style: .default, handler: { (_) in
 			action?()

@@ -6,9 +6,6 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
-import UIKit
-import ownCloudSDK
-
 /*
  * Copyright (C) 2018, ownCloud GmbH.
  *
@@ -18,6 +15,10 @@ import ownCloudSDK
  * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  *
  */
+
+import UIKit
+import ownCloudSDK
+import ownCloudAppShared
 
 class MoreViewHeader: UIView {
 	private var iconView: UIImageView
