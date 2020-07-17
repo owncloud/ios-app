@@ -216,9 +216,15 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	@objc private func cancelBarButtonPressed() {
-		dismiss(animated: true, completion: {
-			self.userChose(item: nil)
-		})
+		if extensionContext != nil {
+ 			// Handle case, if this controller was opened from an extension (e.g. share extension)
+ 			let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+ 			extensionContext?.cancelRequest(withError: error)
+ 		} else {
+			dismiss(animated: true, completion: {
+				self.userChose(item: nil)
+			})
+		}
 	}
 
 	@objc private func selectButtonPressed() {
