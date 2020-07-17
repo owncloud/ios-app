@@ -1,5 +1,5 @@
 //
-//  RenameViewController.swift
+//  NamingViewController.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 02/08/2018.
@@ -18,17 +18,16 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-typealias StringValidatorResult = (Bool, String?, String?)
-typealias StringValidatorHandler = (String) -> StringValidatorResult
+public typealias StringValidatorResult = (Bool, String?, String?)
+public typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-class NamingViewController: UIViewController, Themeable {
-	weak var item: OCItem?
-	weak var core: OCCore?
-	var completion: (String?, NamingViewController) -> Void
-	var stringValidator: StringValidatorHandler?
-	var defaultName: String?
+open class NamingViewController: UIViewController, Themeable {
+	weak open var item: OCItem?
+	weak open var core: OCCore?
+	open var completion: (String?, NamingViewController) -> Void
+	open var stringValidator: StringValidatorHandler?
+	open var defaultName: String?
 
 	private var blurView: UIVisualEffectView
 
@@ -53,7 +52,7 @@ class NamingViewController: UIViewController, Themeable {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	public init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion
@@ -84,15 +83,15 @@ class NamingViewController: UIViewController, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	convenience init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	convenience public init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, completion: completion)
 	}
 
-	convenience init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	convenience public init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, completion: completion)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -101,13 +100,13 @@ class NamingViewController: UIViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		nameTextField.backgroundColor = collection.tableBackgroundColor
 		nameTextField.textColor = collection.tableRowColors.labelColor
 		nameTextField.keyboardAppearance = collection.keyboardAppearance
 	}
 
-	override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
@@ -258,7 +257,7 @@ class NamingViewController: UIViewController, Themeable {
 		}
 	}
 
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 
 		render(newTraitCollection: traitCollection)
@@ -271,7 +270,7 @@ class NamingViewController: UIViewController, Themeable {
 		}
 	}
 
-	@objc func textfieldDidChange(_ sender: UITextField) {
+	@objc open func textfieldDidChange(_ sender: UITextField) {
 		if sender.text != "" {
 			doneButton?.isEnabled = true
 		} else {
@@ -311,7 +310,7 @@ class NamingViewController: UIViewController, Themeable {
 		}
 	}
 
-	@objc func keyboardWillShow(notification: NSNotification) {
+	@objc open func keyboardWillShow(notification: NSNotification) {
 		if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
 			if self.view.frame.origin.y == 0 {
 				// TODO: Improve this for center the stackview with the keyboard not only when the keyboard partialy cover the thumbnailImage
@@ -332,7 +331,7 @@ class NamingViewController: UIViewController, Themeable {
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override open func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardDidShowNotification, object: nil)
 	}
@@ -340,8 +339,7 @@ class NamingViewController: UIViewController, Themeable {
 }
 
 extension NamingViewController: UITextFieldDelegate {
-
-	func textFieldDidBeginEditing(_ textField: UITextField) {
+	open func textFieldDidBeginEditing(_ textField: UITextField) {
 
 		if let name = nameTextField.text,
 			let fileExtension = item?.fileExtension,
@@ -356,7 +354,7 @@ extension NamingViewController: UITextFieldDelegate {
 
 	}
 
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+	open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if textField.text == "" {
 			return false
 		}

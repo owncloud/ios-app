@@ -18,7 +18,7 @@
 
 import UIKit
 
-public class MoreStaticTableViewController: StaticTableViewController {
+open class MoreStaticTableViewController: StaticTableViewController {
 
 	private var themeApplierTokens: [ThemeApplierToken]
 
@@ -37,7 +37,7 @@ public class MoreStaticTableViewController: StaticTableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	public override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+	open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if let title = (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle {
 			let containerView = UIView()
 			let label = UILabel()
@@ -64,22 +64,22 @@ public class MoreStaticTableViewController: StaticTableViewController {
 		return nil
 	}
 
-	public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+	open override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		if  (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle != nil {
 			return UITableView.automaticDimension
 		}
 		return 0.0
 	}
 
-	public override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+	open override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return CGFloat.leastNormalMagnitude
 	}
 
-	public override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+	open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		return nil
 	}
 
-	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		self.tableView.separatorColor = self.tableView.backgroundColor
 	}

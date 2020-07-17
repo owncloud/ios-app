@@ -138,12 +138,14 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			navController.toolbar.isTranslucent = false
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
-			let leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+			if let leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))?.withRenderingMode(.alwaysTemplate) {
+				let createFolderBarButton = UIBarButtonItem(image: leftButtonImage, style: .plain, target: self, action: #selector(createFolderButtonPressed))
+				createFolderBarButton.accessibilityIdentifier = "client.folder-create"
 
-			let createFolderBarButton = UIBarButtonItem(image: leftButtonImage, style: .plain, target: self, action: #selector(createFolderButtonPressed))
-			createFolderBarButton.accessibilityIdentifier = "client.folder-create"
-
-			self.setToolbarItems([createFolderBarButton, flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+				self.setToolbarItems([createFolderBarButton, flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+			} else {
+				self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+			}
 		}
 	}
 
@@ -214,9 +216,15 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	@objc private func cancelBarButtonPressed() {
-		dismiss(animated: true, completion: {
-			self.userChose(item: nil)
-		})
+		if extensionContext != nil {
+ 			// Handle case, if this controller was opened from an extension (e.g. share extension)
+ 			let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+ 			extensionContext?.cancelRequest(withError: error)
+ 		} else {
+			dismiss(animated: true, completion: {
+				self.userChose(item: nil)
+			})
+		}
 	}
 
 	@objc private func selectButtonPressed() {
