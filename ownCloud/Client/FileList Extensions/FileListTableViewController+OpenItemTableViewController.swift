@@ -24,8 +24,8 @@ extension FileListTableViewController : OpenItemHandling {
 	@discardableResult public func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController? {
 		if let core = self.core {
 			if #available(iOS 13.0, *) {
-				if  let tabBarController = self.tabBarController as? ClientRootViewController {
-					let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+				if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+					let activity = OpenItemUserActivity(detailItem: item, detailBookmark: bookmarkContainer.bookmark)
 					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
 			}
@@ -58,11 +58,11 @@ extension FileListTableViewController : OpenItemHandling {
 }
 
 extension FileListTableViewController : MoreItemHandling {
-	public func moreOptions(for item: OCItem, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool {
+	public func moreOptions(for item: OCItem, at locationIdentifier: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool {
 		guard let sender = sender else {
 			return false
 		}
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: locationIdentifier)
 		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler(), completionHandler: nil) {

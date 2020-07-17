@@ -19,11 +19,10 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
-import ownCloudAppShared
 import CoreServices
 
-typealias ClientActionVieDidAppearHandler = () -> Void
-typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
+public typealias ClientActionVieDidAppearHandler = () -> Void
+public typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 public struct OCItemDraggingValue {
 	var item : OCItem
@@ -31,14 +30,14 @@ public struct OCItemDraggingValue {
 }
 
 open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
-	var folderActionBarButton: UIBarButtonItem?
-	var plusBarButton: UIBarButtonItem?
+	public var folderActionBarButton: UIBarButtonItem?
+	public var plusBarButton: UIBarButtonItem?
 
-	var quotaLabel = UILabel()
-	var quotaObservation : NSKeyValueObservation?
-	var titleButtonThemeApplierToken : ThemeApplierToken?
+	public var quotaLabel = UILabel()
+	public var quotaObservation : NSKeyValueObservation?
+	public var titleButtonThemeApplierToken : ThemeApplierToken?
 
-	weak var clientRootViewController : UIViewController?
+	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
 
@@ -141,7 +140,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		self.exitMultiselection()
+		if let multiSelectionSupport = self as? MultiSelectSupport {
+			multiSelectionSupport.exitMultiselection()
+		}
 	}
 
 	private func updateFooter(text:String?) {
@@ -170,7 +171,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		return true
 	}
 
-	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+	open func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
 		for item in session.items {
 			if item.localObject == nil, item.itemProvider.hasItemConformingToTypeIdentifier("public.folder") {
 				return false
@@ -181,7 +182,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		return true
 	}
 
-	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+	open func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
 				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
@@ -198,7 +199,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 	}
 
-	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
+	open func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
 		guard let tabBarController = self.tabBarController as? ToolAndTabBarToggling else { return }
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
@@ -225,7 +226,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	}
 
-	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
+	open func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
 		if !self.tableView.isEditing {
 			removeToolbar()
 		}
@@ -256,14 +257,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 	}
 
-	func dragInteraction(_ interaction: UIDragInteraction,
+	open func dragInteraction(_ interaction: UIDragInteraction,
 						 session: UIDragSession,
 						 didEndWith operation: UIDropOperation) {
 		removeToolbar()
 	}
 
 	// MARK: - Upload
-	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
+	open func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
 		if let rootItem = query.rootItem,
 		   let progress = core?.importItemNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
@@ -280,7 +281,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Navigation Bar Actions
 
-	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
+	@objc open func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 		let controller = ThemedAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
 		// Actions for folderAction
@@ -321,21 +322,18 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.present(controller, animated: true)
 	}
 
-	@objc func moreBarButtonPressed(_ sender: UIBarButtonItem) {
+	@objc open func moreBarButtonPressed(_ sender: UIBarButtonItem) {
 		guard let core = core, let rootItem = self.query.rootItem else {
 			return
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
-		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation, sender: sender)
-
-		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
-			self.present(asCard: moreViewController, animated: true)
+		if let moreItemHandling = self as? MoreItemHandling {
+			moreItemHandling.moreOptions(for: rootItem, at: .moreFolder, core: core, query: query, sender: sender)
 		}
 	}
 
 	// MARK: - Path Bread Crumb Action
-	@objc func showPathBreadCrumb(_ sender: UIButton) {
+	@objc open func showPathBreadCrumb(_ sender: UIButton) {
 		let tableViewController = BreadCrumbTableViewController()
 		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
 		tableViewController.parentNavigationController = self.navigationController
@@ -369,36 +367,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 
 		return self.itemAt(indexPath: indexPath)
-	}
-
-	open override func hasMessage(for item: OCItem) -> Bool {
-		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = (clientRootViewController as? ClientRootViewController)?.syncRecordIDsWithMessages else {
-			return false
-		}
-
-		return syncRecordIDsWithMessages.contains { (syncRecordID) -> Bool in
-			return activeSyncRecordIDs.contains(syncRecordID)
-		}
-	}
-
-	open override func messageButtonTapped(cell: ClientItemCell) {
-		if let item = cell.item {
-			self.showMessageFor(item: item)
-		}
-	}
-
-	// MARK: - Show message for item
-	func showMessageFor(item: OCItem) {
-		if let messages = (clientRootViewController as? ClientRootViewController)?.messageSelector?.selection,
-		   let firstMatchingMessage = messages.first(where: { (message) -> Bool in
-			guard let syncRecordID = message.syncIssue?.syncRecordID, let containsSyncRecordID = item.activeSyncRecordIDs?.contains(syncRecordID) else {
-				return false
-			}
-
-			return containsSyncRecordID
-		}) {
-			firstMatchingMessage.showInApp()
-		}
 	}
 
 	// MARK: - Updates
@@ -539,7 +507,9 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		if !self.tableView.isEditing {
-			self.populateToolbar()
+			if let multiSelectSupport = self as? MultiSelectSupport {
+				multiSelectSupport.populateToolbar()
+			}
 		}
 
 		var selectedItems = [OCItemDraggingValue]()

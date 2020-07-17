@@ -813,7 +813,7 @@ extension QueryFileListTableViewController {
 }
 
 extension ClientDirectoryPickerViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
@@ -836,7 +836,7 @@ extension ClientDirectoryPickerViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 }

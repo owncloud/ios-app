@@ -24,7 +24,12 @@ public protocol OpenItemHandling {
 }
 
 public protocol MoreItemHandling {
-	@discardableResult func moreOptions(for item: OCItem, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
+	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
+}
+
+public protocol InlineMessageSupport {
+	func hasInlineMessage(for item: OCItem) -> Bool
+	func showInlineMessageFor(item: OCItem)
 }
 
 open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
@@ -80,15 +85,25 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		if let moreItemHandling = self as? MoreItemHandling {
-			moreItemHandling.moreOptions(for: item, core: core, query: query, sender: cell)
+			moreItemHandling.moreOptions(for: item, at: .moreItem, core: core, query: query, sender: cell)
 		}
 	}
 
-	open func messageButtonTapped(cell: ClientItemCell) {
+	// MARK: - Inline message support
+	open func hasMessage(for item: OCItem) -> Bool {
+		if let inlineMessageSupport = self as? InlineMessageSupport {
+			return inlineMessageSupport.hasInlineMessage(for: item)
+		}
+
+		return false
 	}
 
-	open func hasMessage(for item: OCItem) -> Bool {
-		return false
+	open func messageButtonTapped(cell: ClientItemCell) {
+		if let item = cell.item {
+			if let inlineMessageSupport = self as? InlineMessageSupport {
+				inlineMessageSupport.showInlineMessageFor(item: item)
+			}
+		}
 	}
 
 	// MARK: - Visibility handling

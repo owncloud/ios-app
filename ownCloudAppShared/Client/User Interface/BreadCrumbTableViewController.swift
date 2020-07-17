@@ -17,9 +17,8 @@
 */
 
 import UIKit
-import ownCloudAppShared
 
-class BreadCrumbTableViewController: StaticTableViewController {
+open class BreadCrumbTableViewController: StaticTableViewController {
 
 	// MARK: - Constants
 	private let maxContentWidth : CGFloat = 500
@@ -28,11 +27,11 @@ class BreadCrumbTableViewController: StaticTableViewController {
 	private let imageHeight : CGFloat = 30
 
 	// MARK: - Instance Variables
-	var parentNavigationController : UINavigationController?
-	var queryPath : NSString = ""
-	var bookmarkShortName : String?
+	open var parentNavigationController : UINavigationController?
+	open var queryPath : NSString = ""
+	open var bookmarkShortName : String?
 
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.tableView.isScrollEnabled = false
