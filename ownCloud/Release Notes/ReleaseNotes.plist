@@ -380,7 +380,188 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 			<key>Version</key>
 			<string>11.4</string>
 			<key>ReleaseNotes</key>
-			<array/>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Better Issue Handling</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Folders on the top</string>
+					<key>Subtitle</key>
+					<string>There is a new option to show folders on the top, but you can also keep the existing behaviour.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Inline App Authentication</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Audio Playback</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>New: Image Upload: Change file format</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Serveral UI Improvements</string>
+					<key>Subtitle</key>
+					<string>Better accessibility access and polishing some UI elements.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>New: Take Image or Video</string>
+					<key>Subtitle</key>
+					<string>Take an image or video right from the app and upload it to your cloud.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Cellular Options</string>
+					<key>Subtitle</key>
+					<string>Giving the user more control over what cellular transfers. There are new settings, which feature can use cellular data or disable it at all.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Contextual Menu</string>
+					<key>Subtitle</key>
+					<string>Long press on a file list item or right click on your mouse shows a contextual menu.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Markup</string>
+					<key>Subtitle</key>
+					<string>Markup a document immediately opens in edit mode now.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>New: Multitouch gestures</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>New: App Version Information</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>New: Improved Media Upload</string>
+					<key>Subtitle</key>
+					<string>We added a possibility to specify different upload folder for video instant upload. The photo picker can now select items from your shared albums.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>New: Public Link Creation</string>
+					<key>Subtitle</key>
+					<string>When a public link was created, the URL will be copied to the clipboard. Furthermore it is possible to drag a public link to an other app.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Avoid duplicate photo upload</string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>Fix:</string>
+					<key>ImageData</key>
+					<string></string>
+					<key>ImageSystemName</key>
+					<string></string>
+				</dict>
+			</array>
 		</dict>
 	</array>
 </dict>
