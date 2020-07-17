@@ -17,18 +17,17 @@
 */
 
 import ownCloudSDK
-import ownCloudAppShared
 
-class CreateFolderAction : Action {
-	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
-	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Create folder".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
-	override class var keyCommand : String? { return "N" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+open class CreateFolderAction : Action {
+	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
+	override open class var category : ActionCategory? { return .normal }
+	override open class var name : String? { return "Create folder".localized }
+	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
+	override open class var keyCommand : String? { return "N" }
+	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
-	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count > 1 {
 			return .none
 		}
@@ -45,7 +44,7 @@ class CreateFolderAction : Action {
 	}
 
 	// MARK: - Action implementation
-	override func run() {
+	override open func run() {
 		guard context.items.count > 0 else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
@@ -106,7 +105,7 @@ class CreateFolderAction : Action {
 		})
 	}
 
-	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+	override open class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .toolbar || location == .folderAction || location == .contextMenuItem {
 			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}

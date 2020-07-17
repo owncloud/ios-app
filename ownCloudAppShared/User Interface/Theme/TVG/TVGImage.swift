@@ -48,11 +48,22 @@ public class TVGImage: NSObject {
 	}
 
 	public convenience init?(named name: String) {
-		guard let resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg") else {
+		var resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg")
+
+		if let resourcePath = resourceURL?.path, !FileManager.default.fileExists(atPath: resourcePath) {
+			resourceURL = nil
+		}
+
+		if resourceURL == nil {
+			resourceURL = Bundle(identifier: "com.owncloud.ownCloudAppShared")?.url(forResource: name, withExtension: "tvg")
+		}
+
+		guard let loadURL = resourceURL else {
+			Log.error("Error locating TVG image \(name)")
 			return nil
 		}
 
-		guard let data = try? Data(contentsOf: resourceURL) else {
+		guard let data = try? Data(contentsOf: loadURL) else {
 			Log.error("Error reading TVG image \(name)")
 			return nil
 		}

@@ -25,10 +25,8 @@
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
 		233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */; };
 		23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */; };
-		239F437E20D0EE6300B1276D /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BEF1172076667F00DD2E6F /* IssuesViewController.swift */; };
 		23D5241521491C670002C566 /* DisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D5241421491C670002C566 /* DisplayViewController.swift */; };
-		23D77FCD212BFBD100DE76F1 /* NamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */; };
 		23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */; };
 		23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */; };
 		23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */; };
@@ -169,8 +167,6 @@
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6E938522220322F30049D676 /* SplashImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E93851C220322F30049D676 /* SplashImage.png */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
-		6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
-		6ED1B80B21A4004900E16C95 /* CreateFolderAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */; };
 		6EE97DCA2204703C0062CCBC /* BackgroundImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EE97DC42204703C0062CCBC /* BackgroundImage.png */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -274,7 +270,6 @@
 		DC3393A022E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939F22E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift */; };
 		DC3393A222E0A71100DD3DA4 /* ItemPolicyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3393A122E0A71100DD3DA4 /* ItemPolicyCell.swift */; };
 		DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3393A322E0A75C00DD3DA4 /* ClientItemResolvingCell.swift */; };
-		DC3393A822E0C4ED00DD3DA4 /* icon-available-offline.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */; };
 		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
 		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC3BE0D92077BC6B002A0AC0 /* openssl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -328,13 +323,10 @@
 		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
 		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
-		DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */; };
-		DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
 		DCAEB05F21F9FB370067E147 /* OCBookmarkManager+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */; };
 		DCAEB06121F9FC510067E147 /* EarlGrey+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */; };
-		DCB504DD221EF07F007638BE /* status-flash.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB504D7221EF07E007638BE /* status-flash.tvg */; };
 		DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */; };
 		DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */; };
 		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
@@ -408,27 +400,40 @@
 		DCE4E45624C1ED8D0051722F /* ClientQueryViewController+InlineMessageSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E45524C1ED8D0051722F /* ClientQueryViewController+InlineMessageSupport.swift */; };
 		DCE4E45824C1F0F40051722F /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		DCE4E45924C1F0F70051722F /* ClientQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */; };
-		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
-		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
-		DCE5E8A32080D781005F60CE /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
-		DCE5E8A42080D781005F60CE /* audio.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88F2080D77E005F60CE /* audio.tvg */; };
-		DCE5E8A52080D781005F60CE /* folder.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8902080D77E005F60CE /* folder.tvg */; };
-		DCE5E8A62080D781005F60CE /* application.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8912080D77F005F60CE /* application.tvg */; };
-		DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */; };
-		DCE5E8A82080D781005F60CE /* folder-public.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8932080D77F005F60CE /* folder-public.tvg */; };
-		DCE5E8A92080D781005F60CE /* image.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8942080D77F005F60CE /* image.tvg */; };
-		DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */; };
-		DCE5E8AB2080D781005F60CE /* text.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8962080D77F005F60CE /* text.tvg */; };
-		DCE5E8AC2080D781005F60CE /* x-office-document.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8972080D77F005F60CE /* x-office-document.tvg */; };
-		DCE5E8AD2080D781005F60CE /* folder-starred.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8982080D77F005F60CE /* folder-starred.tvg */; };
-		DCE5E8AE2080D781005F60CE /* text-code.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8992080D780005F60CE /* text-code.tvg */; };
-		DCE5E8AF2080D781005F60CE /* application-pdf.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89A2080D780005F60CE /* application-pdf.tvg */; };
-		DCE5E8B02080D781005F60CE /* folder-drag-accept.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */; };
-		DCE5E8B12080D781005F60CE /* package-x-generic.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89C2080D780005F60CE /* package-x-generic.tvg */; };
-		DCE5E8B22080D781005F60CE /* text-calendar.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89D2080D780005F60CE /* text-calendar.tvg */; };
-		DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89E2080D780005F60CE /* text-vcard.tvg */; };
-		DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89F2080D780005F60CE /* folder-shared.tvg */; };
-		DCE5E8B52080D781005F60CE /* x-office-presentation.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */; };
+		DCE4E46B24C1F5610051722F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E46A24C1F5610051722F /* ShareViewController.swift */; };
+		DCE4E47224C1F5610051722F /* ownCloud Share Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DCE4E46824C1F5610051722F /* ownCloud Share Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DCE4E47B24C1F5870051722F /* ownCloudAppShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; };
+		DCE4E48024C1F58D0051722F /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
+		DCE4E48624C1F6B50051722F /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E48524C1F6B50051722F /* ShareNavigationController.swift */; };
+		DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */; };
+		DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */; };
+		DCE4E48924C1FB750051722F /* application-pdf.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89A2080D780005F60CE /* application-pdf.tvg */; };
+		DCE4E48A24C1FB750051722F /* application.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8912080D77F005F60CE /* application.tvg */; };
+		DCE4E48B24C1FB750051722F /* audio.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88F2080D77E005F60CE /* audio.tvg */; };
+		DCE4E48C24C1FB750051722F /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
+		DCE4E48D24C1FB750051722F /* folder-drag-accept.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */; };
+		DCE4E48E24C1FB750051722F /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
+		DCE4E48F24C1FB750051722F /* folder-public.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8932080D77F005F60CE /* folder-public.tvg */; };
+		DCE4E49024C1FB750051722F /* folder-shared.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89F2080D780005F60CE /* folder-shared.tvg */; };
+		DCE4E49124C1FB750051722F /* folder-starred.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8982080D77F005F60CE /* folder-starred.tvg */; };
+		DCE4E49224C1FB750051722F /* folder.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8902080D77E005F60CE /* folder.tvg */; };
+		DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
+		DCE4E49424C1FB750051722F /* icon-available-offline.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */; };
+		DCE4E49524C1FB750051722F /* icon-locked.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */; };
+		DCE4E49624C1FB750051722F /* icon-password-manager.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */; };
+		DCE4E49724C1FB750051722F /* image.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8942080D77F005F60CE /* image.tvg */; };
+		DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */; };
+		DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89C2080D780005F60CE /* package-x-generic.tvg */; };
+		DCE4E49A24C1FB750051722F /* status-flash.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB504D7221EF07E007638BE /* status-flash.tvg */; };
+		DCE4E49B24C1FB750051722F /* text-calendar.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89D2080D780005F60CE /* text-calendar.tvg */; };
+		DCE4E49C24C1FB750051722F /* text-code.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8992080D780005F60CE /* text-code.tvg */; };
+		DCE4E49D24C1FB750051722F /* text-vcard.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89E2080D780005F60CE /* text-vcard.tvg */; };
+		DCE4E49E24C1FB750051722F /* text.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8962080D77F005F60CE /* text.tvg */; };
+		DCE4E49F24C1FB750051722F /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
+		DCE4E4A024C1FB750051722F /* x-office-document.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8972080D77F005F60CE /* x-office-document.tvg */; };
+		DCE4E4A124C1FB750051722F /* x-office-presentation.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */; };
+		DCE4E4A224C1FB750051722F /* x-office-spreadsheet.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */; };
+		DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
 		DCFB74BB21AD5C46005796AF /* StaticLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44344321AC031600376B16 /* StaticLoginViewController.swift */; };
@@ -718,6 +723,27 @@
 			remoteGlobalIDString = C79800BA1A21CB5300380860;
 			remoteInfo = "PocketSVG (iOS)";
 		};
+		DCE4E47024C1F5610051722F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCE4E46724C1F5610051722F;
+			remoteInfo = "ownCloud Share Extension";
+		};
+		DCE4E47D24C1F5880051722F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 394A0AF822EEFC2C00603813;
+			remoteInfo = ownCloudAppShared;
+		};
+		DCE4E48324C1F6630051722F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
+			remoteInfo = ownCloudSDK;
+		};
 		DCE93FF221FCA434000E14F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
@@ -795,6 +821,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */,
+				DCE4E47224C1F5610051722F /* ownCloud Share Extension.appex in Embed App Extensions */,
 				DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -832,7 +859,7 @@
 		236735A521217C3500E5834A /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
 		23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSettingsSection.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		239F437D20D0EE6300B1276D /* icon-search.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; path = "icon-search.tvg"; sourceTree = "<group>"; };
+		239F437D20D0EE6300B1276D /* icon-search.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; name = "icon-search.tvg"; path = "../../ownCloud/Resources/icon-search.tvg"; sourceTree = "<group>"; };
 		23BEF1172076667F00DD2E6F /* IssuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesViewController.swift; sourceTree = "<group>"; };
 		23C5652F212167BD00BD4B47 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
 		23C56536212167BE00BD4B47 /* CardTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitionDelegate.swift; sourceTree = "<group>"; };
@@ -1087,7 +1114,7 @@
 		DC33939F22E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPolicyTableViewController.swift; sourceTree = "<group>"; };
 		DC3393A122E0A71100DD3DA4 /* ItemPolicyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPolicyCell.swift; sourceTree = "<group>"; };
 		DC3393A322E0A75C00DD3DA4 /* ClientItemResolvingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemResolvingCell.swift; sourceTree = "<group>"; };
-		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "icon-available-offline.tvg"; sourceTree = "<group>"; };
+		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-available-offline.tvg"; path = "../../ownCloud/Resources/icon-available-offline.tvg"; sourceTree = "<group>"; };
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
 		DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientRootViewController.swift; sourceTree = "<group>"; };
 		DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
@@ -1228,6 +1255,11 @@
 		DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileListTableViewController+OpenItemTableViewController.swift"; sourceTree = "<group>"; };
 		DCE4E44C24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QueryFileListTableViewController+Multiselect.swift"; sourceTree = "<group>"; };
 		DCE4E45524C1ED8D0051722F /* ClientQueryViewController+InlineMessageSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClientQueryViewController+InlineMessageSupport.swift"; sourceTree = "<group>"; };
+		DCE4E46824C1F5610051722F /* ownCloud Share Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud Share Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCE4E46A24C1F5610051722F /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		DCE4E46F24C1F5610051722F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCE4E48224C1F5B70051722F /* ownCloud Share Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ownCloud Share Extension.entitlements"; sourceTree = "<group>"; };
+		DCE4E48524C1F6B50051722F /* ShareNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareNavigationController.swift; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
@@ -1379,6 +1411,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCE4E46524C1F5610051722F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCE4E48024C1F58D0051722F /* ownCloudSDK.framework in Frameworks */,
+				DCE4E47B24C1F5870051722F /* ownCloudAppShared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1417,6 +1458,7 @@
 				39A7138122E79C6700089423 /* ownCloud Intents */,
 				394A0AFA22EEFC2C00603813 /* ownCloudAppShared */,
 				59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */,
+				DCE4E46924C1F5610051722F /* ownCloud Share Extension */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
@@ -1435,6 +1477,7 @@
 				59056CAA22414F3C00A18A22 /* ownCloudScreenshotsTests.xctest */,
 				39A7138022E79C6700089423 /* ownCloud Intents.appex */,
 				394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */,
+				DCE4E46824C1F5610051722F /* ownCloud Share Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1508,7 +1551,6 @@
 				DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */,
 				DC255E432319AD13007279B1 /* Scanner */,
 				6E586CF52199A70100F680C4 /* Actions+Extensions */,
-				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
 				DC3393A322E0A75C00DD3DA4 /* ClientItemResolvingCell.swift */,
 				39CD755323D8392D00193950 /* EditDocumentViewController.swift */,
 			);
@@ -1595,6 +1637,7 @@
 		394A0AFA22EEFC2C00603813 /* ownCloudAppShared */ = {
 			isa = PBXGroup;
 			children = (
+				DCCE54092080175B00067D1D /* TVGs */,
 				DCE4E43824C19A950051722F /* Licensing */,
 				DC0A354F24C0E18800FB58FC /* AppLock */,
 				DC0A354C24C0E09300FB58FC /* User Interface */,
@@ -1845,7 +1888,6 @@
 				396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */,
 				396C82FA2319AFDD00938262 /* CollaborateAction.swift */,
 				6E91F37D21ECA6FD009436D2 /* CopyAction.swift */,
-				6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */,
 				6E586CFF2199A78E00F680C4 /* DeleteAction.swift */,
 				6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */,
 				DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */,
@@ -2260,7 +2302,6 @@
 				39C31F8E22F1A4F50023923D /* Theming */,
 				6E93851C220322F30049D676 /* SplashImage.png */,
 				6EE97DC42204703C0062CCBC /* BackgroundImage.png */,
-				DCCE54092080175B00067D1D /* TVGs */,
 				233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */,
 				233BDEA6204FEFE500C06732 /* Assets.xcassets */,
 				233BDEAB204FEFE500C06732 /* Info.plist */,
@@ -2470,6 +2511,7 @@
 				239F437D20D0EE6300B1276D /* icon-search.tvg */,
 			);
 			name = TVGs;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		DCD1301923A25D0500255779 /* Transactions */ = {
@@ -2529,6 +2571,7 @@
 		DCE4E42F24C1963F0051722F /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
 				394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */,
 				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
 				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
@@ -2551,6 +2594,7 @@
 			isa = PBXGroup;
 			children = (
 				6E37F48A2188B27D00CF16CA /* Action.swift */,
+				6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -2571,6 +2615,17 @@
 				DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */,
 			);
 			path = Licensing;
+			sourceTree = "<group>";
+		};
+		DCE4E46924C1F5610051722F /* ownCloud Share Extension */ = {
+			isa = PBXGroup;
+			children = (
+				DCE4E48224C1F5B70051722F /* ownCloud Share Extension.entitlements */,
+				DCE4E46A24C1F5610051722F /* ShareViewController.swift */,
+				DCE4E48524C1F6B50051722F /* ShareNavigationController.swift */,
+				DCE4E46F24C1F5610051722F /* Info.plist */,
+			);
+			path = "ownCloud Share Extension";
 			sourceTree = "<group>";
 		};
 		DCE5E8B62080D8B8005F60CE /* SDK Extensions */ = {
@@ -2846,6 +2901,7 @@
 				DCC085702293F1FD008CC05C /* PBXTargetDependency */,
 				39A7138622E79C6700089423 /* PBXTargetDependency */,
 				394A0AFF22EEFC2C00603813 /* PBXTargetDependency */,
+				DCE4E47124C1F5610051722F /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -3014,13 +3070,32 @@
 			productReference = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		DCE4E46724C1F5610051722F /* ownCloud Share Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCE4E47A24C1F5610051722F /* Build configuration list for PBXNativeTarget "ownCloud Share Extension" */;
+			buildPhases = (
+				DCE4E46424C1F5610051722F /* Sources */,
+				DCE4E46524C1F5610051722F /* Frameworks */,
+				DCE4E46624C1F5610051722F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCE4E48424C1F6630051722F /* PBXTargetDependency */,
+				DCE4E47E24C1F5880051722F /* PBXTargetDependency */,
+			);
+			name = "ownCloud Share Extension";
+			productName = "ownCloud Share Extension";
+			productReference = DCE4E46824C1F5610051722F /* ownCloud Share Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		233BDE94204FEFE500C06732 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
+				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
@@ -3085,6 +3160,10 @@
 							};
 						};
 					};
+					DCE4E46724C1F5610051722F = {
+						CreatedOnToolsVersion = 11.5;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 233BDE97204FEFE500C06732 /* Build configuration list for PBXProject "ownCloud" */;
@@ -3140,6 +3219,7 @@
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
 				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
 				39A7137F22E79C6700089423 /* ownCloud Intents */,
+				DCE4E46724C1F5610051722F /* ownCloud Share Extension */,
 				DCC0855B2293F1FD008CC05C /* ownCloudApp */,
 				394A0AF822EEFC2C00603813 /* ownCloudAppShared */,
 				DCC085632293F1FD008CC05C /* ownCloudAppTests */,
@@ -3233,50 +3313,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE5E8AB2080D781005F60CE /* text.tvg in Resources */,
-				239F437E20D0EE6300B1276D /* icon-search.tvg in Resources */,
-				DCE5E8AC2080D781005F60CE /* x-office-document.tvg in Resources */,
-				DCE5E8AF2080D781005F60CE /* application-pdf.tvg in Resources */,
 				6EE97DCA2204703C0062CCBC /* BackgroundImage.png in Resources */,
-				DCE5E8A82080D781005F60CE /* folder-public.tvg in Resources */,
-				DCE5E8B12080D781005F60CE /* package-x-generic.tvg in Resources */,
 				398393BE246D63B0001A212B /* Branding-background.png in Resources */,
-				DCE5E8AD2080D781005F60CE /* folder-starred.tvg in Resources */,
 				3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */,
-				DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */,
 				398393BF246D63B0001A212B /* Branding-logo.png in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				6E938522220322F30049D676 /* SplashImage.png in Resources */,
-				DCB504DD221EF07F007638BE /* status-flash.tvg in Resources */,
-				DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */,
-				DCE5E8A42080D781005F60CE /* audio.tvg in Resources */,
 				DCE0FC4723E42ACB0037B4AD /* Localized.strings in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
-				DC3393A822E0C4ED00DD3DA4 /* icon-available-offline.tvg in Resources */,
-				6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */,
 				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,
-				DCE5E8B02080D781005F60CE /* folder-drag-accept.tvg in Resources */,
-				DCE5E8A62080D781005F60CE /* application.tvg in Resources */,
 				DCE684F6241BD4E800799C30 /* Branding.plist in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
 				3995E53123605DE7003525EB /* bookmark-icon.png in Resources */,
-				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
-				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,
-				DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */,
 				59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */,
-				DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */,
 				595E2CA721EE4FC400F0E95D /* PropfindResponse.xml in Resources */,
-				DCE5E8AE2080D781005F60CE /* text-code.tvg in Resources */,
-				DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */,
-				DCE5E8A52080D781005F60CE /* folder.tvg in Resources */,
-				DCE5E8A12080D781005F60CE /* video.tvg in Resources */,
-				DCE5E8A32080D781005F60CE /* file.tvg in Resources */,
-				DCE5E8B22080D781005F60CE /* text-calendar.tvg in Resources */,
-				DCE5E8A92080D781005F60CE /* image.tvg in Resources */,
-				DCE5E8B52080D781005F60CE /* x-office-presentation.tvg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3294,7 +3347,34 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCE4E49B24C1FB750051722F /* text-calendar.tvg in Resources */,
+				DCE4E49C24C1FB750051722F /* text-code.tvg in Resources */,
+				DCE4E48F24C1FB750051722F /* folder-public.tvg in Resources */,
+				DCE4E49224C1FB750051722F /* folder.tvg in Resources */,
+				DCE4E49524C1FB750051722F /* icon-locked.tvg in Resources */,
+				DCE4E49D24C1FB750051722F /* text-vcard.tvg in Resources */,
+				DCE4E48C24C1FB750051722F /* file.tvg in Resources */,
+				DCE4E49F24C1FB750051722F /* video.tvg in Resources */,
+				DCE4E49424C1FB750051722F /* icon-available-offline.tvg in Resources */,
 				DC0A356E24C0E42200FB58FC /* PasscodeViewController.xib in Resources */,
+				DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */,
+				DCE4E48E24C1FB750051722F /* folder-external.tvg in Resources */,
+				DCE4E48924C1FB750051722F /* application-pdf.tvg in Resources */,
+				DCE4E48D24C1FB750051722F /* folder-drag-accept.tvg in Resources */,
+				DCE4E49E24C1FB750051722F /* text.tvg in Resources */,
+				DCE4E48B24C1FB750051722F /* audio.tvg in Resources */,
+				DCE4E49624C1FB750051722F /* icon-password-manager.tvg in Resources */,
+				DCE4E49724C1FB750051722F /* image.tvg in Resources */,
+				DCE4E49A24C1FB750051722F /* status-flash.tvg in Resources */,
+				DCE4E4A024C1FB750051722F /* x-office-document.tvg in Resources */,
+				DCE4E49124C1FB750051722F /* folder-starred.tvg in Resources */,
+				DCE4E4A124C1FB750051722F /* x-office-presentation.tvg in Resources */,
+				DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */,
+				DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */,
+				DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */,
+				DCE4E48A24C1FB750051722F /* application.tvg in Resources */,
+				DCE4E49024C1FB750051722F /* folder-shared.tvg in Resources */,
+				DCE4E4A224C1FB750051722F /* x-office-spreadsheet.tvg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3326,6 +3406,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC576EC022647A070087316D /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCE4E46624C1F5610051722F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3511,7 +3598,6 @@
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
 				3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */,
-				6ED1B80B21A4004900E16C95 /* CreateFolderAction.swift in Sources */,
 				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
@@ -3530,7 +3616,6 @@
 				DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */,
 				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,
 				3968C882239C54AD00AC28AC /* ReleaseNotesTableViewController.swift in Sources */,
-				23D77FCD212BFBD100DE76F1 /* NamingViewController.swift in Sources */,
 				390B51E02292DBB100935E24 /* SharingTableViewController.swift in Sources */,
 				DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */,
 				4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */,
@@ -3692,6 +3777,7 @@
 				DCE4E45824C1F0F40051722F /* ClientDirectoryPickerViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
 				DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */,
+				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
 				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
 				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
@@ -3713,6 +3799,7 @@
 				DCE4E45924C1F0F70051722F /* ClientQueryViewController.swift in Sources */,
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
+				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
 				DC0A359724C0E64500FB58FC /* UIImageView+Thumbnails.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
@@ -3858,6 +3945,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCE4E46424C1F5610051722F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCE4E46B24C1F5610051722F /* ShareViewController.swift in Sources */,
+				DCE4E48624C1F6B50051722F /* ShareNavigationController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -3995,6 +4091,21 @@
 			isa = PBXTargetDependency;
 			name = "PocketSVG (iOS)";
 			targetProxy = DCE4E42524C10E050051722F /* PBXContainerItemProxy */;
+		};
+		DCE4E47124C1F5610051722F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCE4E46724C1F5610051722F /* ownCloud Share Extension */;
+			targetProxy = DCE4E47024C1F5610051722F /* PBXContainerItemProxy */;
+		};
+		DCE4E47E24C1F5880051722F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 394A0AF822EEFC2C00603813 /* ownCloudAppShared */;
+			targetProxy = DCE4E47D24C1F5880051722F /* PBXContainerItemProxy */;
+		};
+		DCE4E48424C1F6630051722F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudSDK;
+			targetProxy = DCE4E48324C1F6630051722F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -4382,7 +4493,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -4404,7 +4515,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-Intents";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -4643,6 +4754,57 @@
 			};
 			name = Release;
 		};
+		DCE4E47324C1F5610051722F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud Share Extension/ownCloud Share Extension.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 161;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "ownCloud Share Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 11.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Share-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCE4E47424C1F5610051722F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud Share Extension/ownCloud Share Extension.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 161;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud Share Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 11.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Share-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -4732,6 +4894,15 @@
 			buildConfigurations = (
 				DCC6566620C9B7E400110A97 /* Debug */,
 				DCC6566720C9B7E400110A97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCE4E47A24C1F5610051722F /* Build configuration list for PBXNativeTarget "ownCloud Share Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCE4E47324C1F5610051722F /* Debug */,
+				DCE4E47424C1F5610051722F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

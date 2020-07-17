@@ -134,8 +134,11 @@ public class AppLockManager: NSObject {
 		}
 	}
 
+	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
+	public var passwordViewHostViewController: UIViewController?
+
 	// MARK: - Init
-	static public var shared = AppLockManager()
+	public static var shared = AppLockManager()
 
 	public override init() {
 		userDefaults = OCAppIdentity.shared.userDefaults!
@@ -166,7 +169,7 @@ public class AppLockManager: NSObject {
 		}
 	}
 
-	public func dismissLockscreen(animated:Bool) {
+	func dismissLockscreen(animated:Bool) {
 		if animated {
 			let animationGroup = DispatchGroup()
 
@@ -200,48 +203,26 @@ public class AppLockManager: NSObject {
 	private var passcodeControllerByWindow : NSMapTable<ThemeWindow, PasscodeViewController> = NSMapTable.weakToStrongObjects()
 	private var applockWindowByWindow : NSMapTable<ThemeWindow, AppLockWindow> = NSMapTable.weakToStrongObjects()
 
-	@objc public func updateLockscreens() {
+	@objc private func cancelAction () {
+		let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+		passwordViewHostViewController?.extensionContext?.cancelRequest(withError: error)
+	}
+
+	@objc func updateLockscreens() {
 		if lockscreenOpen {
-			for themeWindow in ThemeWindow.themeWindows {
-				if let passcodeViewController = passcodeControllerByWindow.object(forKey: themeWindow) {
+			if let passwordViewHostViewController = passwordViewHostViewController {
+				if let passcodeViewController = passwordViewHostViewController.children.last as? PasscodeViewController {
 					passcodeViewController.screenBlurringEnabled = lockscreenOpenForced
 				} else {
-					var appLockWindow : AppLockWindow
-					var passcodeViewController : PasscodeViewController
+					let passcodeViewController = passwordViewController()
+					let navigationController = ThemeNavigationController(rootViewController: passcodeViewController)
+					navigationController.modalPresentationStyle = .overFullScreen
 
-					passcodeViewController = PasscodeViewController(completionHandler: { (viewController: PasscodeViewController, passcode: String) in
-						self.attemptUnlock(with: passcode, passcodeViewController: viewController)
-					})
+					let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
+					passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
+					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appName ?? "ownCloud"
 
-					passcodeViewController.message = "Enter code".localized
-					passcodeViewController.cancelButtonHidden = false
-
-					passcodeViewController.screenBlurringEnabled = lockscreenOpenForced && !self.shouldDisplayLockscreen
-
-					if #available(iOS 13, *) {
-						if let windowScene = themeWindow.windowScene {
-							appLockWindow = AppLockWindow(windowScene: windowScene)
-						} else {
-							appLockWindow = AppLockWindow(frame: UIScreen.main.bounds)
-						}
-					} else {
-						appLockWindow = AppLockWindow(frame: UIScreen.main.bounds)
-					}
-					/*
-						Workaround to the lack of status bar animation when returning true for prefersStatusBarHidden in
-						PasscodeViewController.
-
-						The documentation notes that "The ordering of windows within a given window level is not guaranteed.",
-						so that with a future iOS update this might break and the status bar be displayed regardless. In that
-						case, implement prefersStatusBarHidden in PasscodeViewController to return true and remove the dismiss
-						animation (the re-appearance of the status bar will lead to a jump in the UI otherwise).
-					*/
-					appLockWindow.windowLevel = UIWindow.Level.statusBar
-					appLockWindow.rootViewController = passcodeViewController
-					appLockWindow.makeKeyAndVisible()
-
-					passcodeControllerByWindow.setObject(passcodeViewController, forKey: themeWindow)
-					applockWindowByWindow.setObject(appLockWindow, forKey: themeWindow)
+					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
 
 					self.startLockCountdown()
 
@@ -250,27 +231,87 @@ public class AppLockManager: NSObject {
 						updateLockCountdown()
 					}
 				}
+			} else {
+				for themeWindow in ThemeWindow.themeWindows {
+					if let passcodeViewController = passcodeControllerByWindow.object(forKey: themeWindow) {
+						passcodeViewController.screenBlurringEnabled = lockscreenOpenForced
+					} else {
+						var appLockWindow : AppLockWindow
+						let passcodeViewController = passwordViewController()
+
+						if #available(iOS 13, *) {
+							if let windowScene = themeWindow.windowScene {
+								appLockWindow = AppLockWindow(windowScene: windowScene)
+							} else {
+								appLockWindow = AppLockWindow(frame: UIScreen.main.bounds)
+							}
+						} else {
+							appLockWindow = AppLockWindow(frame: UIScreen.main.bounds)
+						}
+						/*
+						Workaround to the lack of status bar animation when returning true for prefersStatusBarHidden in
+						PasscodeViewController.
+
+						The documentation notes that "The ordering of windows within a given window level is not guaranteed.",
+						so that with a future iOS update this might break and the status bar be displayed regardless. In that
+						case, implement prefersStatusBarHidden in PasscodeViewController to return true and remove the dismiss
+						animation (the re-appearance of the status bar will lead to a jump in the UI otherwise).
+						*/
+						appLockWindow.windowLevel = UIWindow.Level.statusBar
+						appLockWindow.rootViewController = passcodeViewController
+						appLockWindow.makeKeyAndVisible()
+
+						passcodeControllerByWindow.setObject(passcodeViewController, forKey: themeWindow)
+						applockWindowByWindow.setObject(appLockWindow, forKey: themeWindow)
+
+						self.startLockCountdown()
+
+						if self.shouldDisplayCountdown {
+							passcodeViewController.keypadButtonsHidden = true
+							updateLockCountdown()
+						}
+					}
+				}
 			}
 		} else {
-			for themeWindow in ThemeWindow.themeWindows {
-				if let appLockWindow = applockWindowByWindow.object(forKey: themeWindow) {
-					appLockWindow.isHidden = true
+			if let passwordViewHostViewController = passwordViewHostViewController, let passcodeViewController = passwordViewHostViewController.topMostViewController as? PasscodeViewController {
+				passcodeViewController.dismiss(animated: false, completion: nil)
+			} else {
+				for themeWindow in ThemeWindow.themeWindows {
+					if let appLockWindow = applockWindowByWindow.object(forKey: themeWindow) {
+						appLockWindow.isHidden = true
 
-					passcodeControllerByWindow.removeObject(forKey: themeWindow)
-					applockWindowByWindow.removeObject(forKey: themeWindow)
+						passcodeControllerByWindow.removeObject(forKey: themeWindow)
+						applockWindowByWindow.removeObject(forKey: themeWindow)
+					}
 				}
 			}
 		}
 	}
 
+	func passwordViewController() -> PasscodeViewController {
+		var passcodeViewController : PasscodeViewController
+
+		passcodeViewController = PasscodeViewController(completionHandler: { (viewController: PasscodeViewController, passcode: String) in
+			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
+		})
+
+		passcodeViewController.message = "Enter code".localized
+		passcodeViewController.cancelButtonHidden = false
+
+		passcodeViewController.screenBlurringEnabled = lockscreenOpenForced && !self.shouldDisplayLockscreen
+
+		return passcodeViewController
+	}
+
 	// MARK: - App Events
-	@objc public func appDidEnterBackground() {
+	@objc func appDidEnterBackground() {
 		lastApplicationBackgroundedDate = Date()
 
 		showLockscreenIfNeeded(forceShow: true)
 	}
 
-	@objc public func appWillEnterForeground() {
+	@objc func appWillEnterForeground() {
 		if self.shouldDisplayLockscreen {
 			showLockscreenIfNeeded()
 		} else {
@@ -279,7 +320,7 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - Unlock
-	public func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil, passcodeViewController: PasscodeViewController? = nil) {
+	func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil, passcodeViewController: PasscodeViewController? = nil) {
 		if testPasscode == self.passcode {
 			unlocked = true
 			lastApplicationBackgroundedDate = nil
@@ -447,3 +488,4 @@ public class AppLockManager: NSObject {
 		}
 	}
 }
+

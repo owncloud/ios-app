@@ -221,7 +221,7 @@ extension ThemeNavigationController {
 }
 
 extension NamingViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 		if let leftItem = self.navigationItem.leftBarButtonItem, let action = leftItem.action {
@@ -236,7 +236,7 @@ extension NamingViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
