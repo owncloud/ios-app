@@ -1,5 +1,5 @@
 //
-//  RenameViewController.swift
+//  NamingViewController.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 02/08/2018.
