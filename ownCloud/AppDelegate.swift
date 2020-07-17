@@ -214,11 +214,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension UserInterfaceContext : UserInterfaceContextProvider {
-	public func provideMainWindow() -> ThemeWindow? {
+	public func provideRootView() -> UIView? {
 		return (UIApplication.shared.delegate as? AppDelegate)?.window
 	}
 
-	public func provideCurrentWindow() -> ThemeWindow? {
+	public func provideCurrentWindow() -> UIWindow? {
 		return UIApplication.shared.windows.first as? ThemeWindow
 	}
 }

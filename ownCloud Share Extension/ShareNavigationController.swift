@@ -20,16 +20,18 @@ import UIKit
 import ownCloudAppShared
 
 @objc(ShareNavigationController)
-class ShareNavigationController: ThemeNavigationController {
-
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-
+class ShareNavigationController: AppExtensionNavigationController {
+	override func setupViewControllers() {
 		self.setViewControllers([ShareViewController(style: .grouped)], animated: false)
-    }
+	}
+}
 
-    @available(*, unavailable)
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+extension UserInterfaceContext : UserInterfaceContextProvider {
+	public func provideRootView() -> UIView? {
+		return AppExtensionNavigationController.mainNavigationController?.view
+	}
+
+	public func provideCurrentWindow() -> UIWindow? {
+		return AppExtensionNavigationController.mainNavigationController?.view.window
+	}
 }

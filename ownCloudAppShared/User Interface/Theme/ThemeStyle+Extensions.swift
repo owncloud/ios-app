@@ -62,7 +62,7 @@ extension ThemeStyle {
 
 	static public var preferredStyle : ThemeStyle {
 		set {
-			UserDefaults.standard.setValue(newValue.identifier, forKey: "preferred-theme-style")
+			OCAppIdentity.shared.userDefaults?.setValue(newValue.identifier, forKey: "preferred-theme-style")
 
 			considerAppearanceUpdate(animated: true)
 		}
@@ -70,7 +70,7 @@ extension ThemeStyle {
 		get {
 			var style : ThemeStyle?
 
-			if let preferredThemeStyleIdentifier = UserDefaults.standard.string(forKey: "preferred-theme-style") {
+			if let preferredThemeStyleIdentifier = OCAppIdentity.shared.userDefaults?.string(forKey: "preferred-theme-style") {
 				style = .forIdentifier(preferredThemeStyleIdentifier)
 			}
 
@@ -96,7 +96,7 @@ extension ThemeStyle {
 	}
 
 	static public func considerAppearanceUpdate(animated: Bool = false) {
-		let themeWindow : ThemeWindow? = UserInterfaceContext.shared.mainWindow
+		let rootView : UIView? = UserInterfaceContext.shared.rootView
 		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
 
 		if #available(iOS 13, *) {
@@ -119,7 +119,7 @@ extension ThemeStyle {
 			let themeCollection = ThemeCollection(with: applyStyle)
 
 			if #available(iOS 13, *) {
-				if let themeWindowSubviews = themeWindow?.subviews {
+				if let themeWindowSubviews = rootView?.subviews {
 					for view in themeWindowSubviews {
 						view.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
 					}
@@ -136,7 +136,7 @@ extension ThemeStyle {
 
 	static public var followSystemAppearance : Bool {
 		set {
-			UserDefaults.standard.setValue(newValue, forKey: "theme-style-follows-system-appearance")
+			OCAppIdentity.shared.userDefaults?.setValue(newValue, forKey: "theme-style-follows-system-appearance")
 
 			considerAppearanceUpdate()
 		}
@@ -144,7 +144,7 @@ extension ThemeStyle {
 		get {
 			var followSystemAppearance : Bool?
 
-			if let themeStyleFollowsSystemAppearance = UserDefaults.standard.object(forKey: "theme-style-follows-system-appearance") as? Bool {
+			if let themeStyleFollowsSystemAppearance = OCAppIdentity.shared.userDefaults?.object(forKey: "theme-style-follows-system-appearance") as? Bool {
 				followSystemAppearance = themeStyleFollowsSystemAppearance
 			}
 

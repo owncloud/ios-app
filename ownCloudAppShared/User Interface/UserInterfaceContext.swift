@@ -19,9 +19,9 @@
 import UIKit
 
 public protocol UserInterfaceContextProvider: class {
-	func provideMainWindow() -> ThemeWindow? /// provide
+	func provideRootView() -> UIView? /// provide "root-most" view for app
 
-	func provideCurrentWindow() -> ThemeWindow? // provide front-most window
+	func provideCurrentWindow() -> UIWindow? // provide front-most window of the app
 }
 
 open class UserInterfaceContext: NSObject {
@@ -37,11 +37,11 @@ open class UserInterfaceContext: NSObject {
 
 	public var provider : UserInterfaceContextProvider?
 
-	public var mainWindow : ThemeWindow? {
-		return provider?.provideMainWindow()
+	public var rootView : UIView? {
+		return provider?.provideRootView()
 	}
 
-	public var currentWindow : ThemeWindow? {
+	public var currentWindow : UIWindow? {
 		return provider?.provideCurrentWindow()
 	}
 }
