@@ -17,23 +17,22 @@
 */
 
 import UIKit
-import ownCloudAppShared
 
-class MessageView: UIView {
+open class MessageView: UIView {
 
-	var mainView : UIView
-	var messageView : UIView?
-	var messageContainerView : UIView?
-	var messageImageView : VectorImageView?
-	var messageTitleLabel : UILabel?
-	var messageMessageLabel : UILabel?
-	var messageThemeApplierToken : ThemeApplierToken?
-	var composeViewBottomConstraint: NSLayoutConstraint!
+	open var mainView : UIView
+	open var messageView : UIView?
+	open var messageContainerView : UIView?
+	open var messageImageView : VectorImageView?
+	open var messageTitleLabel : UILabel?
+	open var messageMessageLabel : UILabel?
+	open var messageThemeApplierToken : ThemeApplierToken?
+	open var composeViewBottomConstraint: NSLayoutConstraint!
 	private var compactConstraints: [NSLayoutConstraint] = []
 	private var regularConstraints: [NSLayoutConstraint] = []
-	var keyboardHeight : CGFloat = 0
+	open var keyboardHeight : CGFloat = 0
 
-	init(add to: UIView) {
+	public init(add to: UIView) {
 		mainView = to
 		super.init(frame: to.frame)
 
@@ -43,7 +42,7 @@ class MessageView: UIView {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -57,7 +56,7 @@ class MessageView: UIView {
 		}
 	}
 
-	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
+	open func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
 		if !show {
 			if messageView?.superview != nil {
 				messageView?.removeFromSuperview()
@@ -207,7 +206,7 @@ class MessageView: UIView {
 		render()
 	}
 
-	func render() {
+	open func render() {
 		switch UIScreen.main.traitCollection.verticalSizeClass {
 		case .regular:
 			NSLayoutConstraint.deactivate(compactConstraints)

@@ -18,29 +18,28 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class MoreViewHeader: UIView {
+open class MoreViewHeader: UIView {
 	private var iconView: UIImageView
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
 	private var favoriteButton: UIButton
-	var activityIndicator : UIActivityIndicatorView
+	public var activityIndicator : UIActivityIndicatorView
 	private var showsIcon : Bool = true
 
-	var thumbnailSize = CGSize(width: 60, height: 60)
-	let favoriteSize = CGSize(width: 44, height: 44)
+	public var thumbnailSize = CGSize(width: 60, height: 60)
+	public let favoriteSize = CGSize(width: 44, height: 44)
 
-	var showFavoriteButton: Bool
-	var showActivityIndicator: Bool
-	var adaptBackgroundColor : Bool
+	public var showFavoriteButton: Bool
+	public var showActivityIndicator: Bool
+	public var adaptBackgroundColor : Bool
 
-	var item: OCItem
-	weak var core: OCCore?
-	var url: URL?
+	public var item: OCItem
+	public weak var core: OCCore?
+	public var url: URL?
 
-	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
+	public init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
 		self.item = item
 		self.core = core
 		self.showFavoriteButton = favorite
@@ -63,7 +62,7 @@ class MoreViewHeader: UIView {
 		render()
 	}
 
-	init(url : URL) {
+	public init(url : URL) {
 		self.showFavoriteButton = false
 		self.showActivityIndicator = false
 		self.adaptBackgroundColor = false
@@ -223,11 +222,11 @@ class MoreViewHeader: UIView {
 		titleLabel.numberOfLines = 0
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	public required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	@objc func toogleFavoriteState() {
+	@objc public func toogleFavoriteState() {
 		if item.isFavorite == true {
 			item.isFavorite = false
 		} else {
@@ -243,7 +242,7 @@ class MoreViewHeader: UIView {
 		})
 	}
 
-	func updateFavoriteButtonImage() {
+	public func updateFavoriteButtonImage() {
 		if item.isFavorite == true {
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
@@ -257,7 +256,7 @@ class MoreViewHeader: UIView {
 }
 
 extension MoreViewHeader: Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		titleLabel.applyThemeCollection(collection)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message)
 		activityIndicator.style = collection.activityIndicatorViewStyle

@@ -86,17 +86,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
     @discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
-		guard let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
+		guard let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
 			return false
 		}
 
-		if activity.title == ownCloudOpenAccountPath {
+		if activity.title == OCBookmark.ownCloudOpenAccountPath {
 			serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
 			window?.windowScene?.userActivity = bookmark.openAccountUserActivity
 
 			return true
-		} else if activity.title == ownCloudOpenItemPath {
-			guard let itemLocalID = activity.userInfo?[ownCloudOpenItemUuidKey] as? String else {
+		} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
+			guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
 				return false
 			}
 

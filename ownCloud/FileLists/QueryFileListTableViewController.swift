@@ -21,7 +21,18 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
+public extension OCQueryState {
+	var isFinal: Bool {
+		switch self {
+		case .idle, .targetRemoved, .contentsFromCache, .stopped:
+			return true
+		default:
+			return false
+		}
+	}
+}
+
+open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
 	var query : OCQuery
 
 	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
@@ -61,7 +72,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -76,8 +87,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Sorting
-	var sortBar: SortBar?
-	var sortMethod: SortMethod {
+	open var sortBar: SortBar?
+	open var sortMethod: SortMethod {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
 		}
@@ -87,7 +98,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			return sort
 		}
 	}
-	var sortDirection: SortDirection {
+	open var sortDirection: SortDirection {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
 		}
@@ -99,10 +110,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Search
-	var searchController: UISearchController?
+	open var searchController: UISearchController?
 
 	// MARK: - Search: UISearchResultsUpdating Delegate
-	func updateSearchResults(for searchController: UISearchController) {
+	open func updateSearchResults(for searchController: UISearchController) {
 		let searchText = searchController.searchBar.text!
 
 		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
@@ -128,9 +139,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Query progress reporting
-	var showQueryProgress : Bool = true
+	open var showQueryProgress : Bool = true
 
-	var queryProgressSummary : ProgressSummary? {
+	open var queryProgressSummary : ProgressSummary? {
 		willSet {
 			if newValue != nil, showQueryProgress {
 				progressSummarizer?.pushFallbackSummary(summary: newValue!)
@@ -144,19 +155,19 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 	}
 
-	var queryStateObservation : NSKeyValueObservation?
+	open var queryStateObservation : NSKeyValueObservation?
 
 	// MARK: - Pull-to-refresh handling
-	override var pullToRefreshVerticalOffset: CGFloat {
+	override open var pullToRefreshVerticalOffset: CGFloat {
 		return searchController?.searchBar.frame.height ?? 0
 	}
 
-	override func performPullToRefreshAction() {
+	override open func performPullToRefreshAction() {
 		super.performPullToRefreshAction()
 		core?.reload(query)
 	}
 
-	func updateQueryProgressSummary() {
+	open func updateQueryProgressSummary() {
 		let summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
 		switch query.state {
@@ -197,16 +208,16 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	// MARK: - SortBarDelegate
 	var shallShowSortBar = true
 
-	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+	open func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query.sortComparator = sortMethod.comparator(direction: sortDirection)
 	}
 
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+	open func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
 		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 
-	func toggleSelectMode() {
+	open func toggleSelectMode() {
 		if !tableView.isEditing {
 			multipleSelectionButtonPressed()
 		} else {
@@ -215,11 +226,11 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Query Delegate
-	func query(_ query: OCQuery, failedWithError error: Error) {
+	open func query(_ query: OCQuery, failedWithError error: Error) {
 		// Not applicable atm
 	}
 
-	func queryHasChangesAvailable(_ query: OCQuery) {
+	open func queryHasChangesAvailable(_ query: OCQuery) {
 		queryRefreshRateLimiter.runRateLimitedBlock {
 			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
 				OnMainThread {
@@ -272,7 +283,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Themeable
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.searchController?.searchBar.applyThemeCollection(collection)
@@ -280,7 +291,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Events
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.tableView.allowsMultipleSelectionDuringEditing = true
@@ -333,7 +344,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		openMultipleBarButtonItem?.isEnabled = false
 	}
 
-	override func viewDidLayoutSubviews() {
+	open override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
@@ -347,7 +358,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		core?.start(query)
@@ -359,7 +370,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		updateQueryProgressSummary()
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		queryStateObservation?.invalidate()
@@ -374,21 +385,21 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Item retrieval
-	override func itemAt(indexPath : IndexPath) -> OCItem? {
+	open override func itemAt(indexPath : IndexPath) -> OCItem? {
 		return items[indexPath.row]
 	}
 
 	// MARK: - Single item query creation
-	override func query(forItem: OCItem) -> OCQuery? {
+	open override func query(forItem: OCItem) -> OCQuery? {
 		return query
 	}
 
 	// MARK: - Table view data source
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.items.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 		if let newItem = itemAt(indexPath: indexPath) {
 
@@ -411,7 +422,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	// MARK: - Table view delegate
 
-	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+	open override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
 		if sortMethod == .alphabetically {
 			var indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 			if sortDirection == .descendant {
@@ -439,7 +450,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		return 0
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
 			super.tableView(tableView, didSelectRowAt: indexPath)
@@ -448,7 +459,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+	open override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		if tableView.isEditing {
 			updateMultiSelectionUI()
 		}
@@ -617,7 +628,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 }
 
-@available(iOS 13, *) extension QueryFileListTableViewController {
+@available(iOS 13, *) public extension QueryFileListTableViewController {
 	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
 		return !DisplaySettings.shared.preventDraggingFiles
 	}

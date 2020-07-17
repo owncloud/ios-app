@@ -19,15 +19,12 @@
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
-		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
-		232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
 		232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAE2097260400EE22E4 /* SettingsViewController.swift */; };
 		233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDE9F204FEFE500C06732 /* AppDelegate.swift */; };
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */; };
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
 		233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */; };
-		236735A621217C3500E5834A /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236735A521217C3500E5834A /* MoreViewController.swift */; };
 		23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */; };
 		239F437E20D0EE6300B1276D /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BEF1172076667F00DD2E6F /* IssuesViewController.swift */; };
@@ -44,7 +41,6 @@
 		390B51E02292DBB100935E24 /* SharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B51DF2292DBB100935E24 /* SharingTableViewController.swift */; };
 		39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
 		3912208223436EB80026C290 /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3912208123436EB80026C290 /* SortMethod.swift */; };
-		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
 		393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
@@ -59,8 +55,6 @@
 		394E1FDA233E2D64009D2897 /* FavoriteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FD9233E2D64009D2897 /* FavoriteAction.swift */; };
 		394E1FDC233E3750009D2897 /* UnfavoriteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FDB233E3750009D2897 /* UnfavoriteAction.swift */; };
 		394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FFE233E43F5009D2897 /* LinksAction.swift */; };
-		394E200C233E477F009D2897 /* OpenItemUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E200B233E477F009D2897 /* OpenItemUserActivity.swift */; };
-		39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3961281522F8730A0087BD3A /* SceneDelegate.swift */; };
 		3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */; };
 		3968C882239C54AD00AC28AC /* ReleaseNotesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C87A239C54AC00AC28AC /* ReleaseNotesTableViewController.swift */; };
@@ -88,7 +82,6 @@
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39AFC3D1225E72FB00A6D3AE /* GroupSharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */; };
 		39AFC3D8225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */; };
-		39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
 		39B394492385334D00892E8D /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B394482385334D00892E8D /* ThemeView.swift */; };
 		39B9675022BE0FBA0074DB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755123D787E400193950 /* DocumentEditingAction.swift */; };
@@ -170,7 +163,6 @@
 		59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6C21AD61F4007827B8 /* UtilsTests.swift */; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
-		6E37F48B2188B27D00CF16CA /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
 		6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A103D219D5BBA00F90C96 /* RenameAction.swift */; };
 		6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */; };
 		6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F1733217749910049A71B /* ImageDisplayViewController.swift */; };
@@ -274,7 +266,6 @@
 		DC20DE6B21C01B210096000B /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = DC23D1D7238F390200423F62 /* OCLicenseAppStoreReceipt.m */; };
 		DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */ = {isa = PBXBuildFile; fileRef = DC23D1D6238F390200423F62 /* OCLicenseAppStoreReceipt.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
 		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
@@ -282,7 +273,6 @@
 		DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
 		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
-		DC29F09022974AEA00F77349 /* QueryFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */; };
 		DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */; };
 		DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */; };
 		DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939C22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift */; };
@@ -299,7 +289,6 @@
 		DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */; };
 		DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC4331FF2472E1B4002DC0E5 /* OCLicenseEMMProvider.m */; };
-		DC434D1320D7A8F100740056 /* UIAlertController+OCIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */; };
 		DC44343E21ABFA5200376B16 /* StaticLoginProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44343D21ABFA5200376B16 /* StaticLoginProfile.swift */; };
 		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
 		DC4D5A0A247C1398008ADDB6 /* MessageGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4D5A09247C1398008ADDB6 /* MessageGroup.swift */; };
@@ -392,7 +381,6 @@
 		DCDC208C239912DC003CFF5B /* OCLicenseTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC208A239912DC003CFF5B /* OCLicenseTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC208B239912DC003CFF5B /* OCLicenseTransaction.m */; };
 		DCDC208F23994DFB003CFF5B /* LicenseTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC208E23994DFB003CFF5B /* LicenseTransactionsViewController.swift */; };
-		DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */; };
 		DCDC20A12399A715003CFF5B /* OCCore+LicenseEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC209F2399A715003CFF5B /* OCCore+LicenseEnvironment.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */; };
 		DCDC20AB2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -404,6 +392,20 @@
 		DCE28F602433683700879DEC /* ClientSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE28F5F2433683700879DEC /* ClientSessionManager.swift */; };
 		DCE442CE2387452000940A6D /* LicensingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0856B2293F1FD008CC05C /* LicensingTests.m */; };
 		DCE4E42C24C10E0D0051722F /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
+		DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E200B233E477F009D2897 /* OpenItemUserActivity.swift */; };
+		DCE4E43524C1999A0051722F /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
+		DCE4E43724C19A910051722F /* LicenseRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */; };
+		DCE4E43924C19AB20051722F /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
+		DCE4E43A24C19ADC0051722F /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
+		DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
+		DCE4E43C24C19B660051722F /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236735A521217C3500E5834A /* MoreViewController.swift */; };
+		DCE4E43E24C19C3E0051722F /* Action+UserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */; };
+		DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */; };
+		DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
+		DCE4E44424C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */; };
+		DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
+		DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
+		DCE4E44A24C1ADC30051722F /* QueryFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */; };
 		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
 		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
 		DCE5E8A32080D781005F60CE /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
@@ -1039,7 +1041,6 @@
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
 		DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encoding.m"; sourceTree = "<group>"; };
 		DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encoding.h"; sourceTree = "<group>"; };
-		DC018F8220A0F56300135198 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		DC080CE2238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreProvider.h; sourceTree = "<group>"; };
@@ -1221,6 +1222,8 @@
 		DCE0FC4823E42ACB0037B4AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localized.strings; sourceTree = "<group>"; };
 		DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCMessage+Extension.swift"; sourceTree = "<group>"; };
 		DCE28F5F2433683700879DEC /* ClientSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSessionManager.swift; sourceTree = "<group>"; };
+		DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Action+UserInterface.swift"; sourceTree = "<group>"; };
+		DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileListTableViewController+OpenItemTableViewController.swift"; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
@@ -1499,14 +1502,11 @@
 		236735A421217C2300E5834A /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */,
 				DC255E432319AD13007279B1 /* Scanner */,
 				6E586CF52199A70100F680C4 /* Actions+Extensions */,
 				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
-				236735A521217C3500E5834A /* MoreViewController.swift */,
-				232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */,
-				232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */,
 				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
-				6E37F48A2188B27D00CF16CA /* Action.swift */,
 				DC3393A322E0A75C00DD3DA4 /* ClientItemResolvingCell.swift */,
 				39CD755323D8392D00193950 /* EditDocumentViewController.swift */,
 			);
@@ -1530,15 +1530,11 @@
 			isa = PBXGroup;
 			children = (
 				39104E0A223991C8002FC02F /* UIButton+Extension.swift */,
-				DC018F8220A0F56300135198 /* UIView+Extension.swift */,
 				6E83C78320A33C180066EC23 /* LAContext+Extension.swift */,
-				DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */,
 				4CB8ADDF22DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift */,
-				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
 				39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */,
 				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 				4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */,
-				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
 				3998F5D2224102FE00B66713 /* UITableView+Extension.swift */,
 				39CC8AE5228C12100020253B /* Array+Extension.swift */,
 				02072E5F23E46022006548A7 /* UIWindow+Extension.swift */,
@@ -1580,10 +1576,9 @@
 		3912208023436E9B0026C290 /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
-				3912208123436EB80026C290 /* SortMethod.swift */,
-				39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */,
-				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+				DCE4E43424C199860051722F /* Actions */,
+				DCE4E42D24C1961D0051722F /* File Lists */,
+				DCE4E42F24C1963F0051722F /* User Interface */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -1601,6 +1596,7 @@
 		394A0AFA22EEFC2C00603813 /* ownCloudAppShared */ = {
 			isa = PBXGroup;
 			children = (
+				DCE4E43824C19A950051722F /* Licensing */,
 				DC0A354F24C0E18800FB58FC /* AppLock */,
 				DC0A354C24C0E09300FB58FC /* User Interface */,
 				3912208023436E9B0026C290 /* Client */,
@@ -1618,7 +1614,6 @@
 		394E2005233E4765009D2897 /* Window */ = {
 			isa = PBXGroup;
 			children = (
-				394E200B233E477F009D2897 /* OpenItemUserActivity.swift */,
 			);
 			path = Window;
 			sourceTree = "<group>";
@@ -1660,6 +1655,9 @@
 				DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */,
 				4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */,
 				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
+				DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */,
+				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
+				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -1896,12 +1894,14 @@
 			isa = PBXGroup;
 			children = (
 				DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */,
+				DCE4E43624C19A3B0051722F /* More */,
 				DC0A359024C0E46800FB58FC /* Cursor Support */,
 				DC0A355124C0E1EF00FB58FC /* Theme */,
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				DC0A354D24C0E15100FB58FC /* Progress */,
 				DC297959226E4C9200E01BC7 /* Push Presentation Controller */,
 				DC0A354E24C0E15900FB58FC /* StaticTableView */,
+				DCE4E43224C197480051722F /* User Activities */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -2031,8 +2031,8 @@
 		DC29F09122974F8000F77349 /* FileLists */ = {
 			isa = PBXGroup;
 			children = (
-				3913213722946E5E00EF88F4 /* FileListTableViewController.swift */,
 				DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */,
+				DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */,
 			);
 			path = FileLists;
 			sourceTree = "<group>";
@@ -2287,7 +2287,6 @@
 		DC8EB26F239308C3009148F9 /* Licensing */ = {
 			isa = PBXGroup;
 			children = (
-				DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */,
 				DCC8535E23CE123C007BA3EB /* Product List */,
 				DCD1301923A25D0500255779 /* Transactions */,
 				DCEE1C9523A0EAA300FE8D98 /* Offers */,
@@ -2514,6 +2513,60 @@
 			path = Enterprise;
 			sourceTree = "<group>";
 		};
+		DCE4E42D24C1961D0051722F /* File Lists */ = {
+			isa = PBXGroup;
+			children = (
+				3913213722946E5E00EF88F4 /* FileListTableViewController.swift */,
+			);
+			path = "File Lists";
+			sourceTree = "<group>";
+		};
+		DCE4E42F24C1963F0051722F /* User Interface */ = {
+			isa = PBXGroup;
+			children = (
+				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
+				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
+				3912208123436EB80026C290 /* SortMethod.swift */,
+				39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */,
+				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+			);
+			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		DCE4E43224C197480051722F /* User Activities */ = {
+			isa = PBXGroup;
+			children = (
+				394E200B233E477F009D2897 /* OpenItemUserActivity.swift */,
+			);
+			path = "User Activities";
+			sourceTree = "<group>";
+		};
+		DCE4E43424C199860051722F /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				6E37F48A2188B27D00CF16CA /* Action.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		DCE4E43624C19A3B0051722F /* More */ = {
+			isa = PBXGroup;
+			children = (
+				236735A521217C3500E5834A /* MoreViewController.swift */,
+				232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */,
+				232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */,
+			);
+			path = More;
+			sourceTree = "<group>";
+		};
+		DCE4E43824C19A950051722F /* Licensing */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */,
+			);
+			path = Licensing;
+			sourceTree = "<group>";
+		};
 		DCE5E8B62080D8B8005F60CE /* SDK Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2571,7 +2624,6 @@
 				6EA78B8E2179B55400A5216A /* ImageScrollView.swift */,
 				3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */,
 				3998F5D422411EDF00B66713 /* BorderedLabel.swift */,
-				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
 				396BE4C92289500E00B254A9 /* RoundedLabel.swift */,
 				3946B19D2456D5B100F03AED /* NotificationHUDViewController.swift */,
 			);
@@ -3437,8 +3489,8 @@
 				3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */,
 				DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
-				DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */,
 				4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */,
+				DCE4E43E24C19C3E0051722F /* Action+UserInterface.swift in Sources */,
 				DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */,
 				025FC745247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift in Sources */,
 				DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */,
@@ -3450,6 +3502,7 @@
 				DCDC208F23994DFB003CFF5B /* LicenseTransactionsViewController.swift in Sources */,
 				4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */,
 				3946B19E2456D5B100F03AED /* NotificationHUDViewController.swift in Sources */,
+				DCE4E44A24C1ADC30051722F /* QueryFileListTableViewController.swift in Sources */,
 				4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */,
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
@@ -3469,7 +3522,6 @@
 				0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */,
 				4C9BFA2323158C3F0059CA3E /* PreviewViewController.swift in Sources */,
 				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
-				DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
 				DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */,
 				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,
@@ -3511,11 +3563,9 @@
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				4C51727E22DE04BD001BC97F /* BackgroundFetchUpdateTaskAction.swift in Sources */,
 				4C05D8A5238708D40073EF50 /* MediaUploadStorage.swift in Sources */,
-				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
 				DCC832F8242CC94D00153F8C /* AlertView.swift in Sources */,
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
-				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				4C96463C238489E4003278B7 /* MediaUploadActivity.swift in Sources */,
 				02633EFF2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift in Sources */,
 				6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */,
@@ -3551,7 +3601,6 @@
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */,
 				399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */,
-				6E37F48B2188B27D00CF16CA /* Action.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */,
 				39DED4932369879100CCC62C /* ImportFilesController.swift in Sources */,
@@ -3562,13 +3611,12 @@
 				6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
 				DCFB74C121AD5C88005796AF /* StaticLoginStepViewController.swift in Sources */,
-				394E200C233E477F009D2897 /* OpenItemUserActivity.swift in Sources */,
 				DC4D5A0A247C1398008ADDB6 /* MessageGroup.swift in Sources */,
+				DCE4E44424C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift in Sources */,
 				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
 				DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
 				DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */,
-				39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */,
 				DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */,
@@ -3577,7 +3625,6 @@
 				DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */,
 				23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */,
 				2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */,
-				232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */,
 				DC62514C225D254500736874 /* UploadBaseAction.swift in Sources */,
 				4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */,
 				DC3393A222E0A71100DD3DA4 /* ItemPolicyCell.swift in Sources */,
@@ -3591,14 +3638,10 @@
 				DCC83304242CF3AD00153F8C /* AlertViewController.swift in Sources */,
 				394E1FDC233E3750009D2897 /* UnfavoriteAction.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */,
-				DC434D1320D7A8F100740056 /* UIAlertController+OCIssue.swift in Sources */,
 				39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */,
-				DC29F09022974AEA00F77349 /* QueryFileListTableViewController.swift in Sources */,
 				6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */,
-				3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */,
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */,
-				39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */,
 				39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */,
 				394E1FDA233E2D64009D2897 /* FavoriteAction.swift in Sources */,
 			);
@@ -3635,14 +3678,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
+				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
+				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,
+				DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */,
 				DC0A355724C0E35B00FB58FC /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				DC0A359224C0E55800FB58FC /* UIColor+Extension.swift in Sources */,
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
 				DC0A358124C0E43C00FB58FC /* ThemeProvider.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
+				DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
+				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
 				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
@@ -3665,9 +3713,12 @@
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,
 				DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */,
+				DCE4E43924C19AB20051722F /* MoreStaticTableViewController.swift in Sources */,
 				DC0A358C24C0E44B00FB58FC /* ThemeWindow.swift in Sources */,
 				DC0A357124C0E42700FB58FC /* StaticTableViewRow.swift in Sources */,
+				DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
+				DCE4E43C24C19B660051722F /* MoreViewController.swift in Sources */,
 				DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */,
 				DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */,
 				DC0A357824C0E43700FB58FC /* CardPresentationController.swift in Sources */,
@@ -3691,7 +3742,10 @@
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
 				DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */,
 				3912208223436EB80026C290 /* SortMethod.swift in Sources */,
+				DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */,
 				DC0A359524C0E5F900FB58FC /* UIImage+Extension.swift in Sources */,
+				DCE4E43724C19A910051722F /* LicenseRequirements.swift in Sources */,
+				DCE4E43A24C19ADC0051722F /* MoreViewHeader.swift in Sources */,
 				DC0A357B24C0E43C00FB58FC /* Theme.swift in Sources */,
 				DC0A358B24C0E44B00FB58FC /* ThemeRoundedButton.swift in Sources */,
 			);

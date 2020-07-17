@@ -19,10 +19,14 @@
 import UIKit
 import ownCloudApp
 
-struct LicenseRequirements {
-	var feature : OCLicenseFeatureIdentifier
+public struct LicenseRequirements {
+	public var feature : OCLicenseFeatureIdentifier
 
-	func isUnlocked(for core: OCCore) -> Bool {
+	public func isUnlocked(for core: OCCore) -> Bool {
 		return OCLicenseManager.shared.authorizationStatus(forFeature: self.feature, in: core.licenseEnvironment) == .granted
+	}
+
+	public init(feature: OCLicenseFeatureIdentifier) {
+		self.feature = feature
 	}
 }

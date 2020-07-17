@@ -9,7 +9,7 @@
 import UIKit
 import ownCloudSDK
 
-extension OCIssueChoice {
+public extension OCIssueChoice {
 	var alertActionStyle : UIAlertAction.Style {
 		switch type {
 			case .cancel:
@@ -24,7 +24,7 @@ extension OCIssueChoice {
 	}
 }
 
-extension UIAlertController {
+public extension UIAlertController {
 	convenience init(with issue: OCIssue, completion: (() -> Void)? = nil) {
 		self.init(title: issue.localizedTitle, message: issue.localizedDescription, preferredStyle: .alert)
 

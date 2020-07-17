@@ -669,11 +669,11 @@ extension LibrarySharesTableViewController {
 
 extension QueryFileListTableViewController {
 
-	override var canBecomeFirstResponder: Bool {
+	override open var canBecomeFirstResponder: Bool {
 		return true
 	}
 
-	override var keyCommands: [UIKeyCommand]? {
+	override open var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 

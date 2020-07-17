@@ -25,18 +25,7 @@ import CoreServices
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
-extension OCQueryState {
-	var isFinal: Bool {
-		switch self {
-		case .idle, .targetRemoved, .contentsFromCache, .stopped:
-			return true
-		default:
-			return false
-		}
-	}
-}
-
-struct OCItemDraggingValue {
+public struct OCItemDraggingValue {
 	var item : OCItem
 	var bookmarkUUID : String
 }

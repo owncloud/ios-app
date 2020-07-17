@@ -18,14 +18,21 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
-	weak var core : OCCore?
+public protocol OpenItemHandling {
+	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController?
+}
 
-	let estimatedTableRowHeight : CGFloat = 62
+public protocol MoreItemHandling {
+	@discardableResult func moreOptions(for item: OCItem, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
+}
 
-	var progressSummarizer : ProgressSummarizer?
+open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
+	open weak var core : OCCore?
+
+	public let estimatedTableRowHeight : CGFloat = 62
+
+	open var progressSummarizer : ProgressSummarizer?
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	public init(core inCore: OCCore, style: UITableView.Style = .plain) {
@@ -35,7 +42,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -43,7 +50,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		Theme.shared.unregister(client: self)
 	}
 
-	func makeActionProgressHandler() -> ActionProgressHandler {
+	open func makeActionProgressHandler() -> ActionProgressHandler {
 		if _actionProgressHandler == nil {
 			_actionProgressHandler = { [weak self] (progress, publish) in
 				if publish {
@@ -58,45 +65,42 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Item retrieval
-	func item(for cell: ClientItemCell) -> OCItem? {
+	open func item(for cell: ClientItemCell) -> OCItem? {
 		return cell.item
 	}
 
-	func itemAt(indexPath : IndexPath) -> OCItem? {
+	open func itemAt(indexPath : IndexPath) -> OCItem? {
 		return (self.tableView.cellForRow(at: indexPath) as? ClientItemCell)?.item
 	}
 
 	// MARK: - ClientItemCellDelegate
-	func moreButtonTapped(cell: ClientItemCell) {
+	open func moreButtonTapped(cell: ClientItemCell) {
 		guard let item = self.item(for: cell), let core = core, let query = query(forItem: item) else {
 			return
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, sender: cell)
-
-		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
-			self.present(asCard: moreViewController, animated: true)
+		if let moreItemHandling = self as? MoreItemHandling {
+			moreItemHandling.moreOptions(for: item, core: core, query: query, sender: cell)
 		}
 	}
 
-	func messageButtonTapped(cell: ClientItemCell) {
+	open func messageButtonTapped(cell: ClientItemCell) {
 	}
 
-	func hasMessage(for item: OCItem) -> Bool {
+	open func hasMessage(for item: OCItem) -> Bool {
 		return false
 	}
 
 	// MARK: - Visibility handling
 	private var viewControllerVisible : Bool = false
 
-	override func viewWillDisappear(_ animated: Bool) {
+	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		viewControllerVisible = false
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		viewControllerVisible = true
@@ -104,7 +108,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - View setup
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.navigationController?.navigationBar.prefersLargeTitles = false
@@ -125,21 +129,21 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		self.addThemableBackgroundView()
 	}
 
-	func registerCellClasses() {
+	open func registerCellClasses() {
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 	}
 
 	// MARK: - Pull-to-refresh handling
-	var allowPullToRefresh : Bool = false
+	open var allowPullToRefresh : Bool = false
 
-	var pullToRefreshControl: UIRefreshControl?
-	var pullToRefreshAction: ((_ completion: @escaping () -> Void) -> Void)?
+	open var pullToRefreshControl: UIRefreshControl?
+	open var pullToRefreshAction: ((_ completion: @escaping () -> Void) -> Void)?
 
-	var pullToRefreshVerticalOffset : CGFloat {
+	open var pullToRefreshVerticalOffset : CGFloat {
 		return 0
 	}
 
-	@objc func pullToRefreshTriggered() {
+	@objc open func pullToRefreshTriggered() {
 		if core?.connectionStatus == OCCoreConnectionStatus.online {
 			UIImpactFeedbackGenerator().impactOccurred()
 			performPullToRefreshAction()
@@ -148,7 +152,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	func performPullToRefreshAction() {
+	open func performPullToRefreshAction() {
 		if pullToRefreshAction != nil {
 			pullToRefreshBegan()
 
@@ -158,7 +162,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	func pullToRefreshBegan() {
+	open func pullToRefreshBegan() {
 		if let refreshControl = pullToRefreshControl {
 			OnMainThread {
 				if refreshControl.isRefreshing {
@@ -168,7 +172,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	func pullToRefreshEnded() {
+	open func pullToRefreshEnded() {
 		if let refreshControl = pullToRefreshControl {
 			OnMainThread {
 				if refreshControl.isRefreshing == true {
@@ -181,7 +185,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	// MARK: - Reload Data
 	private var tableReloadNeeded = false
 
-	func reloadTableData(ifNeeded: Bool = false) {
+	open func reloadTableData(ifNeeded: Bool = false) {
 		/*
 			This is a workaround to cope with the fact that:
 			- UITableView.reloadData() does nothing if the view controller is not currently visible (via viewWillDisappear/viewWillAppear), so cells may hold references to outdated OCItems
@@ -204,11 +208,11 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	func restoreSelectionAfterTableReload() {
+	open func restoreSelectionAfterTableReload() {
 	}
 
 	// MARK: - Single item query creation
-	func query(forItem: OCItem) -> OCQuery? {
+	open func query(forItem: OCItem) -> OCQuery? {
 		if let path = forItem.path {
 			return OCQuery(forPath: path)
 		}
@@ -217,12 +221,12 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Table view data source
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	open override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
 	// MARK: - Table view delegate
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 
 		if !self.tableView.isEditing {
@@ -230,11 +234,13 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 				return
 			}
 
-			open(item: rowItem, animated: true)
+			if let openItemHandler = self as? OpenItemHandling {
+				openItemHandler.open(item: rowItem, animated: true, pushViewController: true)
+			}
 		}
 	}
 
- 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
 			return nil
 		}
@@ -251,45 +257,8 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		return configuration
 	}
 
-	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
-		if let core = self.core {
-			if #available(iOS 13.0, *) {
-				if  let tabBarController = self.tabBarController as? ClientRootViewController {
-					let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
-					view.window?.windowScene?.userActivity = activity.openItemUserActivity
-				}
-			}
-
-			switch item.type {
-				case .collection:
-					if let path = item.path {
-						let clientQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
-						if pushViewController {
-							self.navigationController?.pushViewController(clientQueryViewController, animated: animated)
-						}
-
-						return clientQueryViewController
-					}
-
-				case .file:
-					guard let query = self.query(forItem: item) else {
-						return nil
-					}
-
-					let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
-					itemViewController.hidesBottomBarWhenPushed = true
-					itemViewController.progressSummarizer = self.progressSummarizer
-					self.navigationController?.pushViewController(itemViewController, animated: animated)
-			}
-		}
-
-		return nil
-	}
-
 	@available(iOS 13.0, *)
-	override func tableView(_ tableView: UITableView,
-	contextMenuConfigurationForRowAt indexPath: IndexPath,
-	point: CGPoint) -> UIContextMenuConfiguration? {
+	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 
 		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
 			return nil
@@ -301,7 +270,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	@available(iOS 13.0, *)
-	func makeContextMenu(for indexPath: IndexPath, core: OCCore, item: OCItem, with cell: UITableViewCell) -> UIMenu {
+	open func makeContextMenu(for indexPath: IndexPath, core: OCCore, item: OCItem, with cell: UITableViewCell) -> UIMenu {
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
@@ -332,7 +301,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Themable
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
 

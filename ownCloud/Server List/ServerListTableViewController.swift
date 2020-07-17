@@ -859,19 +859,6 @@ extension ServerListTableViewController : ClientSessionManagerDelegate {
 	}
 }
 
-let ownCloudOpenAccountActivityType     = "com.owncloud.ios-app.openAccount"
-let ownCloudOpenAccountPath           	= "openAccount"
-let ownCloudOpenAccountAccountUuidKey	= "accountUuid"
-
-extension OCBookmark {
-	var openAccountUserActivity: NSUserActivity {
-		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
-		userActivity.title = ownCloudOpenAccountPath
-		userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: uuid.uuidString]
-		return userActivity
-	}
-}
-
 extension ServerListTableViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {

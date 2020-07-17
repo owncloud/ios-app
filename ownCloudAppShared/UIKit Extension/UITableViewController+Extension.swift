@@ -17,9 +17,8 @@
 */
 
 import UIKit
-import ownCloudAppShared
 
-extension UITableViewController {
+public extension UITableViewController {
 	func addThemableBackgroundView() {
 		// UITableView background view is nil for default. Set a UIView with clear color to can insert a subview above
 		let backgroundView = UIView.init(frame: self.tableView.frame)

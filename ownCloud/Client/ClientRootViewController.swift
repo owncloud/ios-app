@@ -389,7 +389,7 @@ class ClientRootViewController: UITabBarController {
 						self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
 
 						// open the controller for the item
-						subController.open(item: item, animated: false)
+						subController.open(item: item, animated: false, pushViewController: true)
 					} else {
 						// Fallback, if item no longer exists show root folder
 						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
@@ -400,7 +400,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
-		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) as? ClientQueryViewController {
 			return subController
 		}
 

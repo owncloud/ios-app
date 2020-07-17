@@ -17,13 +17,12 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class MoreStaticTableViewController: StaticTableViewController {
+public class MoreStaticTableViewController: StaticTableViewController {
 
 	private var themeApplierTokens: [ThemeApplierToken]
 
-	override init(style: UITableView.Style) {
+	override public init(style: UITableView.Style) {
 		themeApplierTokens = []
 		super.init(style: style)
 	}
@@ -34,11 +33,11 @@ class MoreStaticTableViewController: StaticTableViewController {
 		})
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+	public override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if let title = (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle {
 			let containerView = UIView()
 			let label = UILabel()
@@ -65,32 +64,32 @@ class MoreStaticTableViewController: StaticTableViewController {
 		return nil
 	}
 
-	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+	public override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		if  (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle != nil {
 			return UITableView.automaticDimension
 		}
 		return 0.0
 	}
 
-	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+	public override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		return CGFloat.leastNormalMagnitude
 	}
 
-	override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+	public override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		return nil
 	}
 
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		self.tableView.separatorColor = self.tableView.backgroundColor
 	}
 }
 
-class MoreStaticTableViewSection : StaticTableViewSection {
+open class MoreStaticTableViewSection : StaticTableViewSection {
 	public var headerAttributedTitle : NSAttributedString?
 	public var footerAttributedTitle : NSAttributedString?
 
-	convenience init(headerAttributedTitle theHeaderTitle: NSAttributedString? = nil, footerAttributedTitle theFooterTitle: NSAttributedString? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
+	convenience public init(headerAttributedTitle theHeaderTitle: NSAttributedString? = nil, footerAttributedTitle theFooterTitle: NSAttributedString? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
 		self.init()
 
 		self.headerAttributedTitle = theHeaderTitle
