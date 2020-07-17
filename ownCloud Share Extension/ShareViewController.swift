@@ -130,6 +130,8 @@ class ShareViewController: MoreStaticTableViewController {
 									if let url = item as? URL {
 										self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
 											if (index + 1) == attachments.count {
+												OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+
 												OnMainThread {
 													progressHUDViewController.dismiss(animated: true, completion: {
 														self.dismiss(animated: true)
@@ -182,11 +184,6 @@ class ShareViewController: MoreStaticTableViewController {
 							completion(error)
 						} else {
 							completion(nil)
-						}
-
-						OnBackgroundQueue(after: 2) {
-							// Return OCCore after 2 seconds, giving the core a chance to schedule the upload with a NSURLSession
-							OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 						}
 		},
 					 resultHandler: nil
