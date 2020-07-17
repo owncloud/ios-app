@@ -41,7 +41,11 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 
-	open weak var delegate: ClientItemCellDelegate?
+	open weak var delegate: ClientItemCellDelegate? {
+		didSet {
+			isMoreButtonPermanentlyHidden = (delegate as? MoreItemHandling == nil)
+		}
+	}
 
 	open var titleLabel : UILabel = UILabel()
 	open var detailLabel : UILabel = UILabel()

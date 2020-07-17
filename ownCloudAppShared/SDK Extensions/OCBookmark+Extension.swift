@@ -20,6 +20,10 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
+public protocol BookmarkContainer {
+	var bookmark: OCBookmark { get }
+}
+
 public extension OCBookmarkUserInfoKey {
 	static var scanForAuthenticationMethodsRequired : OCBookmarkUserInfoKey { OCBookmarkUserInfoKey(rawValue: "OCBookmarkScanForAuthenticationMethodsRequired") }
 }

@@ -30,7 +30,7 @@ public struct OCItemDraggingValue {
 	var bookmarkUUID : String
 }
 
-class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
+open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	var folderActionBarButton: UIBarButtonItem?
 	var plusBarButton: UIBarButtonItem?
 
@@ -38,7 +38,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var quotaObservation : NSKeyValueObservation?
 	var titleButtonThemeApplierToken : ThemeApplierToken?
 
-	weak var clientRootViewController : ClientRootViewController?
+	weak var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
 
@@ -47,7 +47,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.init(core: inCore, query: inQuery, rootViewController: nil)
 	}
 
-	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: ClientRootViewController?) {
+	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
 
 		super.init(core: inCore, query: inQuery)
@@ -102,7 +102,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -117,7 +117,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - View controller events
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.tableView.dragDelegate = self
@@ -138,10 +138,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	private var viewControllerVisible : Bool = false
 
-	override func viewWillDisappear(_ animated: Bool) {
+	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		leaveMultipleSelection()
+		self.exitMultiselection()
 	}
 
 	private func updateFooter(text:String?) {
@@ -158,7 +158,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - Theme support
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
@@ -166,7 +166,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	// MARK: - Table view delegate
 
-	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+	open override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
 		return true
 	}
 
@@ -199,7 +199,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
-		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
+		guard let tabBarController = self.tabBarController as? ToolAndTabBarToggling else { return }
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
 		if let core = self.core {
@@ -233,15 +233,15 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	// MARK: - UIBarButtonItem Drop Delegate
 
-	func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+	open func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
 		return true
 	}
 
-	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+	open func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
 		return UIDropProposal(operation: .copy)
 	}
 
-	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+	open func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
 		guard let button = interaction.view as? UIButton, let identifier = button.actionIdentifier  else { return }
 
 		if let action = self.actions?.first(where: {type(of:$0).identifier == identifier}) {
@@ -276,11 +276,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}) {
 			self.progressSummarizer?.startTracking(progress: progress)
 		}
-	}
-
-	override func leaveMultipleSelection() {
-		super.leaveMultipleSelection()
-		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 	}
 
 	// MARK: - Navigation Bar Actions
@@ -368,7 +363,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - ClientItemCell item resolution
-	override func item(for cell: ClientItemCell) -> OCItem? {
+	open override func item(for cell: ClientItemCell) -> OCItem? {
 		guard let indexPath = self.tableView.indexPath(for: cell) else {
 			return nil
 		}
@@ -376,8 +371,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		return self.itemAt(indexPath: indexPath)
 	}
 
-	override func hasMessage(for item: OCItem) -> Bool {
-		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = clientRootViewController?.syncRecordIDsWithMessages else {
+	open override func hasMessage(for item: OCItem) -> Bool {
+		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = (clientRootViewController as? ClientRootViewController)?.syncRecordIDsWithMessages else {
 			return false
 		}
 
@@ -386,7 +381,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
-	override func messageButtonTapped(cell: ClientItemCell) {
+	open override func messageButtonTapped(cell: ClientItemCell) {
 		if let item = cell.item {
 			self.showMessageFor(item: item)
 		}
@@ -394,7 +389,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	// MARK: - Show message for item
 	func showMessageFor(item: OCItem) {
-		if let messages = clientRootViewController?.messageSelector?.selection,
+		if let messages = (clientRootViewController as? ClientRootViewController)?.messageSelector?.selection,
 		   let firstMatchingMessage = messages.first(where: { (message) -> Bool in
 			guard let syncRecordID = message.syncIssue?.syncRecordID, let containsSyncRecordID = item.activeSyncRecordIDs?.contains(syncRecordID) else {
 				return false
@@ -407,7 +402,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - Updates
-	override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
+	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
 		if let rootItem = self.query.rootItem {
 			if query.queryPath != "/" {
 				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
@@ -415,9 +410,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			}
 
 			if #available(iOS 13.0, *) {
-				if  let tabBarController = self.tabBarController as? ClientRootViewController {
+				if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
 					// Use parent folder for UI state restoration
-					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: tabBarController.bookmark)
+					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
 					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
 			}
@@ -425,7 +420,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - Reloads
-	override func restoreSelectionAfterTableReload() {
+	open override func restoreSelectionAfterTableReload() {
 		// Restore previously selected items
 		if tableView.isEditing && selectedItemIds.count > 0 {
 			var selectedItems = [OCItem]()
@@ -441,11 +436,11 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - UIPopoverPresentationControllerDelegate
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	@objc open func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
 
-	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+	@objc open func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }
@@ -458,7 +453,7 @@ extension OCBookmarkManager {
 
 // MARK: - Drag & Drop delegates
 extension ClientQueryViewController: UITableViewDropDelegate {
-	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+	public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
 		guard let core = self.core else { return }
 
 		for item in coordinator.items {
@@ -537,8 +532,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 }
 
 extension ClientQueryViewController: UITableViewDragDelegate {
-
-	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+	public func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 
 		if DisplaySettings.shared.preventDraggingFiles {
 			return [UIDragItem]()
@@ -579,7 +573,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		return []
 	}
 
-	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+	public func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
 		var selectedItems = [OCItemDraggingValue]()
 		for dragItem in session.items {
 			guard let item = dragItem.localObject as? OCItem, let uuid = core?.bookmark.uuid.uuidString else { continue }
@@ -600,7 +594,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		return []
 	}
 
-	func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
+	public func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
 		let item = draggingValue.item
 		if let core = self.core {
 			switch item.type {

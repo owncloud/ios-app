@@ -25,7 +25,7 @@ protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController {
+class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)

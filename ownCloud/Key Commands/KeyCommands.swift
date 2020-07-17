@@ -573,7 +573,7 @@ extension StaticTableViewController {
 
 extension ClientQueryViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -632,7 +632,7 @@ extension ClientQueryViewController {
 		}
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 }

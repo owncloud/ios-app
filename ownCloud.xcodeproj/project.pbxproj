@@ -39,7 +39,6 @@
 		39057AA7233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39057AA8233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		390B51E02292DBB100935E24 /* SharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B51DF2292DBB100935E24 /* SharingTableViewController.swift */; };
-		39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
 		3912208223436EB80026C290 /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3912208123436EB80026C290 /* SortMethod.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
@@ -104,7 +103,6 @@
 		4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */; };
 		4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1561EE22232357009C4EF3 /* PhotoSelectionViewCell.swift */; };
 		4C16CBA7226F0F1A00D67BB6 /* FileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C16CBA6226F0F1900D67BB6 /* FileTests.swift */; };
-		4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */; };
 		4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E17DA234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift */; };
 		4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */; };
 		4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */; };
@@ -132,7 +130,6 @@
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
 		4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */; };
 		4CC4A21922FB4F4C00AE7E2C /* MediaUploadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */; };
-		4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
 		59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59056CAC22414F3C00A18A22 /* ownCloudScreenshotsTests.swift */; };
 		59056CB422414F8000A18A22 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59371D7B224103D300C6BC5B /* SnapshotHelper.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
@@ -284,7 +281,6 @@
 		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC3BE0D92077BC6B002A0AC0 /* openssl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */; };
 		DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */; };
 		DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */; };
 		DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -405,7 +401,12 @@
 		DCE4E44424C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */; };
 		DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
-		DCE4E44A24C1ADC30051722F /* QueryFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */; };
+		DCE4E44B24C1D3780051722F /* QueryFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */; };
+		DCE4E44D24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E44C24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift */; };
+		DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */; };
+		DCE4E45024C1E0400051722F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
+		DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
+		DCE4E45224C1E5240051722F /* ClientQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */; };
 		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
 		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
 		DCE5E8A32080D781005F60CE /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
@@ -1224,6 +1225,7 @@
 		DCE28F5F2433683700879DEC /* ClientSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSessionManager.swift; sourceTree = "<group>"; };
 		DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Action+UserInterface.swift"; sourceTree = "<group>"; };
 		DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileListTableViewController+OpenItemTableViewController.swift"; sourceTree = "<group>"; };
+		DCE4E44C24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QueryFileListTableViewController+Multiselect.swift"; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
@@ -1529,12 +1531,9 @@
 		239F1314205A69240029F186 /* UIKit Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				39104E0A223991C8002FC02F /* UIButton+Extension.swift */,
 				6E83C78320A33C180066EC23 /* LAContext+Extension.swift */,
 				4CB8ADDF22DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift */,
 				39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */,
-				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
-				4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */,
 				3998F5D2224102FE00B66713 /* UITableView+Extension.swift */,
 				39CC8AE5228C12100020253B /* Array+Extension.swift */,
 				02072E5F23E46022006548A7 /* UIWindow+Extension.swift */,
@@ -1650,14 +1649,17 @@
 		399725DF233DF37300FC3B94 /* UIKit Extension */ = {
 			isa = PBXGroup;
 			children = (
-				23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */,
+				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
+				DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */,
+				4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */,
+				39104E0A223991C8002FC02F /* UIButton+Extension.swift */,
 				239F1318205A693A0029F186 /* UIColor+Extension.swift */,
+				23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */,
 				DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */,
 				4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */,
-				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
-				DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */,
 				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
-				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
+				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
+				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -2031,8 +2033,8 @@
 		DC29F09122974F8000F77349 /* FileLists */ = {
 			isa = PBXGroup;
 			children = (
-				DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */,
 				DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */,
+				DCE4E44C24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift */,
 			);
 			path = FileLists;
 			sourceTree = "<group>";
@@ -2517,6 +2519,7 @@
 			isa = PBXGroup;
 			children = (
 				3913213722946E5E00EF88F4 /* FileListTableViewController.swift */,
+				DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */,
 			);
 			path = "File Lists";
 			sourceTree = "<group>";
@@ -3500,9 +3503,7 @@
 				39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */,
 				DCC832E2242C0EAC00153F8C /* MessageSelector.swift in Sources */,
 				DCDC208F23994DFB003CFF5B /* LicenseTransactionsViewController.swift in Sources */,
-				4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */,
 				3946B19E2456D5B100F03AED /* NotificationHUDViewController.swift in Sources */,
-				DCE4E44A24C1ADC30051722F /* QueryFileListTableViewController.swift in Sources */,
 				4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */,
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
@@ -3582,7 +3583,6 @@
 				39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */,
 				394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */,
 				39A243C424BDD9E100F4441F /* StaticLoginBundle.swift in Sources */,
-				4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
 				4C51727D22DE04BD001BC97F /* ScheduledTaskExtension.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
@@ -3601,7 +3601,6 @@
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */,
 				399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */,
-				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */,
 				39DED4932369879100CCC62C /* ImportFilesController.swift in Sources */,
 				397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */,
@@ -3615,6 +3614,7 @@
 				DCE4E44424C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift in Sources */,
 				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
 				DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */,
+				DCE4E44D24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
 				DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
@@ -3637,12 +3637,12 @@
 				DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */,
 				DCC83304242CF3AD00153F8C /* AlertViewController.swift in Sources */,
 				394E1FDC233E3750009D2897 /* UnfavoriteAction.swift in Sources */,
+				DCE4E45224C1E5240051722F /* ClientQueryViewController.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */,
 				39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */,
 				6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */,
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */,
-				39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */,
 				394E1FDA233E2D64009D2897 /* FavoriteAction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3684,6 +3684,7 @@
 				DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */,
 				DC0A355724C0E35B00FB58FC /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				DC0A359224C0E55800FB58FC /* UIColor+Extension.swift in Sources */,
+				DCE4E45024C1E0400051722F /* UIButton+Extension.swift in Sources */,
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
 				DC0A358124C0E43C00FB58FC /* ThemeProvider.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
@@ -3698,6 +3699,7 @@
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */,
 				DC0A358224C0E44200FB58FC /* TVGImage.swift in Sources */,
+				DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */,
 				DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
@@ -3706,6 +3708,7 @@
 				DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */,
 				DC0A358A24C0E44B00FB58FC /* ThemeButton.swift in Sources */,
 				DC0A355424C0E2C200FB58FC /* SortBar.swift in Sources */,
+				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
 				DC0A359724C0E64500FB58FC /* UIImageView+Thumbnails.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
@@ -3727,6 +3730,7 @@
 				DC0A358824C0E44B00FB58FC /* ThemeTableViewCell.swift in Sources */,
 				DC0A359424C0E5C800FB58FC /* GitCommit.swift in Sources */,
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
+				DCE4E44B24C1D3780051722F /* QueryFileListTableViewController.swift in Sources */,
 				DC0A357C24C0E43C00FB58FC /* ThemeCollection.swift in Sources */,
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
