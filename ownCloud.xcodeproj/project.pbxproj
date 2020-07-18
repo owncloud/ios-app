@@ -3105,7 +3105,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
