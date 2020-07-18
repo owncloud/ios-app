@@ -203,9 +203,10 @@ public class AppLockManager: NSObject {
 	private var passcodeControllerByWindow : NSMapTable<ThemeWindow, PasscodeViewController> = NSMapTable.weakToStrongObjects()
 	private var applockWindowByWindow : NSMapTable<ThemeWindow, AppLockWindow> = NSMapTable.weakToStrongObjects()
 
-	@objc private func cancelAction () {
-		let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
-		passwordViewHostViewController?.extensionContext?.cancelRequest(withError: error)
+	open var cancelAction : (() -> Void)?
+
+	@objc private func cancelPressed () {
+		cancelAction?()
 	}
 
 	@objc func updateLockscreens() {
@@ -218,8 +219,10 @@ public class AppLockManager: NSObject {
 					let navigationController = ThemeNavigationController(rootViewController: passcodeViewController)
 					navigationController.modalPresentationStyle = .overFullScreen
 
-					let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
-					passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
+					if cancelAction != nil {
+						let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelPressed))
+						passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
+					}
 					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appName ?? "ownCloud"
 
 					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
@@ -488,4 +491,3 @@ public class AppLockManager: NSObject {
 		}
 	}
 }
-

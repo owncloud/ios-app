@@ -199,7 +199,10 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler), animated: true)
+		let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+		pickerController.cancelAction = cancelAction
+
+		self.navigationController?.pushViewController(pickerController, animated: true)
 	}
 
 	override open func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -215,11 +218,11 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.choiceHandler?(item)
 	}
 
+	open var cancelAction : (() -> Void)?
+
 	@objc private func cancelBarButtonPressed() {
-		if extensionContext != nil {
- 			// Handle case, if this controller was opened from an extension (e.g. share extension)
- 			let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
- 			extensionContext?.cancelRequest(withError: error)
+		if cancelAction != nil {
+			cancelAction?()
  		} else {
 			dismiss(animated: true, completion: {
 				self.userChose(item: nil)

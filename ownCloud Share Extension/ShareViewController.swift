@@ -21,6 +21,10 @@ import ownCloudSDK
 import ownCloudAppShared
 import CoreServices
 
+extension NSErrorDomain {
+	static let ShareViewErrorDomain = "ShareViewErrorDomain"
+}
+
 class ShareViewController: MoreStaticTableViewController {
 
 	var appearedInitial = false
@@ -29,9 +33,12 @@ class ShareViewController: MoreStaticTableViewController {
 		super.viewDidLoad()
 
 		AppLockManager.shared.passwordViewHostViewController = self
+		AppLockManager.shared.cancelAction = { [weak self] in
+			self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+		}
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+		// Theme.shared.add(tvgResourceFor: "owncloud-logo") // make brandable before re-adding
 		OCItem.registerIcons()
 		setupNavigationBar()
 		setupAccountSelection()
@@ -47,7 +54,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	@objc private func cancelAction () {
-		let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+		let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
 		extensionContext?.cancelRequest(withError: error)
 	}
 
@@ -66,20 +73,20 @@ class ShareViewController: MoreStaticTableViewController {
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 		if bookmarks.count > 0 {
 			if bookmarks.count > 1 {
-				let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
+				let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import into.".localized, alignment: .center)
 				actionsRows.append(rowDescription)
 
 				for (bookmark) in bookmarks {
 					let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 						self.openDirectoryPicker(for: bookmark, pushViewController: true)
-					}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
+					}, title: bookmark.shortName, style: .plain, /* make brandable before re-adding --> image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, */ alignment: .left)
 					actionsRows.append(row)
 				}
 			} else if let bookmark = bookmarks.first {
 				self.openDirectoryPicker(for: bookmark, pushViewController: false)
 			}
 		} else {
-			let rowDescription = StaticTableViewRow(label: "No account configured.\nSetup an new account in the app, before you can save a file.".localized, alignment: .center)
+			let rowDescription = StaticTableViewRow(label: "No account configured.\nSetup an new account in the app to save to.".localized, alignment: .center)
 			actionsRows.append(rowDescription)
 		}
 
@@ -87,15 +94,23 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	func openDirectoryPicker(for bookmark: OCBookmark, pushViewController: Bool) {
-		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in
-		}, completionHandler: { (core, error) in
+		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
 			if let core = core, error == nil {
-				let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
-					if let targetDirectory = selectedDirectory {
-						self.importFiles(to: targetDirectory, bookmark: bookmark, core: core)
-					}
-				})
 				OnMainThread {
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
+						if let targetDirectory = selectedDirectory {
+							self.importFiles(to: targetDirectory, bookmark: bookmark, core: core)
+						}
+					})
+
+					directoryPickerViewController.cancelAction = { [weak self] in
+						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+							OnMainThread {
+								self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+							}
+						})
+					}
+
 					if pushViewController {
 						self.navigationController?.pushViewController(directoryPickerViewController, animated: true)
 					} else {
@@ -114,58 +129,52 @@ class ShareViewController: MoreStaticTableViewController {
 	func importFiles(to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
 		if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
 
+			let dispatchGroup = DispatchGroup()
 			let progressHUDViewController = ProgressHUDViewController(on: self, label: "Saving".localized)
 
 			for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
-					if attachments.isEmpty {
-						self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-						return
-					}
+					for attachment in attachments {
+						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+							dispatchGroup.enter()
 
-					for (index, current) in attachments.enumerated() {
-						if let type = current.registeredTypeIdentifiers.first, current.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
-							current.loadItem(forTypeIdentifier: kUTTypeItem as String, options: nil, completionHandler: {(item, error) -> Void in
+							attachment.loadItem(forTypeIdentifier: kUTTypeItem as String, options: nil, completionHandler: { [weak core] (item, error) -> Void in
 								if error == nil {
 									if let url = item as? URL {
 										self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
-											if (index + 1) == attachments.count {
-												OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
-
-												OnMainThread {
-													progressHUDViewController.dismiss(animated: true, completion: {
-														self.dismiss(animated: true)
-														self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
-													})
-												}
-											}
+											dispatchGroup.leave()
 										}
 									} else if let data = item as? Data {
 										let ext = self.utiToFileExtension(type)
-										let tempFilePath = NSTemporaryDirectory() + (current.suggestedName ?? "Import") + "." + (ext ?? type)
+										let tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Import") + "." + (ext ?? type)
 
 										FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
 
 										self.importFile(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, core: core) { (_) in
 											try? FileManager.default.removeItem(atPath: tempFilePath)
 
-											if (index + 1) == attachments.count {
-												OnMainThread {
-													progressHUDViewController.dismiss(animated: true, completion: {
-														self.dismiss(animated: true)
-														self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
-													})
-												}
-											}
+											dispatchGroup.leave()
 										}
 									}
 								} else {
-									print("ERROR: \(String(describing: error))")
+									Log.error("Error loading item: \(String(describing: error))")
+									dispatchGroup.leave()
 								}
 							})
 						}
 					}
 				}
+			}
+
+			dispatchGroup.notify(queue: .main) {
+				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+					OnMainThread {
+						progressHUDViewController.dismiss(animated: true, completion: {
+							self.dismiss(animated: true)
+							self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+						})
+					}
+				})
 			}
 		}
 	}
@@ -176,8 +185,10 @@ class ShareViewController: MoreStaticTableViewController {
 					 at: targetDirectory,
 					 from: importItemURL,
 					 isSecurityScoped: false,
-					 options: [OCCoreOption.importByCopying : true,
-						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
+					 options: [
+						.importByCopying : true,
+						.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
+					 ],
 					 placeholderCompletionHandler: { (error, _) in
 						if error != nil {
 							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
@@ -185,11 +196,11 @@ class ShareViewController: MoreStaticTableViewController {
 						} else {
 							completion(nil)
 						}
-		},
+					 },
 					 resultHandler: nil
-			) == nil {
+		) == nil {
 			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-			let error = NSError(domain: "ImportFileErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+			let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
 			completion(error)
 		}
 	}
