@@ -19,10 +19,22 @@
 import Foundation
 import UIKit
 
+private let _sharedAppBundle = Bundle(identifier: "com.owncloud.ownCloudAppShared")
+
+public extension Bundle {
+	static var sharedAppBundle : Bundle {
+		return _sharedAppBundle!
+	}
+}
+
 extension String {
 
 	public var localized: String {
 		return NSLocalizedString(self, comment: "")
+	}
+
+	public var slocalized : String {
+		return NSLocalizedString(self, tableName: nil, bundle: Bundle.sharedAppBundle, value: self, comment: "")
 	}
 
 	public var isNumeric: Bool {

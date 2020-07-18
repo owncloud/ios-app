@@ -55,7 +55,7 @@ public class TVGImage: NSObject {
 		}
 
 		if resourceURL == nil {
-			resourceURL = Bundle(identifier: "com.owncloud.ownCloudAppShared")?.url(forResource: name, withExtension: "tvg")
+			resourceURL = Bundle.sharedAppBundle.url(forResource: name, withExtension: "tvg")
 		}
 
 		guard let loadURL = resourceURL else {

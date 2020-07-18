@@ -264,6 +264,7 @@
 		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
 		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
 		DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */; };
+		DC2FE2DA24C30586002AFDB3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */; };
 		DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939C22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift */; };
 		DC3393A022E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939F22E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift */; };
@@ -3104,7 +3105,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
@@ -3377,6 +3378,7 @@
 				DCE4E4A024C1FB750051722F /* x-office-document.tvg in Resources */,
 				DCE4E49124C1FB750051722F /* folder-starred.tvg in Resources */,
 				DCE4E4A124C1FB750051722F /* x-office-presentation.tvg in Resources */,
+				DC2FE2DA24C30586002AFDB3 /* Localizable.strings in Resources */,
 				DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */,
 				DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */,
 				DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */,

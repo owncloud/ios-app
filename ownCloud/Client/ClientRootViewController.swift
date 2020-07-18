@@ -340,7 +340,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			self.libraryViewController?.setupQueries()
 		}
 	}
-	
+
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
