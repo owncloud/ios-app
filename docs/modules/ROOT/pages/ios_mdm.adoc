@@ -21,7 +21,7 @@ Moreover, specfile XML is consistently supported by major EMM vendors.
 == Example: Deployment with MobileIron
 
 1. Open https://appconfig.jamfresearch.com[AppConfig Generator].
-2. Upload a specfile.xml.
+2. Upload a specfile.xml. (https://github.com/owncloud/ios-app/tree/master/MDM/AppConfig[Examples])
 3. Change the configuration options.
 4. Download the generated plist file (ManagedAppConfig).
 5. Open MobileIron Core.
