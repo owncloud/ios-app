@@ -275,7 +275,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			button.applyThemeCollection(collection, itemStyle: .bigTitle)
 		}
 
-		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: collection.neutralColors.normal.foreground))
+		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: .clear))
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 	}

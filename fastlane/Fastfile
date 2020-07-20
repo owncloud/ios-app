@@ -288,6 +288,9 @@ end
     set_info_plist_value(path: "ownCloud File ProviderUI/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud File ProviderUI/Info.plist", key: "CFBundleName", value: appName)
 
+    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleDisplayName", value: "Share to " + appName)
+    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleName", value: appName)
+
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
       plist_path: "ownCloud/Resources/Info.plist",

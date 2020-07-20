@@ -38,7 +38,6 @@ class ShareViewController: MoreStaticTableViewController {
 		}
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
-		// Theme.shared.add(tvgResourceFor: "owncloud-logo") // make brandable before re-adding
 		OCItem.registerIcons()
 		setupNavigationBar()
 		setupAccountSelection()
@@ -59,7 +58,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	private func setupNavigationBar() {
-		self.navigationItem.title = OCAppIdentity.shared.appName ?? "ownCloud"
+		self.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
 
 		let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
 		self.navigationItem.setRightBarButton(itemCancel, animated: false)
@@ -79,7 +78,7 @@ class ShareViewController: MoreStaticTableViewController {
 				for (bookmark) in bookmarks {
 					let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 						self.openDirectoryPicker(for: bookmark, pushViewController: true)
-					}, title: bookmark.shortName, style: .plain, /* make brandable before re-adding --> image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, */ alignment: .left)
+					}, title: bookmark.shortName, style: .plain, image: UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0)), imageWidth: 25, alignment: .left)
 					actionsRows.append(row)
 				}
 			} else if let bookmark = bookmarks.first {
