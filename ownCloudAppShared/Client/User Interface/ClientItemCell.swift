@@ -460,6 +460,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if progress != nil {
 			if progressView == nil {
 				let progressView = ProgressView()
+				progressView.contentMode = .center
 				progressView.translatesAutoresizingMaskIntoConstraints = false
 
 				self.contentView.addSubview(progressView)
