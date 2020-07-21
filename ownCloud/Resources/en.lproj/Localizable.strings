@@ -652,7 +652,7 @@
 "Size" = "Size";
 "Density" = "Density";
 "Color model" = "Color model";
-"%@ (%@ bits/channel)" = "%@ (%@ bits/channel)";
+"%@ (%d bits/channel)" = "%@ (%d bits/channel)";
 "Histogram" = "Histogram";
 
 "Camera details" = "Camera details";

@@ -646,7 +646,7 @@ class ImageMetadataViewController: StaticTableViewController {
 					}
 
 					if let colorModel = result.colorModel, let depth = result.depth {
-						let colorInfo = String(format: "%@ (%@ bits/channel)".localized, colorModel, depth)
+						let colorInfo = String(format: "%@ (%d bits/channel)".localized, colorModel, depth)
 						let colorInfoRow = ImageMetadataViewController.createMetadataRow(with: "Color model".localized, subtitle: colorInfo, identifier: "image-color-info")
 						imageDetailsSection.add(row: colorInfoRow)
 					}
