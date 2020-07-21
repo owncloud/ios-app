@@ -4781,7 +4781,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "ownCloud Share Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 11.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -4805,7 +4805,7 @@
 				CURRENT_PROJECT_VERSION = 161;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud Share Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 11.4;
 				MTL_FAST_MATH = YES;
