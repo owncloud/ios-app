@@ -146,7 +146,9 @@ class Migration {
 
 												// For the active account, migrate instant upload settings
 												if let activeAccount = rowDict["activeaccount"] as? Int, activeAccount == 1 {
-													self.migrateInstantUploadSettings(for: bookmark, userId: userId, accountDictionary: rowDict)
+													self.migrationQueue.async {
+														self.migrateInstantUploadSettings(for: bookmark, userId: userId, accountDictionary: rowDict)
+													}
 												}
 
 												Log.debug(tagged: ["MIGRATION"], "Bookmark successfully added")
@@ -156,6 +158,8 @@ class Migration {
 											} else {
 												self.postAccountMigrationNotification(activity: bookmarkActivity, state: .failed, type: .account)
 											}
+										} else {
+											Log.debug(tagged: ["MIGRATION"], "No credentials found for user id \(userId)")
 										}
 									}
 								}
@@ -226,9 +230,13 @@ class Migration {
 		var supportedAuthMethods: [OCAuthenticationMethodIdentifier]?
 
 		func connectAndAuthorize() {
+			Log.debug(tagged: ["MIGRATION"], "Preparing for setup")
+
 			connectGroup.enter()
 			connection.prepareForSetup(options: nil) { (issue, _, supportedAuthenticationMethods, _) in
 				supportedAuthMethods = supportedAuthenticationMethods
+
+				Log.debug(tagged: ["MIGRATION"], "Prepared setting up \(connection) with issue \(String(describing: issue))")
 
 				if supportedAuthMethods != nil {
 					connectGroup.leave()
@@ -253,22 +261,32 @@ class Migration {
 					return
 				}
 
-				// Present issues if the level is >= warning
-				DispatchQueue.main.async {
-					let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { (response) in
-						switch response {
-							case .cancel:
-								issue.reject()
-							case .approve:
-								issue.approve()
-								connectAndAuthorize()
-							case .dismiss:
-								break
-						}
-						connectGroup.leave()
-					})
+				if let parentViewController = parentViewController {
+					// Present issues if the level is >= warning
+					DispatchQueue.main.async {
+						let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { (response) in
+							Log.debug(tagged: ["MIGRATION"], "User responded to the issue with \(response)")
 
-					parentViewController?.present(issuesViewController, animated: true, completion: nil)
+							switch response {
+								case .cancel:
+									issue.reject()
+								case .approve:
+									issue.approve()
+									connectAndAuthorize()
+								case .dismiss:
+									break
+							}
+
+							connectGroup.leave()
+						})
+
+						parentViewController.present(issuesViewController, animated: true, completion: nil)
+						Log.debug(tagged: ["MIGRATION"], "Presenting the issue to the user")
+					}
+				} else {
+					Log.debug(tagged: ["MIGRATION"], "Can't present issue view controller, rejecting the issue")
+					issue.reject()
+					connectGroup.leave()
 				}
 			}
 		}
@@ -276,6 +294,8 @@ class Migration {
 		connectAndAuthorize()
 
 		connectGroup.wait()
+
+		Log.debug(tagged: ["MIGRATION"], "Finished setting up connection \(connection)")
 
 		return supportedAuthMethods
 	}
@@ -339,9 +359,11 @@ class Migration {
 					options[.presentingViewControllerKey] = parentViewController
 				}
 
+				Log.debug(tagged: ["MIGRATION"], "Generating authentication data with options: \(options)")
 				let semaphore = DispatchSemaphore(value: 0)
 				connection.generateAuthenticationData(withMethod: authMethod, options: options) { (error, authMethodIdentifier, authMethodData) in
 					if error == nil {
+						Log.debug(tagged: ["MIGRATION"], "Auth data generated")
 						bookmark.authenticationMethodIdentifier = authMethodIdentifier
 						bookmark.authenticationData = authMethodData
 					} else {
@@ -396,6 +418,8 @@ class Migration {
 			postAccountMigrationNotification(activity: activityName, type: .settings)
 
 			func setupInstantUpload() {
+				Log.debug(tagged: ["MIGRATION"], "Setting up instant upload")
+
 				userDefaults.instantPhotoUploadPath = Migration.legacyInstantUploadFolder
 				userDefaults.instantVideoUploadPath = Migration.legacyInstantUploadFolder
 				userDefaults.instantPhotoUploadBookmarkUUID = bookmark.uuid
@@ -422,6 +446,7 @@ class Migration {
 			var uploadFolderAvailable = false
 			let trackItemGroup = DispatchGroup()
 			trackItemGroup.enter()
+            Log.debug(tagged: ["MIGRATION"], "Check if the root folder is accessible")
 			OCItemTracker().item(for: bookmark, at: "/") { (error, core, rootItem) in
 				if rootItem != nil {
 					trackItemGroup.enter()
@@ -429,11 +454,13 @@ class Migration {
 						if error == nil {
 							if item == nil {
 								trackItemGroup.enter()
+								Log.debug(tagged: ["MIGRATION"], "Creating folder for instant upload")
 								core?.createFolder(Migration.legacyInstantUploadFolder, inside: rootItem!, options: nil, resultHandler: { (error, _, _, _) in
 									uploadFolderAvailable = (error == nil)
 									trackItemGroup.leave()
 								})
 							} else {
+								Log.debug(tagged: ["MIGRATION"], "Instant upload folder already exists")
 								uploadFolderAvailable = true
 							}
 						}
