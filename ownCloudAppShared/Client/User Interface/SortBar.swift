@@ -285,11 +285,11 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - UIPopoverPresentationControllerDelegate
-	private func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	@objc open func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
 
-	private func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+	@objc open func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }
