@@ -27,34 +27,111 @@ extension NSErrorDomain {
 
 class ShareViewController: MoreStaticTableViewController {
 
-	var appearedInitial = false
+	var willAppearInitial = false
+	var didAppearInitial = false
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
+		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
+
 		AppLockManager.shared.passwordViewHostViewController = self
 		AppLockManager.shared.cancelAction = { [weak self] in
-			self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+			self?.returnCores(completion: {
+				self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+			})
 		}
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
 		OCItem.registerIcons()
 		setupNavigationBar()
-		setupAccountSelection()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if !appearedInitial {
-			appearedInitial = true
+		if !willAppearInitial {
+			willAppearInitial = true
 			AppLockManager.shared.showLockscreenIfNeeded()
+
+			if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
+				appexNavigationController.dismissalAction = { [weak self] (_) in
+					self?.returnCores(completion: {
+						Log.debug("Returned all cores (share sheet was closed / dismissed)")
+					})
+				}
+			}
 		}
+
+		setupAccountSelection()
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		if didAppearInitial {
+			self.returnCores(completion: {
+				Log.debug("Returned all cores (back to server list)")
+			})
+		}
+
+		didAppearInitial = true
+	}
+
+	private var requestedCoreBookmarks : [OCBookmark] = []
+
+	func requestCore(for bookmark: OCBookmark, completionHandler: @escaping (OCCore?, Error?) -> Void) {
+		requestedCoreBookmarks.append(bookmark)
+
+		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+			if error != nil {
+				// Remove only one entry, not all for that bookmark
+				if let index = self.requestedCoreBookmarks.index(of: bookmark) {
+					self.requestedCoreBookmarks.remove(at: index)
+				}
+			}
+			completionHandler(core, error)
+		})
+	}
+
+	func returnCore(for bookmark: OCBookmark, completionHandler: @escaping () -> Void) {
+		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+			// Remove only one entry, not all for that bookmark
+			if let index = self.requestedCoreBookmarks.index(of: bookmark) {
+				self.requestedCoreBookmarks.remove(at: index)
+			}
+
+			completionHandler()
+		})
+	}
+
+	func returnCores(completion: (() -> Void)?) {
+		let waitGroup = DispatchGroup()
+		let returnBookmarks = requestedCoreBookmarks
+
+		requestedCoreBookmarks = []
+
+		for bookmark in returnBookmarks {
+			waitGroup.enter()
+
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+				waitGroup.leave()
+			})
+		}
+
+		waitGroup.notify(queue: .main, execute: {
+			OnMainThread {
+				completion?()
+			}
+		})
 	}
 
 	@objc private func cancelAction () {
-		let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
-		extensionContext?.cancelRequest(withError: error)
+		self.returnCores(completion: {
+			let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+			self.extensionContext?.cancelRequest(withError: error)
+		})
 	}
 
 	private func setupNavigationBar() {
@@ -77,12 +154,12 @@ class ShareViewController: MoreStaticTableViewController {
 
 				for (bookmark) in bookmarks {
 					let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-						self.openDirectoryPicker(for: bookmark, pushViewController: true)
+						self.openDirectoryPicker(for: bookmark, withBackButton: true)
 					}, title: bookmark.shortName, style: .plain, image: UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0)), imageWidth: 25, alignment: .left)
 					actionsRows.append(row)
 				}
 			} else if let bookmark = bookmarks.first {
-				self.openDirectoryPicker(for: bookmark, pushViewController: false)
+				self.openDirectoryPicker(for: bookmark, withBackButton: false)
 			}
 		} else {
 			let rowDescription = StaticTableViewRow(label: "No account configured.\nSetup an new account in the app to save to.".localized, alignment: .center)
@@ -92,8 +169,8 @@ class ShareViewController: MoreStaticTableViewController {
 		self.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
 	}
 
-	func openDirectoryPicker(for bookmark: OCBookmark, pushViewController: Bool) {
-		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+	func openDirectoryPicker(for bookmark: OCBookmark, withBackButton: Bool) {
+		self.requestCore(for: bookmark, completionHandler: { (core, error) in
 			if let core = core, error == nil {
 				OnMainThread {
 					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
@@ -103,23 +180,15 @@ class ShareViewController: MoreStaticTableViewController {
 					})
 
 					directoryPickerViewController.cancelAction = { [weak self] in
-						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-							OnMainThread {
-								self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-							}
+						self?.returnCores(completion: {
+							self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
 						})
 					}
 
-					if pushViewController {
-						self.navigationController?.pushViewController(directoryPickerViewController, animated: true)
-					} else {
-						self.addChild(directoryPickerViewController)
-						self.view.addSubview(directoryPickerViewController.view)
-						self.toolbarItems = directoryPickerViewController.toolbarItems
-
-						self.navigationItem.searchController = directoryPickerViewController.searchController
-						self.navigationItem.hidesSearchBarWhenScrolling = false
+					if !withBackButton {
+						directoryPickerViewController.navigationItem.setHidesBackButton(true, animated: false)
 					}
+					self.navigationController?.pushViewController(directoryPickerViewController, animated: withBackButton)
 				}
 			}
 		})
@@ -166,7 +235,7 @@ class ShareViewController: MoreStaticTableViewController {
 			}
 
 			dispatchGroup.notify(queue: .main) {
-				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+				self.returnCore(for: bookmark, completionHandler: {
 					OnMainThread {
 						progressHUDViewController.dismiss(animated: true, completion: {
 							self.dismiss(animated: true)
@@ -180,28 +249,47 @@ class ShareViewController: MoreStaticTableViewController {
 
 	func importFile(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?, completion: @escaping (_ error: Error?) -> Void) {
 		let name = importItemURL.lastPathComponent
-		if core?.importItemNamed(name,
-					 at: targetDirectory,
-					 from: importItemURL,
-					 isSecurityScoped: false,
-					 options: [
-						.importByCopying : true,
-						.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
-					 ],
-					 placeholderCompletionHandler: { (error, _) in
+
+		core?.acquireFileProviderServicesHost(completionHandler: { (error, serviceHost, doneHandler) in
+			let completeImport : (Error?) -> Void = { (error) in
+				completion(error)
+				doneHandler?()
+			}
+
+			if error != nil {
+				Log.debug("Error acquiring file provider host: \(error?.localizedDescription ?? "" )")
+				completeImport(error)
+			} else {
+				if let shareFilesRootURL = core?.vault.rootURL?.appendingPathComponent("share-extension", isDirectory: true) {
+					// Copy file into shared location
+					let tempFileFolderURL = shareFilesRootURL.appendingPathComponent(UUID().uuidString, isDirectory: true)
+					let tempFileURL = tempFileFolderURL.appendingPathComponent("file")
+
+					try? FileManager.default.createDirectory(at: tempFileFolderURL, withIntermediateDirectories: true, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
+					try? FileManager.default.copyItem(at: importItemURL, to: tempFileURL)
+
+					// Upload file from shared location
+					if serviceHost?.importItemNamed(name, at: targetDirectory, from: tempFileURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
+						// Remove file from shared location
+						try? FileManager.default.removeItem(at: tempFileFolderURL)
+
 						if error != nil {
 							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-							completion(error)
-						} else {
-							completion(nil)
 						}
-					 },
-					 resultHandler: nil
-		) == nil {
-			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-			let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
-			completion(error)
-		}
+
+						completeImport(error)
+					}) == nil {
+						Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+						let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
+
+						// Remove file from shared location
+						try? FileManager.default.removeItem(at: tempFileFolderURL)
+
+						completeImport(error)
+					}
+				}
+			}
+		})
 	}
 }
 

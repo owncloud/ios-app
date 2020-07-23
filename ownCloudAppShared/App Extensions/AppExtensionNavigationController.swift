@@ -20,6 +20,8 @@ import UIKit
 
 @objc(AppExtensionNavigationController)
 open class AppExtensionNavigationController: ThemeNavigationController {
+	open var dismissalAction: ((_ animated: Bool) -> Void)?
+
 	// MARK: - UserInterfaceContext glue
 	static public weak var mainNavigationController : ThemeNavigationController? {
 		didSet {
@@ -36,6 +38,12 @@ open class AppExtensionNavigationController: ThemeNavigationController {
 				ThemeStyle.considerAppearanceUpdate()
 			}
 		}
+	}
+
+	// MARK: - Detect dismissal
+	open override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		dismissalAction?(animated)
 	}
 
 	// MARK: - Entry point
