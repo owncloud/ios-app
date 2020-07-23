@@ -22,7 +22,11 @@ import ownCloudApp
 import CoreServices
 
 public typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
-public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
+public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?, _ controller: ClientDirectoryPickerViewController) -> Void
+
+extension NSErrorDomain {
+	static let ClientDirectoryPickerErrorDomain = "ClientDirectoryPickerErrorDomain"
+}
 
 open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
@@ -215,7 +219,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	// MARK: - Actions
 	open func userChose(item: OCItem?) {
-		self.choiceHandler?(item)
+		self.choiceHandler?(item, self)
 	}
 
 	open var cancelAction : (() -> Void)?
@@ -224,16 +228,25 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		if cancelAction != nil {
 			cancelAction?()
  		} else {
-			dismiss(animated: true, completion: {
-				self.userChose(item: nil)
-			})
+			if extensionContext != nil {
+				let error = NSError(domain: NSErrorDomain.ClientDirectoryPickerErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+				extensionContext?.cancelRequest(withError: error)
+			} else {
+				dismiss(animated: true, completion: {
+					self.userChose(item: nil)
+				})
+			}
 		}
 	}
 
 	@objc private func selectButtonPressed() {
-		dismiss(animated: true, completion: {
+		if extensionContext != nil {
 			self.userChose(item: self.query.rootItem)
-		})
+		} else {
+			dismiss(animated: true, completion: {
+				self.userChose(item: self.query.rootItem)
+			})
+		}
 	}
 
 	@objc open func createFolderButtonPressed(_ sender: UIBarButtonItem) {
