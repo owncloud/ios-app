@@ -26,15 +26,15 @@ final public class PushTransitionDelegate: NSObject, UIViewControllerTransitioni
 		super.init()
 	}
 
-	@objc private func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+	public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
 		return PushPresentationController(presentedViewController: presented, presenting: presenting)
 	}
 
-	@objc private func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+	public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 		return PushTransition(dismiss: false)
 	}
 
-	@objc private func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+	public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 		return PushTransition(dismiss: true, transitionRecovery: transitionRecovery)
 	}
 }
