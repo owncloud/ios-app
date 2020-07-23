@@ -274,8 +274,10 @@ end
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
     if File.exist?("../" + themePath)
-      bundle = get_info_plist_value(path: themePath, key: "Bundle")
-      appName = bundle["organizationName"]
+      tmpAppName = get_info_plist_value(path: themePath, key: "organizationName")
+      if tmpAppName != ""
+        appName = tmpAppName
+      end
     end
     ipaName = appName + ".ipa"
 
