@@ -26,6 +26,7 @@
 
 - (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler
 {
+	[NSFileManager.defaultManager createDirectoryAtURL:self.vault.fpServicesURL withIntermediateDirectories:YES attributes:nil error:NULL];
 	[NSFileManager.defaultManager getFileProviderServicesForItemAtURL:self.vault.fpServicesURL completionHandler:^(NSDictionary<NSFileProviderServiceName,NSFileProviderService *> * _Nullable services, NSError * _Nullable error) {
 		NSFileProviderService *service;
 
