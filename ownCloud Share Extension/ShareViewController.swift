@@ -158,15 +158,17 @@ class ShareViewController: MoreStaticTableViewController {
 					}, title: bookmark.shortName, style: .plain, image: UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0)), imageWidth: 25, alignment: .left)
 					actionsRows.append(row)
 				}
+
+				self.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
 			} else if let bookmark = bookmarks.first {
 				self.openDirectoryPicker(for: bookmark, withBackButton: false)
 			}
 		} else {
 			let rowDescription = StaticTableViewRow(label: "No account configured.\nSetup an new account in the app to save to.".localized, alignment: .center)
 			actionsRows.append(rowDescription)
-		}
 
-		self.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+			self.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+		}
 	}
 
 	func openDirectoryPicker(for bookmark: OCBookmark, withBackButton: Bool) {
