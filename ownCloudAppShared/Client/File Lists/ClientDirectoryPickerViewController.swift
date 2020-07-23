@@ -22,7 +22,7 @@ import ownCloudApp
 import CoreServices
 
 public typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
-public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?, _ controller: ClientDirectoryPickerViewController) -> Void
+public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
 
 extension NSErrorDomain {
 	static let ClientDirectoryPickerErrorDomain = "ClientDirectoryPickerErrorDomain"
@@ -219,7 +219,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	// MARK: - Actions
 	open func userChose(item: OCItem?) {
-		self.choiceHandler?(item, self)
+		self.choiceHandler?(item)
 	}
 
 	open var cancelAction : (() -> Void)?

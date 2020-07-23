@@ -24,6 +24,7 @@
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
+#import "FileProviderServiceSource.h"
 
 @interface FileProviderExtension ()
 {
@@ -59,8 +60,19 @@
 
 	[self addObserver:self forKeyPath:@"domain" options:0 context:(__bridge void *)self];
 
+	// [self postAlive];
+
 	return self;
 }
+
+//- (void)postAlive
+//{
+//	OCLogDebug(@"Alive…");
+//
+//	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//		[self postAlive];
+//	});
+//}
 
 - (void)dealloc
 {
@@ -196,6 +208,11 @@
 	NSParameterAssert(pathComponents.count > 2);
 
 	// OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
+
+	if ([pathComponents.lastObject isEqual:self.bookmark.fpServicesURLComponentName])
+	{
+		return (url.lastPathComponent);
+	}
 
 	return pathComponents[pathComponents.count - 2];
 }
@@ -776,11 +793,6 @@
 	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
 }
 
-- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
-{
-	return (nil);
-}
-
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
@@ -883,6 +895,23 @@
 	}
 
 	return (thumbnailRequest.progress);
+}
+
+#pragma mark - Services
+- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
+{
+	BOOL isSpecialItem = [itemIdentifier isEqual:self.bookmark.fpServicesURLComponentName];
+
+	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (%d)", OCLogPrivate(itemIdentifier), isSpecialItem);
+
+	if (isSpecialItem)
+	{
+		return (@[
+			[[FileProviderServiceSource alloc] initWithServiceName:OCFileProviderServiceName extension:self]
+		]);
+	}
+
+	return (nil);
 }
 
 #pragma mark - Core

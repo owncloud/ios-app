@@ -47,7 +47,7 @@ class CopyAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
 			if let targetDirectory = selectedDirectory {
 				items.forEach({ (item) in
 

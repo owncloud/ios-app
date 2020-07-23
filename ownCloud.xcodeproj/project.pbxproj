@@ -40,7 +40,6 @@
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
 		392DDAE624C8923B009E5406 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
-		392DDAED24C8958D009E5406 /* ShareViewClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392DDAEC24C8958D009E5406 /* ShareViewClientDirectoryPickerViewController.swift */; };
 		393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
 		3946B19E2456D5B100F03AED /* NotificationHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3946B19D2456D5B100F03AED /* NotificationHUDViewController.swift */; };
 		394A0AED22EEE32C00603813 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138222E79C6700089423 /* IntentHandler.swift */; };
@@ -440,6 +439,14 @@
 		DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
+		DCF2DA7A24C82E480026D790 /* FileProviderServiceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA7924C82E480026D790 /* FileProviderServiceSource.m */; };
+		DCF2DA7D24C835BF0026D790 /* OCVault+FPServices.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA7B24C835BF0026D790 /* OCVault+FPServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA7C24C835BF0026D790 /* OCVault+FPServices.m */; };
+		DCF2DA8124C836240026D790 /* OCBookmark+FPServices.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA7F24C836240026D790 /* OCBookmark+FPServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF2DA8224C836240026D790 /* OCBookmark+FPServices.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA8024C836240026D790 /* OCBookmark+FPServices.m */; };
+		DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA8424C87A330026D790 /* OCCore+FPServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA8524C87A330026D790 /* OCCore+FPServices.m */; };
 		DCFB74BB21AD5C46005796AF /* StaticLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44344321AC031600376B16 /* StaticLoginViewController.swift */; };
 		DCFB74C121AD5C88005796AF /* StaticLoginStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */; };
 		DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */; };
@@ -883,7 +890,6 @@
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		39265BB123D9987500B0C4CA /* MediaEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaEditingAction.swift; sourceTree = "<group>"; };
-		392DDAEC24C8958D009E5406 /* ShareViewClientDirectoryPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewClientDirectoryPickerViewController.swift; sourceTree = "<group>"; };
 		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
 		3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccountIntentHandler.swift; sourceTree = "<group>"; };
 		3946B19D2456D5B100F03AED /* NotificationHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHUDViewController.swift; sourceTree = "<group>"; };
@@ -1291,6 +1297,15 @@
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		DCEC3DE3242F665D0076B43C /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferView.swift; sourceTree = "<group>"; };
+		DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderService.h; sourceTree = "<group>"; };
+		DCF2DA7824C82E480026D790 /* FileProviderServiceSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderServiceSource.h; sourceTree = "<group>"; };
+		DCF2DA7924C82E480026D790 /* FileProviderServiceSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderServiceSource.m; sourceTree = "<group>"; };
+		DCF2DA7B24C835BF0026D790 /* OCVault+FPServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+FPServices.h"; sourceTree = "<group>"; };
+		DCF2DA7C24C835BF0026D790 /* OCVault+FPServices.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+FPServices.m"; sourceTree = "<group>"; };
+		DCF2DA7F24C836240026D790 /* OCBookmark+FPServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCBookmark+FPServices.h"; sourceTree = "<group>"; };
+		DCF2DA8024C836240026D790 /* OCBookmark+FPServices.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCBookmark+FPServices.m"; sourceTree = "<group>"; };
+		DCF2DA8424C87A330026D790 /* OCCore+FPServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCCore+FPServices.h"; sourceTree = "<group>"; };
+		DCF2DA8524C87A330026D790 /* OCCore+FPServices.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+FPServices.m"; sourceTree = "<group>"; };
 		DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
 		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
@@ -2392,6 +2407,7 @@
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
+				DCF2DA6F24C82C820026D790 /* File Provider Services */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DCFEFE2223687637009A142F /* Licensing */,
 				DCC832E5242CB14E00153F8C /* Notifications */,
@@ -2442,6 +2458,8 @@
 				DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */,
 				DC625140225C904700736874 /* NSError+MessageResolution.m */,
 				DC62513F225C904700736874 /* NSError+MessageResolution.h */,
+				DCF2DA7924C82E480026D790 /* FileProviderServiceSource.m */,
+				DCF2DA7824C82E480026D790 /* FileProviderServiceSource.h */,
 				DCC6565120C9B7E400110A97 /* Info.plist */,
 				DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */,
 				DC576EC222647A070087316D /* Localizable.strings */,
@@ -2629,7 +2647,6 @@
 				DCE4E46A24C1F5610051722F /* ShareViewController.swift */,
 				DCE4E48524C1F6B50051722F /* ShareNavigationController.swift */,
 				DCE4E46F24C1F5610051722F /* Info.plist */,
-				392DDAEC24C8958D009E5406 /* ShareViewClientDirectoryPickerViewController.swift */,
 			);
 			path = "ownCloud Share Extension";
 			sourceTree = "<group>";
@@ -2679,6 +2696,20 @@
 				DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */,
 			);
 			path = Offers;
+			sourceTree = "<group>";
+		};
+		DCF2DA6F24C82C820026D790 /* File Provider Services */ = {
+			isa = PBXGroup;
+			children = (
+				DCF2DA8524C87A330026D790 /* OCCore+FPServices.m */,
+				DCF2DA8424C87A330026D790 /* OCCore+FPServices.h */,
+				DCF2DA8024C836240026D790 /* OCBookmark+FPServices.m */,
+				DCF2DA7F24C836240026D790 /* OCBookmark+FPServices.h */,
+				DCF2DA7C24C835BF0026D790 /* OCVault+FPServices.m */,
+				DCF2DA7B24C835BF0026D790 /* OCVault+FPServices.h */,
+				DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */,
+			);
+			path = "File Provider Services";
 			sourceTree = "<group>";
 		};
 		DCF4F1612051925A00189B9A /* Bookmarks */ = {
@@ -2861,6 +2892,8 @@
 				DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
+				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
+				DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */,
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
 				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
 				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
@@ -2875,9 +2908,11 @@
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
 				DC080CE6238AE3F40044C5D2 /* OCLicenseAppStoreProvider.h in Headers */,
 				DCDC208C239912DC003CFF5B /* OCLicenseTransaction.h in Headers */,
+				DCF2DA7D24C835BF0026D790 /* OCVault+FPServices.h in Headers */,
 				DCDC20A12399A715003CFF5B /* OCCore+LicenseEnvironment.h in Headers */,
 				DCFEFE4F236880B5009A142F /* OCLicenseOffer.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
+				DCF2DA8124C836240026D790 /* OCBookmark+FPServices.h in Headers */,
 				DC66F3A523965A1400CF4812 /* NSDate+RFC3339.h in Headers */,
 				DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */,
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
@@ -3911,13 +3946,16 @@
 				DCFEFE9D2368D7FA009A142F /* OCLicenseObserver.m in Sources */,
 				DC66F39D239659C000CF4812 /* OCASN1.m in Sources */,
 				DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */,
+				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,
 				DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */,
 				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
+				DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */,
 				DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */,
 				DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */,
 				DCC832F2242CC28400153F8C /* NotificationMessagePresenter.m in Sources */,
+				DCF2DA8224C836240026D790 /* OCBookmark+FPServices.m in Sources */,
 				DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */,
 				DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */,
 				DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */,
@@ -3953,6 +3991,7 @@
 				DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */,
 				DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */,
 				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
+				DCF2DA7A24C82E480026D790 /* FileProviderServiceSource.m in Sources */,
 				DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */,
 				DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */,
 				DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */,
@@ -3967,7 +4006,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCE4E46B24C1F5610051722F /* ShareViewController.swift in Sources */,
-				392DDAED24C8958D009E5406 /* ShareViewClientDirectoryPickerViewController.swift in Sources */,
 				DCE4E48624C1F6B50051722F /* ShareNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
