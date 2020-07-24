@@ -18,9 +18,53 @@
 
 import UIKit
 
+extension UserDefaults {
+	enum ProPhotoUploadSettingsKeys : String {
+		case PreferOriginals = "pro-photo-upload-prefer-originals"
+		case PreferRAW = "pro-photo-upload-prefer-raw"
+	}
+
+	public var preferOriginalPhotos: Bool {
+		set {
+			self.set(newValue, forKey: ProPhotoUploadSettingsKeys.PreferOriginals.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: ProPhotoUploadSettingsKeys.PreferOriginals.rawValue)
+		}
+	}
+
+	public var preferRawPhotos: Bool {
+		set {
+			self.set(newValue, forKey: ProPhotoUploadSettingsKeys.PreferRAW.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: ProPhotoUploadSettingsKeys.PreferRAW.rawValue)
+		}
+	}
+}
+
 class ProPhotoUploadSettingsSection: SettingsSection {
+
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 		self.headerTitle = "Extended upload settings".localized
+
+		let preferOriginalsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			if let enableSwitch = sender as? UISwitch {
+				userDefaults.preferOriginalPhotos = enableSwitch.isOn
+			}
+			}, title: "Prefer original photos".localized, value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-originals")
+
+		self.add(row: preferOriginalsRow)
+
+		let preferRawRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			if let enableSwitch = sender as? UISwitch {
+				userDefaults.preferOriginalPhotos = enableSwitch.isOn
+			}
+			}, title: "Prefer RAW photos".localized, value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-raw")
+
+		self.add(row: preferRawRow)
 	}
 }

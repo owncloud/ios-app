@@ -28,11 +28,8 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(MediaExportSettingsSection(userDefaults: userDefaults))
 
-			/*
-			if LicenseRequirements(feature: .photoProFeatures).isUnlocked(for: <#T##OCCore#>) {
-
-			}
-			*/
+			// TODO: check LicenseRequirements(feature: .photoProFeatures).isUnlocked(for: <#T##OCCore#>)
+			self.addSection(ProPhotoUploadSettingsSection(userDefaults: userDefaults))
 
 			if OCBookmarkManager.shared.bookmarks.count > 0 {
 				self.addSection(AutoUploadSettingsSection(userDefaults: userDefaults))
