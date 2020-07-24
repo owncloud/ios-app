@@ -654,6 +654,8 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+"Photo Pro Features" = "Photo Pro Features";
+"Image metadata, extended upload options" = "Image metadata, extended upload options";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
@@ -664,3 +666,103 @@
 "Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
 "Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
 "Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
+
+/* Photo meta-data */
+"Image metadata" = "Image metadata";
+"Image details" = "Image details";
+"Profile" = "Profile";
+"Size" = "Size";
+"Density" = "Density";
+"Color model" = "Color model";
+"%@ (%d bits/channel)" = "%@ (%d bits/channel)";
+"Histogram" = "Histogram";
+
+"Camera details" = "Camera details";
+"Capture settings" = "Capture settings";
+"Time" = "Time";
+"EXIF aux info" = "EXIF aux info";
+"Authoring" =  "Authoring";
+"TIFF" = "TIFF";
+
+"Lens make" = "Lens make";
+"Lens model" = "Lens model";
+"Lens info" = "Lens info";
+"Focal length" = "Focal length";
+"Focal length @ 35 mm" = "Focal length @ 35 mm";
+
+"Shutter speed" = "Shutter speed";
+"Aperture" = "Aperture";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Program";
+"Not defined" = "Not defined";
+"Manual" = "Manual";
+"Normal" = "Normal";
+"Aperture priority" = "Aperture priority";
+"Shutter priority" = "Shutter priority";
+"Creative" = "Creative";
+"Action" = "Action";
+"Portrait" = "Portrait";
+"Landscape" = "Landscape";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Metering";
+"unknown" = "unknown";
+"Average" = "Average";
+"CenterWeightedAverage" = "CenterWeightedAverage";
+"Spot" = "Spot";
+"MultiSpot" = "MultiSpot";
+"Pattern" = "Pattern";
+"Partial" = "Partial";
+
+/* EXIF: flash mode */
+"Flash" = "Flash";
+"Fired" = "Fired";
+"Didn't fire" = "Didn't fire";
+"No strobe return detection" = "No strobe return detection";
+"Strobe return light not detected" = "Strobe return light not detected";
+"Strobe return light detected" = "Strobe return light detected";
+"Compulsory flash firing" = "Compulsory flash firing";
+"Compulsory flash supression" = "Compulsory flash supression";
+"Auto mode" = "Auto mode";
+"Red eye detection supported" = "Red eye detection supported";
+"not present" = "not present";
+
+/* EXIF: white balance */
+"White balance" = "White balance";
+"Auto" = "Auto";
+"Manual" = "Manual";
+
+"Exposure bias" = "Exposure bias";
+"Uncalibrated" = "Uncalibrated";
+"Original date" = "Original date";
+"Digitized date" = "Digitized date";
+
+/* EXIF: aux info */
+"Lens ID" = "Lens ID";
+"Lens serial" = "Lens serial";
+"Serial number" = "Serial number";
+"Flash compensation" = "Flash compensation";
+"Owner" = "Owner";
+"Firmware" = "Firmware";
+"Keywords" = "Keywords";
+"Copyright" = "Copyright";
+
+/* IPTC meta data */
+"Contact info" = "Contact info";
+"Usage terms" = "Usage terms";
+"Scene" = "Scene";
+"Description" = "Description";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Photometric interpretation";
+"none" = "none";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS Location";
+"Coordinates" = "Coordinates";
+"Altitude" = "Altitude";
+"Place" = "Place";
