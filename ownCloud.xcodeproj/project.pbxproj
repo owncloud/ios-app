@@ -9,17 +9,18 @@
 /* Begin PBXBuildFile section */
 		02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02072E5F23E46022006548A7 /* UIWindow+Extension.swift */; };
 		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
+		025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */; };
+		025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */; };
 		025FC720247810AB009307A7 /* MediaUploadSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */; };
 		025FC7272478123E009307A7 /* MediaExportSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */; };
 		025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */; };
 		025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */; };
 		025FC742247D5004009307A7 /* MediaUploadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC741247D5004009307A7 /* MediaUploadOperation.swift */; };
-		025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */; };
-		025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */; };
 		025FC745247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */; };
 		02633EFF2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */; };
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
+		02DC7C9024CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
 		232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
@@ -782,17 +783,18 @@
 /* Begin PBXFileReference section */
 		02072E5F23E46022006548A7 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
 		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
+		025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayExifMetadataAction.swift; sourceTree = "<group>"; };
+		025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadataViewController.swift; sourceTree = "<group>"; };
 		025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsViewController.swift; sourceTree = "<group>"; };
 		025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaExportSettingsSection.swift; sourceTree = "<group>"; };
 		025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoUploadSettingsSection.swift; sourceTree = "<group>"; };
 		025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+InstantUploads.swift"; sourceTree = "<group>"; };
 		025FC741247D5004009307A7 /* MediaUploadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadOperation.swift; sourceTree = "<group>"; };
-		025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayExifMetadataAction.swift; sourceTree = "<group>"; };
-		025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadataViewController.swift; sourceTree = "<group>"; };
 		025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundUploadsSettingsSection.swift; sourceTree = "<group>"; };
 		02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNUserNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
 		0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+UniversalLinks.swift"; sourceTree = "<group>"; };
 		0287DD7C249131E000C912CA /* AppStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatistics.swift; sourceTree = "<group>"; };
+		02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPhotoUploadSettingsSection.swift; sourceTree = "<group>"; };
 		03AE98EEF23B4F4F2C0FDD0F /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientDirectoryPickerViewController.swift; sourceTree = "<group>"; };
 		232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewHeader.swift; sourceTree = "<group>"; };
@@ -2543,6 +2545,7 @@
 				025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */,
 				025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */,
 				025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */,
+				02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */,
 				025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */,
 			);
 			path = Settings;
@@ -3565,6 +3568,7 @@
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */,
 				DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */,
+				02DC7C9024CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift in Sources */,
 				DCC832F6242CC5F700153F8C /* CardIssueMessagePresenter.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,

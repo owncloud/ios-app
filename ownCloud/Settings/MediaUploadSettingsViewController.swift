@@ -27,6 +27,13 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(MediaExportSettingsSection(userDefaults: userDefaults))
+
+			/*
+			if LicenseRequirements(feature: .photoProFeatures).isUnlocked(for: <#T##OCCore#>) {
+
+			}
+			*/
+
 			if OCBookmarkManager.shared.bookmarks.count > 0 {
 				self.addSection(AutoUploadSettingsSection(userDefaults: userDefaults))
 				// TODO: Re-add this section when we re-gain an ability to run background NSURLSessions
