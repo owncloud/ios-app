@@ -266,11 +266,45 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if VendorServices.shared.isBetaBuild,
+		   ActivitySection(rawValue: indexPath.section) == .activities,
+		   let activities = activities,
+		   let syncActivity = activities[indexPath.row] as? OCSyncRecordActivity {
+			return UISwipeActionsConfiguration(actions: [
+				UIContextualAction(style: .normal, title: "Info".localized, handler: { [weak self] (_, _, completionHandler) in
+					self?.showSyncInfo(for: syncActivity)
+					completionHandler(true)
+				})
+			])
+		}
+
+		return nil
+	}
+
 	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
 		return false
 	}
 
 	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 		return nil
+	}
+
+	// MARK: - Sync Info
+	func showSyncInfo(for syncActivity: OCSyncRecordActivity) {
+		self.core?.vault.database?.retrieveSyncRecord(forID: syncActivity.recordID, completionHandler: { (_, error, syncRecord) in
+			OnMainThread {
+				if error == nil {
+					let context = OCDiagnosticContext(core: self.core)
+					if let diagnosticNodes = syncRecord?.diagnosticNodes(with: context) {
+						let groupNode = OCDiagnosticNode.withLabel("Sync Record \(syncRecord?.recordID ?? 0)", children: diagnosticNodes)
+
+						self.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context), animated: true)
+					}
+				} else {
+					Log.error("Error retrieving syncRecord \(syncActivity.recordID): \(String(describing: error))")
+				}
+			}
+		})
 	}
 }
