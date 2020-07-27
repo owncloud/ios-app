@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 class MediaUploadSettingsViewController: StaticTableViewController {
 
@@ -28,7 +29,7 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(MediaExportSettingsSection(userDefaults: userDefaults))
 
-			// TODO: check LicenseRequirements(feature: .photoProFeatures).isUnlocked(for: <#T##OCCore#>)
+			// TODO: Check license for IAP
 			self.addSection(ProPhotoUploadSettingsSection(userDefaults: userDefaults))
 
 			if OCBookmarkManager.shared.bookmarks.count > 0 {
@@ -37,5 +38,28 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 				//self.addSection(BackgroundUploadsSettingsSection(userDefaults: userDefaults))
 			}
 		}
+	}
+
+	private func isProPhotoPackageLicensed() -> Bool {
+
+		let environment = OCLicenseEnvironment()
+
+		// Take a shortcut (ha!) if the authorization status is granted
+		if OCLicenseManager.shared.authorizationStatus(forFeature: .photoProFeatures, in: environment) == .granted {
+			return true
+		}
+
+		// Make sure that pending refreshes have been carried out otherwise, so the result is actually conclusive
+		let waitGroup = DispatchGroup()
+
+		waitGroup.enter()
+
+		OCLicenseManager.shared.perform(afterCurrentlyPendingRefreshes: {
+			waitGroup.leave()
+		})
+
+		_ = waitGroup.wait(timeout: .now() + 3)
+
+		return (OCLicenseManager.shared.authorizationStatus(forFeature: .photoProFeatures, in: environment) == .granted)
 	}
 }

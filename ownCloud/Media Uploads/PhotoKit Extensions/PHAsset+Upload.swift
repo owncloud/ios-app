@@ -93,7 +93,7 @@ extension PHAssetResource {
 			ext = "m4v"
 		case String(kUTTypeTIFF):
 			ext = "tiff"
-		case String(kUTTypeRawImage):
+		case String(kUTTypeRawImage), AVFileType.dng.rawValue:
 			ext = "dng"
 		default:
 			break
@@ -224,15 +224,27 @@ extension PHAsset {
 	- parameter resources: array of PHAssetResource objects belonging to PHAsset
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for image formats which shall be converted to JPEG format
+	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
-	func exportPhoto(resources:[PHAssetResource], fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+	func exportPhoto(resources:[PHAssetResource],
+					 fileName:String,
+					 utisToConvert:[String] = [],
+					 preferredResourceTypes:[PHAssetResourceType] = [],
+					 completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		var resourceToExport:PHAssetResource?
 		var outError: Error?
 
-		// For edited photo pick the edited version
-		resourceToExport = resources.filter({$0.type == .fullSizePhoto}).first
+		// Is there a preferred export type
+		if preferredResourceTypes.count > 0 {
+			resourceToExport = resources.filter({preferredResourceTypes.contains($0.type)}).first
+		}
+
+		if resourceToExport == nil {
+			// For edited photo pick the edited version
+			resourceToExport = resources.filter({$0.type == .fullSizePhoto}).first
+		}
 
 		// If edited photo is not avaialable, pick the original
 		if resourceToExport == nil {
@@ -252,8 +264,8 @@ extension PHAsset {
 		// Prepare export URL and remove path extension which will depend on output format
 		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
 
-		// Check if conversion is required?
-		if utisToConvert.contains(resource.uniformTypeIdentifier) {
+		// Check if conversion is required? Don't convert RAW though
+		if utisToConvert.contains(resource.uniformTypeIdentifier) && resource.type != .alternatePhoto {
 
 			// Since conversion to JPEG is desired, we have first to get the actual data
 			var assetData = Data()
@@ -416,14 +428,19 @@ extension PHAsset {
 
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for media formats which shall be converted
+	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
 	- parameter completion: called when the file is written to disk or if an error occurs
 	*/
-	func export(fileName:String, utisToConvert:[String] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
+	func export(fileName:String, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
 		let assetResources = PHAssetResource.assetResources(for: self)
 		if assetResources.count > 0 {
 			// We have actual data on the device and we can export it directly
 			if self.mediaType == .image {
-				exportPhoto(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+				exportPhoto(resources: assetResources,
+							fileName: fileName,
+							utisToConvert: utisToConvert,
+							preferredResourceTypes: preferredResourceTypes,
+							completionHandler: { (url, error) in
 					completion(url, error)
 				})
 			} else if self.mediaType == .video {
@@ -436,11 +453,14 @@ extension PHAsset {
 		} else {
 			// It could be that we don't have any asset resources locally e.g. since we have to deal with an asset from a cloud album
 			if self.mediaType == .image {
-				exportPhoto(fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+				exportPhoto(fileName: fileName,
+							utisToConvert: utisToConvert,
+							completionHandler: { (url, error) in
 					completion(url, error)
 				})
 			} else if self.mediaType == .video {
-				exportVideo(fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+				exportVideo(fileName: fileName,
+							utisToConvert: utisToConvert) { (url, error) in
 					completion(url, error)
 				}
 			} else {
@@ -454,12 +474,13 @@ extension PHAsset {
 	- parameter core: Reference to the core to be used for the upload
 	- parameter rootItem: Directory item where the media file shall be uploaded
 	- parameter utisToConvert: Array of UTI identifiers describing desired output formats
+	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
 	- parameter preserveOriginalName If true, use original file name from the photo library
 	- parameter completionHandler: Completion handler called after the media file is imported into the core and placeholder item is created.
 	- parameter progressHandler: Receives progress of the at the moment running activity
 	- parameter uploadCompleteHandler: Called when core reports that upload is done
 	*/
-	func upload(with core:OCCore?, at rootItem:OCItem, utisToConvert:[String] = [], preserveOriginalName:Bool = true, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
+	func upload(with core:OCCore?, at rootItem:OCItem, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], preserveOriginalName:Bool = true, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
 
 		func performUpload(sourceURL:URL, copySource:Bool, cellularSwitchIdentifier:OCCellularSwitchIdentifier?) -> (OCItem?, Error?)? {
 
@@ -532,7 +553,7 @@ extension PHAsset {
 
 				// Synchronously export asset
 				let semaphore = DispatchSemaphore(value: 0)
-				export(fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
+				export(fileName: assetName, utisToConvert: utisToConvert, preferredResourceTypes: preferredResourceTypes) { (url, error) in
 					exportedAssetURL = url
 					outError = error
 					semaphore.signal()

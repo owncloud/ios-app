@@ -61,9 +61,9 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 
 		let preferRawRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
-				userDefaults.preferOriginalPhotos = enableSwitch.isOn
+				userDefaults.preferRawPhotos = enableSwitch.isOn
 			}
-			}, title: "Prefer RAW photos".localized, value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-raw")
+			}, title: "Prefer RAW photos".localized, value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
 
 		self.add(row: preferRawRow)
 	}
