@@ -483,9 +483,19 @@ class ImageMetadataParser {
 			result.profile = profile
 		}
 
-		if let height = imageProperties[kCGImagePropertyPixelHeight as String] as? CGFloat,
-			let width = imageProperties[kCGImagePropertyPixelWidth as String] as? CGFloat {
-			result.size = CGSize(width: width, height: height)
+		result.size = CGSize.zero
+		if let exifDict = imageProperties[kCGImagePropertyExifDictionary as String]  as? [String : Any] {
+			if let height = exifDict[kCGImagePropertyExifPixelYDimension as String] as? CGFloat,
+				let width = exifDict[kCGImagePropertyExifPixelXDimension as String] as? CGFloat {
+				result.size = CGSize(width: width, height: height)
+			}
+		}
+
+		if result.size == CGSize.zero {
+			if let height = imageProperties[kCGImagePropertyPixelHeight as String] as? CGFloat,
+				let width = imageProperties[kCGImagePropertyPixelWidth as String] as? CGFloat {
+				result.size = CGSize(width: width, height: height)
+			}
 		}
 
 		if let dpi = imageProperties[kCGImagePropertyDPIHeight as String] as? Int {
