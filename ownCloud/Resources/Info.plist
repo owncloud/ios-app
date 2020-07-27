@@ -11,7 +11,22 @@
 	<key>CFBundleDisplayName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleDocumentTypes</key>
-	<array/>
+		<array>
+			<dict>
+				<key>CFBundleTypeIconFiles</key>
+				<array/>
+				<key>CFBundleTypeName</key>
+				<string>Import all file types</string>
+				<key>LSHandlerRank</key>
+				<string>Alternate</string>
+				<key>LSItemContentTypes</key>
+				<array>
+					<string>public.data</string>
+					<string>public.content</string>
+					<string>public.image</string>
+				</array>
+			</dict>
+		</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
