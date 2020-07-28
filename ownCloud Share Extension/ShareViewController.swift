@@ -205,29 +205,25 @@ class ShareViewController: MoreStaticTableViewController {
 						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
 							dispatchGroup.enter()
 
-							attachment.loadItem(forTypeIdentifier: kUTTypeItem as String, options: nil, completionHandler: { [weak core] (item, error) -> Void in
-								if error == nil {
-									if let url = item as? URL {
-										self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
-											dispatchGroup.leave()
-										}
-									} else if let data = item as? Data {
-										let ext = self.utiToFileExtension(type)
-										let tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Import") + "." + (ext ?? type)
+							attachment.loadFileRepresentation(forTypeIdentifier: type) { (url, error) in
+								if error == nil, let url = url, let shareFilesRootURL = core?.vault.rootURL?.appendingPathComponent("share-extension", isDirectory: true) {
+									// Copy file into shared location
+									let tempFileFolderURL = shareFilesRootURL.appendingPathComponent(UUID().uuidString, isDirectory: true)
+									let name = url.lastPathComponent
+									let tempFileURL = tempFileFolderURL.appendingPathComponent(name)
 
-										FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
+									try? FileManager.default.createDirectory(at: tempFileFolderURL, withIntermediateDirectories: true, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
+									try? FileManager.default.copyItem(at: url, to: tempFileURL)
 
-										self.importFile(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, core: core) { (_) in
-											try? FileManager.default.removeItem(atPath: tempFilePath)
-
-											dispatchGroup.leave()
-										}
+									self.importFile(url: tempFileURL, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
+										try? FileManager.default.removeItem(at: tempFileFolderURL)
+										dispatchGroup.leave()
 									}
 								} else {
 									Log.error("Error loading item: \(String(describing: error))")
-									dispatchGroup.leave()
+																   dispatchGroup.leave()
 								}
-							})
+							}
 						}
 					}
 				}
@@ -259,33 +255,19 @@ class ShareViewController: MoreStaticTableViewController {
 				Log.debug("Error acquiring file provider host: \(error?.localizedDescription ?? "" )")
 				completeImport(error)
 			} else {
-				if let shareFilesRootURL = core?.vault.rootURL?.appendingPathComponent("share-extension", isDirectory: true) {
-					// Copy file into shared location
-					let tempFileFolderURL = shareFilesRootURL.appendingPathComponent(UUID().uuidString, isDirectory: true)
-					let tempFileURL = tempFileFolderURL.appendingPathComponent("file")
+				// Upload file from shared location
+				if serviceHost?.importItemNamed(name, at: targetDirectory, from: importItemURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
 
-					try? FileManager.default.createDirectory(at: tempFileFolderURL, withIntermediateDirectories: true, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
-					try? FileManager.default.copyItem(at: importItemURL, to: tempFileURL)
-
-					// Upload file from shared location
-					if serviceHost?.importItemNamed(name, at: targetDirectory, from: tempFileURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
-						// Remove file from shared location
-						try? FileManager.default.removeItem(at: tempFileFolderURL)
-
-						if error != nil {
-							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-						}
-
-						completeImport(error)
-					}) == nil {
-						Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-						let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
-
-						// Remove file from shared location
-						try? FileManager.default.removeItem(at: tempFileFolderURL)
-
-						completeImport(error)
+					if error != nil {
+						Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
 					}
+
+					completeImport(error)
+				}) == nil {
+					Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+					let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
+
+					completeImport(error)
 				}
 			}
 		})
