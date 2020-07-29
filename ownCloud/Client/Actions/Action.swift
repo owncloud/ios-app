@@ -133,7 +133,8 @@ class Action : NSObject {
 
 		let customMatcher : OCExtensionCustomContextMatcher  = { (context, priority) -> OCExtensionPriority in
 
-			guard let actionContext = context as? ActionContext else {
+			// Make sure we have valid context and extension was not filtered out due to location mismatch
+			guard let actionContext = context as? ActionContext, priority != .noMatch else {
 				return priority
 			}
 

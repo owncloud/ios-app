@@ -31,7 +31,6 @@ class MoveAction : Action {
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.filter({return $0.isRoot || (!$0.permissions.contains(.move) && !$0.permissions.contains(.delete))}).count > 0 {
 			return .none
-
 		}
 
 		return .middle
