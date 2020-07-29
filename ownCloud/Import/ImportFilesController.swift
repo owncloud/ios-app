@@ -20,29 +20,69 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+extension Array where Element: Equatable {
+    mutating func remove(object: Element) {
+		guard let index = firstIndex(of: object) else { return }
+        remove(at: index)
+    }
+
+}
+
+struct ImportFile: Equatable {
+	var url: URL
+	var fileIsLocalCopy: Bool
+}
+
 class ImportFilesController: NSObject {
 
 	// MARK: - Instance variables
-	var url: URL
+
+	static var shared = ImportFilesController()
+	//var url: URL?
 	var localCopyContainerURL: URL?
 	var localCopyURL: URL?
-	var fileIsLocalCopy: Bool
+	//var fileIsLocalCopy: Bool
+	var importFiles: [ImportFile] = []
+	var isVisible: Bool = false
 
 	var fileCoordinator : NSFileCoordinator?
+	var header : MoreViewHeader?
 
 	// MARK: - Init & Deinit
+
+	override init() {
+		//self.url = url
+		//importFiles?.append(url)
+		//fileIsLocalCopy = copyBeforeUsing
+	}
+	/*
 	init(url: URL, copyBeforeUsing: Bool) {
 		self.url = url
+		//importFiles?.append(url)
 		fileIsLocalCopy = copyBeforeUsing
-	}
+	}*/
 
 	deinit {
-		removeLocalCopy()
+		//removeLocalCopy()
 	}
 
 }
 
 extension ImportFilesController {
+
+	public func importFile(_ importFile: ImportFile) {
+		importFiles.append(importFile)
+
+		prepareInputFileForImport(file: importFile, completion: { (error) in
+			guard error == nil else {
+				Log.error("Couldn't import file \(importFile.url.absoluteString) because of error: \(String(describing: error))")
+
+				return
+			}
+
+			self.showAccountUI()
+		})
+	}
 
 	func makeLocalCopy(of itemURL: URL, completion: (_ error: Error?) -> Void) {
 		if let appGroupURL = OCAppIdentity.shared.appGroupContainerURL {
@@ -77,9 +117,9 @@ extension ImportFilesController {
 			inboxURL = inboxURL.appendingPathComponent(itemURL.lastPathComponent)
 			do {
 				try fileManager.copyItem(at: itemURL, to: inboxURL)
-				self.url = inboxURL
+				//self.url = inboxURL
 				self.localCopyURL = inboxURL
-				self.fileIsLocalCopy = true
+				//self.fileIsLocalCopy = true
 			} catch let error as NSError {
 				Log.debug("Error copying file \(inboxURL) \(error.localizedDescription)")
 
@@ -91,15 +131,15 @@ extension ImportFilesController {
 		completion(nil)
 	}
 
-	func prepareInputFileForImport(completion: @escaping (_ error: Error?) -> Void) {
-		let securityScopedURL = url
+	func prepareInputFileForImport(file: ImportFile, completion: @escaping (_ error: Error?) -> Void) {
+		let securityScopedURL = file.url
 		var isAccessingSecurityScopedResource = false
 
-		if !fileIsLocalCopy {
+		if !file.fileIsLocalCopy {
 			isAccessingSecurityScopedResource = securityScopedURL.startAccessingSecurityScopedResource()
 		}
 
-		let uploadIntent = NSFileAccessIntent.readingIntent(with: url, options: .forUploading)
+		let uploadIntent = NSFileAccessIntent.readingIntent(with: file.url, options: .forUploading)
 
 		fileCoordinator = NSFileCoordinator(filePresenter: nil)
 		fileCoordinator?.coordinate(with: [uploadIntent], queue: OperationQueue.main, byAccessor: { (error) in
@@ -117,42 +157,47 @@ extension ImportFilesController {
 		})
 	}
 
-	func accountUI() {
-		prepareInputFileForImport(completion: { (error) in
-			guard error == nil else {
-				Log.error("Couldn't import file \(self.url.absoluteString) because of error: \(String(describing: error))")
-
-				return
-			}
-
+	func showAccountUI() {
+		if !isVisible {
 			let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
-
-			if bookmarks.count > 0 {
-				let moreViewController = self.cardViewController(for: self.localCopyURL ?? self.url)
-				if let window = UserInterfaceContext.shared.currentWindow {
+			if bookmarks.count > 0, let url = importFiles.first?.url {
+				let moreViewController = self.cardViewController(for: self.localCopyURL ?? url)
+				if let window = UserInterfaceContext.shared.currentWindow, let moreViewController = moreViewController {
 					let viewController = window.rootViewController
 					if let navigationController = viewController as? UINavigationController, let viewController = navigationController.visibleViewController {
 						OnMainThread {
+							self.isVisible = true
 							viewController.present(asCard: moreViewController, animated: true)
 						}
 					} else {
 						OnMainThread {
+							self.isVisible = true
 							viewController?.present(asCard: moreViewController, animated: true)
 						}
 					}
 				}
 			}
-		})
+		} else {
+
+			let fileNames = importFiles.map { (importFile) -> String in
+				return importFile.url.lastPathComponent
+			}
+
+			header?.updateHeader(title: "\(importFiles.count) Files", subtitle: fileNames.joined(separator: ", "))
+		}
 	}
 
-	func importItemWithDirectoryPicker(with url : URL, into bookmark: OCBookmark) {
+	func importItemsWithDirectoryPicker(into bookmark: OCBookmark) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in
 		}, completionHandler: { (core, error) in
 			if let core = core, error == nil {
 				OnMainThread {
 					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
 						if let targetDirectory = selectedDirectory {
-							self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core)
+							self.importFiles.forEach { (importFile) in
+								self.importFile(importFile, to: targetDirectory, bookmark: bookmark, core: core)
+							}
+							self.isVisible = false
 						}
 					})
 
@@ -172,11 +217,11 @@ extension ImportFilesController {
 		})
 	}
 
-	func importFile(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
-		let name = importItemURL.lastPathComponent
+	func importFile(_ importFile: ImportFile, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
+		let name = importFile.url.lastPathComponent
 		if core?.importItemNamed(name,
 					 at: targetDirectory,
-					 from: importItemURL,
+					 from: importFile.url,
 					 isSecurityScoped: false,
 					 options: [OCCoreOption.importByCopying : true,
 						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
@@ -196,7 +241,7 @@ extension ImportFilesController {
 						} else {
 							Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
 
-							self.removeLocalCopy()
+							self.removeLocalCopy(importFile: importFile)
 						}
 					}
 		) == nil {
@@ -204,9 +249,11 @@ extension ImportFilesController {
 		}
 	}
 
-	func cardViewController(for url: URL) -> UIViewController {
+	func cardViewController(for url: URL) -> MoreViewController? {
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let header = MoreViewHeader(url: url)
+		header = MoreViewHeader(url: url)
+		guard let header = header else { return nil }
+
 		let moreViewController = MoreViewController(header: header, viewController: tableViewController)
 
 		let title = NSAttributedString(string: "Save File".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
@@ -220,13 +267,14 @@ extension ImportFilesController {
 		for (bookmark) in bookmarks {
 			let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 				moreViewController.dismiss(animated: true, completion: {
-					self.importItemWithDirectoryPicker(with: url, into: bookmark)
+					self.importItemsWithDirectoryPicker(into: bookmark)
 				})
 				}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
 			actionsRows.append(row)
 		}
 
 		let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
+			self.isVisible = false
 			moreViewController.dismiss(animated: true, completion: nil)
 		}, title: "Cancel".localized, style: .destructive, alignment: .center)
 		actionsRows.append(row)
@@ -236,21 +284,19 @@ extension ImportFilesController {
 		return moreViewController
 	}
 
-	func removeLocalCopy() {
-		if fileIsLocalCopy {
+	func removeLocalCopy(importFile: ImportFile) {
+		if importFile.fileIsLocalCopy {
 			let fileManager = FileManager.default
 
-			if let localCopyURL = localCopyURL {
-				if fileManager.fileExists(atPath: localCopyURL.path) {
-					do {
-						try fileManager.removeItem(at: localCopyURL)
-					} catch {
-					}
+			if fileManager.fileExists(atPath: importFile.url.path) {
+				do {
+					try fileManager.removeItem(at: importFile.url)
+				} catch {
 				}
 			}
 
 			if let localCopyContainerURL = localCopyContainerURL {
-				if fileManager.fileExists(atPath: localCopyContainerURL.path) {
+				if fileManager.fileExists(atPath: importFile.url.path) {
 					do {
 						try fileManager.removeItem(at: localCopyContainerURL)
 					} catch {
@@ -258,6 +304,7 @@ extension ImportFilesController {
 				}
 			}
 		}
+		importFiles.remove(object: importFile)
 	}
 
 	class func removeImportDirectory() {

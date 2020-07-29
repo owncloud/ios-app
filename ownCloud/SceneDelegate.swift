@@ -50,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			if urlContext.url.matchesAppScheme {
 				openPrivateLink(url: urlContext.url, in: scene)
 			} else {
-				ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
 		} else  if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
 			if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
@@ -111,15 +111,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-		print("--> url \(URLContexts)")
-
-        if let urlContext = URLContexts.first {
-			if urlContext.url.matchesAppScheme {
-				openPrivateLink(url: urlContext.url, in: scene)
-            } else {
-				ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+		if let urlContext = URLContexts.first, urlContext.url.matchesAppScheme {
+			openPrivateLink(url: urlContext.url, in: scene)
+		} else {
+			URLContexts.forEach { (urlContext) in
+				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
-        }
+		}
     }
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {

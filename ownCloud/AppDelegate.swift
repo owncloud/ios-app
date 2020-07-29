@@ -158,7 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				copyBeforeUsing = !shouldOpenInPlace
 			}
 
-			ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+			ImportFilesController.shared.importFile(ImportFile(url: url, fileIsLocalCopy: copyBeforeUsing))
 		}
 
 		return true

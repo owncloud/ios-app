@@ -222,6 +222,11 @@ open class MoreViewHeader: UIView {
 		titleLabel.numberOfLines = 0
 	}
 
+	public func updateHeader(title: String, subtitle: String) {
+		titleLabel.text = title
+		detailLabel.text = subtitle
+	}
+
 	public required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
