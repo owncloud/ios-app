@@ -270,10 +270,18 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		if VendorServices.shared.isBetaBuild,
 		   ActivitySection(rawValue: indexPath.section) == .activities,
 		   let activities = activities,
-		   let syncActivity = activities[indexPath.row] as? OCSyncRecordActivity {
+		   let nodeGenerator = activities[indexPath.row] as? DiagnosticNodeGenerator, nodeGenerator.isDiagnosticNodeGenerationAvailable {
 			return UISwipeActionsConfiguration(actions: [
 				UIContextualAction(style: .normal, title: "Info".localized, handler: { [weak self] (_, _, completionHandler) in
-					self?.showSyncInfo(for: syncActivity)
+					let context = OCDiagnosticContext(core: self?.core)
+
+					nodeGenerator.provideDiagnosticNode(for: context, completion: { [weak self] (groupNode, style) in
+						guard let groupNode = groupNode else { return }
+
+						OnMainThread {
+							self?.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context, style: style), animated: true)
+						}
+					})
 					completionHandler(true)
 				})
 			])
@@ -288,33 +296,5 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 
 	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 		return nil
-	}
-
-	// MARK: - Sync Info
-	func showSyncInfo(for syncActivity: OCSyncRecordActivity) {
-		self.core?.vault.database?.retrieveSyncRecord(forID: syncActivity.recordID, completionHandler: { (_, error, syncRecord) in
-			OnMainThread {
-				if error == nil {
-					let context = OCDiagnosticContext(core: self.core)
-					if let syncRecordDiagnosticNodes = syncRecord?.diagnosticNodes(with: context), let allPipelines = self.core?.connection.allHTTPPipelines {
-						var diagnosticNodes = syncRecordDiagnosticNodes
-						var pipelineNodes : [OCDiagnosticNode] = []
-
-						for pipeline in allPipelines {
-							let nodes = pipeline.diagnosticNodes(with: context)
-							pipelineNodes.append(OCDiagnosticNode.withLabel("HTTP Pipeline \(pipeline.identifier)", children: nodes))
-						}
-
-						diagnosticNodes.append(OCDiagnosticNode.withLabel("HTTP Requests", children: pipelineNodes))
-
-						let groupNode = OCDiagnosticNode.withLabel("Sync Record \(syncRecord?.recordID ?? 0)", children: diagnosticNodes)
-
-						self.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context), animated: true)
-					}
-				} else {
-					Log.error("Error retrieving syncRecord \(syncActivity.recordID): \(String(describing: error))")
-				}
-			}
-		})
 	}
 }

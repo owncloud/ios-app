@@ -19,6 +19,11 @@
 import UIKit
 import ownCloudSDK
 
+protocol DiagnosticNodeGenerator : OCActivity {
+	var isDiagnosticNodeGenerationAvailable : Bool { get }
+	func provideDiagnosticNode(for context: OCDiagnosticContext, completion: @escaping (_ groupNode: OCDiagnosticNode?, _ style: DiagnosticViewController.Style) -> Void)
+}
+
 class DiagnosticViewController: StaticTableViewController {
 
 	var context : OCDiagnosticContext?
@@ -30,8 +35,14 @@ class DiagnosticViewController: StaticTableViewController {
 		}
 	}
 
-	init(for node: OCDiagnosticNode, context: OCDiagnosticContext?) {
+	enum Style {
+		case flat
+		case hierarchical
+	}
+
+	init(for node: OCDiagnosticNode, context: OCDiagnosticContext?, style: Style = .hierarchical) {
 		self.context = context
+		self.style = style
 
 		super.init(style: .grouped)
 
@@ -48,6 +59,7 @@ class DiagnosticViewController: StaticTableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	private var style : Style
 	private var section : StaticTableViewSection?
 	private var newSections : [StaticTableViewSection]?
 
@@ -71,11 +83,21 @@ class DiagnosticViewController: StaticTableViewController {
 					}, title: node.label ?? "", style: .plain))
 
 				case .group:
-					if let children = node.children {
-						section = StaticTableViewSection(headerTitle: node.label)
-						newSections?.append(section!)
+					switch style {
+						case .flat:
+							if let children = node.children {
+								section = StaticTableViewSection(headerTitle: node.label)
+								newSections?.append(section!)
 
-						add(nodes: children)
+								add(nodes: children)
+							}
+
+						case .hierarchical:
+							section?.add(row: StaticTableViewRow(rowWithAction: { [weak self, weak context] (_, _) in
+								let viewController = DiagnosticViewController(for: node, context: context, style: self?.style ?? .hierarchical)
+
+								self?.navigationController?.pushViewController(viewController, animated: true)
+							}, title: node.label ?? "", accessoryType: .disclosureIndicator))
 					}
 			}
 		}
