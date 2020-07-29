@@ -296,7 +296,17 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 			OnMainThread {
 				if error == nil {
 					let context = OCDiagnosticContext(core: self.core)
-					if let diagnosticNodes = syncRecord?.diagnosticNodes(with: context) {
+					if let syncRecordDiagnosticNodes = syncRecord?.diagnosticNodes(with: context), let allPipelines = self.core?.connection.allHTTPPipelines {
+						var diagnosticNodes = syncRecordDiagnosticNodes
+						var pipelineNodes : [OCDiagnosticNode] = []
+
+						for pipeline in allPipelines {
+							let nodes = pipeline.diagnosticNodes(with: context)
+							pipelineNodes.append(OCDiagnosticNode.withLabel("HTTP Pipeline \(pipeline.identifier)", children: nodes))
+						}
+
+						diagnosticNodes.append(OCDiagnosticNode.withLabel("HTTP Requests", children: pipelineNodes))
+
 						let groupNode = OCDiagnosticNode.withLabel("Sync Record \(syncRecord?.recordID ?? 0)", children: diagnosticNodes)
 
 						self.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context), animated: true)

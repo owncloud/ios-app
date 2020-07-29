@@ -57,16 +57,18 @@ class DiagnosticViewController: StaticTableViewController {
 
 			switch node.type {
 				case .info:
-					if let length = node.content?.count, length < 20 {
+					let length = (node.content?.count ?? 0) + (node.label?.count ?? 0)
+
+					if length < 40 {
 						section?.add(row: StaticTableViewRow(valueRowWithAction: nil, title: node.label ?? "", value: node.content ?? ""))
 					} else {
 						section?.add(row: StaticTableViewRow(rowWithAction: nil, title: node.label ?? "", subtitle: node.content))
 					}
 
 				case .action:
-					section?.add(row: StaticTableViewRow(buttonWithAction: { (_, _) in
-						node.action?()
-					}, title: node.label ?? ""))
+					section?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+						node.action?(self?.context)
+					}, title: node.label ?? "", style: .plain))
 
 				case .group:
 					if let children = node.children {
