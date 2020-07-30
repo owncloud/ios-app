@@ -48,12 +48,111 @@ class VendorServices : NSObject {
 		return ""
 	}
 
+	var brandingURL : URL? {
+		return Bundle.main.url(forResource: "Branding", withExtension: "plist")
+	}
+
+	func brandingURLFor(name: String) -> URL? {
+		return Bundle.main.url(forResource: name, withExtension: "plist")
+	}
+
+	var brandingProperties : NSDictionary? {
+		var themingValues : NSDictionary?
+
+		if let url = self.brandingURL {
+			themingValues = NSDictionary(contentsOf: url)
+		}
+
+		return themingValues
+	}
+
+	var helpURL: URL? {
+		if self.isBranded, let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String, let url = URL(string: help) else { return nil }
+			return url
+		}
+
+		return URL(string: "https://www.owncloud.com/help")
+	}
+
+	var privacyURL: URL? {
+		if self.isBranded, let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String, let url = URL(string: privacy) else { return nil }
+			return url
+		}
+
+		return URL(string: "https://owncloud.org/privacy-policy/")
+	}
+
+	var appName: String {
+		if self.isBranded, let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
+			return organizationName
+		}
+
+		return OCAppIdentity.shared.appName ?? "App"
+	}
+
+	var feedbackMailEnabled: Bool {
+		if self.isBranded, let bundleValues = self.brandingProperties {
+			guard bundleValues["feedbackMail"] != nil else { return false }
+			return true
+		}
+
+		return true
+	}
+
+	var feedbackMail: String? {
+		if self.isBranded, let bundleValues = self.brandingProperties, let feedbackMail = bundleValues["feedbackMail"] as? String {
+			return feedbackMail
+		} else if let feedbackMail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String {
+			return feedbackMail
+		}
+
+		return nil
+	}
+
 	var isBetaBuild: Bool {
 		if let isBetaBuild = self.classSetting(forOCClassSettingsKey: .isBetaBuild) as? Bool {
 			return isBetaBuild
 		}
 
 		return false
+	}
+
+	var isBranded: Bool {
+		if let themingValues = self.brandingProperties, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
+			return true
+		}
+
+		return false
+	}
+
+	var hasBrandedProfiles: Bool {
+		if let themingValues = self.brandingProperties, let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
+			return true
+		}
+
+		return false
+	}
+
+	var hasBrandedLogin: Bool {
+		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil {
+			return true
+		}
+
+		return false
+	}
+
+	var canAddAccount: Bool {
+		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
+			if canAddAccount, self.hasBrandedProfiles {
+				return true
+			}
+
+			return false
+		}
+
+		return true
 	}
 
 	var showBetaWarning: Bool {
@@ -95,11 +194,10 @@ class VendorServices : NSObject {
 			appSuffix = "-EMM"
 		}
 
-		guard let feedbackEmail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String,
-			let appName = OCAppIdentity.shared.appName else {
-				return
+		guard let feedbackEmail = self.feedbackMail else {
+			return
 		}
-		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)\(appSuffix)", message: nil, from: viewController)
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(self.appName)\(appSuffix)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {

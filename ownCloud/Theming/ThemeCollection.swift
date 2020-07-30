@@ -78,7 +78,6 @@ enum ThemeCollectionInterfaceStyle : String, CaseIterable {
 	case light
 	case unspecified
 
-	@available(iOS 12.0, *)
 	var userInterfaceStyle : UIUserInterfaceStyle {
 		switch self {
 			case .dark: return .dark
@@ -135,6 +134,9 @@ class ThemeCollection : NSObject {
 	@objc var statusBarStyle : UIStatusBarStyle
 	@objc var barStyle : UIBarStyle
 
+	// MARK: - SearchBar
+	@objc var searchBarColors : ThemeColorCollection
+
 	// MARK: - Progress
 	@objc var progressColors : ThemeColorPair
 
@@ -167,7 +169,7 @@ class ThemeCollection : NSObject {
 		return (collection)
 	}()
 
-	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark) {
+	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil) {
 		var logoFillColor : UIColor?
 
 		self.interfaceStyle = .unspecified
@@ -177,68 +179,76 @@ class ThemeCollection : NSObject {
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
 
-		self.darkBrandColors = ThemeColorCollection(
+		let colors = ThemeColorValueResolver(colorValues: customColors, genericValues: genericColors)
+		let styleResolver = ThemeStyleValueResolver(styleValues: interfaceStyles)
+
+		self.darkBrandColors = colors.resolveThemeColorCollection("darkBrandColors", ThemeColorCollection(
 			backgroundColor: darkColor,
 			tintColor: lightColor.lighter(0.2),
 			labelColor: UIColor.white,
 			secondaryLabelColor: UIColor.lightGray,
 			symbolColor: UIColor.white,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: darkColor))
-		)
+		))
 
-		self.lightBrandColors = ThemeColorCollection(
+		self.lightBrandColors = colors.resolveThemeColorCollection("lightBrandColors", ThemeColorCollection(
 			backgroundColor: lightColor,
 			tintColor: UIColor.white,
 			labelColor: UIColor.white,
 			secondaryLabelColor: UIColor.lightGray,
 			symbolColor: UIColor.white,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		)
+		))
 
-		self.informativeColor = UIColor.darkGray
-		self.successColor = UIColor(hex: 0x27AE60)
-		self.warningColor = UIColor(hex: 0xF2994A)
-		self.errorColor = UIColor(hex: 0xEB5757)
+		self.informativeColor = colors.resolveColor("Label.informativeColor", UIColor.darkGray)
+		self.successColor = colors.resolveColor("Label.successColor", UIColor(hex: 0x27AE60))
+		self.warningColor = colors.resolveColor("Label.warningColor", UIColor(hex: 0xF2994A))
+		self.errorColor = colors.resolveColor("Label.errorColor", UIColor(hex: 0xEB5757))
 
-		self.approvalColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763)))
-		self.neutralColors = lightBrandColors.filledColorPairCollection
-		self.destructiveColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red))
-
+		self.approvalColors = colors.resolveThemeColorPairCollection("Fill.approvalColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763))))
+		self.neutralColors = colors.resolveThemeColorPairCollection("Fill.neutralColors", lightBrandColors.filledColorPairCollection)
 		self.purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
 		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale()
+		self.destructiveColors = colors.resolveThemeColorPairCollection("Fill.destructiveColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red)))
 
-		self.tintColor = self.lightBrandColor
+		self.tintColor = colors.resolveColor("tintColor", self.lightBrandColor)
 
 		// Table view
-		self.tableBackgroundColor = UIColor.white
+		self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", UIColor.white)
+
 		if #available(iOS 13, *) {
-			self.tableGroupBackgroundColor = UIColor.groupTableViewBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
-			self.tableSeparatorColor = UIColor.separator
+			self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)))
+			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.separator)
+			self.tableSeparatorColor = color
+
 		} else {
-			self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
-			self.tableSeparatorColor = UIColor.lightGray
+			self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground)
+			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.lightGray)
+			self.tableSeparatorColor = color
 		}
 		self.tableSectionHeaderColor = UIColor.gray
 		self.tableSectionFooterColor = UIColor.gray
-		self.tableRowBorderColor = UIColor.black.withAlphaComponent(0.1)
 
-		self.tableRowColors = ThemeColorCollection(
+		let rowColor : UIColor? = UIColor.black.withAlphaComponent(0.1)
+		self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowColor)
+
+		self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
 			backgroundColor: tableBackgroundColor,
 			tintColor: nil,
 			labelColor: UIColor.black,
 			secondaryLabelColor: UIColor.gray,
 			symbolColor: darkColor,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		)
+		))
 
-		self.tableRowHighlightColors = ThemeColorCollection(
+		self.tableRowHighlightColors = colors.resolveThemeColorCollection("Table.tableRowHighlightColors", ThemeColorCollection(
 			backgroundColor: UIColor.white.darker(0.1),
 			tintColor: nil,
 			labelColor: UIColor.black,
 			secondaryLabelColor: UIColor.gray,
 			symbolColor: darkColor,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		)
+		))
 
 		self.favoriteEnabledColor = UIColor(hex: 0xFFCC00)
 		self.favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
@@ -247,126 +257,317 @@ class ThemeCollection : NSObject {
 		switch style {
 			case .dark:
 				// Interface style
-				self.interfaceStyle = .dark
-				self.keyboardAppearance = .dark
-				self.backgroundBlurEffectStyle = .dark
+				self.interfaceStyle = styleResolver.resolveInterfaceStyle(fallback: .dark)
+				self.keyboardAppearance = styleResolver.resolveKeyboardStyle(fallback: .dark)
+				self.backgroundBlurEffectStyle = styleResolver.resolveBlurEffectStyle(fallback: .dark)
 
 				// Bars
-				self.navigationBarColors = self.darkBrandColors
-				self.toolbarColors = self.darkBrandColors
+				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
+				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
+				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 
 				// Table view
-				self.tableBackgroundColor = navigationBarColors.backgroundColor!.darker(0.1)
-				self.tableGroupBackgroundColor = navigationBarColors.backgroundColor!.darker(0.3)
-				self.tableSeparatorColor = UIColor.darkGray
-				self.tableRowBorderColor = UIColor.white.withAlphaComponent(0.1)
-				self.tableRowColors = ThemeColorCollection(
+				self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", navigationBarColors.backgroundColor!.darker(0.1))
+				self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", navigationBarColors.backgroundColor!.darker(0.3))
+				let separatorColor : UIColor? = UIColor.darkGray
+				self.tableSeparatorColor = colors.resolveColor("Table.tableSeparatorColor", separatorColor)
+				let rowBorderColor : UIColor? = UIColor.white.withAlphaComponent(0.1)
+				self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowBorderColor)
+				self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
 					backgroundColor: tableBackgroundColor,
 					tintColor: navigationBarColors.tintColor,
 					labelColor: navigationBarColors.labelColor,
 					secondaryLabelColor: navigationBarColors.secondaryLabelColor,
 					symbolColor: lightColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
+				))
 
-				self.tableRowHighlightColors = ThemeColorCollection(
+				self.tableRowHighlightColors = colors.resolveThemeColorCollection("Table.tableRowHighlightColors", ThemeColorCollection(
 					backgroundColor: lightColor.darker(0.2),
 					tintColor: UIColor.white,
 					labelColor: UIColor.white,
 					secondaryLabelColor: UIColor.white,
 					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
+				))
 
 				// Bar styles
-				self.statusBarStyle = .lightContent
-				self.barStyle = .black
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
+				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
 				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3))
 
 				// Activity
-				self.activityIndicatorViewStyle = .white
-				self.searchBarActivityIndicatorViewStyle = .white
+				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .white)
+				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .white)
 
 				// Logo fill color
-				logoFillColor = UIColor.white
+				let logoColor : UIColor? = UIColor.white
+				logoFillColor = colors.resolveColor("Icon.logoFillColor", logoColor)
 
 			case .light:
 				// Interface style
-				self.interfaceStyle = .light
-				self.keyboardAppearance = .light
-				self.backgroundBlurEffectStyle = .light
+				self.interfaceStyle = styleResolver.resolveInterfaceStyle(fallback: .light)
+				self.keyboardAppearance = styleResolver.resolveKeyboardStyle(fallback: .light)
+				self.backgroundBlurEffectStyle = styleResolver.resolveBlurEffectStyle(fallback: .light)
 
 				// Bars
-				self.navigationBarColors = ThemeColorCollection(
+				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", ThemeColorCollection(
 					backgroundColor: UIColor.white.darker(0.05),
 					tintColor: nil,
 					labelColor: UIColor.black,
 					secondaryLabelColor: UIColor.gray,
 					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
+				))
 
-				self.toolbarColors = self.navigationBarColors
+				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.navigationBarColors)
+				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.navigationBarColors)
 
 				// Bar styles
 				if #available(iOS 13, *) {
-					self.statusBarStyle = .darkContent
+					self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .darkContent)
 				} else {
-					self.statusBarStyle = .default
+					self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .default)
 				}
-				self.barStyle = .default
+				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
 
 				// Progress
 				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
 
 				// Activity
-				self.activityIndicatorViewStyle = .gray
-				self.searchBarActivityIndicatorViewStyle = .gray
+				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .gray)
+				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .gray)
 
 				// Logo fill color
-				logoFillColor = UIColor.lightGray
+				let logoColor : UIColor? = UIColor.lightGray
+				logoFillColor = colors.resolveColor("Icon.logoFillColor", logoColor)
 
 			case .contrast:
 				// Interface style
-				self.interfaceStyle = .light
-				self.keyboardAppearance = .light
-				self.backgroundBlurEffectStyle = .light
+				self.interfaceStyle = styleResolver.resolveInterfaceStyle(fallback: .light)
+				self.keyboardAppearance = styleResolver.resolveKeyboardStyle(fallback: .light)
+				self.backgroundBlurEffectStyle = styleResolver.resolveBlurEffectStyle(fallback: .light)
 
 				// Bars
-				self.navigationBarColors = self.darkBrandColors
-				self.toolbarColors = self.darkBrandColors
+				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
+				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
+				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 
 				// Bar styles
-				self.statusBarStyle = .lightContent
-				self.barStyle = .black
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
+				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
-				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
+				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
 
 				// Activity
-				self.activityIndicatorViewStyle = .gray
-				self.searchBarActivityIndicatorViewStyle = .white
+				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .gray)
+				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .white)
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
 		}
 
-		let iconSymbolColor = self.tableRowColors.symbolColor.hexString()
+		let iconSymbolColor = self.tableRowColors.symbolColor
 
 		self.iconColors = [
-			"folderFillColor" : iconSymbolColor,
-			"fileFillColor" : iconSymbolColor,
-			"logoFillColor" : logoFillColor?.hexString() ?? "#ffffff",
-			"iconFillColor" : tableRowColors.tintColor?.hexString() ?? iconSymbolColor,
-			"symbolFillColor" : iconSymbolColor
+			"folderFillColor" : colors.resolveColor("Icon.folderFillColor", iconSymbolColor).hexString(),
+			"fileFillColor" : colors.resolveColor("Icon.fileFillColor", iconSymbolColor).hexString(),
+			"logoFillColor" : colors.resolveColor("Icon.logoFillColor", logoFillColor)?.hexString() ?? "#ffffff",
+			"iconFillColor" : colors.resolveColor("Icon.iconFillColor", tableRowColors.tintColor)?.hexString() ?? iconSymbolColor.hexString(),
+			"symbolFillColor" : colors.resolveColor("Icon.symbolFillColor", iconSymbolColor).hexString()
 		]
 	}
 
 	convenience override init() {
 		self.init(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8))
 	}
+}
+
+class ThemeStyleValueResolver : NSObject {
+
+	var styles: NSDictionary?
+
+	init(styleValues : NSDictionary?) {
+		styles = styleValues
+	}
+
+	func resolveStatusBarStyle(fallback: UIStatusBarStyle) -> UIStatusBarStyle {
+		if let styleValue = styles?.value(forKeyPath: "statusBarStyle") as? String {
+			switch styleValue {
+			case "default":
+				return .default
+			case "lightContent":
+				return .lightContent
+			case "darkContent":
+				if #available(iOS 13.0, *) {
+					return .darkContent
+				} else {
+					return fallback
+				}
+			default:
+				return fallback
+			}
+		}
+		return fallback
+	}
+
+	func resolveBarStyle(fallback: UIBarStyle) -> UIBarStyle {
+		if let styleValue = styles?.value(forKeyPath: "barStyle") as? String {
+			switch styleValue {
+			case "default":
+				return .default
+			case "black":
+				return .black
+			default:
+				return fallback
+			}
+		}
+		return fallback
+	}
+
+	func resolveActivityIndicatorViewStyle(for key: String, fallback: UIActivityIndicatorView.Style) -> UIActivityIndicatorView.Style {
+		if let styleValue = styles?.value(forKeyPath: key) as? String {
+			switch styleValue {
+			case "medium":
+				if #available(iOS 13.0, *) {
+					return .medium
+				} else {
+					return fallback
+				}
+			case "large":
+				if #available(iOS 13.0, *) {
+					return .large
+				} else {
+					return fallback
+				}
+			case "whiteLarge":
+				return .whiteLarge
+			case "white":
+				return .white
+			case "gray":
+				return .gray
+			default:
+				return fallback
+			}
+		}
+		return fallback
+	}
+
+	func resolveKeyboardStyle(fallback: UIKeyboardAppearance) -> UIKeyboardAppearance {
+		if let styleValue = styles?.value(forKeyPath: "keyboardAppearance") as? String {
+			switch styleValue {
+			case "default":
+				return .default
+			case "light":
+				return .light
+			case "dark":
+				return .dark
+			default:
+				return fallback
+			}
+		}
+		return fallback
+	}
+
+	func resolveBlurEffectStyle(fallback: UIBlurEffect.Style) -> UIBlurEffect.Style {
+		if let styleValue = styles?.value(forKeyPath: "backgroundBlurEffectStyle") as? String {
+			switch styleValue {
+			case "regular":
+				return .regular
+			case "light":
+				return .light
+			case "dark":
+				return .dark
+			default:
+				return fallback
+			}
+		}
+		return fallback
+	}
+
+	func resolveInterfaceStyle(fallback: ThemeCollectionInterfaceStyle) -> ThemeCollectionInterfaceStyle {
+		if let styleValue = styles?.value(forKeyPath: "interfaceStyle") as? String {
+			switch styleValue {
+			case "unspecified":
+				return .unspecified
+			case "light":
+				return .light
+			case "dark":
+				return .dark
+			default:
+				return fallback
+			}
+		}
+		return fallback
+	}
+
+}
+
+class ThemeColorValueResolver : NSObject {
+
+	var generic: NSDictionary?
+	var colors: NSDictionary?
+
+	init(colorValues : NSDictionary?, genericValues: NSDictionary?) {
+		colors = colorValues
+		generic = genericValues
+	}
+
+	func resolveColor(_ forKeyPath: String, _ fallback : UIColor) -> UIColor {
+		if let rawColor = colors?.value(forKeyPath: forKeyPath) as? String {
+			if rawColor.contains("."), let genericRawColor = generic?.value(forKeyPath: rawColor) as? String, let decodedHexColor = genericRawColor.colorFromHex {
+				return decodedHexColor
+			} else if let decodedHexColor = rawColor.colorFromHex {
+				return decodedHexColor
+			}
+		}
+		return fallback
+	}
+
+	func resolveColor(_ forKeyPath: String, _ fallback : UIColor? = nil) -> UIColor? {
+		if let rawColor = colors?.value(forKeyPath: forKeyPath) as? String {
+			if rawColor.contains("."), let genericRawColor = generic?.value(forKeyPath: rawColor) as? String, let decodedHexColor = genericRawColor.colorFromHex {
+				return decodedHexColor
+			} else if let decodedHexColor = rawColor.colorFromHex {
+				if forKeyPath.hasPrefix("NavigationBar") {
+				}
+				return decodedHexColor
+			}
+		}
+		return fallback
+	}
+
+	func resolveThemeColorPair(_ forKeyPath: String, _ colorPair : ThemeColorPair) -> ThemeColorPair {
+		let pair = ThemeColorPair(foreground: self.resolveColor(forKeyPath.appending(".foreground"), colorPair.foreground),
+								  background: self.resolveColor(forKeyPath.appending(".background"), colorPair.background))
+
+		return pair
+	}
+
+	func resolveThemeColorCollection(_ forKeyPath: String, _ colorCollection : ThemeColorCollection) -> ThemeColorCollection {
+		let collection = ThemeColorCollection(backgroundColor: self.resolveColor(forKeyPath.appending(".backgroundColor"), colorCollection.backgroundColor),
+											  tintColor: self.resolveColor(forKeyPath.appending(".tintColor"), colorCollection.tintColor),
+											  labelColor: self.resolveColor(forKeyPath.appending(".labelColor"), colorCollection.labelColor),
+											  secondaryLabelColor: self.resolveColor(forKeyPath.appending(".secondaryLabelColor"), colorCollection.secondaryLabelColor),
+											  symbolColor: self.resolveColor(forKeyPath.appending(".symbolColor"), colorCollection.symbolColor),
+											  filledColorPairCollection: self.resolveThemeColorPairCollection(forKeyPath.appending(".filledColorPairCollection"), colorCollection.filledColorPairCollection))
+
+		return collection
+	}
+
+	func resolveThemeColorPairCollection(_ forKeyPath: String, _ colorPairCollection : ThemeColorPairCollection) -> ThemeColorPairCollection {
+		let newColorPairCollection = colorPairCollection
+
+		newColorPairCollection.normal = self.resolveThemeColorPair(forKeyPath.appending(".normal"), colorPairCollection.normal)
+		newColorPairCollection.highlighted = self.resolveThemeColorPair(forKeyPath.appending(".highlighted"), colorPairCollection.highlighted)
+		newColorPairCollection.disabled = self.resolveThemeColorPair(forKeyPath.appending(".disabled"), colorPairCollection.disabled)
+
+		return newColorPairCollection
+	}
+
 }
 
 @available(iOS 13.0, *)

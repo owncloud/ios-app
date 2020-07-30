@@ -82,8 +82,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			searchController = UISearchController(searchResultsController: nil)
 			searchController?.searchResultsUpdater = self
 			searchController?.hidesNavigationBarDuringPresentation = true
-			searchController?.dimsBackgroundDuringPresentation = false
-			searchController?.searchBar.placeholder = "Add email or name".localized
+			searchController?.obscuresBackgroundDuringPresentation = false
 			searchController?.searchBar.delegate = self
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
@@ -143,6 +142,20 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}, keepRunning: true)
 
 		shareQuery?.refreshInterval = 2
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
+		if #available(iOS 13.0, *) {
+			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
+			let attributedString = NSAttributedString(string: "Add email or name", attributes: attributedStringColor)
+			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
+		} else {
+			// Fallback on earlier versions
+			searchController?.searchBar.placeholder = "Add email or name".localized
+		}
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

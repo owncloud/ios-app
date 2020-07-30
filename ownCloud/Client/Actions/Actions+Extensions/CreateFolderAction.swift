@@ -67,23 +67,30 @@ class CreateFolderAction : Action {
 			OnMainThread {
 				let createFolderVC = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
 					if name.contains("/") || name.contains("\\") {
-						return (false, "File name cannot contain / or \\".localized)
+						return (false, nil, "File name cannot contain / or \\".localized)
 					} else {
-						return (true, nil)
+						if let item = item {
+							if ((try? self.core?.cachedItem(inParent: item, withName: name, isDirectory: true)) != nil) ||
+							   ((try? self.core?.cachedItem(inParent: item, withName: name, isDirectory: false)) != nil) {
+								return (false, "Item with same name already exists".localized, "An item with the same name already exists in this location.".localized)
+							}
+						}
+
+						return (true, nil, nil)
 					}
 				}, completion: { newName, _ in
 					guard newName != nil else {
 						return
 					}
 
-					if let progress = self.core?.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
+					if let progress = self.core?.createFolder(newName!, inside: item!, options: nil, placeholderCompletionHandler: { (error, _) in
 						if error != nil {
 							Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
 							self.completed(with: error)
 						} else {
 							self.completed()
 						}
-					}) {
+					}, resultHandler: nil) {
 						self.publish(progress: progress)
 					}
 				})

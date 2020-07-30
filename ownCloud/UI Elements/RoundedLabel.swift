@@ -20,12 +20,22 @@ import UIKit
 
 class RoundedLabel: UIView {
 
+	struct Style {
+		var textColor : UIColor
+		var backgroundColor : UIColor
+
+		var horizontalPadding : CGFloat
+		var verticalPadding : CGFloat
+		var cornerRadius : CGFloat
+
+		static var token = Style(textColor: .white, backgroundColor: .red, horizontalPadding: 5, verticalPadding: 2, cornerRadius: 5)
+		static var round = Style(textColor: .white, backgroundColor: .red, horizontalPadding: 10, verticalPadding: 5, cornerRadius: -1)
+	}
+
 	// MARK: - Constants
-	private let cornerRadius : CGFloat = 5.0
-	private let borderWidth : CGFloat = 1.0
-	private let horizontalPadding : CGFloat = 10.0
-	private let verticalPadding : CGFloat = 20.0
-	private let verticalLabelPadding : CGFloat = 5.0
+	private var horizontalPadding : CGFloat = 10.0
+	private var verticalPadding : CGFloat = 5.0
+	private var cornerRadius : CGFloat = 5.0
 
 	// MARK: - Instance Variables
 	private var label = UILabel()
@@ -35,9 +45,9 @@ class RoundedLabel: UIView {
 			label.text = labelText
 		}
 	}
-	public var mainColor : UIColor = UIColor.black {
+	public var labelBackgroundColor : UIColor = UIColor.black {
 		didSet {
-			self.backgroundColor = mainColor
+			self.backgroundColor = labelBackgroundColor
 		}
 	}
 	public var textColor : UIColor = UIColor.white {
@@ -53,11 +63,17 @@ class RoundedLabel: UIView {
 		styleView()
 	}
 
-	init(text: String, textColor: UIColor, backgroundColor: UIColor) {
+	init(text: String = "", style: Style = .token) {
 		super.init(frame: CGRect.zero)
+
 		labelText = text
-		self.textColor = textColor
-		mainColor = backgroundColor
+		textColor = style.textColor
+		labelBackgroundColor = style.backgroundColor
+
+		horizontalPadding = style.horizontalPadding
+		verticalPadding = style.verticalPadding
+		cornerRadius = style.cornerRadius
+
 		styleView()
 	}
 
@@ -68,31 +84,43 @@ class RoundedLabel: UIView {
 	// MARK: - Prepare and Update View
 
 	private func styleView() {
-		self.layer.cornerRadius = cornerRadius
-		self.backgroundColor = mainColor
+		label.translatesAutoresizingMaskIntoConstraints = false
 
 		label.textAlignment = .center
 		label.font = font
 		label.numberOfLines = 1
 		label.text = labelText
-		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = mainColor
+		label.textColor = textColor
+
+		label.setContentCompressionResistancePriority(.required, for: .vertical)
+		label.setContentCompressionResistancePriority(.required, for: .horizontal)
+		label.setContentHuggingPriority(.required, for: .vertical)
+		label.setContentHuggingPriority(.required, for: .horizontal)
+
 		self.addSubview(label)
+
+		if cornerRadius == -1 {
+			// Compute corner radius dynamically
+			var temporaryText : Bool = false
+			if label.text?.count == 0 {
+				temporaryText = true
+				label.text = "1234"
+				label.layoutIfNeeded()
+			}
+			cornerRadius = (label.systemLayoutSizeFitting(CGSize(width: 240, height: 240), withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .defaultHigh).height / 2.0) + verticalPadding
+			if temporaryText {
+				label.text = ""
+			}
+		}
+
+		self.layer.cornerRadius = cornerRadius
+		self.backgroundColor = labelBackgroundColor
 
 		NSLayoutConstraint.activate([
 			label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: horizontalPadding),
 			label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -horizontalPadding),
-			label.topAnchor.constraint(equalTo: self.topAnchor),
-			label.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-			label.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
-			label.heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
-			])
+			label.topAnchor.constraint(equalTo: self.topAnchor, constant: verticalPadding),
+			label.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -verticalPadding)
+		])
 	}
-
-	public func update(text: String, textColor: UIColor, backgroundColor: UIColor) {
-		labelText = text
-		mainColor = backgroundColor
-		self.textColor = textColor
-	}
-
 }

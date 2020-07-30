@@ -19,6 +19,13 @@
 import UIKit
 
 final class PushTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+	var transitionRecovery : PushTransitionRecovery?
+
+	init(with transitionRecovery: PushTransitionRecovery? = nil) {
+		self.transitionRecovery = transitionRecovery
+		super.init()
+	}
+
 	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
 		return PushPresentationController(presentedViewController: presented, presenting: presenting)
 	}
@@ -28,6 +35,6 @@ final class PushTransitionDelegate: NSObject, UIViewControllerTransitioningDeleg
 	}
 
 	func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return PushTransition(dismiss: true)
+		return PushTransition(dismiss: true, transitionRecovery: transitionRecovery)
 	}
 }

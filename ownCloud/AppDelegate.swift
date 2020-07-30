@@ -29,12 +29,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
+	var staticLoginViewController : StaticLoginViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		var navigationController: UINavigationController?
+		var rootViewController : UIViewController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+
+		// Set up notification categories
+		NotificationManager.shared.registerCategories()
 
 		// Set up license management
 		OCLicenseManager.shared.setupLicenseManagement()
@@ -44,12 +49,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		serverListTableViewController = ServerListTableViewController(style: .plain)
+		if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
+			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
+			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			rootViewController = navigationController
+		} else {
+			serverListTableViewController = ServerListTableViewController(style: .plain)
 
-		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+			rootViewController = navigationController
+		}
 
-		window?.rootViewController = navigationController!
-		window?.addSubview((navigationController?.view)!)
+		window?.rootViewController = rootViewController!
 		window?.makeKeyAndVisible()
 
 		ImportFilesController.removeImportDirectory()
@@ -62,7 +74,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ScheduledTaskManager.shared.setup()
 
-        AppStatistics.shared.update()
+		MediaUploadQueue.shared.setup()
+		AppStatistics.shared.update()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
@@ -126,8 +139,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		// Set background refresh interval
-		UIApplication.shared.setMinimumBackgroundFetchInterval(
-			UIApplication.backgroundFetchIntervalMinimum)
+		guard #available(iOS 13, *) else {
+			UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+			return true
+		}
 
 		setupAndHandleCrashReports()
 

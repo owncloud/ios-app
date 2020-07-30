@@ -3,9 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.developer.associated-domains</key>
-	<array>
-		<string>applinks:well-known.shniq.cloud</string>
-	</array>
+	<array/>
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>

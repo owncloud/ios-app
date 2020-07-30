@@ -81,6 +81,7 @@ class DisplayHostViewController: UIPageViewController {
 
 	deinit {
 		queryObservation?.invalidate()
+		queryObservation = nil
 
 		if queryStarted {
 			core?.stop(query)
