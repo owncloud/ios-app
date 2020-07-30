@@ -24,7 +24,7 @@
 
 @implementation OCCore (FPServices)
 
-- (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler
+- (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler errorHandler:(void(^)(NSError *error))errorHandler
 {
 	[NSFileManager.defaultManager createDirectoryAtURL:self.vault.fpServicesURL withIntermediateDirectories:YES attributes:nil error:NULL];
 	[NSFileManager.defaultManager getFileProviderServicesForItemAtURL:self.vault.fpServicesURL completionHandler:^(NSDictionary<NSFileProviderServiceName,NSFileProviderService *> * _Nullable services, NSError * _Nullable error) {
@@ -46,6 +46,7 @@
 
 				id<OCFileProviderServicesHost> remoteObjectProxy = [connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
 					OCLogError(@"File Provider Services proxy connection error: %@", error);
+					errorHandler(error);
 				}];
 
 				completionHandler(error, (id<OCFileProviderServicesHost>)remoteObjectProxy, ^{

@@ -191,12 +191,49 @@ extension ImportFilesController {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in
 		}, completionHandler: { (core, error) in
 			if let core = core, error == nil {
-				OnMainThread {
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
+				OnMainThread { [weak core] in
+					let waitGroup = DispatchGroup()
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
 						if let targetDirectory = selectedDirectory {
-							self.importFiles.forEach { (importFile) in
-								self.importFile(importFile, to: targetDirectory, bookmark: bookmark, core: core)
+							for importFile in self.importFiles {
+								let name = importFile.url.lastPathComponent
+
+								waitGroup.enter()
+								if core?.importItemNamed(name,
+											 at: targetDirectory,
+											 from: importFile.url,
+											 isSecurityScoped: false,
+											 options: [OCCoreOption.importByCopying : true,
+												   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
+											 placeholderCompletionHandler: { (error, item) in
+												if error != nil {
+													Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+												}
+
+												waitGroup.leave()
+											 },
+											 resultHandler: { (error, _ core, _ item, _) in
+												if error != nil {
+													Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+												} else {
+													Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+
+													self.removeLocalCopy(importFile: importFile)
+												}
+											}
+								) == nil {
+									Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+								}
 							}
+
+							waitGroup.notify(queue: .main, execute: {
+								OnBackgroundQueue(after: 2) {
+									// Return OCCore after 2 seconds, giving the core a chance to schedule the uploads with a NSURLSession
+									OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+
+									})
+								}
+							})
 							self.isVisible = false
 						}
 					})
@@ -215,38 +252,6 @@ extension ImportFilesController {
 				}
 			}
 		})
-	}
-
-	func importFile(_ importFile: ImportFile, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
-		let name = importFile.url.lastPathComponent
-		if core?.importItemNamed(name,
-					 at: targetDirectory,
-					 from: importFile.url,
-					 isSecurityScoped: false,
-					 options: [OCCoreOption.importByCopying : true,
-						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
-					 placeholderCompletionHandler: { (error, item) in
-						if error != nil {
-							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-						}
-
-						OnBackgroundQueue(after: 2) {
-							// Return OCCore after 2 seconds, giving the core a chance to schedule the upload with a NSURLSession
-							OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
-						}
-					 },
-					 resultHandler: { (error, _ core, _ item, _) in
-						if error != nil {
-							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-						} else {
-							Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-
-							self.removeLocalCopy(importFile: importFile)
-						}
-					}
-		) == nil {
-			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-		}
 	}
 
 	func cardViewController(for url: URL) -> MoreViewController? {

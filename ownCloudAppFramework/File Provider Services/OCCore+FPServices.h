@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCCore (FPServices)
 
-- (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler;
+- (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler errorHandler:(void(^)(NSError *error))errorHandler;
 
 @end
 

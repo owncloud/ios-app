@@ -174,13 +174,30 @@ class ShareViewController: MoreStaticTableViewController {
 				OnMainThread {
 					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
 						if let targetDirectory = selectedDirectory {
-							self.importFiles(to: targetDirectory, bookmark: bookmark, core: core)
+							let progressHUDViewController = ProgressHUDViewController(on: self, label: "Saving".localized)
+							self.importFiles(to: targetDirectory, bookmark: bookmark, core: core, completion: { [weak self] in
+								OnMainThread {
+									progressHUDViewController.dismiss(animated: true, completion: {
+										self?.dismiss(animated: true, completion: {
+											self?.returnCores(completion: {
+												OnMainThread {
+													self?.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+												}
+											})
+										})
+									})
+								}
+							})
 						}
 					})
 
 					directoryPickerViewController.cancelAction = { [weak self] in
-						self?.returnCores(completion: {
-							self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+						self?.dismiss(animated: true, completion: {
+							self?.returnCores(completion: {
+								OnMainThread {
+									self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+								}
+							})
 						})
 					}
 					if !withBackButton {
@@ -193,11 +210,9 @@ class ShareViewController: MoreStaticTableViewController {
 		})
 	}
 
-	func importFiles(to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
+	func importFiles(to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?, completion: @escaping () -> Void) {
 		if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
-
 			let dispatchGroup = DispatchGroup()
-			let progressHUDViewController = ProgressHUDViewController(on: self, label: "Saving".localized)
 
 			for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
@@ -205,23 +220,15 @@ class ShareViewController: MoreStaticTableViewController {
 						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
 							dispatchGroup.enter()
 
-							attachment.loadFileRepresentation(forTypeIdentifier: type) { (url, error) in
-								if error == nil, let url = url, let shareFilesRootURL = core?.vault.rootURL?.appendingPathComponent("share-extension", isDirectory: true) {
-									// Copy file into shared location
-									let tempFileFolderURL = shareFilesRootURL.appendingPathComponent(UUID().uuidString, isDirectory: true)
-									let name = url.lastPathComponent
-									let tempFileURL = tempFileFolderURL.appendingPathComponent(name)
-
-									try? FileManager.default.createDirectory(at: tempFileFolderURL, withIntermediateDirectories: true, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
-									try? FileManager.default.copyItem(at: url, to: tempFileURL)
-
-									self.importFile(url: tempFileURL, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
-										try? FileManager.default.removeItem(at: tempFileFolderURL)
+							attachment.loadFileRepresentation(forTypeIdentifier: type) { [weak core] (url, error) in
+								if error == nil, let url = url {
+									core?.importThroughFileProvider(url: url, to: targetDirectory, bookmark: bookmark, completion: { (error) in
+										Log.error("Error importing item at \(url.absoluteString) through file provider: \(String(describing: error))")
 										dispatchGroup.leave()
-									}
+									})
 								} else {
 									Log.error("Error loading item: \(String(describing: error))")
-																   dispatchGroup.leave()
+									dispatchGroup.leave()
 								}
 							}
 						}
@@ -229,48 +236,8 @@ class ShareViewController: MoreStaticTableViewController {
 				}
 			}
 
-			dispatchGroup.notify(queue: .main) {
-				self.returnCore(for: bookmark, completionHandler: {
-					OnMainThread {
-						progressHUDViewController.dismiss(animated: true, completion: {
-							self.dismiss(animated: true)
-							self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
-						})
-					}
-				})
-			}
+			dispatchGroup.notify(queue: .main, execute: completion)
 		}
-	}
-
-	func importFile(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?, completion: @escaping (_ error: Error?) -> Void) {
-		let name = importItemURL.lastPathComponent
-
-		core?.acquireFileProviderServicesHost(completionHandler: { (error, serviceHost, doneHandler) in
-			let completeImport : (Error?) -> Void = { (error) in
-				completion(error)
-				doneHandler?()
-			}
-
-			if error != nil {
-				Log.debug("Error acquiring file provider host: \(error?.localizedDescription ?? "" )")
-				completeImport(error)
-			} else {
-				// Upload file from shared location
-				if serviceHost?.importItemNamed(name, at: targetDirectory, from: importItemURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
-
-					if error != nil {
-						Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-					}
-
-					completeImport(error)
-				}) == nil {
-					Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-					let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 1, userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
-
-					completeImport(error)
-				}
-			}
-		})
 	}
 }
 

@@ -228,25 +228,16 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		if cancelAction != nil {
 			cancelAction?()
  		} else {
-			if extensionContext != nil {
-				let error = NSError(domain: NSErrorDomain.ClientDirectoryPickerErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
-				extensionContext?.cancelRequest(withError: error)
-			} else {
-				dismiss(animated: true, completion: {
-					self.userChose(item: nil)
-				})
-			}
+			dismiss(animated: true, completion: {
+				self.userChose(item: nil)
+			})
 		}
 	}
 
 	@objc private func selectButtonPressed() {
-		if extensionContext != nil {
+		dismiss(animated: true, completion: {
 			self.userChose(item: self.query.rootItem)
-		} else {
-			dismiss(animated: true, completion: {
-				self.userChose(item: self.query.rootItem)
-			})
-		}
+		})
 	}
 
 	@objc open func createFolderButtonPressed(_ sender: UIBarButtonItem) {

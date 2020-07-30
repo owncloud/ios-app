@@ -73,10 +73,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 
 		if lastPathComponent.isRootPath {
-			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
+			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, weak core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
 
-				OnMainThread {
+				OnMainThread { [weak self, weak core] in
 					var footerText: String?
 
 					if quotaUsed > 0 {
