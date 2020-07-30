@@ -24,7 +24,6 @@
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
-#import <CrashReporter.h>
 
 @interface FileProviderExtension ()
 {
@@ -50,8 +49,6 @@
 	OCAppIdentity.sharedAppIdentity.appIdentifierPrefix = bundleInfoDict[@"OCAppIdentifierPrefix"];
 	OCAppIdentity.sharedAppIdentity.keychainAccessGroupIdentifier = bundleInfoDict[@"OCKeychainAccessGroupIdentifier"];
 	OCAppIdentity.sharedAppIdentity.appGroupIdentifier = bundleInfoDict[@"OCAppGroupIdentifier"];
-
-	[self setupCrashReporter];
 
 	if (self = [super init]) {
 		_fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
@@ -968,26 +965,6 @@
 	{
 		[issue cancel];
 	}
-}
-
-#pragma mark - Crash reporting
-
-- (void)setupCrashReporter {
-	PLCrashReporterConfig *configuration = [PLCrashReporterConfig defaultConfiguration];
-	PLCrashReporter *reporter = [[PLCrashReporter alloc] initWithConfiguration:configuration];
-	if ([reporter hasPendingCrashReport]) {
-		NSData *crashData = [reporter loadPendingCrashReportData];
-		if (crashData != nil) {
-			PLCrashReport *report = [[PLCrashReport alloc] initWithData:crashData error:nil];
-			if (report != nil) {
-				NSString *crashString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
-				OCLogError(@"%@", crashString);
-			}
-		}
-		[reporter purgePendingCrashReport];
-	}
-
-	[reporter enableCrashReporter];
 }
 
 #pragma mark - Class settings
