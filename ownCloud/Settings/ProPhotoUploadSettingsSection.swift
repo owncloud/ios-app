@@ -55,7 +55,7 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 			if let enableSwitch = sender as? UISwitch {
 				userDefaults.preferOriginalPhotos = enableSwitch.isOn
 			}
-			}, title: "Prefer original photos".localized, value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-originals")
+			}, title: "Prefer unedited photos".localized, value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-originals")
 
 		self.add(row: preferOriginalsRow)
 

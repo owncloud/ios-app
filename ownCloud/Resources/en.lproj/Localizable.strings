@@ -766,3 +766,8 @@
 "Coordinates" = "Coordinates";
 "Altitude" = "Altitude";
 "Place" = "Place";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Extended upload settings";
+"Prefer unedited photos" = "Prefer unedited photos";
+"Prefer RAW photos" = "Prefer RAW photos";
