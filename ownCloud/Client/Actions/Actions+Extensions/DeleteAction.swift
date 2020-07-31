@@ -28,8 +28,22 @@ class DeleteAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		guard forContext.items.sharedWithUser.count == 0 else {
-			return .none
+		let sharedWithUser = forContext.items.sharedWithUser
+
+		if let core = forContext.core {
+			if sharedWithUser.count == 1 {
+				if sharedWithUser[0].isShareRootItem(from: core) {
+					return .none
+				}
+			} else {
+				let sharedFolders = sharedWithUser.filter({$0.type == .collection})
+				for sharedFolder in sharedFolders {
+					if sharedFolder.isShareRootItem(from: core) {
+						return .none
+					}
+				}
+			}
+
 		}
 
 		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.delete)}).count > 0 {
