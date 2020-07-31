@@ -220,25 +220,6 @@ class ShareViewController: MoreStaticTableViewController {
 						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
 							dispatchGroup.enter()
 							if type == "public.plain-text" {
-								if let attributedString = item.attributedContentText {
-									do {
-										let rtfData = try attributedString.data(from: .init(location: 0, length: attributedString.length),
-																				documentAttributes: [.documentType: NSAttributedString.DocumentType.rtf])
-
-										let tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + ".rtf"
-										FileManager.default.createFile(atPath: tempFilePath, contents:rtfData, attributes:nil)
-
-										core?.importThroughFileProvider(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, completion: { (_) in
-											try? FileManager.default.removeItem(atPath: tempFilePath)
-											dispatchGroup.leave()
-										})
-									} catch {
-										print(error)
-										dispatchGroup.leave()
-									}
-								}
-
-								/*
 								attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { [weak core] (item, error) -> Void in
 									if error == nil {
 										if let text = item as? String {
@@ -256,7 +237,6 @@ class ShareViewController: MoreStaticTableViewController {
 										dispatchGroup.leave()
 									}
 								})
-								*/
 							} else {
 								attachment.loadFileRepresentation(forTypeIdentifier: type) { [weak core] (url, error) in
 									if error == nil, let url = url {
