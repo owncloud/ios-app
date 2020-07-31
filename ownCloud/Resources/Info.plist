@@ -11,22 +11,23 @@
 	<key>CFBundleDisplayName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleDocumentTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeIconFiles</key>
-				<array/>
-				<key>CFBundleTypeName</key>
-				<string>Import all file types</string>
-				<key>LSHandlerRank</key>
-				<string>Alternate</string>
-				<key>LSItemContentTypes</key>
-				<array>
-					<string>public.data</string>
-					<string>public.content</string>
-					<string>public.image</string>
-				</array>
-			</dict>
-		</array>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Import all file types</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.content</string>
+				<string>public.item</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -73,8 +74,6 @@
 	<string>This permission is needed for uploading media files to your server.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This permission is needed to scan documents.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This permission is needed to record videos</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -83,6 +82,8 @@
 	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This permission is needed to record videos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -101,6 +102,8 @@
 		<string>com.owncloud.ios-app.openAccount</string>
 		<string>com.owncloud.ios-app.openItem</string>
 	</array>
+	<key>OCAppComponentIdentifier</key>
+	<string>app</string>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
@@ -109,8 +112,6 @@
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>OCAppComponentIdentifier</key>
-	<string>app</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
