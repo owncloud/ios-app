@@ -546,6 +546,10 @@
 "Diagnostic Overview" = "Diagnostic Overview";
 "Diagnostics" = "Diagnostics";
 
+"Update Status" = "Update Status";
+"Completed update scans" = "Completed update scans";
+"Total update scans" = "Total update scans";
+
 /* Available offline */
 "Root folder" = "Root folder";
 "at" = "at";

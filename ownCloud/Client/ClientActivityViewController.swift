@@ -267,8 +267,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		if VendorServices.shared.isBetaBuild,
-		   ActivitySection(rawValue: indexPath.section) == .activities,
+		if ActivitySection(rawValue: indexPath.section) == .activities,
 		   let activities = activities,
 		   let nodeGenerator = activities[indexPath.row] as? DiagnosticNodeGenerator, nodeGenerator.isDiagnosticNodeGenerationAvailable {
 			return UISwipeActionsConfiguration(actions: [

@@ -359,6 +359,7 @@
 		DCC085802293F490008CC05C /* DisplaySettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0857C2293F2D7008CC05C /* DisplaySettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */; };
+		DCC3701624D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */; };
 		DCC5E446232654DE002E5B84 /* NSObject+AnnotatedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */; };
 		DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
@@ -1164,6 +1165,7 @@
 		DCC0857C2293F2D7008CC05C /* DisplaySettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplaySettings.h; sourceTree = "<group>"; };
 		DCC0857D2293F2D7008CC05C /* DisplaySettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisplaySettings.m; sourceTree = "<group>"; };
 		DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticManager.swift; sourceTree = "<group>"; };
+		DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCScanJobActivity+DiagnosticGenerator.swift"; sourceTree = "<group>"; };
 		DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+AnnotatedProperties.h"; sourceTree = "<group>"; };
 		DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AnnotatedProperties.m"; sourceTree = "<group>"; };
 		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2237,6 +2239,7 @@
 				DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */,
 				DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */,
 				DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */,
+				DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */,
 			);
 			path = Diagnostic;
 			sourceTree = "<group>";
@@ -3524,6 +3527,7 @@
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
 				39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
+				DCC3701624D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */,
 				394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */,
 				39A243C424BDD9E100F4441F /* StaticLoginBundle.swift in Sources */,
 				4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */,
