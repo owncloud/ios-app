@@ -124,7 +124,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 								let diagnosticNodes = database.diagnosticNodes(with: nil)
 
 								OnMainThread {
-									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic overview".localized, children: diagnosticNodes), context: nil), animated: true)
+									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
 								}
 
 								done()
