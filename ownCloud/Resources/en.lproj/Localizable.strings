@@ -543,6 +543,9 @@
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
 
+"Diagnostic Overview" = "Diagnostic Overview";
+"Diagnostics" = "Diagnostics";
+
 /* Available offline */
 "Root folder" = "Root folder";
 "at" = "at";

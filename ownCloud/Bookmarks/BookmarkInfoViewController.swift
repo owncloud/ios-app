@@ -62,7 +62,6 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 		let deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {
-
 				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
@@ -107,6 +106,38 @@ class BookmarkInfoViewController: StaticTableViewController {
 		}, title: "Delete Local Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
 
 		addSection(StaticTableViewSection(headerTitle: "Compacting".localized, footerTitle: nil, identifier: "section-compact", rows: [ includeAvailableOfflineCopiesRow, deleteLocalFilesRow ]))
+
+		let showDiagnostics = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			if let bookmark = self?.bookmark {
+				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+					let vault = OCVault(bookmark: bookmark)
+
+					vault.open(completionHandler: { (_, error) in
+						let done : () -> Void = {
+							vault.close { (_, _) in
+								completionHandler()
+							}
+						}
+
+						if let database = vault.database, error == nil {
+							OnBackgroundQueue {
+								let diagnosticNodes = database.diagnosticNodes(with: nil)
+
+								OnMainThread {
+									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic overview".localized, children: diagnosticNodes), context: nil), animated: true)
+								}
+
+								done()
+							}
+						} else {
+							done()
+						}
+					})
+				}, for: bookmark)
+			}
+		}, title: "Diagnostic Overview".localized, accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
+
+		addSection(StaticTableViewSection(headerTitle: "Diagnostics".localized, footerTitle: nil, identifier: "section-diagnostics", rows: [ showDiagnostics ]))
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -133,8 +164,8 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 	// MARK: - Helper methods
 	private func updateStorageInfo() {
-		if bookmark != nil {
-			if let vaultURL = OCVault(bookmark: bookmark!).filesRootURL {
+		if let bookmark = bookmark {
+			if let vaultURL = OCVault(bookmark: bookmark).filesRootURL {
 				FileManager.default.calculateDirectorySize(at: vaultURL) { (size) in
 					if size != nil {
 						let occupiedSpace = self.byteCounterFormatter.string(fromByteCount: size!)
