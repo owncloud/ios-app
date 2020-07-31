@@ -21,7 +21,7 @@ import ownCloudSDK
 
 extension OCSyncRecordActivity : DiagnosticNodeGenerator {
 	var isDiagnosticNodeGenerationAvailable : Bool {
-		return VendorServices.shared.isBetaBuild
+		return DiagnosticManager.shared.enabled
 	}
 
 	func provideDiagnosticNode(for context: OCDiagnosticContext, completion: @escaping (OCDiagnosticNode?, DiagnosticViewController.Style) -> Void) {

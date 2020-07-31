@@ -269,6 +269,9 @@
 "Prevent gestures" = "Prevent gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
+/* Advanced settings */
+"Enable diagnostics" = "Enable diagnostics";
+
 /* Passcode Messages */
 
 "Enter code" = "Enter code";

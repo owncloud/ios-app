@@ -358,6 +358,7 @@
 		DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0857D2293F2D7008CC05C /* DisplaySettings.m */; };
 		DCC085802293F490008CC05C /* DisplaySettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0857C2293F2D7008CC05C /* DisplaySettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
+		DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */; };
 		DCC5E446232654DE002E5B84 /* NSObject+AnnotatedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */; };
 		DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
@@ -1162,6 +1163,7 @@
 		DCC0856D2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCC0857C2293F2D7008CC05C /* DisplaySettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplaySettings.h; sourceTree = "<group>"; };
 		DCC0857D2293F2D7008CC05C /* DisplaySettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisplaySettings.m; sourceTree = "<group>"; };
+		DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticManager.swift; sourceTree = "<group>"; };
 		DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+AnnotatedProperties.h"; sourceTree = "<group>"; };
 		DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AnnotatedProperties.m"; sourceTree = "<group>"; };
 		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2232,6 +2234,7 @@
 		DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */ = {
 			isa = PBXGroup;
 			children = (
+				DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */,
 				DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */,
 				DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */,
 			);
@@ -3395,6 +3398,7 @@
 				39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */,
 				3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */,
 				DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */,
+				DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
