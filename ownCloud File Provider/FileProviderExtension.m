@@ -24,6 +24,7 @@
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
+#import <CrashReporter.h>
 
 @interface FileProviderExtension ()
 {
@@ -50,6 +51,30 @@
 	OCAppIdentity.sharedAppIdentity.keychainAccessGroupIdentifier = bundleInfoDict[@"OCKeychainAccessGroupIdentifier"];
 	OCAppIdentity.sharedAppIdentity.appGroupIdentifier = bundleInfoDict[@"OCAppGroupIdentifier"];
 
+	// Initialize crash reporter as soon as FP extension is loaded into memory
+	PLCrashReporterConfig *configuration = [PLCrashReporterConfig defaultConfiguration];
+	PLCrashReporter *reporter = [[PLCrashReporter alloc] initWithConfiguration:configuration];
+
+	// Do we have a pending crash report from previous session?
+	if ([reporter hasPendingCrashReport]) {
+
+		// Generate a report and add it to the log file
+		NSData *crashData = [reporter loadPendingCrashReportData];
+		if (crashData != nil) {
+			PLCrashReport *report = [[PLCrashReport alloc] initWithData:crashData error:nil];
+			if (report != nil) {
+				NSString *crashString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
+				OCLogError(@"%@", crashString);
+			}
+		}
+
+		// Purge the report which we just added to the log
+		[reporter purgePendingCrashReport];
+	}
+
+	// Start intercepting OS signals to catch crashes
+	[reporter enableCrashReporter];
+
 	if (self = [super init]) {
 		_fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
 		_fileManager = [NSFileManager new];
@@ -58,6 +83,7 @@
 	[OCHTTPPipelineManager setupPersistentPipelines]; // Set up HTTP pipelines
 
 	[self addObserver:self forKeyPath:@"domain" options:0 context:(__bridge void *)self];
+
 
 	return self;
 }
