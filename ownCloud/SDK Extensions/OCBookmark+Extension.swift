@@ -43,3 +43,20 @@ extension OCBookmark {
 		}
 	}
 }
+
+extension OCBookmark {
+
+	enum Edition : String {
+		case Enterprise, Community, Unknown
+	}
+
+	var edition : Edition {
+		if let statusDict = self.userInfo["statusInfo"] as? [String : Any] {
+			guard let editionValue = statusDict["edition"] as? String else {
+				return .Unknown
+			}
+			return Edition(rawValue: editionValue) ?? .Unknown
+		}
+		return .Unknown
+	}
+}

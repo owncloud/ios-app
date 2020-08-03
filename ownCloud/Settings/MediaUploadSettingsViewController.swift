@@ -29,8 +29,11 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(MediaExportSettingsSection(userDefaults: userDefaults))
 
-			// TODO: Check license for IAP
-			self.addSection(ProPhotoUploadSettingsSection(userDefaults: userDefaults))
+			let enterpriseAccountAvailable = OCBookmarkManager.shared.bookmarks.filter({$0.edition == .Enterprise}).count > 0
+
+			if enterpriseAccountAvailable || isProPhotoPackageLicensed() {
+				self.addSection(ProPhotoUploadSettingsSection(userDefaults: userDefaults))
+			}
 
 			if OCBookmarkManager.shared.bookmarks.count > 0 {
 				self.addSection(AutoUploadSettingsSection(userDefaults: userDefaults))
