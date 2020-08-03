@@ -128,6 +128,7 @@
 		39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */; };
 		39F48A6824D848550000E3F9 /* branding-splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6624D848550000E3F9 /* branding-splashscreen.png */; };
 		39F48A6924D848550000E3F9 /* branding-splashscreen-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */; };
+		39F48A6A24D89D7E0000E3F9 /* branding-bookmark-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6524D847D70000E3F9 /* branding-bookmark-icon.png */; };
 		39F689AB22F018C100E63429 /* GetDirectoryListingIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */; };
 		39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		46B9D336BF7FE50321823888 /* Pods_ownCloudScreenshotsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */; };
@@ -3153,6 +3154,7 @@
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
+				39F48A6A24D89D7E0000E3F9 /* branding-bookmark-icon.png in Resources */,
 				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,
