@@ -3,12 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02072E5F23E46022006548A7 /* UIWindow+Extension.swift */; };
 		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
+		024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 024F3A2024A3AB410083E11E /* CrashReporter */; };
 		025FC720247810AB009307A7 /* MediaUploadSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */; };
 		025FC7272478123E009307A7 /* MediaExportSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */; };
 		025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */; };
@@ -52,6 +53,7 @@
 		394E1FDA233E2D64009D2897 /* FavoriteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FD9233E2D64009D2897 /* FavoriteAction.swift */; };
 		394E1FDC233E3750009D2897 /* UnfavoriteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FDB233E3750009D2897 /* UnfavoriteAction.swift */; };
 		394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FFE233E43F5009D2897 /* LinksAction.swift */; };
+		395ADF5424D8359700141A5A /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */; };
 		3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3961281522F8730A0087BD3A /* SceneDelegate.swift */; };
 		3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */; };
 		3968C882239C54AD00AC28AC /* ReleaseNotesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C87A239C54AC00AC28AC /* ReleaseNotesTableViewController.swift */; };
@@ -328,6 +330,8 @@
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
+		DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */; };
+		DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */; };
 		DCA35DA724D309B600DBE2B0 /* OCCore+UploadByFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35DA624D309B600DBE2B0 /* OCCore+UploadByFileProvider.swift */; };
 		DCAEB05F21F9FB370067E147 /* OCBookmarkManager+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */; };
 		DCAEB06121F9FC510067E147 /* EarlGrey+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */; };
@@ -343,6 +347,7 @@
 		DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0857D2293F2D7008CC05C /* DisplaySettings.m */; };
 		DCC085802293F490008CC05C /* DisplaySettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0857C2293F2D7008CC05C /* DisplaySettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
+		DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */; };
 		DCC5E446232654DE002E5B84 /* NSObject+AnnotatedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */; };
 		DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
@@ -1202,6 +1207,8 @@
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerAccess.swift; sourceTree = "<group>"; };
 		DC9C1AEB247C76470067895A /* MessageGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupCell.swift; sourceTree = "<group>"; };
+		DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticViewController.swift; sourceTree = "<group>"; };
+		DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCSyncRecordActivity+DiagnosticGenerator.swift"; sourceTree = "<group>"; };
 		DCA35DA624D309B600DBE2B0 /* OCCore+UploadByFileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCore+UploadByFileProvider.swift"; sourceTree = "<group>"; };
 		DCAB9CC823417243009091B6 /* ThemedAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedAlertController.swift; sourceTree = "<group>"; };
 		DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Tools.swift"; sourceTree = "<group>"; };
@@ -1222,6 +1229,8 @@
 		DCC0856D2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCC0857C2293F2D7008CC05C /* DisplaySettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplaySettings.h; sourceTree = "<group>"; };
 		DCC0857D2293F2D7008CC05C /* DisplaySettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisplaySettings.m; sourceTree = "<group>"; };
+		DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticManager.swift; sourceTree = "<group>"; };
+		DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCScanJobActivity+DiagnosticGenerator.swift"; sourceTree = "<group>"; };
 		DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+AnnotatedProperties.h"; sourceTree = "<group>"; };
 		DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AnnotatedProperties.m"; sourceTree = "<group>"; };
 		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1346,6 +1355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */,
+				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
 				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
 				DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */,
@@ -1518,6 +1528,7 @@
 				4C51727422DE04BD001BC97F /* Tasks */,
 				DCC832D1242BB3E900153F8C /* Messages */,
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
+				DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */,
 				DC44343721ABF9A200376B16 /* Static Login */,
 				DC7DF17C205140F400189B9A /* Server List */,
 				DCF4F1802051A91500189B9A /* Settings */,
@@ -2372,6 +2383,17 @@
 			path = Licensing;
 			sourceTree = "<group>";
 		};
+		DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */ = {
+			isa = PBXGroup;
+			children = (
+				DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */,
+				DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */,
+				DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */,
+				DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */,
+			);
+			path = Diagnostic;
+			sourceTree = "<group>";
+		};
 		DCAEB05821F9FB0F0067E147 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -2967,6 +2989,9 @@
 				DCE4E47124C1F5610051722F /* PBXTargetDependency */,
 			);
 			name = ownCloud;
+			packageProductDependencies = (
+				024F3A2024A3AB410083E11E /* CrashReporter */,
+			);
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
 			productType = "com.apple.product-type.application";
@@ -3255,6 +3280,9 @@
 				ar,
 			);
 			mainGroup = 233BDE93204FEFE500C06732;
+			packageReferences = (
+				024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */,
+			);
 			productRefGroup = 233BDE9D204FEFE500C06732 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -3637,6 +3665,7 @@
 				4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */,
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
 				4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */,
+				395ADF5424D8359700141A5A /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */,
 				DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */,
 				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
@@ -3647,6 +3676,7 @@
 				39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */,
 				3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */,
 				DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */,
+				DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */,
 				DCE4E43E24C19C3E0051722F /* Action+UserInterface.swift in Sources */,
@@ -3665,6 +3695,7 @@
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
 				3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */,
 				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
+				DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
 				396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */,
@@ -3714,6 +3745,7 @@
 				4C82D07022C9387300835F0B /* MediaDisplayViewController.swift in Sources */,
 				DCFB74C421AD7E18005796AF /* StaticLoginServerListViewController.swift in Sources */,
 				232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */,
+				DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */,
 				4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
@@ -4273,7 +4305,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_SHORT_VERSION = 11.4;
-				APP_VERSION = 162;
+				APP_VERSION = 163;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4336,7 +4368,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_SHORT_VERSION = 11.4;
-				APP_VERSION = 162;
+				APP_VERSION = 163;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4381,7 +4413,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -4391,7 +4424,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_SHORT_VERSION = 11.4;
-				APP_VERSION = 162;
+				APP_VERSION = 163;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -4404,7 +4437,10 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4420,7 +4456,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_SHORT_VERSION = 11.4;
-				APP_VERSION = 162;
+				APP_VERSION = 163;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4433,7 +4469,10 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
@@ -4453,7 +4492,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				INFOPLIST_FILE = ownCloudTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -4471,7 +4514,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				INFOPLIST_FILE = ownCloudTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -4501,7 +4548,11 @@
 				INFOPLIST_FILE = ownCloudAppShared/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppShared;
@@ -4531,7 +4582,11 @@
 				INFOPLIST_FILE = ownCloudAppShared/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppShared;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -4558,7 +4613,11 @@
 				);
 				INFOPLIST_FILE = "ownCloud Intents/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
@@ -4581,7 +4640,11 @@
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud Intents/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4610,7 +4673,11 @@
 				);
 				INFOPLIST_FILE = ownCloudScreenshotsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudScreenshotsTests;
@@ -4636,7 +4703,11 @@
 				);
 				INFOPLIST_FILE = ownCloudScreenshotsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudScreenshotsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4699,7 +4770,11 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				INTENTS_CODEGEN_LANGUAGE = Swift;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudApp;
@@ -4733,7 +4808,11 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				INTENTS_CODEGEN_LANGUAGE = Swift;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudApp;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -4758,7 +4837,11 @@
 				);
 				INFOPLIST_FILE = ownCloudAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppTests;
@@ -4777,7 +4860,11 @@
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = ownCloudAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4797,7 +4884,11 @@
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4817,7 +4908,11 @@
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-Provider";
@@ -4842,7 +4937,11 @@
 				);
 				INFOPLIST_FILE = "ownCloud Share Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 11.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -4866,7 +4965,11 @@
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud Share Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 11.4;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Share-Extension";
@@ -4981,6 +5084,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/microsoft/plcrashreporter.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		024F3A2024A3AB410083E11E /* CrashReporter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */;
+			productName = CrashReporter;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 233BDE94204FEFE500C06732 /* Project object */;
 }

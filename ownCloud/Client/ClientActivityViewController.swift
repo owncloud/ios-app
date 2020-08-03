@@ -267,6 +267,29 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if ActivitySection(rawValue: indexPath.section) == .activities,
+		   let activities = activities,
+		   let nodeGenerator = activities[indexPath.row] as? DiagnosticNodeGenerator, nodeGenerator.isDiagnosticNodeGenerationAvailable {
+			return UISwipeActionsConfiguration(actions: [
+				UIContextualAction(style: .normal, title: "Info".localized, handler: { [weak self] (_, _, completionHandler) in
+					let context = OCDiagnosticContext(core: self?.core)
+
+					nodeGenerator.provideDiagnosticNode(for: context, completion: { [weak self] (groupNode, style) in
+						guard let groupNode = groupNode else { return }
+
+						OnMainThread {
+							self?.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context, style: style), animated: true)
+						}
+					})
+					completionHandler(true)
+				})
+			])
+		}
+
+		return nil
+	}
+
 	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
 		return false
 	}

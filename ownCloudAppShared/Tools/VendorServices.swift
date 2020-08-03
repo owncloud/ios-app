@@ -277,11 +277,10 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.isBetaBuild : false,
-				.showBetaWarning : false,
+				.isBetaBuild : true,
+				.showBetaWarning : true,
 				.enableUIAnimations: true,
 				.enableReviewPrompt: true,
-
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 				.feedbackEmail: "ios-app@owncloud.com",
 				.recommendToFriendEnabled: !VendorServices.shared.isBranded,
