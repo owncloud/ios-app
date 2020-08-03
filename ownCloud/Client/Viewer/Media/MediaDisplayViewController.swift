@@ -92,7 +92,7 @@ class MediaDisplayViewController : DisplayViewController {
 	}
 
 	override func requiresLocalCopyForPreview() -> Bool {
-		return !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
+		return (OCAppIdentity.shared.userDefaults?.downloadMediaFiles ?? false)
 	}
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {

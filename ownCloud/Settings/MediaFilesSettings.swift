@@ -21,16 +21,16 @@ import UIKit
 extension UserDefaults {
 
 	enum MediaFilesKeys : String {
-		case EnableStreamingKey = "media-enable-streaming"
+		case DownloadMediaFiles = "media-download-files"
 	}
 
-	public var streamingEnabled: Bool {
+	public var downloadMediaFiles: Bool {
 		set {
-			self.set(newValue, forKey: MediaFilesKeys.EnableStreamingKey.rawValue)
+			self.set(newValue, forKey: MediaFilesKeys.DownloadMediaFiles.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: MediaFilesKeys.EnableStreamingKey.rawValue)
+			return self.bool(forKey: MediaFilesKeys.DownloadMediaFiles.rawValue)
 		}
 	}
 }
@@ -47,9 +47,9 @@ class MediaFilesSettingsSection: SettingsSection {
 
 		enableStreamingSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
-				self?.userDefaults.streamingEnabled = enableSwitch.isOn
+				self?.userDefaults.downloadMediaFiles = enableSwitch.isOn
 			}
-			}, title: "Streaming Enabled".localized, value: self.userDefaults.streamingEnabled, identifier: "streaming-enabled")
+			}, title: "Download instead of streaming".localized, value: self.userDefaults.downloadMediaFiles, identifier: "download-media")
 
 		self.add(row: enableStreamingSwitchRow!)
 
