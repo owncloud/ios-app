@@ -64,7 +64,7 @@
 			PLCrashReport *report = [[PLCrashReport alloc] initWithData:crashData error:nil];
 			if (report != nil) {
 				NSString *crashString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
-				OCLogError(@"%@", crashString);
+				OCTLogError(@[@"CRASH_REPORTER"], @"%@", crashString);
 			}
 		}
 
