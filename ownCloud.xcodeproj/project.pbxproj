@@ -19,6 +19,7 @@
 		02633EFF2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */; };
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
+		02AE32E424D2FA8B00A19476 /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 02AE32E324D2FA8B00A19476 /* CrashReporter */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
 		232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
@@ -1345,6 +1346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */,
+				02AE32E424D2FA8B00A19476 /* CrashReporter in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
 				DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */,
 				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
@@ -2900,6 +2902,9 @@
 				DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */,
 			);
 			name = "ownCloud File Provider";
+			packageProductDependencies = (
+				02AE32E324D2FA8B00A19476 /* CrashReporter */,
+			);
 			productName = "ownCloud File Provider";
 			productReference = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -4691,6 +4696,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		024F3A2024A3AB410083E11E /* CrashReporter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */;
+			productName = CrashReporter;
+		};
+		02AE32E324D2FA8B00A19476 /* CrashReporter */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */;
 			productName = CrashReporter;
