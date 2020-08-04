@@ -24,12 +24,12 @@ import ownCloudSDK
 
 extension CLLocation {
 	var dmsLatitude: String {
-		let direction = self.coordinate.latitude >= 0 ? "N" : "S"
+		let direction = self.coordinate.latitude >= 0 ? "N".localized : "S".localized
 		return dms(from: self.coordinate.latitude) + "\"\(direction)"
 	}
 
 	var dmsLongitude: String {
-		let direction = self.coordinate.longitude >= 0 ? "E" : "W"
+		let direction = self.coordinate.longitude >= 0 ? "E".localized : "W".localized
 		return dms(from: self.coordinate.longitude) + "\"\(direction)"
 	}
 
@@ -74,7 +74,7 @@ class ImageMetadataParser {
 	}()
 
 	enum MetadataParseError : Error {
-		case InvailidInput
+		case InvalidInput
 		case MetadataMissing
 	}
 
@@ -443,7 +443,7 @@ class ImageMetadataParser {
 	}()
 
 	func parse(url:URL) throws -> ParseResult {
-		guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else { throw MetadataParseError.InvailidInput }
+		guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else { throw MetadataParseError.InvalidInput }
 
 		guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : Any] else { throw MetadataParseError.MetadataMissing }
 

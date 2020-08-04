@@ -744,3 +744,7 @@
 "Coordinates" = "Coordinates";
 "Altitude" = "Altitude";
 "Place" = "Place";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";

@@ -24,12 +24,27 @@ class DisplayExifMetadataAction : Action {
 	override class var name : String? { return "Image Metadata".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .contextMenuItem] }
 	class var supportedMimeTypes : [String] { return ["image"] }
+	class var excludedMimeTypes : [String] { return ["image/gif", "image/svg"] }
+
+	override class var keyCommand : String? { return "I" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .photoProFeatures) }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count == 1, let item = forContext.items.first, item.type == .file, let mimeType = item.mimeType {
-			if supportedMimeTypes.filter({ mimeType.contains($0) }).count > 0 {
+
+			if supportedMimeTypes.filter({
+				if mimeType.contains($0) {
+					if excludedMimeTypes.filter({
+						return mimeType.contains($0)
+					}).count == 0 {
+						return true
+					}
+				}
+				return false
+			}).count > 0 {
 				return .middle
 			}
 		}
