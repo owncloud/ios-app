@@ -390,6 +390,16 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Share Sheet</string>
+					<key>Subtitle</key>
+					<string>Our new share sheet imports everything and everywhere. Just tap on the share button, select the ownCloud app and save multiple files, photos, selected text, downloads, …</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>square.and.arrow.up</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Take Image or Video</string>
 					<key>Subtitle</key>
 					<string>Take an image or video right from the app and upload it to your cloud.</string>
@@ -472,7 +482,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Improved Media Upload</string>
 					<key>Subtitle</key>
-					<string>We added a possibility to specify different upload folder for video instant upload. The photo picker can now select items from your shared albums.</string>
+					<string>We added a new option to specify different upload folder for video instant upload. The photo picker can now select items from your shared albums.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -492,7 +502,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Fix: Avoid duplicate photo upload</string>
 					<key>Subtitle</key>
-					<string> Fix that photos which have modified are going to be re-uploaded upon each modification in case instant upload is active</string>
+					<string>Fix that photos which have modified are going to be re-uploaded upon each modification in case instant upload is active</string>
 					<key>Type</key>
 					<string>Fix:</string>
 					<key>ImageName</key>
