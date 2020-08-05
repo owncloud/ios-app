@@ -136,7 +136,7 @@ class MoreSettingsSection: SettingsSection {
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle
 			guard let viewController = self.viewController else { return }
-			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version informations were copied to the clipboard".localized, completion: nil)
+			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version information were copied to the clipboard".localized, completion: nil)
 		}, title: "App Version".localized, subtitle: footerTitle, identifier: "app-version")
 	}
 

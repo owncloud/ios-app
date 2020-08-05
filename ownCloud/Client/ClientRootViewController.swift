@@ -221,7 +221,7 @@ class ClientRootViewController: UITabBarController {
 		libraryViewController = LibraryTableViewController(style: .grouped)
 		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
 		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
-		libraryNavigationController?.tabBarItem.image = UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
+		libraryNavigationController?.tabBarItem.image = UIImage(named: "branding-bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
