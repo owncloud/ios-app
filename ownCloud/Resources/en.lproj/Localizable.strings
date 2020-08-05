@@ -94,6 +94,7 @@
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
+"%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
 /* Static Login Setup */
