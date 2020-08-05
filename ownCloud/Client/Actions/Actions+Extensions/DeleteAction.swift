@@ -31,19 +31,11 @@ class DeleteAction : Action {
 		let sharedWithUser = forContext.items.sharedWithUser
 
 		if let core = forContext.core {
-			if sharedWithUser.count == 1 {
-				if sharedWithUser[0].isShareRootItem(from: core) {
+			for sharedItem in sharedWithUser {
+				if sharedItem.isShareRootItem(from: core) {
 					return .none
 				}
-			} else {
-				let sharedFolders = sharedWithUser.filter({$0.type == .collection})
-				for sharedFolder in sharedFolders {
-					if sharedFolder.isShareRootItem(from: core) {
-						return .none
-					}
-				}
 			}
-
 		}
 
 		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.delete)}).count > 0 {
