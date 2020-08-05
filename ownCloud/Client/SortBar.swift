@@ -68,9 +68,11 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	var sortSegmentedControl: SegmentedControl?
 	var sortButton: UIButton?
 	var selectButton: UIButton?
+	var selectedLabel: UILabel?
 	var showSelectButton: Bool = false {
 		didSet {
 			selectButton?.isHidden = !showSelectButton
+			selectedLabel?.isHidden = showSelectButton
 		}
 	}
 
@@ -109,16 +111,18 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	init(frame: CGRect, sortMethod: SortMethod) {
 		sortSegmentedControl = SegmentedControl()
 		selectButton = UIButton()
+		selectedLabel = UILabel()
 		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
 
 		super.init(frame: frame)
 
-		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let selectButton = selectButton {
+		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let selectButton = selectButton, let selectedLabel = selectedLabel {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
+			selectedLabel.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
@@ -126,6 +130,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 			self.addSubview(sortSegmentedControl)
 			self.addSubview(sortButton)
 			self.addSubview(selectButton)
+			self.addSubview(selectedLabel)
 
 			// Sort segmented control
 			NSLayoutConstraint.activate([
@@ -188,6 +193,16 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 				])
+
+			selectedLabel.textAlignment = .right
+			selectedLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+
+			NSLayoutConstraint.activate([
+				selectedLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+				selectedLabel.leftAnchor.constraint(lessThanOrEqualTo: sortButton.rightAnchor, constant: rightPadding),
+				selectedLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
+				selectedLabel.heightAnchor.constraint(equalToConstant: sideButtonsSize.height)
+				])
 		}
 
 		// Finalize view setup
@@ -195,6 +210,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
+		selectedLabel?.isHidden = showSelectButton
 		updateForCurrentTraitCollection()
 	}
 
@@ -211,6 +227,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton?.applyThemeCollection(collection)
 		self.selectButton?.applyThemeCollection(collection)
+		self.selectedLabel?.textColor = collection.navigationBarColors.tintColor
 		self.sortSegmentedControl?.applyThemeCollection(collection)
 		self.backgroundColor = collection.navigationBarColors.backgroundColor
 	}
@@ -283,6 +300,10 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	@objc private func toggleSelectMode() {
 		delegate?.toggleSelectMode()
+	}
+
+	public func updateSelectedLabel(title: String) {
+		selectedLabel?.text = title
 	}
 
 	// MARK: - UIPopoverPresentationControllerDelegate

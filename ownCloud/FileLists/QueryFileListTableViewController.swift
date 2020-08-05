@@ -470,6 +470,13 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			selectDeselectAllButtonItem?.target = self
 			selectDeselectAllButtonItem?.action = #selector(selectAllItems)
 		}
+		if selectedCount == 1 {
+			sortBar?.updateSelectedLabel(title: String(format: "%d Item selected".localized, selectedCount))
+		} else if selectedCount > 1 {
+			sortBar?.updateSelectedLabel(title: String(format: "%d Items selected".localized, selectedCount))
+		} else {
+			sortBar?.updateSelectedLabel(title: "Select items".localized)
+		}
 	}
 
 	fileprivate func updateActions(for selectedItems:[OCItem]) {
