@@ -445,29 +445,41 @@ class Migration {
 			// So, check if the directory is present and create it if it is absent
 			var uploadFolderAvailable = false
 			let trackItemGroup = DispatchGroup()
-			trackItemGroup.enter()
             Log.debug(tagged: ["MIGRATION"], "Check if the root folder is accessible")
+
+			// Track root folder
+			trackItemGroup.enter()
 			OCItemTracker().item(for: bookmark, at: "/") { (error, core, rootItem) in
-				if rootItem != nil {
-					trackItemGroup.enter()
-					OCItemTracker().item(for: bookmark, at: Migration.legacyInstantUploadFolder) { (error, core, item) in
-						if error == nil {
-							if item == nil {
-								trackItemGroup.enter()
-								Log.debug(tagged: ["MIGRATION"], "Creating folder for instant upload")
-								core?.createFolder(Migration.legacyInstantUploadFolder, inside: rootItem!, options: nil, resultHandler: { (error, _, _, _) in
-									uploadFolderAvailable = (error == nil)
-									trackItemGroup.leave()
-								})
-							} else {
-								Log.debug(tagged: ["MIGRATION"], "Instant upload folder already exists")
-								uploadFolderAvailable = true
-							}
-						}
+				defer {
+					trackItemGroup.leave()
+				}
+				guard let rootItem = rootItem else { return }
+
+				// Track InstantUpload subfolder
+				trackItemGroup.enter()
+				OCItemTracker().item(for: bookmark, at: Migration.legacyInstantUploadFolder) { (error, core, item) in
+					defer {
 						trackItemGroup.leave()
 					}
+
+					guard error == nil else { return }
+
+					// Check if the upload folder does exist eventually
+					guard item == nil else {
+						Log.debug(tagged: ["MIGRATION"], "Instant upload folder already exists")
+						uploadFolderAvailable = true
+						return
+					}
+
+					Log.debug(tagged: ["MIGRATION"], "Creating folder for instant upload")
+
+					// Create upload subfolder
+					trackItemGroup.enter()
+					core?.createFolder(Migration.legacyInstantUploadFolder, inside: rootItem, options: nil, placeholderCompletionHandler: { (error, _) in
+						uploadFolderAvailable = (error == nil)
+						trackItemGroup.leave()
+					})
 				}
-				trackItemGroup.leave()
 			}
 
 			trackItemGroup.wait()
