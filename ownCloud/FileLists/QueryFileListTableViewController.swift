@@ -474,6 +474,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			sortBar?.updateSelectedLabel(title: String(format: "%d Item selected".localized, selectedCount))
 		} else if selectedCount > 1 {
 			sortBar?.updateSelectedLabel(title: String(format: "%d Items selected".localized, selectedCount))
+		} else {
+			sortBar?.updateSelectedLabel(title: "")
 		}
 	}
 
