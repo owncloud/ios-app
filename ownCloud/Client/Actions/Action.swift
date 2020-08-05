@@ -85,6 +85,15 @@ class ActionExtension: OCExtension {
 	}
 }
 
+extension Array where Element: OCItem {
+	var sharedWithUser : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
+	}
+	var isShared : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isShared })
+	}
+}
+
 class ActionContext: OCExtensionContext {
 	// MARK: - Custom Instance Properties.
 	weak var viewController: UIViewController?
@@ -92,6 +101,8 @@ class ActionContext: OCExtensionContext {
 	weak var query: OCQuery?
 	var items: [OCItem]
 	weak var sender: AnyObject?
+
+	private var cachedParentFolders = [OCLocalID : OCItem]()
 
 	// MARK: - Init & Deinit.
 	init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
@@ -107,6 +118,42 @@ class ActionContext: OCExtensionContext {
 		self.query = query
 		self.requirements = requirements
 		self.preferences = preferences
+	}
+
+	func parent(for item:OCItem) -> OCItem? {
+		var parent: OCItem?
+		guard let localID = item.parentLocalID as OCLocalID? else { return nil }
+
+		parent = cachedParentFolders[localID]
+		if parent == nil, let core = self.core {
+			parent = item.parentItem(from: core)
+			self.cachedParentFolders[localID] = parent
+		}
+
+		return parent
+	}
+
+	func isShareRoot(item:OCItem) -> Bool {
+		guard item.isSharedWithUser else { return false }
+
+		guard parent(for: item) == nil else { return false }
+
+		return true
+	}
+
+	func containsShareRoot() -> Bool {
+		let sharedItems = self.items.sharedWithUser
+
+		guard sharedItems.count > 0 else { return false }
+
+		for sharedItem in sharedItems {
+
+			if isShareRoot(item: sharedItem) {
+				return true
+			}
+		}
+
+		return true
 	}
 }
 
