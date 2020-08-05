@@ -357,8 +357,8 @@
 "Media import" = "Media import";
 "%@ of %@" = "%@ of %@";
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
-"%d Item selected" = "%d Item selected";
-"%d Items selected" = "%d Items selected";
+"%d Item of %d Selected" = "%d Item of %d Selected";
+"%d Items of %d Selected" = "%d Items of %d Selected";
 
 /* Scan */
 "Scan" = "Scan";
