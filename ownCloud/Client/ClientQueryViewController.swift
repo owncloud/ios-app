@@ -62,27 +62,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		super.init(core: inCore, query: inQuery)
 
+		updateTitle()
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
-
-		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
-			self.navigationItem.title = shortName
-		} else {
-			let titleButton = UIButton()
-			titleButton.setTitle(lastPathComponent, for: .normal)
-			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
-			titleButton.sizeToFit()
-			titleButton.accessibilityLabel = "Show parent paths".localized
-			titleButton.accessibilityIdentifier = "show-paths-button"
-			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
-			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
-			titleButtonThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
-				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
-				titleButton.tintColor = collection.navigationBarColors.labelColor
-			})
-			self.navigationItem.titleView = titleButton
-		}
-
 		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
@@ -156,6 +137,29 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		super.viewWillDisappear(animated)
 
 		leaveMultipleSelection()
+	}
+
+	private func updateTitle() {
+		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+
+		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
+			self.navigationItem.title = shortName
+		} else {
+			let titleButton = UIButton()
+			titleButton.setTitle(lastPathComponent, for: .normal)
+			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
+			titleButton.sizeToFit()
+			titleButton.accessibilityLabel = "Show parent paths".localized
+			titleButton.accessibilityIdentifier = "show-paths-button"
+			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
+			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+			titleButtonThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+				titleButton.tintColor = collection.navigationBarColors.labelColor
+			})
+			self.navigationItem.titleView = titleButton
+		}
 	}
 
 	private func updateFooter(text:String?) {
@@ -294,6 +298,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	override func leaveMultipleSelection() {
 		super.leaveMultipleSelection()
+		updateTitle()
 		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 	}
 
