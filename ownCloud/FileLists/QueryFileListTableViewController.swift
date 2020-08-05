@@ -471,11 +471,11 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			selectDeselectAllButtonItem?.action = #selector(selectAllItems)
 		}
 		if selectedCount == 1 {
-			sortBar?.updateSelectedLabel(title: String(format: "%d Item selected".localized, selectedCount))
+			self.title = String(format: "%d item of %d selected".localized, selectedCount, self.items.count)
 		} else if selectedCount > 1 {
-			sortBar?.updateSelectedLabel(title: String(format: "%d Items selected".localized, selectedCount))
+			self.title = String(format: "%d items of %d selected".localized, selectedCount, self.items.count)
 		} else {
-			sortBar?.updateSelectedLabel(title: "")
+			self.title = ""
 		}
 	}
 

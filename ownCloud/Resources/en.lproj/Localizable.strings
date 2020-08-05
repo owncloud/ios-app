@@ -94,6 +94,7 @@
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
+"%@ items | " = "%@ items | ";
 
 /* Static Login Setup */
 "Server error" = "Server error";

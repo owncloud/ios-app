@@ -104,6 +104,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 						} else {
 							footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
 						}
+
+						if let self = self {
+							footerText = String(format: "%@ items | ", "\(self.items.count)") + (footerText ?? "")
+						}
 					}
 
 					self?.updateFooter(text: footerText)
@@ -420,7 +424,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
 		if let rootItem = self.query.rootItem {
 			if query.queryPath != "/" {
-				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+				let totalSize = String(format: "%@ items | ", "\(self.items.count)") + String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				self.updateFooter(text: totalSize)
 			}
 
