@@ -35,6 +35,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	var selectedItemIds = Set<OCLocalID>()
 
+	var actionContext: ActionContext?
 	var actions : [Action]?
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -234,6 +235,12 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 					let previousItemCount = self.items.count
 
 					self.items = changeSet?.queryResult ?? []
+
+					// Setup new action context
+					if let core = self.core {
+						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+						self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
+					}
 
 					switch query.state {
 					case .contentsFromCache, .idle, .waitingForServerReply:
@@ -478,12 +485,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
 		if selectedItems.count > 0 {
-			if let core = self.core {
-				// Get possible associated actions
-				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation)
+			if let context = self.actionContext {
 
-				self.actions = Action.sortedApplicableActions(for: actionContext)
+				context.items = selectedItems
+				self.actions = Action.sortedApplicableActions(for: context)
 
 				// Enable / disable tool-bar items depending on action availability
 				for item in toolbarItems {

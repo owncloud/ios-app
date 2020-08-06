@@ -125,6 +125,11 @@ class ActionContext: OCExtensionContext {
 		guard let localID = item.parentLocalID as OCLocalID? else { return nil }
 
 		parent = cachedParentFolders[localID]
+
+		if parent != nil {
+			return parent
+		}
+
 		if parent == nil, let core = self.core {
 			parent = item.parentItem(from: core)
 			self.cachedParentFolders[localID] = parent
