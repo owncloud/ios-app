@@ -99,14 +99,60 @@ class ActionContext: OCExtensionContext {
 	weak var viewController: UIViewController?
 	weak var core: OCCore?
 	weak var query: OCQuery?
-	var items: [OCItem]
+
+	private var rootItems: Int = 0
+	private var moveableItems: Int = 0
+	private var deleteableItems: Int = 0
+	private var cachedSharedItems = [OCItem]()
+	private var cachedParentFolders = [OCLocalID : OCItem]()
+	private var itemStorage: [OCItem]
+
+	var items: [OCItem] {
+		get {
+			return itemStorage
+		}
+	}
+
+	var itemsSharedWithUser: [OCItem] {
+		return cachedSharedItems
+	}
+
+	var containsRoot: Bool {
+		return rootItems > 0
+	}
+
+	var allItemsDeleteable: Bool {
+		return items.count == deleteableItems
+	}
+
+	var allItemsMoveable: Bool {
+		return items.count == moveableItems
+	}
+
+	var allItemsShared: Bool {
+		return self.items.count == self.cachedSharedItems.count
+	}
+
 	weak var sender: AnyObject?
 
-	private var cachedParentFolders = [OCLocalID : OCItem]()
+	var containsShareRoot : Bool {
+
+		guard self.itemsSharedWithUser.count > 0 else { return false }
+
+		for sharedItem in self.itemsSharedWithUser {
+
+			if isShareRoot(item: sharedItem) {
+				return true
+			}
+		}
+
+		return true
+	}
 
 	// MARK: - Init & Deinit.
 	init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
-		self.items = items
+
+		itemStorage = items
 
 		super.init()
 
@@ -118,6 +164,56 @@ class ActionContext: OCExtensionContext {
 		self.query = query
 		self.requirements = requirements
 		self.preferences = preferences
+
+		updateCaches()
+	}
+
+	func replace(items:[OCItem]) {
+		self.itemStorage = items
+		updateCaches()
+	}
+
+	func removeAllItems() {
+		self.itemStorage.removeAll()
+		updateCaches()
+	}
+
+	func remove(item:OCItem) {
+		self.itemStorage.removeAll(where: {$0.localID == item.localID})
+		if item.isSharedWithUser {
+			self.cachedSharedItems.removeAll(where: { $0.localID == item.localID })
+		}
+
+		if item.isRoot, rootItems > 0 {
+			rootItems -= 1
+		}
+
+		if item.permissions.contains(.delete), deleteableItems > 0 {
+			deleteableItems -= 1
+		}
+
+		if item.permissions.contains(.move), deleteableItems > 0 {
+			moveableItems -= 1
+		}
+	}
+
+	func add(item:OCItem) {
+		self.itemStorage.append(item)
+		if item.isSharedWithUser {
+			self.cachedSharedItems.append(item)
+		}
+
+		if item.isRoot {
+			rootItems += 1
+		}
+
+		if item.permissions.contains(.delete) {
+			deleteableItems += 1
+		}
+
+		if item.permissions.contains(.move) {
+			moveableItems += 1
+		}
 	}
 
 	func parent(for item:OCItem) -> OCItem? {
@@ -146,19 +242,11 @@ class ActionContext: OCExtensionContext {
 		return true
 	}
 
-	func containsShareRoot() -> Bool {
-		let sharedItems = self.items.sharedWithUser
-
-		guard sharedItems.count > 0 else { return false }
-
-		for sharedItem in sharedItems {
-
-			if isShareRoot(item: sharedItem) {
-				return true
-			}
-		}
-
-		return true
+	private func updateCaches() {
+		cachedSharedItems = itemStorage.sharedWithUser
+		rootItems = itemStorage.filter({ $0.isRoot }).count
+		deleteableItems = itemStorage.filter({$0.permissions.contains(.delete)}).count
+		moveableItems = itemStorage.filter({$0.permissions.contains(.move)}).count
 	}
 }
 

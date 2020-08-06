@@ -29,11 +29,11 @@ class DeleteAction : Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
-		if forContext.containsShareRoot() {
+		if forContext.containsRoot || !forContext.allItemsDeleteable {
 			return .none
 		}
 
-		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.delete)}).count > 0 {
+		if forContext.containsShareRoot {
 			return .none
 		}
 

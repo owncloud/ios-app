@@ -26,13 +26,12 @@ class UnshareAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedWithUser = forContext.items.sharedWithUser
 
-		if forContext.items.count != sharedWithUser.count {
+		if !forContext.allItemsShared {
 			return .none
 		}
 
-		for sharedItem in sharedWithUser {
+		for sharedItem in forContext.itemsSharedWithUser {
 			if !forContext.isShareRoot(item: sharedItem) {
 				return .none
 			}

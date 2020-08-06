@@ -29,7 +29,11 @@ class MoveAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.filter({return $0.isRoot || (!$0.permissions.contains(.move) && !$0.permissions.contains(.delete))}).count > 0 {
+		if forContext.containsRoot {
+			return .none
+		}
+
+		if !forContext.allItemsMoveable || !forContext.allItemsDeleteable {
 			return .none
 		}
 
