@@ -109,31 +109,28 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 		let showDiagnostics = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let bookmark = self?.bookmark {
-				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-					let vault = OCVault(bookmark: bookmark)
+				let vault = OCVault(bookmark: bookmark)
 
-					vault.open(completionHandler: { (_, error) in
-						let done : () -> Void = {
-							vault.close { (_, _) in
-								completionHandler()
-							}
+				vault.open(completionHandler: { (_, error) in
+					let done : () -> Void = {
+						vault.close { (_, _) in
 						}
+					}
 
-						if let database = vault.database, error == nil {
-							OnBackgroundQueue {
-								let diagnosticNodes = database.diagnosticNodes(with: nil)
+					if let database = vault.database, error == nil {
+						OnBackgroundQueue {
+							let diagnosticNodes = database.diagnosticNodes(with: nil)
 
-								OnMainThread {
-									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
-								}
-
-								done()
+							OnMainThread {
+								self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
 							}
-						} else {
+
 							done()
 						}
-					})
-				}, for: bookmark)
+					} else {
+						done()
+					}
+				})
 			}
 		}, title: "Diagnostic Overview".localized, accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
 
