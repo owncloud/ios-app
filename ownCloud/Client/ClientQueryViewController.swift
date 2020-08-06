@@ -440,7 +440,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		guard tableView.isEditing else { return }
 
 		guard selectedItemIds.count > 0 else { return }
-		
+
 		for row in 0..<self.items.count {
 			if let itemLocalID = self.items[row].localID as OCLocalID? {
 				if selectedItemIds.contains(itemLocalID) {
