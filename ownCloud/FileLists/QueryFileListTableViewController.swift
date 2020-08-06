@@ -34,7 +34,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
 	var selectedItemIds = [OCLocalID]()
-	var selectedItems = [OCItem]()
 
 	var actionContext: ActionContext?
 	var actions : [Action]?
@@ -453,7 +452,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			super.tableView(tableView, didSelectRowAt: indexPath)
 		} else {
 			if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
-				selectedItems.append(item)
 				selectedItemIds.append(itemLocalID as OCLocalID)
 				self.actionContext?.add(item: item)
 			}
@@ -465,7 +463,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		if tableView.isEditing {
 			if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
-				selectedItems.removeAll(where: {$0.localID == itemLocalID})
 				selectedItemIds.removeAll(where: {$0.hash == itemLocalID.hash})
 				self.actionContext?.remove(item: item)
 			}
@@ -481,7 +478,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
-		if selectedItems.count > 0 {
+		if selectedItemIds.count > 0 {
 			if let context = self.actionContext {
 
 				self.actions = Action.sortedApplicableActions(for: context)
@@ -592,9 +589,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			}.forEach { (indexPath) in
 				self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
 		}
-		selectedItems = self.items
-		selectedItemIds = selectedItems.compactMap({$0.localID as OCLocalID?})
-		self.actionContext?.replace(items: selectedItems)
+		selectedItemIds = self.items.compactMap({$0.localID as OCLocalID?})
+		self.actionContext?.replace(items: self.items)
 
 		updateMultipleSelectButtonItem()
 		updateActions()
@@ -605,7 +601,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		self.tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
 			self.tableView.deselectRow(at: indexPath, animated: true)
 		})
-		selectedItems.removeAll()
 		selectedItemIds.removeAll()
 		self.actionContext?.removeAllItems()
 
