@@ -472,9 +472,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 		self.navigationItem.titleView = nil
 		if selectedCount == 1 {
-			self.navigationItem.title = String(format: "%d Item of %d Selected".localized, selectedCount, self.items.count)
+			self.navigationItem.title = String(format: "%d Item".localized, selectedCount)
 		} else if selectedCount > 1 {
-			self.title = String(format: "%d Items of %d Selected".localized, selectedCount, self.items.count)
+			self.title = String(format: "%d Items".localized, selectedCount)
 		} else {
 			self.navigationItem.title = ""
 		}
