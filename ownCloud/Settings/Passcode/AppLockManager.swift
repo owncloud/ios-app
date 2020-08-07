@@ -457,7 +457,7 @@ extension AppLockManager: OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
-			.passcodeEnforced : true
+			.passcodeEnforced : false
 		]
 	}
 }
