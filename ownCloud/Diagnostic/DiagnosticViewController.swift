@@ -127,8 +127,6 @@ class DiagnosticViewController: StaticTableViewController {
 				shareViewController.popoverPresentationController?.sourceRect = sender.frame
 			}
 			self.present(shareViewController, animated: true, completion: nil)
-
-			Log.debug("\(markdown)")
 		}
 	}
 }

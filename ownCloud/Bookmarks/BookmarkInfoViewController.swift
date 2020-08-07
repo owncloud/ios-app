@@ -107,34 +107,36 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 		addSection(StaticTableViewSection(headerTitle: "Compacting".localized, footerTitle: nil, identifier: "section-compact", rows: [ includeAvailableOfflineCopiesRow, deleteLocalFilesRow ]))
 
-		let showDiagnostics = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			if let bookmark = self?.bookmark {
-				let vault = OCVault(bookmark: bookmark)
+		if DiagnosticManager.shared.enabled {
+			let showDiagnostics = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				if let bookmark = self?.bookmark {
+					let vault = OCVault(bookmark: bookmark)
 
-				vault.open(completionHandler: { (_, error) in
-					let done : () -> Void = {
-						vault.close { (_, _) in
-						}
-					}
-
-					if let database = vault.database, error == nil {
-						OnBackgroundQueue {
-							let diagnosticNodes = database.diagnosticNodes(with: nil)
-
-							OnMainThread {
-								self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
+					vault.open(completionHandler: { (_, error) in
+						let done : () -> Void = {
+							vault.close { (_, _) in
 							}
+						}
 
+						if let database = vault.database, error == nil {
+							OnBackgroundQueue {
+								let diagnosticNodes = database.diagnosticNodes(with: nil)
+
+								OnMainThread {
+									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
+								}
+
+								done()
+							}
+						} else {
 							done()
 						}
-					} else {
-						done()
-					}
-				})
-			}
-		}, title: "Diagnostic Overview".localized, accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
+					})
+				}
+			}, title: "Diagnostic Overview".localized, accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
 
-		addSection(StaticTableViewSection(headerTitle: "Diagnostics".localized, footerTitle: nil, identifier: "section-diagnostics", rows: [ showDiagnostics ]))
+			addSection(StaticTableViewSection(headerTitle: "Diagnostics".localized, footerTitle: nil, identifier: "section-diagnostics", rows: [ showDiagnostics ]))
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
