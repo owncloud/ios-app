@@ -26,10 +26,16 @@ typedef void(^OCFileProviderServiceSessionErrorHandler)(NSError *error);
 @interface OCFileProviderServiceSession : NSObject
 
 @property(readonly) NSURL *serviceURL;
+@property(nullable,strong) OCVault *vault;
 
 - (instancetype)initWithServiceURL:(NSURL *)serviceURL;
+- (instancetype)initWithBookmark:(OCBookmark *)bookmark;
+- (instancetype)initWithVault:(OCVault *)vault;
 
 - (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler errorHandler:(OCFileProviderServiceSessionErrorHandler)errorHandler;
+
+- (void)incrementSessionUsage;
+- (void)decrementSessionUsage;
 
 @end
 

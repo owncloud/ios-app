@@ -1,5 +1,5 @@
 //
-//  OCCore+UploadByFileProvider.swift
+//  OCFileProviderServiceSession+UploadByFileProvider.swift
 //  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 30.07.20.
@@ -20,16 +20,24 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public extension OCCore {
-	func importThroughFileProvider(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, completion: @escaping (_ error: Error?) -> Void) {
+public extension OCFileProviderServiceSession {
+	func importThroughFileProvider(url importItemURL: URL, to targetDirectory : OCItem, completion: @escaping (_ error: Error?) -> Void) {
 		let name = importItemURL.lastPathComponent
 		var effectiveImportItemURL : URL = importItemURL
 		var tempFolderURL : URL?
 
+		guard let vault = vault else {
+			Log.error("Not importing file \(importItemURL.lastPathComponent) due to insufficient parameters…")
+			completion(NSError(ocError: .insufficientParameters))
+			return
+		}
+
+		Log.debug("Importing file \(importItemURL.lastPathComponent) …")
+
 		// Check if item is inside vault
-		if let vaultRootURLString = self.vault.rootURL?.absoluteString, !importItemURL.absoluteString.hasPrefix(vaultRootURLString) {
+		if let vaultRootURLString = vault.rootURL?.absoluteString, !importItemURL.absoluteString.hasPrefix(vaultRootURLString) {
 			// If not, copy item inside temporary vault location
-			if let shareFilesRootURL = self.vault.rootURL?.appendingPathComponent("fp-import", isDirectory: true) {
+			if let shareFilesRootURL = vault.rootURL?.appendingPathComponent("fp-import", isDirectory: true) {
 				let tryTempFolderURL = shareFilesRootURL.appendingPathComponent(UUID().uuidString, isDirectory: true)
 				let name = importItemURL.lastPathComponent
 				let tempFileURL = tryTempFolderURL.appendingPathComponent(name)

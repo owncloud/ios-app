@@ -19,6 +19,7 @@
 #import <ownCloudSDK/ownCloudSDK.h>
 #import "OCFileProviderServiceSession.h"
 #import "OCFileProviderService.h"
+#import "OCVault+FPServices.h"
 #import "OCBookmark+FPServices.h"
 
 @interface OCFileProviderServiceSession ()
@@ -86,6 +87,21 @@
 	return (self);
 }
 
+- (instancetype)initWithVault:(OCVault *)vault
+{
+	if ((self = [self initWithServiceURL:vault.fpServicesURL]) != nil)
+	{
+		_vault = vault;
+	}
+
+	return (self);
+}
+
+- (instancetype)initWithBookmark:(OCBookmark *)bookmark
+{
+	return ([self initWithServiceURL:[[OCVault alloc] initWithBookmark:bookmark].fpServicesURL]);
+}
+
 - (void)dealloc
 {
 	if (_doneHandler != nil)
@@ -151,8 +167,10 @@
 						session->_doneHandler = [hostDoneHandler copy];
 
 						[session->_queue async:^(dispatch_block_t  _Nonnull innerQueueCompletionHandler) {
-							completionHandler(error, host, doneHandler);
-							innerQueueCompletionHandler();
+							completionHandler(error, host, ^{
+								doneHandler();
+								innerQueueCompletionHandler();
+							});
 						}];
 					}
 					else
@@ -206,6 +224,16 @@
 
 		queueCompletionHandler();
 	}];
+}
+
+- (void)incrementSessionUsage
+{
+	_usageCount++;
+}
+
+- (void)decrementSessionUsage
+{
+	[self releaseFileProviderService];
 }
 
 @end

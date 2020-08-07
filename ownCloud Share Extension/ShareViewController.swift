@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 import CoreServices
 
@@ -174,20 +175,34 @@ class ShareViewController: MoreStaticTableViewController {
 				OnMainThread {
 					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
 						if let targetDirectory = selectedDirectory {
-							let progressHUDViewController = ProgressHUDViewController(on: self, label: "Saving".localized)
-							self.importFiles(to: targetDirectory, bookmark: bookmark, core: core, completion: { [weak self] in
-								OnMainThread {
-									progressHUDViewController.dismiss(animated: true, completion: {
-										self?.dismiss(animated: true, completion: {
-											self?.returnCores(completion: {
+							if let vault = core?.vault {
+								self.fpServiceSession = OCFileProviderServiceSession(vault: vault)
+
+								self.returnCores(completion: {
+									OnMainThread {
+										self.navigationController?.popToViewController(self, animated: false)
+
+										let progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, cancelHandler: {})
+
+										self.present(progressViewController, animated: false)
+
+										if let fpServiceSession = self.fpServiceSession {
+											self.importFiles(to: targetDirectory, serviceSession: fpServiceSession, progressViewController: progressViewController, completion: { [weak self] (error) in
 												OnMainThread {
-													self?.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+													if let error = error {
+														self?.extensionContext?.cancelRequest(withError: error)
+														progressViewController.dismiss(animated: false)
+													} else {
+														self?.extensionContext?.completeRequest(returningItems: [], completionHandler: { (_) in
+															progressViewController.dismiss(animated: false)
+														})
+													}
 												}
 											})
-										})
-									})
-								}
-							})
+										}
+									}
+								})
+							}
 						}
 					})
 
@@ -210,69 +225,189 @@ class ShareViewController: MoreStaticTableViewController {
 		})
 	}
 
-	func importFiles(to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?, completion: @escaping () -> Void) {
+	var fpServiceSession : OCFileProviderServiceSession?
+	var asyncQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
+
+	func showAlert(title: String?, message: String? = nil, error: Error? = nil, decisionHandler: @escaping ((_ continue: Bool) -> Void)) {
+		OnMainThread {
+			let message = message ?? ((error != nil) ? error?.localizedDescription : nil)
+			let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+			alert.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { (_) in
+				decisionHandler(false)
+			}))
+
+			if let nsError = error as NSError?, nsError.domain == NSCocoaErrorDomain, nsError.code == NSXPCConnectionInvalid || nsError.code == NSXPCConnectionInterrupted {
+				Log.error("XPC connection error: \(String(describing: error))")
+			} else {
+				alert.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: { (_) in
+					decisionHandler(true)
+				}))
+			}
+
+			(self.presentedViewController ?? self).present(alert, animated: true, completion: nil)
+		}
+	}
+
+	func importFiles(to targetDirectory : OCItem, serviceSession: OCFileProviderServiceSession, progressViewController: ProgressIndicatorViewController?, completion: @escaping (_ error: Error?) -> Void) {
 		if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
-			let dispatchGroup = DispatchGroup()
+			var totalItems : Int = 0
+			var importedItems : Int = 0
+			var importError : Error?
+
+			for item : NSExtensionItem in inputItems {
+				if let attachments = item.attachments {
+					totalItems += attachments.count
+				}
+			}
+
+			let incrementImportedFile : () -> Void = { [weak progressViewController] in
+				importedItems += 1
+
+				OnMainThread {
+					progressViewController?.update(progress: Float(importedItems)/Float(totalItems), text: NSString(format: "Importing item %ld of %ld".localized as NSString, importedItems, totalItems) as String)
+				}
+			}
+
+			// Keep session open
+			serviceSession.acquireFileProviderServicesHost(completionHandler: { (_, _, doneHandler) in
+				serviceSession.incrementSessionUsage()
+				doneHandler?()
+			}, errorHandler: { (_) in })
 
 			for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
 					for attachment in attachments {
+						if progressViewController?.cancelled == true {
+							break
+						}
+
 						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
-							dispatchGroup.enter()
-
 							if type == "public.plain-text" || type == "public.url" {
-								attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { [weak core] (item, error) -> Void in
-									if error == nil {
-										var data : Data?
-										var tempFilePath : String?
+								asyncQueue.async({ (jobDone) in
+									if progressViewController?.cancelled == true {
+										jobDone()
+										return
+									}
 
-										if let text = item as? String { // Save plain text content
-											let ext = self.utiToFileExtension(type)
-											tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
-											data = Data(text.utf8)
-										} else if let url = item as? URL { // Download URL content
-											do {
-												tempFilePath = NSTemporaryDirectory() + url.lastPathComponent
-												data = try Data(contentsOf: url)
-											} catch {
-												dispatchGroup.leave()
+									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in
+
+										if error == nil {
+											var data : Data?
+											var tempFilePath : String?
+
+											if let text = item as? String { // Save plain text content
+												let ext = self.utiToFileExtension(type)
+												tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
+												data = Data(text.utf8)
+											} else if let url = item as? URL { // Download URL content
+												do {
+													tempFilePath = NSTemporaryDirectory() + url.lastPathComponent
+													data = try Data(contentsOf: url)
+												} catch {
+													jobDone()
+												}
 											}
+
+											if let data = data, let tempFilePath = tempFilePath {
+												FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
+
+												serviceSession.importThroughFileProvider(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, completion: { (error) in
+													try? FileManager.default.removeItem(atPath: tempFilePath)
+
+													if let error = error {
+														Log.error("Error importing item at \(tempFilePath) through file provider: \(String(describing: error))")
+
+														self.showAlert(title: NSString(format: "Error importing %@".localized as NSString, (tempFilePath as NSString).lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
+															if !doContinue {
+																importError = error
+																progressViewController?.cancel()
+															}
+
+															jobDone()
+														})
+													} else {
+														incrementImportedFile()
+
+														jobDone()
+													}
+												})
+											} else {
+												jobDone()
+											}
+										} else {
+											Log.error("Error loading item: \(String(describing: error))")
+
+											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { (doContinue) in
+												if !doContinue {
+													importError = error
+													progressViewController?.cancel()
+												}
+
+												jobDone()
+											})
 										}
+									})
+								})
+							} else {
+								// Handle local files
+								asyncQueue.async({ (jobDone) in
+									if progressViewController?.cancelled == true {
+										jobDone()
+										return
+									}
 
-										if let data = data, let tempFilePath = tempFilePath {
-											FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
+									attachment.loadFileRepresentation(forTypeIdentifier: type) { (url, error) in
+										if error == nil, let url = url {
+											serviceSession.importThroughFileProvider(url: url, to: targetDirectory, completion: { (error) in
+												if let error = error {
+													Log.error("Error importing item at \(url.absoluteString) through file provider: \(String(describing: error))")
 
-											core?.importThroughFileProvider(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, completion: { (_) in
-												try? FileManager.default.removeItem(atPath: tempFilePath)
-												dispatchGroup.leave()
+													self.showAlert(title: NSString(format: "Error importing %@", url.lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
+														if !doContinue {
+															importError = error
+															progressViewController?.cancel()
+														}
+
+														jobDone()
+													})
+												} else {
+													incrementImportedFile()
+
+													jobDone()
+												}
+											})
+										} else if let error = error {
+											Log.error("Error loading item: \(String(describing: error))")
+
+											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { (doContinue) in
+												if !doContinue {
+													importError = error
+													progressViewController?.cancel()
+												}
+
+												jobDone()
 											})
 										} else {
-											dispatchGroup.leave()
+											jobDone()
 										}
-									} else {
-										Log.error("Error loading item: \(String(describing: error))")
-										dispatchGroup.leave()
 									}
 								})
-							} else { // Handle local files
-								attachment.loadFileRepresentation(forTypeIdentifier: type) { [weak core] (url, error) in
-									if error == nil, let url = url {
-										core?.importThroughFileProvider(url: url, to: targetDirectory, bookmark: bookmark, completion: { (error) in
-											Log.error("Error importing item at \(url.absoluteString) through file provider: \(String(describing: error))")
-											dispatchGroup.leave()
-										})
-									} else {
-										Log.error("Error loading item: \(String(describing: error))")
-										dispatchGroup.leave()
-									}
-								}
 							}
 						}
 					}
 				}
 			}
 
-			dispatchGroup.notify(queue: .main, execute: completion)
+			asyncQueue.async({ (jobDone) in
+				// Balance previous retainSession() call and allow session to close
+				serviceSession.decrementSessionUsage()
+
+				OnMainThread {
+					completion(importError ?? ((progressViewController?.cancelled ?? false) ? NSError(ocError: .cancelled) : nil))
+					jobDone()
+				}
+			})
 		}
 	}
 }
