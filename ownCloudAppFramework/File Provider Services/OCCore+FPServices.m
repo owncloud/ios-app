@@ -21,40 +21,30 @@
 #import "OCBookmark+FPServices.h"
 #import "OCVault+FPServices.h"
 #import "OCFileProviderService.h"
+#import "OCFileProviderServiceSession.h"
+
+#import <objc/runtime.h>
+
+static NSString *sOCCoreFPServiceSessionKey = @"sOCCoreFPServiceSessionKey";
 
 @implementation OCCore (FPServices)
 
 - (void)acquireFileProviderServicesHostWithCompletionHandler:(void(^)(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable, void(^ _Nullable doneHandler)(void)))completionHandler errorHandler:(void(^)(NSError *error))errorHandler
 {
-	[NSFileManager.defaultManager createDirectoryAtURL:self.vault.fpServicesURL withIntermediateDirectories:YES attributes:nil error:NULL];
-	[NSFileManager.defaultManager getFileProviderServicesForItemAtURL:self.vault.fpServicesURL completionHandler:^(NSDictionary<NSFileProviderServiceName,NSFileProviderService *> * _Nullable services, NSError * _Nullable error) {
-		NSFileProviderService *service;
+	OCFileProviderServiceSession *session;
 
-		if ((service = services[OCFileProviderServiceName]) != nil)
+	@synchronized(sOCCoreFPServiceSessionKey)
+	{
+		if ((session = objc_getAssociatedObject(self, (__bridge void *)sOCCoreFPServiceSessionKey)) == nil)
 		{
-			[service getFileProviderConnectionWithCompletionHandler:^(NSXPCConnection * _Nullable connection, NSError * _Nullable error) {
-				if (error == nil)
-				{
-					__weak NSXPCConnection *weakConnection = connection;
-
-					connection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(OCFileProviderServicesHost)];
-					connection.interruptionHandler = ^{
-						[weakConnection invalidate];
-					};
-					[connection resume];
-				}
-
-				id<OCFileProviderServicesHost> remoteObjectProxy = [connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
-					OCLogError(@"File Provider Services proxy connection error: %@", error);
-					errorHandler(error);
-				}];
-
-				completionHandler(error, (id<OCFileProviderServicesHost>)remoteObjectProxy, ^{
-					[connection invalidate];
-				});
-			}];
+			if ((session = [[OCFileProviderServiceSession alloc] initWithServiceURL:self.vault.fpServicesURL]) != nil)
+			{
+				objc_setAssociatedObject(self, (__bridge void *)sOCCoreFPServiceSessionKey, session, OBJC_ASSOCIATION_RETAIN);
+			}
 		}
-	}];
+	}
+
+	[session acquireFileProviderServicesHostWithCompletionHandler:completionHandler errorHandler:errorHandler];
 }
 
 @end
