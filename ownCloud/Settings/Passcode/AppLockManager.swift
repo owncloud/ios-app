@@ -124,6 +124,10 @@ class AppLockManager: NSObject {
 		}
 	}
 
+	var isPasscodeEnforced : Bool {
+		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
+	}
+
 	// MARK: - Init
 	static var shared = AppLockManager()
 
@@ -435,5 +439,25 @@ class AppLockManager: NSObject {
 				}
 			}
 		}
+	}
+}
+
+// MARK: - OCClassSettings support
+
+extension OCClassSettingsIdentifier {
+	static let passcode = OCClassSettingsIdentifier("passcode")
+}
+
+extension OCClassSettingsKey {
+	static let passcodeEnforced = OCClassSettingsKey("enforced")
+}
+
+extension AppLockManager: OCClassSettingsSupport {
+	static var classSettingsIdentifier: OCClassSettingsIdentifier = .passcode
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.passcodeEnforced : true
+		]
 	}
 }
