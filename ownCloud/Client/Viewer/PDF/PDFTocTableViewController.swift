@@ -18,6 +18,7 @@
 
 import UIKit
 import PDFKit
+import ownCloudAppShared
 
 class PDFTocTableViewController: UITableViewController, Themeable {
 

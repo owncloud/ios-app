@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudUI
+import ownCloudAppShared
 
 typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
 

@@ -19,6 +19,7 @@
 import UIKit
 import LocalAuthentication
 import ownCloudSDK
+import ownCloudAppShared
 
 // MARK: - SecurityAskfrequency
 @objc enum SecurityAskFrequency: Int, CaseIterable {

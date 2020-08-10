@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class AlertOption : NSObject {
 	typealias ChoiceHandler = (_: AlertView, _: AlertOption) -> Void

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import StoreKit
 
 class ReleaseNotesHostViewController: UIViewController {
@@ -134,7 +135,7 @@ class ReleaseNotesHostViewController: UIViewController {
 	}
 
 	@objc func rateApp() {
-		guard let appStoreLink =  MoreSettingsSection.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
+		guard let appStoreLink =  VendorServices.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
 
 		guard let reviewURL = URL(string: "\(appStoreLink)&action=write-review") else { return }
 

@@ -558,10 +558,6 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
-/* Import File */
-"Save File" = "Save File";
-"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
-
 /* Single Account */
 "You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
 
@@ -659,6 +655,15 @@
 "purchase" = "purchase";
 "subscription" = "subscription";
 
+/* Share Sheet */
+"Save File" = "Save File";
+"Choose an account and folder to import into." = "Choose an account and folder to import into.";
+"No account configured.\nSetup an new account in the app to save to." = "No account configured.\nSetup an new account in the app to save to.";
+"Importing item %ld of %ld" = "Importing item %ld of %ld";
+"Error importing %@" = "Error importing %@";
+"Error loading item" = "Error loading item";
+"Preparing…" = "Preparing…";
+
 /* Data migration from legacy app */
 "Account Migration" = "Account Migration";
 "App Passcode" = "App Passcode";
@@ -667,6 +672,7 @@
 "Migrated" = "Migrated";
 "Failed to migrate" = "Failed to migrate";
 "Failed to access legacy user data" = "Failed to access legacy user data";
+
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";

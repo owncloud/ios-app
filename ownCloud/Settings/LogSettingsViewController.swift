@@ -18,23 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-
-extension OCLogLevel {
-	var label : String {
-		switch self {
-			case .debug:
-				return "Debug".localized
-			case .info:
-				return "Info".localized
-			case .warning:
-				return "Warning".localized
-			case .error:
-				return "Error".localized
-			case .off:
-				return "Off".localized
-		}
-	}
-}
+import ownCloudAppShared
 
 class LogSettingsViewController: StaticTableViewController {
 
