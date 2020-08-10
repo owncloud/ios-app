@@ -659,6 +659,15 @@
 "purchase" = "purchase";
 "subscription" = "subscription";
 
+/* Data migration from legacy app */
+"Account Migration" = "Account Migration";
+"App Passcode" = "App Passcode";
+"Instant Upload Settings" = "Instant Upload Settings";
+"Migrating" = "Migrating";
+"Migrated" = "Migrated";
+"Failed to migrate" = "Failed to migrate";
+"Failed to access legacy user data" = "Failed to access legacy user data";
+
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
 
