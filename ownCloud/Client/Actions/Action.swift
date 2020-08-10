@@ -146,7 +146,7 @@ class ActionContext: OCExtensionContext {
 			}
 		}
 
-		return true
+		return false
 	}
 
 	// MARK: - Init & Deinit.
