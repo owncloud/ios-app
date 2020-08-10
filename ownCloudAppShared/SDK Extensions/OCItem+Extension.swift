@@ -292,10 +292,6 @@ extension OCItem {
 		return shareRootItem
 	}
 
-	private struct AssociatedKeys {
-		static var isShareRootItemKey = "isShareRootItemKey"
-	}
-
 	public func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 

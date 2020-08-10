@@ -237,9 +237,9 @@ class ActionContext: OCExtensionContext {
 	func isShareRoot(item:OCItem) -> Bool {
 		guard item.isSharedWithUser else { return false }
 
-		guard parent(for: item) == nil else { return false }
+		guard let parent = parent(for: item) else { return true }
 
-		return true
+		return !parent.isSharedWithUser
 	}
 
 	private func updateCaches() {
