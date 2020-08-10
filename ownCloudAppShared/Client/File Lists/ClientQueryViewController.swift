@@ -50,28 +50,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		clientRootViewController = rootViewController
 
 		super.init(core: inCore, query: inQuery)
+		updateTitleView()
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
-
-		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
-			self.navigationItem.title = shortName
-		} else {
-			let titleButton = UIButton()
-			titleButton.setTitle(lastPathComponent, for: .normal)
-			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
-			titleButton.sizeToFit()
-			titleButton.accessibilityLabel = "Show parent paths".localized
-			titleButton.accessibilityIdentifier = "show-paths-button"
-			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
-			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
-			titleButtonThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
-				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
-				titleButton.tintColor = collection.navigationBarColors.labelColor
-			})
-			self.navigationItem.titleView = titleButton
-		}
-
 		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, weak core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
@@ -92,6 +73,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 							footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaTotalFormatted)
 						} else {
 							footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
+						}
+
+						if let self = self {
+							if self.items.count == 1 {
+								footerText = String(format: "%@ item | ", "\(self.items.count)") + (footerText ?? "")
+							} else if self.items.count > 1 {
+								footerText = String(format: "%@ items | ", "\(self.items.count)") + (footerText ?? "")
+							}
 						}
 					}
 
@@ -373,7 +362,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
 		if let rootItem = self.query.rootItem {
 			if query.queryPath != "/" {
-				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+				if self.items.count == 1 {
+					totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
+				} else if self.items.count > 1 {
+					totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
+				}
 				self.updateFooter(text: totalSize)
 			}
 
@@ -598,6 +592,36 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		return nil
+	}
+}
+
+extension ClientQueryViewController {
+
+	@objc public func exitedMultiselection() {
+		updateTitleView()
+	}
+
+	open func updateTitleView() {
+		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+
+		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
+			self.navigationItem.title = shortName
+		} else {
+			let titleButton = UIButton()
+			titleButton.setTitle(lastPathComponent, for: .normal)
+			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
+			titleButton.sizeToFit()
+			titleButton.accessibilityLabel = "Show parent paths".localized
+			titleButton.accessibilityIdentifier = "show-paths-button"
+			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
+			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+			titleButtonThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+				titleButton.tintColor = collection.navigationBarColors.labelColor
+			})
+			self.navigationItem.titleView = titleButton
+		}
 	}
 }
 

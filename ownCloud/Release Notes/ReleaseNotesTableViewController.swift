@@ -29,7 +29,7 @@ class ReleaseNotesTableViewController: StaticTableViewController {
     }
 
 	func prepareReleaseNotes() {
-		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) {
+		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion), let imageData = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) {
 			let section = StaticTableViewSection()
 
 			for aDict in relevantReleaseNotes {
@@ -37,17 +37,8 @@ class ReleaseNotesTableViewController: StaticTableViewController {
 					for releaseNote in (notes as? [[String:String]])! {
 						if let title = releaseNote["Title"], let subtitle = releaseNote["Subtitle"] {
 							var image : UIImage?
-							if #available(iOS 13.0, *), let imageSystemName = releaseNote["ImageSystemName"] {
-								let homeSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .thin)
-								image = UIImage(systemName: imageSystemName, withConfiguration: homeSymbolConfiguration)?.withRenderingMode(.alwaysTemplate)
-							} else if let strBase64 = releaseNote["ImageData"] {
-								let dataDecoded : Data = Data(base64Encoded: strBase64, options: .ignoreUnknownCharacters)!
 
-								if let decodedimage = UIImage(data: dataDecoded)?.scaledImageFitting(in: CGSize(width: 50.0, height: 44.0))?.withRenderingMode(.alwaysTemplate) {
-									image = decodedimage
-								}
-							}
-							if let image = image {
+							if let imageName = releaseNote["ImageName"], let image = ReleaseNotesDatasource().image(for: imageName) {
 								let row = StaticTableViewRow(rowWithAction: { (_, _) in
 									self.dismissAnimated()
 								}, title: title, subtitle: subtitle, image: image, imageWidth:50.0, alignment: .left, accessoryType: .none)

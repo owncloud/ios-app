@@ -39,7 +39,6 @@ public protocol MultiSelectSupport {
 	func exitMultiselection()
 
 	func populateToolbar()
-
 }
 
 open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {

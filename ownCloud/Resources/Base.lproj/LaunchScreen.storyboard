@@ -16,10 +16,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="BackgroundImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="30I-hD-9cc" userLabel="backgoundImage">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="branding-splashscreen-background.png" translatesAutoresizingMaskIntoConstraints="NO" id="30I-hD-9cc" userLabel="backgoundImage">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="1380"/>
                             </imageView>
-                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="WtJ-CJ-2he">
+                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="branding-splashscreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="WtJ-CJ-2he">
                                 <rect key="frame" x="200" y="0.0" width="624" height="1346"/>
                             </imageView>
                         </subviews>
@@ -50,7 +50,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="BackgroundImage.png" width="1" height="1"/>
-        <image name="SplashImage.png" width="2048" height="2048"/>
+        <image name="branding-splashscreen-background.png" width="1" height="1"/>
+        <image name="branding-splashscreen.png" width="2048" height="2048"/>
     </resources>
 </document>

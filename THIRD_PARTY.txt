@@ -75,5 +75,13 @@ The third party software included and used by this project is:
 	Original license document included at external/libzip/LICENSE
 	See https://github.com/nih-at/libzip
 
+ * 	PLCrashReporter
+   	Copyright (c) Microsoft Corporation.
+	Copyright (c) 2008 - 2014 Plausible Labs Cooperative, Inc.
+   	Licensed under proprietary license
+   	Placed as swift package
+	Original license document included at plcrashreporter/LICENSE.
+   	See https://github.com/microsoft/plcrashreporter
+
 
 

@@ -25,6 +25,7 @@
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
 #import "FileProviderServiceSource.h"
+#import <CrashReporter.h>
 
 @interface FileProviderExtension ()
 {
@@ -43,6 +44,8 @@
 
 - (instancetype)init
 {
+	[self setupCrashReporting];
+
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
 	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
@@ -73,6 +76,37 @@
 //		[self postAlive];
 //	});
 //}
+
+- (void)setupCrashReporting {
+
+    static dispatch_once_t token;
+
+    dispatch_once (&token, ^{
+		// Initialize crash reporter as soon as FP extension is loaded into memory
+		PLCrashReporterConfig *configuration = [PLCrashReporterConfig defaultConfiguration];
+		PLCrashReporter *reporter = [[PLCrashReporter alloc] initWithConfiguration:configuration];
+
+		// Do we have a pending crash report from previous session?
+		if ([reporter hasPendingCrashReport]) {
+
+			// Generate a report and add it to the log file
+			NSData *crashData = [reporter loadPendingCrashReportData];
+			if (crashData != nil) {
+				PLCrashReport *report = [[PLCrashReport alloc] initWithData:crashData error:nil];
+				if (report != nil) {
+					NSString *crashString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
+					OCTLogError(@[@"CRASH_REPORTER"], @"%@", crashString);
+				}
+			}
+
+			// Purge the report which we just added to the log
+			[reporter purgePendingCrashReport];
+		}
+
+		// Start intercepting OS signals to catch crashes
+		[reporter enableCrashReporter];
+    });
+}
 
 - (void)dealloc
 {

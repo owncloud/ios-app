@@ -63,6 +63,14 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 			selectDeselectAllButtonItem?.target = self
 			selectDeselectAllButtonItem?.action = #selector(selectAllItems)
 		}
+		self.navigationItem.titleView = nil
+ 		if selectedCount == 1 {
+ 			self.navigationItem.title = String(format: "%d Item".localized, selectedCount)
+ 		} else if selectedCount > 1 {
+ 			self.title = String(format: "%d Items".localized, selectedCount)
+ 		} else {
+ 			self.navigationItem.title = ""
+ 		}
 	}
 
 	fileprivate func updateActions(for selectedItems:[OCItem]) {
@@ -141,7 +149,13 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 
 			self.regularRightBarButtons = nil
 			self.regularLeftBarButtons = nil
+
+			exitedMultiselection()
 		}
+	}
+
+	@objc public func exitedMultiselection() {
+		// may be overriden in subclasses
 	}
 
 	open func populateToolbar() {

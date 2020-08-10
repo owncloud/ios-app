@@ -178,11 +178,9 @@ class ItemPolicyTableViewController : FileListTableViewController {
 
 			switch section {
 				case .all:
-					if let customQueryCondition = policyProcessor?.customQueryCondition {
-						title = policyProcessor?.localizedName ?? "All Files".localized
-						query = OCQuery(condition: customQueryCondition, inputFilter: nil)
-					}
-
+					query = OCQuery(condition: .require([
+						.where(.downloadTrigger, isEqualTo: OCItemDownloadTriggerID.availableOffline)
+					]), inputFilter:nil)
 				case .policies:
 					if let item = self.itemAt(indexPath: indexPath) {
 						if item.type == .collection {

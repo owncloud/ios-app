@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
+import CrashReporter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -143,6 +144,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 		}
 
+		setupAndHandleCrashReports()
+
 		return true
 	}
 
@@ -221,6 +224,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
+
 extension UserInterfaceContext : UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
 		return (UIApplication.shared.delegate as? AppDelegate)?.window
@@ -228,5 +232,25 @@ extension UserInterfaceContext : UserInterfaceContextProvider {
 
 	public func provideCurrentWindow() -> UIWindow? {
 		return UIApplication.shared.windows.first as? ThemeWindow
+	}
+}
+
+extension AppDelegate {
+	func setupAndHandleCrashReports() {
+		let configuration = PLCrashReporterConfig.defaultConfiguration()
+		guard let crashReporter = PLCrashReporter(configuration: configuration) else {
+			return
+		}
+
+		if crashReporter.hasPendingCrashReport() {
+			if let crashData = try? crashReporter.loadPendingCrashReportDataAndReturnError(), let crashReport = try? PLCrashReport(data: crashData) {
+				if let report = PLCrashReportTextFormatter.stringValue(for: crashReport, with: PLCrashReportTextFormatiOS) {
+					Log.error(tagged: ["CRASH_REPORTER"], report)
+				}
+			}
+			crashReporter.purgePendingCrashReport()
+		}
+
+		crashReporter.enable()
 	}
 }

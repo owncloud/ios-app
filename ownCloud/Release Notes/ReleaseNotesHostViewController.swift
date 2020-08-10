@@ -212,6 +212,21 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 		return nil
 	}
+
+	func image(for key: String) -> UIImage? {
+		if #available(iOS 13.0, *) {
+			let homeSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .thin)
+			return UIImage(systemName: key, withConfiguration: homeSymbolConfiguration)?.withRenderingMode(.alwaysTemplate)
+		} else if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist"), let releaseNotesValues = NSDictionary(contentsOfFile: path), let imageValues = releaseNotesValues["ImageData"] as? NSDictionary, let base64Image = imageValues[key] as? String {
+			let dataDecoded : Data = Data(base64Encoded: base64Image, options: .ignoreUnknownCharacters)!
+
+			if let decodedimage = UIImage(data: dataDecoded)?.scaledImageFitting(in: CGSize(width: 50.0, height: 44.0))?.withRenderingMode(.alwaysTemplate) {
+				return decodedimage
+			}
+		}
+
+		return nil
+	}
 }
 
 extension OCClassSettingsKey {
