@@ -112,6 +112,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 
+		if Migration.shared.legacyDataFound {
+			let migrationViewController = MigrationViewController()
+			let navigationController = ThemeNavigationController(rootViewController: migrationViewController)
+			migrationViewController.migrationFinishedHandler = {
+				Migration.shared.wipeLegacyData()
+			}
+			navigationController.modalPresentationStyle = .fullScreen
+			self.present(navigationController, animated: false)
+		}
+
 		messageCountByBookmarkUUID = [:] // Initial update of app badge icon
 
 		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages, _, _) in
@@ -706,13 +716,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self.delete(bookmark: bookmark, at: indexPath ) {
-					OnMainThread {
-						self.tableView.performBatchUpdates({
-							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-						}, completion: { (_) in
-							self.ignoreServerListChanges = false
-						})
-					}
+					self.ignoreServerListChanges = false
 				}
 			}
 		})

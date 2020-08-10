@@ -132,16 +132,21 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			// at the time of writing, so these entries take care of correctly
 			// mapping suffixes to UTIs
 
-			@"odc" 	: @"org.oasis-open.opendocument.chart",
-			@"otc" 	: @"org.oasis-open.opendocument.chart-template",
+			@"odc" 		: @"org.oasis-open.opendocument.chart",
+			@"otc" 		: @"org.oasis-open.opendocument.chart-template",
 
-			@"odi" 	: @"org.oasis-open.opendocument.image",
-			@"oti" 	: @"org.oasis-open.opendocument.image-template",
+			@"odi" 		: @"org.oasis-open.opendocument.image",
+			@"oti" 		: @"org.oasis-open.opendocument.image-template",
 
-			@"odm" 	: @"org.oasis-open.opendocument.text-master",
-			@"oth" 	: @"org.oasis-open.opendocument.text-web",
+			@"odm" 		: @"org.oasis-open.opendocument.text-master",
+			@"oth" 		: @"org.oasis-open.opendocument.text-web",
 
-			@"m"	: @"public.objective-c-source"
+			@"m"		: @"public.objective-c-source",
+
+			@"mindnode"	: @"com.mindnode.mindnode.mindmap",
+			@"itmz"		: @"com.toketaware.uti.ithoughts.itmz",
+			
+			@"pdf"		: @"com.adobe.pdf"
 		};
 	});
 
