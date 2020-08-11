@@ -35,16 +35,6 @@
 		</string>
 		<stringArray keyName="connection.connection-allowed-authentication-methods">
 		</stringArray>
-		<boolean keyName="connection.connection-strict-bookmark-certificate-enforcement">
-			<defaultValue>
-				<value>true</value> 
-			</defaultValue>
-		</boolean>
-		<boolean keyName="connection.connection-insert-x-request-id">
-			<defaultValue>
-				<value>true</value> 
-			</defaultValue>
-		</boolean>
 		<string keyName="connection.endpoint-capabilities">
 			<defaultValue>
 				<value>ocs/v1.php/cloud/capabilities</value> 
@@ -126,25 +116,6 @@
                     <language value="en-US">com.owncloud.basicauth</language>
                 </option>
             </options>
-        </field>
-    </fieldGroup>
-    <fieldGroup>
-        <name>
-            <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
-            <language value="en-US">Connection</language>
-        </name>
-        <field keyName="connection.connection-strict-bookmark-certificate-enforcement" type="checkbox">
-            <label>
-                <language value="en-US">Strict Certificate Enforcement</language>
-            </label>
-            <description>
-                <language value="en-US">Require the certificate stored in the connection's bookmark if the connection's state is active.</language>
-            </description>
-        </field>
-        <field keyName="connection.connection-insert-x-request-id" type="checkbox">
-            <label>
-                <language value="en-US">Insert X-Request-ID</language>
-            </label>
         </field>
     </fieldGroup>
     <fieldGroup>
