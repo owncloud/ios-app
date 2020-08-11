@@ -454,7 +454,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Inline App Authentication</string>
 					<key>Subtitle</key>
-					<string>When a re-authentication is needed, no longer loosing the focus and authenticate directly in the file list.</string>
+					<string>When a re-authentication is needed, no longer loosing the focus and authenticate directly from your context.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -464,7 +464,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Image Upload: Change file format</string>
 					<key>Subtitle</key>
-					<string>When media upload is enabled, the user can decide between different file name format.</string>
+					<string>When media upload is enabled, the user can decide between different file name formats.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -484,7 +484,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Improved Media Upload</string>
 					<key>Subtitle</key>
-					<string>We added a new option to specify different upload folder for video instant upload. The photo picker can now select items from your shared albums.</string>
+					<string>We added a new option to specify different upload folders for video instant upload. The photo picker can now select items from your shared albums.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
