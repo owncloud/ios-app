@@ -522,6 +522,16 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Item Counter</string>
+					<key>Subtitle</key>
+					<string>The total number of items will be shown on in the footer and the number of selected items will be shown on the top.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>textformat.123</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Fix: Avoid duplicate photo upload</string>
 					<key>Subtitle</key>
 					<string>Fix that photos which have modified are going to be re-uploaded upon each modification in case instant upload is active</string>
