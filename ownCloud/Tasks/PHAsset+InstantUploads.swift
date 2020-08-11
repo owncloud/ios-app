@@ -17,6 +17,7 @@
 */
 
 import Photos
+import ownCloudAppShared
 
 extension PHAsset {
 	static func fetchAssetsFromCameraRoll(with mediaTypes:[PHAssetMediaType], createdAfter:Date? = nil, fetchLimit:Int = 0) -> PHFetchResult<PHAsset>? {

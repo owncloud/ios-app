@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import Photos
 
 class UploadMediaAction: UploadBaseAction {

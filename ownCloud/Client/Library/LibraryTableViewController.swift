@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 protocol LibraryShareList: UIViewController {
 	func updateWith(shares: [OCShare])

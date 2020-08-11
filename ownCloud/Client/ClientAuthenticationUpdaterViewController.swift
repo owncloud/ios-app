@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class ClientAuthenticationUpdaterViewController: StaticTableViewController {
 	var headerText : String

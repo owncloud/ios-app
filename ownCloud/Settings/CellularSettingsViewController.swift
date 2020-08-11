@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class CellularSettingsViewController: StaticTableViewController {
 	var changeHandler : (() -> Void)?

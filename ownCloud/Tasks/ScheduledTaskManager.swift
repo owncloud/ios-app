@@ -21,6 +21,7 @@ import UIKit
 import Network
 import Photos
 import ownCloudSDK
+import ownCloudAppShared
 import BackgroundTasks
 import CoreLocation
 
