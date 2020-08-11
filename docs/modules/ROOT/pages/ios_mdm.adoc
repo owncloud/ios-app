@@ -296,7 +296,7 @@ Shortcuts are a very powerful way to build automated workflows in iOS. Apps can 
 
 |log.log-privacy-mask
 |Boolean
-|Blah
+|Controls whether certain objects in log statements should be masked for privacy.
 
 |log.log-enabled-components
 |String Array
