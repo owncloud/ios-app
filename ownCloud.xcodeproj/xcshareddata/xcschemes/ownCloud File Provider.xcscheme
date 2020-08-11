@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1030"
+   LastUpgradeVersion = "1160"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -140,6 +140,11 @@
             key = "oc:file-provider.skip-local-error-checks"
             value = "true"
             isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-single-lined"
+            value = "false"
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>

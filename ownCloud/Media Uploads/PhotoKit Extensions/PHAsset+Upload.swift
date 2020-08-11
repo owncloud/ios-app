@@ -18,6 +18,7 @@
 
 import Photos
 import ownCloudSDK
+import ownCloudAppShared
 import CoreServices
 
 extension URL {

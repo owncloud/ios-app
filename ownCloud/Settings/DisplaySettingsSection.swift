@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class DisplaySettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {

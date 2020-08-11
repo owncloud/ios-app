@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 extension UIWindow {
     func display(itemWithID Identifier:String, in bookmark:OCBookmark) {

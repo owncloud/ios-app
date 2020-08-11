@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 protocol DiagnosticNodeGenerator : OCActivity {
 	var isDiagnosticNodeGenerationAvailable : Bool { get }
@@ -49,7 +50,13 @@ class DiagnosticViewController: StaticTableViewController {
 		self.rootNode = node
 
 		self.navigationItem.title = node.label
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), style: .plain, target: self, action: #selector(self.shareAsMarkdown(_:)))
+
+		var shareImage = UIImage(named: "open-in")
+		if #available(iOS 13.0, *) {
+			shareImage = UIImage(systemName: "square.and.arrow.up")
+		}
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: shareImage, style: .plain, target: self, action: #selector(self.shareAsMarkdown(_:)))
+		self.navigationItem.rightBarButtonItem?.accessibilityLabel = "Share Diagnostics"
 		self.nodes = node.children
 
 		rebuildTable()
@@ -122,7 +129,7 @@ class DiagnosticViewController: StaticTableViewController {
 			shareViewController.completionWithItemsHandler = { (_, _, _, _) in
 			}
 
-			if UIDevice.current.isIpad() {
+			if UIDevice.current.isIpad {
 				shareViewController.popoverPresentationController?.sourceView = sender
 				shareViewController.popoverPresentationController?.sourceRect = sender.frame
 			}

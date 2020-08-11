@@ -21,6 +21,7 @@ import CoreLocation
 import UserNotifications
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 extension UserDefaults {
 

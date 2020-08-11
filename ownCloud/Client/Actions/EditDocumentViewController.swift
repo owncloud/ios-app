@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import QuickLook
 
 @available(iOS 13.0, *)
@@ -185,7 +186,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 	func present(error: Error, title: String) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			presentationStyle = .alert
 		}
 

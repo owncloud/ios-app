@@ -19,12 +19,13 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController {
+class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -388,7 +389,7 @@ class ClientRootViewController: UITabBarController {
 						self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
 
 						// open the controller for the item
-						subController.open(item: item, animated: false)
+						subController.open(item: item, animated: false, pushViewController: true)
 					} else {
 						// Fallback, if item no longer exists show root folder
 						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
@@ -399,7 +400,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
-		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) as? ClientQueryViewController {
 			return subController
 		}
 
@@ -658,8 +659,4 @@ extension ClientRootViewController: UITabBarControllerDelegate {
 
 		return true
 	}
-}
-
-extension NSNotification.Name {
-	static let ClientSyncRecordIDsWithMessagesChanged = NSNotification.Name(rawValue: "client-sync-record-ids-with-messages-changed")
 }

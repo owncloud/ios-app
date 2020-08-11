@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 protocol ClientSessionManagerDelegate : class {
 	func canPresent(bookmark: OCBookmark, message: OCMessage?) -> OCMessagePresentationPriority

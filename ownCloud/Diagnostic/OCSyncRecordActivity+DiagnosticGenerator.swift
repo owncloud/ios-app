@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 extension OCSyncRecordActivity : DiagnosticNodeGenerator {
 	var isDiagnosticNodeGenerationAvailable : Bool {
