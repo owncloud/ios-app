@@ -486,7 +486,7 @@
 
 /* Media files settings */
 "Media Files" = "Media Files";
-"Streaming Enabled" = "Streaming Enabled";
+"Download instead of streaming" = "Download instead of streaming";
 
 /* Photo upload settings */
 "Media Upload" = "Media Upload";

@@ -490,6 +490,16 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Media Streaming</string>
+					<key>Subtitle</key>
+					<string>Media files will be streamed by default, instead of downloading the file before. You can change this option in the app settings.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>play.circle</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Public Link Creation</string>
 					<key>Subtitle</key>
 					<string>When a public link was created, the URL will be copied to the clipboard. Furthermore it is possible to drag a public link to an other app.</string>
