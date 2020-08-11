@@ -23,210 +23,266 @@ ownCloud App implements a mechanism internally called Class Settings which can b
 This is also an order in which these settings take precedence. In addition the app does register default values for certain settings directly in the source code.
 
 ==== App Basic Configuration
-[cols=3*,options=header]
+There are few settings allowing to mark an app installation as BETA and e.g. to supress UIKit animation and review prompt.
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |app.show-beta-warning
 |Boolean
+|`true`
 |If set to true, app will show a warning about a beta build.
 
 |app.is-beta-build
 |Boolean
+|`true`
 |If set to true, app will show e.g. in the settings that a currently installed app has a beta build status.
 
 |app.enable-ui-animations
 |Boolean
+|`true`
 |If set to true, all `UIKit` animations are supressed.
 
 |app.enable-review-prompt
 |Boolean
+|`true`
 |Controls if app should call rate-limited iOS standard API asking the user to provide an AppStore review.
 |===
 
 ==== Display Settings
-[cols=3*,options=header]
+To customize file list UI behevior, following settings are available: 
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |display.show-hidden-files
 |Boolean
+|`false`
 |Set to `true` to make hidden files visible.
 
 |display.sort-folders-first
 |Boolean
+|`false`
 |Set to `true` to make folders appear at the top of the item list.
 
 |display.prevent-dragging-files
 |Boolean
+|`false`
 |Set to `true` to prevent drag and drop on files.
 |===
 
 ==== Passcode Enforcement
-[cols=3*,options=header]
+If your organization policies require users to use a passcode as an additional security barrier for managed apps, the below setting will allow to enforce this requirement.
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |passcode.enforced
-|Bool
+|Boolean
+|`false`
 |If set to true, the app will require the user to set up a passcode upon a first launch.
 |===
 
 ==== User Feedback
-[cols=3*,options=header]
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |feedback.app-store-link
 |String
+|`https://itunes.apple.com/app/id1359583808?mt=8`
 |iTunes / AppStore URL pointing to the AppStore product page.
 
 |feedback.feedback-email
 |String
+|`ios-app@owncloud.com`
 |Suport email address.
 
 |feedback.recommend-to-friend-enabled
 |Boolean
+|`true` if unbranded and `false` otherwise
 |Controls if option in the settings menu opening a Mail compose view containing a text with the app download link is enabled.
 
 |feedback.send-feedback-enabled
 |Boolean
+|`true` if branded and the email is configured in branding profile
 |Controls if the option in the settings menu is enabled which allows sending a support mail directly from the app.
 |===
 
 ==== Bookmark
-[cols=3*,options=header]
+
+Below settings allow to configure the app to use a certain server URL and even bind it to this URL only by setting the default non-editable.
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |bookmark.default-url
 |String
+|`nil`
 |Pre-configured URL of an ownCloud instance.
 
 |bookmark.url-editable
 |Boolean
+|`nil`
 |Set to false to disable editing of the default server URL.
 |===
 
 ==== HTTP User Agent
-[cols=3*,options=header]
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |http.user-agent
 |String
-|User agent string can be overriden via this setting. Default is `ownCloudApp/<version> <part>/<build>; <os>/<os_version>`.
+|`ownCloudApp/<version> <part>/<build>; <os>/<os_version>`
+|User agent string can be overriden via this setting.
 |===
 
 ==== Connection
 
 ===== Server Endpoints
 
-[cols=3*,options=header]
+In case ownCloud server instance is customized and is using different sub-paths for common endpoints, those can be customized using following settings:
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |connection.well-known
 |String
+|`.well-known`
 |OpenID Connection well known directory location.
 
 |connection.endpoint-capabilities
 |String
+|`ocs/v2.php/cloud/capabilities`
 |Endpoint allowing to query server capabilities.
 
 |connection.endpoint-user
 |String
+|`ocs/v2.php/cloud/user`
 |Server endpoint allowing to query user profile information.
 
 |connection.endpoint-webdav
 |String
+|`remote.php/dav/files`
 |Endpoint polled in intervals to detect changes to the root directory ETag.
 
 |connection.endpoint-webdav-meta
 |String
+|`remote.php/dav/meta`
 |Metadata DAV endpoint, used for private link resolution.
 
 |connection.endpoint-thumbnail
 |String
+|`index.php/apps/files/api/v1/thumbnail`
 |Endpoint allowint to retrieve item thumbnails.
 
 |connection.endpoint-status
 |String
+|`status.php`
 |Requested during login and polled in intervals during maintenance mode (_status.php_)
 
 |connection.endpoint-shares
 |String
+|`ocs/v2.php/apps/files_sharing/api/v1/shares`
 |Polled in intervals to detect changes if share is used with the interval option.
 
 |connection.endpoint-remote-shares
 |String
+|`ocs/v2.php/apps/files_sharing/api/v1/remote_shares`
 |Polled in intervals to detect changes if share is used with the interval option.
 
 |connection.endpoint-recipients
 |String
+|`ocs/v2.php/apps/files_sharing/api/v1/sharees`
 |Requested once per search string change when searching for recipients.
 
 |connection.well-known-subpath
 |String
+|`nil`
 |Sub-path for OpenID Connect configuration.
 |===
 
 ===== Connection Setup
 
-[cols=3*,options=header]
+Settings allowing to influence connection setup process and e.g. prevent the app from connecting to outdated server version or do not allow connecting using unencrypted http protocol.
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |connection.connection-preferred-authentication-methods
 |String Array
+|`[com.owncloud.openid-connect, com.owncloud.oauth2, com.owncloud.basicauth]`
 |Array of preferred authentication methods in order of preference, starting with the most preferred. Possible values: `com.owncloud.basicauth`, `com.owncloud.oauth2`, `com.owncloud.openid-connect`
 
 |connection.connection-allowed-authentication-methods
 |String Array
+|`nil`
 |Array of allowed authentication methods (see _onnection.connection-preferred-authentication-methods_ key). Defaults to nil for no restrictions.
 
 |connection.connection-certificate-extended-validation-rule
 |String
+|`bookmarkCertificate == serverCertificate"`
 |Rule that defines the criteria a certificate needs to meet for connection to accept it. Options: `never` or string in _NSPredicate_ format, e.g. `serverCertificate.commonName == "demo.owncloud.org`
 
 |connection.cconnection-renewed-certificate-acceptance-rule
 |String
+|`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for connect to accept a renewed certificate automatically. Options: `never` or string in _NSPredicate_ format, e.g. `serverCertificate.commonName == "demo.owncloud.org`
 
 |connection.connection-minimum-server-version
 |String
+|`10.0`
 |Minimum ownCloud server version as string.
 
 |connection.allow-background-url-sessions
 |Boolean
+|`true`
 |Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`
 
 |connection.force-background-url-sessions
 |Boolean
+|`false`
 |Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
 
 |connection.allow-cellular
 |Boolean
+|`true`
 |Allow the use of cellular connections.
 
 |connection.plain-http-policy
 |String
+|`warn`
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. Possible options are `warn` and `forbidden`.
 |===
 
@@ -234,120 +290,191 @@ This is also an order in which these settings take precedence. In addition the a
 
 Settings allowing to configure OAuth2 based authentication.
 
-[cols=3*,options=header]
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |authentication-oauth2.oa2-authorization-endpoint
 |String
+|`index.php/apps/oauth2/authorize`
 |OAauth2 authorization endpoint.
 
 |authentication-oauth2.oa2-token-endpoint
 |String
+|`index.php/apps/oauth2/api/v1/token`
 |OAuth2 token endpoint
 
 |authentication-oauth2.a2-redirect-uri
 |String
+|`oc://ios.owncloud.com`
 |Redirect URI sent to the authorization endpoint.
 
 |authentication-oauth2.oa2-client-id
 |String
+|`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1`
 |BASE64 encoded client ID.
 
 |authentication-oauth2.a2-client-secret
 |String
+|`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx`
 |Pre-configured, BASE64 encoded client secret.
 
 |authentication-oauth2.oa2-browser-session-class
 |String
-|Default is set to `operating-system`, otherwise the value is appended as a suffix to `OCAuthenticationBrowserSession` to build up a full name of the class provided by ownCloud SDK.
+|`operating-system`
+|Value, when it is not `operating-system`, is appended as a suffix to `OCAuthenticationBrowserSession` to build up a full name of the class provided by ownCloud SDK.
 
 |authentication-oauth2.oa2-expiration-override-seconds
 |Integer
+|`nil`
 |Setting used mainly meant to be used for testing and allowing to influence the life-time of the OAuth2 auth token.
 |===
 
 ==== Shortcuts
 Shortcuts are a very powerful way to build automated workflows in iOS. Apps can provide shortcut intents for certain actions. ownCloud app provides certain actions as shortcuts as well (e.g. allowing to get account information, create folder and so on). However in some cases it might make sense to disable shortcuts to minimize security risks. It can be done using following option:
 
-[cols=3*,options=header]
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |shortcuts.enabled
-|Bool
+|Boolean
+|`true`
 |When set to false, iOS system wide shortcuts defined in the ownCloud app become unavailable.
 |===
 
 ==== Logging
-[cols=3*,options=header]
+Logging settings control the ammount and type of app internal log messages stored as text files and accessible via settings menu.
+
+[cols=4*,options=header]
 |===
 |Key
 |Type
+|Default
 |Description
 
 |log.log-level
 |Integer
+|4
 |Log level: 0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off
 
 |log.log-privacy-mask
 |Boolean
+|`false`
 |Controls whether certain objects in log statements should be masked for privacy.
 
 |log.log-enabled-components
 |String Array
+|`[writer.stderr, writer.file, option.log-requests-and-responses]`
 |Components and log options as array of string identifiers
 
 |log.log-synchronous
 |Boolean
+|`false`
 |If set to true, logging operation is performed synchronously instead of being submitted to the asynchronous queue.
 
 |log.log-colored
 |Boolean
+|`false`
 |If set to true, log messages are pre-pended with differently colored Emoji symbols.
 
 |log.log-only-tags
 |String Array
+|`nil`
 |Log only messages containing one of the tags in the list.
 
 |log.log-omit-tags
 |String Array
+|`nil`
 |Omit messages containing one of the tags in the list.
 
 |log.log-only-matching
 |String Array
+|`nil`
 |Log only messages containing one of the terms contained in the list.
 
 |log.log-omit-matching
 |String Array
+|`nil`
 |Omit messages containing one of the terms contained in the list.
 
 |log.log-blank-filtered-messages
 |Boolean
+|`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`
 
 |log.log-single-lined
 |Boolean
-|Right now used to control in which level of detail HTTP requests and responses are logged. Default is `true`.
+|`true`
+|Right now used to control in which level of detail HTTP requests and responses are logged.
 
 |log.log-maximum-message-size
 |Integer
-|Maximum message size in bytes, default is 0 which corresponds to 'unlimited'.
+|`0`
+|Maximum message size in bytes (0 corresponds to 'unlimited').
 
 |log.log-format
 |String
-|Can be `text` (default), `json` or `json-composed`
+|`text`
+|Options are `text`, `json` or `json-composed`
 |===
+
+Here is an example of an XML spec-file based on AppConfig standard with minimal logging settings allowing to change a log level and disable / enable private information masking:
+
+```
+<managedAppConfiguration>
+	<version>1.0.0</version>
+	<bundleId>com.owncloud.ios-app</bundleId>
+	<dict>
+		<integer keyName="log.log-level">
+			<defaultValue>
+				<value>4</value>
+			</defaultValue>
+			<constraints  min="0" max="4" >
+			</constraints>
+		</integer>
+		<boolean keyName="log.log-privacy-mask">
+		</boolean>
+	</dict>
+	<presentation defaultLocale="en-US">
+	<fieldGroup>
+		<name>
+			<language value="en-US">Logging</language>
+		</name>
+		<field keyName="log.log-level" type="input">
+			<label>
+				<language value="en-US">Log Level</language>
+			</label>
+			<description>
+				<language value="en-US">0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off</language>
+			</description>
+		</field>
+		<field keyName="log.log-privacy-mask" type="checkbox">
+			<label>
+				<language value="en-US">Log Privacy Mask</language>
+			</label>
+			<description>
+				<language value="en-US">Hide private user's data</language>
+			</description>
+		</field>
+	</fieldGroup>
+	</presentation>
+</managedAppConfiguration>
+```
 
 == AppConfig XML Schema
 
 {appconfig-xml-format-url}[The XML format], developed by AppConfig community, makes it easy for developers to define and deploy an app configuration. 
 It not only supports configuration variables having default values, but also provides a configuration UI description, which can be interpreted by the tool and which generates a plist file. 
 Moreover, specfile XML is consistently supported by major EMM vendors.
+
+AppConfig conformant spec file tailored to administrator needs and containing one or more of the above settings can be easily created using https://www.appconfig.org/www/appconfigspeccreator/[Config Spec Creator] tool hosted at https://www.appconfig.org[AppConfig website].
 
 == Example: Deployment with MobileIron
 
