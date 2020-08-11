@@ -9,8 +9,339 @@
 
 Starting with iOS 7, Apple added support for {mdm-protocol-ref-url}[managed application configuration]. 
 An MDM server can push a configuration to the iOS App. 
-The app can access the configuration using the `NSUserDefaults` class. 
+The app can access this configuration (read-only) using the `NSUserDefaults` class by reading a configuration dictionary under the key _com.apple.configuration.managed_. An app can also observe a system notification (_NSUserDefaultsDidChangeNotification_) to get notified about configuration changes. In addition feedback can be queried back by MDM server. To enable that, app has to write a dictionary with feedback information into user defaults under _com.apple.feedback.managed_ key.
 The configuration is basically a key-value dictionary provided as a `.plist` file.
+
+=== Configurable Settings
+
+ownCloud App implements a mechanism internally called Class Settings which can be derived from different sources:
+
+- Settings dictionary pushed by an MDM Server and accessible using `NSUserDefaults` API under the key _com.apple.configuration.managed_.
+- User preferences accessed by the very same API but stored under _org.owncloud.user-settings_ key.
+- Environment variables which e.g. can be set in Xcode for testing. In this case setting keys have to be prepended with _oc:_ prefix.
+
+This is also an order in which these settings take precedence. In addition the app does register default values for certain settings directly in the source code.
+
+==== App Basic Configuration
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|app.show-beta-warning
+|Boolean
+|If set to true, app will show a warning about a beta build.
+
+|app.is-beta-build
+|Boolean
+|If set to true, app will show e.g. in the settings that a currently installed app has a beta build status.
+
+|app.enable-ui-animations
+|Boolean
+|If set to true, all `UIKit` animations are supressed.
+
+|app.enable-review-prompt
+|Boolean
+|Controls if app should call rate-limited iOS standard API asking the user to provide an AppStore review.
+|===
+
+==== Display Settings
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|display.show-hidden-files
+|Boolean
+|Set to `true` to make hidden files visible.
+
+|display.sort-folders-first
+|Boolean
+|Set to `true` to make folders appear at the top of the item list.
+
+|display.prevent-dragging-files
+|Boolean
+|Set to `true` to prevent drag and drop on files.
+|===
+
+==== Passcode Enforcement
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|passcode.enforced
+|Bool
+|If set to true, the app will require the user to set up a passcode upon a first launch.
+|===
+
+==== User Feedback
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|feedback.app-store-link
+|String
+|iTunes / AppStore URL pointing to the AppStore product page.
+
+|feedback.feedback-email
+|String
+|Suport email address.
+
+|feedback.recommend-to-friend-enabled
+|Boolean
+|Controls if option in the settings menu opening a Mail compose view containing a text with the app download link is enabled.
+
+|feedback.send-feedback-enabled
+|Boolean
+|Controls if the option in the settings menu is enabled which allows sending a support mail directly from the app.
+|===
+
+==== Bookmark
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|bookmark.default-url
+|String
+|Pre-configured URL of an ownCloud instance.
+
+|bookmark.url-editable
+|Boolean
+|Set to false to disable editing of the default server URL.
+|===
+
+==== HTTP User Agent
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|http.user-agent
+|String
+|User agent string can be overriden via this setting. Default is `ownCloudApp/<version> <part>/<build>; <os>/<os_version>`.
+|===
+
+==== Connection
+
+===== Server Endpoints
+
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|connection.well-known
+|String
+|OpenID Connection well known directory location.
+
+|connection.endpoint-capabilities
+|String
+|Endpoint allowing to query server capabilities.
+
+|connection.endpoint-user
+|String
+|Server endpoint allowing to query user profile information.
+
+|connection.endpoint-webdav
+|String
+|Endpoint polled in intervals to detect changes to the root directory ETag.
+
+|connection.endpoint-webdav-meta
+|String
+|Metadata DAV endpoint, used for private link resolution.
+
+|connection.endpoint-thumbnail
+|String
+|Endpoint allowint to retrieve item thumbnails.
+
+|connection.endpoint-status
+|String
+|Requested during login and polled in intervals during maintenance mode (_status.php_)
+
+|connection.endpoint-shares
+|String
+|Polled in intervals to detect changes if share is used with the interval option.
+
+|connection.endpoint-remote-shares
+|String
+|Polled in intervals to detect changes if share is used with the interval option.
+
+|connection.endpoint-recipients
+|String
+|Requested once per search string change when searching for recipients.
+
+|connection.well-known-subpath
+|String
+|Sub-path for OpenID Connect configuration.
+|===
+
+===== Connection Setup
+
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|connection.connection-preferred-authentication-methods
+|String Array
+|Array of preferred authentication methods in order of preference, starting with the most preferred. Possible values: `com.owncloud.basicauth`, `com.owncloud.oauth2`, `com.owncloud.openid-connect`
+
+|connection.connection-allowed-authentication-methods
+|String Array
+|Array of allowed authentication methods (see _onnection.connection-preferred-authentication-methods_ key). Defaults to nil for no restrictions.
+
+|connection.connection-certificate-extended-validation-rule
+|String
+|Rule that defines the criteria a certificate needs to meet for connection to accept it. Options: `never` or string in _NSPredicate_ format, e.g. `serverCertificate.commonName == "demo.owncloud.org`
+
+|connection.cconnection-renewed-certificate-acceptance-rule
+|String
+|Rule that defines the criteria that need to be met for connect to accept a renewed certificate automatically. Options: `never` or string in _NSPredicate_ format, e.g. `serverCertificate.commonName == "demo.owncloud.org`
+
+|connection.connection-minimum-server-version
+|String
+|Minimum ownCloud server version as string.
+
+|connection.allow-background-url-sessions
+|Boolean
+|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`
+
+|connection.force-background-url-sessions
+|Boolean
+|Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
+
+|connection.allow-cellular
+|Boolean
+|Allow the use of cellular connections.
+
+|connection.plain-http-policy
+|String
+|Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. Possible options are `warn` and `forbidden`.
+|===
+
+==== OAuth2 Based Authentication
+
+Settings allowing to configure OAuth2 based authentication.
+
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|authentication-oauth2.oa2-authorization-endpoint
+|String
+|OAauth2 authorization endpoint.
+
+|authentication-oauth2.oa2-token-endpoint
+|String
+|OAuth2 token endpoint
+
+|authentication-oauth2.a2-redirect-uri
+|String
+|Redirect URI sent to the authorization endpoint.
+
+|authentication-oauth2.oa2-client-id
+|String
+|BASE64 encoded client ID.
+
+|authentication-oauth2.a2-client-secret
+|String
+|Pre-configured, BASE64 encoded client secret.
+
+|authentication-oauth2.oa2-browser-session-class
+|String
+|Default is set to `operating-system`, otherwise the value is appended as a suffix to `OCAuthenticationBrowserSession` to build up a full name of the class provided by ownCloud SDK.
+
+|authentication-oauth2.oa2-expiration-override-seconds
+|Integer
+|Setting used mainly meant to be used for testing and allowing to influence the life-time of the OAuth2 auth token.
+|===
+
+==== Shortcuts
+Shortcuts are a very powerful way to build automated workflows in iOS. Apps can provide shortcut intents for certain actions. ownCloud app provides certain actions as shortcuts as well (e.g. allowing to get account information, create folder and so on). However in some cases it might make sense to disable shortcuts to minimize security risks. It can be done using following option:
+
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|shortcuts.enabled
+|Bool
+|When set to false, iOS system wide shortcuts defined in the ownCloud app become unavailable.
+|===
+
+==== Logging
+[cols=3*,options=header]
+|===
+|Key
+|Type
+|Description
+
+|log.log-level
+|Integer
+|Log level: 0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off
+
+|log.log-privacy-mask
+|Boolean
+|Blah
+
+|log.log-enabled-components
+|String Array
+|Components and log options as array of string identifiers
+
+|log.log-synchronous
+|Boolean
+|If set to true, logging operation is performed synchronously instead of being submitted to the asynchronous queue.
+
+|log.log-colored
+|Boolean
+|If set to true, log messages are pre-pended with differently colored Emoji symbols.
+
+|log.log-only-tags
+|String Array
+|Log only messages containing one of the tags in the list.
+
+|log.log-omit-tags
+|String Array
+|Omit messages containing one of the tags in the list.
+
+|log.log-only-matching
+|String Array
+|Log only messages containing one of the terms contained in the list.
+
+|log.log-omit-matching
+|String Array
+|Omit messages containing one of the terms contained in the list.
+
+|log.log-blank-filtered-messages
+|Boolean
+|Controls whether filtered out messages should still be logged, but with the message replaced with `-`
+
+|log.log-single-lined
+|Boolean
+|Right now used to control in which level of detail HTTP requests and responses are logged. Default is `true`.
+
+|log.log-maximum-message-size
+|Integer
+|Maximum message size in bytes, default is 0 which corresponds to 'unlimited'.
+
+|log.log-format
+|String
+|Can be `text` (default), `json` or `json-composed`
+|===
 
 == AppConfig XML Schema
 
