@@ -40,7 +40,7 @@ class ReleaseNotesHostViewController: UIViewController {
 
 		Theme.shared.register(client: self)
 
-		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenReleaseNotesVersion)
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appBuildNumber), forClassSettingsKey: .lastSeenReleaseNotesVersion)
 
 		let headerView = UIView()
 		headerView.backgroundColor = .clear
@@ -161,7 +161,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 	var shouldShowReleaseNotes: Bool {
 		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
 
-			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedSame {
+			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedSame {
 				return false
 			}
 
@@ -182,7 +182,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 			return false
 		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil {
-			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
+			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appBuildNumber {
 				   return true
 			}
 			return false
