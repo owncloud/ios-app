@@ -463,11 +463,11 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		if tableView.isEditing {
 			if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
-				selectedItemIds.removeAll(where: {$0.hash == itemLocalID.hash})
+				selectedItemIds.removeAll(where: {$0 as String == itemLocalID})
 				self.actionContext?.remove(item: item)
 			}
 			updateMultipleSelectButtonItem()
-			updateActions()
+			updateActions() 
 		}
 	}
 
