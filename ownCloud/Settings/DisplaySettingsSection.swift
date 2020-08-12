@@ -44,5 +44,11 @@ class DisplaySettingsSection: SettingsSection {
 				DisplaySettings.shared.preventDraggingFiles = disableDragging
 			}
 		}, title: "Prevent gestures".localized, subtitle: "Prevent dragging of files and folders and multiselection using system defined gestures".localized, value: DisplaySettings.shared.preventDraggingFiles, identifier: "prevent-dragging-files-switch"))
+
+		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
+			if let diagnosticsEnabled = row.value as? Bool {
+				DiagnosticManager.shared.enabled = diagnosticsEnabled
+			}
+		}, title: "Enable diagnostics".localized, value: DiagnosticManager.shared.enabled, identifier: "diagnostics-enabled"))
 	}
 }

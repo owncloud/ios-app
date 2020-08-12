@@ -108,8 +108,8 @@
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
          runnableDebuggingMode = "1"
-         BundleIdentifier = "com.apple.mobileslideshow"
-         RemotePath = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/Applications/MobileSlideShow.app">
+         BundleIdentifier = "com.apple.DocumentsApp"
+         RemotePath = "/var/containers/Bundle/Application/CC7CBD37-6E2F-48F6-B68C-2AD36F379B02/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -124,7 +124,7 @@
          <EnvironmentVariable
             key = "oc:log.log-level"
             value = "0"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-synchronous"
