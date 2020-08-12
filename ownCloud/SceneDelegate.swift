@@ -17,6 +17,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -27,13 +28,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
+			var navigationController: UINavigationController?
 
-			let serverListTableViewController = ServerListTableViewController(style: .plain)
-			serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
+			if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
+				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
+				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
+				navigationController?.setNavigationBarHidden(true, animated: false)
+			} else {
+				let serverListTableViewController = ServerListTableViewController(style: .plain)
+				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
 
-			let navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
+				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
+			}
 			window?.rootViewController = navigationController
-			window?.addSubview((navigationController.view)!)
+			window?.addSubview((navigationController!.view)!)
 			window?.makeKeyAndVisible()
 		}
 
@@ -42,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			if urlContext.url.matchesAppScheme {
 				openPrivateLink(url: urlContext.url, in: scene)
 			} else {
-				ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
 		} else  if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
 			if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
@@ -55,22 +63,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		}
 	}
 
+	private func set(scene: UIScene, inForeground: Bool) {
+		if let windowScene = scene as? UIWindowScene {
+			for window in windowScene.windows {
+				if let themeWindow = window as? ThemeWindow {
+					themeWindow.themeWindowInForeground = true
+				}
+			}
+		}
+	}
+
+	func sceneWillEnterForeground(_ scene: UIScene) {
+		self.set(scene: scene, inForeground: true)
+	}
+
+	func sceneDidEnterBackground(_ scene: UIScene) {
+		self.set(scene: scene, inForeground: false)
+	}
+
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
 		return scene.userActivity
 	}
 
     @discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
-		guard let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
+		guard let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
 			return false
 		}
 
-		if activity.title == ownCloudOpenAccountPath {
+		if activity.title == OCBookmark.ownCloudOpenAccountPath {
 			serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
 			window?.windowScene?.userActivity = bookmark.openAccountUserActivity
 
 			return true
-		} else if activity.title == ownCloudOpenItemPath {
-			guard let itemLocalID = activity.userInfo?[ownCloudOpenItemUuidKey] as? String else {
+		} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
+			guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
 				return false
 			}
 
@@ -85,13 +111,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let urlContext = URLContexts.first {
-			if urlContext.url.matchesAppScheme {
-				openPrivateLink(url: urlContext.url, in: scene)
-            } else {
-                ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
-            }
-        }
+		if let urlContext = URLContexts.first, urlContext.url.matchesAppScheme {
+			openPrivateLink(url: urlContext.url, in: scene)
+		} else {
+			URLContexts.forEach { (urlContext) in
+				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
+			}
+		}
     }
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {

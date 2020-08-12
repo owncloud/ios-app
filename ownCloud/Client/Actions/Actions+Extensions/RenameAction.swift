@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }
@@ -56,9 +57,16 @@ class RenameAction : Action {
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\".localized)
+				return (false, nil, "File name cannot contain / or \\".localized)
 			} else {
-				return (true, nil)
+				if let rootItem = rootItem {
+					if ((try? self.core?.cachedItem(inParent: rootItem, withName: name, isDirectory: true)) != nil) ||
+					   ((try? self.core?.cachedItem(inParent: rootItem, withName: name, isDirectory: false)) != nil) {
+						return (false, "Item with same name already exists".localized, "An item with the same name already exists in this location.".localized)
+					}
+				}
+
+				return (true, nil, nil)
 			}
 		}, completion: { newName, _ in
 			guard newName != nil else {

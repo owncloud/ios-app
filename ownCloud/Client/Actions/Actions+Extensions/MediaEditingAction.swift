@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 class MediaEditingAction : DocumentEditingAction {

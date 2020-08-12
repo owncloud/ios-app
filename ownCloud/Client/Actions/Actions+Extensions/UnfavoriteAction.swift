@@ -18,7 +18,7 @@
 
 import Foundation
 import ownCloudSDK
-import MobileCoreServices
+import ownCloudAppShared
 
 class UnfavoriteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unfavorite") }

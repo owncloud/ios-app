@@ -18,11 +18,13 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
+import ownCloudAppShared
+import CoreServices
 import ImageIO
 import AVFoundation
 
 extension AVAsset {
+
      func exportVideo(targetURL:URL, type:AVFileType) -> Bool {
           if self.isExportable {
                let group = DispatchGroup()

@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 
 class BackgroundFetchUpdateTaskAction : ScheduledTaskAction {
 
@@ -73,14 +74,12 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction {
 			})
 		}
 
-		// Handle update completion
-		coreUpdateGroup.notify(queue: DispatchQueue.main) {
-			if errorCount == 0 {
-				self.result = .success(nil)
-			} else {
-				self.result = .failure(lastError)
-			}
-			self.completed()
+		coreUpdateGroup.wait()
+		if errorCount == 0 {
+			self.result = .success(nil)
+		} else {
+			self.result = .failure(lastError)
 		}
+		self.completed()
 	}
 }

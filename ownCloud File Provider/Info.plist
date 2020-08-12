@@ -20,6 +20,11 @@
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(APP_VERSION)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionFileProviderDocumentGroup</key>
@@ -31,6 +36,8 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>FileProviderExtension</string>
 	</dict>
+	<key>OCAppComponentIdentifier</key>
+	<string>fileProviderExtension</string>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
 	<key>OCAppIdentifierPrefix</key>
@@ -39,10 +46,5 @@
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 </dict>
 </plist>

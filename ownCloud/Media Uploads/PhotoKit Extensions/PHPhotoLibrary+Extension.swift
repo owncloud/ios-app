@@ -18,6 +18,7 @@
 
 import UIKit
 import Photos
+import ownCloudAppShared
 
 extension PHPhotoLibrary {
 

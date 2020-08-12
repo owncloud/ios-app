@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.owncloud.background-refresh-task</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -14,12 +18,13 @@
 			<key>CFBundleTypeName</key>
 			<string>Import all file types</string>
 			<key>LSHandlerRank</key>
-			<string>Alternate</string>
+			<string>Default</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>public.data</string>
 				<string>public.content</string>
-				<string>public.image</string>
+				<string>public.item</string>
 			</array>
 		</dict>
 	</array>
@@ -69,10 +74,16 @@
 	<string>This permission is needed for uploading media files to your server.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This permission is needed to scan documents.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This permission is needed to record videos</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This permission is needed to record videos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -91,6 +102,8 @@
 		<string>com.owncloud.ios-app.openAccount</string>
 		<string>com.owncloud.ios-app.openItem</string>
 	</array>
+	<key>OCAppComponentIdentifier</key>
+	<string>app</string>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
@@ -120,6 +133,7 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
+		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

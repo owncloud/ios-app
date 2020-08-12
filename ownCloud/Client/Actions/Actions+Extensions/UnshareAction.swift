@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 extension Array where Element: OCItem {
 	var sharedWithUser : [OCItem] {
@@ -122,7 +123,7 @@ class UnshareAction : Action {
 			with: name,
 			message: message,
 			destructiveLabel: "Unshare".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
+			preferredStyle: UIDevice.current.isIpad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				unshareItemAndPublishProgress(items)
 		})

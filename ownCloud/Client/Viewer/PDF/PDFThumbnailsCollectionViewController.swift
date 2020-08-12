@@ -19,6 +19,7 @@
 import UIKit
 import PDFKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themeable {
 
@@ -161,7 +162,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 			viewWidth = newTotalWidth
 		} else {
 			// Heads up! bounds on iPad are incorrect for the own view controller's view
-			if UIDevice.current.isIpad() {
+			if UIDevice.current.isIpad {
 				viewWidth = parent!.view.bounds.width
 			} else {
 				viewWidth = view.bounds.inset(by: view.safeAreaInsets).width
@@ -170,7 +171,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 
 		let width = viewWidth - (layout.sectionInset.left + layout.sectionInset.right)
 
-		let multiplier = (orientation.isPortrait || UIDevice.current.isIpad()) ? thumbnailSizeMultiplierPortrait : thumbnailSizeMultiplierLandscape
+		let multiplier = (orientation.isPortrait || UIDevice.current.isIpad) ? thumbnailSizeMultiplierPortrait : thumbnailSizeMultiplierLandscape
 		let thumbnailWidth = floor(width * multiplier) - horizontalInset
 		var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
 

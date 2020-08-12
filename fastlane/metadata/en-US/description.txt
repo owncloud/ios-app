@@ -1,0 +1,27 @@
+Connect an ownCloud server and have your private file sync and share cloud up and running in no time.
+
+ownCloud is an open source content collaboration software for everyone from individuals operating the free ownCloud server to large enterprises operating under ownCloud Enterprise subscription.
+
+HOW DOES THE APP HELP YOU?
+
+With the ownCloud iOS App you can browse all of your ownCloud synced files, create and edit new files, share these files and folders with co-workers, and keep the contents of those folders in sync across all of your devices. Simply copy a file into a directory on your server and ownCloud does the rest.
+
+COOL NEW FEATURES
+The iOS ownCloud App brings:
+- Seamless integration with iOS files for improved collaboration
+- Multi-select with drag and drop features for efficient file management
+- Certificate management and password manager integration for boosting security
+and so much more!
+
+Whether using a mobile device, a desktop, or the web client, ownCloud provides the ability to put the right files in the right hands at the right time on any device in one simple-to-use, secure, private and controlled solution. 
+
+A WORD FROM THE DEVELOPER
+"The new ownCloud app is a complete redesign and not only uses the latest technologies and frameworks under the hood, but offers the user a native and intuitive iOS user interface.
+The development of the app was carried out in the team with great passion and we are very pleased, what we may present new in the next versions.
+Thank you for your support!" Matthias Huehne
+
+ABOUT OWNCLOUD
+ownCloud is the market leading open source content collaboration solution worldwide. ownCloud enables users to securely access and share data from any device, anywhere in the world. With more than 200,000 installations and 50 million users, ownCloud provides users a modern collaborative experience, thereby boosting productivity without compromising on security. 
+
+Terms of Use: https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE
+Privacy Policy: https://owncloud.com/privacy-legal/

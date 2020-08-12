@@ -18,14 +18,23 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
+
+protocol ClientActivityCellDelegate : class {
+
+	func showMessage(for activity: OCActivity)
+
+	func hasMessage(for activity: OCActivity) -> Bool
+}
 
 class ClientActivityCell: ThemeTableViewCell {
 
-	weak var delegate: ClientItemCellDelegate?
+	weak var delegate: ClientActivityCellDelegate?
 
 	var descriptionLabel : UILabel = UILabel()
 	var statusLabel : UILabel = UILabel()
 	var statusCircle: ProgressView = ProgressView()
+	var messageButton : UIButton = UIButton()
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -45,14 +54,24 @@ class ClientActivityCell: ThemeTableViewCell {
 		descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 		statusLabel.translatesAutoresizingMaskIntoConstraints = false
 		statusCircle.translatesAutoresizingMaskIntoConstraints = false
+		messageButton.translatesAutoresizingMaskIntoConstraints = false
 
 		descriptionLabel.font = .systemFont(ofSize: 17, weight: .semibold)
 		statusLabel.font = .systemFont(ofSize: 14)
 		statusLabel.textColor = .gray
 
+		messageButton.setTitle("⚠️", for: .normal)
+		messageButton.contentMode = .center
+		if #available(iOS 13.4, *) {
+			messageButton.isPointerInteractionEnabled = true
+		}
+		messageButton.isHidden = true
+		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
+
 		self.contentView.addSubview(descriptionLabel)
 		self.contentView.addSubview(statusLabel)
 		self.contentView.addSubview(statusCircle)
+		self.contentView.addSubview(messageButton)
 
 		descriptionLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		statusLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
@@ -71,8 +90,20 @@ class ClientActivityCell: ThemeTableViewCell {
 
 			statusCircle.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			statusCircle.widthAnchor.constraint(equalToConstant: 50),
-			statusCircle.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
+			statusCircle.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+
+			messageButton.leftAnchor.constraint(equalTo: statusCircle.leftAnchor),
+			messageButton.rightAnchor.constraint(equalTo: statusCircle.rightAnchor),
+			messageButton.topAnchor.constraint(equalTo: statusCircle.topAnchor),
+			messageButton.bottomAnchor.constraint(equalTo: statusCircle.bottomAnchor)
 		])
+	}
+
+	// MARK: - Message support
+	@objc func messageButtonTapped() {
+		if let activity = self.activity {
+			self.delegate?.showMessage(for: activity)
+		}
 	}
 
 	// MARK: - Present item
@@ -88,6 +119,11 @@ class ClientActivityCell: ThemeTableViewCell {
 		descriptionLabel.text = activity.localizedDescription
 		statusLabel.text = activity.localizedStatusMessage
 		statusCircle.progress = activity.progress
+
+		let hasMessage = self.delegate?.hasMessage(for: activity) ?? false
+
+		statusCircle.isHidden = hasMessage
+		messageButton.isHidden = !hasMessage
 
 		self.accessoryType = .none
 	}

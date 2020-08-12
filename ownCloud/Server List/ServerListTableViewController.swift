@@ -18,6 +18,8 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
@@ -32,6 +34,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Internals
 	var shownFirstTime = true
+	var hasToolbar : Bool = true
+
+	var pushTransitionRecovery : PushTransitionRecovery?
+	weak var pushFromViewController : UIViewController?
 
 	// MARK: - Init
 	override init(style: UITableView.Style) {
@@ -81,17 +87,21 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.dragDelegate = self
  		extendedLayoutIncludesOpaqueBars = true
 
-		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
-		addServerBarButtonItem.accessibilityLabel = "Add account".localized
-		addServerBarButtonItem.accessibilityIdentifier = "addAccount"
-		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
+		if VendorServices.shared.canAddAccount {
+			let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
+			addServerBarButtonItem.accessibilityLabel = "Add account".localized
+			addServerBarButtonItem.accessibilityIdentifier = "addAccount"
+			self.navigationItem.rightBarButtonItem = addServerBarButtonItem
+		}
 
-		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+		// This view is nil, when branded app version
+		if welcomeOverlayView != nil {
+			welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+			Theme.shared.add(tvgResourceFor: "owncloud-logo")
+			welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
+		}
 
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
-		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
-
-		self.navigationItem.title = OCAppIdentity.shared.appName
+		self.navigationItem.title = VendorServices.shared.appName
 
 		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
 
@@ -102,17 +112,81 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
+
+		if Migration.shared.legacyDataFound {
+			let migrationViewController = MigrationViewController()
+			let navigationController = ThemeNavigationController(rootViewController: migrationViewController)
+			migrationViewController.migrationFinishedHandler = {
+				Migration.shared.wipeLegacyData()
+			}
+			navigationController.modalPresentationStyle = .fullScreen
+			self.present(navigationController, animated: false)
+		}
+
+		messageCountByBookmarkUUID = [:] // Initial update of app badge icon
+
+		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages, _, _) in
+			var countByBookmarkUUID : [UUID? : Int ] = [:]
+
+			if let messages = messages {
+				for message in messages {
+					if !message.resolved {
+						if let count = countByBookmarkUUID[message.bookmarkUUID] {
+							countByBookmarkUUID[message.bookmarkUUID] = count + 1
+						} else {
+							countByBookmarkUUID[message.bookmarkUUID] = 1
+						}
+					}
+				}
+			}
+
+			OnMainThread {
+				self?.messageCountByBookmarkUUID = countByBookmarkUUID
+			}
+		})
+	}
+
+	var messageCountSelector : MessageSelector?
+
+	typealias ServerListTableMessageCountByUUID = [UUID? : Int ]
+
+	var messageCountByBookmarkUUID : ServerListTableMessageCountByUUID = [:] {
+		didSet {
+			// Notify cells about changed counts
+			NotificationCenter.default.post(Notification(name: .BookmarkMessageCountChanged, object: messageCountByBookmarkUUID, userInfo: nil))
+
+			// Update app badge count
+			var totalNotificationCount = messageCountByBookmarkUUID[nil] ?? 0 // Global notifications
+
+			for bookmark in OCBookmarkManager.shared.bookmarks {
+				if let count = messageCountByBookmarkUUID[bookmark.uuid] {
+					totalNotificationCount += count
+				}
+			}
+
+			NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
+				if granted {
+					OnMainThread {
+						UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+					}
+				}
+			}
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		self.navigationController?.setToolbarHidden(false, animated: animated)
+		if hasToolbar {
+			self.navigationController?.setToolbarHidden(false, animated: animated)
+		}
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 
 		Theme.shared.register(client: self)
 
-		welcomeOverlayView.layoutSubviews()
+		if welcomeOverlayView != nil {
+			welcomeOverlayView.layoutSubviews()
+		}
 
 		self.tableView.reloadData()
 	}
@@ -121,6 +195,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		var showBetaWarning = VendorServices.shared.showBetaWarning
 
 		super.viewDidAppear(animated)
+
+		ClientSessionManager.shared.add(delegate: self)
 
 		updateNoServerMessageVisibility()
 
@@ -174,7 +250,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				OCAppIdentity.shared.userDefaults?.set(NSDate(), forKey: "LastBetaWarningAcceptDate")
 			}
 
-			self.present(betaAlert, animated: true, completion: nil)
+			self.showModal(viewController: betaAlert)
 		}
 	}
 
@@ -183,19 +259,27 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		self.navigationController?.setToolbarHidden(true, animated: animated)
 
+		ClientSessionManager.shared.remove(delegate: self)
+
 		Theme.shared.unregister(client: self)
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		welcomeAddServerButton.themeColorCollection = collection.neutralColors
+		if welcomeAddServerButton != nil {
+			welcomeAddServerButton.themeColorCollection = collection.neutralColors
+
+			welcomeTitleLabel.applyThemeCollection(collection, itemStyle: .title)
+			welcomeMessageLabel.applyThemeCollection(collection, itemStyle: .message)
+		}
 
 		self.tableView.applyThemeCollection(collection)
-
-		self.welcomeTitleLabel.applyThemeCollection(collection, itemStyle: .title)
-		self.welcomeMessageLabel.applyThemeCollection(collection, itemStyle: .message)
 	}
 
 	func updateNoServerMessageVisibility() {
+		guard welcomeOverlayView != nil else {
+			return
+		}
+
 		if OCBookmarkManager.shared.bookmarks.count == 0 {
 			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
@@ -264,11 +348,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, removeAuthDataFromCopy: Bool = true) {
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
 		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
-		navigationController.modalPresentationStyle = .fullScreen
+		navigationController.modalPresentationStyle = .overFullScreen
 
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
@@ -283,12 +367,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if attemptLoginOnSuccess {
 			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
 				if success, let bookmark = bookmark, let self = self {
+					if let error = autosolveErrorOnSuccess as Error? {
+						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+					}
 					self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				}
 			}
 		}
 
-		self.present(navigationController, animated: true, completion: {
+		self.showModal(viewController: navigationController, completion: {
 			OnMainThread {
 				if performContinue {
 					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
@@ -301,13 +388,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func showBookmarkInfoUI(_ bookmark: OCBookmark) {
 		let viewController = BookmarkInfoViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
-
-		navigationController.modalPresentationStyle = .fullScreen
+		navigationController.modalPresentationStyle = .overFullScreen
 
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
 
-		self.present(navigationController, animated: true, completion: nil)
+		self.showModal(viewController: navigationController)
 	}
 
 	@available(iOS 13.0, *)
@@ -326,19 +412,32 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
-	func delete(bookmark: OCBookmark, at indexPath: IndexPath) {
+	func showModal(viewController: UIViewController, completion: (() -> Void)? = nil) {
+		self.present(viewController, animated: true, completion: completion)
+	}
+
+	func delete(bookmark: OCBookmark, at indexPath: IndexPath, completion: (() -> Void)? = nil) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			presentationStyle = .alert
 		}
 
-		let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
+		var alertTitle = "Really delete '%@'?".localized
+		var destructiveTitle = "Delete".localized
+		var failureTitle = "Deletion of '%@' failed".localized
+		if VendorServices.shared.isBranded {
+			alertTitle = "Really logout from '%@'?".localized
+			destructiveTitle = "Logout".localized
+			failureTitle = "Logout of '%@' failed".localized
+		}
+
+		let alertController = ThemedAlertController(title: NSString(format: alertTitle as NSString, bookmark.shortName) as String,
 													message: "This will also delete all locally stored file copies.".localized,
 													preferredStyle: presentationStyle)
 
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-		alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
+		alertController.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: { (_) in
 
 			OCBookmarkManager.lock(bookmark: bookmark)
 
@@ -349,7 +448,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					OnMainThread {
 						if error != nil {
 							// Inform user if vault couldn't be erased
-							let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+							let alertController = ThemedAlertController(title: NSString(format: failureTitle as NSString, bookmark.shortName as NSString) as String,
 																		message: error?.localizedDescription,
 																		preferredStyle: .alert)
 
@@ -360,14 +459,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							// Success! We can now remove the bookmark
 							self.ignoreServerListChanges = true
 
+							OCMessageQueue.global.dequeueAllMessages(forBookmarkUUID: bookmark.uuid)
+
 							OCBookmarkManager.shared.removeBookmark(bookmark)
 
-							self.tableView.performBatchUpdates({
-								self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-							}, completion: { (_) in
-								self.ignoreServerListChanges = false
-							})
-
+							completion?()
 							self.updateNoServerMessageVisibility()
 						}
 
@@ -410,7 +506,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
-	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool) {
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
 			return
 		}
@@ -419,10 +515,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			return
 		}
 
-		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+		let clientRootViewController = ClientSessionManager.shared.startSession(for: bookmark)!
 
 		let bookmarkRow = self.tableView.cellForRow(at: indexPath)
-		let activityIndicator = UIActivityIndicatorView(style: .white)
+		let activityIndicator = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 
 		var bookmarkRowAccessoryView : UIView?
 
@@ -439,7 +535,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		})
 
 		clientRootViewController.authDelegate = self
-		clientRootViewController.modalPresentationStyle = .fullScreen
+		clientRootViewController.modalPresentationStyle = .overFullScreen
 
 		clientRootViewController.afterCoreStart(lastVisibleItemId) {
 			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
@@ -447,17 +543,40 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
 				// Set up custom push transition for presentation
-				if let navigationController = self.navigationController {
+
+				if let fromViewController = self.pushFromViewController ?? self.navigationController {
 					let transitionDelegate = PushTransitionDelegate()
 
 					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
 					clientRootViewController.transitioningDelegate = transitionDelegate
 					clientRootViewController.modalPresentationStyle = .custom
 
-					navigationController.present(clientRootViewController, animated: animated, completion: {
+					fromViewController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
+
+						// Present message if one was provided
+						if let message = message {
+							self.presentInClient(message: message)
+						}
 					})
 				}
+			}
+			self.didUpdateServerList()
+		}
+	}
+
+	func didUpdateServerList() {
+		// This is a hook for subclasses
+	}
+
+	var clientViewController : ClientRootViewController? {
+		return self.presentedViewController as? ClientRootViewController
+	}
+
+	func presentInClient(message: OCMessage) {
+		if let cardMessagePresenter = clientViewController?.cardMessagePresenter {
+			OnMainThread { // Wait for next runloop cycle
+				OCMessageQueue.global.present(message, with: cardMessagePresenter)
 			}
 		}
 	}
@@ -468,7 +587,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	func setLastSelectedBookmark(_ bookmark: OCBookmark, openedBlock: (() -> Void)?) {
 		resetPreviousBookmarkSelection()
-
 		lastSelectedBookmark = bookmark
 		lastSelectedBookmarkOpenedBlock = openedBlock
 	}
@@ -518,7 +636,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func makeContextMenu(for indexPath: IndexPath, with bookmark: OCBookmark) -> UIMenu {
 		var menuItems : [UIAction] = []
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: 	"uiwindow.split.2x1")) { _ in
 				self.openAccountInWindow(at: indexPath)
 			}
@@ -532,8 +650,21 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			self.showBookmarkInfoUI(bookmark)
 		}
 		menuItems.append(manage)
-		let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-			self.delete(bookmark: bookmark, at: indexPath)
+
+		var destructiveTitle = "Delete".localized
+		if VendorServices.shared.isBranded {
+			destructiveTitle = "Logout".localized
+		}
+		let delete = UIAction(title: destructiveTitle, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+			self.delete(bookmark: bookmark, at: indexPath ) {
+				OnMainThread {
+					self.tableView.performBatchUpdates({
+						self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+					}, completion: { (_) in
+						self.ignoreServerListChanges = false
+					})
+				}
+			}
 		}
 		menuItems.append(delete)
 
@@ -569,9 +700,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			bookmarkCell.titleLabel.text = bookmark.shortName
-			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : bookmark.url?.absoluteString
-			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
+			bookmarkCell.bookmark = bookmark
+			bookmarkCell.updateMessageBadge(count: messageCountByBookmarkUUID[bookmark.uuid] ?? 0)
 		}
 
 		return bookmarkCell
@@ -579,9 +709,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
-		let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
+		var destructiveTitle = "Delete".localized
+		if VendorServices.shared.isBranded {
+			destructiveTitle = "Logout".localized
+		}
+
+		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-				self.delete(bookmark: bookmark, at: indexPath)
+				self.delete(bookmark: bookmark, at: indexPath ) {
+					self.ignoreServerListChanges = false
+				}
 			}
 		})
 
@@ -600,7 +737,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		})
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if #available(iOS 13.0, *), UIDevice.current.isIpad {
 			let openAccountAction = UITableViewRowAction(style: .normal,
 														 title: "Open in Window".localized,
 														 handler: { (_, indexPath) in
@@ -690,16 +827,39 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 	}
 }
 
-let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAccount"
-let ownCloudOpenAccountPath               = "openAccount"
-let ownCloudOpenAccountAccountUuidKey         = "accountUuid"
+extension ServerListTableViewController : ClientSessionManagerDelegate {
+	func canPresent(bookmark: OCBookmark, message: OCMessage?) -> OCMessagePresentationPriority {
+		if let themeWindow = self.viewIfLoaded?.window as? ThemeWindow, themeWindow.themeWindowInForeground {
+			if !isLocked(bookmark: bookmark) {
+				if presentedViewController == nil {
+					return .high
+				} else {
+					if let clientViewController = self.clientViewController {
+						if clientViewController.bookmark.uuid == bookmark.uuid {
+							return .high
+						} else {
+							return .default
+						}
+					}
+				}
+			}
 
-extension OCBookmark {
-	var openAccountUserActivity: NSUserActivity {
-		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
-		userActivity.title = ownCloudOpenAccountPath
-		userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: uuid.uuidString]
-		return userActivity
+			return .low
+		}
+
+		return .wontPresent
+	}
+
+	func present(bookmark: OCBookmark, message: OCMessage?) {
+		OnMainThread {
+			if self.presentedViewController == nil {
+				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
+			} else {
+				if self.clientViewController != nil, let message = message {
+					self.presentInClient(message: message)
+				}
+			}
+		}
 	}
 }
 
@@ -719,5 +879,8 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 
 		return []
 	}
+}
 
+extension NSNotification.Name {
+	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
 }
