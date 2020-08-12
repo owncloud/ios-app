@@ -66,6 +66,12 @@ class DiagnosticViewController: StaticTableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	open override func viewDidLoad() {
+		super.viewDidLoad()
+
+		self.tableView.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
+	}
+
 	private var style : Style
 	private var section : StaticTableViewSection?
 	private var newSections : [StaticTableViewSection]?

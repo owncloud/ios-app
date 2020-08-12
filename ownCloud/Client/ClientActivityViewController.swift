@@ -156,6 +156,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		self.tableView.register(MessageGroupCell.self, forCellReuseIdentifier: "message-group-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
+		self.tableView.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
