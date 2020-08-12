@@ -93,6 +93,11 @@ class DiagnosticViewController: StaticTableViewController {
 				case .action:
 					section?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 						node.action?(self?.context)
+
+						if let self = self {
+							_ = NotificationHUDViewController(on: self, title: node.label ?? "", subtitle: "Action executed".localized, completion: {
+							})
+						}
 					}, title: node.label ?? "", style: .plain))
 
 				case .group:
