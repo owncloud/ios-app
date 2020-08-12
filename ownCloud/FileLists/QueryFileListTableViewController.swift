@@ -258,9 +258,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 							self.messageView?.message(show: false)
 						}
 
-						let indexPath = self.tableView.indexPathForSelectedRow
 						self.tableView.reloadData()
-						self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 					case .targetRemoved:
 						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 						self.tableView.reloadData()
@@ -411,6 +409,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			if newItem.displaysDifferent(than: cell?.item, in: core) {
 				cell?.item = newItem
 			}
+
+			if let localID = newItem.localID as OCLocalID?, self.selectedItemIds.contains(localID) {
+				cell?.setSelected(true, animated: false)
+			}
 		}
 
 		return cell!
@@ -452,7 +454,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			super.tableView(tableView, didSelectRowAt: indexPath)
 		} else {
 			if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
-				selectedItemIds.append(itemLocalID as OCLocalID)
+				if !selectedItemIds.contains(itemLocalID as OCLocalID) {
+					selectedItemIds.append(itemLocalID as OCLocalID)
+				}
 				self.actionContext?.add(item: item)
 			}
 			updateMultipleSelectButtonItem()
@@ -467,7 +471,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 				self.actionContext?.remove(item: item)
 			}
 			updateMultipleSelectButtonItem()
-			updateActions() 
+			updateActions()
 		}
 	}
 
@@ -606,15 +610,5 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 		updateMultipleSelectButtonItem()
 		updateActions()
-	}
-}
-
-@available(iOS 13, *) extension QueryFileListTableViewController {
-	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-		return !DisplaySettings.shared.preventDraggingFiles
-	}
-
-	override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
-		multipleSelectionButtonPressed()
 	}
 }

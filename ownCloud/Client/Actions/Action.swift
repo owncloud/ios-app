@@ -179,7 +179,11 @@ class ActionContext: OCExtensionContext {
 	}
 
 	func remove(item:OCItem) {
+		guard self.itemStorage.contains(item) else {
+			return
+		}
 		self.itemStorage.removeAll(where: {$0.localID == item.localID})
+
 		if item.isSharedWithUser {
 			self.cachedSharedItems.removeAll(where: { $0.localID == item.localID })
 		}
@@ -198,7 +202,13 @@ class ActionContext: OCExtensionContext {
 	}
 
 	func add(item:OCItem) {
+
+		guard !self.itemStorage.contains(item) else {
+			return
+		}
+
 		self.itemStorage.append(item)
+
 		if item.isSharedWithUser {
 			self.cachedSharedItems.append(item)
 		}
