@@ -186,6 +186,8 @@ platform :ios do
       ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-Provider",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Intents",
+      ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Share-Extension",
+      ENTERPRISE_SHARE_EXTENSION_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Share-Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
       ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShare",
       ENTERPRISE_TEAM: "4AP2STM4H5",
@@ -205,6 +207,8 @@ platform :ios do
       ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-File-Provider",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.emm.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-Intents",
+      ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.ios-app.emm.ownCloud-Share-Extension",
+      ENTERPRISE_SHARE_EXTENSION_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-Share-Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp.emm",
       ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShared.emm",
       ENTERPRISE_TEAM: "4AP2STM4H5",
@@ -224,6 +228,8 @@ lane :owncloud_online_build do
     ENTERPRISE_FP_PROFILE: "ownCloud online AppStore DocumentProvider",
     ENTERPRISE_INTENT_ID: "online.owncloud.ios-app.Intents",
     ENTERPRISE_INTENT_PROFILE: "ownCloud online AppStore Intents",
+    ENTERPRISE_SHARE_EXTENSION_ID: "online.owncloud.ios-app.ShareExtApp",
+    ENTERPRISE_SHARE_EXTENSION_PROFILE: "ownCloud online AppStore Share Ext",
     ENTERPRISE_APP_FW_ID: "online.owncloud.ios-app.ownCloudApp",
     ENTERPRISE_APP_SHARED_ID: "online.owncloud.ios-app.ownCloudAppShared",
     ENTERPRISE_TEAM: "4AP2STM4H5",
@@ -243,6 +249,8 @@ end
       ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
       ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
+      ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.enterprise.ios-app.ownCloud-Share-Extension",
+      ENTERPRISE_SHARE_EXTENSION_PROFILE: "Enterprise Distribution iOS Neo Share Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
       ENTERPRISE_APP_SHARED_ID: "com.owncloud.enterprise.ownCloudAppShared",
       ENTERPRISE_TEAM: "5QNK8L2PSC",
@@ -263,6 +271,8 @@ end
     ENTERPRISE_FP_PROFILE = values[:ENTERPRISE_FP_PROFILE]
     ENTERPRISE_INTENT_ID = values[:ENTERPRISE_INTENT_ID]
     ENTERPRISE_INTENT_PROFILE = values[:ENTERPRISE_INTENT_PROFILE]
+    ENTERPRISE_SHARE_EXTENSION_ID = values[:ENTERPRISE_SHARE_EXTENSION_ID]
+    ENTERPRISE_SHARE_EXTENSION_PROFILE = values[:ENTERPRISE_SHARE_EXTENSION_PROFILE]
     ENTERPRISE_APP_FW_ID = values[:ENTERPRISE_APP_FW_ID]
     ENTERPRISE_APP_SHARED_ID = values[:ENTERPRISE_APP_SHARED_ID]
     ENTERPRISE_TEAM = values[:ENTERPRISE_TEAM]

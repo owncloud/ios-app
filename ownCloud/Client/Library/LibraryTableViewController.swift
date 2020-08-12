@@ -78,6 +78,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.tableView.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
 
 		Theme.shared.add(tvgResourceFor: "icon-available-offline")
 
