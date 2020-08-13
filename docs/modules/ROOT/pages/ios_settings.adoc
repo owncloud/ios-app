@@ -74,6 +74,7 @@ image:84_Settings_themes.png[84_Settings_themes.png]
 a|image:themes/classic.png[ownCloud iOS App - Classic theme]
 a|image:themes/dark.png[ownCloud iOS App - Dark theme]
 a|image:themes/light.png[ownCloud iOS App - Light theme]
+|===
 
 |===
 
