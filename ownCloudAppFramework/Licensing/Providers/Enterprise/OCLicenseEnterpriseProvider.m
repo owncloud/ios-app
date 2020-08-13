@@ -132,11 +132,11 @@
 
 			if (accountCount == 1)
 			{
-				[iapMessage insertString:[NSString stringWithFormat:OCLocalized(@"%@ already unlocked for your Enterprise accounts %@."), subject, lastAccountName] atIndex:0];
+				[iapMessage insertString:[NSString stringWithFormat:OCLocalized(@"%@ already unlocked for your account %@."), subject, lastAccountName] atIndex:0];
 			}
 			else
 			{
-				[iapMessage insertString:[NSString stringWithFormat:OCLocalized(@"%@ already unlocked for your Enterprise accounts (%@ and %d more)."), subject, lastAccountName, accountCount-1] atIndex:0];
+				[iapMessage insertString:[NSString stringWithFormat:OCLocalized(@"%@ already unlocked for your accounts (%@ and %d more)."), subject, lastAccountName, accountCount-1] atIndex:0];
 			}
 		}
 		else
