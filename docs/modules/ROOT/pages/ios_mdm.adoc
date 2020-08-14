@@ -16,11 +16,14 @@ The configuration is basically a key-value dictionary provided as a `.plist` fil
 
 ownCloud App implements a mechanism internally called Class Settings which can be derived from different sources:
 
-- Settings dictionary pushed by an MDM Server and accessible using `NSUserDefaults` API under the key _com.apple.configuration.managed_.
-- User preferences accessed by the very same API but stored under _org.owncloud.user-settings_ key.
 - Environment variables which e.g. can be set in Xcode for testing. In this case setting keys have to be prepended with _oc:_ prefix.
+- User preferences accessed by the very same API but stored under _org.owncloud.user-settings_ key.
+- Settings dictionary pushed by an MDM Server and accessible using `NSUserDefaults` API under the key _com.apple.configuration.managed_.
+- Default settings defined directly in the app sourcecode.
 
-This is also an order in which these settings take precedence. In addition the app does register default values for certain settings directly in the source code.
+This is also an order in which these settings take precedence (environment variables have highest priority). So, when settings are accessed, they are merged and higher priority value for the same key overwrites lower priority ones.
+
+Some settings are accessed only once at runtime and the read value is cached, so that new setting to take effect may a require an app to be terminated and restarted.
 
 ==== App Basic Configuration
 There are few settings allowing to mark an app installation as BETA and e.g. to supress UIKit animation and review prompt.
