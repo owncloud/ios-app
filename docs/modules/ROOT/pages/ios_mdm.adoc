@@ -287,6 +287,11 @@ Settings allowing to influence connection setup process and e.g. prevent the app
 |String
 |`warn`
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. Possible options are `warn` and `forbidden`.
+
+|connection.sync-root-etag-interval
+|Integer
+|10 sec
+|Time interval in which root item list is polled to detect ETag changes.
 |===
 
 ==== OAuth2 Based Authentication
