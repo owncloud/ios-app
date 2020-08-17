@@ -73,6 +73,12 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 			let section = StaticTableViewSection(headerTitle: "Pro Features".localized)
 			let environment = OCLicenseEnvironment()
 
+			if let iapMessages = OCLicenseManager.shared.inAppPurchaseMessage(forFeature: nil) {
+				let messageRow = StaticTableViewRow(message: iapMessages, icon: UIImage(named: "info-icon")?.scaledImageFitting(in: CGSize(width: 24, height: 24)), style: .warning, identifier: "iap-messages")
+
+				section.add(row: messageRow)
+			}
+
 			if let features = OCLicenseManager.shared.features(withOffers: true) {
 				for feature in features {
 					section.add(row: StaticTableViewRow(customView: LicenseInAppPurchaseFeatureView(with: feature, in: environment, baseViewController: self), inset: UIEdgeInsets(top: 15, left: 18, bottom: 15, right: 18)))

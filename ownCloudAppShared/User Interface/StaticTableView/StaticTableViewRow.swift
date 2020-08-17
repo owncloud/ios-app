@@ -51,6 +51,14 @@ public enum StaticTableViewRowActionType {
 	case didEnd
 }
 
+public enum StaticTableViewRowMessageStyle {
+	case plain
+	case warning
+	case alert
+	case confirmation
+	case custom(textColor: UIColor?, backgroundColor: UIColor?, tintColor: UIColor?)
+}
+
 open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public weak var section : StaticTableViewSection?
@@ -502,6 +510,131 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.updateViewFromValue = { (row) in
 			if let value = row.value as? String {
 				row.cell?.textLabel?.text = value
+			}
+		}
+	}
+
+	// MARK: - Messages
+	convenience public init(message: String, title: String? = nil, icon: UIImage? = nil, tintIcon: Bool = true, style: StaticTableViewRowMessageStyle = .plain, titleMessageSpacing: CGFloat = 10, imageSpacing: CGFloat = 15, padding: UIEdgeInsets = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20), identifier: String? = nil) {
+		let titleLabel = UILabel()
+		let messageLabel = UILabel()
+		var iconView : UIImageView?
+		var stackView : UIStackView
+
+		messageLabel.translatesAutoresizingMaskIntoConstraints = false
+		messageLabel.text = message
+		messageLabel.numberOfLines = 0
+		messageLabel.textAlignment = .left
+		messageLabel.font = UIFont.preferredFont(forTextStyle: .body)
+
+		titleLabel.translatesAutoresizingMaskIntoConstraints = false
+		titleLabel.text = title
+		titleLabel.numberOfLines = 0
+		titleLabel.textAlignment = .left
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+
+		messageLabel.setContentHuggingPriority(.required, for: .vertical)
+		titleLabel.setContentHuggingPriority(.required, for: .vertical)
+
+		let vertStackView = UIStackView(arrangedSubviews: (title != nil) ? [ titleLabel, messageLabel ] : [ messageLabel ])
+
+		vertStackView.translatesAutoresizingMaskIntoConstraints = false
+		vertStackView.axis = .vertical
+		vertStackView.spacing = titleMessageSpacing
+		vertStackView.alignment = .leading
+
+		if let icon = icon {
+			let imageView = UIImageView(image: icon)
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+			imageView.setContentHuggingPriority(.required, for: .horizontal)
+			imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+			imageView.setContentCompressionResistancePriority(.required, for: .vertical)
+
+			iconView = imageView
+
+			let horizStackView = UIStackView(arrangedSubviews: [imageView, vertStackView])
+
+			horizStackView.translatesAutoresizingMaskIntoConstraints = false
+			horizStackView.axis = .horizontal
+			horizStackView.spacing = imageSpacing
+			horizStackView.alignment = .top
+
+			stackView = horizStackView
+		} else {
+			stackView = vertStackView
+		}
+
+		let paddingView = UIView()
+		paddingView.translatesAutoresizingMaskIntoConstraints = false
+
+		paddingView.addSubview(stackView)
+
+		NSLayoutConstraint.activate([
+			stackView.leadingAnchor.constraint(equalTo: paddingView.leadingAnchor, constant: padding.left),
+			stackView.trailingAnchor.constraint(equalTo: paddingView.trailingAnchor, constant: -padding.right),
+			stackView.topAnchor.constraint(equalTo: paddingView.topAnchor, constant: padding.top),
+			stackView.bottomAnchor.constraint(equalTo: paddingView.bottomAnchor, constant: -padding.bottom)
+		])
+
+		self.init(customView: paddingView, identifier: identifier)
+
+		self.themeApplierToken = Theme.shared.add(applier: { [weak titleLabel, weak messageLabel, weak paddingView, weak iconView] (_, themeCollection, _) in
+			var textColor, backgroundColor, tintColor : UIColor?
+
+			switch style {
+				case .plain:
+					textColor = themeCollection.tintColor
+					tintColor = textColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+				case .confirmation:
+					textColor = themeCollection.approvalColors.normal.foreground
+					tintColor = textColor
+					backgroundColor = themeCollection.approvalColors.normal.background
+
+				case .warning:
+					textColor = .black
+					tintColor = textColor
+					backgroundColor = .systemYellow
+
+				case .alert:
+					textColor = themeCollection.destructiveColors.normal.foreground
+					tintColor = textColor
+					backgroundColor = themeCollection.destructiveColors.normal.background
+
+				case let .custom(customTextColor, customBackgroundColor, customTintColor):
+					textColor = customTextColor
+					backgroundColor = customBackgroundColor
+					tintColor = customTintColor
+			}
+
+			if textColor == nil {
+				textColor = themeCollection.tableRowColors.tintColor
+			}
+
+			titleLabel?.tintColor = textColor
+			titleLabel?.textColor = textColor
+			messageLabel?.tintColor = textColor
+			messageLabel?.textColor = textColor
+			paddingView?.backgroundColor = backgroundColor
+
+			if let tintColor = tintColor, tintIcon {
+				if iconView?.image?.renderingMode == .alwaysTemplate {
+					iconView?.tintColor = tintColor
+				} else {
+					iconView?.image = iconView?.image?.tinted(with: tintColor)
+				}
+			}
+		}, applyImmediately: true)
+
+		self.selectable = false
+		self.cell?.selectionStyle = .none
+		self.cell?.isUserInteractionEnabled = false
+
+		self.value = message
+		self.updateViewFromValue = { [weak messageLabel] (row) in
+			if let value = row.value as? String {
+				messageLabel?.text = value
 			}
 		}
 	}

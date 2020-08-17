@@ -85,6 +85,12 @@
 
 }
 
+#pragma mark - IAP Messages
+- (nullable NSString *)inAppPurchaseMessageForFeature:(OCLicenseFeatureIdentifier)featureIdentifier
+{
+	return (nil);
+}
+
 #pragma mark - Storage
 - (NSData *)storedData
 {
@@ -112,3 +118,5 @@
 }
 
 @end
+
+NSNotificationName OCLicenseProviderInAppPurchaseMessageChangedNotification = @"OCLicenseProviderInAppPurchaseMessageChanged";

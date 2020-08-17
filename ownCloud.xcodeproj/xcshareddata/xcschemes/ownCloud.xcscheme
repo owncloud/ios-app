@@ -146,6 +146,16 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:licensing.disable-appstore-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:licensing.disable-enterprise-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
             value = "10"
             isEnabled = "NO">
@@ -197,7 +207,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-only-tags"
-            value = "[Request,Response]"
+            value = "[Request,Response,Cookies]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -244,6 +254,11 @@
             key = "oc:connection.connection-allowed-authentication-methods"
             value = "[com.owncloud.basicauth]"
             isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:core.cookie-support-enabled"
+            value = "true"
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
