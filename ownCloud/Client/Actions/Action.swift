@@ -142,9 +142,12 @@ class Action : NSObject {
 				return .noMatch
 			}
 
-			return priority
-
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
+			if Self.enabled == false {
+				return .noMatch
+			}
+
+			return priority
 		}
 
 		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: keyCommand, keyModifierFlags: keyModifierFlags)
@@ -161,7 +164,7 @@ class Action : NSObject {
 
 		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
 			for match in matches {
-				if let action = match.extension.provideObject(for: context) as? Action {
+				if let action = match.extension.provideObject(for: context) as? Action, type(of: action).enabled == true {
 					sortedActions.append(action)
 				}
 			}
@@ -546,5 +549,33 @@ private extension Action {
 		let navigationController = ThemeNavigationController(rootViewController: viewController)
 
 		hostViewController.present(navigationController, animated: true, completion: nil)
+	}
+}
+
+// MARK: - OCClassSettings support
+
+extension OCClassSettingsIdentifier {
+	static let action = OCClassSettingsIdentifier("action")
+}
+
+extension Action : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .action
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return nil
+	}
+
+	static func enabledKey() -> OCClassSettingsKey? {
+		guard let identifier = Self.identifier?.rawValue else { return nil }
+		return OCClassSettingsKey(identifier + ".enabled")
+	}
+
+	static var enabled : Bool {
+		if let key = Self.enabledKey() {
+			if let value = Self.classSetting(forOCClassSettingsKey: key) as? Bool {
+				return value
+			}
+		}
+		return true
 	}
 }
