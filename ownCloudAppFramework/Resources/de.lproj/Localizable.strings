@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  ownCloud
+
+  Created by Felix Schwarz on 31.01.20.
+  Copyright © 2020 ownCloud GmbH. All rights reserved.
+*/
+
+"App Store" = "App Store";
+"Purchases are not allowed on this device." = "Käufe sind auf diesem Gerät nicht erlaubt.";
+"Purchased App Version" = "Gekaufte App-Version";
+"Receipt Date" = "Rechnungsdatum";
+"Manage subscription" = "Abonnement verwalten";
+"Purchases are not allowed on this device." = "Käufe sind auf diesem Gerät nicht erlaubt.";
+
+"Type" = "Typ";
+"Quantity" = "Menge";
+"Product" = "Produkt";
+"Date" = "Datum";
+"Cancelled" = "abgebrochen";
+"Ends" = "Endet";
+"none" = "Keine";
+"trial" = "Testzeit";
+"purchase" = "Kauf";
+"subscription" = "Abonnement";
+
+"day" = "Tag";
+"%lu day" = "%lu Tag";
+"%lu days" = "%lu Tage";
+
+"week" = "Woche";
+"%lu week" = "%lu Woche";
+"%lu weeks" = "%lu Wochen";
+
+"month" = "Monat";
+"%lu month" = "%lu Monat";
+"%lu months" = "%lu Monate";
+
+"year" = "Jahr";
+"%lu year" = "%lu Jahr";
+"%lu years" = "%lu Jahre";
+
+"%@ already unlocked for %@." = "%@ bereits freigeschaltet für %@.";
