@@ -661,6 +661,7 @@
 "Error importing %@" = "Error importing %@";
 "Error loading item" = "Error loading item";
 "Preparing…" = "Preparing…";
+"Save here" = "Save here";
 
 /* Data migration from legacy app */
 "Account Migration" = "Account Migration";
