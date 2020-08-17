@@ -24,5 +24,4 @@
 "%lu year" = "%lu year";
 "%lu years" = "%lu years";
 
-"%@ already unlocked for your account %@." = "%@ already unlocked for your account %@.";
-"%@ already unlocked for your account %@ and %d more." = "%@ already unlocked for your account %@ and %d more.";
+"%@ already unlocked for %@." = "%@ already unlocked for %@.";

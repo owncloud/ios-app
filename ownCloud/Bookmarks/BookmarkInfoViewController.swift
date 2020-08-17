@@ -121,7 +121,10 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 						if let database = vault.database, error == nil {
 							OnBackgroundQueue {
-								let diagnosticNodes = database.diagnosticNodes(with: nil)
+								var diagnosticNodes : [OCDiagnosticNode] = []
+
+								diagnosticNodes.append(contentsOf: database.diagnosticNodes(with: nil))
+								diagnosticNodes.append(OCDiagnosticNode.withLabel("Bookmark Metadata".localized, children: bookmark.diagnosticNodes(with: nil)))
 
 								OnMainThread {
 									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
