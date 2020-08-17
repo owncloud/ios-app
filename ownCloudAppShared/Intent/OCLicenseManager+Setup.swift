@@ -61,7 +61,8 @@ public extension OCLicenseManager {
 		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup]))
 
 		// Set up App Store License Provider
-		if !OCLicenseEMMProvider.isEMMVersion { // only add AppStore IAP provider (and IAPs) if this is not the EMM version (which is supposed to already include all of them)
+		if let disableAppStoreLicensing = classSetting(forOCClassSettingsKey: .disableAppStoreLicensing) as? Bool, disableAppStoreLicensing == false, // only add AppStore IAP provider (and IAPs) if IAP licernsing has not been disabled via ClassSettings
+		   !OCLicenseEMMProvider.isEMMVersion { // only add AppStore IAP provider (and IAPs) if this is not the EMM version (which is supposed to already include all of them)
 			let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
@@ -73,13 +74,37 @@ public extension OCLicenseManager {
 		}
 
 		// Set up Enterprise Provider
-		let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [.bundlePro])
+		if let disableEnterpriseLicensing = classSetting(forOCClassSettingsKey: .disableEnterpriseLicensing) as? Bool, disableEnterpriseLicensing == false { // only add Enterprise provider if not disabled via ClassSettings
+			let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [.bundlePro])
 
-		add(enterpriseProvider)
+			add(enterpriseProvider)
+		}
 
 		// Set up EMM Provider
 		let emmProvider = OCLicenseEMMProvider(unlockedProductIdentifiers: [.bundlePro])
 
 		add(emmProvider)
+	}
+}
+
+public extension OCClassSettingsIdentifier {
+	static var licensing : OCClassSettingsIdentifier { return OCClassSettingsIdentifier(rawValue: "licensing") }
+}
+
+public extension OCClassSettingsKey {
+	static var disableAppStoreLicensing : OCClassSettingsKey { return OCClassSettingsKey(rawValue: "disable-appstore-licensing") }
+	static var disableEnterpriseLicensing : OCClassSettingsKey { return OCClassSettingsKey(rawValue: "disable-enterprise-licensing") }
+}
+
+extension OCLicenseManager : OCClassSettingsSupport {
+	public static var classSettingsIdentifier: OCClassSettingsIdentifier {
+		return .licensing
+	}
+
+	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.disableAppStoreLicensing : false,
+			.disableEnterpriseLicensing : false
+		]
 	}
 }
