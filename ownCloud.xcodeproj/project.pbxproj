@@ -26,7 +26,6 @@
 		232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAE2097260400EE22E4 /* SettingsViewController.swift */; };
 		233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDE9F204FEFE500C06732 /* AppDelegate.swift */; };
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
-		233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */; };
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
 		233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */; };
 		23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */; };
@@ -95,6 +94,7 @@
 		39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755323D8392D00193950 /* EditDocumentViewController.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
 		39DF77AB24EA7BBC0066E8F0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE0FC4923E42ACB0037B4AD /* Localizable.strings */; };
+		39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DF77BF24EA842C0066E8F0 /* LaunchScreen.storyboard */; };
 		39E104CA24C585C30085FDDD /* (null) in Resources */ = {isa = PBXBuildFile; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E42D1B2315288B00B82AC3 /* KeyCommands.swift */; };
@@ -881,7 +881,6 @@
 		233BDE9C204FEFE500C06732 /* ownCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ownCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDE9F204FEFE500C06732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		233BDEA6204FEFE500C06732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		233BDEA9204FEFE500C06732 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		233BDEAB204FEFE500C06732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		233BDEB0204FEFE500C06732 /* ownCloudTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnCloudTests.swift; sourceTree = "<group>"; };
@@ -995,6 +994,7 @@
 		39DF77B924EA7F1C0066E8F0 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39DF77BA24EA7F1D0066E8F0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39DF77BB24EA7F1E0066E8F0 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		39DF77BF24EA842C0066E8F0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		39E42D1B2315288B00B82AC3 /* KeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCommands.swift; sourceTree = "<group>"; };
@@ -2394,8 +2394,8 @@
 		DC85573120513C7500189B9A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				39DF77BF24EA842C0066E8F0 /* LaunchScreen.storyboard */,
 				39C31F8E22F1A4F50023923D /* Theming */,
-				233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */,
 				233BDEA6204FEFE500C06732 /* Assets.xcassets */,
 				233BDEAB204FEFE500C06732 /* Info.plist */,
 				59D4895420C83F2E00369C2E /* InfoPlist.strings */,
@@ -3458,6 +3458,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */,
 				398393BE246D63B0001A212B /* branding-login-background.png in Resources */,
 				3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */,
 				398393BF246D63B0001A212B /* branding-login-logo.png in Resources */,
@@ -3466,7 +3467,6 @@
 				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,
 				DCE684F6241BD4E800799C30 /* Branding.plist in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
-				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
 				39F48A6A24D89D7E0000E3F9 /* branding-bookmark-icon.png in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,
@@ -4274,14 +4274,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				233BDEA9204FEFE500C06732 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */ = {
 			isa = PBXVariantGroup;
 			children = (
