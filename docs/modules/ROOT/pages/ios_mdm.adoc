@@ -146,7 +146,7 @@ ownCloud app uses internally a plug-in like mechanism called extensions. Extensi
 |Boolean
 |===
 
-(*) These extension might require additional license (in-app purchase, entreprise version).
+(*) These extensions might require additional license (in-app purchase, enterprise version).
 
 ==== Display Settings
 To customize file list UI behevior, following settings are available: 
