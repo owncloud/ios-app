@@ -241,6 +241,43 @@ Below settings allow to configure the app to use a certain server URL and even b
 |Set to false to disable editing of the default server URL.
 |===
 
+==== Item Policies
+
+Download expiration policy settings:
+
+[cols=4*,options=header]
+|===
+|Key
+|Type
+|Default
+|Description
+
+|item-policy.local-copy-expiration-enabled
+|Boolean
+|`true`
+|By default locally dowdnloaded items are cleaned up after 7 days.
+
+|item-policy.local-copy-expiration
+|Integer
+|604800
+|Time in seconds after which local downloads are declared as expired.
+|===
+
+Vacuuming policy settings:
+
+[cols=4*,options=header]
+|===
+|Key
+|Type
+|Default
+|Description
+
+|item-policy.vacuum-sync-anchor-ttl
+|Integer
+|60
+|Time in seconds for which removed items are kept.
+|===
+
 ==== HTTP User Agent
 [cols=4*,options=header]
 |===
