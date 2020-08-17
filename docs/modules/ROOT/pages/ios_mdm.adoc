@@ -56,6 +56,98 @@ There are few settings allowing to mark an app installation as BETA and e.g. to 
 |Controls if app should call rate-limited iOS standard API asking the user to provide an AppStore review.
 |===
 
+==== Extensions / Actions
+ownCloud app uses internally a plug-in like mechanism called extensions. Extensions are used to implement menu actions mostly found under "+" menu allowing to add new items (Upload media, take photo etc.) or in more menu (Copy, Move, Open in etc.). Using below settings actions / extensions can be disabled. Extensions are enabled by default, however this might depend on licensing requirements of a particular extension.
+
+[cols=3*,options=header]
+|===
+|Extension
+|Key
+|Type
+
+|Share public link
+|action.com.owncloud.action.links.enabled
+|Boolean
+
+|Collaborate
+|action.com.owncloud.action.collaborate.enabled
+|Boolean
+
+|Unshare
+|action.com.owncloud.action.unshare.enabled
+|Boolean
+
+|Favorite
+|action.com.owncloud.action.favorite.enabled
+|Boolean
+
+|Unfavorite
+|action.com.owncloud.action.unfavorite.enabled
+|Boolean
+
+|Copy file
+|action.com.owncloud.action.copy.enabled
+|Boolean
+
+|Create folder
+|action.com.owncloud.action.createFolder.enabled
+|Boolean
+
+|Delete
+|action.com.owncloud.action.delete.enabled
+|Boolean
+
+|Duplicate 
+|action.com.owncloud.action.duplicate.enabled
+|Boolean
+
+|Move
+|action.com.owncloud.action.move.enabled
+|Boolean
+
+|Rename
+|action.com.owncloud.action.rename.enabled
+|Boolean
+
+|Make available offline
+|action.com.owncloud.action.makeAvailableOffline.enabled
+|Boolean
+
+|Make unavailable offline
+|action.com.owncloud.action.makeUnavailableOffline.enabled
+|Boolean
+
+|Open in...
+|action.com.owncloud.action.openin.enabled
+|Boolean
+
+|Upload file
+|action.com.owncloud.action.uploadfile.enabled
+|Boolean
+
+|Upload media
+|action.com.owncloud.action.uploadphotos.enabled
+|Boolean
+
+|Take and upload photo / video
+|action.com.owncloud.action.upload.camera_media.enabled
+|Boolean
+
+|Edit / trim video
+|action.com.owncloud.action.mediaediting.enabled
+|Boolean
+
+|Markup document(*)
+|action.com.owncloud.action.markup.enabled
+|Boolean
+
+|Scan document(*)
+|action.com.owncloud.action.scan.enabled
+|Boolean
+|===
+
+(*) These extension might require additional license (in-app purchase, entreprise version).
+
 ==== Display Settings
 To customize file list UI behevior, following settings are available: 
 
