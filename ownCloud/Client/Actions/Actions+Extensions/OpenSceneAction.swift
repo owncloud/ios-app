@@ -18,23 +18,23 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 class OpenSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in a new Window".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			if forContext.items.count == 1 {
-				return .first
+				return .beforeMiddle
 			}
 		}
 
@@ -48,7 +48,7 @@ class OpenSceneAction: Action {
 			return
 		}
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
 				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
 				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
@@ -57,6 +57,6 @@ class OpenSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "uiwindow.split.2x1")?.tinted(with: Theme.shared.activeCollection.tintColor)
+		return UIImage(systemName: "uiwindow.split.2x1")?.withRenderingMode(.alwaysTemplate)
 	}
 }

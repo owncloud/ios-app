@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import PDFKit
 
 extension UILabel {
@@ -173,8 +174,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	// MARK: - View lifecycle management
 
 	override func viewDidLoad() {
-		shallDisplayMoreButtonInToolbar = false
-
 		super.viewDidLoad()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePageChanged), name: .PDFViewPageChanged, object: nil)

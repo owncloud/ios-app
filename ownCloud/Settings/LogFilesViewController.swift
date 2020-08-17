@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class LogFileTableViewCell : ThemeTableViewCell {
 
@@ -211,7 +212,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 			}
 		}
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			shareViewController.popoverPresentationController?.sourceView = sender
 			shareViewController.popoverPresentationController?.sourceRect = sender.frame
 		}

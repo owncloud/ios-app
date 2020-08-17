@@ -91,7 +91,7 @@
 
 - (OCLicenseAppStoreReceiptParseError)parse
 {
-	NSData *receiptData, *rootCAData, *uuidData;
+	NSData *receiptData, *rootCAData;
 	OCLicenseAppStoreReceiptParseError error = OCLicenseAppStoreReceiptParseErrorNone;
 
 	// Fetch essentials
@@ -105,7 +105,7 @@
 		return(OCLicenseAppStoreReceiptParseErrorNoRootCA);
 	}
 
-	if ((uuidData = [OCLicenseAppStoreReceipt deviceIdentifierData]) == nil)
+	if ([OCLicenseAppStoreReceipt deviceIdentifierData] == nil)
 	{
 		return(OCLicenseAppStoreReceiptParseErrorNoDeviceID);
 	}
@@ -148,8 +148,7 @@
 		error = OCLicenseAppStoreReceiptParseErrorSignatureVerification;
 		if ((receiptContents = BIO_new(BIO_s_mem())) == NULL) { break; }
 
-		int verificationResult;
-		if ((verificationResult = PKCS7_verify(pkcs7, NULL, x509Store, NULL, receiptContents, 0)) != 1) { break; }
+		if (PKCS7_verify(pkcs7, NULL, x509Store, NULL, receiptContents, 0) != 1) { break; }
 		if (ERR_get_error() != 0) { break; }
 
 		// Parse ASN.1 contents

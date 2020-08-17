@@ -16,7 +16,7 @@
  *
  */
 
-#import <MobileCoreServices/MobileCoreServices.h>
+#import <CoreServices/CoreServices.h>
 
 #import "OCItem+FileProviderItem.h"
 #import "NSError+MessageResolution.h"
@@ -77,7 +77,22 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			@"application/vnd.oasis.opendocument.formula" 			: @"org.oasis-open.opendocument.formula",
 			@"application/vnd.oasis.opendocument.formula-template" 		: @"org.oasis-open.opendocument.formula-template",
 
-			@"application/illustrator"					: @"com.adobe.illustrator.ai-image"
+			/*
+				These MIME-Types aren't correctly mapped by iOS, so they're hardcoded. Reference:
+				- OC10 suffix -> MIMEType map: https://github.com/owncloud/core/blob/master/resources/config/mimetypemapping.dist.json
+				- Apple UTI reference table: https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html
+			*/
+			@"application/illustrator"					: @"com.adobe.illustrator.ai-image",
+
+			@"application/x-perl"						: @"public.perl-script",
+			@"application/x-php"						: @"public.php-script",
+			@"text/x-python"						: @"public.python-script",
+			@"text/x-c"							: @"public.c-source",
+			@"text/x-c++src"						: @"public.c-plus-plus-source",
+			@"text/x-h"							: @"public.c-header",
+			@"text/markdown"						: @"net.daringfireball.markdown",
+			@"text/x-shellscript"						: @"public.shell-script",
+			@"text/x-java-source"						: @"com.sun.java-source"
 		};
 	});
 
@@ -117,14 +132,21 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			// at the time of writing, so these entries take care of correctly
 			// mapping suffixes to UTIs
 
-			@"odc" : @"org.oasis-open.opendocument.chart",
-			@"otc" : @"org.oasis-open.opendocument.chart-template",
+			@"odc" 		: @"org.oasis-open.opendocument.chart",
+			@"otc" 		: @"org.oasis-open.opendocument.chart-template",
 
-			@"odi" : @"org.oasis-open.opendocument.image",
-			@"oti" : @"org.oasis-open.opendocument.image-template",
+			@"odi" 		: @"org.oasis-open.opendocument.image",
+			@"oti" 		: @"org.oasis-open.opendocument.image-template",
 
-			@"odm" : @"org.oasis-open.opendocument.text-master",
-			@"oth" : @"org.oasis-open.opendocument.text-web"
+			@"odm" 		: @"org.oasis-open.opendocument.text-master",
+			@"oth" 		: @"org.oasis-open.opendocument.text-web",
+
+			@"m"		: @"public.objective-c-source",
+
+			@"mindnode"	: @"com.mindnode.mindnode.mindmap",
+			@"itmz"		: @"com.toketaware.uti.ithoughts.itmz",
+			
+			@"pdf"		: @"com.adobe.pdf"
 		};
 	});
 

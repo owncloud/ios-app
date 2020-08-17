@@ -17,11 +17,14 @@
  */
 
 import UIKit
+import ownCloudSDK
+import ownCloudAppShared
 
 class ServerListBookmarkCell : ThemeTableViewCell {
 	public var titleLabel : UILabel = UILabel()
 	public var detailLabel : UILabel = UILabel()
 	public var iconView : UIImageView = UIImageView()
+	public var infoView : UIView = UIView()
 
 	public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -42,7 +45,10 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
+		infoView.translatesAutoresizingMaskIntoConstraints = false
+
 		iconView.contentMode = .scaleAspectFit
+		iconView.image = UIImage(named: "branding-bookmark-icon")
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
@@ -52,29 +58,103 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		detailLabel.textColor = UIColor.gray
 
-		self.contentView.addSubview(titleLabel)
-		self.contentView.addSubview(detailLabel)
-		self.contentView.addSubview(iconView)
+		contentView.addSubview(titleLabel)
+		contentView.addSubview(detailLabel)
+		contentView.addSubview(iconView)
+		contentView.addSubview(infoView)
 
-		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
-		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -25).isActive = true
-		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -25).isActive = true
+		NSLayoutConstraint.activate([
+			iconView.widthAnchor.constraint(equalToConstant: 40),
+			iconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
-		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
-		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
+			iconView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
+			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -25),
+			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -25),
 
-		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
-		iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+			titleLabel.rightAnchor.constraint(equalTo: infoView.leftAnchor),
+			titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+			titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5),
 
-		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
-		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
-		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
+			detailLabel.rightAnchor.constraint(equalTo: infoView.leftAnchor),
+			detailLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
 
-		iconView.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
-		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
-		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
+			infoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+			infoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+			infoView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20)
+		])
+
+		infoView.setContentHuggingPriority(.required, for: .horizontal)
+		iconView.setContentHuggingPriority(.required, for: .vertical)
+		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+
+		NotificationCenter.default.addObserver(self, selector: #selector(ServerListBookmarkCell.updateMessageBadgeFrom(notification:)), name: .BookmarkMessageCountChanged, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self, name: .BookmarkMessageCountChanged, object: nil)
+	}
+
+	// MARK: - Content updates
+	var messageSelector : MessageSelector?
+	var directMessageCountTrackingEnabled : Bool = false
+	var bookmark : OCBookmark? {
+		didSet {
+			if let bookmark = bookmark {
+				titleLabel.text = bookmark.shortName
+				detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : bookmark.url?.absoluteString
+				accessibilityIdentifier = "server-bookmark-cell"
+
+				if directMessageCountTrackingEnabled {
+					messageSelector = MessageSelector(from: .global, filter: { (message) -> Bool in
+						return (message.bookmarkUUID == bookmark.uuid) && !message.resolved
+					}, handler: { [weak self] (messages, _, _) in
+						OnMainThread {
+							self?.updateMessageBadge(count: (messages != nil) ? messages!.count : 0)
+						}
+					})
+				}
+			} else {
+				if directMessageCountTrackingEnabled {
+					messageSelector = nil
+				}
+			}
+		}
+	}
+
+	// MARK: - Message Badge
+	private var badgeLabel : RoundedLabel?
+
+	func updateMessageBadge(count: Int) {
+		if count > 0 {
+			if badgeLabel == nil {
+				badgeLabel = RoundedLabel(text: "", style: .token)
+				badgeLabel?.translatesAutoresizingMaskIntoConstraints = false
+
+				if let badgeLabel = badgeLabel {
+					infoView.addSubview(badgeLabel)
+
+					NSLayoutConstraint.activate([
+						badgeLabel.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 20),
+						badgeLabel.trailingAnchor.constraint(equalTo: infoView.trailingAnchor),
+						badgeLabel.centerYAnchor.constraint(equalTo: infoView.centerYAnchor)
+					])
+				}
+			}
+
+			badgeLabel?.labelText = "\(count)"
+		} else {
+			badgeLabel?.removeFromSuperview()
+			badgeLabel = nil
+		}
+	}
+
+	@objc func updateMessageBadgeFrom(notification: Notification) {
+		if let countByBookmarkUUID = notification.object as? ServerListTableViewController.ServerListTableMessageCountByUUID, let bookmarkUUID = bookmark?.uuid {
+			self.updateMessageBadge(count: countByBookmarkUUID[bookmarkUUID] ?? 0)
+		}
 	}
 
 	// MARK: - Themeing
@@ -83,8 +163,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
-
-		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
+		self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
@@ -94,5 +173,6 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
+		self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
 	}
 }

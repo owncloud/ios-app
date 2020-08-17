@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
-import MobileCoreServices
 
 extension ServerListTableViewController {
 	override var keyCommands: [UIKeyCommand]? {
@@ -38,7 +37,7 @@ extension ServerListTableViewController {
 			shortcuts.append(editSettingsCommand)
 			shortcuts.append(manageSettingsCommand)
 			shortcuts.append(deleteSettingsCommand)
-			if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+			if #available(iOS 13.0, *), UIDevice.current.isIpad {
 				let openWindowCommand = UIKeyCommand(input: "W", modifierFlags: [.command, .shift], action: #selector(openSelectedBookmarkInWindow), discoverabilityTitle: "Open in new Window".localized)
 				shortcuts.append(openWindowCommand)
 			}
@@ -200,7 +199,7 @@ extension BookmarkInfoViewController {
 }
 
 extension ThemeNavigationController {
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -212,7 +211,7 @@ extension ThemeNavigationController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 
@@ -222,7 +221,7 @@ extension ThemeNavigationController {
 }
 
 extension NamingViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 		if let leftItem = self.navigationItem.leftBarButtonItem, let action = leftItem.action {
@@ -237,7 +236,7 @@ extension NamingViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -413,7 +412,7 @@ extension PublicLinkEditTableViewController {
 
 extension StaticTableViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
@@ -449,7 +448,7 @@ extension StaticTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 
@@ -574,7 +573,7 @@ extension StaticTableViewController {
 
 extension ClientQueryViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -633,7 +632,7 @@ extension ClientQueryViewController {
 		}
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -670,11 +669,11 @@ extension LibrarySharesTableViewController {
 
 extension QueryFileListTableViewController {
 
-	override var canBecomeFirstResponder: Bool {
+	override open var canBecomeFirstResponder: Bool {
 		return true
 	}
 
-	override var keyCommands: [UIKeyCommand]? {
+	override open var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -814,7 +813,7 @@ extension QueryFileListTableViewController {
 }
 
 extension ClientDirectoryPickerViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
@@ -837,7 +836,7 @@ extension ClientDirectoryPickerViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	open override var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -963,7 +962,7 @@ extension PhotoSelectionViewController {
 
 extension PasscodeViewController {
 
-    override var keyCommands: [UIKeyCommand]? {
+    public override var keyCommands: [UIKeyCommand]? {
         var keyCommands : [UIKeyCommand] = []
         for i in 0 ..< 10 {
             keyCommands.append(
@@ -1068,4 +1067,58 @@ extension DisplayHostViewController {
 			setViewControllers([previousViewController], direction: .reverse, animated: false, completion: nil)
 		}
     }
+}
+
+extension AlertViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		var commands : [UIKeyCommand] = []
+		var index : Int = 1
+		var defaultCommand : UIKeyCommand?
+
+		if options.count == 1, let option = options.first {
+			defaultCommand = UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(chooseDefaultOption), discoverabilityTitle: option.label)
+		} else {
+			for option in options {
+				if option.type == .default {
+					defaultCommand = UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(chooseDefaultOption), discoverabilityTitle: option.label)
+				} else {
+					let command = UIKeyCommand(input: "\(index)", modifierFlags: .command, action: #selector(chooseOption(_:)), discoverabilityTitle: option.label)
+					commands.append(command)
+				}
+
+				index += 1
+			}
+		}
+
+		if let defaultCommand = defaultCommand {
+			commands.append(defaultCommand)
+		}
+
+		return commands
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	@objc func chooseDefaultOption() {
+		for option in options {
+			if option.type == .default {
+				alertView?.selectOption(option: option)
+				return
+			}
+		}
+
+		if let firstOption = options.first {
+			alertView?.selectOption(option: firstOption)
+		}
+	}
+
+	@objc func chooseOption(_ sender: Any?) {
+		if let command = sender as? UIKeyCommand, let input = command.input, let intInput = Int(input) {
+			let offset = intInput - 1
+
+			alertView?.selectOption(option: self.options[offset])
+		}
+	}
 }

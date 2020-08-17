@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1030"
+   LastUpgradeVersion = "1160"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -108,8 +108,8 @@
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
          runnableDebuggingMode = "1"
-         BundleIdentifier = "com.owncloud.ios-app"
-         RemotePath = "/Users/felix/Library/Developer/CoreSimulator/Devices/348A2D78-5A15-4E50-8EAF-1170115BC798/data/Containers/Bundle/Application/AD282E5C-E658-4707-8C08-A292831061C2/ownCloud.app">
+         BundleIdentifier = "com.apple.DocumentsApp"
+         RemotePath = "/var/containers/Bundle/Application/CC7CBD37-6E2F-48F6-B68C-2AD36F379B02/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -124,7 +124,7 @@
          <EnvironmentVariable
             key = "oc:log.log-level"
             value = "0"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-synchronous"
@@ -134,6 +134,16 @@
          <EnvironmentVariable
             key = "oc:log.log-colored"
             value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:file-provider.skip-local-error-checks"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-single-lined"
+            value = "false"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

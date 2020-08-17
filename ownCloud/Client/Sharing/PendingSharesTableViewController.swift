@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class PendingSharesTableViewController: StaticTableViewController {
 
@@ -116,7 +117,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 					let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 						guard let self = self else { return }
 						var presentationStyle: UIAlertController.Style = .actionSheet
-						if UIDevice.current.isIpad() {
+						if UIDevice.current.isIpad {
 							presentationStyle = .alert
 						}
 

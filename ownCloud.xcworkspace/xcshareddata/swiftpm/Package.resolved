@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PLCrashReporter",
+        "repositoryURL": "https://github.com/microsoft/plcrashreporter.git",
+        "state": {
+          "branch": null,
+          "revision": "4637a7854de2cc5c354d46fb931d74bdbc2c043e",
+          "version": "1.7.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

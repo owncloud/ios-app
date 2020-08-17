@@ -18,13 +18,13 @@
 
 import Foundation
 import ownCloudSDK
-import MobileCoreServices
+import ownCloudAppShared
 
 class UnfavoriteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unfavorite") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Unfavorite".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut] }
+	override class var name : String? { return "Favorited".localized }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "F" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
@@ -55,7 +55,7 @@ class UnfavoriteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .contextMenuItem {
 			return UIImage(named: "star")
 		}
 

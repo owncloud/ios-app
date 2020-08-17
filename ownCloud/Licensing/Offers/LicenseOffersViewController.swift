@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudAppShared
 
 class LicenseOffersViewController: StaticTableViewController {
 	var featureIdentifier: OCLicenseFeatureIdentifier
@@ -100,6 +101,12 @@ class LicenseOffersViewController: StaticTableViewController {
 
 		// (Re)build sections
 		var sections : [StaticTableViewSection] = []
+
+		if let iapMessages = OCLicenseManager.shared.inAppPurchaseMessage(forFeature: featureIdentifier) {
+			let messageRow = StaticTableViewRow(message: iapMessages, icon: UIImage(named: "info-icon")?.scaledImageFitting(in: CGSize(width: 24, height: 24)), style: .warning, identifier: "iap-messages")
+
+			sections.append(StaticTableViewSection(headerTitle: nil, rows: [ messageRow ]))
+		}
 
 		if iapSection.rows.count > 0 {
 			sections.append(iapSection)

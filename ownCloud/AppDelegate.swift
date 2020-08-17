@@ -20,18 +20,26 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
+import CrashReporter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+	private let delayForLinkResolution = 0.2
+
 	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
+	var staticLoginViewController : StaticLoginViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		var navigationController: UINavigationController?
+		var rootViewController : UIViewController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+
+		// Set up notification categories
+		NotificationManager.shared.registerCategories()
 
 		// Set up license management
 		OCLicenseManager.shared.setupLicenseManagement()
@@ -41,12 +49,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		serverListTableViewController = ServerListTableViewController(style: .plain)
+		if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
+			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
+			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			rootViewController = navigationController
+		} else {
+			serverListTableViewController = ServerListTableViewController(style: .plain)
 
-		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+			rootViewController = navigationController
+		}
 
-		window?.rootViewController = navigationController!
-		window?.addSubview((navigationController?.view)!)
+		window?.rootViewController = rootViewController!
 		window?.makeKeyAndVisible()
 
 		ImportFilesController.removeImportDirectory()
@@ -58,6 +73,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
 		ScheduledTaskManager.shared.setup()
+
+		MediaUploadQueue.shared.setup()
+		AppStatistics.shared.update()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
@@ -76,6 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadCameraMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
@@ -86,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		if #available(iOS 13.0, *) {
-			if UIDevice.current.isIpad() {
+			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only
 				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
@@ -120,19 +139,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		// Set background refresh interval
-		UIApplication.shared.setMinimumBackgroundFetchInterval(
-			UIApplication.backgroundFetchIntervalMinimum)
+		guard #available(iOS 13, *) else {
+			UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+			return true
+		}
+
+		setupAndHandleCrashReports()
 
 		return true
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-		var copyBeforeUsing = true
-		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
-			copyBeforeUsing = !shouldOpenInPlace
-		}
+		if url.matchesAppScheme {
+			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
-		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+			openPrivateLink(url: url, in: window)
+
+		} else {
+			var copyBeforeUsing = true
+			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+				copyBeforeUsing = !shouldOpenInPlace
+			}
+
+			ImportFilesController.shared.importFile(ImportFile(url: url, fileIsLocalCopy: copyBeforeUsing))
+		}
 
 		return true
 	}
@@ -155,6 +185,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 
+	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+			let url = userActivity.webpageURL else {
+				return false
+		}
+
+		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
+
+		openPrivateLink(url: url, in: window)
+
+		return true
+	}
+
 	// MARK: UISceneSession Lifecycle
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication,
@@ -165,5 +208,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+	}
+
+	private func openPrivateLink(url:URL, in window:UIWindow) {
+		if UIApplication.shared.applicationState == .background {
+			// If the app is already running, just start link resolution
+			url.resolveAndPresent(in: window)
+		} else {
+			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
+			// with activities of the just instantiated ServerListTableViewController
+			OnMainThread(after:delayForLinkResolution) {
+				url.resolveAndPresent(in: window)
+			}
+		}
+	}
+}
+
+
+extension UserInterfaceContext : UserInterfaceContextProvider {
+	public func provideRootView() -> UIView? {
+		return (UIApplication.shared.delegate as? AppDelegate)?.window
+	}
+
+	public func provideCurrentWindow() -> UIWindow? {
+		return UIApplication.shared.windows.first as? ThemeWindow
+	}
+}
+
+extension AppDelegate {
+	func setupAndHandleCrashReports() {
+		let configuration = PLCrashReporterConfig.defaultConfiguration()
+		guard let crashReporter = PLCrashReporter(configuration: configuration) else {
+			return
+		}
+
+		if crashReporter.hasPendingCrashReport() {
+			if let crashData = try? crashReporter.loadPendingCrashReportDataAndReturnError(), let crashReport = try? PLCrashReport(data: crashData) {
+				if let report = PLCrashReportTextFormatter.stringValue(for: crashReport, with: PLCrashReportTextFormatiOS) {
+					Log.error(tagged: ["CRASH_REPORTER"], report)
+				}
+			}
+			crashReporter.purgePendingCrashReport()
+		}
+
+		crashReporter.enable()
 	}
 }

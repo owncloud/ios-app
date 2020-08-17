@@ -511,9 +511,7 @@
 	// From observed products
 	for (OCLicenseProductIdentifier productIdentifier in observer.products)
 	{
-		OCLicenseProduct *product;
-
-		if ((product = [self productWithIdentifier:productIdentifier]) != nil)
+		if ([self productWithIdentifier:productIdentifier] != nil)
 		{
 			[productIdentifiers addObject:productIdentifier];
 		}
@@ -612,9 +610,7 @@
 {
 	if (context == (__bridge void *)self)
 	{
-		OCLicenseProvider *provider;
-
-		if ((provider = OCTypedCast(object, OCLicenseProvider)) != nil)
+		if (OCTypedCast(object, OCLicenseProvider) != nil)
 		{
 			if ([keyPath isEqualToString:@"offers"] || [keyPath isEqualToString:@"entitlements"])
 			{
@@ -622,6 +618,36 @@
 			}
 		}
 	}
+}
+
+#pragma mark - In App Purchase Message
+- (NSString *)inAppPurchaseMessageForFeature:(OCLicenseFeatureIdentifier)featureIdentifier
+{
+	NSMutableString *iapMessageSummary = nil;
+
+	@synchronized(self)
+	{
+		for (OCLicenseProvider *provider in _providers)
+		{
+			NSString *iapMessage = nil;
+
+			if (((iapMessage = [provider inAppPurchaseMessageForFeature:featureIdentifier]) != nil) && (iapMessage.length > 0))
+			{
+				if (iapMessageSummary == nil) { iapMessageSummary = [NSMutableString new]; }
+
+				if (iapMessageSummary.length > 0)
+				{
+					[iapMessageSummary appendFormat:@"\n\n%@",iapMessage];
+				}
+				else
+				{
+					[iapMessageSummary appendString:iapMessage];
+				}
+			}
+		}
+	}
+
+	return (iapMessageSummary);
 }
 
 #pragma mark - One-off status info

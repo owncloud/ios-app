@@ -8,7 +8,7 @@
 
 "Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
 
-"day" = "day"
+"day" = "day";
 "%lu day" = "%lu day";
 "%lu days" = "%lu days";
 
@@ -23,3 +23,5 @@
 "year" = "year";
 "%lu year" = "%lu year";
 "%lu years" = "%lu years";
+
+"%@ already unlocked for %@." = "%@ already unlocked for %@.";

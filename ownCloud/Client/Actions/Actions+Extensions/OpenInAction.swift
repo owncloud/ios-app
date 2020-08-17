@@ -17,12 +17,13 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -30,7 +31,7 @@ class OpenInAction: Action {
 		if forContext.items.contains(where: {$0.type == .collection}) {
 			return .none
 		}
-		return .first
+		return .nearFirst
 	}
 
 	var interactionControllerDispatchGroup : DispatchGroup?
@@ -95,7 +96,7 @@ class OpenInAction: Action {
 					}
 					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
 
-					if UIDevice.current.isIpad() {
+					if UIDevice.current.isIpad {
 						if let sender = self.context.sender as? UITabBarController {
 							var sourceRect = sender.view.frame
 							sourceRect.origin.y = viewController.view.frame.size.height
@@ -121,7 +122,11 @@ class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)
+			}
+
 			return UIImage(named: "open-in")
 		}
 

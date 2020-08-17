@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Show hidden files
 @property(assign,nonatomic) BOOL showHiddenFiles;
 
+#pragma mark - Folders first
+@property(assign,nonatomic) BOOL sortFoldersFirst;
+
 #pragma mark - Drag files
 @property(assign,nonatomic) BOOL preventDraggingFiles;
 
@@ -38,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 extern NSString *DisplaySettingsShowHiddenFilesPrefsKey;			//!< The UserDefaults Key containing the BOOL value for .showHiddenFiles
+extern NSString *DisplaySettingsSortFoldersFirstPrefsKey;			//!< The UserDefaults Key containing the BOOL value for .sortFoldersFirst
 extern NSString *DisplaySettingsPreventDraggingFilesPrefsKey;			//!< The UserDefaults Key containing the BOOL value for .preventDraggingFiles
 
 extern OCIPCNotificationName OCIPCNotificationNameDisplaySettingsChanged; 	//!< Posted when display settings changed (internal use only)
@@ -45,6 +49,7 @@ extern NSNotificationName DisplaySettingsChanged;				//!< Posted when display se
 
 extern OCClassSettingsIdentifier OCClassSettingsIdentifierDisplay; 		//!< The class settings identifier for the Display Settings
 extern OCClassSettingsKey OCClassSettingsKeyDisplayShowHiddenFiles;		//!< The class settings key for Show Hidden Files
-extern OCClassSettingsKey OCClassSettingsKeyDisplayPreventDraggingFiles;			//!< The class settings key if Drag Files is enabled
+extern OCClassSettingsKey OCClassSettingsKeyDisplaySortFoldersFirst;		//!< The class settings key for sorting folders first
+extern OCClassSettingsKey OCClassSettingsKeyDisplayPreventDraggingFiles;	//!< The class settings key if Drag Files is enabled
 
 NS_ASSUME_NONNULL_END
