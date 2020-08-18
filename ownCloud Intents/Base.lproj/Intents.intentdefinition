@@ -126,11 +126,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>K5U8aR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19D76</string>
+	<string>19F96</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11C504</string>
+	<string>11E708</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.3.1</string>
+	<string>11.6</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -2620,7 +2620,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>A3Pv0a</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>114</integer>
+			<integer>119</integer>
 			<key>INTypeName</key>
 			<string>FileInfo</string>
 			<key>INTypeProperties</key>
@@ -2805,6 +2805,34 @@
 					<integer>114</integer>
 					<key>INTypePropertyType</key>
 					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>File ID</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>xseRVY</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>12</integer>
+					<key>INTypePropertyName</key>
+					<string>fileID</string>
+					<key>INTypePropertyTag</key>
+					<integer>118</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Local ID</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>m6tE77</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>13</integer>
+					<key>INTypePropertyName</key>
+					<string>localID</string>
+					<key>INTypePropertyTag</key>
+					<integer>119</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
 				</dict>
 			</array>
 		</dict>
