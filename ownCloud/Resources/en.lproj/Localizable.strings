@@ -63,6 +63,9 @@
 "Server Username" = "Server Username";
 "Show accounts" = "Show accounts";
 "Setup complete" = "Setup complete";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Access Files" = "Access Files";
 "Logout" = "Logout";
 
 /* Client */
