@@ -544,6 +544,16 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Shortcuts: Get File Info</string>
+					<key>Subtitle</key>
+					<string>The Shortcuts.app action &quot;Get File Info&quot; has two new output parameters &quot;File ID&quot; and &quot;Local File ID&quot;.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Fix: Avoid duplicate photo upload</string>
 					<key>Subtitle</key>
 					<string>Fix that photos which have modified are going to be re-uploaded upon each modification in case instant upload is active</string>
