@@ -224,7 +224,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
-
 extension UserInterfaceContext : UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
 		return (UIApplication.shared.delegate as? AppDelegate)?.window
