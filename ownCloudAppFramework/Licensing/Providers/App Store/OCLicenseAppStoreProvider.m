@@ -88,7 +88,22 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 	OCLogDebug(@"purchasesAllowed=%d", purchasesAllowed);
 
-	return (purchasesAllowed);
+	return (purchasesAllowed && !self.isVolumePurchase); // Do not allow purchases if the app was purchased through VPP
+}
+
+- (BOOL)isVolumePurchase
+{
+	if ((_receipt != nil) && (_receipt.originalAppVersion != nil) && [_receipt.originalAppVersion isEqual:@""])
+	{
+		// For apps purchased / installed through the Volume Purchase Program (VPP), the field originalAppVersion
+		// exists in the receipt, but contains just an empty string. Likely background (read: best-effort _assumption_
+		// based on searching developer forums and own observations) is that originally purchased app versions are
+		// stored as part of the respective App Store account, but for VPP none appears to be linked, so that info
+		// can't be provided.
+		return (YES);
+	}
+
+	return (NO);
 }
 
 #pragma mark - Mapping
@@ -460,7 +475,9 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 						if (errorHandler != nil)
 						{
 							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:OCLicenseAppStoreProviderErrorPurchasesNotAllowed userInfo:@{
-								NSLocalizedDescriptionKey : OCLocalized(@"Purchases are not allowed on this device.")
+								NSLocalizedDescriptionKey : (appStoreProvider.isVolumePurchase ?
+									 OCLocalized(@"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version.") :
+									 OCLocalized(@"Purchases are not allowed on this device."))
 							}]);
 						}
 					}
@@ -793,6 +810,18 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 - (void)restorePurchasesWithCompletionHandler:(OCLicenseAppStoreRestorePurchasesCompletionHandler)completionHandler
 {
 	OCTLogDebug(@[@"RestorePurchases"], @"Restoring purchases…");
+
+	if (self.isVolumePurchase)
+	{
+		OCTLogDebug(@[@"RestorePurchases"], @"Cancelling purchase restore (VPP detected)…");
+
+		if (completionHandler != nil)
+		{
+			completionHandler(nil);
+		}
+
+		return;
+	}
 
 	@synchronized(self)
 	{

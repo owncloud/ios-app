@@ -43,6 +43,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseAppStoreProviderError)
 @property(strong) NSArray<OCLicenseAppStoreItem *> *items;
 
 @property(nonatomic,readonly) BOOL purchasesAllowed;
+@property(nonatomic,readonly) BOOL isVolumePurchase;
 
 #pragma mark - Init
 - (instancetype)initWithItems:(NSArray<OCLicenseAppStoreItem *> *)items;
