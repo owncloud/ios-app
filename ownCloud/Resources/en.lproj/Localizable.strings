@@ -152,6 +152,7 @@
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Really delete '%@'?";
+"Really logout from '%@'?" = "Really logout from '%@'?";
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Remove" = "Remove";
@@ -365,6 +366,7 @@
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
 "%d Item" = "%d Item";
 "%d Items" = "%d Items";
+"Select Items" = "Select Items";
 
 /* Scan */
 "Scan" = "Scan";
