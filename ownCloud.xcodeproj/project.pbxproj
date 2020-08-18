@@ -101,7 +101,6 @@
 		39E104CA24C585C30085FDDD /* (null) in Resources */ = {isa = PBXBuildFile; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E42D1B2315288B00B82AC3 /* KeyCommands.swift */; };
-		39E6DE84233CC39A008DAE04 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
 		39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E6DE85233CDF1E008DAE04 /* OCItemTracker.swift */; };
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
 		39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */; };
@@ -3339,7 +3338,6 @@
 				es,
 				cs,
 				de,
-				"de-DE",
 				"en-GB",
 				ko,
 				ru,
@@ -4009,7 +4007,6 @@
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
-				39E6DE84233CC39A008DAE04 /* Intents.intentdefinition in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
