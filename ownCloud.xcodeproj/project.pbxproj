@@ -44,6 +44,8 @@
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		391C79A824E186DC00CB6333 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		391C79AE24E187C400CB6333 /* LegacyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2890F24BFAF0100E3D35C /* LegacyCredentials.swift */; };
+		392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6624D848550000E3F9 /* branding-splashscreen.png */; };
+		3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
 		392DDAE624C8923B009E5406 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392DDB1324CF024C009E5406 /* ImportFilesController.swift */; };
@@ -3478,11 +3480,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */,
+				3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */,
 				398393BE246D63B0001A212B /* branding-login-background.png in Resources */,
 				3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */,
 				398393BF246D63B0001A212B /* branding-login-logo.png in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
+				392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */,
 				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,
 				DCE684F6241BD4E800799C30 /* Branding.plist in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
