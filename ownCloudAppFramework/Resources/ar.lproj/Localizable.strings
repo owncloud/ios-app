@@ -1,12 +1,28 @@
 /* 
-  Localized.strings
+  Localizable.strings
   ownCloud
 
   Created by Felix Schwarz on 31.01.20.
   Copyright © 2020 ownCloud GmbH. All rights reserved.
 */
 
+"App Store" = "App Store";
 "Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+"Purchased App Version" = "Purchased App Version";
+"Receipt Date" = "Receipt Date";
+"Manage subscription" = "Manage subscription";
+"Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+
+"Type" = "Type";
+"Quantity" = "Quantity";
+"Product" = "Product";
+"Date" = "Date";
+"Cancelled" = "Cancelled";
+"Ends" = "Ends";
+"none" = "none";
+"trial" = "trial";
+"purchase" = "purchase";
+"subscription" = "subscription";
 
 "day" = "day";
 "%lu day" = "%lu day";

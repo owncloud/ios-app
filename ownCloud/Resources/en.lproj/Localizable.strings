@@ -63,6 +63,10 @@
 "Server Username" = "Server Username";
 "Show accounts" = "Show accounts";
 "Setup complete" = "Setup complete";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Access Files" = "Access Files";
+"Logout" = "Logout";
 
 /* Client */
 "Browse" = "Browse";
@@ -151,6 +155,9 @@
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
+"Really delete '%@'?" = "Really delete '%@'?";
+"Really logout from '%@'?" = "Really logout from '%@'?";
+"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Remove" = "Remove";
 "Removing of '%@' failed" = "Removing of '%@' failed";
@@ -363,6 +370,7 @@
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
 "%d Item" = "%d Item";
 "%d Items" = "%d Items";
+"Select Items" = "Select Items";
 
 /* Scan */
 "Scan" = "Scan";
@@ -643,7 +651,6 @@
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"App Store" = "App Store";
 "Purchases" = "Purchases";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Document Scanner";
@@ -653,20 +660,6 @@
 "Markup Documents" = "Markup Documents";
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
-"Purchased App Version" = "Purchased App Version";
-"Receipt Date" = "Receipt Date";
-"Manage subscription" = "Manage subscription";
-"Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
-"Type" = "Type";
-"Quantity" = "Quantity";
-"Product" = "Product";
-"Date" = "Date";
-"Cancelled" = "Cancelled";
-"Ends" = "Ends";
-"none" = "none";
-"trial" = "trial";
-"purchase" = "purchase";
-"subscription" = "subscription";
 
 /* Share Sheet */
 "Save File" = "Save File";
@@ -676,6 +669,7 @@
 "Error importing %@" = "Error importing %@";
 "Error loading item" = "Error loading item";
 "Preparing…" = "Preparing…";
+"Save here" = "Save here";
 
 /* Data migration from legacy app */
 "Account Migration" = "Account Migration";

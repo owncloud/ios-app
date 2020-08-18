@@ -146,6 +146,16 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:licensing.disable-appstore-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:licensing.disable-enterprise-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
             value = "10"
             isEnabled = "NO">

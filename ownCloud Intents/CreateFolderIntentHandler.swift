@@ -58,7 +58,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 				OCItemTracker().item(for: bookmark, at: folderPath) { (error, core, folderPathItem) in
 					if error == nil, folderPathItem == nil, let core = core {
 
-						let progress = core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
+						let progress = core.createFolder(name, inside: targetItem, options: nil, placeholderCompletionHandler: { (error, item) in
 							if error != nil {
 								completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 							} else {

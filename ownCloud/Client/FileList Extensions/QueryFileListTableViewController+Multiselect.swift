@@ -69,7 +69,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
  		} else if selectedCount > 1 {
  			self.title = String(format: "%d Items".localized, selectedCount)
  		} else {
- 			self.navigationItem.title = ""
+			self.navigationItem.title = UIDevice.current.isIpad ? "Select Items".localized : ""
  		}
 	}
 
