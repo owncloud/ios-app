@@ -536,7 +536,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Universal Links / Deep Linking</string>
 					<key>Subtitle</key>
-					<string>Open a file directly into the app by an universal link. More information can be found in the app documentation.</string>
+					<string>Open a file directly in the app through an universal link. More information can be found in the app documentation.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -546,7 +546,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Shortcuts: Get File Info</string>
 					<key>Subtitle</key>
-					<string>The Shortcuts.app action &quot;Get File Info&quot; has two new output parameters &quot;File ID&quot; and &quot;Local File ID&quot;.</string>
+					<string>In the Shortcuts.app, the action &quot;Get File Info&quot; has two new output parameters, &quot;File ID&quot; and &quot;Local File ID&quot;.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
