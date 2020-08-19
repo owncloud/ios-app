@@ -161,7 +161,7 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(privacyPolicyRow!)
 		}
 
-		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
+		rows.append(contentsOf: [termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
 
 		add(rows: rows)
 	}

@@ -37,7 +37,7 @@ class DisplaySettingsSection: SettingsSection {
 			if let newSortFolderFirst = row.value as? Bool {
 				DisplaySettings.shared.sortFoldersFirst = newSortFolderFirst
 			}
-		}, title: "Show folders at the top".localized, value: DisplaySettings.shared.sortFoldersFirst, identifier: "sort-folders-first"))
+		}, title: "Show folders on top".localized, value: DisplaySettings.shared.sortFoldersFirst, identifier: "sort-folders-first"))
 
 		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
 			if let disableDragging = row.value as? Bool {

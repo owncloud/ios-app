@@ -424,9 +424,9 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Folders at the top</string>
+					<string>Folders on top</string>
 					<key>Subtitle</key>
-					<string>There is a new option to show folders on the top, with the option of keeping the existing behaviour.</string>
+					<string>There is a new option to show folders on top, with the option of keeping the existing behaviour.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -486,7 +486,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Improved Media Upload</string>
 					<key>Subtitle</key>
-					<string>New option added to specify different upload folders for instant video uploads. The photo picker can now select items from shared albums.</string>
+					<string>New option added to specify different upload folders for instant photo and video uploads. The photo picker can now select items from shared albums.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -536,7 +536,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Universal Links / Deep Linking</string>
 					<key>Subtitle</key>
-					<string>Open a file directly into the app by an universal link. More information can be found in the app documentation.</string>
+					<string>Open a file directly in the app through an universal link. More information can be found in the app documentation.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -546,7 +546,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Shortcuts: Get File Info</string>
 					<key>Subtitle</key>
-					<string>The Shortcuts.app action &quot;Get File Info&quot; has two new output parameters &quot;File ID&quot; and &quot;Local File ID&quot;.</string>
+					<string>In the Shortcuts.app, the action &quot;Get File Info&quot; has two new output parameters, &quot;File ID&quot; and &quot;Local File ID&quot;.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -607,6 +607,16 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<string>Fix: Quick Access</string>
 					<key>Subtitle</key>
 					<string>Fixes the display of locally downloaded files as items available offline in the Quick Access section</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Sort by Type</string>
+					<key>Subtitle</key>
+					<string>Sort by type works now as expected</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>

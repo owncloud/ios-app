@@ -62,6 +62,7 @@ extension ThemeStyle {
 
 	static public var preferredStyle : ThemeStyle {
 		set {
+			// Store preferred theme style to shared userDefaults
 			OCAppIdentity.shared.userDefaults?.setValue(newValue.identifier, forKey: "preferred-theme-style")
 
 			considerAppearanceUpdate(animated: true)
@@ -70,6 +71,14 @@ extension ThemeStyle {
 		get {
 			var style : ThemeStyle?
 
+			// This setting was previously stored in UserDefaults.standard. If it exists there, make sure to move it over
+			// and subsequently remove it, so it can't overwrite changes to the value coming after that.
+			if let legacyLocalPreferredThemeStyleIdentifier = UserDefaults.standard.string(forKey: "preferred-theme-style") {
+				OCAppIdentity.shared.userDefaults?.setValue(legacyLocalPreferredThemeStyleIdentifier, forKey: "preferred-theme-style")
+				UserDefaults.standard.removeObject(forKey: "preferred-theme-style")
+			}
+
+			// Retrieve preferred theme style from shared userDefaults
 			if let preferredThemeStyleIdentifier = OCAppIdentity.shared.userDefaults?.string(forKey: "preferred-theme-style") {
 				style = .forIdentifier(preferredThemeStyleIdentifier)
 			}
