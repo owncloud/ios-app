@@ -424,9 +424,9 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Folders at the top</string>
+					<string>Folders on top</string>
 					<key>Subtitle</key>
-					<string>There is a new option to show folders on the top, with the option of keeping the existing behaviour.</string>
+					<string>There is a new option to show folders on top, with the option of keeping the existing behaviour.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -486,7 +486,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Improved Media Upload</string>
 					<key>Subtitle</key>
-					<string>New option added to specify different upload folders for instant video uploads. The photo picker can now select items from shared albums.</string>
+					<string>New option added to specify different upload folders for instant photo and video uploads. The photo picker can now select items from shared albums.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>

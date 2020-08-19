@@ -274,7 +274,7 @@
 /* Display settings */
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
-"Show folders at the top" = "Show folders at the top";
+"Show folders on top" = "Show folders on top";
 "Prevent gestures" = "Prevent gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
