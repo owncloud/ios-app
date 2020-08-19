@@ -238,6 +238,26 @@ lane :owncloud_online_build do
   )
 end
 
+  lane :owncloud_branding_build do
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
+      ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
+      ENTERPRISE_FP_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
+      ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
+      ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.enterprise.ios-app.ownCloud-Share-Extension",
+      ENTERPRISE_SHARE_EXTENSION_PROFILE: "Enterprise Distribution iOS Neo Share Extension",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
+      ENTERPRISE_TEAM: "5QNK8L2PSC",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
+      EXPORT_METHOD: "enterprise",
+      CONFIGURATION: "Debug",
+      BETA_APP_ICON: false
+    )
+  end
+
   lane :owncloud_enterprise_build do
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
