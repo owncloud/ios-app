@@ -612,6 +612,16 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>ImageName</key>
 					<string>bandage</string>
 				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Sort by Type</string>
+					<key>Subtitle</key>
+					<string>Sort by type works now as expected</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
 			</array>
 		</dict>
 	</array>

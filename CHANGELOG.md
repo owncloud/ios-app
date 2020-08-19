@@ -27,6 +27,7 @@
 - Fix: Serveral UI Improvements (PR #654, #264)
 - Fix: File Provider (#754, …)
 - Fix: Quick Access (#745)
+- Fix: Sort by Type (#670)
 
 ## Release version 1.3.2 (April 2020)
 
