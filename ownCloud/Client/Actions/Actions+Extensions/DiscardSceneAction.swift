@@ -18,7 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 class DiscardSceneAction: Action {
@@ -32,7 +32,7 @@ class DiscardSceneAction: Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			if let viewController = forContext.viewController, viewController.view.window?.windowScene?.userActivity != nil {
 				return .first
 			}
@@ -48,7 +48,7 @@ class DiscardSceneAction: Action {
 			return
 		}
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			if let scene = viewController.view.window?.windowScene {
 				UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (_) in
 				}
@@ -57,6 +57,6 @@ class DiscardSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "xmark.square")?.tinted(with: Theme.shared.activeCollection.tintColor)
+		return UIImage(systemName: "xmark.square")?.withRenderingMode(.alwaysTemplate)
 	}
 }

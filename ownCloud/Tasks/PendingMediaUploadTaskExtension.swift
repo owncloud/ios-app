@@ -7,7 +7,7 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
+* Copyright (C) 2020, ownCloud GmbH.
 *
 * This code is covered by the GNU Public License Version 3.
 *
@@ -18,17 +18,13 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 import Photos
 
 class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.pending_media_upload") }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
-	override class var features : [String : Any]? { return [ FeatureKeys.runOnWifi : true] }
-
-	private var uploadDirectoryTracking: OCCoreItemTracking?
-	private weak var weakCore: OCCore?
-	private var coreUpdatesHandler: OCCoreItemListFetchUpdatesCompletionHandler?
 
 	override func run(background:Bool) {
 

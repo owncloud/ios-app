@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class ClientItemResolvingCell: ClientItemCell {
 	var itemTracker : OCCoreItemTracking?

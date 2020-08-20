@@ -19,12 +19,13 @@
 import Foundation
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "D" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -76,7 +77,7 @@ class DuplicateAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(named: "duplicate-file")
 		}
 

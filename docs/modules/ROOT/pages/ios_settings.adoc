@@ -76,6 +76,8 @@ a|image:themes/dark.png[ownCloud iOS App - Dark theme]
 a|image:themes/light.png[ownCloud iOS App - Light theme]
 |===
 
+|===
+
 === System Appearance (up from iOS 13)
 
 When System Appearance is selected, ownCloud will automatically use the selected iOS system theme (light or dark) to reflect the system UI. 

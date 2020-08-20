@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1030"
+   LastUpgradeVersion = "1160"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -136,9 +136,24 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "MTC_MAX_HIT_COUNT"
+            value = "9999"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:licensing.disable-appstore-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:licensing.disable-enterprise-licensing"
+            value = "true"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
@@ -192,7 +207,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-only-tags"
-            value = "[Request,Response]"
+            value = "[Request,Response,Cookies]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -206,9 +221,44 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.log-single-lined"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-maximum-message-size"
+            value = "100000"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-format"
+            value = "string:json"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-format"
+            value = "string:json-composed"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:connection.allow-background-url-sessions"
             value = "false"
             isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.openid-connect,com.owncloud.oauth2]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.basicauth]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:core.cookie-support-enabled"
+            value = "true"
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

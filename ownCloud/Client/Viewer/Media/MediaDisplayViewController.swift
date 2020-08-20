@@ -20,7 +20,8 @@ import UIKit
 import AVKit
 import MediaPlayer
 import ownCloudSDK
-import MobileCoreServices
+import ownCloudAppShared
+import CoreServices
 
 class MediaDisplayViewController : DisplayViewController {
 
@@ -39,6 +40,8 @@ class MediaDisplayViewController : DisplayViewController {
 	private var mediaItemTitle: String?
 	private var mediaItemArtist: String?
 
+	private var hasFocus: Bool = false
+
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
@@ -52,7 +55,6 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.requiresLocalItemCopy = !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handleDidEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -61,6 +63,16 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+
+		hasFocus = true
+		player?.play()
+	}
+
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+
+		hasFocus = false
+		player?.pause()
 	}
 
 	override func viewSafeAreaInsetsDidChange() {
@@ -78,6 +90,10 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		self.view.layoutIfNeeded()
+	}
+
+	override func requiresLocalCopyForPreview() -> Bool {
+		return (OCAppIdentity.shared.userDefaults?.downloadMediaFiles ?? false)
 	}
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
@@ -150,7 +166,9 @@ class MediaDisplayViewController : DisplayViewController {
 						try? AVAudioSession.sharedInstance().setCategory(.playback)
 						try? AVAudioSession.sharedInstance().setActive(true)
 
-						self?.player?.play()
+						if (self?.hasFocus)! {
+							self?.player?.play()
+						}
 
 						self?.updateNowPlayingInfoCenter()
 

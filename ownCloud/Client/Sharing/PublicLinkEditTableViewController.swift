@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class PublicLinkEditTableViewController: StaticTableViewController {
 
@@ -154,7 +155,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					self?.activeTextField = textField
 				}
 			}
-			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd)
+			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd, clearButtonMode: .always)
 
 		section.add(row: nameRow)
 		self.addSection(section)
@@ -650,10 +651,17 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if let permissionMask = permissionMask {
 			let share = OCShare(publicLinkToPath: self.share.itemPath, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
-			self.core.createShare(share, options: nil, completionHandler: { (error, _) in
+			self.core.createShare(share, options: nil, completionHandler: { (error, createdShare) in
 				if error == nil {
-					OnMainThread {
-						self.dismissAnimated()
+					if let shareURL = createdShare?.url {
+						UIPasteboard.general.url = shareURL
+						OnMainThread {
+							_ = NotificationHUDViewController(on: self, title: "Created Public Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: {
+								OnMainThread {
+									self.dismissAnimated()
+								}
+							})
+						}
 					}
 				} else {
 					if let shareError = error {

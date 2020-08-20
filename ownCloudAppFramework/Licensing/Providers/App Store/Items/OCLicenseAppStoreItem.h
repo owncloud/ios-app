@@ -31,7 +31,7 @@ typedef NSString* OCLicenseAppStoreProductIdentifier;
 
 @property(assign,readonly) OCLicenseType type;
 
-@property(strong,readonly) OCLicenseDuration *trialDuration;
+@property(nullable,strong,readonly) OCLicenseDuration *trialDuration;
 
 @property(strong,readonly) OCLicenseProductIdentifier productIdentifier;
 
