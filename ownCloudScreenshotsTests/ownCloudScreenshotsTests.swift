@@ -25,9 +25,9 @@ import ownCloudAppShared
 class ScreenshotsTests: XCTestCase {
 
 	let serverDescription = "ownCloud"
-	let url = "demo.shniq.cloud"
-	let user = "alice"
-	let password = "i0uKoGQ3rmhT"
+	let url = "demo.owncloud.com"
+ 	let user = "admin"
+ 	let password = "admin"
 
 	override func setUp() {
 		super.setUp()
