@@ -20,13 +20,14 @@ import XCTest
 import EarlGrey
 import LocalAuthentication
 import ownCloudSDK
+import ownCloudAppShared
 
 class ScreenshotsTests: XCTestCase {
 
 	let serverDescription = "ownCloud"
-	let url = "demo.owncloud.com"
-	let user = "admin"
-	let password = "admin"
+	let url = "demo.shniq.cloud"
+	let user = "alice"
+	let password = "i0uKoGQ3rmhT"
 
 	override func setUp() {
 		super.setUp()
@@ -56,10 +57,10 @@ class ScreenshotsTests: XCTestCase {
 		let credentials : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : serverDescription]
 		addAccount(app: app, credentials: credentials)
 		//Add account
-		let credentialsDemo : [String : String] = ["url" : "demo.owncloud.com", "user" : "demo", "password" : "demo", "serverDescription" : "demo@demo.owncloud.com"]
+		let credentialsDemo : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : "demo@demo.owncloud.com"]
 		addAccount(app: app, credentials: credentialsDemo)
 		//Add account
-		let credentialsDemo2 : [String : String] = ["url" : "demo.owncloud.com", "user" : "admin", "password" : "admin", "serverDescription" : "admin@demo.owncloud.com"]
+		let credentialsDemo2 : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : "admin@demo.owncloud.com"]
 		addAccount(app: app, credentials: credentialsDemo2)
 
 		snapshot("11_ios_accounts_list_demo")
@@ -85,7 +86,9 @@ class ScreenshotsTests: XCTestCase {
 			app.navigationBars.element(boundBy: 0).buttons[localizedString(key: "Add account")].tap()
 			app.textFields["row-url-url"].typeText(url)
 
-			app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].doubleTap()
+			print(app.navigationBars.element(boundBy: 0).buttons)
+
+			app.navigationBars[localizedString(key: "Add account")]/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continue\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 
 			if waitForUserNameTextField(app: app) != .completed {
 				XCTFail("Error: Can not check auth method of the server")
@@ -97,7 +100,7 @@ class ScreenshotsTests: XCTestCase {
 			app.textFields["row-name-name"].tap()
 			app.textFields["row-name-name"].typeText(serverDescription)
 
-			app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].tap()
+			app.navigationBars[localizedString(key: "Add account")]/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continue\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 		} else {
 			XCTFail("Error: Adding Login failed")
 		}
