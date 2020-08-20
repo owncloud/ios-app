@@ -56,6 +56,11 @@ fastlane ios owncloud_emm_build
 fastlane ios owncloud_online_build
 ```
 
+### ios owncloud_branding_build
+```
+fastlane ios owncloud_branding_build
+```
+
 ### ios owncloud_enterprise_build
 ```
 fastlane ios owncloud_enterprise_build
