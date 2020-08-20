@@ -366,7 +366,7 @@ end
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud Share Extension/ownCloud Share Extension.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
