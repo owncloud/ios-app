@@ -17,10 +17,10 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Import all file types</string>
-			<key>LSHandlerRank</key>
-			<string>Default</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.content</string>

@@ -22,8 +22,6 @@
 	<string>$(APP_VERSION)</string>
 	<key>NSExtension</key>
 	<dict>
-		<key>NSExtensionPrincipalClass</key>
-		<string>ShareNavigationController</string>
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
@@ -34,13 +32,15 @@
         $extensionItem.attachments,
         $attachment,
         (
-          ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.data&quot;
+          ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.data"
         )
     ).@count == $extensionItem.attachments.@count
 ).@count &gt; 0</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>ShareNavigationController</string>
 	</dict>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
