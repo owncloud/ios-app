@@ -3,3 +3,4 @@
 - App.mobileprovision
 - FileProvider.mobileprovision
 - Intent.mobileprovision
+- ShareExtension.mobileprovision
