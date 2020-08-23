@@ -1,0 +1,32 @@
+= iOS Frequently Asked Questions (FAQ)
+:hardbreaks:
+:oauth2-app-url: https://marketplace.owncloud.com/apps/oauth2
+:toc: right
+
+Here you can find some of the most frequently asked questions about the ownCloud iOS app.
+
+== Usage
+
+=== Compatibility with ownCloud server older than version 10.0
+
+Previous ownCloud iOS app with support for ownCloud server < 10.0 is still available in App Store:  
+https://apps.apple.com/app/id543672169
+
+=== Compatibility with iOS versions older than iOS 12.0
+
+Previous ownCloud iOS app with support for iOS < 12.0 is still available in App Store:  
+https://apps.apple.com/app/id543672169
+
+=== Login with TOTP and other 2FA
+
+ownCloud server must have {oauth2-app-url}[the OAuth2 app] installed, configured, and enabled to use Two-Factor Authentication.
+Please contact your ownCloud administrator for more details.
+
+== Feature Requests
+
+=== Text editing inside the iOS app
+
+Currently this isn't a planned feature. Focus is more to build the best integration in serious 3rd party text editing app.
+
+Here you can find previous discussion:
+https://github.com/owncloud/ios-app/issues/317

@@ -9,4 +9,5 @@
 * xref:ios_task_scheduling.adoc[Task Scheduling]
 * xref:ios_mdm.adoc[Mobile Device Management (MDM)]
 * xref:ios_security.adoc[Security]
+* xref:ios_faq.adoc[Frequently Asked Questions (FAQ)]
 * xref:ios_troubleshooting.adoc[Troubleshooting]
