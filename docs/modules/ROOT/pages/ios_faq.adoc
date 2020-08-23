@@ -24,9 +24,26 @@ Please contact your ownCloud administrator for more details.
 
 == Feature Requests
 
+== Access full folder via FileProvider, not only single files
+
+This seems like a bigger challenge for us. We track the status here:
+https://github.com/owncloud/ios-app/issues/604
+
 === Text editing inside the iOS app
 
 Currently this isn't a planned feature. Focus is more to build the best integration in serious 3rd party text editing app.
 
 Here you can find previous discussion:
 https://github.com/owncloud/ios-app/issues/317
+
+=== Translation missing or bug
+
+You can help translate in your language or fix a bug.
+
+We use Transifex for translations. Please register for an account and join the global community:
+https://www.transifex.com/owncloud-org/owncloud/mobile-ios-app/
+
+=== Testing new features
+
+Join the beta program on iOS:
+https://owncloud.com/beta-testing/#ios
