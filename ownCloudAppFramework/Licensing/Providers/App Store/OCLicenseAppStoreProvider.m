@@ -88,7 +88,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 	OCLogDebug(@"purchasesAllowed=%d", purchasesAllowed);
 
-	return (purchasesAllowed && !self.isVolumePurchase); // Do not allow purchases if the app was purchased through VPP
+	return (purchasesAllowed);
 }
 
 - (BOOL)isVolumePurchase
@@ -469,12 +469,12 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 				if (appStoreProvider != nil)
 				{
-					if (!appStoreProvider.purchasesAllowed)
+					if (!appStoreProvider.purchasesAllowed || appStoreProvider.isVolumePurchase)
 					{
 						// Present alert
 						if (errorHandler != nil)
 						{
-							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:OCLicenseAppStoreProviderErrorPurchasesNotAllowed userInfo:@{
+							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:(appStoreProvider.isVolumePurchase ? OCLicenseAppStoreProviderErrorPurchasesNotAllowedForVPPCopies :  OCLicenseAppStoreProviderErrorPurchasesNotAllowed) userInfo:@{
 								NSLocalizedDescriptionKey : (appStoreProvider.isVolumePurchase ?
 									 OCLocalized(@"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version.") :
 									 OCLocalized(@"Purchases are not allowed on this device."))
