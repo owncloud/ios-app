@@ -194,7 +194,9 @@ class ShareViewController: MoreStaticTableViewController {
 														progressViewController.dismiss(animated: false)
 													} else {
 														self?.extensionContext?.completeRequest(returningItems: [], completionHandler: { (_) in
-															progressViewController.dismiss(animated: false)
+															OnMainThread {
+																progressViewController.dismiss(animated: false)
+															}
 														})
 													}
 												}
