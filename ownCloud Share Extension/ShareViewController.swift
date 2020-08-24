@@ -173,7 +173,7 @@ class ShareViewController: MoreStaticTableViewController {
 		self.requestCore(for: bookmark, completionHandler: { (core, error) in
 			if let core = core, error == nil {
 				OnMainThread {
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory, _) in
 						if let targetDirectory = selectedDirectory {
 							if let vault = core?.vault {
 								self.fpServiceSession = OCFileProviderServiceSession(vault: vault)
