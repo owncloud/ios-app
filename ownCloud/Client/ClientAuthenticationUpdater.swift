@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class ClientAuthenticationUpdater: NSObject {
 	var bookmark : OCBookmark

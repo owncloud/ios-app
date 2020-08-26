@@ -1,4 +1,5 @@
-/* 
+
+/*
   Localizable.strings
   ownCloud
 
@@ -17,66 +18,98 @@
  */
 
 /* Add / Edit Bookmark */
-"Edit bookmark" = "Edit bookmark";
-"Add bookmark" = "Add bookmark";
-"Server URL" = "Server URL";
-"https://example.com" = "https://example.com";
-"Continue" = "Continue";
-"Name" = "Name";
-"Example Server" = "Example Server";
-"Show Certificate Details" = "Show Certificate Details";
-"Connect" = "Connect";
-"Delete Authentication Data" = "Delete Authentication Data";
-"Authentication" = "Authentication";
-"Username" = "Username";
-"Password" = "Password";
-"Certificate Details" = "Certificate Details";
-"Cancel" = "Cancel";
-"Approve" = "Approve";
-"Error" = "Error";
-"Review Connection" = "Review Connection";
-"Authenticated via" = "Authenticated via";
+"Edit account" = "Edit account";
+"Add account" = "Legg til en konto";
+"Server URL" = "Server-URL";
+"https://example.com" = "https://eksempel.no\n";
+"Continue" = "Fortsett";
+"Name" = "Navn";
+"Example Server" = "Eksempel Server";
+"Show Certificate Details" = "Vis Sertifikat Detaljer";
+"Connect" = "Koble til";
+"Delete Authentication Data" = "Slett Autentiserings Data";
+"Authentication" = "Autentisering";
+"Username" = "Brukernavn";
+"Password" = "Passord";
+"Certificate Details" = "Sertifikat Detaljer";
+"Cancel" = "Avbryt";
+"Approve" = "Godkjent";
+"Error" = "Feil";
+"Review Connection" = "Gjenopprett Tilkobling";
+"Authenticated via" = "Autentisert via";
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+"Edit" = "Endre";
+"Credentials" = "Påloggingsdetaljer";
+"Rejected" = "Rejected";
+"Passed" = "Passed";
+"Accepted" = "Accepted";
+"Validation Error" = "Valideringsfeil";
+"Certificate was rejected by user." = "Certificate was rejected by user.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Certificate has issues.\nOpen 'Certificate Details' for more informations.";
+"No issues found. Certificate passed validation." = "No issues found. Certificate passed validation.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.";
 
 "Contacting server…" = "Contacting server…";
-"Authenticating…" = "Authenticating…";
+"Authenticating…" = "Autentiserer...";
 
-"Missing hostname" = "Missing hostname";
-"The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
+"Fetching user information…" = "Henter brukerinformasjon...";
+"Updating connection…" = "Updating connection…";
+
+"Missing hostname" = "Mangler hostname";
+"The entered URL does not include a hostname." = "Gitt URL mangler hostname";
+"Add account" = "Legg til en konto";
+"Server name" = "Server name";
+"Server Password" = "Server Password";
+"Server Username" = "Server Username";
+"Show accounts" = "Show accounts";
+"Setup complete" = "Setup complete";
 
 /* Client */
 "Browse" = "Browse";
-"Disconnect" = "Disconnect";
-"Connecting…" = "Connecting…";
+"Disconnect" = "Koble fra";
+"Connecting…" = "Kobler til...";
 "Connected." = "Connected.";
+"Select" = "Velg";
+"Done" = "Ferdig";
 
-"Folder" = "Folder";
+"Folder" = "Mappe";
 
-"Stopped" = "Stopped";
-"Started…" = "Started…";
+"Stopped" = "Stoppet";
+"Started…" = "Startet...";
 "Contents from cache." = "Contents from cache.";
-"Offline. Contents from cache." = "Offline. Contents from cache.";
 "Waiting for server response…" = "Waiting for server response…";
 "This folder no longer exists." = "This folder no longer exists.";
-"Everything up-to-date." = "Everything up-to-date.";
-"Please wait…" = "Please wait…";
+"Everything up-to-date." = "Alt er oppdatert.";
+"Please wait…" = "Vennligst vent...";
 "Sort by %@" = "Sort by %@";
-"Sort by" = "Sort by";
+"Sort by" = "Sorter etter";
 
-"name (A-Z)" = "name (A-Z)";
-"name (Z-A)" = "name (Z-A)";
-"type" = "type";
-"size" = "size";
-"date" = "date";
-"Search this folder" = "Search this folder";
-"Pending" = "Pending";
+"name" = "name";
+"kind" = "kind";
+"size" = "størrelse";
+"date" = "dato";
+"Search this folder" = "Lagre denne mappen";
+"Pending" = "Venter";
+"Show parent paths" = "Show parent paths";
+
+"%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
+"%@ item | " = "%@ item | ";
+"%@ items | " = "%@ items | ";
+
+/* Static Login Setup */
+"Server error" = "Serverfeil";
+"The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
+"The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
+"Retry detection" = "Retry detection";
 
 /* Client Messages */
-"Empty folder" = "Empty folder";
+"Empty folder" = "Tom mappe";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
 
 "Folder removed" = "Folder removed";
-"This folder no longer exists on the server." = "This folder no longer exists on the server.";
+"This folder no longer exists on the server." = "Mappen finnes ikke på serveren lenger.";
 "Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
 "Are you sure you want to delete these items from the server?" = "Are you sure you want to delete these items from the server?";
 "Multiple items" = "Multiple items";
@@ -87,73 +120,124 @@
 "This permission is needed to upload photos and videos from your photo library." = "This permission is needed to upload photos and videos from your photo library.";
 "Not now" = "Not now";
 "Upload file" = "Upload file";
+"Upload files" = "Last opp filer";
+
+"No matches" = "No matches";
+"There are no results for this search term" = "There are no results for this search term";
+"Status" = "Status";
+
+"Authorization failed" = "Authorization failed";
+"The account has been disabled." = "The account has been disabled.";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"Access denied" = "Adgang nektet";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
+"No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Sign in" = "Logg inn";
+"Continue offline" = "Continue offline";
+"Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+"All done" = "All done";
+"No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
+
+"Show all" = "Vis alle";
+"+ %ld more" = "+ %ld more";
+"Apply choice to all similar issues" = "Apply choice to all similar issues";
+"Apply to all" = "Apply to all";
 
 /* Server List*/
-"Cancel" = "Cancel";
+"Cancel" = "Avbryt";
 "OK" = "OK";
 
 "'%@' is currently locked" = "'%@' is currently locked";
-"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "En pågående operasjon hindrer tilkobling til '%@'. Prøv igjen senere.";
+"Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
+"This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Really delete '%@'?";
-"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
-"Delete" = "Delete";
-"Deletion of '%@' failed" = "Deletion of '%@' failed";
+"This will also delete all locally stored file copies." = "Dette bil også slette alle lokale fil-kopier.";
+"Delete" = "Slett";
+"Remove" = "Fjern";
+"Removing of '%@' failed" = "Removing of '%@' failed";
+"Accounts" = "Kontoer";
 
-"Help" = "Help";
-"Feedback" = "Feedback";
+"Help" = "Hjelp";
+"Feedback" = "Tilbakemelding";
+"Welcome" = "Velkommen";
+"Thanks for choosing %@! \n Start by adding your account." = "Thanks for choosing %@! \n Start by adding your account.";
 
 /* Settings Messages */
 
-"Security" = "Security";
-"Passcode Lock" = "Passcode Lock";
+"Security" = "Sikkerhet";
+"Passcode Lock" = "Passordlås";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
 "Videos" = "Videos";
 "Photos" = "Photos";
 "Background uploads" = "Background uploads";
-"Wifi only" = "Wifi only";
-"Settings" = "Settings";
+"Wifi only" = "Kun Wifi";
+"Settings" = "Innstillinger";
 "Lock application" = "Lock application";
-"Upload videos via WiFi only" = "Upload videos via WiFi only";
-"Upload pictures via WiFi only" = "Upload pictures via WiFi only";
-"More" = "More";
+"Upload videos via WiFi only" = "Last opp video kun via WiFi";
+"Upload pictures via WiFi only" = "Kun last opp bilder via WiFi";
+"More" = "Mer";
 "Send feedback" = "Send feedback";
-"Recommend to a friend" = "Recommend to a friend";
-"Privacy Policy" = "Privacy Policy";
+"Recommend to a friend" = "Anbefal for en venn";
+"Privacy Policy" = "Personvern regler";
+"Terms Of Use" = "Terms Of Use";
 "Acknowledgements" = "Acknowledgements";
-"Video upload path" = "Video upload path";
+"Video upload path" = "Video opplastings-sti";
 "Photo upload path" = "Photo upload path";
-"Always" = "Always";
-"After 1 minute" = "After 1 minute";
-"After 5 minutes" = "After 5 minutes";
-"After 30 minutes" = "After 30 minutes";
-"Please configure an email account" = "Please configure an email account";
+"Immediately" = "Immediately";
+"After 1 minute" = "Etter 1 minutt";
+"After 5 minutes" = "Etter 5 minutter";
+"After 30 minutes" = "Etter 30 minutter";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
+"Please configure an email account" = "Vennligst konfigurere epost-kontoen din";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
 
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
+"beta" = "beta";
+"release" = "release";
+"App Version" = "App Version";
+"Version information were copied to the clipboard" = "Version information were copied to the clipboard";
+
+
 /* User Interface Settings */
-"Theme" = "Theme";
+"Theme" = "Drakt";
 "User Interface" = "User Interface";
-"Dark" = "Dark";
-"Light" = "Light";
+"Dark" = "Mørk";
+"Light" = "Lys";
 "Classic" = "Classic";
+"System" = "System";
+"System Appeareance" = "System Appeareance";
 
 /* Log settings */
+"Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
+"Share" = "Delt ressurs";
+"Delete all log files?" = "Delete all log files?";
+"Delete all" = "Slett alle";
+
 "Log Level" = "Log Level";
 "Log Destinations" = "Log Destinations";
 "Privacy" = "Privacy";
 
 "Logging" = "Logging";
-"Enable logging" = "Enable logging";
+"Enable logging" = "Aktiver loggføring";
+"Options" = "Innstillinger";
 
 "Off" = "Off";
 "Info" = "Info";
-"Default" = "Default";
-"Warning" = "Warning";
-"Error" = "Error";
+"Default" = "Standard";
+"Warning" = "Advarsel";
+"Error" = "Feil";
 
 "Share log file" = "Share log file";
 "Reset log file" = "Reset log file";
+
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
 
 "Mask private data" = "Mask private data";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
@@ -165,15 +249,43 @@
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
 
+/* Data usage settings */
+"Data usage" = "Data usage";
+"Delete unused local copies" = "Delete unused local copies";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
+"never" = "aldri";
+"after %@" = "after %@";
+"Decrease Slider Value" = "Decrease Slider Value";
+"Increase Slider Value" = "Increase Slider Value";
+
+"Cellular transfers" = "Cellular transfers";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
+"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"General" = "Generelt";
+"By feature" = "By feature";
+
+"off" = "off";
+"enabled" = "aktivert";
+
+/* Display settings */
+"Advanced settings" = "Avanserte innstillinger";
+"Show hidden files and folders" = "Show hidden files and folders";
+"Show folders at the top" = "Show folders at the top";
+"Prevent gestures" = "Prevent gestures";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
+
+/* Advanced settings */
+"Enable diagnostics" = "Enable diagnostics";
+
 /* Passcode Messages */
 
-"Enter code" = "Enter code";
-"Repeat code" = "Repeat code";
-"Delete code" = "Delete code";
+"Enter code" = "Oppgi kode";
+"Repeat code" = "Gjenta kode";
+"Delete code" = "Slett kode";
 "The entered codes are different" = "The entered codes are different";
 "Incorrect code" = "Incorrect code";
 "Please try again in %@" = "Please try again in %@";
-"Unlock %@" = "Unlock %@";
+"Unlock %@" = "Lås opp %@";
 "Biometric authentication failed" = "Biometric authentication failed";
 
 /* Certificate management */
@@ -181,35 +293,396 @@
 "Certificates" = "Certificates";
 "User-approved certificates" = "User-approved certificates";
 
-"Approved" = "Approved";
+"Approved" = "Godkjent";
+"Auto-approved" = "Auto-approved";
 "Revoke approval" =  "Revoke approval";
 
 /* Actions */
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
-"New Folder" = "New Folder";
-"Rename" =" Rename";
-"Create folder" =" Create folder";
-"Duplicate" = "Duplicate";
-"Move" = "Move";
+"Item with same name already exists" = "Item with same name already exists";
+"An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
+"New Folder" = "Ny mappe";
+"Folder name" = "Mappenavn";
+"Rename" ="Gi nytt navn";
+"Create folder" ="Opprett mappe";
+"Duplicate" = "Dupliser";
+"Move" = "Flytt";
 "Open in" = "Open in";
+"Copy" = "Kopier";
+"Copy here" = "Copy here";
+"Cannot connect to " = "Cannot connect to ";
+" couldn't download file(s)" = " couldn't download file(s)";
+"Actions" = "Handlinger";
+"copy" = "copy";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
+"Take photo or video" = "Take photo or video";
+
+"Preparing…" = "Preparing…";
+
+"No actions available" = "No actions available";
+"No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
+
+"Close actions menu" = "Close actions menu";
+"Favorited" = "Er favoritt";
+"Favorite item" = "Favorite item";
+"Unfavorite item" = "Unfavorite item";
 
 /* Directory Picker Messages */
-"Move here" = "Move here";
+"Move here" = "Flytt hitt";
 
 /* Preview */
-"Open file" = "Open file";
-"There is no network" = "There is no network";
-"Error" = "Error";
+"Open file" = "Åpne fil";
+"Network unavailable" = "Network unavailable";
+"Error" = "Feil";
 "Could not get the picture" = "Could not get the picture";
-"Downloading" = "Downloading";
+"Downloading" = "Laster ned";
+"File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
-"Resume" = "Resume";
-"Go to page" = "Go to page";
-"Page" = "Page";
-"This document has %@ pages" = "This document has %@ pages";
-"%@ of %@" = "%@ of %@";
-"Invalid Page" = "Invalid Page";
-"The entered page number doesn't exist" = "The entered page number doesn't exist";
+"Resume" = "Gjenoppta";
+"Go to page" = "Gå til side";
+"Page" = "Side";
+"This document has %@ pages" = "Dette dokumentet har %@ sider";
+"%@ of %@" = "%@ av %@";
+"Invalid Page" = "Ugyldig side";
+"The entered page number doesn't exist" = "Oppgitt sidetall finnes ikke";
+"Search PDF" = "Search PDF";
+"Outline" = "Outline";
+
+/* Photo Upload */
+"Upload" = "Last opp";
+"Select All" = "Select All";
+"Deselect All" = "Deselect All";
+"All Photos" = "Alle bilder";
+"Albums" = "Album";
+"Importing from photo library" = "Importing from photo library";
+"Media import" = "Media import";
+"%@ of %@" = "%@ av %@";
+"Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
+"%d Item" = "%d Item";
+"%d Items" = "%d Items";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Lagrer";
+"File format" = "File format";
+"Name" = "Navn";
+"Save as" = "Lagre som";
+"Options" = "Innstillinger";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Lagrer";
+"File format" = "File format";
+"Name" = "Navn";
+"Save as" = "Lagre som";
+"Options" = "Innstillinger";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
+
+/* Sharing */
+"Searching Shares…" = "Searching Shares…";
+"Recipient" = "Mottaker";
+"Recipients" = "Recipients";
+"Public Link" = "Public Link";
+"Public Links" = "Offentlige lenker";
+"Shared by %@" = "Shared by %@";
+"Invite Recipient" = "Invite Recipient";
+"Recipients" = "Recipients";
+"Add email or name" = "Add email or name";
+"Users" = "Brukere";
+"Groups" = "Grupper";
+"Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
+"(Group)" = "(Group)";
+"Adding User to Share failed" = "Adding User to Share failed";
+"Permissions" = "Permissions";
+"Invited: %@" = "Invited: %@";
+"Created: %@" = "Created: %@";
+"Allows the users you share with to re-share" = "Allows the users you share with to re-share";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Allows the users you share with to edit your shared files, and to collaborate";
+"Allows the users you share with to create new files and add them to the share" = "Allows the users you share with to create new files and add them to the share";
+"Allows uploading a new version of a shared file and replacing it" = "Allows uploading a new version of a shared file and replacing it";
+"Allows the users you share with to delete shared files" = "Allows the users you share with to delete shared files";
+"Setting permission failed" = "Setting permission failed";
+"Shared with" = "Delt med";
+"Remove Recipient failed" = "Remove Recipient failed";
+"Remove Recipient" = "Remove Recipient";
+"Create" = "Opprett";
+"Change" = "Endre";
+"Recipients can view or download contents." = "Mottakere kan se og laste ned innhold.";
+"Recipients can view, download, edit, delete and upload contents." = "Mottakere kan se, laste ned, redigere, slette og laste opp innhold.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Motta filer fra andre uten å avsløre innholdet i mappen.";
+"Download / View" = "Last ned / Se";
+"Download / View / Upload" = "Last ned / Se / Last opp";
+"Upload only (File Drop)" = "Kun opplasting (Fil Slipp)";
+"Creating public link failed" = "Creating public link failed";
+"Create Public Link" = "Create Public Link";
+"Links" = "Lenker";
+"Link" = "Lenke";
+"Setting expiration date failed" = "Setting expiration date failed";
+"Expiration date" = "Utløpsdato";
+"Copy Public Link" = "Copy Public Link";
+"Delete Public Link" = "Delete Public Link";
+"Deleting Public Link failed" = "Deleting Public Link failed";
+"Deleting password failed" = "Deleting password failed";
+"Setting password failed" = "Setting password failed";
+"Type to update password" = "Type to update password";
+"Cannot change permission" = "Cannot change permission";
+"Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
+"Password Protected" = "Passordbeskyttet";
+"Pending Federated Invites" = "Pending Federated Invites";
+"Pending Invites" = "Pending Invites";
+"Shared with you" = "Delt med deg";
+"Shared with others" = "Delt med andre";
+"Shares" = "Delinger";
+"Copy Private Link" = "Copy Private Link";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Only recipients can use this link. Use it as a permanent link to point to this resource";
+"Accept Share failed" = "Accept Share failed";
+"Decline Share failed" = "Decline Share failed";
+"Accept" = "Aksepter";
+"Decline" = "Avslå";
+"Declined" = "Avvist";
+"Decline Share" = "Avslå Deling";
+"Unshare" = "Avslutt deling";
+"Unshare failed" = "Unshare failed";
+"Are you sure you want to unshare these items?" = "Are you sure you want to unshare these items?";
+"Are you sure you want to unshare this item?" = "Are you sure you want to unshare this item?";
+"Share" = "Delt ressurs";
+"Read" = "Les";
+"Can Share" = "Can Share";
+"Can Edit" = "Can Edit";
+"Can Edit and Change" = "Can Edit and Change";
+"Can Create" = "Can Create";
+"Can Change" = "Can Change";
+"Can Delete" = "Can Delete";
+"Accept Invite %@" = "Accept Invite %@";
+"Decline Invite %@" = "Decline Invite %@";
+"Decline cannot be undone." = "Decline cannot be undone.";
+"Sharing" = "Deling";
+"You" = "You";
+"Share this file" = "Share this file";
+"Share this folder" = "Share this folder";
+"shared" = "delte";
+"Owner" = "Owner";
+"Private Link" = "Private Link";
+"Created Public Link" = "Created Public Link";
+"URL was copied to the clipboard" = "URL was copied to the clipboard";
+
+/* Quick Access view */
+"Quick Access" = "Quick Access";
+"Collection" = "Collection";
+"Recents" = "Recents";
+"Favorites"= "Favoritter";
+"Images" = "Bilder";
+"PDF Documents" = "PDF Documents";
+"Text" = "Tekst";
+"Documents" = "Dokumenter";
+"Audio" = "Audio";
+
+/* Media files settings */
+"Media Files" = "Media Files";
+"Download instead of streaming" = "Download instead of streaming";
+
+/* Photo upload settings */
+"Media Upload" = "Media Upload";
+"Media Export" = "Media Export";
+"Auto Upload" = "Auto Upload";
+"Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
+"Preserve original media file names" = "Preserve original media file names";
+"Auto Upload Photos" = "Auto Upload Photos";
+"Auto Upload Videos" = "Auto Upload Videos";
+"Account" = "Konto";
+"Accounts" = "Kontoer";
+"Select account" = "Select account";
+"Photo upload path" = "Photo upload path";
+"Video upload path" = "Video opplastings-sti";
+"Select Upload Path" = "Select Upload Path";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
+"Importing %@ media files for upload" = "Importing %@ media files for upload";
+"Photo upload" = "Photo upload";
+"Video upload" = "Video upload";
+
+/* Background media uploads */
+"Background uploads" = "Background uploads";
+"Use background refresh" = "Use background refresh";
+"Enable background uploads" = "Enable background uploads";
+"Use background location updates" = "Use background location updates";
+"Background upload notifications" = "Background upload notifications";
+"if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
+"Location permission denied" = "Location permission denied";
+"Please re-enable location acquisition in system settings" = "Please re-enable location acquisition in system settings";
+"Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "Creating %ld folders…";
+"Moving %ld items…" = "Moving %ld items…";
+"Copying %ld items…" = "Copying %ld items…";
+"Deleting %ld items…" = "Deleting %ld items…";
+"Uploading %ld files…" = "Uploading %ld files…";
+"Downloading %ld files…" = "Downloading %ld files…";
+"Updating %ld items…" = "Updating %ld items…";
+
+/* Offline storage management */
+"Free on %@" = "Free on %@";
+"unknown" = "ukjent";
+"Offline files use" = "Offline files use";
+"Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Include available offline files" = "Include available offline files";
+"Delete Local Copies" = "Delete Local Copies";
+"Manage" = "Manage";
+"Storage" = "Lager";
+"Compacting" = "Compacting";
+
+"Really include available offline files?" = "Really include available offline files?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+
+/* Diagnostic */
+"Diagnostic Overview" = "Diagnostic Overview";
+"Diagnostics" = "Diagnostisering";
+"Share Diagnostics" = "Share Diagnostics";
+"Action executed" = "Action executed";
+
+"Update Status" = "Update Status";
+"Completed update scans" = "Completed update scans";
+"Total update scans" = "Total update scans";
+
+/* Available offline */
+"Root folder" = "Root folder";
+"at" = "på";
+"(no match)" = "(no match)";
+
+"Make available offline" = "Make available offline";
+"Make unavailable offline" = "Make unavailable offline";
+
+"Available Offline" = "Available Offline";
+"No items have been selected for offline availability." = "No items have been selected for offline availability.";
+
+"Overview" = "Overview";
+"All Files" = "All Files";
+
+/* Single Account */
+"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+
+/* Release Notes */
+"Proceed" = "Fortsett";
+"New in ownCloud" = "New in ownCloud";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
+
+/* Key Commands */
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Søk";
+"Back" = "Tilbake";
+"Save" = "Lagre";
+"Sort by %@" = "Sort by %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Pasteboard" = "Copy to Pasteboard";
+"Import from Pasteboard" = "Import from Pasteboard";
+"Next" = "Neste";
+"Previous" = "Forrige";
+"Favorite" = "Gjør til favoritt";
+"Cut" = "Cut";
+
+/* Markup */
+"How should this file be saved?" = "How should this file be saved?";
+"Overwrite original" = "Overwrite original";
+"Save as copy" = "Save as copy";
+"Discard changes" = "Discard changes";
+"Markup" = "Markup";
+"Crop or Rotate" = "Crop or Rotate";
+"Saving edited file failed" = "Saving edited file failed";
+"File no longer exists" = "File no longer exists";
+
+/* Licensing */
+"Unlocked" = "Unlocked";
+"Unlock" = "Unlock";
+
+"Subscribe Now" = "Subscribe Now";
+"Free" = "Free";
+
+"%@ / %@" = "%@ / %@";
+"after free %@ trial" = "after free %@ trial";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Try %@ for free.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Then %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ – starting immediately";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Pro Features";
+
+/* Licensing: App Store */
+"Restore purchases" = "Restore purchases";
+"Restoring purchases…" = "Restoring purchases…";
+"Error restoring purchases" = "Error restoring purchases";
+"Error loading product info from App Store"= "Error loading product info from App Store";
+"Purchase failed" = "Purchase failed";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Enterprise";
+
+/* Licensing: Settings */
+"In-App Purchases" = "In-App Purchases";
+"Purchases" = "Purchases";
+"Error fetching transactions" = "Error fetching transactions";
+"Document Scanner" = "Document Scanner";
+"Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
+"Shortcuts Actions" = "Shortcuts Actions";
+"Use ownCloud actions in Shortcuts." = "Use ownCloud actions in Shortcuts.";
+"Markup Documents" = "Markup Documents";
+"Markup photos and PDF files." = "Markup photos and PDF files.";
+"Unlock all Pro Features." = "Unlock all Pro Features.";
+
+/* Share Sheet */
+"Save File" = "Save File";
+"Choose an account and folder to import into." = "Choose an account and folder to import into.";
+"No account configured.\nSetup an new account in the app to save to." = "No account configured.\nSetup an new account in the app to save to.";
+"Importing item %ld of %ld" = "Importing item %ld of %ld";
+"Error importing %@" = "Error importing %@";
+"Error loading item" = "Error loading item";
+"Preparing…" = "Preparing…";
+"Save here" = "Save here";
+
+/* Data migration from legacy app */
+"Account Migration" = "Account Migration";
+"App Passcode" = "App Passcode";
+"Instant Upload Settings" = "Instant Upload Settings";
+"Migrating" = "Migrating";
+"Migrated" = "Migrated";
+"Failed to migrate" = "Failed to migrate";
+"Failed to access legacy user data" = "Failed to access legacy user data";
+
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
+
+/* Universal Links */
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
+"Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
+

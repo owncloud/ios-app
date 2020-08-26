@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import CoreServices
 
 class UploadFileAction: UploadBaseAction {

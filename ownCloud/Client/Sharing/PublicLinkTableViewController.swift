@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import CoreServices
 
 class PublicLinkTableViewController: SharingTableViewController {
@@ -203,7 +204,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
-					if UIDevice.current.isIpad() {
+					if UIDevice.current.isIpad {
 						presentationStyle = .alert
 					}
 

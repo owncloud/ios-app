@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class StaticLoginSingleAccountServerListViewController: ServerListTableViewController {
 	// Sections in the table view controller

@@ -20,6 +20,7 @@ import Foundation
 import ownCloudSDK
 import Photos
 import AVFoundation
+import ownCloudAppShared
 
 extension OCCellularSwitchIdentifier {
     static let photoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "cellular-photo-upload")
@@ -58,6 +59,7 @@ class MediaUploadQueue : OCActivitySource {
 		OCCellularManager.shared.registerSwitch(videoCellularSwitch)
 
 		importQueue.qualityOfService = .utility
+		importQueue.maxConcurrentOperationCount = ProcessInfo.processInfo.activeProcessorCount
 	}
 
 	func addUpload(_ asset:PHAsset, for bookmark:OCBookmark, at path:String) {

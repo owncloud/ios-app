@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 import Photos
 
 class PendingMediaUploadTaskExtension : ScheduledTaskAction {

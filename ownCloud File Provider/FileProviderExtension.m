@@ -24,6 +24,8 @@
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
+#import "FileProviderServiceSource.h"
+#import <CrashReporter.h>
 
 @interface FileProviderExtension ()
 {
@@ -42,6 +44,8 @@
 
 - (instancetype)init
 {
+	[self setupCrashReporting];
+
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
 	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
@@ -59,7 +63,49 @@
 
 	[self addObserver:self forKeyPath:@"domain" options:0 context:(__bridge void *)self];
 
+	// [self postAlive];
+
 	return self;
+}
+
+//- (void)postAlive
+//{
+//	OCLogDebug(@"Alive…");
+//
+//	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//		[self postAlive];
+//	});
+//}
+
+- (void)setupCrashReporting {
+
+    static dispatch_once_t token;
+
+    dispatch_once (&token, ^{
+		// Initialize crash reporter as soon as FP extension is loaded into memory
+		PLCrashReporterConfig *configuration = [PLCrashReporterConfig defaultConfiguration];
+		PLCrashReporter *reporter = [[PLCrashReporter alloc] initWithConfiguration:configuration];
+
+		// Do we have a pending crash report from previous session?
+		if ([reporter hasPendingCrashReport]) {
+
+			// Generate a report and add it to the log file
+			NSData *crashData = [reporter loadPendingCrashReportData];
+			if (crashData != nil) {
+				PLCrashReport *report = [[PLCrashReport alloc] initWithData:crashData error:nil];
+				if (report != nil) {
+					NSString *crashString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
+					OCTLogError(@[@"CRASH_REPORTER"], @"%@", crashString);
+				}
+			}
+
+			// Purge the report which we just added to the log
+			[reporter purgePendingCrashReport];
+		}
+
+		// Start intercepting OS signals to catch crashes
+		[reporter enableCrashReporter];
+    });
 }
 
 - (void)dealloc
@@ -196,6 +242,11 @@
 	NSParameterAssert(pathComponents.count > 2);
 
 	// OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
+
+	if ([pathComponents.lastObject isEqual:self.bookmark.fpServicesURLComponentName])
+	{
+		return (url.lastPathComponent);
+	}
 
 	return pathComponents[pathComponents.count - 2];
 }
@@ -776,11 +827,6 @@
 	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
 }
 
-- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
-{
-	return (nil);
-}
-
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
@@ -883,6 +929,23 @@
 	}
 
 	return (thumbnailRequest.progress);
+}
+
+#pragma mark - Services
+- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
+{
+	BOOL isSpecialItem = [itemIdentifier isEqual:self.bookmark.fpServicesURLComponentName];
+
+	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (%d)", OCLogPrivate(itemIdentifier), isSpecialItem);
+
+	if (isSpecialItem)
+	{
+		return (@[
+			[[FileProviderServiceSource alloc] initWithServiceName:OCFileProviderServiceName extension:self]
+		]);
+	}
+
+	return (nil);
 }
 
 #pragma mark - Core

@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 class StaticLoginStepViewController : StaticTableViewController {
 	weak var loginViewController : StaticLoginViewController?

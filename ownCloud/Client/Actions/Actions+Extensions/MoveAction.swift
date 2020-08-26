@@ -49,7 +49,7 @@ class MoveAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
 			guard let selectedDirectory = selectedDirectory else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return

@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
@@ -110,7 +111,7 @@ class UnshareAction : Action {
 			with: name,
 			message: message,
 			destructiveLabel: "Unshare".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
+			preferredStyle: UIDevice.current.isIpad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				unshareItemAndPublishProgress(items)
 		})
