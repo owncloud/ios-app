@@ -71,7 +71,7 @@ public extension OCLicenseManager {
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
-				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.photo-pro-features", productIdentifier: .singlePhotoProFeatures),
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.photo_pro_features", productIdentifier: .singlePhotoProFeatures),
 				OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
 			])
 
