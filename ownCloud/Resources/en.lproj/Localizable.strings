@@ -717,6 +717,8 @@
 "Original date" = "Original date";
 "Digitized date" = "Digitized date";
 
+"Color space" = "Color space";
+
 /* EXIF: aux info */
 "Lens ID" = "Lens ID";
 "Lens serial" = "Lens serial";
