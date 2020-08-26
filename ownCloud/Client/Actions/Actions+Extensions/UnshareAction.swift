@@ -19,15 +19,6 @@
 import ownCloudSDK
 import ownCloudAppShared
 
-extension Array where Element: OCItem {
-	var sharedWithUser : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
-	}
-	var isShared : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isShared })
-	}
-}
-
 class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
@@ -36,17 +27,14 @@ class UnshareAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedWithUser = forContext.items.sharedWithUser
 
-		if forContext.items.count != sharedWithUser.count {
+		if !forContext.allItemsShared {
 			return .none
 		}
 
-		if let core = forContext.core {
-			for sharedItem in sharedWithUser {
-				if !sharedItem.isShareRootItem(from: core) {
-					return .none
-				}
+		for sharedItem in forContext.itemsSharedWithUser {
+			if !forContext.isShareRoot(item: sharedItem) {
+				return .none
 			}
 		}
 

@@ -292,38 +292,6 @@ extension OCItem {
 		return shareRootItem
 	}
 
-	private struct AssociatedKeys {
-		static var isShareRootItemKey = "isShareRootItemKey"
-	}
-
-	public func isShareRootItem(from core: OCCore) -> Bool {
-		if let cachedIsShareRootItem = objc_getAssociatedObject(self, &AssociatedKeys.isShareRootItemKey) as? Bool {
-			// Return cached result
-			return cachedIsShareRootItem
-		}
-
-		var isShareRootItem : Bool = false
-
-		if self.isSharedWithUser {
-			// It's sufficient to check if the parent folder is also shared to determine if THIS item is the root of the share this item is in
-			if let parentPath = self.path?.parentPath, parentPath != self.path, let parentItem = self.parentItem(from: core) {
-				isShareRootItem = !parentItem.isSharedWithUser
-			} else {
-				isShareRootItem = true
-			}
-		}
-
-		// Cache result
-		objc_setAssociatedObject(self, &AssociatedKeys.isShareRootItemKey, isShareRootItem, .OBJC_ASSOCIATION_RETAIN)
-
-		OnMainThread {
-			// Clear on next runloop pass
-			objc_setAssociatedObject(self, &AssociatedKeys.isShareRootItemKey, nil, .OBJC_ASSOCIATION_RETAIN)
-		}
-
-		return isShareRootItem
-	}
-
 	public func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 

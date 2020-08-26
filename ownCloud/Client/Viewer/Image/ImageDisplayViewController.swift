@@ -192,22 +192,23 @@ class ImageDisplayViewController : DisplayViewController {
 
 // MARK: - Display Extension.
 extension ImageDisplayViewController: DisplayExtension {
+	private static let supportedFormatsRegex = try? NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
+
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		do {
-			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
-				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
-				if matches > 0 {
-					return .locationMatch
-				}
+		guard let regex = supportedFormatsRegex else { return .noMatch }
+
+		if let mimeType = context.location?.identifier?.rawValue {
+			let matches = regex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
+
+			if matches > 0 {
+				return .locationMatch
 			}
-
-			return .noMatch
-		} catch {
-			return .noMatch
 		}
+
+		return .noMatch
 	}
+
 	static var displayExtensionIdentifier: String = "org.owncloud.image"
 	static var supportedMimeTypes: [String]?
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
