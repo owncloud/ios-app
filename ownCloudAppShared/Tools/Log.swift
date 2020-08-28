@@ -23,6 +23,8 @@ import ownCloudSDK
 public extension OCLogLevel {
 	var label : String {
 		switch self {
+			case .verbose:
+				return "Verbose".localized
 			case .debug:
 				return "Debug".localized
 			case .info:
