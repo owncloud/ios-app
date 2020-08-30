@@ -225,10 +225,10 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	private func dismissWithChoice(item: OCItem?) {
 		if self.presentingViewController != nil {
 			dismiss(animated: true, completion: {
-				self.userChose(item: self.query.rootItem, needsToDismissViewController: false)
+				self.userChose(item: item, needsToDismissViewController: false)
 			})
 		} else {
-			self.userChose(item: self.query.rootItem, needsToDismissViewController: true)
+			self.userChose(item: item, needsToDismissViewController: true)
 		}
 	}
 
