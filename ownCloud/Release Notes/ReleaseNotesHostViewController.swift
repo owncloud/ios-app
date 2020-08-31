@@ -95,7 +95,14 @@ class ReleaseNotesHostViewController: UIViewController {
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
 
-			footerButton.setTitle(String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName), for: .normal)
+			var footerText = ""
+			if VendorServices.shared.isBranded {
+				footerText = String(format:"Thank you for using %@.\n".localized, appName)
+			} else {
+				footerText = String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName)
+			}
+			footerButton.setTitle(footerText, for: .normal)
+
 			footerButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
 			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			footerButton.titleLabel?.numberOfLines = 0
