@@ -122,7 +122,7 @@ extension OCItem {
 		return mimeTypeToIconMap
 	}()
 
-	static private let validIconNames : [String] = [
+	static public let validIconNames : [String] = [
 		// List taken from https://github.com/owncloud/core/blob/master/core/js/mimetypelist.js
 		"application",
 		"application-pdf",
@@ -148,7 +148,7 @@ extension OCItem {
 		"icon-search"
 	]
 
-	static func iconName(for MIMEType: String?) -> String? {
+	static public func iconName(for MIMEType: String?) -> String? {
 		var iconName : String?
 
 		if let mimeType = MIMEType {
@@ -180,7 +180,7 @@ extension OCItem {
 		return iconName
 	}
 
-	var iconName : String? {
+	public var iconName : String? {
 		var iconName = OCItem.iconName(for: self.mimeType)
 
 		if iconName == nil {
@@ -194,19 +194,19 @@ extension OCItem {
 		return iconName
 	}
 
-	var fileExtension : String? {
+	public var fileExtension : String? {
 		return (self.name as NSString?)?.pathExtension
 	}
 
-	var baseName : String? {
+	public var baseName : String? {
 		return (self.name as NSString?)?.deletingPathExtension
 	}
 
-	var sizeLocalized: String {
+	public var sizeLocalized: String {
 		return OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 	}
 
-	var lastModifiedLocalized: String {
+	public var lastModifiedLocalized: String {
 		guard let lastModified = self.lastModified else { return "" }
 
 		return OCItem.dateFormatter.string(from: lastModified)
@@ -227,64 +227,79 @@ extension OCItem {
 		return dateFormatter
 	}()
 
-	var sharedByPublicLink : Bool {
+	public var sharedByPublicLink : Bool {
 		if self.shareTypesMask.contains(.link) {
 			return true
 		}
 		return false
 	}
 
-	var isShared : Bool {
+	public var isShared : Bool {
 		if self.shareTypesMask.isEmpty {
 			return false
 		}
 		return true
 	}
 
-	var sharedByUserOrGroup : Bool {
+	public var sharedByUserOrGroup : Bool {
 		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote) {
 			return true
 		}
 		return false
 	}
 
-	func shareRootItem(from core: OCCore) -> OCItem? {
+	public func shareRootItem(from core: OCCore) -> OCItem? {
 		var shareRootItem : OCItem?
 
 		if self.isSharedWithUser {
-			var parentItem : OCItem? = self
-
 			shareRootItem = self
 
-			repeat {
-				parentItem = parentItem?.parentItem(from: core)
+			let waitSemaphore = DispatchSemaphore(value: 0)
 
-				if parentItem != nil, parentItem?.isSharedWithUser == true {
-					shareRootItem = parentItem
-				}
-			} while ((parentItem != nil) && (parentItem?.isSharedWithUser == true))
+			// Wrap all requests into a single transaction to consolidate lookups
+			// and avoid having to wait for available time multiple time, accumulating
+			// idle/waiting time
+			core.vault.database?.performBatchUpdates({ (database) -> Error? in
+				var parentPath = self.path?.parentPath
+				var lastParentPath = parentPath
+
+				repeat {
+					lastParentPath = parentPath
+
+					database?.retrieveCacheItems(atPath: parentPath, itemOnly: true, completionHandler: { (_, error, _, items) in
+						if error == nil, let parentItem = items?.first {
+							parentPath = parentItem.path
+
+							if parentItem.isSharedWithUser {
+								shareRootItem = parentItem
+							} else {
+								parentPath = nil
+							}
+						} else {
+							parentPath = nil
+						}
+					})
+				} while ((parentPath != nil) && (lastParentPath != parentPath) && (parentPath != "/"))
+
+				waitSemaphore.signal()
+
+				return nil
+			}, completionHandler: nil)
+
+			waitSemaphore.wait()
 		}
 
 		return shareRootItem
 	}
 
-	func isShareRootItem(from core: OCCore) -> Bool {
-		if let shareRootItem = shareRootItem(from: core) {
-			return shareRootItem.localID == localID
-		}
-
-		return false
-	}
-
-	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
+	public func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 
 		if let parentItemLocalID = self.parentLocalID {
-			var waitGroup : DispatchGroup?
+			var waitSemaphore : DispatchSemaphore?
 
 			if completionHandler == nil {
-				waitGroup = DispatchGroup()
-				waitGroup?.enter()
+				waitSemaphore = DispatchSemaphore(value: 0)
 			}
 
 			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
@@ -294,19 +309,19 @@ extension OCItem {
 
 				if completionHandler == nil {
 					parentItem = item
-					waitGroup?.leave()
 				} else {
 					completionHandler?(error, item)
 				}
+				waitSemaphore?.signal()
 			}
 
-			waitGroup?.wait()
+			waitSemaphore?.wait()
 		}
 
 		return parentItem
 	}
 
-	func displaysDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
+	public func displaysDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
 		guard let item = item else {
 			return true
 		}
@@ -315,14 +330,15 @@ extension OCItem {
 			// Different item
 			(item.localID != localID) ||
 
-			// File contents (and therefore likely metadata) differs
-			(item.itemVersionIdentifier != itemVersionIdentifier) ||
+			// Content deemed different
+			contentDifferent(than: item, in: core) ||
 
 			// File name differs
 			(item.name != name) ||
 
 			// Upload/Download status differs
 			(item.syncActivity != syncActivity) ||
+			(item.activeSyncRecordIDs != activeSyncRecordIDs) ||
 
 			// Cloud status differs
 			(item.cloudStatus != cloudStatus) ||
@@ -334,6 +350,24 @@ extension OCItem {
 			// Sharing attributes differ
 			(item.shareTypesMask != shareTypesMask) ||
 			(item.permissions != permissions) // these contain sharing info, too
+		)
+	}
+
+	public func contentDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
+		guard let item = item else {
+			return true
+		}
+
+		return (
+			// Different item
+			(item.localID != localID) ||
+
+			// File contents (and therefore likely metadata) differs
+			(item.itemVersionIdentifier != itemVersionIdentifier) 		|| // remote item
+			(item.localCopyVersionIdentifier != localCopyVersionIdentifier) || // local copy
+
+			// Size differs
+			(item.size != size)
 		)
 	}
 }

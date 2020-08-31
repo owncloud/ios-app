@@ -23,10 +23,12 @@ import MessageUI
 import SafariServices
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
 
+	private var documentationRow: StaticTableViewRow?
 	private var helpRow: StaticTableViewRow?
 	private var sendFeedbackRow: StaticTableViewRow?
 	private var recommendRow: StaticTableViewRow?
@@ -49,9 +51,16 @@ class MoreSettingsSection: SettingsSection {
 
 	private func createRows() {
 
+		documentationRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			if let url = VendorServices.shared.documentationURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
+		}, title: "Documentation".localized, accessoryType: .disclosureIndicator, identifier: "documentation")
+
 		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = URL(string: "https://www.owncloud.com/help")
-			self?.openSFWebViewWithConfirmation(for: url!)
+			if let url = VendorServices.shared.helpURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
 		}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -67,8 +76,9 @@ class MoreSettingsSection: SettingsSection {
 		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
 		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = URL(string: "https://owncloud.org/privacy-policy/")
-			self?.openSFWebViewWithConfirmation(for: url!)
+			if let url = VendorServices.shared.privacyURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
 		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
 
 		termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -134,23 +144,35 @@ class MoreSettingsSection: SettingsSection {
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle
 			guard let viewController = self.viewController else { return }
-			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version informations were copied to the clipboard".localized, completion: nil)
+			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version information were copied to the clipboard".localized, completion: nil)
 		}, title: "App Version".localized, subtitle: footerTitle, identifier: "app-version")
 	}
 
 	// MARK: - Update UI
 	func updateUI() {
-		var rows = [helpRow!]
+		var rows : [StaticTableViewRow] = []
 
-		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
+		if VendorServices.shared.documentationURL != nil {
+			rows.append(documentationRow!)
+		}
+
+		if VendorServices.shared.helpURL != nil {
+			rows.append(helpRow!)
+		}
+
+		if let sendFeedbackEnabled = VendorServices.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
 			rows.append(sendFeedbackRow!)
 		}
 
-		if let recommendToFriend = self.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
+		if let recommendToFriend = VendorServices.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
 			rows.append(recommendRow!)
 		}
 
-		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
+		if VendorServices.shared.privacyURL != nil {
+			rows.append(privacyPolicyRow!)
+		}
+
+		rows.append(contentsOf: [termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
 
 		add(rows: rows)
 	}
@@ -167,33 +189,5 @@ class MoreSettingsSection: SettingsSection {
 		alert.addAction(okAction)
 		alert.addAction(cancelAction)
 		self.viewController?.present(alert, animated: true)
-	}
-}
-
-// MARK: - OCClassSettings support
-extension OCClassSettingsIdentifier {
-	static let feedback = OCClassSettingsIdentifier("feedback")
-}
-
-extension OCClassSettingsKey {
-	static let appStoreLink = OCClassSettingsKey("app-store-link")
-	static let feedbackEmail = OCClassSettingsKey("feedback-email")
-	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
-	static let sendFeedbackEnabled = OCClassSettingsKey("send-feedback-enabled")
-}
-
-extension MoreSettingsSection : OCClassSettingsSupport {
-	static let classSettingsIdentifier : OCClassSettingsIdentifier = .feedback
-
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .feedback {
-			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
-					 .feedbackEmail: "ios-app@owncloud.com",
-					 .recommendToFriendEnabled: true,
-					 .sendFeedbackEnabled: true
-			]
-		}
-
-		return nil
 	}
 }

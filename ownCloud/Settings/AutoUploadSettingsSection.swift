@@ -167,7 +167,9 @@ class AutoUploadSettingsSection: SettingsSection {
 			instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
 					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
-						self?.setupPhotoAutoUpload(enabled: switchState)
+						OnMainThread {
+							self?.setupPhotoAutoUpload(enabled: switchState)
+						}
 					})
 				}
 				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos, identifier: "auto-upload-photos")
@@ -175,7 +177,9 @@ class AutoUploadSettingsSection: SettingsSection {
 			instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
 					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
-						self?.setupVideoAutoUpload(enabled: switchState)
+						OnMainThread {
+							self?.setupVideoAutoUpload(enabled: switchState)
+						}
 					})
 				}
 				}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos, identifier: "auto-upload-videos")
@@ -384,7 +388,7 @@ class AutoUploadSettingsSection: SettingsSection {
 											guard let core = core, error == nil else { return }
 
 											OnMainThread {
-												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
+												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
 													OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 													completion(selectedDirectory)
 												})

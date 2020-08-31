@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
@@ -95,7 +96,7 @@ class OpenInAction: Action {
 					}
 					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
 
-					if UIDevice.current.isIpad() {
+					if UIDevice.current.isIpad {
 						if let sender = self.context.sender as? UITabBarController {
 							var sourceRect = sender.view.frame
 							sourceRect.origin.y = viewController.view.frame.size.height

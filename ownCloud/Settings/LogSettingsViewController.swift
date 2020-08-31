@@ -18,23 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-
-extension OCLogLevel {
-	var label : String {
-		switch self {
-			case .debug:
-				return "Debug".localized
-			case .info:
-				return "Info".localized
-			case .warning:
-				return "Warning".localized
-			case .error:
-				return "Error".localized
-			case .off:
-				return "Off".localized
-		}
-	}
-}
+import ownCloudAppShared
 
 class LogSettingsViewController: StaticTableViewController {
 
@@ -163,6 +147,7 @@ class LogSettingsViewController: StaticTableViewController {
 				logLevelSection = StaticTableViewSection(headerTitle: "Log Level".localized)
 
 				let logLevels : [[String:Any]] = [
+					[ OCLogLevel.verbose.label : OCLogLevel.verbose.rawValue ],
 					[ OCLogLevel.debug.label   : OCLogLevel.debug.rawValue   ],
 					[ OCLogLevel.info.label    : OCLogLevel.info.rawValue    ],
 					[ OCLogLevel.warning.label : OCLogLevel.warning.rawValue ],

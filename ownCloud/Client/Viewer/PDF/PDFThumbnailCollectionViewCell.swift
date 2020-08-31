@@ -18,6 +18,7 @@
 
 import UIKit
 import PDFKit
+import ownCloudAppShared
 
 class PDFThumbnailCollectionViewCell: UICollectionViewCell {
     static let identifier = "PDFThumbnailCollectionViewCell"

@@ -18,12 +18,14 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 
 protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController {
+class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -31,6 +33,7 @@ class ClientRootViewController: UITabBarController {
 	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
+	private var coreRequested : Bool = false
 	var filesNavigationController : ThemeNavigationController?
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
@@ -41,6 +44,9 @@ class ClientRootViewController: UITabBarController {
 	var progressBarHeightConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
+
+	var notificationPresenter : NotificationMessagePresenter?
+	var cardMessagePresenter : CardIssueMessagePresenter?
 
 	var pasteboardChangedCounter = 0
 
@@ -63,12 +69,19 @@ class ClientRootViewController: UITabBarController {
 		}
 	}
 
+	var messageSelector : MessageSelector?
+
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
+
+		notificationPresenter = NotificationMessagePresenter(forBookmarkUUID: bookmark.uuid)
+		cardMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, limitToSingleCard: true, presenter: { [weak self] (viewController) in
+			self?.presentAlertAsCard(viewController: viewController, withHandle: false, dismissable: true)
+		})
 
 		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
 		if progressSummarizer != nil {
@@ -135,14 +148,35 @@ class ClientRootViewController: UITabBarController {
 
 		Theme.shared.unregister(client: self)
 
-		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		// Remove message presenters
+		if let notificationPresenter = self.notificationPresenter {
+			core?.messageQueue.remove(presenter: notificationPresenter)
+		}
+
+		if let cardMessagePresenter = self.cardMessagePresenter {
+			core?.messageQueue.remove(presenter: cardMessagePresenter)
+		}
+
+		if self.coreRequested {
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		}
 	}
 
 	// MARK: - Startup
 	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.coreRequested = true
 			self.core = core
 			core?.delegate = self
+
+			// Add message presenters
+			if let notificationPresenter = self.notificationPresenter {
+				core?.messageQueue.add(presenter: notificationPresenter)
+			}
+
+			if let cardMessagePresenter = self.cardMessagePresenter {
+				core?.messageQueue.add(presenter: cardMessagePresenter)
+			}
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
@@ -192,7 +226,7 @@ class ClientRootViewController: UITabBarController {
 		libraryViewController = LibraryTableViewController(style: .grouped)
 		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
 		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
-		libraryNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+		libraryNavigationController?.tabBarItem.image = UIImage(named: "branding-bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -247,13 +281,17 @@ class ClientRootViewController: UITabBarController {
 					self.createFileListStack(for: localItemId)
 				} else {
 					let query = OCQuery(forPath: "/")
-					let queryViewController = ClientQueryViewController(core: core, query: query)
+					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
 					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
 					self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 				}
 
 				let emptyViewController = self.emptyViewController
-				emptyViewController.navigationItem.title = "Accounts".localized
+				if VendorServices.shared.isBranded {
+					emptyViewController.navigationItem.title = "Manage".localized
+				} else {
+					emptyViewController.navigationItem.title = "Accounts".localized
+				}
 
 				self.filesNavigationController?.popLastHandler = { [weak self] (viewController) in
 					if viewController == emptyViewController {
@@ -268,8 +306,19 @@ class ClientRootViewController: UITabBarController {
 
 					return (viewController != emptyViewController)
 				}
+
+				let bookmarkUUID = core.bookmark.uuid
+
 				self.activityViewController?.core = core
 				self.libraryViewController?.core = core
+
+				self.messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
+					return (message.bookmarkUUID == bookmarkUUID) && !message.resolved
+				}, provideGroupedSelection: true, provideSyncRecordIDs: true, handler: { [weak self] (messages, groups, syncRecordIDs) in
+					self?.updateMessageSelectionWith(messages: messages, groups: groups, syncRecordIDs: syncRecordIDs)
+				})
+
+				self.activityViewController?.messageSelector = self.messageSelector
 
 				self.connectionInitializedObservation = core.observe(\OCCore.connection.connectionInitializationPhaseCompleted, options: [.initial], changeHandler: { [weak self] (core, _) in
 					if core.connection.connectionInitializationPhaseCompleted {
@@ -303,13 +352,29 @@ class ClientRootViewController: UITabBarController {
 //		self.view.setNeedsLayout()
 	}
 
+	func updateMessageSelectionWith(messages: [OCMessage]?, groups : [MessageGroup]?, syncRecordIDs : Set<OCSyncRecordID>?) {
+		OnMainThread {
+			self.activityViewController?.handleMessagesUpdates(messages: messages, groups: groups)
+
+			if syncRecordIDs != self.syncRecordIDsWithMessages {
+				self.syncRecordIDsWithMessages = syncRecordIDs
+			}
+		}
+	}
+
+	var syncRecordIDsWithMessages : Set<OCSyncRecordID>? {
+		didSet {
+			NotificationCenter.default.post(name: .ClientSyncRecordIDsWithMessagesChanged, object: self.core)
+		}
+	}
+
 	func createFileListStack(for itemLocalID: String) {
 		if let core = core {
 			// retrieve the item for the item id
 			core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
 				OnMainThread {
 					let query = OCQuery(forPath: "/")
-					let queryViewController = ClientQueryViewController(core: core, query: query)
+					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
 
 					if error == nil, let item = item, item.isRoot == false {
 						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
@@ -328,7 +393,7 @@ class ClientRootViewController: UITabBarController {
 						self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
 
 						// open the controller for the item
-						subController.open(item: item, animated: false)
+						subController.open(item: item, animated: false, pushViewController: true)
 					} else {
 						// Fallback, if item no longer exists show root folder
 						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
@@ -339,7 +404,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
-		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) as? ClientQueryViewController {
 			return subController
 		}
 
@@ -560,6 +625,25 @@ extension ClientRootViewController : OCCoreDelegate {
 			}
 		} else {
 			presentAlert(authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, nil)
+		}
+	}
+
+	func presentAlertAsCard(viewController: UIViewController, withHandle: Bool = false, dismissable: Bool = true) {
+		alertQueue.async { [weak self] (queueCompletionHandler) in
+			if let startViewController = self {
+				var hostViewController : UIViewController = startViewController
+
+				while hostViewController.presentedViewController != nil,
+				      hostViewController.presentedViewController?.isBeingDismissed == false {
+					hostViewController = hostViewController.presentedViewController!
+				}
+
+				hostViewController.present(asCard: viewController, animated: true, withHandle: withHandle, dismissable: dismissable, completion: {
+					queueCompletionHandler()
+				})
+			} else {
+				queueCompletionHandler()
+			}
 		}
 	}
 }

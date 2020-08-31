@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 struct DisplayViewConfiguration {
 	var item: OCItem?
@@ -165,6 +166,8 @@ class DisplayViewController: UIViewController {
 
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
+		coreConnectionStatusObservation = nil
+
 		Theme.shared.unregister(client: self)
 		self.stopQuery()
 	}

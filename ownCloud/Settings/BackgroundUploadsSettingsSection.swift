@@ -20,6 +20,8 @@ import UIKit
 import CoreLocation
 import UserNotifications
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 
 extension UserDefaults {
 
@@ -111,10 +113,9 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 			if let enableSwitch = sender as? UISwitch {
 				if enableSwitch.isOn {
 					// Request authorization for notifications
-					let center = UNUserNotificationCenter.current()
-					center.getNotificationSettings(completionHandler: { (settings) in
+					NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in
 						if settings.authorizationStatus == .notDetermined {
-							center.requestAuthorization(options: [.alert]) { (granted, _) in
+							NotificationManager.shared.requestAuthorization(options: [.alert]) { (granted, _) in
 								OnMainThread {
 									enableSwitch.isOn = granted
 									userDefaults.backgroundMediaUploadsNotificationsEnabled = granted
@@ -133,8 +134,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		self.add(row: notificationsRow!)
 
 		// Update notifications option
-		let center = UNUserNotificationCenter.current()
-		center.getNotificationSettings(completionHandler: { (settings) in
+		NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in
 			OnMainThread {
 				self.notificationsRow?.value = userDefaults.backgroundMediaUploadsNotificationsEnabled && settings.authorizationStatus == .authorized
 			}

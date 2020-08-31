@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import StoreKit
 
 class ReleaseNotesHostViewController: UIViewController {
@@ -39,7 +40,7 @@ class ReleaseNotesHostViewController: UIViewController {
 
 		Theme.shared.register(client: self)
 
-		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenReleaseNotesVersion)
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appBuildNumber), forClassSettingsKey: .lastSeenReleaseNotesVersion)
 
 		let headerView = UIView()
 		headerView.backgroundColor = .clear
@@ -134,7 +135,7 @@ class ReleaseNotesHostViewController: UIViewController {
 	}
 
 	@objc func rateApp() {
-		guard let appStoreLink =  MoreSettingsSection.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
+		guard let appStoreLink =  VendorServices.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
 
 		guard let reviewURL = URL(string: "\(appStoreLink)&action=write-review") else { return }
 
@@ -148,7 +149,7 @@ extension ReleaseNotesHostViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
 		self.view.backgroundColor = collection.tableBackgroundColor
-		titleLabel.applyThemeCollection(collection, itemStyle: .logo)
+		titleLabel.applyThemeCollection(collection, itemStyle: .title)
 		proceedButton.backgroundColor = collection.neutralColors.normal.background
 		proceedButton.setTitleColor(collection.neutralColors.normal.foreground, for: .normal)
 		footerButton.setTitleColor(collection.tableRowColors.labelColor, for: .normal)
@@ -160,7 +161,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 	var shouldShowReleaseNotes: Bool {
 		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
 
-			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedSame {
+			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedSame {
 				return false
 			}
 
@@ -181,11 +182,11 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 			return false
 		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil {
-			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
+			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appBuildNumber {
 				   return true
 			}
 			return false
-		} else if OCBookmarkManager.shared.bookmarks.count > 0 {
+		} else if OCBookmarkManager.shared.bookmarks.count > 0 && !VendorServices.shared.isBranded {
 			// Fallback, if app was previously installed, because we cannot check for an user defaults key, we have to check if accounts was previously configured
 			return true
 		}
@@ -206,6 +207,21 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 				}
 
 				return relevantReleaseNotes as? [[String:Any]]
+			}
+		}
+
+		return nil
+	}
+
+	func image(for key: String) -> UIImage? {
+		if #available(iOS 13.0, *) {
+			let homeSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .thin)
+			return UIImage(systemName: key, withConfiguration: homeSymbolConfiguration)?.withRenderingMode(.alwaysTemplate)
+		} else if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist"), let releaseNotesValues = NSDictionary(contentsOfFile: path), let imageValues = releaseNotesValues["ImageData"] as? NSDictionary, let base64Image = imageValues[key] as? String {
+			let dataDecoded : Data = Data(base64Encoded: base64Image, options: .ignoreUnknownCharacters)!
+
+			if let decodedimage = UIImage(data: dataDecoded)?.scaledImageFitting(in: CGSize(width: 50.0, height: 44.0))?.withRenderingMode(.alwaysTemplate) {
+				return decodedimage
 			}
 		}
 

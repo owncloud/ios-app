@@ -28,9 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^OCLicenseAppStoreRestorePurchasesCompletionHandler)(NSError * _Nullable error);
 typedef void(^OCLicenseAppStoreRefreshProductsCompletionHandler)(NSError * _Nullable error);
 
-typedef NS_ENUM(NSUInteger, OCLicenseAppStoreProviderError)
+typedef NS_ENUM(NSInteger, OCLicenseAppStoreProviderError)
 {
-	OCLicenseAppStoreProviderErrorPurchasesNotAllowed
+	OCLicenseAppStoreProviderErrorPurchasesNotAllowed,
+	OCLicenseAppStoreProviderErrorPurchasesNotAllowedForVPPCopies
 };
 
 @interface OCLicenseAppStoreProvider : OCLicenseProvider <OCLogTagging>
@@ -43,6 +44,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseAppStoreProviderError)
 @property(strong) NSArray<OCLicenseAppStoreItem *> *items;
 
 @property(nonatomic,readonly) BOOL purchasesAllowed;
+@property(nonatomic,readonly) BOOL isVolumePurchase;
 
 #pragma mark - Init
 - (instancetype)initWithItems:(NSArray<OCLicenseAppStoreItem *> *)items;

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class DisplayHostViewController: UIPageViewController {
 
@@ -81,6 +82,7 @@ class DisplayHostViewController: UIPageViewController {
 
 	deinit {
 		queryObservation?.invalidate()
+		queryObservation = nil
 
 		if queryStarted {
 			core?.stop(query)

@@ -61,6 +61,12 @@
 "Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
+"Show accounts" = "Show accounts";
+"Setup complete" = "Setup complete";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Access Files" = "Access Files";
+"Logout" = "Logout";
 
 /* Client */
 "Browse" = "Browse";
@@ -92,6 +98,14 @@
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
+"%@ item | " = "%@ item | ";
+"%@ items | " = "%@ items | ";
+
+/* Static Login Setup */
+"Server error" = "Server error";
+"The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
+"The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
+"Retry detection" = "Retry detection";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -125,16 +139,28 @@
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
 
+"All done" = "All done";
+"No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
+
+"Show all" = "Show all";
+"+ %ld more" = "+ %ld more";
+"Apply choice to all similar issues" = "Apply choice to all similar issues";
+"Apply to all" = "Apply to all";
+
 /* Server List*/
 "Cancel" = "Cancel";
 "OK" = "OK";
 
 "'%@' is currently locked" = "'%@' is currently locked";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
+"Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
+"This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Really delete '%@'?";
+"Really logout from '%@'?" = "Really logout from '%@'?";
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
-"Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Remove" = "Remove";
+"Removing of '%@' failed" = "Removing of '%@' failed";
 "Accounts" = "Accounts";
 
 "Help" = "Help";
@@ -157,6 +183,7 @@
 "Upload videos via WiFi only" = "Upload videos via WiFi only";
 "Upload pictures via WiFi only" = "Upload pictures via WiFi only";
 "More" = "More";
+"Documentation" = "Documentation";
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
@@ -177,7 +204,7 @@
 "beta" = "beta";
 "release" = "release";
 "App Version" = "App Version";
-"Version informations were copied to the clipboard" = "Version informations were copied to the clipboard";
+"Version information were copied to the clipboard" = "Version information were copied to the clipboard";
 
 
 /* User Interface Settings */
@@ -248,9 +275,12 @@
 /* Display settings */
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
-"Show folders at the top" = "Show folders at the top";
+"Show folders on top" = "Show folders on top";
 "Prevent gestures" = "Prevent gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
+
+/* Advanced settings */
+"Enable diagnostics" = "Enable diagnostics";
 
 /* Passcode Messages */
 
@@ -276,6 +306,8 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
+"Item with same name already exists" = "Item with same name already exists";
+"An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
 "Rename" ="Rename";
@@ -337,6 +369,9 @@
 "Media import" = "Media import";
 "%@ of %@" = "%@ of %@";
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
+"%d Item" = "%d Item";
+"%d Items" = "%d Items";
+"Select Items" = "Select Items";
 
 /* Scan */
 "Scan" = "Scan";
@@ -463,7 +498,7 @@
 
 /* Media files settings */
 "Media Files" = "Media Files";
-"Streaming Enabled" = "Streaming Enabled";
+"Download instead of streaming" = "Download instead of streaming";
 
 /* Photo upload settings */
 "Media Upload" = "Media Upload";
@@ -521,6 +556,16 @@
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
 
+/* Diagnostic */
+"Diagnostic Overview" = "Diagnostic Overview";
+"Diagnostics" = "Diagnostics";
+"Share Diagnostics" = "Share Diagnostics";
+"Action executed" = "Action executed";
+
+"Update Status" = "Update Status";
+"Completed update scans" = "Completed update scans";
+"Total update scans" = "Total update scans";
+
 /* Available offline */
 "Root folder" = "Root folder";
 "at" = "at";
@@ -535,9 +580,8 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
-/* Import File */
-"Save File" = "Save File";
-"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
+/* Single Account */
+"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
 
 /* Release Notes */
 "Proceed" = "Proceed";
@@ -602,13 +646,13 @@
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
 "Purchase failed" = "Purchase failed";
+"More information" = "More information";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"App Store" = "App Store";
 "Purchases" = "Purchases";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Document Scanner";
@@ -618,6 +662,7 @@
 "Markup Documents" = "Markup Documents";
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
+
 "Purchased App Version" = "Purchased App Version";
 "Receipt Date" = "Receipt Date";
 "Manage subscription" = "Manage subscription";
@@ -634,6 +679,25 @@
 "subscription" = "subscription";
 "Photo Pro Features" = "Photo Pro Features";
 "Image metadata, extended upload options" = "Image metadata, extended upload options";
+
+/* Share Sheet */
+"Save File" = "Save File";
+"Choose an account and folder to import into." = "Choose an account and folder to import into.";
+"No account configured.\nSetup an new account in the app to save to." = "No account configured.\nSetup an new account in the app to save to.";
+"Importing item %ld of %ld" = "Importing item %ld of %ld";
+"Error importing %@" = "Error importing %@";
+"Error loading item" = "Error loading item";
+"Preparing…" = "Preparing…";
+"Save here" = "Save here";
+
+/* Data migration from legacy app */
+"Account Migration" = "Account Migration";
+"App Passcode" = "App Passcode";
+"Instant Upload Settings" = "Instant Upload Settings";
+"Migrating" = "Migrating";
+"Migrated" = "Migrated";
+"Failed to migrate" = "Failed to migrate";
+"Failed to access legacy user data" = "Failed to access legacy user data";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";

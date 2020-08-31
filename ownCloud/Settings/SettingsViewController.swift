@@ -19,11 +19,18 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class SettingsViewController: StaticTableViewController {
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.navigationItem.title = "Settings".localized
+
+		if self.navigationController?.isBeingPresented ?? false {
+			let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+			self.navigationItem.rightBarButtonItem = doneBarButtonItem
+		}
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(SecuritySettingsSection(userDefaults: userDefaults))

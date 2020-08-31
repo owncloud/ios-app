@@ -17,6 +17,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <ownCloudSDK/ownCloudSDK.h>
 
 #import <openssl/err.h>
 #import <openssl/x509.h>
@@ -65,9 +66,14 @@
 	if (NSBundle.mainBundle.appStoreReceiptURL != nil)
 	{
 		NSData *receiptData;
+		NSURL *receiptURL = NSBundle.mainBundle.appStoreReceiptURL;
 
-		if ((receiptData = [NSData dataWithContentsOfURL:NSBundle.mainBundle.appStoreReceiptURL]) != nil)
+		OCLogDebug(@"Trying to load receipt from %@", receiptURL);
+
+		if ((receiptData = [NSData dataWithContentsOfURL:receiptURL]) != nil)
 		{
+			OCLogDebug(@"Loaded receipt from %@", receiptURL);
+
 			return ([[self alloc] initWithReceiptData:receiptData]);
 		}
 	}
@@ -87,7 +93,7 @@
 
 - (OCLicenseAppStoreReceiptParseError)parse
 {
-	NSData *receiptData, *rootCAData, *uuidData;
+	NSData *receiptData, *rootCAData;
 	OCLicenseAppStoreReceiptParseError error = OCLicenseAppStoreReceiptParseErrorNone;
 
 	// Fetch essentials
@@ -101,7 +107,7 @@
 		return(OCLicenseAppStoreReceiptParseErrorNoRootCA);
 	}
 
-	if ((uuidData = [OCLicenseAppStoreReceipt deviceIdentifierData]) == nil)
+	if ([OCLicenseAppStoreReceipt deviceIdentifierData] == nil)
 	{
 		return(OCLicenseAppStoreReceiptParseErrorNoDeviceID);
 	}
@@ -144,8 +150,7 @@
 		error = OCLicenseAppStoreReceiptParseErrorSignatureVerification;
 		if ((receiptContents = BIO_new(BIO_s_mem())) == NULL) { break; }
 
-		int verificationResult;
-		if ((verificationResult = PKCS7_verify(pkcs7, NULL, x509Store, NULL, receiptContents, 0)) != 1) { break; }
+		if (PKCS7_verify(pkcs7, NULL, x509Store, NULL, receiptContents, 0) != 1) { break; }
 		if (ERR_get_error() != 0) { break; }
 
 		// Parse ASN.1 contents

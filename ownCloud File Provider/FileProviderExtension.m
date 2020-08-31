@@ -24,10 +24,13 @@
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
+#import "FileProviderServiceSource.h"
+#import <CrashReporter.h>
 
 @interface FileProviderExtension ()
 {
 	NSFileCoordinator *_fileCoordinator;
+	NotificationMessagePresenter *_messagePresenter;
 }
 
 @property (nonatomic, readonly, strong) NSFileManager *fileManager;
@@ -41,9 +44,9 @@
 
 - (instancetype)init
 {
-	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
+	[self setupCrashReporting];
 
-	_fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
 	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
 
@@ -52,6 +55,7 @@
 	OCAppIdentity.sharedAppIdentity.appGroupIdentifier = bundleInfoDict[@"OCAppGroupIdentifier"];
 
 	if (self = [super init]) {
+		_fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
 		_fileManager = [NSFileManager new];
 	}
 
@@ -59,7 +63,49 @@
 
 	[self addObserver:self forKeyPath:@"domain" options:0 context:(__bridge void *)self];
 
+	// [self postAlive];
+
 	return self;
+}
+
+//- (void)postAlive
+//{
+//	OCLogDebug(@"Alive…");
+//
+//	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//		[self postAlive];
+//	});
+//}
+
+- (void)setupCrashReporting {
+
+    static dispatch_once_t token;
+
+    dispatch_once (&token, ^{
+		// Initialize crash reporter as soon as FP extension is loaded into memory
+		PLCrashReporterConfig *configuration = [PLCrashReporterConfig defaultConfiguration];
+		PLCrashReporter *reporter = [[PLCrashReporter alloc] initWithConfiguration:configuration];
+
+		// Do we have a pending crash report from previous session?
+		if ([reporter hasPendingCrashReport]) {
+
+			// Generate a report and add it to the log file
+			NSData *crashData = [reporter loadPendingCrashReportData];
+			if (crashData != nil) {
+				PLCrashReport *report = [[PLCrashReport alloc] initWithData:crashData error:nil];
+				if (report != nil) {
+					NSString *crashString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
+					OCTLogError(@[@"CRASH_REPORTER"], @"%@", crashString);
+				}
+			}
+
+			// Purge the report which we just added to the log
+			[reporter purgePendingCrashReport];
+		}
+
+		// Start intercepting OS signals to catch crashes
+		[reporter enableCrashReporter];
+    });
 }
 
 - (void)dealloc
@@ -72,6 +118,12 @@
 
 	if (_core != nil)
 	{
+		if (_messagePresenter != nil)
+		{
+			OCLogDebug(@"Removing Message Presenter for FileProvider %@", self);
+			[core.messageQueue removePresenter:_messagePresenter];
+		}
+
 		OCLogDebug(@"Returning OCCore for FileProvider %@", self);
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
 	}
@@ -190,6 +242,11 @@
 	NSParameterAssert(pathComponents.count > 2);
 
 	// OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
+
+	if ([pathComponents.lastObject isEqual:self.bookmark.fpServicesURLComponentName])
+	{
+		return (url.lastPathComponent);
+	}
 
 	return pathComponents[pathComponents.count - 2];
 }
@@ -389,30 +446,37 @@
 	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
 	{
 		// Detect collission with existing items
-		OCItem *existingItem;
-
 		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
 
-		if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
+		if (!self.skipLocalErrorChecks)
 		{
-			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
-			if (@available(iOS 13.3, *))
+			OCItem *existingItem;
+
+			if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 			{
-				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+				FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
+				if (@available(iOS 13.3, *))
+				{
+					completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+				}
+				else
+				{
+					completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+				}
+				return;
 			}
-			else
-			{
-				completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
-			}
-			return;
 		}
 
-		[self.core createFolder:directoryName inside:parentItem options:@{
-//			OCCoreOptionPlaceholderCompletionHandler : [^(NSError * _Nullable error, OCItem * _Nullable item) {
-//				FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
-//
-//				completionHandler(item, [error translatedError]);
-//			} copy]
+		__block BOOL calledCompletionHandler = NO;
+
+		[self.core createFolder:directoryName inside:parentItem options:nil placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
+			FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
+
+			if (!calledCompletionHandler)
+			{
+				calledCompletionHandler = YES;
+				completionHandler(item, [error translatedError]);
+			}
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if (error != nil)
 			{
@@ -426,12 +490,19 @@
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
 						if (@available(iOS 13.3, *))
 						{
-							completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+							if (!calledCompletionHandler)
+							{
+								calledCompletionHandler = YES;
+								completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+							}
 						}
 						else
 						{
-							completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
-
+							if (!calledCompletionHandler)
+							{
+								calledCompletionHandler = YES;
+								completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+							}
 						}
 						return;
 					}
@@ -440,7 +511,11 @@
 
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, [error translatedError]);
+			if (!calledCompletionHandler)
+			{
+				calledCompletionHandler = YES;
+				completionHandler(item, [error translatedError]);
+			}
 		}];
 	}
 	else
@@ -560,11 +635,10 @@
 		if (isImportingFromVault)
 		{
 			NSFileProviderItemIdentifier sourceItemIdentifier;
-			NSFileProviderItem sourceItem;
 
 			// Determine source item
 			if (((sourceItemIdentifier = [self persistentIdentifierForItemAtURL:readURL]) != nil) &&
-			    ((sourceItem = [self itemForIdentifier:sourceItemIdentifier error:nil]) != nil))
+			    ([self itemForIdentifier:sourceItemIdentifier error:nil] != nil))
 			{
 				importByCopying = YES;
 			}
@@ -753,11 +827,6 @@
 	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
 }
 
-- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
-{
-	return (nil);
-}
-
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
@@ -775,12 +844,18 @@
 
 			if ( !unlocked || (unlocked && [[lockDate dateByAddingTimeInterval:lockDelay] compare:[NSDate date]] == NSOrderedAscending))
 			{
-				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+				if (error != NULL)
+				{
+					*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+				}
 
 				return (nil);
 			}
 		} else if ((unlockData != nil) && ![[NSKeyedUnarchiver unarchivedObjectOfClass:NSNumber.class fromData:unlockData error:NULL] boolValue]) {
-			*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+			if (error != NULL)
+			{
+				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+			}
 
 			return (nil);
 		}
@@ -856,6 +931,23 @@
 	return (thumbnailRequest.progress);
 }
 
+#pragma mark - Services
+- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
+{
+	BOOL isSpecialItem = [itemIdentifier isEqual:self.bookmark.fpServicesURLComponentName];
+
+	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (%d)", OCLogPrivate(itemIdentifier), isSpecialItem);
+
+	if (isSpecialItem)
+	{
+		return (@[
+			[[FileProviderServiceSource alloc] initWithServiceName:OCFileProviderServiceName extension:self]
+		]);
+	}
+
+	return (nil);
+}
+
 #pragma mark - Core
 - (OCBookmark *)bookmark
 {
@@ -907,6 +999,12 @@
 						core.delegate = self;
 					} completionHandler:^(OCCore *core, NSError *error) {
 						self->_core = core;
+
+						if ((self->_messagePresenter = [[NotificationMessagePresenter alloc] initForBookmarkUUID:core.bookmark.uuid]) != nil)
+						{
+							[core.messageQueue addPresenter:self->_messagePresenter];
+						}
+
 						OCSyncExecDone(waitForCore);
 					}];
 				});
@@ -932,6 +1030,24 @@
 	}
 }
 
+#pragma mark - Class settings
++ (OCClassSettingsIdentifier)classSettingsIdentifier
+{
+	return (OCClassSettingsIdentifierFileProvider);
+}
+
++ (NSDictionary<OCClassSettingsKey,id> *)defaultSettingsForIdentifier:(OCClassSettingsIdentifier)identifier
+{
+	return (@{
+			OCClassSettingsKeyFileProviderSkipLocalErrorChecks : @(NO)
+		});
+}
+
+- (BOOL)skipLocalErrorChecks
+{
+	return (((NSNumber *)[self classSettingForOCClassSettingsKey:OCClassSettingsKeyFileProviderSkipLocalErrorChecks]).boolValue);
+}
+
 #pragma mark - Log tagging
 + (NSArray<OCLogTagName> *)logTags
 {
@@ -946,6 +1062,8 @@
 @end
 
 OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";
+OCClassSettingsIdentifier OCClassSettingsIdentifierFileProvider = @"file-provider";
+OCClassSettingsKey OCClassSettingsKeyFileProviderSkipLocalErrorChecks = @"skip-local-error-checks";
 
 /*
 	Additional information:
