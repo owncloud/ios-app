@@ -39,7 +39,7 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 
-			if #available(iOS 13, *), !OCLicenseEMMProvider.isEMMVersion {
+			if #available(iOS 13, *), !OCLicenseEMMProvider.isEMMVersion, !VendorServices.shared.isBranded {
 				self.addSection(PurchasesSettingsSection(userDefaults: userDefaults))
 			}
 
