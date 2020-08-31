@@ -578,7 +578,7 @@
 
 /* Release Notes */
 "Proceed" = "Continuar";
-"New in ownCloud" = "New in ownCloud";
+"New in %@" = "New in %@";
 "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
 
 /* Key Commands */
