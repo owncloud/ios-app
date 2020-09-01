@@ -21,6 +21,7 @@ import CoreLocation
 import MapKit
 import Contacts
 import ownCloudSDK
+import ownCloudAppShared
 
 extension CLLocation {
 	var dmsLatitude: String {
