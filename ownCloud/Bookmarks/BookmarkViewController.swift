@@ -78,6 +78,7 @@ class BookmarkViewController: StaticTableViewController {
 	var cookieStorage : OCHTTPCookieStorage? {
 		if _cookieStorage == nil, let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
 			_cookieStorage = OCHTTPCookieStorage()
+			Log.debug("Created cookie storage \(String(describing: _cookieStorage))")
 		}
 
 		return _cookieStorage
