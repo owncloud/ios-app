@@ -93,6 +93,9 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			@"text/markdown"						: @"net.daringfireball.markdown",
 			@"text/x-shellscript"						: @"public.shell-script",
 			@"text/x-java-source"						: @"com.sun.java-source"
+
+//			@"audio/ogg"							: @"org.xiph.oga",
+//			@"video/ogg"							: @"org.xiph.ogv"
 		};
 	});
 
@@ -201,6 +204,14 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		}
 
 		OCLogDebug(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+	}
+
+	// Reject "dyn.*" types
+	if ([uti hasPrefix:@"dyn."])
+	{
+		// Use data instead
+		uti = (__bridge NSString *)kUTTypeData;
+		OCLogDebug(@"Rejected dynamic %@ UTI for %@, using %@ instead", self.name, self.mimeType, uti);
 	}
 
 	return (uti);
