@@ -347,6 +347,8 @@
 		DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35DA624D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift */; };
 		DCAEB05F21F9FB370067E147 /* OCBookmarkManager+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */; };
 		DCAEB06121F9FC510067E147 /* EarlGrey+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */; };
+		DCB2C05F250C1F9E001083CA /* BrandingClassSettingsSource.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */; };
+		DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */; };
 		DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */; };
 		DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */; };
 		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
@@ -536,13 +538,6 @@
 			remoteGlobalIDString = DC7E0A77203732B3006111FA;
 			remoteInfo = Ocean;
 		};
-		391C7A3624E4119C00CB6333 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
-			remoteInfo = ownCloudApp;
-		};
 		394A0AFE22EEFC2C00603813 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
@@ -696,6 +691,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = DC30949C205749EA00189B9A;
 			remoteInfo = openssl;
+		};
+		DCB2C058250C1C3F001083CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
+			remoteInfo = ownCloudApp;
+		};
+		DCB2C05A250C1C4D001083CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
+			remoteInfo = ownCloudSDK;
 		};
 		DCC085662293F1FD008CC05C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1263,6 +1272,8 @@
 		DCAB9CC823417243009091B6 /* ThemedAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedAlertController.swift; sourceTree = "<group>"; };
 		DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Tools.swift"; sourceTree = "<group>"; };
 		DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EarlGrey+Tools.swift"; sourceTree = "<group>"; };
+		DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrandingClassSettingsSource.h; sourceTree = "<group>"; };
+		DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrandingClassSettingsSource.m; sourceTree = "<group>"; };
 		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
 		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
@@ -2473,6 +2484,15 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		DCB2C05C250C1ECD001083CA /* Branding */ = {
+			isa = PBXGroup;
+			children = (
+				DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */,
+				DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */,
+			);
+			path = Branding;
+			sourceTree = "<group>";
+		};
 		DCBF0A5E2280393A00465530 /* PDF */ = {
 			isa = PBXGroup;
 			children = (
@@ -2510,6 +2530,7 @@
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
+				DCB2C05C250C1ECD001083CA /* Branding */,
 				DCF2DA6F24C82C820026D790 /* File Provider Services */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DCFEFE2223687637009A142F /* Licensing */,
@@ -2983,6 +3004,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				394A0AFD22EEFC2C00603813 /* ownCloudAppShared.h in Headers */,
+				DCB2C05F250C1F9E001083CA /* BrandingClassSettingsSource.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3124,7 +3146,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC0A359D24C0EBDC00FB58FC /* PBXTargetDependency */,
+				DCB2C05B250C1C4D001083CA /* PBXTargetDependency */,
 				DC0A359B24C0EBD800FB58FC /* PBXTargetDependency */,
 				394A0B0822EEFCD900603813 /* PBXTargetDependency */,
 			);
@@ -3221,8 +3243,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				DCC085832293F671008CC05C /* PBXTargetDependency */,
 				DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */,
+				DCC085832293F671008CC05C /* PBXTargetDependency */,
 			);
 			name = "ownCloud File Provider";
 			packageProductDependencies = (
@@ -3244,6 +3266,7 @@
 			);
 			dependencies = (
 				DCE4E48424C1F6630051722F /* PBXTargetDependency */,
+				DCB2C059250C1C3F001083CA /* PBXTargetDependency */,
 				DCE4E47E24C1F5880051722F /* PBXTargetDependency */,
 			);
 			name = "ownCloud Share Extension";
@@ -4092,6 +4115,7 @@
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
+				DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
 				DCC832F4242CC28F00153F8C /* NotificationManager.m in Sources */,
 				DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */,
@@ -4177,11 +4201,6 @@
 			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
 			targetProxy = DC0A359A24C0EBD800FB58FC /* PBXContainerItemProxy */;
 		};
-		DC0A359D24C0EBDC00FB58FC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
-			targetProxy = 391C7A3624E4119C00CB6333 /* PBXContainerItemProxy */;
-		};
 		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ownCloudMocking;
@@ -4236,6 +4255,16 @@
 			isa = PBXTargetDependency;
 			name = openssl;
 			targetProxy = DC8EB26D23927FE7009148F9 /* PBXContainerItemProxy */;
+		};
+		DCB2C059250C1C3F001083CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
+			targetProxy = DCB2C058250C1C3F001083CA /* PBXContainerItemProxy */;
+		};
+		DCB2C05B250C1C4D001083CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudSDK;
+			targetProxy = DCB2C05A250C1C4D001083CA /* PBXContainerItemProxy */;
 		};
 		DCC085672293F1FD008CC05C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4670,6 +4699,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

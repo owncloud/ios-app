@@ -8,6 +8,8 @@
 	<true/>
 	<key>feedbackMail</key>
 	<string></string>
+	<key>Configuration</key>
+	<dict/>
 	<key>Profiles</key>
 	<array/>
 	<key>URLs</key>
