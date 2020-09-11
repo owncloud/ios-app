@@ -8,6 +8,8 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
+
 @testable import ownCloud
 
 class MockClientRootViewController: ClientRootViewController {

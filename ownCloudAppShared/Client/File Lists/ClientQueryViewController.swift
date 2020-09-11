@@ -77,9 +77,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 						if let self = self {
 							if self.items.count == 1 {
-								footerText = String(format: "%@ item | ", "\(self.items.count)") + (footerText ?? "")
+								footerText = String(format: "%@ item | ".localized, "\(self.items.count)") + (footerText ?? "")
 							} else if self.items.count > 1 {
-								footerText = String(format: "%@ items | ", "\(self.items.count)") + (footerText ?? "")
+								footerText = String(format: "%@ items | ".localized, "\(self.items.count)") + (footerText ?? "")
 							}
 						}
 					}

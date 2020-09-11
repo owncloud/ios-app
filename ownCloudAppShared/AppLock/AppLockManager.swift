@@ -169,7 +169,7 @@ public class AppLockManager: NSObject {
 		}
 	}
 
-	func dismissLockscreen(animated:Bool) {
+	public func dismissLockscreen(animated:Bool) {
 		if animated {
 			let animationGroup = DispatchGroup()
 

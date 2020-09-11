@@ -366,7 +366,7 @@ end
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud Share Extension/ownCloud Share Extension.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
@@ -377,8 +377,8 @@ end
 
     set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
 
-    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
 
     automatic_code_signing(
       path: "ownCloud.xcodeproj",
