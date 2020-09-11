@@ -216,9 +216,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			considerBetaWarning()
 		}
 
-        if !shownFirstTime {
-            VendorServices.shared.considerReviewPrompt()
-        }
+		if !shownFirstTime {
+			VendorServices.shared.considerReviewPrompt()
+		}
 	}
 
 	@objc func considerAutoLogin() -> Bool {
@@ -506,6 +506,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
+	weak var activeClientRootViewController : ClientRootViewController?
+
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
 			return
@@ -538,9 +540,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
 		clientRootViewController.afterCoreStart(lastVisibleItemId) {
-			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
-			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
+			if self.lastSelectedBookmark?.uuid == bookmark.uuid, // Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+			   self.activeClientRootViewController == nil { // Make sure we don't present this ClientRootViewController while still presenting another
 				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
+
+				self.activeClientRootViewController = clientRootViewController // save this ClientRootViewController as the active one (only weakly referenced)
 
 				// Set up custom push transition for presentation
 

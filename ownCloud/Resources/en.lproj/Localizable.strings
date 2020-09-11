@@ -183,6 +183,7 @@
 "Upload videos via WiFi only" = "Upload videos via WiFi only";
 "Upload pictures via WiFi only" = "Upload pictures via WiFi only";
 "More" = "More";
+"Documentation" = "Documentation";
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
@@ -645,6 +646,7 @@
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
 "Purchase failed" = "Purchase failed";
+"More information" = "More information";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";
