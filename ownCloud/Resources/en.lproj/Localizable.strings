@@ -662,6 +662,7 @@
 "Markup Documents" = "Markup Documents";
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
+
 "Purchased App Version" = "Purchased App Version";
 "Receipt Date" = "Receipt Date";
 "Manage subscription" = "Manage subscription";
@@ -780,6 +781,8 @@
 "Original date" = "Original date";
 "Digitized date" = "Digitized date";
 
+"Color space" = "Color space";
+
 /* EXIF: aux info */
 "Lens ID" = "Lens ID";
 "Lens serial" = "Lens serial";
@@ -807,8 +810,13 @@
 "Coordinates" = "Coordinates";
 "Altitude" = "Altitude";
 "Place" = "Place";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";
 
 /* Pro photo upload settings */
 "Extended upload settings" = "Extended upload settings";
 "Prefer unedited photos" = "Prefer unedited photos";
 "Prefer RAW photos" = "Prefer RAW photos";
+

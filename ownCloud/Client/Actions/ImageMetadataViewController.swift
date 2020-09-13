@@ -25,13 +25,17 @@ import ownCloudAppShared
 
 extension CLLocation {
 	var dmsLatitude: String {
-		let direction = self.coordinate.latitude >= 0 ? "N" : "S"
+		let direction = self.coordinate.latitude >= 0 ? "N".localized : "S".localized
 		return dms(from: self.coordinate.latitude) + "\"\(direction)"
 	}
 
 	var dmsLongitude: String {
-		let direction = self.coordinate.longitude >= 0 ? "E" : "W"
+		let direction = self.coordinate.longitude >= 0 ? "E".localized : "W".localized
 		return dms(from: self.coordinate.longitude) + "\"\(direction)"
+	}
+
+	var altitudeString: String {
+		return String(format: "%.2f m", self.altitude)
 	}
 
 	private func dms(from coordinate:CLLocationDegrees) -> String {
@@ -75,7 +79,7 @@ class ImageMetadataParser {
 	}()
 
 	enum MetadataParseError : Error {
-		case InvailidInput
+		case InvalidInput
 		case MetadataMissing
 	}
 
@@ -358,7 +362,7 @@ class ImageMetadataParser {
 			if let value = value as? Int, value == 1 {
 				space = "sRGB"
 			}
-			return MetadataItem(name: "Exposure bias".localized, value: space)
+			return MetadataItem(name: "Color space".localized, value: space)
 		}
 
 		// Time
@@ -444,7 +448,7 @@ class ImageMetadataParser {
 	}()
 
 	func parse(url:URL) throws -> ParseResult {
-		guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else { throw MetadataParseError.InvailidInput }
+		guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else { throw MetadataParseError.InvalidInput }
 
 		guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : Any] else { throw MetadataParseError.MetadataMissing }
 
@@ -608,7 +612,7 @@ class ImageMetadataViewController: StaticTableViewController {
 						self.gpsSection.add(row: latLongRow)
 
 						if location.altitude != 0 {
-							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Altitude".localized, subtitle: "\(location.altitude) m", style: .value2, accessoryType: .none, identifier: "location-gps-alt")
+							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Altitude".localized, subtitle: location.altitudeString, style: .value2, accessoryType: .none, identifier: "location-gps-alt")
 							self.gpsSection.add(row: altitudeRow)
 						}
 
