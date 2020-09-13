@@ -209,12 +209,10 @@ class ShareViewController: MoreStaticTableViewController {
 					})
 
 					directoryPickerViewController.cancelAction = { [weak self] in
-						self?.dismiss(animated: true, completion: {
-							self?.returnCores(completion: {
-								OnMainThread {
-									self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-								}
-							})
+						self?.returnCores(completion: {
+							OnMainThread {
+								self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+							}
 						})
 					}
 					if !withBackButton {
