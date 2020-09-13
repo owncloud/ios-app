@@ -19,12 +19,13 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController {
+class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -32,6 +33,7 @@ class ClientRootViewController: UITabBarController {
 	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
+	private var coreRequested : Bool = false
 	var filesNavigationController : ThemeNavigationController?
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
@@ -155,12 +157,15 @@ class ClientRootViewController: UITabBarController {
 			core?.messageQueue.remove(presenter: cardMessagePresenter)
 		}
 
-		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		if self.coreRequested {
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		}
 	}
 
 	// MARK: - Startup
 	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.coreRequested = true
 			self.core = core
 			core?.delegate = self
 
@@ -221,7 +226,7 @@ class ClientRootViewController: UITabBarController {
 		libraryViewController = LibraryTableViewController(style: .grouped)
 		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
 		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
-		libraryNavigationController?.tabBarItem.image = UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
+		libraryNavigationController?.tabBarItem.image = UIImage(named: "branding-bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -388,7 +393,7 @@ class ClientRootViewController: UITabBarController {
 						self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
 
 						// open the controller for the item
-						subController.open(item: item, animated: false)
+						subController.open(item: item, animated: false, pushViewController: true)
 					} else {
 						// Fallback, if item no longer exists show root folder
 						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
@@ -399,7 +404,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
-		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) as? ClientQueryViewController {
 			return subController
 		}
 
@@ -658,8 +663,4 @@ extension ClientRootViewController: UITabBarControllerDelegate {
 
 		return true
 	}
-}
-
-extension NSNotification.Name {
-	static let ClientSyncRecordIDsWithMessagesChanged = NSNotification.Name(rawValue: "client-sync-record-ids-with-messages-changed")
 }

@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class DeleteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.delete") }
@@ -28,19 +29,13 @@ class DeleteAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedWithUser = forContext.items.sharedWithUser
 
-		if let core = forContext.core {
-			for sharedItem in sharedWithUser {
-				if sharedItem.isShareRootItem(from: core) {
-					return .none
-				}
-			}
+		if forContext.containsRoot || !forContext.allItemsDeleteable {
+			return .none
 		}
 
-		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.delete)}).count > 0 {
+		if forContext.containsShareRoot {
 			return .none
-
 		}
 
 		return .last
@@ -92,7 +87,7 @@ class DeleteAction : Action {
 			with: name,
 			message: message,
 			destructiveLabel: "Delete".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
+			preferredStyle: UIDevice.current.isIpad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				deleteItemAndPublishProgress(items)
 		})

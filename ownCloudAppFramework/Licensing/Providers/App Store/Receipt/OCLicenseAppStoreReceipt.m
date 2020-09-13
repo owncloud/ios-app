@@ -17,6 +17,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <ownCloudSDK/ownCloudSDK.h>
 
 #import <openssl/err.h>
 #import <openssl/x509.h>
@@ -65,9 +66,14 @@
 	if (NSBundle.mainBundle.appStoreReceiptURL != nil)
 	{
 		NSData *receiptData;
+		NSURL *receiptURL = NSBundle.mainBundle.appStoreReceiptURL;
 
-		if ((receiptData = [NSData dataWithContentsOfURL:NSBundle.mainBundle.appStoreReceiptURL]) != nil)
+		OCLogDebug(@"Trying to load receipt from %@", receiptURL);
+
+		if ((receiptData = [NSData dataWithContentsOfURL:receiptURL]) != nil)
 		{
+			OCLogDebug(@"Loaded receipt from %@", receiptURL);
+
 			return ([[self alloc] initWithReceiptData:receiptData]);
 		}
 	}

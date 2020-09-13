@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
+import CrashReporter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -105,7 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
 		if #available(iOS 13.0, *) {
-			if UIDevice.current.isIpad() {
+			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only
 				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
@@ -144,13 +145,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 		}
 
+		setupAndHandleCrashReports()
+
 		return true
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-
 		if url.matchesAppScheme {
-			guard let window = app.currentWindow() else { return false }
+			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 			openPrivateLink(url: url, in: window)
 
@@ -160,7 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				copyBeforeUsing = !shouldOpenInPlace
 			}
 
-			ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+			ImportFilesController.shared.importFile(ImportFile(url: url, fileIsLocalCopy: copyBeforeUsing))
 		}
 
 		return true
@@ -184,18 +186,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-            let url = userActivity.webpageURL else {
-                return false
-        }
+	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+			let url = userActivity.webpageURL else {
+				return false
+		}
 
-		guard let window = application.currentWindow() else { return false }
+		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 		openPrivateLink(url: url, in: window)
 
-        return true
-    }
+		return true
+	}
 
 	// MARK: UISceneSession Lifecycle
 	@available(iOS 13.0, *)
@@ -220,5 +222,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				url.resolveAndPresent(in: window)
 			}
 		}
+	}
+}
+
+extension UserInterfaceContext : UserInterfaceContextProvider {
+	public func provideRootView() -> UIView? {
+		return (UIApplication.shared.delegate as? AppDelegate)?.window
+	}
+
+	public func provideCurrentWindow() -> UIWindow? {
+		return UIApplication.shared.windows.first as? ThemeWindow
+	}
+}
+
+extension AppDelegate {
+	func setupAndHandleCrashReports() {
+		let configuration = PLCrashReporterConfig.defaultConfiguration()
+		guard let crashReporter = PLCrashReporter(configuration: configuration) else {
+			return
+		}
+
+		if crashReporter.hasPendingCrashReport() {
+			if let crashData = try? crashReporter.loadPendingCrashReportDataAndReturnError(), let crashReport = try? PLCrashReport(data: crashData) {
+				if let report = PLCrashReportTextFormatter.stringValue(for: crashReport, with: PLCrashReportTextFormatiOS) {
+					Log.error(tagged: ["CRASH_REPORTER"], report)
+				}
+			}
+			crashReporter.purgePendingCrashReport()
+		}
+
+		crashReporter.enable()
 	}
 }

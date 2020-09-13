@@ -17,6 +17,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -49,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			if urlContext.url.matchesAppScheme {
 				openPrivateLink(url: urlContext.url, in: scene)
 			} else {
-				ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
 		} else  if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
 			if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
@@ -84,18 +85,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		return scene.userActivity
 	}
 
-    @discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
-		guard let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
+	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
+		guard let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
 			return false
 		}
 
-		if activity.title == ownCloudOpenAccountPath {
+		if activity.title == OCBookmark.ownCloudOpenAccountPath {
 			serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
 			window?.windowScene?.userActivity = bookmark.openAccountUserActivity
 
 			return true
-		} else if activity.title == ownCloudOpenItemPath {
-			guard let itemLocalID = activity.userInfo?[ownCloudOpenItemUuidKey] as? String else {
+		} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
+			guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
 				return false
 			}
 
@@ -104,33 +105,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window?.windowScene?.userActivity = activity
 
 			return true
-        }
+		}
 
 		return false
 	}
 
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let urlContext = URLContexts.first {
-			if urlContext.url.matchesAppScheme {
-				openPrivateLink(url: urlContext.url, in: scene)
-            } else {
-                ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
-            }
-        }
-    }
+	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+		if let urlContext = URLContexts.first, urlContext.url.matchesAppScheme {
+			openPrivateLink(url: urlContext.url, in: scene)
+		} else {
+			URLContexts.forEach { (urlContext) in
+				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
+			}
+		}
+	}
 
-    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-            let url = userActivity.webpageURL else {
-                return
-        }
+	func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+			let url = userActivity.webpageURL else {
+				return
+		}
 
 		guard let windowScene = scene as? UIWindowScene else { return }
 
 		guard let window =  windowScene.windows.first else { return }
 
 		url.resolveAndPresent(in: window)
-    }
+	}
 
 	private func openPrivateLink(url:URL, in scene:UIScene?) {
 		if url.privateLinkItemID() != nil {

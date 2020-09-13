@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
@@ -111,6 +112,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
+
+		if Migration.shared.legacyDataFound {
+			let migrationViewController = MigrationViewController()
+			let navigationController = ThemeNavigationController(rootViewController: migrationViewController)
+			migrationViewController.migrationFinishedHandler = {
+				Migration.shared.wipeLegacyData()
+			}
+			navigationController.modalPresentationStyle = .fullScreen
+			self.present(navigationController, animated: false)
+		}
 
 		messageCountByBookmarkUUID = [:] // Initial update of app badge icon
 
@@ -205,9 +216,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			considerBetaWarning()
 		}
 
-        if !shownFirstTime {
-            VendorServices.shared.considerReviewPrompt()
-        }
+		if !shownFirstTime {
+			VendorServices.shared.considerReviewPrompt()
+		}
 	}
 
 	@objc func considerAutoLogin() -> Bool {
@@ -407,7 +418,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	func delete(bookmark: OCBookmark, at indexPath: IndexPath, completion: (() -> Void)? = nil) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			presentationStyle = .alert
 		}
 
@@ -495,6 +506,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
+	weak var activeClientRootViewController : ClientRootViewController?
+
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
 			return
@@ -527,9 +540,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
 		clientRootViewController.afterCoreStart(lastVisibleItemId) {
-			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
-			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
+			if self.lastSelectedBookmark?.uuid == bookmark.uuid, // Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+			   self.activeClientRootViewController == nil { // Make sure we don't present this ClientRootViewController while still presenting another
 				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
+
+				self.activeClientRootViewController = clientRootViewController // save this ClientRootViewController as the active one (only weakly referenced)
 
 				// Set up custom push transition for presentation
 
@@ -625,7 +640,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func makeContextMenu(for indexPath: IndexPath, with bookmark: OCBookmark) -> UIMenu {
 		var menuItems : [UIAction] = []
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: 	"uiwindow.split.2x1")) { _ in
 				self.openAccountInWindow(at: indexPath)
 			}
@@ -706,13 +721,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self.delete(bookmark: bookmark, at: indexPath ) {
-					OnMainThread {
-						self.tableView.performBatchUpdates({
-							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-						}, completion: { (_) in
-							self.ignoreServerListChanges = false
-						})
-					}
+					self.ignoreServerListChanges = false
 				}
 			}
 		})
@@ -732,7 +741,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		})
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if #available(iOS 13.0, *), UIDevice.current.isIpad {
 			let openAccountAction = UITableViewRowAction(style: .normal,
 														 title: "Open in Window".localized,
 														 handler: { (_, indexPath) in
@@ -855,19 +864,6 @@ extension ServerListTableViewController : ClientSessionManagerDelegate {
 				}
 			}
 		}
-	}
-}
-
-let ownCloudOpenAccountActivityType     = "com.owncloud.ios-app.openAccount"
-let ownCloudOpenAccountPath           	= "openAccount"
-let ownCloudOpenAccountAccountUuidKey	= "accountUuid"
-
-extension OCBookmark {
-	var openAccountUserActivity: NSUserActivity {
-		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
-		userActivity.title = ownCloudOpenAccountPath
-		userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: uuid.uuidString]
-		return userActivity
 	}
 }
 

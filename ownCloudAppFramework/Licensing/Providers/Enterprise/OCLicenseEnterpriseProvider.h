@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCLicenseEnterpriseProvider : OCLicenseProvider
 
+@property(class,nonatomic,readonly) NSUInteger numberOfEnterpriseAccounts;
+
 @property(strong,readonly) NSArray<OCLicenseProductIdentifier> *unlockedProductIdentifiers;
 
 - (instancetype)initWithUnlockedProductIdentifiers:(NSArray<OCLicenseProductIdentifier> *)unlockedProductIdentifiers;

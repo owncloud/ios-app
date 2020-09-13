@@ -18,8 +18,9 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
-class CertificateManagementRow : StaticTableViewRow {
+open class CertificateManagementRow : StaticTableViewRow {
 	var certificate : OCCertificate?
 }
 

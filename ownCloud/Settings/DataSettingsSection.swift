@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class DataSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {

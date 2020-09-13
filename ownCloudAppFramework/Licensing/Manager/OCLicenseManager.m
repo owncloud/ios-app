@@ -620,6 +620,36 @@
 	}
 }
 
+#pragma mark - In App Purchase Message
+- (NSString *)inAppPurchaseMessageForFeature:(OCLicenseFeatureIdentifier)featureIdentifier
+{
+	NSMutableString *iapMessageSummary = nil;
+
+	@synchronized(self)
+	{
+		for (OCLicenseProvider *provider in _providers)
+		{
+			NSString *iapMessage = nil;
+
+			if (((iapMessage = [provider inAppPurchaseMessageForFeature:featureIdentifier]) != nil) && (iapMessage.length > 0))
+			{
+				if (iapMessageSummary == nil) { iapMessageSummary = [NSMutableString new]; }
+
+				if (iapMessageSummary.length > 0)
+				{
+					[iapMessageSummary appendFormat:@"\n\n%@",iapMessage];
+				}
+				else
+				{
+					[iapMessageSummary appendString:iapMessage];
+				}
+			}
+		}
+	}
+
+	return (iapMessageSummary);
+}
+
 #pragma mark - One-off status info
 - (OCLicenseAuthorizationStatus)authorizationStatusForFeature:(OCLicenseFeatureIdentifier)featureIdentifier inEnvironment:(OCLicenseEnvironment *)environment
 {

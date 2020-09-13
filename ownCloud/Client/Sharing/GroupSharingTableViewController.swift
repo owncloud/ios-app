@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
@@ -470,7 +471,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
-					if UIDevice.current.isIpad() {
+					if UIDevice.current.isIpad {
 						presentationStyle = .alert
 					}
 

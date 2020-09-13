@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class StaticLoginServerListViewController: ServerListTableViewController {
 	var headerView : UIView?
@@ -60,6 +61,19 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 			bookmarkCell.titleLabel.text =  bookmark.shortName
 			bookmarkCell.detailLabel.text = bookmark.displayName ?? bookmark.userName
 			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
+		}
+
+		var maskedCorners : CACornerMask = []
+		if indexPath.row == 0 {
+			maskedCorners = maskedCorners.union([.layerMaxXMinYCorner, .layerMinXMinYCorner])
+		}
+		if indexPath.row == (OCBookmarkManager.shared.bookmarks.count - 1) {
+			maskedCorners = maskedCorners.union([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+		}
+		if !maskedCorners.isEmpty {
+			bookmarkCell.clipsToBounds = true
+			bookmarkCell.layer.cornerRadius = 8
+			bookmarkCell.layer.maskedCorners = maskedCorners
 		}
 
 		return bookmarkCell

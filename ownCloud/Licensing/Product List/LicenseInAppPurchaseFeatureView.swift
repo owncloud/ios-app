@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudAppShared
 
 class LicenseInAppPurchaseFeatureView: UIView, Themeable {
 	var feature: OCLicenseFeature
