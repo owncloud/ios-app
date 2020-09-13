@@ -174,7 +174,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		{
 			uti = OCItem.overriddenUTIByMIMEType[self.mimeType];
 
-			OCLogVerbose(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+			OCLogDebug(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
 		}
 	}
 
@@ -187,7 +187,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		{
 			uti = OCItem.overriddenUTIBySuffix[suffix];
 
-			OCLogVerbose(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
+			OCLogDebug(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
 		}
 	}
 
@@ -203,7 +203,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			uti = (__bridge NSString *)kUTTypeData;
 		}
 
-		OCLogVerbose(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+		OCLogDebug(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
 	}
 
 	// Reject "dyn.*" types
@@ -212,7 +212,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		// Use generic data UTI instead
 		// Rationale: https://github.com/owncloud/ios-app/issues/747#issuecomment-689797261
 		uti = (__bridge NSString *)kUTTypeData;
-		OCLogVerbose(@"Rejected dynamic %@ UTI for %@, using %@ instead", self.name, self.mimeType, uti);
+		OCLogDebug(@"Rejected dynamic %@ UTI for %@, using %@ instead", self.name, self.mimeType, uti);
 	}
 
 	return (uti);

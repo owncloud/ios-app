@@ -48,7 +48,7 @@ public extension OCBookmark {
 	}
 }
 
-extension OCBookmark {
+public extension OCBookmark {
 
 	enum Edition : String {
 		case Enterprise, Community, Unknown

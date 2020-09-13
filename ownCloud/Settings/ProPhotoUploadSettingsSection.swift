@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudAppShared
 
 extension UserDefaults {
 	enum ProPhotoUploadSettingsKeys : String {
