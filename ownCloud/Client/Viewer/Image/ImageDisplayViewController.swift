@@ -66,6 +66,7 @@ class ImageDisplayViewController : DisplayViewController {
 										  kCGImageSourceCreateThumbnailWithTransform: true,
 										  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
 				serialQueue.async {
+
 					if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
 						OnMainThread {
 							completion(downsampledImage)

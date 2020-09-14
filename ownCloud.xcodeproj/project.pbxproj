@@ -15,6 +15,8 @@
 		025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */; };
 		025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */; };
 		025FC742247D5004009307A7 /* MediaUploadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC741247D5004009307A7 /* MediaUploadOperation.swift */; };
+		025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */; };
+		025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */; };
 		025FC745247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */; };
 		02633EFF2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */; };
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
@@ -866,6 +868,8 @@
 		025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoUploadSettingsSection.swift; sourceTree = "<group>"; };
 		025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+InstantUploads.swift"; sourceTree = "<group>"; };
 		025FC741247D5004009307A7 /* MediaUploadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadOperation.swift; sourceTree = "<group>"; };
+		025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayExifMetadataAction.swift; sourceTree = "<group>"; };
+		025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadataViewController.swift; sourceTree = "<group>"; };
 		025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundUploadsSettingsSection.swift; sourceTree = "<group>"; };
 		02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNUserNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
 		0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+UniversalLinks.swift"; sourceTree = "<group>"; };
@@ -1653,6 +1657,7 @@
 				6E586CF52199A70100F680C4 /* Actions+Extensions */,
 				DC3393A322E0A75C00DD3DA4 /* ClientItemResolvingCell.swift */,
 				39CD755323D8392D00193950 /* EditDocumentViewController.swift */,
+				025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -2013,6 +2018,7 @@
 				DC625147225CEB2C00736874 /* UploadFileAction.swift */,
 				DC625149225CEB4300736874 /* UploadMediaAction.swift */,
 				0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */,
+				025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -3795,6 +3801,8 @@
 				3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */,
+				025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */,
+				DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */,
 				39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */,
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadMediaAction.swift in Sources */,
@@ -3845,6 +3853,7 @@
 				39A243C424BDD9E100F4441F /* StaticLoginBundle.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
 				4C51727D22DE04BD001BC97F /* ScheduledTaskExtension.swift in Sources */,
+				025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
 				397E276C23D05A5400117B07 /* ServerListToolCell.swift in Sources */,
