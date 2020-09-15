@@ -1,6 +1,9 @@
 = iOS Frequently Asked Questions (FAQ)
 :hardbreaks:
 :oauth2-app-url: https://marketplace.owncloud.com/apps/oauth2
+:ios-legacy-appstore-url: https://apps.apple.com/app/id543672169
+:ios-app-tx-url: https://www.transifex.com/owncloud-org/owncloud/mobile-ios-app/
+:ios-app-beta-url: https://owncloud.com/beta-testing/#ios
 :toc: right
 
 Here you can find some of the most frequently asked questions about the ownCloud iOS app.
@@ -10,12 +13,12 @@ Here you can find some of the most frequently asked questions about the ownCloud
 === Compatibility with ownCloud server older than version 10.0
 
 Previous ownCloud iOS app with support for ownCloud server < 10.0 is still available in App Store:  
-https://apps.apple.com/app/id543672169
+{ios-legacy-appstore-url}
 
 === Compatibility with iOS versions older than iOS 12.0
 
 Previous ownCloud iOS app with support for iOS < 12.0 is still available in App Store:  
-https://apps.apple.com/app/id543672169
+{ios-legacy-appstore-url}
 
 === Login with TOTP and other 2FA
 
@@ -33,17 +36,17 @@ https://github.com/owncloud/ios-app/issues/604
 
 Currently this isn't a planned feature. Focus is more to build the best integration in serious 3rd party text editing app.
 
-Here you can find previous discussion:
+Here you can find previous discussions:
 https://github.com/owncloud/ios-app/issues/317
 
-=== Translation missing or bug
+=== Missing translations or translation bugs
 
 You can help translate in your language or fix a bug.
 
 We use Transifex for translations. Please register for an account and join the global community:
-https://www.transifex.com/owncloud-org/owncloud/mobile-ios-app/
+{ios-app-tx-url}
 
 === Testing new features
 
 Join the beta program on iOS:
-https://owncloud.com/beta-testing/#ios
+{ios-app-beta-url}
