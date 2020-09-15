@@ -223,7 +223,7 @@ public class AppLockManager: NSObject {
 						let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelPressed))
 						passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
 					}
-					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appName ?? "ownCloud"
+					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
 
 					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
 
