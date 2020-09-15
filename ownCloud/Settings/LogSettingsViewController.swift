@@ -147,7 +147,6 @@ class LogSettingsViewController: StaticTableViewController {
 				logLevelSection = StaticTableViewSection(headerTitle: "Log Level".localized)
 
 				let logLevels : [[String:Any]] = [
-					[ OCLogLevel.verbose.label : OCLogLevel.verbose.rawValue ],
 					[ OCLogLevel.debug.label   : OCLogLevel.debug.rawValue   ],
 					[ OCLogLevel.info.label    : OCLogLevel.info.rawValue    ],
 					[ OCLogLevel.warning.label : OCLogLevel.warning.rawValue ],

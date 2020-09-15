@@ -9,7 +9,10 @@
 	<key>feedbackMail</key>
 	<string></string>
 	<key>Configuration</key>
-	<dict/>
+	<dict>
+		<key>core.cookie-support-enabled</key>
+		<true/>
+	</dict>
 	<key>Profiles</key>
 	<array/>
 	<key>URLs</key>
