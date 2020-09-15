@@ -605,6 +605,11 @@ extension ClientRootViewController : OCCoreDelegate {
 				// Create connection
  				let connection = OCConnection(bookmark: clonedBookmark)
 
+				if let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+					connection.cookieStorage = OCHTTPCookieStorage()
+					Log.debug("Created cookie storage \(String(describing: connection.cookieStorage)) for client root view auth method detection")
+				}
+
 				connection.prepareForSetup(options: nil, completionHandler: { (issue, suggestedURL, supportedMethods, preferredMethods) in
 					Log.debug("Preparing for handling authentication error: issue=\(issue?.description ?? "nil"), suggestedURL=\(suggestedURL?.absoluteString ?? "nil"), supportedMethods: \(supportedMethods?.description ?? "nil"), preferredMethods: \(preferredMethods?.description ?? "nil"), existingAuthMethod: \(self.bookmark.authenticationMethodIdentifier?.rawValue ?? "nil"))")
 

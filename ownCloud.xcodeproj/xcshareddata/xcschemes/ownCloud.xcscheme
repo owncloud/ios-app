@@ -258,7 +258,7 @@
          <EnvironmentVariable
             key = "oc:core.cookie-support-enabled"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
