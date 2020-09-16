@@ -33,6 +33,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
+	private var coreRequested : Bool = false
 	var filesNavigationController : ThemeNavigationController?
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
@@ -156,12 +157,15 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.messageQueue.remove(presenter: cardMessagePresenter)
 		}
 
-		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		if self.coreRequested {
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		}
 	}
 
 	// MARK: - Startup
 	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.coreRequested = true
 			self.core = core
 			core?.delegate = self
 
@@ -600,6 +604,11 @@ extension ClientRootViewController : OCCoreDelegate {
 
 				// Create connection
  				let connection = OCConnection(bookmark: clonedBookmark)
+
+				if let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+					connection.cookieStorage = OCHTTPCookieStorage()
+					Log.debug("Created cookie storage \(String(describing: connection.cookieStorage)) for client root view auth method detection")
+				}
 
 				connection.prepareForSetup(options: nil, completionHandler: { (issue, suggestedURL, supportedMethods, preferredMethods) in
 					Log.debug("Preparing for handling authentication error: issue=\(issue?.description ?? "nil"), suggestedURL=\(suggestedURL?.absoluteString ?? "nil"), supportedMethods: \(supportedMethods?.description ?? "nil"), preferredMethods: \(preferredMethods?.description ?? "nil"), existingAuthMethod: \(self.bookmark.authenticationMethodIdentifier?.rawValue ?? "nil"))")

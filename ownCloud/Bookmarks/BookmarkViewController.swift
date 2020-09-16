@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 import ownCloudAppShared
+// UNCOMMENT FOR HOST SIMULATOR: // import ownCloudMocking
 
 typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
 
@@ -71,6 +72,35 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	private var mode : BookmarkViewControllerMode
+
+	// MARK: - Connection instantiation
+	private var _cookieStorage : OCHTTPCookieStorage?
+	var cookieStorage : OCHTTPCookieStorage? {
+		if _cookieStorage == nil, let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+			_cookieStorage = OCHTTPCookieStorage()
+			Log.debug("Created cookie storage \(String(describing: _cookieStorage))")
+		}
+
+		return _cookieStorage
+	}
+
+	private var _hostSimulator : OCConnectionHostSimulator?
+	var hostSimulator : OCConnectionHostSimulator? {
+		if _hostSimulator == nil {
+			// UNCOMMENT FOR HOST SIMULATOR: // _hostSimulator = OCHostSimulator.cookieRedirectSimulator(requestWithoutCookiesHandler: nil, requestForCookiesHandler: nil, requestWithCookiesHandler: nil)
+		}
+
+		return _hostSimulator
+	}
+
+	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
+		let connection = OCConnection(bookmark: bmark)
+
+		connection.hostSimulator = self.hostSimulator
+		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
+
+		return connection
+	}
 
 	// MARK: - Init & Deinit
 	init(_ editBookmark: OCBookmark?, removeAuthDataFromCopy: Bool = false) {
@@ -374,7 +404,7 @@ class BookmarkViewController: StaticTableViewController {
 				bookmark?.url = serverURL
 
 				if let connectionBookmark = bookmark {
-					let connection = OCConnection(bookmark: connectionBookmark)
+					let connection = instantiateConnection(for: connectionBookmark)
 					let previousCertificate = bookmark?.certificate
 
 					hud?.present(on: self, label: "Contacting server…".localized)
@@ -439,7 +469,7 @@ class BookmarkViewController: StaticTableViewController {
 		if let connectionBookmark = bookmark {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
-			let connection = OCConnection(bookmark: connectionBookmark)
+			let connection = instantiateConnection(for: connectionBookmark)
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 				if OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
@@ -538,7 +568,7 @@ class BookmarkViewController: StaticTableViewController {
 		if isBookmarkComplete(bookmark: bookmark) {
 			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
 
-			let connection = OCConnection(bookmark: bookmark)
+			let connection = instantiateConnection(for: bookmark)
 
 			connection.connect { [weak self] (error, issue) in
 				if let strongSelf = self {

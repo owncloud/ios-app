@@ -388,7 +388,7 @@ class AutoUploadSettingsSection: SettingsSection {
 											guard let core = core, error == nil else { return }
 
 											OnMainThread {
-												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
+												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
 													OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 													completion(selectedDirectory)
 												})

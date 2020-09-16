@@ -27,6 +27,21 @@
 
 @implementation OCLicenseEnterpriseProvider
 
++ (NSUInteger)numberOfEnterpriseAccounts
+{
+	NSUInteger enterpriseAccounts = 0;
+
+	for (OCBookmark *bookmark in OCBookmarkManager.sharedBookmarkManager.bookmarks)
+	{
+		if ([((NSDictionary *)bookmark.userInfo[@"statusInfo"])[@"edition"] isEqual:@"Enterprise"])
+		{
+			enterpriseAccounts++;
+		}
+	}
+
+	return (enterpriseAccounts);
+}
+
 #pragma mark - Init
 - (instancetype)initWithUnlockedProductIdentifiers:(NSArray<OCLicenseProductIdentifier> *)unlockedProductIdentifiers
 {
