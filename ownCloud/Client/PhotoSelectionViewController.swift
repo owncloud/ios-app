@@ -34,27 +34,40 @@ typealias PhotosSelectedCallback = ([PHAsset]) -> Void
 class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	// MARK: - Constants
-	fileprivate let thumbnailSizeMultiplier: CGFloat = 0.205
-	fileprivate let verticalInset: CGFloat = 1.0
-	fileprivate let horizontalInset: CGFloat = 1.0
-	fileprivate let itemSpacing: CGFloat = 1.0
-	fileprivate let thumbnailMaxWidthPad: CGFloat = 120.0
-	fileprivate let thumbnailMaxWidthPhone: CGFloat = 80.0
+	private let thumbnailSizeMultiplier: CGFloat = 0.205
+	private let verticalInset: CGFloat = 1.0
+	private let horizontalInset: CGFloat = 1.0
+	private let itemSpacing: CGFloat = 1.0
+	private let thumbnailMaxWidthPad: CGFloat = 120.0
+	private let thumbnailMaxWidthPhone: CGFloat = 80.0
 
 	// MARK: - Instance variables
-	var fetchResult: PHFetchResult<PHAsset>!
+	private var fetchResult: PHFetchResult<PHAsset>!
+	private var availableWidth: CGFloat = 0
+
+	private var thumbnailSize: CGSize!
+	private var previousPreheatRect = CGRect.zero
+	private var thumbnailWidth: CGFloat = 80.0
+
+	private let imageManager = PHCachingImageManager()
+	private let layout = UICollectionViewFlowLayout()
+	private lazy var durationFormatter = DateComponentsFormatter()
+	private var uploadButtonItem: UIBarButtonItem?
+
+	private lazy var rawBadgeImage: UIImage? = {
+		UIImage(named: "raw-badge")?.withRenderingMode(.alwaysTemplate).tinted(with: UIColor.white)
+	}()
+
+	private lazy var cameraBadgeImage: UIImage? = {
+		UIImage(named: "camera-badge")?.withRenderingMode(.alwaysTemplate).tinted(with: UIColor.white)
+	}()
+
+	private lazy var livePhotoBadgeImage: UIImage = {
+		PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
+	}()
+
 	var assetCollection: PHAssetCollection?
-	var availableWidth: CGFloat = 0
 	var selectionCallback: PhotosSelectedCallback?
-
-	fileprivate var thumbnailSize: CGSize!
-	fileprivate var previousPreheatRect = CGRect.zero
-	fileprivate var thumbnailWidth: CGFloat = 80.0
-
-	fileprivate let imageManager = PHCachingImageManager()
-	fileprivate let layout = UICollectionViewFlowLayout()
-	fileprivate lazy var durationFormatter = DateComponentsFormatter()
-	fileprivate var uploadButtonItem: UIBarButtonItem?
 
     public var focussedIndexPath: IndexPath? {
         didSet {
@@ -240,12 +253,12 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 		// Add a badge to the cell if the PHAsset represents a Live Photo.
 		if asset.mediaSubtypes.contains(.photoLive) {
-			cell.mediaBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
+			cell.mediaBadgeImage = livePhotoBadgeImage
 		} else if asset.mediaType == .video {
 			cell.videoDurationLabel.text = durationFormatter.string(from: asset.duration)
-			cell.mediaBadgeImage = UIImage(named: "camera-badge")?.withRenderingMode(.alwaysTemplate).tinted(with: UIColor.white)
+			cell.mediaBadgeImage = cameraBadgeImage
 		} else if PHAssetResource.assetResources(for: asset).filter({$0.type == .alternatePhoto}).count > 0 {
-			cell.mediaBadgeImage = UIImage(named: "raw-badge")?.withRenderingMode(.alwaysTemplate).tinted(with: UIColor.white)
+			cell.mediaBadgeImage = rawBadgeImage
 		}
 
 		// Request an image for the asset from the PHCachingImageManager.
