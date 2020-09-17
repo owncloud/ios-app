@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2020, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2020, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -24,6 +24,10 @@ import ownCloudAppShared
 class MediaUploadSettingsViewController: StaticTableViewController {
 
 	private var proPhotoSettingsSection: StaticTableViewSection?
+
+	deinit {
+		NotificationCenter.default.removeObserver(self, name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -52,33 +56,22 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 		guard let proSettingsSection = proPhotoSettingsSection else { return }
 
-		var addProPhotoSettings = false
-
 		if OCLicenseEnterpriseProvider.numberOfEnterpriseAccounts > 0 {
-			addProPhotoSettings = true
-		}
-
-		let featureAuthStatus = OCLicenseManager.shared.authorizationStatus(forFeature: .photoProFeatures, in: OCLicenseEnvironment())
-
-		switch featureAuthStatus {
-		case .unknown:
-			OCLicenseManager.shared.observeProducts(nil, features: [ .photoProFeatures ], in: OCLicenseEnvironment(), withOwner: self) { (licenseObserver, isInitial, _) in
-				// call code that adds and removes the section depending on authStatus and number of enterprise accounts
-				if isInitial {
-					OCLicenseManager.shared.stop(licenseObserver)
-				}
-				self.reconsiderProPhotoSettingsSection()
+			if !self.sections.contains(proSettingsSection) {
+				self.addSection(proSettingsSection)
 			}
-		case .granted:
-			addProPhotoSettings = true
-		default:
-			break
-		}
-
-		if addProPhotoSettings {
-			self.addSection(proSettingsSection)
 		} else {
-			self.removeSection(proSettingsSection)
+			OCLicenseManager.shared.observeProducts(nil, features: [ .photoProFeatures ], in: OCLicenseEnvironment(), withOwner: self) { [weak self] (_, _, status) in
+				self?.reconsiderProPhotoSettingsSection()
+				switch status {
+				case .granted:
+					if self?.sections.contains(proSettingsSection) == false {
+						self?.addSection(proSettingsSection)
+					}
+				default:
+					self?.removeSection(proSettingsSection)
+				}
+			}
 		}
 	}
 
