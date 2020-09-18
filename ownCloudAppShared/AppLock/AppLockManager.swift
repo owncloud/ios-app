@@ -134,10 +134,10 @@ public class AppLockManager: NSObject {
 		}
 	}
 
-	var isPasscodeEnforced : Bool {
+	public var isPasscodeEnforced : Bool {
 		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
 	}
-	
+
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
 
@@ -507,9 +507,9 @@ extension OCClassSettingsKey {
 }
 
 extension AppLockManager: OCClassSettingsSupport {
-	static var classSettingsIdentifier: OCClassSettingsIdentifier = .passcode
+	public static var classSettingsIdentifier: OCClassSettingsIdentifier = .passcode
 
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
 			.passcodeEnforced : false
 		]

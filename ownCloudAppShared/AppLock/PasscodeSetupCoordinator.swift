@@ -18,7 +18,7 @@
 
 import UIKit
 
-enum PasscodeAction {
+public enum PasscodeAction {
 	case setup
 	case delete
 
@@ -30,9 +30,9 @@ enum PasscodeAction {
 	}
 }
 
-class PasscodeSetupCoordinator {
+public class PasscodeSetupCoordinator {
 
-	typealias PasscodeSetupCompletion = (_ cancelled:Bool) -> Void
+	public typealias PasscodeSetupCompletion = (_ cancelled:Bool) -> Void
 
 	private var parentViewController: UIViewController
 	private var action: PasscodeAction
@@ -41,7 +41,7 @@ class PasscodeSetupCoordinator {
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
 
-	class var isPasscodeSecurityEnabled: Bool {
+	public class var isPasscodeSecurityEnabled: Bool {
 		get {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
@@ -53,7 +53,7 @@ class PasscodeSetupCoordinator {
 			AppLockManager.shared.lockEnabled = newValue
 		}
 	}
-	class var isBiometricalSecurityEnabled: Bool {
+	public class var isBiometricalSecurityEnabled: Bool {
 		get {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
@@ -66,12 +66,12 @@ class PasscodeSetupCoordinator {
 		}
 	}
 
-	init(parentViewController:UIViewController, action:PasscodeAction = .setup, completion:PasscodeSetupCompletion? = nil) {
+	public init(parentViewController:UIViewController, action:PasscodeAction = .setup, completion:PasscodeSetupCompletion? = nil) {
 		self.parentViewController = parentViewController
 		self.action = action
 	}
 
-	func start() {
+	public func start() {
 
 		passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController) in
 			passcodeViewController.dismiss(animated: true) {
@@ -115,7 +115,7 @@ class PasscodeSetupCoordinator {
 		parentViewController.present(passcodeViewController!, animated: true, completion: nil)
 	}
 
-	func startBiometricalFlow(_ enable:Bool) {
+	public func startBiometricalFlow(_ enable:Bool) {
 
 		passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController: PasscodeViewController) in
 				passcodeViewController.dismiss(animated: true) {
