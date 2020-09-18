@@ -177,8 +177,10 @@ class SecuritySettingsSection: SettingsSection {
 		var rowsToAdd: [StaticTableViewRow] = []
 		var rowsToRemove: [StaticTableViewRow] = []
 
-		if !rows.contains(passcodeRow!) {
-			rowsToAdd.append(passcodeRow!)
+		if !AppLockManager.shared.isPasscodeEnforced {
+			if !rows.contains(passcodeRow!) {
+				rowsToAdd.append(passcodeRow!)
+			}
 		}
 
 		if PasscodeSetupCoordinator.isPasscodeSecurityEnabled {
