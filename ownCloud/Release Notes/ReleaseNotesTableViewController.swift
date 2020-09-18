@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 class ReleaseNotesTableViewController: StaticTableViewController {
 
@@ -28,24 +29,32 @@ class ReleaseNotesTableViewController: StaticTableViewController {
     }
 
 	func prepareReleaseNotes() {
-		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion), let imageData = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) {
+		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion), ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) != nil {
 			let section = StaticTableViewSection()
 
 			for aDict in relevantReleaseNotes {
 				if let notes = aDict["ReleaseNotes"] as? NSArray {
 					for releaseNote in (notes as? [[String:String]])! {
 						if let title = releaseNote["Title"], let subtitle = releaseNote["Subtitle"] {
-							var image : UIImage?
+
+							var processedTitle = title
+							var processedSubtitle = subtitle
+							if let infoDict = Bundle.main.infoDictionary {
+								for (key, value) in infoDict {
+									processedSubtitle = processedSubtitle.replacingOccurrences(of: "${\(key)}", with: "\(value)")
+									processedTitle = processedTitle.replacingOccurrences(of: "${\(key)}", with: "\(value)")
+								}
+							}
 
 							if let imageName = releaseNote["ImageName"], let image = ReleaseNotesDatasource().image(for: imageName) {
 								let row = StaticTableViewRow(rowWithAction: { (_, _) in
 									self.dismissAnimated()
-								}, title: title, subtitle: subtitle, image: image, imageWidth:50.0, alignment: .left, accessoryType: .none)
+								}, title: processedTitle, subtitle: processedSubtitle, image: image, imageWidth:50.0, alignment: .left, accessoryType: .none)
 								section.add(row: row)
 							} else {
 								let row = StaticTableViewRow(rowWithAction: { (_, _) in
 									self.dismissAnimated()
-								}, title: title, subtitle: subtitle, alignment: .left, accessoryType: .none)
+								}, title: processedTitle, subtitle: processedSubtitle, alignment: .left, accessoryType: .none)
 								section.add(row: row)
 							}
 						}

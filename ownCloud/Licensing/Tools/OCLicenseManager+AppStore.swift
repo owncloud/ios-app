@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudAppShared
 
 extension OCLicenseManager {
 	@objc func restorePurchases(on viewController: UIViewController, with completionHandler: OCLicenseAppStoreRestorePurchasesCompletionHandler? = nil) {

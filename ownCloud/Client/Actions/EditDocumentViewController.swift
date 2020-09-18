@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import QuickLook
 
 @available(iOS 13.0, *)
@@ -96,10 +97,20 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		// Activate editing mode by faking a tap on pencil icon. Unfortunately that's the only way to do it apparently
+		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
 		OnMainThread(after:0.5) {
-			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
-			markupButton.sendActions(for: .touchUpInside)
+			if #available(iOS 14.0, *) {
+				if UIDevice.current.isIpad {
+					guard let markupButton = self.navigationItem.rightBarButtonItems?.last else { return }
+				 _ = markupButton.target?.perform(markupButton.action, with: markupButton)
+				} else {
+					guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
+					_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+				}
+			} else { // action and target is nil on iOS 13
+				guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
+				markupButton.sendActions(for: .touchUpInside)
+			}
 		}
 	}
 
@@ -185,7 +196,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 	func present(error: Error, title: String) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			presentationStyle = .alert
 		}
 

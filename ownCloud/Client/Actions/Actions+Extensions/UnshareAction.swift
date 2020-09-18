@@ -17,15 +17,7 @@
 */
 
 import ownCloudSDK
-
-extension Array where Element: OCItem {
-	var sharedWithUser : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
-	}
-	var isShared : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isShared })
-	}
-}
+import ownCloudAppShared
 
 class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
@@ -35,17 +27,14 @@ class UnshareAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedWithUser = forContext.items.sharedWithUser
 
-		if forContext.items.count != sharedWithUser.count {
+		if !forContext.allItemsShared {
 			return .none
 		}
 
-		if let core = forContext.core {
-			for sharedItem in sharedWithUser {
-				if !sharedItem.isShareRootItem(from: core) {
-					return .none
-				}
+		for sharedItem in forContext.itemsSharedWithUser {
+			if !forContext.isShareRoot(item: sharedItem) {
+				return .none
 			}
 		}
 
@@ -122,7 +111,7 @@ class UnshareAction : Action {
 			with: name,
 			message: message,
 			destructiveLabel: "Unshare".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
+			preferredStyle: UIDevice.current.isIpad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				unshareItemAndPublishProgress(items)
 		})

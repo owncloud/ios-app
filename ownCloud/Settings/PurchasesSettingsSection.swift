@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudAppShared
 
 class PurchasesSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells

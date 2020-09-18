@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class MessageTableViewController: UITableViewController, Themeable {
 	weak var core : OCCore? {

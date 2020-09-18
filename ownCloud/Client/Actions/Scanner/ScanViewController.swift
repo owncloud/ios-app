@@ -21,6 +21,7 @@ import VisionKit
 import ImageIO
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class ScanPage {
 	var image : UIImage

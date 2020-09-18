@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class ClientAuthenticationUpdater: NSObject {
 	var bookmark : OCBookmark
@@ -57,6 +58,11 @@ class ClientAuthenticationUpdater: NSObject {
 			let tempBookmark = OCBookmark(for: url)
 			let tempConnection = OCConnection(bookmark: tempBookmark)
 			var options : [OCAuthenticationMethodKey : Any] = [:]
+
+			if let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+				tempConnection.cookieStorage = OCHTTPCookieStorage()
+				Log.debug("Created cookie storage \(String(describing: tempConnection.cookieStorage)) for client auth updater")
+			}
 
 			options[.presentingViewControllerKey] = viewController
 

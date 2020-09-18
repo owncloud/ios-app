@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudAppShared
 
 class LicenseInAppProductListViewController: StaticTableViewController {
 	init() {
@@ -71,6 +72,12 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		if self.sections.count == 0 {
 			let section = StaticTableViewSection(headerTitle: "Pro Features".localized)
 			let environment = OCLicenseEnvironment()
+
+			if let iapMessages = OCLicenseManager.shared.inAppPurchaseMessage(forFeature: nil) {
+				let messageRow = StaticTableViewRow(message: iapMessages, icon: UIImage(named: "info-icon")?.scaledImageFitting(in: CGSize(width: 24, height: 24)), style: .warning, identifier: "iap-messages")
+
+				section.add(row: messageRow)
+			}
 
 			if let features = OCLicenseManager.shared.features(withOffers: true) {
 				for feature in features {

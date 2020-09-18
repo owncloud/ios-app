@@ -66,6 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (OCLicenseAuthorizationStatus)authorizationStatusForFeature:(OCLicenseFeatureIdentifier)featureIdentifier inEnvironment:(OCLicenseEnvironment *)environment;
 - (OCLicenseAuthorizationStatus)authorizationStatusForProduct:(OCLicenseProductIdentifier)productIdentifier inEnvironment:(OCLicenseEnvironment *)environment;
 
+#pragma mark - IAP Messages
+- (nullable NSString *)inAppPurchaseMessageForFeature:(nullable OCLicenseFeatureIdentifier)featureIdentifier; //!< (optional) Message to be shown above IAPs for the identified feature. (consolidated)
+
 #pragma mark - Transactions
 - (void)retrieveAllTransactionsWithCompletionHandler:(void(^)(NSError * _Nullable error, NSArray<NSArray<OCLicenseTransaction *> *> * _Nullable transactionsByProvider))completionHandler;
 

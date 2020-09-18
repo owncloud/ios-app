@@ -64,10 +64,11 @@ PROVISIONING_DIR="Provisioning Files"
 DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/App.mobileprovision"
 FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/FileProvider.mobileprovision"
 INTENT_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/Intent.mobileprovision"
+SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/ShareExtension.mobileprovision"
 
-declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  );
-declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_Intents.entitlements" );
-declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex" );
+declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
+declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
+declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex" );
 declare -a BUNDLEIDS=();
 
 # Delete previous temporal app folder if exist
@@ -92,7 +93,7 @@ do
     if [ ! -f "./$a" ]; then
     echo "${WARN}Error: can't find $a in the current directory${NC}"
     exit 1
-else    
+else
 	# Convert provisioning profile to plist
 	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
 	# Get provisioning SHA-1
@@ -157,7 +158,7 @@ do
     PlistBuddy -x -c "print :Entitlements " /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}") > "${ENTITLEMENTS[$i]}.tmp"
     # Get all entitlements from app binary
     codesign -d --entitlements :- "${LOCATIONS[$i]}" > "${ENTITLEMENTS[$i]}"
-    
+
     TEAMID=`PlistBuddy -c "print com.apple.developer.team-identifier " "${ENTITLEMENTS[$i]}.tmp"`
     echo "TeamId: ${INFO}$TEAMID${NC}"
     APPGROUP=`PlistBuddy -c "print com.apple.security.application-groups:0 " "${ENTITLEMENTS[$i]}.tmp"`

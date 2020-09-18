@@ -11,6 +11,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import ownCloudMocking
+import ownCloudAppShared
 
 @testable import ownCloud
 
@@ -46,7 +47,7 @@ class FileTests: XCTestCase {
 		let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
 		rootViewController.afterCoreStart(nil) {
-			let navigationController = UIApplication.shared.currentWindow()?.rootViewController
+			let navigationController = UserInterfaceContext.shared.currentWindow?.rootViewController
 			let transitionDelegate = PushTransitionDelegate()
 
 			rootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
@@ -58,7 +59,7 @@ class FileTests: XCTestCase {
 	}
 
 	func dismissFileList() {
-		UIApplication.shared.currentWindow()?.rootViewController?.dismiss(animated: false, completion: nil)
+		UserInterfaceContext.shared.currentWindow?.rootViewController?.dismiss(animated: false, completion: nil)
 	}
 
 	// MARK: - Mocks

@@ -18,6 +18,8 @@
 
 import ownCloudSDK
 import UIKit
+import ownCloudAppShared
+// import ownCloudMocking
 
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
@@ -140,11 +142,39 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		return busySection
 	}
 
+	private var _cookieStorage : OCHTTPCookieStorage?
+	var cookieStorage : OCHTTPCookieStorage? {
+		if _cookieStorage == nil, let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+			_cookieStorage = OCHTTPCookieStorage()
+			Log.debug("Created cookie storage \(String(describing: _cookieStorage)) for static login")
+		}
+
+		return _cookieStorage
+	}
+
+	private var _hostSimulator : OCConnectionHostSimulator?
+	var hostSimulator : OCConnectionHostSimulator? {
+		if _hostSimulator == nil {
+			// UNCOMMENT FOR HOST SIMULATOR: // _hostSimulator = OCHostSimulator.cookieRedirectSimulator(requestWithoutCookiesHandler: nil, requestForCookiesHandler: nil, requestWithCookiesHandler: nil)
+		}
+
+		return _hostSimulator
+	}
+
+	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
+		let connection = OCConnection(bookmark: bmark)
+
+		connection.hostSimulator = self.hostSimulator
+		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
+
+		return connection
+	}
+
 	@objc func startAuthentication(_ sender: Any?) {
 		guard let bookmark = self.bookmark else { return }
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
-		let connection = OCConnection(bookmark: bookmark)
+		let connection = instantiateConnection(for: bookmark)
 		var options : [OCAuthenticationMethodKey : Any] = [:]
 
 		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier {
@@ -280,7 +310,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	func determineSupportedAuthMethod(_ isInitialRequest: Bool = true) {
 		guard let bookmark = self.bookmark else { return }
 
-		let connection = OCConnection(bookmark: bookmark)
+		let connection = instantiateConnection(for: bookmark)
 		connection.prepareForSetup(options: nil, completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
 			var proceed : Bool = true
 

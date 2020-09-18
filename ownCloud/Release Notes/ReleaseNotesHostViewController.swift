@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import StoreKit
 
 class ReleaseNotesHostViewController: UIViewController {
@@ -39,7 +40,9 @@ class ReleaseNotesHostViewController: UIViewController {
 
 		Theme.shared.register(client: self)
 
-		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenReleaseNotesVersion)
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appBuildNumber), forClassSettingsKey: .lastSeenReleaseNotesVersion)
+
+		let appName = OCAppIdentity.shared.appName ?? "ownCloud"
 
 		let headerView = UIView()
 		headerView.backgroundColor = .clear
@@ -55,7 +58,7 @@ class ReleaseNotesHostViewController: UIViewController {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
 
-		titleLabel.text = "New in ownCloud".localized
+		titleLabel.text = String(format:"New in %@".localized, appName)
 		titleLabel.textAlignment = .center
 		titleLabel.numberOfLines = 0
 		titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
@@ -92,8 +95,14 @@ class ReleaseNotesHostViewController: UIViewController {
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
 
-			let appName = OCAppIdentity.shared.appName ?? "ownCloud"
-			footerButton.setTitle(String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName), for: .normal)
+			var footerText = ""
+			if VendorServices.shared.isBranded {
+				footerText = String(format:"Thank you for using %@.\n".localized, appName)
+			} else {
+				footerText = String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName)
+			}
+			footerButton.setTitle(footerText, for: .normal)
+
 			footerButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
 			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			footerButton.titleLabel?.numberOfLines = 0
@@ -134,7 +143,7 @@ class ReleaseNotesHostViewController: UIViewController {
 	}
 
 	@objc func rateApp() {
-		guard let appStoreLink =  MoreSettingsSection.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
+		guard let appStoreLink =  VendorServices.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
 
 		guard let reviewURL = URL(string: "\(appStoreLink)&action=write-review") else { return }
 
@@ -160,7 +169,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 	var shouldShowReleaseNotes: Bool {
 		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
 
-			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedSame {
+			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedSame {
 				return false
 			}
 
@@ -181,7 +190,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 			return false
 		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil {
-			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
+			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appBuildNumber {
 				   return true
 			}
 			return false

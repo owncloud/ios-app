@@ -10,6 +10,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import LocalAuthentication
+import ownCloudAppShared
 
 @testable import ownCloud
 

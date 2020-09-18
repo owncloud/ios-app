@@ -1,9 +1,72 @@
-• iPad: Mouse and Trackpad support
-With iPadOS 13.4 we supporting mouse and trackpads
+• Cellular Options
+New settings give users more choice and control over their data usage, including which feature can use cellular data and the option to fully disable cellular data usage.
 
-• Fix: Shortcut - Save Action
-Fixed saving, when device is in flight mode.
+• Share Sheet
+Our new share sheet imports nearly everything from nearly everywhere. Just tap on the share button and select the ownCloud app to save multiple files, photos, selected text, downloads and so much more.
 
-• Fix: Keep open files up-to-date
-Open items will be automatically updated if the content was changed
+• Camera Access
+Take a photo or video right from the app and upload it to your ownCloud.
+
+• Better Issue Handling
+Easier issue handling through the grouping of identical issues to perform actions on them in bulk.
+
+• Folders on top
+There is a new option to show folders on top, with the option of keeping the existing behaviour.
+
+• Contextual Menu
+A long press on a file list item or right click on your mouse shows a contextual menu.
+
+• Multitouch gestures
+On iOS 13, users can multi-select items by swiping.
+
+• Inline Authentication
+When a re-authentication is needed the app no longer looses focus and authenticates directly from your context.
+
+• Image Upload: Change file name
+When media upload is enabled, users can decide between different file name formats.
+
+• App Version Information
+The app version information in the app settings can be copied to the clipboard for sharing.
+
+• Improved Media Upload
+New option added to specify different upload folders for instant photo and video uploads. The photo picker can now select items from shared albums.
+
+• Media Streaming
+Media files will be streamed by default, instead of downloading the file first. You can revert to downloading first in the app settings.
+
+• Public Link Creation
+When a public link is created, the URL is copied to the clipboard. Public links can now be dragged to another app.
+
+• Diagnostics
+The new diagnostic view shows account informations in the manage view or, if something went wrong, in the state tab for every item. Please enable the diagnostic option in the app settings first.
+
+• Item Counter
+The total number of items is shown in the footer. The number of selected items is shown on the top.
+
+• Universal Links / Deep Linking
+Open a file directly in the app through an universal link. More information can be found in the app documentation.
+
+• Shortcuts: Get File Info
+In the Shortcuts.app, the action "Get File Info" has two new output parameters, "File ID" and "Local File ID".
+
+• Fix: Avoid duplicate photo upload
+Fixes the re-upload of photos upon each modification when instant upload is active
+
+• Fix: Markup
+When opening a file for markup, the app immediately switches to edit mode instead of showing the file view first.
+
+• Fix: Audio Playback
+Fixes the simultaneous playback of multiple media files when the current media file is loosing focus.
+
+• Fix: Serveral UI Improvements
+Better accessibility. Some UI elements got polished.
+
+• Fix: File Provider
+Fixes the failure to open some file types in third party apps in the document browser
+
+• Fix: Quick Access
+Fixes the display of locally downloaded files as items available offline in the Quick Access section
+
+• Fix: Sort by Type
+Sort by type works now as expected
 

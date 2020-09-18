@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 protocol MessageGroupCellDelegate : class {
 	func cell(_ cell: MessageGroupCell, showMessagesLike: OCMessage)
