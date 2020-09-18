@@ -15,7 +15,6 @@
 * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
 *
 */
-
 import UIKit
 import ownCloudSDK
 import ownCloudApp
@@ -24,9 +23,11 @@ import ownCloudAppShared
 class MediaUploadSettingsViewController: StaticTableViewController {
 
 	private var proPhotoSettingsSection: StaticTableViewSection?
+	private var autoUploadSection : AutoUploadSettingsSection?
+	private var licenseObserver : OCLicenseObserver?
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	override func viewDidLoad() {
@@ -35,47 +36,46 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			proPhotoSettingsSection = ProPhotoUploadSettingsSection(userDefaults: userDefaults)
-		}
-
-		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(MediaExportSettingsSection(userDefaults: userDefaults))
-
-			if OCBookmarkManager.shared.bookmarks.count > 0 {
-				self.addSection(AutoUploadSettingsSection(userDefaults: userDefaults))
-				// TODO: Re-add this section when we re-gain an ability to run background NSURLSessions
-				//self.addSection(BackgroundUploadsSettingsSection(userDefaults: userDefaults))
-			}
-
-			reconsiderProPhotoSettingsSection()
 		}
 
-		NotificationCenter.default.addObserver(self, selector: #selector(bookmarksChanged), name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(reconsiderSections), name: .OCBookmarkManagerListChanged, object: nil)
+
+		licenseObserver = OCLicenseManager.shared.observeProducts(nil, features: [ .photoProFeatures ], in: OCLicenseEnvironment(), withOwner: self) { [weak self] (_, _, _) in
+			self?.reconsiderSections()
+		}
 	}
 
-	private func reconsiderProPhotoSettingsSection() {
+	@objc private func reconsiderSections() {
+		OnMainThread {
+			guard let proSettingsSection = self.proPhotoSettingsSection else { return }
 
-		guard let proSettingsSection = proPhotoSettingsSection else { return }
+			if OCBookmarkManager.shared.bookmarks.count > 0 {
+				if self.autoUploadSection == nil, let userDefaults = OCAppIdentity.shared.userDefaults {
+					self.autoUploadSection = AutoUploadSettingsSection(userDefaults: userDefaults)
+				}
 
-		if OCLicenseEnterpriseProvider.numberOfEnterpriseAccounts > 0 {
-			if !self.sections.contains(proSettingsSection) {
-				self.addSection(proSettingsSection)
+				if let autoUploadSection = self.autoUploadSection, !autoUploadSection.attached {
+					self.addSection(autoUploadSection)
+				}
+				// TODO: Re-add this section when we re-gain an ability to run background NSURLSessions
+				//self.addSection(BackgroundUploadsSettingsSection(userDefaults: userDefaults))
+			} else {
+				if let autoUploadSection = self.autoUploadSection, autoUploadSection.attached {
+					self.removeSection(autoUploadSection)
+					self.autoUploadSection = nil
+				}
 			}
-		} else {
-			OCLicenseManager.shared.observeProducts(nil, features: [ .photoProFeatures ], in: OCLicenseEnvironment(), withOwner: self) { [weak self] (_, _, status) in
-				self?.reconsiderProPhotoSettingsSection()
-				switch status {
-				case .granted:
-					if self?.sections.contains(proSettingsSection) == false {
-						self?.addSection(proSettingsSection)
-					}
-				default:
-					self?.removeSection(proSettingsSection)
+
+			if OCLicenseEnterpriseProvider.numberOfEnterpriseAccounts > 0 || OCLicenseManager.shared.authorizationStatus(forFeature: .photoProFeatures, in: OCLicenseEnvironment()) == .granted {
+				if !proSettingsSection.attached {
+					self.addSection(proSettingsSection)
+				}
+			} else {
+				if proSettingsSection.attached {
+					self.removeSection(proSettingsSection)
 				}
 			}
 		}
-	}
-
-	@objc private func bookmarksChanged() {
-		reconsiderProPhotoSettingsSection()
 	}
 }
