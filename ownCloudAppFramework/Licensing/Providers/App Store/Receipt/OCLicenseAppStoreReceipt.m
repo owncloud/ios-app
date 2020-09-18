@@ -68,6 +68,8 @@
 		NSData *receiptData;
 		NSURL *receiptURL = NSBundle.mainBundle.appStoreReceiptURL;
 
+		OCLogDebug(@"Trying to load receipt from %@", receiptURL);
+
 		if ((receiptData = [NSData dataWithContentsOfURL:receiptURL]) != nil)
 		{
 			OCLogDebug(@"Loaded receipt from %@", receiptURL);

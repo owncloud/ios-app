@@ -77,9 +77,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 						if let self = self {
 							if self.items.count == 1 {
-								footerText = String(format: "%@ item | ", "\(self.items.count)") + (footerText ?? "")
+								footerText = String(format: "%@ item | ".localized, "\(self.items.count)") + (footerText ?? "")
 							} else if self.items.count > 1 {
-								footerText = String(format: "%@ items | ", "\(self.items.count)") + (footerText ?? "")
+								footerText = String(format: "%@ items | ".localized, "\(self.items.count)") + (footerText ?? "")
 							}
 						}
 					}
@@ -384,14 +384,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	// MARK: - Reloads
 	open override func restoreSelectionAfterTableReload() {
 		// Restore previously selected items
-		if tableView.isEditing && selectedItemIds.count > 0 {
-			var selectedItems = [OCItem]()
-			for row in 0..<self.items.count {
-				if let itemLocalID = self.items[row].localID as OCLocalID? {
-					if selectedItemIds.contains(itemLocalID) {
-						selectedItems.append(self.items[row])
-						self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
-					}
+		guard tableView.isEditing else { return }
+
+		guard selectedItemIds.count > 0 else { return }
+
+		for row in 0..<self.items.count {
+			if let itemLocalID = self.items[row].localID as OCLocalID? {
+				if selectedItemIds.contains(itemLocalID) {
+					self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
 				}
 			}
 		}

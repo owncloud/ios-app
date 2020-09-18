@@ -173,7 +173,7 @@ class ShareViewController: MoreStaticTableViewController {
 		self.requestCore(for: bookmark, completionHandler: { (core, error) in
 			if let core = core, error == nil {
 				OnMainThread {
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory, _) in
 						if let targetDirectory = selectedDirectory {
 							if let vault = core?.vault {
 								self.fpServiceSession = OCFileProviderServiceSession(vault: vault)
@@ -194,7 +194,9 @@ class ShareViewController: MoreStaticTableViewController {
 														progressViewController.dismiss(animated: false)
 													} else {
 														self?.extensionContext?.completeRequest(returningItems: [], completionHandler: { (_) in
-															progressViewController.dismiss(animated: false)
+															OnMainThread {
+																progressViewController.dismiss(animated: false)
+															}
 														})
 													}
 												}
@@ -207,12 +209,10 @@ class ShareViewController: MoreStaticTableViewController {
 					})
 
 					directoryPickerViewController.cancelAction = { [weak self] in
-						self?.dismiss(animated: true, completion: {
-							self?.returnCores(completion: {
-								OnMainThread {
-									self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-								}
-							})
+						self?.returnCores(completion: {
+							OnMainThread {
+								self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+							}
 						})
 					}
 					if !withBackButton {

@@ -22,12 +22,14 @@ public extension OCLicenseFeatureIdentifier {
 	static var documentScanner : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "document-scanner") }
 	static var shortcuts : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "shortcuts") }
 	static var documentMarkup : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "document-markup") }
+	static var photoProFeatures : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "photo-pro-features") }
 }
 
 public extension OCLicenseProductIdentifier {
 	static var singleDocumentScanner : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.document-scanner") }
 	static var singleShortcuts : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.shortcuts") }
 	static var singleDocumentMarkup : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.document-markup") }
+	static var singlePhotoProFeatures : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.photo-pro-features") }
 
 	static var bundlePro : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "bundle.pro") }
 }
@@ -46,19 +48,22 @@ public extension OCLicenseManager {
 		let documentScannerFeature = OCLicenseFeature(identifier: .documentScanner, name: "Document Scanner".localized, description: "Scan documents and photos with your camera.".localized)
 		let shortcutsFeature = OCLicenseFeature(identifier: .shortcuts, name: "Shortcuts Actions".localized, description: "Use ownCloud actions in Shortcuts.".localized)
 		let documentMarkupFeature = OCLicenseFeature(identifier: .documentMarkup, name: "Markup Documents".localized, description: "Markup photos and PDF files.".localized)
+		let photoProFeature = OCLicenseFeature(identifier: .photoProFeatures, name: "Photo Pro Features".localized, description: "Image metadata, extended upload options".localized)
 
 		// - Features
 		register(documentScannerFeature)
 		register(shortcutsFeature)
 		register(documentMarkupFeature)
+		register(photoProFeature)
 
 		// - Single feature products
 		register(OCLicenseProduct(identifier: .singleDocumentScanner, name: documentScannerFeature.localizedName!, description: documentScannerFeature.localizedDescription, contents: [.documentScanner]))
 		register(OCLicenseProduct(identifier: .singleShortcuts, name: shortcutsFeature.localizedName!, description: shortcutsFeature.localizedDescription, contents: [.shortcuts]))
 		register(OCLicenseProduct(identifier: .singleDocumentMarkup, name: documentMarkupFeature.localizedName!, description: documentMarkupFeature.localizedDescription, contents: [.documentMarkup]))
+		register(OCLicenseProduct(identifier: .singlePhotoProFeatures, name: photoProFeature.localizedName!, description: photoProFeature.localizedDescription, contents: [.photoProFeatures]))
 
 		// - Subscription
-		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup]))
+		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup, .photoProFeatures]))
 
 		// Set up App Store License Provider
 		if let disableAppStoreLicensing = classSetting(forOCClassSettingsKey: .disableAppStoreLicensing) as? Bool, disableAppStoreLicensing == false, // only add AppStore IAP provider (and IAPs) if IAP licernsing has not been disabled via ClassSettings
@@ -67,6 +72,7 @@ public extension OCLicenseManager {
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
 				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.photo_pro_features", productIdentifier: .singlePhotoProFeatures),
 				OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
 			])
 

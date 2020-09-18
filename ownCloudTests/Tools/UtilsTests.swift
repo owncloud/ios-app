@@ -9,6 +9,7 @@
 import Foundation
 import ownCloudSDK
 import ownCloudMocking
+import ownCloudAppShared
 
 @testable import ownCloud
 

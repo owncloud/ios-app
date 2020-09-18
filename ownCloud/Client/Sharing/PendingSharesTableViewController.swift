@@ -144,14 +144,34 @@ class PendingSharesTableViewController: StaticTableViewController {
 					section.add(row: row)
 
 					if share.itemPath.count > 0 {
-						if let itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
-							if error == nil, isInitial {
+						if (share.state == .accepted) || (share.accepted == true) {
+							// Item should exist -> track it
+							if let itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
+								if error == nil, isInitial {
+									OnMainThread {
+										row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
+									}
+								}
+							}) {
+								row.representedObject = itemTracker // End tracking when the row is deallocated
+							}
+						} else {
+							// Item doesn't exist in our scope -> use placeholder icons
+							var iconName : String?
+
+							switch share.itemType {
+								case .collection:
+									iconName = "folder"
+
+								case .file:
+									iconName = "file"
+							}
+
+							if let iconName = iconName {
 								OnMainThread {
-									row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
+									row.cell?.imageView?.image = Theme.shared.image(for: iconName, size: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
 								}
 							}
-						}) {
-							row.representedObject = itemTracker // End tracking when the row is deallocated
 						}
 					}
 				}

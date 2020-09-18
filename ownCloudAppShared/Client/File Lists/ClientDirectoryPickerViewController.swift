@@ -22,7 +22,7 @@ import ownCloudApp
 import CoreServices
 
 public typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
-public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
+public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?, _ needsToDismissViewController: Bool) -> Void
 
 extension NSErrorDomain {
 	static let ClientDirectoryPickerErrorDomain = "ClientDirectoryPickerErrorDomain"
@@ -218,8 +218,18 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	// MARK: - Actions
-	open func userChose(item: OCItem?) {
-		self.choiceHandler?(item)
+	open func userChose(item: OCItem?, needsToDismissViewController: Bool) {
+		self.choiceHandler?(item, needsToDismissViewController)
+	}
+
+	private func dismissWithChoice(item: OCItem?) {
+		if self.presentingViewController != nil {
+			dismiss(animated: true, completion: {
+				self.userChose(item: item, needsToDismissViewController: false)
+			})
+		} else {
+			self.userChose(item: item, needsToDismissViewController: true)
+		}
 	}
 
 	open var cancelAction : (() -> Void)?
@@ -228,16 +238,12 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		if cancelAction != nil {
 			cancelAction?()
  		} else {
-			dismiss(animated: true, completion: {
-				self.userChose(item: nil)
-			})
+			dismissWithChoice(item: nil)
 		}
 	}
 
 	@objc private func selectButtonPressed() {
-		dismiss(animated: true, completion: {
-			self.userChose(item: self.query.rootItem)
-		})
+		dismissWithChoice(item: self.query.rootItem)
 	}
 
 	@objc open func createFolderButtonPressed(_ sender: UIBarButtonItem) {

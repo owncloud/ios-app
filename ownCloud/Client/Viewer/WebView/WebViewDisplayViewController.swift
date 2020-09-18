@@ -126,22 +126,24 @@ class WebViewDisplayViewController: DisplayViewController {
 }
 
 extension WebViewDisplayViewController: DisplayExtension {
+	private static let supportedFormatsRegex = try? NSRegularExpression(pattern: "\\A((text/(html|css))|(image/gif)|(application/(javascript|json|x-php|octet-stream)))", options: .caseInsensitive)
+
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		do {
-			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/(html|css))|(image/gif)|(application/(javascript|json|x-php|octet-stream)))", options: .caseInsensitive)
-				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
-				if matches > 0 {
-					return .locationMatch
-				}
+		guard let regex = supportedFormatsRegex else { return .noMatch }
+
+		if let mimeType = context.location?.identifier?.rawValue {
+
+			let matches = regex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
+
+			if matches > 0 {
+				return .locationMatch
 			}
-
-			return .noMatch
-		} catch {
-			return .noMatch
 		}
+
+		return .noMatch
 	}
+
 	static var displayExtensionIdentifier: String = "org.owncloud.webview"
 	static var supportedMimeTypes: [String]?
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]

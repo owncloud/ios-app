@@ -21,6 +21,7 @@ import ownCloudSDK
 import ownCloudAppShared
 
 extension QueryFileListTableViewController : MultiSelectSupport {
+
 	public func setupMultiselection() {
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultiselection))
@@ -73,18 +74,15 @@ extension QueryFileListTableViewController : MultiSelectSupport {
  		}
 	}
 
-	fileprivate func updateActions(for selectedItems:[OCItem]) {
+	fileprivate func updateActions() {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
-		if selectedItems.count > 0 {
-			if let core = self.core {
-				// Get possible associated actions
-				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation)
+		if selectedItemIds.count > 0 {
+			if let context = self.actionContext {
 
-				self.actions = Action.sortedApplicableActions(for: actionContext)
+				self.actions = Action.sortedApplicableActions(for: context)
 
 				// Enable / disable tool-bar items depending on action availability
 				for item in toolbarItems {
@@ -102,34 +100,6 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 				item.isEnabled = false
 			}
 		}
-
-	}
-
-	public func updateMultiselection() {
-
-		updateSelectDeselectAllButton()
-
-		var selectedItems = [OCItem]()
-
-		// Do we have selected items?
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
-			if selectedIndexPaths.count > 0 {
-
-				// Get array of OCItems from selected table view index paths
-				selectedItemIds.removeAll()
-				for indexPath in selectedIndexPaths {
-					if let item = itemAt(indexPath: indexPath) {
-						selectedItems.append(item)
-
-						if let localID = item.localID as OCLocalID? {
-							selectedItemIds.insert(localID)
-						}
-					}
-				}
-			}
-		}
-
-		updateActions(for: selectedItems)
 	}
 
 	@objc public func exitMultiselection() {
@@ -156,6 +126,11 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 
 	@objc public func exitedMultiselection() {
 		// may be overriden in subclasses
+	}
+
+	@objc public func updateMultiselection() {
+		updateSelectDeselectAllButton()
+		updateActions()
 	}
 
 	open func populateToolbar() {
@@ -203,6 +178,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 		}
 
 		updateMultiselection()
+
 		self.tableView.setEditing(true, animated: true)
 		sortBar?.showSelectButton = false
 
@@ -210,8 +186,6 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 
 		self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
 		self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
-
-		updateMultiselection()
 	}
 
 	@objc public func selectAllItems(_ sender: UIBarButtonItem) {
@@ -220,6 +194,9 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 			}.forEach { (indexPath) in
 				self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
 		}
+		selectedItemIds = self.items.compactMap({$0.localID as OCLocalID?})
+		self.actionContext?.replace(items: self.items)
+
 		updateMultiselection()
 	}
 
@@ -228,6 +205,9 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 		self.tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
 			self.tableView.deselectRow(at: indexPath, animated: true)
 		})
+		selectedItemIds.removeAll()
+		self.actionContext?.removeAllItems()
+
 		updateMultiselection()
 	}
 }

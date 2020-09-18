@@ -240,6 +240,13 @@ class LicenseOfferView: UIView, Themeable {
 
 				let alertController = UIAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
 
+				let nsError = error as NSError
+				if nsError.domain == OCLicenseAppStoreProviderErrorDomain, nsError.code == OCLicenseAppStoreProviderError.purchasesNotAllowedForVPPCopies.rawValue {
+					alertController.addAction(UIAlertAction(title: "More information".localized, style: .default, handler: { (_) in
+						UIApplication.shared.open(URL(string: "https://owncloud.com/mobile-apps/#ios-emm")!, options: [ : ], completionHandler: nil)
+					}))
+				}
+
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
 				self.baseViewController?.present(alertController, animated: true, completion: nil)

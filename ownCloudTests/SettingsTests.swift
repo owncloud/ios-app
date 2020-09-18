@@ -45,6 +45,7 @@ class SettingsTests: XCTestCase {
 
 		//Assert
 		EarlGrey.selectElement(with: grey_accessibilityID("show-hidden-files-switch")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("sort-folders-first")).assert(grey_sufficientlyVisible())
 		EarlGrey.selectElement(with: grey_accessibilityID("prevent-dragging-files-switch")).assert(grey_sufficientlyVisible())
 	}
 	
