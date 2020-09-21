@@ -135,7 +135,8 @@ public class AppLockManager: NSObject {
 	}
 
 	public var isPasscodeEnforced : Bool {
-		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
+		return true
+		//return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
 	}
 
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working

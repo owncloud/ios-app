@@ -112,6 +112,10 @@ public class PasscodeSetupCoordinator {
 		})
 
 		passcodeViewController?.message = self.action.localizedDescription
+		if AppLockManager.shared.isPasscodeEnforced {
+			passcodeViewController?.errorMessage = "You are required to set the passcode".localized
+		}
+
 		parentViewController.present(passcodeViewController!, animated: true, completion: nil)
 	}
 
