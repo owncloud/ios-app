@@ -164,6 +164,17 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	// MARK: - Startup
 	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
+
+		let loadingView = ActionOverlayView(with: "Starting up…".localized, buttonTitle: "Cancel".localized, baseViewController: self)
+		loadingView.translatesAutoresizingMaskIntoConstraints = false
+		self.view.addSubview(loadingView)
+
+		loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+		loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+		loadingView.widthAnchor.constraint(equalToConstant: self.view.frame.size.width).isActive = true
+		loadingView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+		loadingView.bottomAnchor.constraint(equalTo: progressBar?.topAnchor ?? self.tabBar.topAnchor).isActive = true
+
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.coreRequested = true
 			self.core = core
@@ -182,6 +193,9 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
+				OnMainThread {
+					loadingView.removeFromSuperview()
+				}
 				self.coreReady(lastVisibleItemId)
 			}
 
@@ -668,4 +682,95 @@ extension ClientRootViewController: UITabBarControllerDelegate {
 
 		return true
 	}
+}
+
+class ActionOverlayView: UIView, Themeable {
+	weak var baseViewController: ClientRootViewController?
+
+	var titleLabel : UILabel?
+	var title: String
+	var buttonTitle: String
+	var actionButton: ThemeButton?
+	var activityIndicator : UIActivityIndicatorView?
+
+	private let titleLabelSize : CGFloat = 17
+
+	init(with title: String, buttonTitle: String, baseViewController: ClientRootViewController?) {
+		self.title = title
+		self.buttonTitle = buttonTitle
+		self.baseViewController = baseViewController
+
+		super.init(frame: .zero)
+		self.translatesAutoresizingMaskIntoConstraints = false
+
+		buildView()
+
+		Theme.shared.register(client: self, applyImmediately: true)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	func buildView() {
+		titleLabel = UILabel()
+
+		guard let titleLabel = titleLabel else { return }
+
+		titleLabel.translatesAutoresizingMaskIntoConstraints = false
+		titleLabel.font = UIFont.systemFont(ofSize: self.titleLabelSize, weight: .semibold)
+		titleLabel.text = title
+
+		self.addSubview(titleLabel)
+
+		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+		self.setContentCompressionResistancePriority(.required, for: .vertical)
+
+		var constraints = [
+			titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+			titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+		]
+
+		actionButton = ThemeButton()
+		actionButton?.translatesAutoresizingMaskIntoConstraints = false
+		actionButton?.setTitle(buttonTitle, for: .normal)
+		actionButton?.addTarget(self, action: #selector(cancelView), for: .touchUpInside)
+
+		guard let cancelButton = actionButton else { return }
+
+		self.addSubview(cancelButton)
+
+		constraints.append(contentsOf: [
+			cancelButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+			cancelButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20)
+		])
+
+		activityIndicator = UIActivityIndicatorView(style: .white)
+		activityIndicator?.startAnimating()
+		activityIndicator?.translatesAutoresizingMaskIntoConstraints = false
+
+		guard let activityIndicator = activityIndicator else { return }
+		self.addSubview(activityIndicator)
+
+		constraints.append(contentsOf: [
+			activityIndicator.leftAnchor.constraint(equalTo: titleLabel.rightAnchor, constant: 10),
+			activityIndicator.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
+		])
+
+		NSLayoutConstraint.activate(constraints)
+	}
+
+	@objc func cancelView() {
+		baseViewController?.closeClient()
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		titleLabel?.applyThemeCollection(collection)
+		actionButton?.applyThemeCollection(collection, itemStyle: .informal)
+	}
+
 }
