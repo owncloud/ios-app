@@ -234,20 +234,25 @@ extension PHAsset {
 					 preferredResourceTypes:[PHAssetResourceType] = [],
 					 completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
+		// Filter resources which are prefered for export
+		let filteredResources = resources.filter({preferredResourceTypes.contains($0.type)})
 		var resourceToExport:PHAssetResource?
 		var outError: Error?
 
-		// Is there a preferred export type
-		if preferredResourceTypes.count > 0 {
-			resourceToExport = resources.filter({preferredResourceTypes.contains($0.type)}).first
+		// Pick RAW photo if available in matched resources
+		resourceToExport =  filteredResources.filter({$0.type == .alternatePhoto}).first
+
+		// Pick the original if available in matched resources
+		if resourceToExport == nil {
+			resourceToExport = filteredResources.filter({$0.type == .photo}).first
 		}
 
+		// Pick edited photo as fallback
 		if resourceToExport == nil {
-			// For edited photo pick the edited version
 			resourceToExport = resources.filter({$0.type == .fullSizePhoto}).first
 		}
 
-		// If edited photo is not avaialable, pick the original
+		// Pick original photo as fallback
 		if resourceToExport == nil {
 			resourceToExport = resources.filter({$0.type == .photo}).first
 		}
