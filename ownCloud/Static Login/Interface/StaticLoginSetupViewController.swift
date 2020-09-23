@@ -112,7 +112,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		containerView.addSubview(centerView)
 
 		containerView.addThemeApplier({ (_, collection, _) in
-			messageLabel.applyThemeCollection(collection, itemStyle: .title)
+			messageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
 		})
 
 		messageLabel.text = message

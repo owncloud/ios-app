@@ -34,6 +34,9 @@ public enum ThemeItemStyle {
 	case title
 	case message
 
+	case welcomeTitle
+	case welcomeMessage
+
 	case bigTitle
 	case bigMessage
 
@@ -168,6 +171,14 @@ public extension NSObject {
 				case .title, .bigTitle:
 					normalColor = collection.tableRowColors.labelColor
 					highlightColor = collection.tableRowHighlightColors.labelColor
+
+				case .welcomeTitle:
+					normalColor = collection.loginColors.labelColor
+					highlightColor = collection.loginColors.labelColor
+
+				case .welcomeMessage:
+					normalColor = collection.loginColors.secondaryLabelColor
+					highlightColor = collection.loginColors.secondaryLabelColor
 
 				case .message, .bigMessage:
 					normalColor = collection.tableRowColors.secondaryLabelColor

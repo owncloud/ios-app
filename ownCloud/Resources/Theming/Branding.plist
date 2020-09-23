@@ -48,6 +48,19 @@
 			<key>Disabled</key>
 			<string>#BFC9D9</string>
 		</dict>
+		<key>Login</key>
+		<dict>
+			<key>Primary</key>
+			<string>#333333</string>
+			<key>Inverse</key>
+			<string>#FFFFFF</string>
+			<key>Secondary</key>
+			<string>#666666</string>
+			<key>Inverse-Light</key>
+			<string>#F2F4F7</string>
+			<key>Disabled</key>
+			<string>#BFC9D9</string>
+		</dict>
 		<key>Background</key>
 		<dict>
 			<key>Standard</key>
@@ -366,6 +379,43 @@
 					<string></string>
 					<key>tintColor</key>
 					<string>Text.Inverse</string>
+					<key>filledColorPairCollection</key>
+					<dict>
+						<key>normal</key>
+						<dict>
+							<key>background</key>
+							<string></string>
+							<key>foreground</key>
+							<string></string>
+						</dict>
+						<key>highlighted</key>
+						<dict>
+							<key>background</key>
+							<string></string>
+							<key>foreground</key>
+							<string></string>
+						</dict>
+						<key>disabled</key>
+						<dict>
+							<key>background</key>
+							<string></string>
+							<key>foreground</key>
+							<string></string>
+						</dict>
+					</dict>
+				</dict>
+				<key>Login</key>
+				<dict>
+					<key>backgroundColor</key>
+					<string>Background.Standard</string>
+					<key>labelColor</key>
+					<string>Login.Primary</string>
+					<key>secondaryLabelColor</key>
+					<string>Login.Secondary</string>
+					<key>symbolColor</key>
+					<string></string>
+					<key>tintColor</key>
+					<string>Login.Inverse</string>
 					<key>filledColorPairCollection</key>
 					<dict>
 						<key>normal</key>
