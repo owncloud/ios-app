@@ -99,7 +99,7 @@
 			<key>Active</key>
 			<string>#FFFFFF</string>
 			<key>Inactive</key>
-			<string>#EEEEEE</string>
+			<string>#DDDDDD</string>
 		</dict>
 	</dict>
 	<key>Themes</key>
