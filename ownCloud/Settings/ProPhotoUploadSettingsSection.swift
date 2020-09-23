@@ -18,6 +18,42 @@
 
 import UIKit
 import ownCloudAppShared
+import AVFoundation
+
+extension AVCaptureDevice {
+	var supportsRaw : Bool {
+		let session = AVCaptureSession()
+		let output = AVCapturePhotoOutput()
+
+		guard let input = try? AVCaptureDeviceInput(device: self) else {
+			  return false
+		}
+
+		guard session.canAddInput(input) else { return false  }
+		guard session.canAddOutput(output) else { return false }
+
+		session.beginConfiguration()
+		session.sessionPreset = .photo
+		session.addInput(input)
+		session.addOutput(output)
+		session.commitConfiguration()
+
+		return !output.availableRawPhotoPixelFormatTypes.isEmpty
+	}
+
+	class func rawCameraDeviceAvailable() -> Bool {
+		let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
+			[.builtInTrueDepthCamera, .builtInDualCamera, .builtInWideAngleCamera],
+																mediaType: .video, position: .unspecified)
+		for device in discoverySession.devices {
+			if device.supportsRaw {
+				return true
+			}
+		}
+
+		return false
+	}
+}
 
 extension UserDefaults {
 	enum ProPhotoUploadSettingsKeys : String {
@@ -60,12 +96,14 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 
 		self.add(row: preferOriginalsRow)
 
-		let preferRawRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-			if let enableSwitch = sender as? UISwitch {
-				userDefaults.preferRawPhotos = enableSwitch.isOn
-			}
-			}, title: "Prefer RAW photos".localized, value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
+		if AVCaptureDevice.rawCameraDeviceAvailable() {
+			let preferRawRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+				if let enableSwitch = sender as? UISwitch {
+					userDefaults.preferRawPhotos = enableSwitch.isOn
+				}
+				}, title: "Prefer RAW photos".localized, value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
 
-		self.add(row: preferRawRow)
+			self.add(row: preferRawRow)
+		}
 	}
 }
