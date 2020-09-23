@@ -315,21 +315,27 @@ class StaticLoginViewController: UIViewController, Themeable {
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart(nil) {
-			OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
-
+		clientRootViewController.afterCoreStart(nil, completionHandler: { (error) in
 			// Set up custom push transition for presentation
 			if let navigationController = self.navigationController {
-				let transitionDelegate = PushTransitionDelegate()
+				if let error = error {
+					let alert = UIAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-				clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
-				clientRootViewController.transitioningDelegate = transitionDelegate
-				clientRootViewController.modalPresentationStyle = .custom
+					navigationController.present(alert, animated: true)
+				} else {
+					OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
-				navigationController.present(clientRootViewController, animated: true, completion: {
-				})
+					let transitionDelegate = PushTransitionDelegate()
+
+					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+					clientRootViewController.transitioningDelegate = transitionDelegate
+					clientRootViewController.modalPresentationStyle = .custom
+
+					navigationController.present(clientRootViewController, animated: true)
+				}
 			}
 			self.showFirstScreen()
-		}
+		})
 	}
 }
