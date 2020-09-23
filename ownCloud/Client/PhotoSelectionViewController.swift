@@ -21,11 +21,18 @@ import Photos
 import PhotosUI
 import ownCloudApp
 import ownCloudAppShared
+import CoreServices
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
 		let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
 		return allLayoutAttributes.map { $0.indexPath }
+	}
+}
+
+private extension PHAssetResource {
+	var isRaw: Bool {
+		self.type == .alternatePhoto || self.uniformTypeIdentifier == String(kUTTypeRawImage) || self.uniformTypeIdentifier == AVFileType.dng.rawValue
 	}
 }
 
@@ -257,7 +264,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		} else if asset.mediaType == .video {
 			cell.videoDurationLabel.text = durationFormatter.string(from: asset.duration)
 			cell.mediaBadgeImage = cameraBadgeImage
-		} else if PHAssetResource.assetResources(for: asset).filter({$0.type == .alternatePhoto}).count > 0 {
+		} else if PHAssetResource.assetResources(for: asset).filter({$0.isRaw}).count > 0 {
 			cell.mediaBadgeImage = rawBadgeImage
 		}
 
