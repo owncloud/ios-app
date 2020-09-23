@@ -191,6 +191,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 						self?.updateConnectionStatusSummary()
 					})
 				}
+			} else {
+				Log.error("Error requesting/starting core: \(String(describing: error))")
 			}
 
 			OnMainThread {
