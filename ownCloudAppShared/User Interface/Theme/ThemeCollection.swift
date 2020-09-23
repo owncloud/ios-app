@@ -147,6 +147,9 @@ public class ThemeCollection : NSObject {
 	// MARK: - Icon colors
 	@objc public var iconColors : [String:String]
 
+	// MARK: - Login colors
+	@objc public var loginColors : ThemeColorCollection
+
 	@objc public var favoriteEnabledColor : UIColor?
 	@objc public var favoriteDisabledColor : UIColor?
 
@@ -265,6 +268,7 @@ public class ThemeCollection : NSObject {
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
+				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Table view
 				self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", navigationBarColors.backgroundColor!.darker(0.1))
@@ -324,6 +328,7 @@ public class ThemeCollection : NSObject {
 
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.navigationBarColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.navigationBarColors)
+				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
 				if #available(iOS 13, *) {
@@ -354,6 +359,7 @@ public class ThemeCollection : NSObject {
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
+				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
 				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)

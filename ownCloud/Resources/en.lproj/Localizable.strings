@@ -49,6 +49,8 @@
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
 "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.";
 
+"Error opening %@" = "Error opening %@";
+
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
 
