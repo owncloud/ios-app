@@ -121,7 +121,7 @@ public extension NSObject {
 		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
 			tabBar.tintColor = collection.toolbarColors.filledColorPairCollection.normal.foreground
-			tabBar.unselectedItemTintColor = collection.toolbarColors.filledColorPairCollection.disabled.foreground
+			tabBar.unselectedItemTintColor = collection.toolbarColors.filledColorPairCollection.normal.foreground.darker(0.25)
 		}
 
 		if let tableView = self as? UITableView {
