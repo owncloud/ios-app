@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 
-	public func handle(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
+    public func handle(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
@@ -54,7 +54,7 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 		completion(GetAccountIntentResponse.success(account: account))
 	}
 
-	public func resolveAccountUUID(for intent: GetAccountIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolveAccountUUID(for intent: GetAccountIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let account = intent.accountUUID {
 			completion(INStringResolutionResult.success(with: account))
 		} else {
@@ -62,7 +62,7 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 		}
 	}
 
-	public func confirm(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
+    private func confirm(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
         completion(GetAccountIntentResponse(code: .ready, userActivity: nil))
 	}
 }

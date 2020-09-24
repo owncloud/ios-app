@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
-	public func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
+    public func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(SaveFileIntentResponse(code: .disabled, userActivity: nil))
@@ -115,11 +115,11 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		}
 	}
 
-	public func provideAccountOptions(for intent: SaveFileIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+    public func provideAccountOptions(for intent: SaveFileIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	public func resolveAccount(for intent: SaveFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+    public func resolveAccount(for intent: SaveFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -127,7 +127,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		}
 	}
 
-	public func resolvePath(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolvePath(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {
@@ -135,7 +135,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		}
 	}
 
-	public func resolveFile(for intent: SaveFileIntent, with completion: @escaping (INFileResolutionResult) -> Void) {
+    public func resolveFile(for intent: SaveFileIntent, with completion: @escaping (INFileResolutionResult) -> Void) {
 		if let file = intent.file {
 			completion(INFileResolutionResult.success(with: file))
 		} else {
@@ -143,15 +143,15 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		}
 	}
 
-	public func resolveFilename(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolveFilename(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		completion(INStringResolutionResult.success(with: intent.filename ?? ""))
 	}
 
-	public func resolveFileextension(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolveFileextension(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		completion(INStringResolutionResult.success(with: intent.fileextension ?? ""))
 	}
 
-	public func resolveShouldOverwrite(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
+    public func resolveShouldOverwrite(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
 		var shouldOverwrite = false
 		if let overwrite = intent.shouldOverwrite?.boolValue {
 			shouldOverwrite = overwrite

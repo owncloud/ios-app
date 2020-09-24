@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling {
 
-	public func handle(intent: DeletePathItemIntent, completion: @escaping (DeletePathItemIntentResponse) -> Void) {
+    public func handle(intent: DeletePathItemIntent, completion: @escaping (DeletePathItemIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(DeletePathItemIntentResponse(code: .disabled, userActivity: nil))
@@ -72,7 +72,7 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 		}
 	}
 
-	public func resolveAccount(for intent: DeletePathItemIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+    public func resolveAccount(for intent: DeletePathItemIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -80,11 +80,11 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 		}
 	}
 
-	public func provideAccountOptions(for intent: DeletePathItemIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+    public func provideAccountOptions(for intent: DeletePathItemIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	public func resolvePath(for intent: DeletePathItemIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolvePath(for intent: DeletePathItemIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {
