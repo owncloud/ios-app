@@ -9,7 +9,7 @@ assignees: ''
 
 Release a new version
 
-XCode version to work with:
+Xcode version to work with:
 
 ## TASKS:
 
