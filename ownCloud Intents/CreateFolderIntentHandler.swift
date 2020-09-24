@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 
-	func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
+    public func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(CreateFolderIntentResponse(code: .disabled, userActivity: nil))
@@ -83,7 +83,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		}
 	}
 
-	func resolveName(for intent: CreateFolderIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolveName(for intent: CreateFolderIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let name = intent.name {
 			completion(INStringResolutionResult.success(with: name))
 		} else {
@@ -91,7 +91,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		}
 	}
 
-	func resolveAccount(for intent: CreateFolderIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+    public func resolveAccount(for intent: CreateFolderIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -99,11 +99,11 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		}
 	}
 
-	func provideAccountOptions(for intent: CreateFolderIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+    public func provideAccountOptions(for intent: CreateFolderIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	func resolvePath(for intent: CreateFolderIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolvePath(for intent: CreateFolderIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {

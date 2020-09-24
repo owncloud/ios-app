@@ -27,7 +27,7 @@ typealias GetFileCompletionHandler = (GetFileIntentResponse) -> Void
 @available(iOS 13.0, *)
 public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 
-	func handle(intent: GetFileIntent, completion: @escaping (GetFileIntentResponse) -> Void) {
+    public func handle(intent: GetFileIntent, completion: @escaping (GetFileIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(GetFileIntentResponse(code: .disabled, userActivity: nil))
@@ -77,7 +77,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 		}
 	}
 
-	func resolvePath(for intent: GetFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolvePath(for intent: GetFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
@@ -86,11 +86,11 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 		}
 	}
 
-	func provideAccountOptions(for intent: GetFileIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+    public func provideAccountOptions(for intent: GetFileIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	func resolveAccount(for intent: GetFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+    public func resolveAccount(for intent: GetFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {

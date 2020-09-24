@@ -29,7 +29,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	var completion : GetDirectoryListingCompletionHandler?
 
-	func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
@@ -39,11 +39,11 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	}
 
-	func provideAccountOptions(for intent: GetDirectoryListingIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+	public func provideAccountOptions(for intent: GetDirectoryListingIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	func resolveAccount(for intent: GetDirectoryListingIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+	public func resolveAccount(for intent: GetDirectoryListingIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -51,15 +51,15 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		}
 	}
 
-	func resolveSortType(for intent: GetDirectoryListingIntent, with completion: @escaping (SortingTypeResolutionResult) -> Void) {
+	public func resolveSortType(for intent: GetDirectoryListingIntent, with completion: @escaping (SortingTypeResolutionResult) -> Void) {
 		completion(SortingTypeResolutionResult.success(with: intent.sortType))
 	}
 
-	func resolveSortDirection(for intent: GetDirectoryListingIntent, with completion: @escaping (SortingDirectionResolutionResult) -> Void) {
+	public func resolveSortDirection(for intent: GetDirectoryListingIntent, with completion: @escaping (SortingDirectionResolutionResult) -> Void) {
 		completion(SortingDirectionResolutionResult.success(with: intent.sortDirection))
 	}
 
-	func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
+	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(GetDirectoryListingIntentResponse(code: .disabled, userActivity: nil))
@@ -124,7 +124,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 	}
 
-	func confirm(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
+    private func confirm(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
         completion(GetDirectoryListingIntentResponse(code: .ready, userActivity: nil))
 	}
 }

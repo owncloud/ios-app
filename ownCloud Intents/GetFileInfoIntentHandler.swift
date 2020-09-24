@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
-	func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
+	public func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(GetFileInfoIntentResponse(code: .disabled, userActivity: nil))
@@ -81,7 +81,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 		}
 	}
 
-	func resolveAccount(for intent: GetFileInfoIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+	public func resolveAccount(for intent: GetFileInfoIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -89,11 +89,11 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 		}
 	}
 
-	func provideAccountOptions(for intent: GetFileInfoIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+	public func provideAccountOptions(for intent: GetFileInfoIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	func resolvePath(for intent: GetFileInfoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	public func resolvePath(for intent: GetFileInfoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {
