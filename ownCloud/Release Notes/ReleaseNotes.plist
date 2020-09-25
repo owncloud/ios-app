@@ -730,6 +730,16 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>ImageName</key>
 					<string>bandage</string>
 				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Create Public Link</string>
+					<key>Subtitle</key>
+					<string>Creating a public link over a federated share was broken</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
 			</array>
 		</dict>
 	</array>
