@@ -120,7 +120,7 @@ public extension NSObject {
 
 		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
-			tabBar.tintColor = collection.toolbarColors.filledColorPairCollection.normal.foreground
+			tabBar.tintColor = collection.toolbarColors.tintColor
 			tabBar.unselectedItemTintColor = collection.toolbarColors.filledColorPairCollection.normal.foreground.darker(0.25)
 		}
 
