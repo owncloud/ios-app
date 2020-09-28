@@ -624,6 +624,124 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Image Metadata</string>
+					<key>Subtitle</key>
+					<string>View metadata (EXIF, IPTC, Geolocation) on image files.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>photo</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Pro Photo Upload</string>
+					<key>Subtitle</key>
+					<string>Two new settings give the user more control over photo uploads: 
+Prefer original photo instead of edited version is picked when uploading and prefer raw photo format, if available.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>camera</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Media Upload Path</string>
+					<key>Subtitle</key>
+					<string>Upload Path for photo and video was not visible in settings for some cases.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: File List</string>
+					<key>Subtitle</key>
+					<string>In some cases the file list was not presented.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Markup</string>
+					<key>Subtitle</key>
+					<string>Markup mode was not enabled automatically on iOS 14.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Shortcuts</string>
+					<key>Subtitle</key>
+					<string>Shortcuts In-App purchase could not retrieved.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Share Sheet</string>
+					<key>Subtitle</key>
+					<string>Share Sheet on iOS 12 could not dismissed.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Multiple Selection</string>
+					<key>Subtitle</key>
+					<string>Improved performance during multiple selection.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: File Provider</string>
+					<key>Subtitle</key>
+					<string>Some file types was grayed out and cannot be opened.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: General Improvements</string>
+					<key>Subtitle</key>
+					<string>We made some internal improvements to make everything smoother and removed some edge cases.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Create Public Link</string>
+					<key>Subtitle</key>
+					<string>Creating a public link over a federated share was broken</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

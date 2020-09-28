@@ -124,6 +124,11 @@ class Migration {
 										bookmark.url = URL(string: serverURL)
 										let connection = OCConnection(bookmark: bookmark)
 
+										if let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+											connection.cookieStorage = OCHTTPCookieStorage()
+											Log.debug("Created cookie storage \(String(describing: connection.cookieStorage)) for migration")
+										}
+
 										if let userCredentials = self.getCredentialsDataItem(for: userId) {
 											let bookmarkActivity = "\(userCredentials.userDisplayName ?? userCredentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
 

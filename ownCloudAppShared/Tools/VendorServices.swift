@@ -65,6 +65,15 @@ public class VendorServices : NSObject {
 		return themingValues
 	}
 
+	public var documentationURL: URL? {
+		if self.isBranded, let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let documentation = urls["Documentation"] as? String, let url = URL(string: documentation) else { return nil }
+			return url
+		}
+
+		return URL(string: "https://doc.owncloud.com/ios-app/")
+	}
+
 	public var helpURL: URL? {
 		if self.isBranded, let themingValues = self.brandingProperties {
 			guard let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String, let url = URL(string: help) else { return nil }

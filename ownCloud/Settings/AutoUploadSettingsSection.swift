@@ -196,7 +196,6 @@ class AutoUploadSettingsSection: SettingsSection {
 	}
 
 	private func setupPhotoAutoUpload(enabled:Bool) {
-
 		if !enabled {
 			userDefaults.resetInstantPhotoUploadConfiguration()
 			postSettingsChangedNotification()
@@ -206,6 +205,8 @@ class AutoUploadSettingsSection: SettingsSection {
 			userDefaults.instantUploadPhotosAfter = Date()
 			if userDefaults.instantPhotoUploadPath == nil || userDefaults.instantPhotoUploadBookmarkUUID == nil {
 				showAccountSelectionViewController(for: .photo)
+			} else {
+				updateDynamicUI()
 			}
 		}
 	}
@@ -220,7 +221,9 @@ class AutoUploadSettingsSection: SettingsSection {
 			userDefaults.instantUploadVideosAfter = Date()
 			if userDefaults.instantVideoUploadPath == nil || userDefaults.instantVideoUploadBookmarkUUID == nil {
 				showAccountSelectionViewController(for: .video)
-			}
+			} else {
+			   updateDynamicUI()
+		   }
 		}
 	}
 
@@ -384,7 +387,7 @@ class AutoUploadSettingsSection: SettingsSection {
 											guard let core = core, error == nil else { return }
 
 											OnMainThread {
-												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
+												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
 													OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 													completion(selectedDirectory)
 												})
