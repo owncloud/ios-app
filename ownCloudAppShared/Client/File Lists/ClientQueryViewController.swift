@@ -215,12 +215,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	}
 
-	open func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
-		if !self.tableView.isEditing {
-			removeToolbar()
-		}
-	}
-
 	// MARK: - UIBarButtonItem Drop Delegate
 
 	open func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
@@ -556,6 +550,12 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		return []
+	}
+
+	public func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
+		if !self.tableView.isEditing {
+			removeToolbar()
+		}
 	}
 
 	public func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
