@@ -11,7 +11,33 @@
 	<key>Configuration</key>
 	<dict/>
 	<key>Profiles</key>
-	<array/>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>ownCloud.online</string>
+			<key>name</key>
+			<string>ownCloud.online</string>
+			<key>welcome</key>
+			<string>Welcome to ownCloud.online</string>
+			<key>promptForPasswordAuth</key>
+			<string>Enter your username and password</string>
+			<key>promptForTokenAuth</key>
+			<string>Please log in to authorize the app.</string>
+			<key>promptForURL</key>
+			<string>Please enter your ownCloud.online URL</string>
+			<key>bookmarkName</key>
+			<string>ownCloud.online</string>
+			<key>url</key>
+			<string></string>
+			<key>canConfigureURL</key>
+			<true/>
+			<key>allowedAuthenticationMethods</key>
+			<array>
+				<string>com.owncloud.basicauth</string>
+				<string>com.owncloud.oauth2</string>
+			</array>
+		</dict>
+	</array>
 	<key>URLs</key>
 	<dict>
 		<key>Help</key>

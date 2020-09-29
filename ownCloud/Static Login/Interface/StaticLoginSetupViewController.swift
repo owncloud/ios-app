@@ -24,10 +24,11 @@ import ownCloudAppShared
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
 	var bookmark : OCBookmark?
+	var busySection : StaticTableViewSection?
 
+	private var urlString : String?
 	private var username : String?
 	private var password : String?
-
 	private var passwordRow : StaticTableViewRow?
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
@@ -43,6 +44,45 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		if profile.canConfigureURL {
+			self.addSection(urlSection())
+		} else {
+			proceedWithLogin()
+		}
+
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+	}
+
+	func urlSection() -> StaticTableViewSection {
+		var urlSection : StaticTableViewSection
+
+		urlSection = StaticTableViewSection(headerTitle: nil, identifier: "urlSection")
+		urlSection.addStaticHeader(title: profile.welcome!, message: profile.promptForURL)
+
+		urlSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+			if let self = self, let value = row.value as? String {
+				self.urlString = value
+			}
+			}, placeholder: "URL", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
+
+		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
+			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: "Cancel".localized)
+			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
+			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		} else {
+		let (proceedButton, _) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: nil)
+			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
+		}
+
+		return urlSection
+	}
+
 	func loginMaskSection() -> StaticTableViewSection {
 		var loginMaskSection : StaticTableViewSection
 
@@ -53,23 +93,23 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let value = row.value as? String {
 				self?.username = value
 			}
-		}, placeholder: "Username", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
+			}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, _) in
 			if let value = row.value as? String {
 				self?.password = value
 			}
-		}, placeholder: "Password", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
+			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
 		if let passwordRow = passwordRow {
 			loginMaskSection.add(row: passwordRow)
 		}
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
-			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
+			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, cancelLabel: "Cancel".localized)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {
-			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: nil)
+			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, cancelLabel: nil)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		}
 
@@ -168,6 +208,41 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
 
 		return connection
+	}
+
+	@objc func proceedWithURL() {
+		if let value = self.urlString {
+			if let urlString = self.profile.urlString, urlString.count > 0, urlString.contains("%@") {
+				let urlString = String(format: urlString, value)
+				if let url = URL(string: urlString) {
+					self.bookmark = OCBookmark(for: url)
+					self.proceedWithLogin()
+				}
+			} else if value.count > 0, let url = URL(string: value) {
+				self.bookmark = OCBookmark(for: url)
+				self.proceedWithLogin()
+			}
+		}
+	}
+
+	func proceedWithLogin() {
+		guard self.bookmark != nil else {
+			let alertController = ThemedAlertController(title: "Missing Profile URL", message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.", profile.name ?? ""), preferredStyle: .alert)
+
+			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+			self.loginViewController?.present(alertController, animated: true, completion: nil)
+			return
+		}
+
+		if let urlSection = self.sectionForIdentifier("urlSection") {
+			self.removeSection(urlSection)
+		}
+
+		busySection = self.busySection(message: "Contacting server…".localized)
+
+		self.addSection(busySection!)
+		self.determineSupportedAuthMethod()
 	}
 
 	@objc func startAuthentication(_ sender: Any?) {
@@ -281,30 +356,6 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		self.loginViewController?.openBookmark(bookmark, closeHandler: {
 			self.loginViewController?.showFirstScreen()
 		})
-	}
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
-
-		guard self.bookmark != nil else {
-			let alertController = ThemedAlertController(title: "Missing Profile URL", message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.", profile.name ?? ""), preferredStyle: .alert)
-
-			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-			self.loginViewController?.present(alertController, animated: true, completion: nil)
-			return
-		}
-
-		busySection = self.busySection(message: "Contacting server…".localized)
-
-		self.addSection(busySection!)
-		self.determineSupportedAuthMethod()
-	}
-
-	var busySection : StaticTableViewSection?
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
 	}
 
 	func determineSupportedAuthMethod(_ isInitialRequest: Bool = true) {

@@ -59,6 +59,9 @@ class StaticLoginBundle: NSObject {
 						if let promptForTokenAuth = profile["promptForTokenAuth"] as? String {
 							staticloginProfile.promptForTokenAuth = promptForTokenAuth
 						}
+						if let promptForURL = profile["promptForURL"] as? String {
+							staticloginProfile.promptForURL = promptForURL
+						}
 						if let welcome = profile["welcome"] as? String {
 							staticloginProfile.welcome = welcome
 						}
@@ -67,6 +70,10 @@ class StaticLoginBundle: NSObject {
 						}
 						if let url = profile["url"] as? String {
 							staticloginProfile.url = URL(string: url)
+							staticloginProfile.urlString = url
+						}
+						if let canConfigureURL = profile["canConfigureURL"] as? Bool {
+							staticloginProfile.canConfigureURL = canConfigureURL
 						}
 						if let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
 							staticloginProfile.allowedAuthenticationMethods = allowedAuthenticationMethods as? [OCAuthenticationMethodIdentifier]
