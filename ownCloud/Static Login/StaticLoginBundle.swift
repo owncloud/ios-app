@@ -62,6 +62,12 @@ class StaticLoginBundle: NSObject {
 						if let promptForURL = profile["promptForURL"] as? String {
 							staticloginProfile.promptForURL = promptForURL
 						}
+						if let promptForHelpURL = profile["promptForHelpURL"] as? String {
+							staticloginProfile.promptForHelpURL = promptForHelpURL
+						}
+						if let helpURLButtonString = profile["helpURLButtonString"] as? String {
+							staticloginProfile.helpURLButtonString = helpURLButtonString
+						}
 						if let welcome = profile["welcome"] as? String {
 							staticloginProfile.welcome = welcome
 						}
@@ -71,6 +77,9 @@ class StaticLoginBundle: NSObject {
 						if let url = profile["url"] as? String {
 							staticloginProfile.url = URL(string: url)
 							staticloginProfile.urlString = url
+						}
+						if let helpURL = profile["helpURL"] as? String {
+							staticloginProfile.helpURL = URL(string: helpURL)
 						}
 						if let canConfigureURL = profile["canConfigureURL"] as? Bool {
 							staticloginProfile.canConfigureURL = canConfigureURL

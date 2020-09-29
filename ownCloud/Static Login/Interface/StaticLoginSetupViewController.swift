@@ -19,7 +19,6 @@
 import ownCloudSDK
 import UIKit
 import ownCloudAppShared
-// import ownCloudMocking
 
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
@@ -49,10 +48,12 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		if profile.canConfigureURL {
 			self.addSection(urlSection())
+			if profile.promptForHelpURL != nil, profile.helpURLButtonString != nil, profile.helpURL != nil {
+				self.addSection(urlHelpSection())
+			}
 		} else {
 			proceedWithLogin()
 		}
-
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -69,7 +70,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let self = self, let value = row.value as? String {
 				self.urlString = value
 			}
-			}, placeholder: "URL", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
+			}, placeholder: "https://", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
 			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: "Cancel".localized)
@@ -81,6 +82,18 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		}
 
 		return urlSection
+	}
+
+	func urlHelpSection() -> StaticTableViewSection {
+		var urlHelpSection : StaticTableViewSection
+
+		urlHelpSection = StaticTableViewSection(headerTitle: nil, identifier: "urlHelpSection")
+		if let message = profile.promptForHelpURL, let title = profile.helpURLButtonString {
+			let (proceedButton, _) = urlHelpSection.addButtonFooter(message: message, messageItemStyle: .welcomeMessage, proceedLabel: title, proceedItemStyle: .informal, cancelLabel: nil)
+				proceedButton?.addTarget(self, action: #selector(self.helpAction), for: .touchUpInside)
+		}
+
+		return urlHelpSection
 	}
 
 	func loginMaskSection() -> StaticTableViewSection {
@@ -210,16 +223,26 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		return connection
 	}
 
+	@objc func helpAction() {
+		if let helpURL = self.profile.helpURL {
+			let alert = ThemedAlertController(title: "Do you want to open the following URL?".localized,
+							  message: helpURL.absoluteString,
+							  preferredStyle: .alert)
+
+			let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+				UIApplication.shared.open(helpURL, options: [:], completionHandler: nil)
+			}
+			let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+			alert.addAction(okAction)
+			alert.addAction(cancelAction)
+			self.present(alert, animated: true)
+		}
+	}
+
 	@objc func proceedWithURL() {
 		if let value = self.urlString {
-			if let urlString = self.profile.urlString, urlString.count > 0, urlString.contains("%@") {
-				let urlString = String(format: urlString, value)
-				if let url = URL(string: urlString) {
-					self.bookmark = OCBookmark(for: url)
-					self.proceedWithLogin()
-				}
-			} else if value.count > 0, let url = URL(string: value) {
-				self.bookmark = OCBookmark(for: url)
+			if let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: value, protocolWasPrepended: nil) {
+				self.bookmark = OCBookmark(for: normalizedURL as URL)
 				self.proceedWithLogin()
 			}
 		}
@@ -237,6 +260,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		if let urlSection = self.sectionForIdentifier("urlSection") {
 			self.removeSection(urlSection)
+		}
+		if let urlHelpSection = self.sectionForIdentifier("urlHelpSection") {
+			self.removeSection(urlHelpSection)
 		}
 
 		busySection = self.busySection(message: "Contacting server…".localized)

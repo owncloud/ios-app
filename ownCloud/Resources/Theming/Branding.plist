@@ -25,12 +25,18 @@
 			<string>Please log in to authorize the app.</string>
 			<key>promptForURL</key>
 			<string>Please enter your ownCloud.online URL</string>
+			<key>promptForHelpURL</key>
+			<string>If you do not have an ownCloud.online account yet, you can request a free test account.</string>
+			<key>helpURLButtonString</key>
+			<string>TRY IT FOR FREE</string>
 			<key>bookmarkName</key>
 			<string>ownCloud.online</string>
 			<key>url</key>
 			<string></string>
 			<key>canConfigureURL</key>
 			<true/>
+			<key>helpURL</key>
+			<string>https://owncloud.online/try/</string>
 			<key>allowedAuthenticationMethods</key>
 			<array>
 				<string>com.owncloud.basicauth</string>
