@@ -4590,7 +4590,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4623,7 +4623,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4773,7 +4773,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app.Intents";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -4799,7 +4799,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app.Intents";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-Intents";
 				SKIP_INSTALL = YES;
@@ -5042,7 +5042,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app.DocumentProvider";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -5066,7 +5066,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app.DocumentProvider";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-Provider";
 				SKIP_INSTALL = YES;
@@ -5098,7 +5098,7 @@
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app.ShareExtApp";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Share-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
@@ -5126,7 +5126,7 @@
 				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "online.owncloud.ios-app.ShareExtApp";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Share-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-Share-Extension";
 				SKIP_INSTALL = YES;
