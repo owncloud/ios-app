@@ -96,6 +96,11 @@ platform :ios do
           build_emm_app = options[:build_emm_app]
         end
 
+        build_owncloud_online_app = true
+        if options[:build_owncloud_online_app] == false
+          build_owncloud_online_app = options[:build_owncloud_online_app]
+        end
+
         # Create Release Notes
         if create_release_notes
           puts("Creating Release Notes…")
@@ -176,6 +181,36 @@ platform :ios do
             )
           end
       end
+
+      if build_owncloud_online_app
+        puts("Build ownCloud.online iOS App…")
+        # Set ownCloud.online App-Icon for App Build
+        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
+        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+
+        # Set ownCloud.online App-Icon for AppStore Connect
+        sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
+        sh "mv metadata/app_icon-ownCloud-online.jpg metadata/app_icon.jpg"
+
+        # Build App
+        owncloud_online_build()
+
+        # Deliver
+        if deliver
+          deliver(
+            skip_screenshots: skip_screenshots,
+            skip_metadata: true,
+            submit_for_review: false,
+            ignore_language_directory_validation: true,
+            skip_binary_upload: false,
+            force: true,
+            overwrite_screenshots: create_screenshots,
+            app_identifier: "online.owncloud.ios-app",
+            skip_app_version_update: true,
+            ipa: "ownCloud.ipa"
+          )
+        end
+    end
   end
 
   lane :owncloud_regular_build do
@@ -234,7 +269,7 @@ lane :owncloud_online_build do
     APP_GROUP_IDENTIFIERS: "group.online.owncloud.ios-app",
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Debug",
-    BETA_APP_ICON: true
+    BETA_APP_ICON: false
   )
 end
 
