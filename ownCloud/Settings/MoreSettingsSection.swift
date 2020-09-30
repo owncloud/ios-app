@@ -28,6 +28,7 @@ import ownCloudAppShared
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
 
+	private var documentationRow: StaticTableViewRow?
 	private var helpRow: StaticTableViewRow?
 	private var sendFeedbackRow: StaticTableViewRow?
 	private var recommendRow: StaticTableViewRow?
@@ -49,6 +50,12 @@ class MoreSettingsSection: SettingsSection {
 	// MARK: - Creation of the rows.
 
 	private func createRows() {
+
+		documentationRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			if let url = VendorServices.shared.documentationURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
+		}, title: "Documentation".localized, accessoryType: .disclosureIndicator, identifier: "documentation")
 
 		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let url = VendorServices.shared.helpURL {
@@ -144,6 +151,10 @@ class MoreSettingsSection: SettingsSection {
 	// MARK: - Update UI
 	func updateUI() {
 		var rows : [StaticTableViewRow] = []
+
+		if VendorServices.shared.documentationURL != nil {
+			rows.append(documentationRow!)
+		}
 
 		if VendorServices.shared.helpURL != nil {
 			rows.append(helpRow!)

@@ -77,8 +77,9 @@ extension StaticTableViewSection {
 		headerView.addSubview(titleLabel)
 
 		headerView.addThemeApplier({ (_, collection, _) in
-			titleLabel.applyThemeCollection(collection, itemStyle: .title)
+			titleLabel.applyThemeCollection(collection, itemStyle: .welcomeTitle)
 		})
+		titleLabel.textColor = .red
 
 		titleLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.5, weight: .bold)
 
@@ -100,7 +101,7 @@ extension StaticTableViewSection {
 			messageLabel.numberOfLines = 0
 
 			headerView.addThemeApplier({ (_, collection, _) in
-				messageLabel.applyThemeCollection(collection, itemStyle: .title)
+				messageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
 			})
 
 			headerView.addSubview(messageLabel)

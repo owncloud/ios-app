@@ -216,9 +216,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			considerBetaWarning()
 		}
 
-        if !shownFirstTime {
-            VendorServices.shared.considerReviewPrompt()
-        }
+		if !shownFirstTime {
+			VendorServices.shared.considerReviewPrompt()
+		}
 	}
 
 	@objc func considerAutoLogin() -> Bool {
@@ -506,6 +506,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
+	weak var activeClientRootViewController : ClientRootViewController?
+
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
 			return
@@ -537,32 +539,42 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		clientRootViewController.authDelegate = self
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart(lastVisibleItemId) {
-			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
-			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
-				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
-
-				// Set up custom push transition for presentation
-
+		clientRootViewController.afterCoreStart(lastVisibleItemId, completionHandler: { (error) in
+			if self.lastSelectedBookmark?.uuid == bookmark.uuid, // Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+			   self.activeClientRootViewController == nil { // Make sure we don't present this ClientRootViewController while still presenting another
 				if let fromViewController = self.pushFromViewController ?? self.navigationController {
-					let transitionDelegate = PushTransitionDelegate()
+				   	if let error = error {
+						let alert = UIAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+						alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
-					clientRootViewController.transitioningDelegate = transitionDelegate
-					clientRootViewController.modalPresentationStyle = .custom
+						fromViewController.present(alert, animated: true)
 
-					fromViewController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
+					} else {
+						OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
-						// Present message if one was provided
-						if let message = message {
-							self.presentInClient(message: message)
-						}
-					})
+						self.activeClientRootViewController = clientRootViewController // save this ClientRootViewController as the active one (only weakly referenced)
+
+						// Set up custom push transition for presentation
+						let transitionDelegate = PushTransitionDelegate()
+
+						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+						clientRootViewController.transitioningDelegate = transitionDelegate
+						clientRootViewController.modalPresentationStyle = .custom
+
+						fromViewController.present(clientRootViewController, animated: animated, completion: {
+							self.resetPreviousBookmarkSelection(bookmark)
+
+							// Present message if one was provided
+							if let message = message {
+								self.presentInClient(message: message)
+							}
+						})
+					}
 				}
 			}
 			self.didUpdateServerList()
-		}
+		})
 	}
 
 	func didUpdateServerList() {

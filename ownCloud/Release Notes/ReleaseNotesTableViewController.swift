@@ -29,15 +29,13 @@ class ReleaseNotesTableViewController: StaticTableViewController {
     }
 
 	func prepareReleaseNotes() {
-		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion), let imageData = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) {
+		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion), ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) != nil {
 			let section = StaticTableViewSection()
 
 			for aDict in relevantReleaseNotes {
 				if let notes = aDict["ReleaseNotes"] as? NSArray {
 					for releaseNote in (notes as? [[String:String]])! {
 						if let title = releaseNote["Title"], let subtitle = releaseNote["Subtitle"] {
-							var image : UIImage?
-
 							if let imageName = releaseNote["ImageName"], let image = ReleaseNotesDatasource().image(for: imageName) {
 								let row = StaticTableViewRow(rowWithAction: { (_, _) in
 									self.dismissAnimated()

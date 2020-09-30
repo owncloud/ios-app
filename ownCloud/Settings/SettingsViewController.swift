@@ -39,7 +39,9 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 
-			if #available(iOS 13, *), !OCLicenseEMMProvider.isEMMVersion {
+			if #available(iOS 13, *), // Require iOS 13
+			   !OCLicenseEMMProvider.isEMMVersion, // Do not show purchases in the EMM version
+			   OCLicenseEnterpriseProvider.numberOfEnterpriseAccounts < OCBookmarkManager.shared.bookmarks.count { // Do only show purchases section if there's at least one non-Enterprise account
 				self.addSection(PurchasesSettingsSection(userDefaults: userDefaults))
 			}
 

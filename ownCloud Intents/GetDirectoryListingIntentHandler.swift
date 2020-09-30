@@ -29,7 +29,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	var completion : GetDirectoryListingCompletionHandler?
 
-	public func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+    public func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
@@ -124,7 +124,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 	}
 
-	public func confirm(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
+    private func confirm(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
         completion(GetDirectoryListingIntentResponse(code: .ready, userActivity: nil))
 	}
 }

@@ -29,9 +29,12 @@ class MoveAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.filter({return $0.isRoot || (!$0.permissions.contains(.move) && !$0.permissions.contains(.delete))}).count > 0 {
+		if forContext.containsRoot {
 			return .none
+		}
 
+		if !forContext.allItemsMoveable || !forContext.allItemsDeleteable {
+			return .none
 		}
 
 		return .middle
@@ -46,7 +49,7 @@ class MoveAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
 			guard let selectedDirectory = selectedDirectory else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return
