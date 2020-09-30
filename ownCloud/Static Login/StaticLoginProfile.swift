@@ -38,6 +38,7 @@ class StaticLoginProfile: NSObject {
 	var urlString : String?
 	var helpURL : URL?
 	var canConfigureURL : Bool = false
+	var allowedHosts : [String]?
 	var allowedAuthenticationMethods : [OCAuthenticationMethodIdentifier]?
 	var themeStyleID : ThemeStyleIdentifier?
 }

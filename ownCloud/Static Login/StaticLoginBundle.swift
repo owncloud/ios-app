@@ -87,6 +87,9 @@ class StaticLoginBundle: NSObject {
 						if let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
 							staticloginProfile.allowedAuthenticationMethods = allowedAuthenticationMethods as? [OCAuthenticationMethodIdentifier]
 						}
+						if let allowedHosts = profile["allowedHosts"] as? NSArray {
+							staticloginProfile.allowedHosts = allowedHosts as? [String]
+						}
 
 						return staticloginProfile
 					}

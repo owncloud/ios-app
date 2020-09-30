@@ -48,7 +48,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		if profile.canConfigureURL {
 			self.addSection(urlSection())
-			if profile.promptForHelpURL != nil, profile.helpURLButtonString != nil, profile.helpURL != nil {
+			if OCBookmarkManager.shared.bookmarks.count == 0, profile.promptForHelpURL != nil, profile.helpURLButtonString != nil, profile.helpURL != nil {
 				self.addSection(urlHelpSection())
 			}
 		} else {
@@ -240,17 +240,42 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	}
 
 	@objc func proceedWithURL() {
-		if let value = self.urlString {
+		var error = false
+		if let value = self.urlString, value.count > 0 {
 			if let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: value, protocolWasPrepended: nil) {
-				self.bookmark = OCBookmark(for: normalizedURL as URL)
-				self.proceedWithLogin()
+				if let allowedHosts = self.profile.allowedHosts, allowedHosts.count > 0, let host = normalizedURL.host {
+					if !allowedHosts.contains(where: { (allowedHost) -> Bool in
+						return host.hasSuffix(allowedHost) ? true : false
+					}) {
+						error = true
+					}
+				}
+
+				if !error {
+					self.bookmark = OCBookmark(for: normalizedURL as URL)
+					self.proceedWithLogin()
+				}
+			} else {
+				error = true
 			}
+		} else {
+			error = true
+		}
+
+		if error {
+			let alert = ThemedAlertController(title: "Wrong URL".localized,
+							  message: "Please enter an valid URL".localized,
+							  preferredStyle: .alert)
+
+			let okAction = UIAlertAction(title: "OK".localized, style: .default)
+			alert.addAction(okAction)
+			self.present(alert, animated: true)
 		}
 	}
 
 	func proceedWithLogin() {
 		guard self.bookmark != nil else {
-			let alertController = ThemedAlertController(title: "Missing Profile URL", message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.", profile.name ?? ""), preferredStyle: .alert)
+			let alertController = ThemedAlertController(title: "Missing Profile URL".localized, message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.".localized, profile.name ?? ""), preferredStyle: .alert)
 
 			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
@@ -400,7 +425,17 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					}
 				}, cancel: { () in
 					OnMainThread {
-						self.cancel(nil)
+						if self.profile.canConfigureURL {
+							if let busySection = self.sectionForIdentifier("busySection") {
+								self.removeSection(busySection)
+							}
+							self.addSection(self.urlSection())
+							if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil {
+								self.addSection(self.urlHelpSection())
+							}
+						} else {
+							self.cancel(nil)
+						}
 					}
 				})
 			}
