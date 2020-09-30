@@ -184,9 +184,22 @@ platform :ios do
 
       if build_owncloud_online_app
         puts("Build ownCloud.online iOS App…")
+
+        # Set ownCloud.online Splashscreen Background for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background.png ../ownCloud/Resources/Theming/branding-splashscreen-background-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen-background.png"
+
+        # Set ownCloud.online Splashscreen Logo for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen.png ../ownCloud/Resources/Theming/branding-splashscreen-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen.png"
+
         # Set ownCloud.online App-Icon for App Build
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+
+        # Set ownCloud.online Description
+        sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
+        sh "mv metadata/en-us/description-ownCloud-online.txt metadata/en-us/description.txt"
 
         # Set ownCloud.online App-Icon for AppStore Connect
         sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
@@ -199,7 +212,7 @@ platform :ios do
         if deliver
           deliver(
             skip_screenshots: skip_screenshots,
-            skip_metadata: true,
+            skip_metadata: false,
             submit_for_review: false,
             ignore_language_directory_validation: true,
             skip_binary_upload: false,
