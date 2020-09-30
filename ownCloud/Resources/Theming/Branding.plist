@@ -37,6 +37,11 @@
 			<true/>
 			<key>helpURL</key>
 			<string>https://owncloud.online/try/</string>
+			<key>allowedHosts</key>
+			<array>
+				<string>owncloud.online</string>
+				<string>owncloud.com</string>
+			</array>
 			<key>allowedAuthenticationMethods</key>
 			<array>
 				<string>com.owncloud.basicauth</string>
@@ -72,11 +77,11 @@
 			<key>Primary</key>
 			<string>#333333</string>
 			<key>Inverse</key>
-			<string>#FFFFFF</string>
+			<string>#000000</string>
 			<key>Secondary</key>
 			<string>#666666</string>
 			<key>Inverse-Light</key>
-			<string>#F2F4F7</string>
+			<string>#000000</string>
 			<key>Disabled</key>
 			<string>#BFC9D9</string>
 		</dict>
@@ -142,9 +147,9 @@
 		<key>Tab</key>
 		<dict>
 			<key>Active</key>
-			<string>#FFFFFF</string>
+			<string>#000000</string>
 			<key>Inactive</key>
-			<string>#DDDDDD</string>
+			<string>#777777</string>
 		</dict>
 	</dict>
 	<key>Themes</key>
@@ -373,7 +378,7 @@
 					<key>symbolColor</key>
 					<string></string>
 					<key>tintColor</key>
-					<string>Text.Inverse</string>
+					<string>Tab.Active</string>
 					<key>filledColorPairCollection</key>
 					<dict>
 						<key>normal</key>
@@ -381,7 +386,7 @@
 							<key>background</key>
 							<string></string>
 							<key>foreground</key>
-							<string>Tab.Active</string>
+							<string>Tab.Inactive</string>
 						</dict>
 						<key>highlighted</key>
 						<dict>
@@ -395,7 +400,7 @@
 							<key>background</key>
 							<string></string>
 							<key>foreground</key>
-							<string>Tab.Inactive</string>
+							<string></string>
 						</dict>
 					</dict>
 				</dict>
@@ -406,7 +411,7 @@
 					<key>labelColor</key>
 					<string>Text.Inverse</string>
 					<key>secondaryLabelColor</key>
-					<string></string>
+					<string>Text.Secondary</string>
 					<key>symbolColor</key>
 					<string></string>
 					<key>tintColor</key>
