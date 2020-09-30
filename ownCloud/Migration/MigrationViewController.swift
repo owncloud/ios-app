@@ -66,9 +66,8 @@ class MigrationViewController: UITableViewController, Themeable {
 	// MARK: - User Actions
 
 	@IBAction func finishMigration() {
-		self.dismiss(animated: true) {
-			self.migrationFinishedHandler?()
-		}
+		self.migrationFinishedHandler?()
+		self.dismiss(animated: true)
 	}
 
 	// MARK: - Table view data source
