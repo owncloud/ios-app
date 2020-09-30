@@ -3,32 +3,32 @@ View metadata (EXIF, IPTC, Geolocation) on image files.
 
 • Pro Photo Upload
 Two new settings give the user more control over photo uploads: 
-Prefer original photo instead of edited version is picked when uploading and prefer raw photo format, if available.
+Users can choose to prefer the original photo instead of an edited version and also to upload the raw photo format, if available.
 
 • Fix: Media Upload Path
-Upload Path for photo and video was not visible in settings for some cases.
+Upload path for photo and video was not visible in settings for some cases.
 
 • Fix: File List
 In some cases the file list was not presented.
 
 • Fix: Markup
-Markup mode was not enabled automatically on iOS 14.
+Markup mode was not enabled automatically when using iOS 14.
 
 • Fix: Shortcuts
-Shortcuts In-App purchase could not retrieved.
+The Shortcuts in-app purchase could not be retrieved.
 
 • Fix: Share Sheet
-Share Sheet on iOS 12 could not dismissed.
+Share Sheet on iOS 12 could not be dismissed.
 
 • Fix: Multiple Selection
-Improved performance during multiple selection.
+Improved performance when selecting multiple items.
 
 • Fix: File Provider
-Some file types was grayed out and cannot be opened.
+Some file types were grayed out and could not be opened.
 
 • Fix: General Improvements
 We made some internal improvements to make everything smoother and removed some edge cases.
 
 • Fix: Create Public Link
-Creating a public link over a federated share was broken
+The process of creating a public link on a federated share was broken
 
