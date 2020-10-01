@@ -705,6 +705,7 @@
 "Migrated" = "Migrated";
 "Failed to migrate" = "Failed to migrate";
 "Failed to access legacy user data" = "Failed to access legacy user data";
+"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
