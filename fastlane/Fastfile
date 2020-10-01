@@ -242,7 +242,8 @@ platform :ios do
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -262,7 +263,8 @@ platform :ios do
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app.emm",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -282,7 +284,8 @@ lane :owncloud_online_build do
     APP_GROUP_IDENTIFIERS: "group.online.owncloud.ios-app",
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Debug",
-    BETA_APP_ICON: false
+    BETA_APP_ICON: false,
+    APP_NAME: "ownCloud.online"
   )
 end
 
@@ -347,7 +350,9 @@ end
 
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
-    if File.exist?("../" + themePath)
+    if values[:APP_NAME] != false
+      appName = values[:APP_NAME]
+    elsif File.exist?("../" + themePath)
       tmpAppName = get_info_plist_value(path: themePath, key: "organizationName")
       if tmpAppName != ""
         appName = tmpAppName
