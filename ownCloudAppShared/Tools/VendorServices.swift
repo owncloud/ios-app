@@ -129,10 +129,9 @@ public class VendorServices : NSObject {
 
 	public var isBranded: Bool {
 		guard let themingValues = self.brandingProperties else { return false }
-
-		if Bundle.main.bundleIdentifier == "online.owncloud.ios-app" {
+		if Bundle.main.bundleIdentifier == "online.owncloud.ios-app", let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0, self.brandingProperties != nil {
 			return true
-		} else if let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
+		} else if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
 			return true
 		}
 
@@ -141,14 +140,6 @@ public class VendorServices : NSObject {
 
 	public var hasBrandedProfiles: Bool {
 		if let themingValues = self.brandingProperties, let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
-			return true
-		}
-
-		return false
-	}
-
-	public var hasBrandedLogin: Bool {
-		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil {
 			return true
 		}
 

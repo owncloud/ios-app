@@ -33,9 +33,13 @@ class StaticLoginBundle: NSObject {
 		let bundle = StaticLoginBundle()
 
 		if let bundleValues = VendorServices.shared.brandingProperties {
-			if let logoImage = UIImage(named: "branding-login-logo.png"), let backgroundImage = UIImage(named: "branding-login-background.png"), let organizationName = bundleValues["organizationName"] as? String {
+			if let organizationName = bundleValues["organizationName"] as? String {
 				bundle.organizationName = organizationName
+			}
+			if let logoImage = UIImage(named: "branding-login-logo.png") {
 				bundle.organizationLogoImage = logoImage
+			}
+			if let backgroundImage = UIImage(named: "branding-login-background.png") {
 				bundle.organizationBackgroundImage = backgroundImage
 			}
 
