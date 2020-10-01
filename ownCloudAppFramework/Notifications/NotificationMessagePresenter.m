@@ -47,9 +47,7 @@
 
 - (void)present:(OCMessage *)message completionHandler:(void (^)(OCMessagePresentationResult, OCMessageChoice * _Nullable))completionHandler
 {
-	UNUserNotificationCenter *center = UNUserNotificationCenter.currentNotificationCenter;
-
-	[center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+	[NotificationManager.sharedNotificationManager requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) {
 		if (granted)
 		{
 			UNMutableNotificationContent *content = [UNMutableNotificationContent new];
