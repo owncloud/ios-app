@@ -136,6 +136,7 @@ platform :ios do
             deliver(
               skip_screenshots: skip_screenshots,
               skip_metadata: false,
+              metadata_path: "./metadata",
               submit_for_review: false,
               ignore_language_directory_validation: true,
               skip_binary_upload: false,
@@ -154,14 +155,6 @@ platform :ios do
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
-          # Set EMM Description
-          sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
-          sh "mv metadata/en-us/description-emm.txt metadata/en-us/description.txt"
-
-          # Set EMM App-Icon for AppStore Connect
-          sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
-          sh "mv metadata/app_icon-emm.jpg metadata/app_icon.jpg"
-
           # Build App
           owncloud_emm_build()
 
@@ -170,6 +163,7 @@ platform :ios do
             deliver(
               skip_screenshots: skip_screenshots,
               skip_metadata: false,
+              metadata_path: "./metadata-emm",
               submit_for_review: false,
               ignore_language_directory_validation: true,
               skip_binary_upload: false,
@@ -197,14 +191,6 @@ platform :ios do
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
-        # Set ownCloud.online Description
-        sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
-        sh "mv metadata/en-us/description-ownCloud-online.txt metadata/en-us/description.txt"
-
-        # Set ownCloud.online App-Icon for AppStore Connect
-        sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
-        sh "mv metadata/app_icon-ownCloud-online.jpg metadata/app_icon.jpg"
-
         # Build App
         owncloud_online_build()
 
@@ -213,6 +199,7 @@ platform :ios do
           deliver(
             skip_screenshots: skip_screenshots,
             skip_metadata: false,
+            metadata_path: "./metadata-owncloud-online",
             submit_for_review: false,
             ignore_language_directory_validation: true,
             skip_binary_upload: false,
