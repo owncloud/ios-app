@@ -4452,7 +4452,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 11.4.1;
+				APP_SHORT_VERSION = 11.4.2;
 				APP_VERSION = 172;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -4515,7 +4515,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 11.4.1;
+				APP_SHORT_VERSION = 11.4.2;
 				APP_VERSION = 172;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -4571,7 +4571,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.4.1;
 				APP_VERSION = 172;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
@@ -4604,7 +4603,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.4.1;
 				APP_VERSION = 172;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
