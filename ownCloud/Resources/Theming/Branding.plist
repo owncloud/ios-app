@@ -103,7 +103,7 @@
 			<key>Light</key>
 			<string>#EEEEEE</string>
 			<key>Input-Form</key>
-			<string>#52DDA9</string>
+			<string>#FFFFFF</string>
 			<key>Selected</key>
 			<string>#E5EFFF</string>
 			<key>Tooltip</key>
@@ -185,7 +185,7 @@
 						<key>normal</key>
 						<dict>
 							<key>background</key>
-							<string></string>
+							<string>#52DDA9</string>
 							<key>foreground</key>
 							<string></string>
 						</dict>
@@ -479,7 +479,7 @@
 				<key>NavigationBar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>Corporate.Color</string>
+					<string>#FFFFFF</string>
 					<key>labelColor</key>
 					<string>Text.Inverse</string>
 					<key>secondaryLabelColor</key>
