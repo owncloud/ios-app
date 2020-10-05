@@ -79,12 +79,19 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}
 	}
 
-	fileprivate var activeViewConstraints: [NSLayoutConstraint] = [] {
+	private var activeViewConstraints: [NSLayoutConstraint] = [] {
 		willSet {
 			NSLayoutConstraint.deactivate(activeViewConstraints)
 		}
 		didSet {
 			NSLayoutConstraint.activate(activeViewConstraints)
+		}
+	}
+
+	private var fullScreen: Bool = false {
+		didSet {
+			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
+			setupConstraints()
 		}
 	}
 
@@ -183,6 +190,15 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				self?.pdfView.go(to: page)
 			}
 		}
+
+		let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
+		tapRecognizer.numberOfTapsRequired = 1
+		pdfView.addGestureRecognizer(tapRecognizer)
+		pdfView.isUserInteractionEnabled = true
+	}
+
+	@objc func toggleFullscreen(_ sender: UITapGestureRecognizer) {
+		self.fullScreen.toggle()
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -291,8 +307,13 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 		thumbnailView.isHidden = false
 
-		switch thumbnailViewPosition {
-			case .left:
+		switch (thumbnailViewPosition, fullScreen) {
+			case (_, true):
+				constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				thumbnailView.isHidden = true
+			case (.left, false):
 				constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
 				constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
 				constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
@@ -302,7 +323,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
 				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
 
-			case .right:
+			case (.right, false):
 				constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
 				constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: containerView.trailingAnchor))
 				constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
@@ -313,7 +334,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				constraints.append(containerView.trailingAnchor.constraint(equalTo: thumbnailView.leadingAnchor))
 				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
 
-			case .bottom:
+			case (.bottom, false):
 				constraints.append(thumbnailView.topAnchor.constraint(equalTo: containerView.bottomAnchor))
 				constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
 				constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
@@ -324,7 +345,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
 				constraints.append(containerView.bottomAnchor.constraint(equalTo: thumbnailView.topAnchor))
 
-			case .none:
+			case (.none, _):
 				constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
 				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
 				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
