@@ -192,14 +192,14 @@
 						<key>highlighted</key>
 						<dict>
 							<key>background</key>
-							<string></string>
+							<string>#52DDA9</string>
 							<key>foreground</key>
 							<string></string>
 						</dict>
 						<key>disabled</key>
 						<dict>
 							<key>background</key>
-							<string></string>
+							<string>#37C390</string>
 							<key>foreground</key>
 							<string></string>
 						</dict>
