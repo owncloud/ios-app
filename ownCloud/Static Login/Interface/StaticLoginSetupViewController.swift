@@ -373,7 +373,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 									}
 								})
 
-								self.present(issuesViewController, animated: true, completion: nil)
+								if let busySection = self.sectionForIdentifier("busySection") {
+									self.removeSection(busySection)
+								}
+								self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
 							}
 						}
 					})
@@ -524,7 +527,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 						}
 					})
 
-					self.present(issuesViewController, animated: true, completion: nil)
+					if let busySection = self.sectionForIdentifier("busySection") {
+						self.removeSection(busySection)
+					}
+					self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
 				}
 
 				return false
