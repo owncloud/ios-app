@@ -52,7 +52,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	private let searchAnnotationDelay = 3.0
 	private let thumbnailViewWidthMultiplier: CGFloat = 0.15
 	private let thumbnailViewHeightMultiplier: CGFloat = 0.1
-	private let thumbnailMargin: CGFloat = 32.0
 	private let filenameContainerTopMargin: CGFloat = 10.0
 	private let thumbnailView = PDFThumbnailView()
 
@@ -165,8 +164,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
 			pdfView.autoScales = true
 			updatePageLabel()
-
-			adjustThumbnailsSize()
 
 			completion(true)
 
@@ -284,12 +281,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - Private helpers
-
-	private func adjustThumbnailsSize() {
-		let maxHeight = floor(self.view.bounds.height * thumbnailViewHeightMultiplier - thumbnailMargin)
-		let maxWidth = floor(self.view.bounds.width * thumbnailViewWidthMultiplier - thumbnailMargin)
-		thumbnailView.thumbnailSize = CGSize(width: maxWidth, height: maxHeight)
-	}
 
 	private func setupConstraints() {
 
