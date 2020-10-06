@@ -45,24 +45,26 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	static let PDFGoToPageNotification = Notification(name: Notification.Name(rawValue: "PDFGoToPageNotification"))
 
-	fileprivate var gotoPageNotificationObserver : Any?
-
-	fileprivate let searchAnnotationDelay = 3.0
-	fileprivate let thumbnailViewWidthMultiplier: CGFloat = 0.15
-	fileprivate let thumbnailViewHeightMultiplier: CGFloat = 0.1
-	fileprivate let thumbnailMargin: CGFloat = 32.0
-	fileprivate let filenameContainerTopMargin: CGFloat = 10.0
 	public let pdfView = PDFView()
-	fileprivate let thumbnailView = PDFThumbnailView()
 
-	fileprivate let containerView = UIStackView()
-	fileprivate let pageCountLabel = UILabel()
+	private var gotoPageNotificationObserver : Any?
 
-	fileprivate var searchButtonItem: UIBarButtonItem?
-	fileprivate var gotoButtonItem: UIBarButtonItem?
-	fileprivate var outlineItem: UIBarButtonItem?
+	private let searchAnnotationDelay = 3.0
+	private let thumbnailViewWidthMultiplier: CGFloat = 0.15
+	private let thumbnailViewHeightMultiplier: CGFloat = 0.1
+	private let thumbnailMargin: CGFloat = 32.0
+	private let filenameContainerTopMargin: CGFloat = 10.0
+	private let thumbnailView = PDFThumbnailView()
 
-	fileprivate var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
+	private let containerView = UIStackView()
+	private let pageCountLabel = UILabel()
+	private let pageCountContainerView = UIView()
+
+	private var searchButtonItem: UIBarButtonItem?
+	private var gotoButtonItem: UIBarButtonItem?
+	private var outlineItem: UIBarButtonItem?
+
+	private var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
 		didSet {
 			switch thumbnailViewPosition {
 				case .left, .right:
@@ -91,6 +93,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	private var fullScreen: Bool = false {
 		didSet {
 			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
+			pageCountLabel.isHidden = fullScreen
 			setupConstraints()
 		}
 	}
@@ -118,12 +121,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 				setupToolbar()
 
-				self.view.backgroundColor = UIColor.gray
+				self.view.backgroundColor = self.pdfView.backgroundColor
 				self.thumbnailViewPosition = .none
 
 				// Configure thumbnail view
 				thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-				thumbnailView.backgroundColor = UIColor.gray
+				thumbnailView.backgroundColor = self.pdfView.backgroundColor
 				thumbnailView.pdfView = pdfView
 				thumbnailView.isExclusiveTouch = true
 
@@ -143,17 +146,11 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pdfView.usePageViewController(true, withViewOptions: nil)
 				containerView.addArrangedSubview(pdfView)
 
-				let pageCountContainerView = UIView()
 				pageCountContainerView.backgroundColor = UIColor.gray
 				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
 				pageCountContainerView.addSubview(pageCountLabel)
 
 				pageCountLabel._setupPdfInfoLabel()
-				pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
-				pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
-				pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
-				pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
-
 				containerView.addArrangedSubview(pageCountContainerView)
 
 				self.view.addSubview(containerView)
@@ -194,7 +191,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
 		tapRecognizer.numberOfTapsRequired = 1
 		pdfView.addGestureRecognizer(tapRecognizer)
-		pdfView.isUserInteractionEnabled = true
+		//pdfView.isUserInteractionEnabled = true
 	}
 
 	@objc func toggleFullscreen(_ sender: UITapGestureRecognizer) {
@@ -288,13 +285,13 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	// MARK: - Private helpers
 
-	fileprivate func adjustThumbnailsSize() {
+	private func adjustThumbnailsSize() {
 		let maxHeight = floor(self.view.bounds.height * thumbnailViewHeightMultiplier - thumbnailMargin)
 		let maxWidth = floor(self.view.bounds.width * thumbnailViewWidthMultiplier - thumbnailMargin)
 		thumbnailView.thumbnailSize = CGSize(width: maxWidth, height: maxHeight)
 	}
 
-	fileprivate func setupConstraints() {
+	private func setupConstraints() {
 
 		if thumbnailView.superview == nil || pdfView.superview == nil {
 			return
@@ -352,11 +349,17 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				thumbnailView.isHidden = true
 		}
 
+		let pageLabelHeightMultiplier: CGFloat = thumbnailView.isHidden == false ? 0.9 : 0.0
+		pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
+		pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
+		pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
+		pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: pageLabelHeightMultiplier).isActive = true
+
 		self.activeViewConstraints = constraints
 
 	}
 
-	fileprivate func setupToolbar() {
+	private func setupToolbar() {
 		searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
 		gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
 		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
@@ -371,7 +374,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			outlineItem!]
 	}
 
-	fileprivate func selectPage(with label:String) {
+	private func selectPage(with label:String) {
 		guard let pdf = pdfView.document else { return }
 
 		if let pageNr = Int(label) {
@@ -389,7 +392,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}
 	}
 
-	fileprivate func updatePageLabel() {
+	private func updatePageLabel() {
 		guard let pdf = pdfView.document else { return }
 
 		guard let page = pdfView.currentPage else { return }
