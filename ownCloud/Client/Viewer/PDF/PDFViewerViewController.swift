@@ -120,12 +120,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 				setupToolbar()
 
-				self.view.backgroundColor = self.pdfView.backgroundColor
 				self.thumbnailViewPosition = .none
 
 				// Configure thumbnail view
 				thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-				thumbnailView.backgroundColor = self.pdfView.backgroundColor
 				thumbnailView.pdfView = pdfView
 				thumbnailView.isExclusiveTouch = true
 
@@ -134,7 +132,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				containerView.spacing = UIStackView.spacingUseSystem
 				containerView.isLayoutMarginsRelativeArrangement = true
 				containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: filenameContainerTopMargin, leading: 0, bottom: 0, trailing: 0)
-				containerView.backgroundColor = UIColor.lightGray
 				containerView.translatesAutoresizingMaskIntoConstraints = false
 				containerView.axis = .vertical
 				containerView.distribution = .fill
@@ -145,7 +142,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pdfView.usePageViewController(true, withViewOptions: nil)
 				containerView.addArrangedSubview(pdfView)
 
-				pageCountContainerView.backgroundColor = UIColor.gray
 				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
 				pageCountContainerView.addSubview(pageCountLabel)
 
@@ -153,6 +149,16 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				containerView.addArrangedSubview(pageCountContainerView)
 
 				self.view.addSubview(containerView)
+
+				if #available(iOS 13, *) {
+					self.view.backgroundColor = self.pdfView.backgroundColor
+					thumbnailView.backgroundColor = self.pdfView.backgroundColor
+				} else {
+					self.view.backgroundColor = .gray
+					thumbnailView.backgroundColor = .gray
+				}
+
+				pageCountContainerView.backgroundColor = UIColor.gray
 
 				setupConstraints()
 
