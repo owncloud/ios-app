@@ -337,7 +337,7 @@ end
 
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
-    if values[:APP_NAME] != false
+    if !values[:APP_NAME].nil?
       appName = values[:APP_NAME]
     elsif File.exist?("../" + themePath)
       tmpAppName = get_info_plist_value(path: themePath, key: "organizationName")
