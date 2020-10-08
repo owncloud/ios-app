@@ -35,7 +35,6 @@ class StaticLoginProfile: NSObject {
 	var welcome : String?
 	var bookmarkName : String?
 	var url : URL?
-	var urlString : String?
 	var helpURL : URL?
 	var canConfigureURL : Bool = false
 	var allowedHosts : [String]?

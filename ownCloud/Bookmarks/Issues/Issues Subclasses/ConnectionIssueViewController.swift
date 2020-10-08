@@ -139,15 +139,11 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 	}
 
 	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		guard let displayIssues = displayIssues, displayIssues.displayIssues.count == 1 else {
+		guard let displayIssues = displayIssues, displayIssues.displayIssues.count == 1, displayIssues.displayIssues.first?.localizedTitle == headerTitle else {
 			return super.tableView(tableView, heightForHeaderInSection: section)
 		}
 
-		if displayIssues.displayIssues.first?.localizedTitle == headerTitle {
-			return 0
-		}
-
-		return super.tableView(tableView, heightForHeaderInSection: section)
+		return 0
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

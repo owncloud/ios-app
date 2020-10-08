@@ -108,13 +108,12 @@ class MigrationViewController: UITableViewController, Themeable {
 			headerLogoView.rightAnchor.constraint(equalTo: rootView.rightAnchor),
 			headerLogoView.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.5, constant: 0),
 			headerLogoView.topAnchor.constraint(equalTo: rootView.topAnchor, constant: 15),
-			headerLogoView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
 
 			// Header Label
 			headerLabel.leftAnchor.constraint(equalTo: rootView.leftAnchor, constant: 15),
 			headerLabel.rightAnchor.constraint(equalTo: rootView.rightAnchor, constant: -15),
 			headerLabel.topAnchor.constraint(equalTo: headerLogoView.bottomAnchor, constant: 10),
-			headerLabel.bottomAnchor.constraint(equalTo: rootView.bottomAnchor, constant: 15)
+			headerLabel.bottomAnchor.constraint(equalTo: rootView.bottomAnchor, constant: -15)
 		])
 
 		if let organizationLogoImage = UIImage(named: "branding-splashscreen") {

@@ -179,6 +179,10 @@ platform :ios do
       if build_owncloud_online_app
         puts("Build ownCloud.online iOS App…")
 
+        # Moving the ownCloud.online Branding.plist to the correct place
+        sh "mv ../ownCloud/Resources/Theming/Branding.plist ../ownCloud/Resources/Theming/Branding-regular.plist"
+        sh "mv ../ownCloud/Resources/Theming/Branding-owncloud-online.plist ../ownCloud/Resources/Theming/Branding.plist"
+
         # Set ownCloud.online Splashscreen Background for App Build
         sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background.png ../ownCloud/Resources/Theming/branding-splashscreen-background-regular.png"
         sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen-background.png"

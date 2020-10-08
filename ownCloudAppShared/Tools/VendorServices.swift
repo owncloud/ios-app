@@ -129,9 +129,7 @@ public class VendorServices : NSObject {
 
 	public var isBranded: Bool {
 		guard let themingValues = self.brandingProperties else { return false }
-		if Bundle.main.bundleIdentifier == "online.owncloud.ios-app", let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0, self.brandingProperties != nil {
-			return true
-		} else if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
+		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
 			return true
 		}
 

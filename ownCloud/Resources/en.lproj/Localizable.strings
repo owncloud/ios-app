@@ -113,7 +113,7 @@
 "You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
 "Login" = "Login";
 "Wrong URL" = "Wrong URL";
-"Please enter an valid URL" = "Please enter an valid URL";
+"Please enter a valid URL" = "Please enter a valid URL";
 "Missing Profile URL" = "Missing Profile URL";
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 

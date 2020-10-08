@@ -264,7 +264,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		if error {
 			let alert = ThemedAlertController(title: "Wrong URL".localized,
-							  message: "Please enter an valid URL".localized,
+							  message: "Please enter a valid URL".localized,
 							  preferredStyle: .alert)
 
 			let okAction = UIAlertAction(title: "OK".localized, style: .default)
@@ -373,7 +373,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 									}
 								})
 
-								if let busySection = self.sectionForIdentifier("busySection") {
+								if let busySection = self.busySection, busySection.attached {
 									self.removeSection(busySection)
 								}
 								self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
@@ -429,7 +429,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				}, cancel: { () in
 					OnMainThread {
 						if self.profile.canConfigureURL {
-							if let busySection = self.sectionForIdentifier("busySection") {
+							if let busySection = self.busySection, busySection.attached {
 								self.removeSection(busySection)
 							}
 							self.addSection(self.urlSection())
@@ -527,7 +527,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 						}
 					})
 
-					if let busySection = self.sectionForIdentifier("busySection") {
+					if let busySection = self.busySection, busySection.attached {
 						self.removeSection(busySection)
 					}
 					self.loginViewController?.present(issuesViewController, animated: true, completion: nil)

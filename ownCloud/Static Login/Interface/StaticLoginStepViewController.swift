@@ -156,7 +156,6 @@ extension StaticTableViewSection {
 			NSLayoutConstraint.activate([
 				titleLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor),
 				titleLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor),
-				titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 				titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: topSpacing)
 			])
 			topAnchor = titleLabel.bottomAnchor

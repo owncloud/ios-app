@@ -80,7 +80,6 @@ class StaticLoginBundle: NSObject {
 						}
 						if let url = profile["url"] as? String {
 							staticloginProfile.url = URL(string: url)
-							staticloginProfile.urlString = url
 						}
 						if let helpURL = profile["helpURL"] as? String {
 							staticloginProfile.helpURL = URL(string: helpURL)
