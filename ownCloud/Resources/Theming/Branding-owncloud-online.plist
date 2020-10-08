@@ -41,6 +41,7 @@
 			<array>
 				<string>owncloud.online</string>
 				<string>owncloud.com</string>
+				<string>owncloud.team</string>
 			</array>
 			<key>allowedAuthenticationMethods</key>
 			<array>
