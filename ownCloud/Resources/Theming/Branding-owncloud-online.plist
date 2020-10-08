@@ -593,7 +593,7 @@
 			<key>Styles</key>
 			<dict>
 				<key>statusBarStyle</key>
-				<string>default</string>
+				<string>darkContent</string>
 				<key>barStyle</key>
 				<string>black</string>
 				<key>activityIndicatorViewStyle</key>
