@@ -388,6 +388,8 @@
 		DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD810932398492C003B0053 /* OCLicenseDuration.m */; };
 		DCD954DF247D62FA00E184E6 /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
+		DCDBB60A2525305600FAD707 /* NotificationAuthErrorForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */; };
 		DCDC0ACF23CD186400DFE36D /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC0AD023CD18D200DFE36D /* OCLicenseManager+Setup.swift */; };
 		DCDC208C239912DC003CFF5B /* OCLicenseTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC208A239912DC003CFF5B /* OCLicenseTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1326,6 +1328,8 @@
 		DCD810932398492C003B0053 /* OCLicenseDuration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseDuration.m; sourceTree = "<group>"; };
 		DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
 		DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCLicenseManager+Internal.h"; sourceTree = "<group>"; };
+		DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationAuthErrorForwarder.h; sourceTree = "<group>"; };
+		DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationAuthErrorForwarder.m; sourceTree = "<group>"; };
 		DCDC0AD023CD18D200DFE36D /* OCLicenseManager+Setup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+Setup.swift"; sourceTree = "<group>"; };
 		DCDC0AD223CD1E3200DFE36D /* IntentSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentSettings.swift; sourceTree = "<group>"; };
 		DCDC208A239912DC003CFF5B /* OCLicenseTransaction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseTransaction.h; sourceTree = "<group>"; };
@@ -2620,6 +2624,8 @@
 				DCC832E9242CB4D600153F8C /* NotificationManager.h */,
 				DCC832E7242CB18700153F8C /* NotificationMessagePresenter.m */,
 				DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */,
+				DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */,
+				DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -3042,6 +3048,7 @@
 				DC080CF2238C8DF70044C5D2 /* OCLicenseAppStoreItem.h in Headers */,
 				DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */,
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
+				DCDBB60A2525305600FAD707 /* NotificationAuthErrorForwarder.h in Headers */,
 				DC080CE6238AE3F40044C5D2 /* OCLicenseAppStoreProvider.h in Headers */,
 				DCDC208C239912DC003CFF5B /* OCLicenseTransaction.h in Headers */,
 				DCF2DA7D24C835BF0026D790 /* OCVault+FPServices.h in Headers */,
@@ -4121,6 +4128,7 @@
 				DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */,
 				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
+				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 				DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */,
@@ -4571,6 +4579,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_SHORT_VERSION = 11.4.2;
 				APP_VERSION = 172;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
@@ -4603,6 +4612,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_SHORT_VERSION = 11.4.2;
 				APP_VERSION = 172;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;

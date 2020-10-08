@@ -44,6 +44,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		super.init(style: style)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(openAccount(notification:)), name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -52,6 +53,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
@@ -498,6 +500,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self.tableView.reloadData()
 				self.updateNoServerMessageVisibility()
 			}
+		}
+	}
+
+	@objc func openAccount(notification: NSNotification) {
+		if let bookmarkUUID = notification.object as? UUID,
+		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+		   	self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 		}
 	}
 
