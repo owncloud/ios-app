@@ -191,9 +191,11 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			}
 		}
 
-		let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
-		tapRecognizer.numberOfTapsRequired = 1
-		pdfView.addGestureRecognizer(tapRecognizer)
+		if #available(iOS 13, *) {
+			let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
+			tapRecognizer.numberOfTapsRequired = 1
+			pdfView.addGestureRecognizer(tapRecognizer)
+		}
 		//pdfView.isUserInteractionEnabled = true
 	}
 
@@ -201,12 +203,41 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		self.fullScreen.toggle()
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		self.thumbnailViewPosition = .bottom
+	}
+
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		self.thumbnailViewPosition = .bottom
-
 		pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
 		pdfView.autoScales = true
+		if #available(iOS 13, *) {
+			self.calculateThumbnailSize()
+		}
+	}
+
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		// Crashes on pre-iOS 13
+		if #available(iOS 13, *) {
+			coordinator.animate(alongsideTransition: nil) { (_) in
+				self.calculateThumbnailSize()
+			}
+		}
+	}
+
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+		if #available(iOS 13, *) {
+			coordinator.animate(alongsideTransition: nil) { (_) in
+				if newCollection.verticalSizeClass == .regular {
+					self.thumbnailViewPosition = .bottom
+				} else {
+					self.thumbnailViewPosition = .right
+				}
+				self.calculateThumbnailSize()
+			}
+		}
 	}
 
 	func save(item: OCItem) {
@@ -287,6 +318,11 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - Private helpers
+
+	private func calculateThumbnailSize() {
+		let maxHeight = floor( min(self.thumbnailView.bounds.size.height, self.thumbnailView.bounds.size.width)  * 0.6)
+		self.thumbnailView.thumbnailSize = CGSize(width: maxHeight, height: maxHeight)
+	}
 
 	private func setupConstraints() {
 
