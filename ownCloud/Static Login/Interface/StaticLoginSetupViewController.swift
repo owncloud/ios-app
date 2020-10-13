@@ -56,8 +56,13 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		}
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+	override func updateViewConstraints() {
+		super.updateViewConstraints()
+		if tableView.contentSize.height > view.frame.size.height {
+			tableView.isScrollEnabled = true
+		} else {
+			tableView.isScrollEnabled = false
+		}
 	}
 
 	func urlSection() -> StaticTableViewSection {
@@ -70,7 +75,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let self = self, let value = row.value as? String {
 				self.urlString = value
 			}
-			}, placeholder: "https://", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
+			}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
 			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: "Cancel".localized)

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>canAddAccount</key>
-	<true/>
+	<false/>
 	<key>organizationName</key>
 	<string>ownCloud.online</string>
 	<key>feedbackMail</key>

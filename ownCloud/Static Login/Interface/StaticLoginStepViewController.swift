@@ -26,6 +26,8 @@ class StaticLoginStepViewController : StaticTableViewController {
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		self.tableView.backgroundColor = .clear
 	}
 
 	init(loginViewController theLoginViewController: StaticLoginViewController) {
