@@ -263,7 +263,7 @@
          <EnvironmentVariable
             key = "oc:host-simulator.active-simulations"
             value = "[reject-downloads-500]"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:host-simulator.active-simulations"
