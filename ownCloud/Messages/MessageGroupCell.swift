@@ -87,6 +87,7 @@ class MessageGroupCell: ThemeTableViewCell {
 
 		let messages = messageGroup.messages
 		let multiMessage = messages.count > 1
+		let multiMessageCount = messages.count
 
 		if let choices = message.choices {
 			for choice in choices {
@@ -160,11 +161,12 @@ class MessageGroupCell: ThemeTableViewCell {
 				if showAllLabel == nil {
 					showAllLabel = UIButton(type: .system)
 					showAllLabel?.translatesAutoresizingMaskIntoConstraints = false
-					showAllLabel?.setTitle("Show all".localized, for: .normal)
 					showAllLabel?.addTarget(self, action: #selector(showAllIssues), for: .primaryActionTriggered)
 
 					applyAllContainer?.addSubview(showAllLabel!)
 				}
+
+				showAllLabel?.setTitle("\("Show all".localized) (\(multiMessageCount))", for: .normal)
 
 				if setupLayout, let applyAllContainer = applyAllContainer, let applyAllSwitch = applyAllSwitch, let applyAllLabel = applyAllLabel, let showAllLabel = showAllLabel {
 					NSLayoutConstraint.activate([

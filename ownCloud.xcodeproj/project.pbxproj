@@ -313,7 +313,7 @@
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
 		DC66F39C239659C000CF4812 /* OCASN1.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F39A239659C000CF4812 /* OCASN1.h */; };
 		DC66F39D239659C000CF4812 /* OCASN1.m in Sources */ = {isa = PBXBuildFile; fileRef = DC66F39B239659C000CF4812 /* OCASN1.m */; };
-		DC66F3A523965A1400CF4812 /* NSDate+RFC3339.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F3A323965A1400CF4812 /* NSDate+RFC3339.h */; };
+		DC66F3A523965A1400CF4812 /* NSDate+RFC3339.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F3A323965A1400CF4812 /* NSDate+RFC3339.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */ = {isa = PBXBuildFile; fileRef = DC66F3A423965A1400CF4812 /* NSDate+RFC3339.m */; };
 		DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F3A923965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC66F3AC23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m in Sources */ = {isa = PBXBuildFile; fileRef = DC66F3AA23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m */; };

@@ -152,19 +152,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		return _cookieStorage
 	}
 
-	private var _hostSimulator : OCConnectionHostSimulator?
-	var hostSimulator : OCConnectionHostSimulator? {
-		if _hostSimulator == nil {
-			// UNCOMMENT FOR HOST SIMULATOR: // _hostSimulator = OCHostSimulator.cookieRedirectSimulator(requestWithoutCookiesHandler: nil, requestForCookiesHandler: nil, requestWithCookiesHandler: nil)
-		}
-
-		return _hostSimulator
-	}
-
 	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
 		let connection = OCConnection(bookmark: bmark)
 
-		connection.hostSimulator = self.hostSimulator
+		connection.hostSimulator = OCHostSimulatorManager.shared.hostSimulator(forLocation: .accountSetup, for: self)
 		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
 
 		return connection
