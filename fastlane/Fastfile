@@ -316,7 +316,8 @@ end
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
-      BETA_APP_ICON: true
+      BETA_APP_ICON: true,
+      APP_NAME: "ownCloud"
     )
   end
 
