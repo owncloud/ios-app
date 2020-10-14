@@ -66,7 +66,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var duplicateMultipleBarButtonItem: UIBarButtonItem?
 	public var copyMultipleBarButtonItem: UIBarButtonItem?
 	public var openMultipleBarButtonItem: UIBarButtonItem?
-
+	public var isFolderSelectionOnlyMode: Bool = false
 	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -409,6 +409,13 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			if let localID = newItem.localID as OCLocalID?, self.selectedItemIds.contains(localID) {
 				cell?.setSelected(true, animated: false)
 			}
+
+			if isFolderSelectionOnlyMode {
+				if newItem.type == .file {
+					cell?.isActive = false
+				}
+				cell?.isMoreButtonPermanentlyHidden = true
+			}
 		}
 
 		return cell!
@@ -457,6 +464,9 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
+			if let item = itemAt(indexPath: indexPath), item.type != .collection, isFolderSelectionOnlyMode {
+				return
+			}
 			if didSelectCellAction != nil {
 				didSelectCellAction?({ })
 			} else {
@@ -485,6 +495,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 				multiSelectionSupport.updateMultiselection()
 			}
 		}
+	}
+
+	override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		if let item = itemAt(indexPath: indexPath), item.type != .collection, isFolderSelectionOnlyMode {
+			return false
+		}
+
+		return true
 	}
 }
 

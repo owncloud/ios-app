@@ -251,6 +251,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 			let customFileListController = QueryFileListTableViewController(core: core, query: favoriteQuery)
 			customFileListController.title = "Favorites".localized
+			customFileListController.isFolderSelectionOnlyMode = true
 			customFileListController.pullToRefreshAction = { [weak self] (completion) in
 				self?.core?.refreshFavorites(completionHandler: { (_, _) in
 					completion()
