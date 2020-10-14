@@ -4,6 +4,8 @@
 <dict>
 	<key>canAddAccount</key>
 	<false/>
+	<key>canEditAccount</key>
+	<true/>
 	<key>organizationName</key>
 	<string>ownCloud.online</string>
 	<key>feedbackMail</key>

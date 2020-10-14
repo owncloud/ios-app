@@ -575,7 +575,7 @@
 "All Files" = "All Files";
 
 /* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+"You are connected as\n%@" = "You are connected as\n%@";
 
 /* Release Notes */
 "Proceed" = "Fortsett";

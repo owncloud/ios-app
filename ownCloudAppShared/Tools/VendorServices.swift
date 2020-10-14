@@ -156,6 +156,18 @@ public class VendorServices : NSObject {
 		return true
 	}
 
+	public var canEditAccount: Bool {
+		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canEditAccount"] as? Bool {
+			if canAddAccount, self.hasBrandedProfiles {
+				return true
+			}
+
+			return false
+		}
+
+		return true
+	}
+
 	public var showBetaWarning: Bool {
 		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
 			return showBetaWarning

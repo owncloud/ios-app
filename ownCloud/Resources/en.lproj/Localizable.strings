@@ -110,7 +110,7 @@
 "Retry detection" = "Retry detection";
 
 /* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+"You are connected as\n%@" = "You are connected as\n%@";
 "Login" = "Login";
 "Wrong URL" = "Wrong URL";
 "Please enter a valid URL" = "Please enter a valid URL";

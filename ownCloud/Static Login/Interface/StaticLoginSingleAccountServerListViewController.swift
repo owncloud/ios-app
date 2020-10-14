@@ -46,6 +46,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	// Implementation
 	var headerView : UIView?
 	weak var staticLoginViewController : StaticLoginViewController?
+	var canConfigureURL: Bool = true
+	private var actionRows: [ActionRowIndex] = [.editLogin, .manageStorage, .logout]
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -53,6 +55,10 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		self.tableView.isScrollEnabled = true
 		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "login-cell")
 		self.tableView.register(ServerListToolCell.self, forCellReuseIdentifier: "tool-cell")
+
+		if !VendorServices.shared.canEditAccount {
+			actionRows = [.manageStorage, .logout]
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -68,7 +74,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		switch SingleAccountSection(rawValue: section) {
 			case .accessFiles: return AccessFilesRowIndex.allCases.count
-			case .actions: 	   return ActionRowIndex.allCases.count
+			case .actions: 	   return actionRows.count
 			case .settings:    return SettingsRowIndex.allCases.count
 
 			default: 	   return 0
@@ -102,7 +108,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 					return ServerListToolCell()
 				}
 
-				switch ActionRowIndex(rawValue: indexPath.row) {
+				switch actionRows[indexPath.row] {
 					case .editLogin:
 						bookmarkCell.textLabel?.text = "Edit Login".localized
 
@@ -137,9 +143,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 						} else {
 							bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 						}
-
-					default:
-						bookmarkCell.textLabel?.text = ""
 				}
 
 				rowCell = bookmarkCell
@@ -170,7 +173,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let userName = bookmark.userName {
-				let headerText = String(format: "You are connected as\n%@ to %@".localized, userName, bookmark.shortName)
+				let headerText = String(format: "You are connected as\n%@".localized, userName)
 				headerView = StaticTableViewSection.buildHeader(title: headerText)
 			}
 
@@ -188,7 +191,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			case .actions:
 				if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first {
 					tableView.deselectRow(at: indexPath, animated: true)
-					switch ActionRowIndex(rawValue: indexPath.row) {
+					switch actionRows[indexPath.row] {
 						case .editLogin:
 							showBookmarkUI(edit: bookmark)
 
@@ -199,8 +202,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 							delete(bookmark: bookmark, at: IndexPath(row: 0, section: 0) ) {
 								self.staticLoginViewController?.showFirstScreen()
 							}
-
-						default: break
 					}
 				}
 
