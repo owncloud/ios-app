@@ -42,6 +42,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
 	open var allowedPathFilter : ClientDirectoryPickerPathFilter?
 	open var navigationPathFilter : ClientDirectoryPickerPathFilter?
+	open var hasFavorites: Bool = true
 
 	// MARK: - Init & deinit
 	convenience public init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
@@ -171,7 +172,42 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return allowNavigation
 	}
 
+	// MARK: - Table view data source
+
+	override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if hasFavorites, indexPath.section == 0 {
+			return estimatedTableRowHeight
+		}
+
+		return UITableView.automaticDimension
+	}
+
+	override open func numberOfSections(in tableView: UITableView) -> Int {
+		if hasFavorites {
+			return 2
+		}
+		return 1
+	}
+
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if hasFavorites, section == 0 {
+			return 1
+		}
+
+		return self.items.count
+	}
+
 	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		if hasFavorites, indexPath.section == 0 {
+			let cellStyle = UITableViewCell.CellStyle.default
+			let cell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
+			cell.textLabel?.text = "Favorites".localized
+			cell.imageView?.image = UIImage(named: "star")!.paddedTo(width: 40)
+			cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+
+			return cell
+		}
+
 		let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
 		if let clientItemCell = cell as? ClientItemCell {
@@ -183,7 +219,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+		if hasFavorites, indexPath.section == 0 {
+			return true
+		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return true
 		}
 
@@ -191,7 +229,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+		if hasFavorites, indexPath.section == 0 {
+			return indexPath
+		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return indexPath
 		}
 
@@ -199,14 +239,49 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
-			return
+		if hasFavorites, indexPath.section == 0 {
+			guard let core = self.core else {
+				return
+			}
+
+			let favoriteQuery = OCQuery(condition: .require([
+				.where(.isFavorite, isEqualTo: true)
+				//.where(.type, isEqualTo: OCItemType.collection)
+			]), inputFilter:nil)
+
+			let customFileListController = QueryFileListTableViewController(core: core, query: favoriteQuery)
+			customFileListController.title = "Favorites".localized
+			customFileListController.pullToRefreshAction = { [weak self] (completion) in
+				self?.core?.refreshFavorites(completionHandler: { (_, _) in
+					completion()
+				})
+			}
+
+			customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
+				guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
+					return
+				}
+
+				let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: self?.allowedPathFilter, navigationPathFilter: self?.navigationPathFilter, choiceHandler: choiceHandler)
+				pickerController.hasFavorites = false
+				pickerController.cancelAction = self?.cancelAction
+
+				self?.navigationController?.pushViewController(pickerController, animated: true)
+			}
+
+			self.navigationController?.pushViewController(customFileListController, animated: true)
+		} else {
+
+			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
+				return
+			}
+
+			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+			pickerController.hasFavorites = false
+			pickerController.cancelAction = cancelAction
+
+			self.navigationController?.pushViewController(pickerController, animated: true)
 		}
-
-		let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
-		pickerController.cancelAction = cancelAction
-
-		self.navigationController?.pushViewController(pickerController, animated: true)
 	}
 
 	override open func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

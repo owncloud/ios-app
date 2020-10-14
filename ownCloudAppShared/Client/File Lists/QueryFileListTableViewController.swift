@@ -67,6 +67,8 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var copyMultipleBarButtonItem: UIBarButtonItem?
 	public var openMultipleBarButtonItem: UIBarButtonItem?
 
+	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?
+
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
 
@@ -455,7 +457,11 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
-			super.tableView(tableView, didSelectRowAt: indexPath)
+			if didSelectCellAction != nil {
+				didSelectCellAction?({ })
+			} else {
+				super.tableView(tableView, didSelectRowAt: indexPath)
+			}
 		} else {
 			if let multiSelectionSupport = self as? MultiSelectSupport {
 				if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
