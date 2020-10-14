@@ -663,11 +663,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 			menuItems.append(openWindow)
 		}
-		let edit = UIAction(title: "Edit", image: UIImage(systemName: "gear")) { _ in
+		let edit = UIAction(title: "Edit".localized, image: UIImage(systemName: "gear")) { _ in
 			self.showBookmarkUI(edit: bookmark)
 		}
 		menuItems.append(edit)
-		let manage = UIAction(title: "Manage", image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
+		let manage = UIAction(title: "Manage".localized, image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
 			self.showBookmarkInfoUI(bookmark)
 		}
 		menuItems.append(manage)

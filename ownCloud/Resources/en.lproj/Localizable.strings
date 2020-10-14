@@ -109,6 +109,14 @@
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
 
+/* Single Account */
+"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+"Login" = "Login";
+"Wrong URL" = "Wrong URL";
+"Please enter a valid URL" = "Please enter a valid URL";
+"Missing Profile URL" = "Missing Profile URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
+
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
@@ -582,9 +590,6 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
-/* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
-
 /* Release Notes */
 "Proceed" = "Proceed";
 "New in ownCloud" = "New in ownCloud";
@@ -702,6 +707,7 @@
 "Migrated" = "Migrated";
 "Failed to migrate" = "Failed to migrate";
 "Failed to access legacy user data" = "Failed to access legacy user data";
+"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";

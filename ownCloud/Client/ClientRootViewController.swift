@@ -290,7 +290,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				}
 
 				let emptyViewController = self.emptyViewController
-				if VendorServices.shared.isBranded {
+				if VendorServices.shared.isBranded, !VendorServices.shared.canAddAccount {
 					emptyViewController.navigationItem.title = "Manage".localized
 				} else {
 					emptyViewController.navigationItem.title = "Accounts".localized

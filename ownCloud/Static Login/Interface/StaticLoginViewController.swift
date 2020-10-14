@@ -191,7 +191,18 @@ class StaticLoginViewController: UIViewController, Themeable {
 		super.viewWillAppear(animated)
 
 		if contentViewController == nil {
-			showFirstScreen()
+			if Migration.shared.legacyDataFound {
+				let migrationViewController = MigrationViewController()
+				let navigationController = ThemeNavigationController(rootViewController: migrationViewController)
+				migrationViewController.migrationFinishedHandler = {
+					Migration.shared.wipeLegacyData()
+					self.showFirstScreen()
+				}
+				navigationController.modalPresentationStyle = .fullScreen
+				self.present(navigationController, animated: false)
+			} else {
+				showFirstScreen()
+			}
 		}
 	}
 

@@ -123,8 +123,8 @@ class IssuesViewController: UIViewController {
 
 				switch $0.type {
 				case .approve:
-					backgroundColor = UIColor(hex:0x1AC763)
-					color = UIColor.white
+					backgroundColor = Theme.shared.activeCollection.approvalColors.normal.background
+					color = Theme.shared.activeCollection.approvalColors.normal.foreground
 				case .custom(let backColor):
 					backgroundColor = backColor
 				default:
