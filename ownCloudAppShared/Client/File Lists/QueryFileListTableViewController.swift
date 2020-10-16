@@ -66,7 +66,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var duplicateMultipleBarButtonItem: UIBarButtonItem?
 	public var copyMultipleBarButtonItem: UIBarButtonItem?
 	public var openMultipleBarButtonItem: UIBarButtonItem?
-	public var isFolderSelectionOnlyMode: Bool = false
+	public var isMoreButtonPermanentlyHidden: Bool = false
 	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -410,10 +410,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 				cell?.setSelected(true, animated: false)
 			}
 
-			if isFolderSelectionOnlyMode {
-				if newItem.type == .file {
-					cell?.isActive = false
-				}
+			if isMoreButtonPermanentlyHidden {
 				cell?.isMoreButtonPermanentlyHidden = true
 			}
 		}
@@ -464,7 +461,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
-			if let item = itemAt(indexPath: indexPath), item.type != .collection, isFolderSelectionOnlyMode {
+			if let item = itemAt(indexPath: indexPath), item.type != .collection, isMoreButtonPermanentlyHidden {
 				return
 			}
 			if didSelectCellAction != nil {
@@ -497,12 +494,13 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		}
 	}
 
-	override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		if let item = itemAt(indexPath: indexPath), item.type != .collection, isFolderSelectionOnlyMode {
-			return false
+	@available(iOS 13.0, *)
+	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		if isMoreButtonPermanentlyHidden {
+			return nil
 		}
 
-		return true
+		return super.tableView(tableView, contextMenuConfigurationForRowAt: indexPath, point: point)
 	}
 }
 

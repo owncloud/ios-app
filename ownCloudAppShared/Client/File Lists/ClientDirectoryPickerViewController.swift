@@ -129,6 +129,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 
 		sortBar?.showSelectButton = false
+		tableView.dragInteractionEnabled = false
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {
@@ -240,37 +241,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if hasFavorites, indexPath.section == 0 {
-			guard let core = self.core else {
-				return
-			}
-
-			let favoriteQuery = OCQuery(condition: .require([
-				.where(.isFavorite, isEqualTo: true)
-				//.where(.type, isEqualTo: OCItemType.collection)
-			]), inputFilter:nil)
-
-			let customFileListController = QueryFileListTableViewController(core: core, query: favoriteQuery)
-			customFileListController.title = "Favorites".localized
-			customFileListController.isFolderSelectionOnlyMode = true
-			customFileListController.pullToRefreshAction = { [weak self] (completion) in
-				self?.core?.refreshFavorites(completionHandler: { (_, _) in
-					completion()
-				})
-			}
-
-			customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
-				guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
-					return
-				}
-
-				let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: self?.allowedPathFilter, navigationPathFilter: self?.navigationPathFilter, choiceHandler: choiceHandler)
-				pickerController.hasFavorites = false
-				pickerController.cancelAction = self?.cancelAction
-
-				self?.navigationController?.pushViewController(pickerController, animated: true)
-			}
-
-			self.navigationController?.pushViewController(customFileListController, animated: true)
+			selectFavoriteItem()
 		} else {
 
 			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
@@ -291,6 +262,11 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		return .none
+	}
+
+	@available(iOS 13.0, *)
+	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		return nil
 	}
 
 	// MARK: - Actions
@@ -340,5 +316,39 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			createFolderAction?.progressHandler = makeActionProgressHandler()
 			createFolderAction?.run()
 		}
+	}
+
+	func selectFavoriteItem() {
+		guard let core = self.core else {
+			return
+		}
+
+		let favoriteQuery = OCQuery(condition: .require([
+			.where(.isFavorite, isEqualTo: true),
+			.where(.type, isEqualTo: OCItemType.collection.rawValue)
+		]), inputFilter:nil)
+
+		let customFileListController = QueryFileListTableViewController(core: core, query: favoriteQuery)
+		customFileListController.title = "Favorites".localized
+		customFileListController.isMoreButtonPermanentlyHidden = true
+		customFileListController.pullToRefreshAction = { [weak self] (completion) in
+			self?.core?.refreshFavorites(completionHandler: { (_, _) in
+				completion()
+			})
+		}
+
+		customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
+			guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
+				return
+			}
+
+			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: self?.allowedPathFilter, navigationPathFilter: self?.navigationPathFilter, choiceHandler: choiceHandler)
+			pickerController.hasFavorites = false
+			pickerController.cancelAction = self?.cancelAction
+
+			self?.navigationController?.pushViewController(pickerController, animated: true)
+		}
+
+		self.navigationController?.pushViewController(customFileListController, animated: true)
 	}
 }
