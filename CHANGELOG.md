@@ -1,5 +1,19 @@
 # ChangeLog
 
+## Release version 11.4.1 (September 2020)
+
+- Image Metadata (#679)
+- Pro Photo Upload (#685, #688)
+- Fix: Media Upload Path (#784)
+- Fix: File List (#786)
+- Fix: Markup (#783)
+- Fix: Shortcuts (#785)
+- Fix: Share Sheet (#782)
+- Fix: Multiple Selection (#735)
+- Fix: File Provider (#747)
+- Fix: General Improvements (#790, #792, #793)
+- Fix: Create Public Link (#803)
+
 ## Release version 11.4 (August 2020)
 
 - Branding Support (#2, #120)

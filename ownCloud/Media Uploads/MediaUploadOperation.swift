@@ -156,6 +156,7 @@ class MediaUploadOperation : Operation {
 		// Determine the list of preferred media formats
 		var utisToConvert = [String]()
 		var preserveOriginalNames = false
+		var preferredResourceTypes = [PHAssetResourceType]()
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			if userDefaults.convertHeic {
@@ -165,9 +166,23 @@ class MediaUploadOperation : Operation {
 				utisToConvert.append(AVFileType.mov.rawValue)
 			}
 			preserveOriginalNames = userDefaults.preserveOriginalMediaFileNames
+
+			if userDefaults.preferOriginalPhotos {
+				preferredResourceTypes.append(.photo)
+			}
+
+			if userDefaults.preferRawPhotos {
+				preferredResourceTypes.append(.alternatePhoto)
+			}
 		}
 
-		if let result = asset.upload(with: core, at: rootItem, utisToConvert: utisToConvert, preserveOriginalName: preserveOriginalNames, progressHandler: nil, uploadCompleteHandler: {
+		if let result = asset.upload(with: core,
+									 at: rootItem,
+									 utisToConvert: utisToConvert,
+									 preferredResourceTypes: preferredResourceTypes,
+									 preserveOriginalName: preserveOriginalNames,
+									 progressHandler: nil,
+									 uploadCompleteHandler: {
 			uploadCompletion()
 		}) {
 			if let error = result.1 {

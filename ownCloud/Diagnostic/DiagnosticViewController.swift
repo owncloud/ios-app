@@ -134,16 +134,14 @@ class DiagnosticViewController: StaticTableViewController {
 		self.sections = newSections ?? []
 	}
 
-	@objc func shareAsMarkdown(_ sender: UIView) {
+	@objc func shareAsMarkdown(_ sender: UIBarButtonItem) {
 		if let markdown = self.rootNode?.composeMarkdown() {
 			let shareViewController = UIActivityViewController(activityItems: [markdown], applicationActivities:nil)
-			shareViewController.completionWithItemsHandler = { (_, _, _, _) in
-			}
 
 			if UIDevice.current.isIpad {
-				shareViewController.popoverPresentationController?.sourceView = sender
-				shareViewController.popoverPresentationController?.sourceRect = sender.frame
+				shareViewController.popoverPresentationController?.barButtonItem = sender
 			}
+
 			self.present(shareViewController, animated: true, completion: nil)
 		}
 	}

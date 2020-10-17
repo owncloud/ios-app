@@ -30,7 +30,7 @@ extension CIImage {
 
 		// Conversion to JPEG required
 		let colorSpace = CGColorSpaceCreateDeviceRGB()
-		var ciContext = CIContext()
+		let ciContext = CIContext()
 		var imageData : Data?
 		var outError: Error?
 

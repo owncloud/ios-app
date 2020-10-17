@@ -22,7 +22,7 @@ import ownCloudSDK
 @available(iOS 13.0, *)
 extension OCBookmarkManager {
 
-	public var accountList : [Account] {
+	var accountList : [Account] {
 		var accountList : [Account] = []
 		accountList = OCBookmarkManager.shared.bookmarks.map { (bookmark) -> Account in
 			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.shortName)
@@ -40,7 +40,7 @@ extension OCBookmarkManager {
 		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
 	}
 
-	public func accountBookmark(for uuidString: String) -> (OCBookmark, Account)? {
+	func accountBookmark(for uuidString: String) -> (OCBookmark, Account)? {
 		if let bookmark = bookmark(for: uuidString) {
 			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.shortName)
 			account.name = bookmark.shortName

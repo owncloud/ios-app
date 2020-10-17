@@ -85,17 +85,73 @@ public class ActionExtension: OCExtension {
 	}
 }
 
+extension Array where Element: OCItem {
+	var sharedWithUser : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
+	}
+	var isShared : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isShared })
+	}
+}
+
 public class ActionContext: OCExtensionContext {
 	// MARK: - Custom Instance Properties.
 	weak public var viewController: UIViewController?
 	weak public var core: OCCore?
 	weak public var query: OCQuery?
-	public var items: [OCItem]
 	weak public var sender: AnyObject?
+
+	private var rootItems: Int = 0
+	private var moveableItems: Int = 0
+	private var deleteableItems: Int = 0
+	private var cachedSharedItems = [OCItem]()
+	private var cachedParentFolders = [OCLocalID : OCItem]()
+	private var itemStorage: [OCItem]
+
+	public var items: [OCItem] {
+		get {
+			return itemStorage
+		}
+	}
+
+	public var itemsSharedWithUser: [OCItem] {
+		return cachedSharedItems
+	}
+
+	public var containsRoot: Bool {
+		return rootItems > 0
+	}
+
+	public var allItemsDeleteable: Bool {
+		return items.count == deleteableItems
+	}
+
+	public var allItemsMoveable: Bool {
+		return items.count == moveableItems
+	}
+
+	public var allItemsShared: Bool {
+		return self.items.count == self.cachedSharedItems.count
+	}
+
+	public var containsShareRoot : Bool {
+
+		guard self.itemsSharedWithUser.count > 0 else { return false }
+
+		for sharedItem in self.itemsSharedWithUser {
+
+			if isShareRoot(item: sharedItem) {
+				return true
+			}
+		}
+
+		return false
+	}
 
 	// MARK: - Init & Deinit.
 	public init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
-		self.items = items
+
+		itemStorage = items
 
 		super.init()
 
@@ -107,6 +163,99 @@ public class ActionContext: OCExtensionContext {
 		self.query = query
 		self.requirements = requirements
 		self.preferences = preferences
+
+		updateCaches()
+	}
+
+	public func replace(items:[OCItem]) {
+		self.itemStorage = items
+		updateCaches()
+	}
+
+	public func removeAllItems() {
+		self.itemStorage.removeAll()
+		updateCaches()
+	}
+
+	public func remove(item:OCItem) {
+		guard self.itemStorage.contains(item) else {
+			return
+		}
+		self.itemStorage.removeAll(where: {$0.localID == item.localID})
+
+		if item.isSharedWithUser {
+			self.cachedSharedItems.removeAll(where: { $0.localID == item.localID })
+		}
+
+		if item.isRoot, rootItems > 0 {
+			rootItems -= 1
+		}
+
+		if item.permissions.contains(.delete), deleteableItems > 0 {
+			deleteableItems -= 1
+		}
+
+		if item.permissions.contains(.move), deleteableItems > 0 {
+			moveableItems -= 1
+		}
+	}
+
+	public func add(item:OCItem) {
+
+		guard !self.itemStorage.contains(item) else {
+			return
+		}
+
+		self.itemStorage.append(item)
+
+		if item.isSharedWithUser {
+			self.cachedSharedItems.append(item)
+		}
+
+		if item.isRoot {
+			rootItems += 1
+		}
+
+		if item.permissions.contains(.delete) {
+			deleteableItems += 1
+		}
+
+		if item.permissions.contains(.move) {
+			moveableItems += 1
+		}
+	}
+
+	public func parent(for item:OCItem) -> OCItem? {
+		var parent: OCItem?
+		guard let localID = item.parentLocalID as OCLocalID? else { return nil }
+
+		parent = cachedParentFolders[localID]
+
+		if parent != nil {
+			return parent
+		}
+
+		if parent == nil, let core = self.core {
+			parent = item.parentItem(from: core)
+			self.cachedParentFolders[localID] = parent
+		}
+
+		return parent
+	}
+
+	public func isShareRoot(item:OCItem) -> Bool {
+		guard item.isSharedWithUser else { return false }
+
+		guard let parent = parent(for: item) else { return true }
+
+		return !parent.isSharedWithUser
+	}
+
+	private func updateCaches() {
+		cachedSharedItems = itemStorage.sharedWithUser
+		rootItems = itemStorage.filter({ $0.isRoot }).count
+		deleteableItems = itemStorage.filter({$0.permissions.contains(.delete)}).count
+		moveableItems = itemStorage.filter({$0.permissions.contains(.move)}).count
 	}
 }
 
@@ -133,7 +282,8 @@ open class Action : NSObject {
 
 		let customMatcher : OCExtensionCustomContextMatcher  = { (context, priority) -> OCExtensionPriority in
 
-			guard let actionContext = context as? ActionContext else {
+			// Make sure we have valid context and extension was not filtered out due to location mismatch
+			guard let actionContext = context as? ActionContext, priority != .noMatch else {
 				return priority
 			}
 

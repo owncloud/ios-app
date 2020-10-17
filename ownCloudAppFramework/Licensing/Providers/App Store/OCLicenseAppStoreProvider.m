@@ -88,7 +88,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 	OCLogDebug(@"purchasesAllowed=%d", purchasesAllowed);
 
-	return (purchasesAllowed && !self.isVolumePurchase); // Do not allow purchases if the app was purchased through VPP
+	return (purchasesAllowed);
 }
 
 - (BOOL)isVolumePurchase
@@ -254,12 +254,45 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged ignoreSelf:YES];
 }
 
++ (NSURL *)sharedReceiptLocation
+{
+	return ([OCAppIdentity.sharedAppIdentity.appGroupContainerURL URLByAppendingPathComponent:@"shared-app-store-receipt"]);
+}
+
 - (void)loadReceipt
 {
 	OCTLogDebug(@[@"LoadReceipt"], @"Loading App Store Receipt");
 
 	OCLicenseAppStoreReceipt *receipt = OCLicenseAppStoreReceipt.defaultReceipt;
 	OCLicenseAppStoreReceiptParseError parseError;
+
+	if (![OCProcessManager isProcessExtension])
+	{
+		// Main app
+		if (receipt != nil)
+		{
+			// Store a copy that extensions can use if they don't get their own App Store receipt
+			OCTLogDebug(@[@"LoadReceipt"], @"Storing a copy of App Store Receipt at sharedReceiptLocation=%@", OCLicenseAppStoreProvider.sharedReceiptLocation);
+
+			[receipt.receiptData writeToURL:OCLicenseAppStoreProvider.sharedReceiptLocation atomically:YES];
+		}
+	}
+	else
+	{
+		if (receipt == nil)
+		{
+			// Look for stored app copy and use that if no default receipt could be loaded
+			NSData *receiptData;
+
+			OCTLogDebug(@[@"LoadReceipt"], @"Default App Store Receipt unavailable, trying to load app copy from %@", OCLicenseAppStoreProvider.sharedReceiptLocation);
+
+			if ((receiptData = [NSData dataWithContentsOfURL:OCLicenseAppStoreProvider.sharedReceiptLocation]) != nil)
+			{
+				OCTLogDebug(@[@"LoadReceipt"], @"Loaded app copy from %@", OCLicenseAppStoreProvider.sharedReceiptLocation);
+				receipt = [[OCLicenseAppStoreReceipt alloc] initWithReceiptData:receiptData];
+			}
+		}
+	}
 
 	if ((parseError = [receipt parse]) != OCLicenseAppStoreReceiptParseErrorNone)
 	{
@@ -469,12 +502,12 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 				if (appStoreProvider != nil)
 				{
-					if (!appStoreProvider.purchasesAllowed)
+					if (!appStoreProvider.purchasesAllowed || appStoreProvider.isVolumePurchase)
 					{
 						// Present alert
 						if (errorHandler != nil)
 						{
-							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:OCLicenseAppStoreProviderErrorPurchasesNotAllowed userInfo:@{
+							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:(appStoreProvider.isVolumePurchase ? OCLicenseAppStoreProviderErrorPurchasesNotAllowedForVPPCopies :  OCLicenseAppStoreProviderErrorPurchasesNotAllowed) userInfo:@{
 								NSLocalizedDescriptionKey : (appStoreProvider.isVolumePurchase ?
 									 OCLocalized(@"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version.") :
 									 OCLocalized(@"Purchases are not allowed on this device."))
