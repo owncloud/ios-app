@@ -40,7 +40,7 @@ image:ios-app-settings-logging.png[ios-app-settings-logging]
 
 In the worst case scenario, when the app either isn't responding or is crashing, iOS saves a crash log on the device.
 You can find it under menu:Settings[Privacy > Analytics > Analytics Data].
-On iOS 12, the log entries are sorted alphabetically with the app name and date and time. 
+On iOS 12, the log entries are sorted alphabetically with the app name and date and time.
 Tap the name to open and export with the share button on the top right-hand side.
 
 === ownCloud's Log File
@@ -64,7 +64,7 @@ The ownCloud iOS app sends the `X-REQUEST-ID` header with every request. You'll 
 
 Some helpful files include the following:
 
-error_logx:: Maintains errors associated with PHP code.
+error_log:: Maintains errors associated with PHP code.
 access_log:: Typically records all requests handled by the server; handy as a debugging tool, because the log line contains information specific to each request and its result.
 
 Below, you can find where the error logs are typically located, based on operating system and web server.
