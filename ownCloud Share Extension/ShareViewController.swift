@@ -282,16 +282,12 @@ class ShareViewController: MoreStaticTableViewController {
 							break
 						}
 
-						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
-							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
+						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+							if type == "public.plain-text" || type == "public.url" {
 								asyncQueue.async({ (jobDone) in
 									if progressViewController?.cancelled == true {
 										jobDone()
 										return
-									}
-									// Workaround for saving attachements from Mail.app. Attachments from Mail.app contains two types e.g. "com.adobe.pdf" AND "public.file-url". For loading the file the type "public.file-url" is needed. Otherwise the resource could not be accessed (NSItemProviderSandboxedResource)
-									if attachment.registeredTypeIdentifiers.contains("public.file-url") {
-										type = "public.file-url"
 									}
 
 									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in
