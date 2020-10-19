@@ -214,8 +214,9 @@ class LibraryTableViewController: StaticTableViewController {
 				if view.row == nil, let core = core {
 					var badgeLabel : RoundedLabel?
 
-					if view.showBadge, let badge = badge, badge > 0 {
+					if view.showBadge, let badge = badge {
 						badgeLabel = RoundedLabel(text: "\(badge)", style: .token)
+						badgeLabel?.isHidden = (badge == 0)
 					}
 
 					view.row = StaticTableViewRow(rowWithAction: { [weak self, weak view] (_, _) in
@@ -253,9 +254,11 @@ class LibraryTableViewController: StaticTableViewController {
 					if let row = view.row {
 						shareSection?.add(row: row, animated: true)
 					}
-				} else if view.showBadge, let badge = badge, badge > 0 {
+				} else if view.showBadge, let badge = badge {
 					guard let accessoryView = view.row?.additionalAccessoryView as? RoundedLabel else { return }
+
 					accessoryView.labelText = "\(badge)"
+					accessoryView.isHidden = (badge == 0)
 				}
 			} else {
 				if let row = view.row {
