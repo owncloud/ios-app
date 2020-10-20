@@ -563,6 +563,8 @@ Logging settings control the ammount and type of app internal log messages store
 |Options are `text`, `json` or `json-composed`
 |===
 
+== AppConfig XML Example
+
 Here is an example of an XML spec-file based on AppConfig standard with minimal logging settings allowing to change a log level and disable / enable private information masking:
 
 ```
