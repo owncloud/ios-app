@@ -42,7 +42,13 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
 	open var allowedPathFilter : ClientDirectoryPickerPathFilter?
 	open var navigationPathFilter : ClientDirectoryPickerPathFilter?
-	open var hasFavorites: Bool = false
+	private var hasFavorites: Bool = false
+	private var showFavorites: Bool {
+		if directoryPath == "/", hasFavorites == true {
+			return true
+		}
+		return false
+	}
 
 	let favoriteQuery = OCQuery(condition: .require([
 		.where(.isFavorite, isEqualTo: true),
@@ -184,7 +190,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	// MARK: - Table view data source
 
 	override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if hasFavorites, indexPath.section == 0 {
+		if showFavorites, indexPath.section == 0 {
 			return estimatedTableRowHeight
 		}
 
@@ -192,14 +198,14 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func numberOfSections(in tableView: UITableView) -> Int {
-		if hasFavorites {
+		if showFavorites {
 			return 2
 		}
 		return 1
 	}
 
 	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if hasFavorites, section == 0 {
+		if showFavorites, section == 0 {
 			return 1
 		}
 
@@ -207,7 +213,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if hasFavorites, indexPath.section == 0 {
+		if showFavorites, indexPath.section == 0 {
 			let cellStyle = UITableViewCell.CellStyle.default
 			let cell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
 			cell.textLabel?.text = "Favorites".localized
@@ -228,7 +234,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		if hasFavorites, indexPath.section == 0 {
+		if showFavorites, indexPath.section == 0 {
 			return true
 		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return true
@@ -238,7 +244,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		if hasFavorites, indexPath.section == 0 {
+		if showFavorites, indexPath.section == 0 {
 			return indexPath
 		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return indexPath
@@ -248,7 +254,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if hasFavorites, indexPath.section == 0 {
+		if showFavorites, indexPath.section == 0 {
 			selectFavoriteItem()
 		} else {
 			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
@@ -256,7 +262,6 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			}
 
 			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
-			pickerController.hasFavorites = false
 			pickerController.cancelAction = cancelAction
 
 			self.navigationController?.pushViewController(pickerController, animated: true)
@@ -349,7 +354,6 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			}
 
 			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: self?.allowedPathFilter, navigationPathFilter: self?.navigationPathFilter, choiceHandler: choiceHandler)
-			pickerController.hasFavorites = false
 			pickerController.cancelAction = self?.cancelAction
 
 			self?.navigationController?.pushViewController(pickerController, animated: true)
