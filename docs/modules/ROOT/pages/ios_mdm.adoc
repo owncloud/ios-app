@@ -20,6 +20,7 @@ ownCloud App implements a mechanism internally called Class Settings which can b
 - User preferences accessed by the very same API but stored under _org.owncloud.user-settings_ key.
 - Settings dictionary pushed by an MDM Server and accessible using `NSUserDefaults` API under the key _com.apple.configuration.managed_.
 - Default settings defined directly in the app sourcecode.
+- Branding.plist which is the part of the Xcode project under ownCloud/Resources/Theming. It allows to override class settings by specifying them in the `Configuration` section
 
 This is also an order in which these settings take precedence (environment variables have highest priority). So, when settings are accessed, they are merged and higher priority value for the same key overwrites lower priority ones.
 
