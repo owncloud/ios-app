@@ -163,7 +163,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	}
 
 	// MARK: - Startup
-	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
+	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping ((_ error: Error?) -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.coreRequested = true
 			self.core = core
@@ -182,18 +182,21 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
+				// Core is ready
 				self.coreReady(lastVisibleItemId)
-			}
 
-			// Start showing connection status
-			OnMainThread { [weak self] () in
-				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
-					self?.updateConnectionStatusSummary()
-				})
+				// Start showing connection status
+				OnMainThread { [weak self] () in
+					self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
+						self?.updateConnectionStatusSummary()
+					})
+				}
+			} else {
+				Log.error("Error requesting/starting core: \(String(describing: error))")
 			}
 
 			OnMainThread {
-				completionHandler()
+				completionHandler(error)
 			}
 		})
 	}
@@ -287,7 +290,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				}
 
 				let emptyViewController = self.emptyViewController
-				if VendorServices.shared.isBranded {
+				if VendorServices.shared.isBranded, !VendorServices.shared.canAddAccount {
 					emptyViewController.navigationItem.title = "Manage".localized
 				} else {
 					emptyViewController.navigationItem.title = "Accounts".localized

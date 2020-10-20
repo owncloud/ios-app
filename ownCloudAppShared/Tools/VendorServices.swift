@@ -128,7 +128,8 @@ public class VendorServices : NSObject {
 	}
 
 	public var isBranded: Bool {
-		if let themingValues = self.brandingProperties, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
+		guard let themingValues = self.brandingProperties else { return false }
+		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
 			return true
 		}
 
@@ -143,16 +144,20 @@ public class VendorServices : NSObject {
 		return false
 	}
 
-	public var hasBrandedLogin: Bool {
-		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil {
-			return true
-		}
-
-		return false
-	}
-
 	public var canAddAccount: Bool {
 		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
+			if canAddAccount, self.hasBrandedProfiles {
+				return true
+			}
+
+			return false
+		}
+
+		return true
+	}
+
+	public var canEditAccount: Bool {
+		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canEditAccount"] as? Bool {
 			if canAddAccount, self.hasBrandedProfiles {
 				return true
 			}

@@ -25,6 +25,10 @@ open class ThemeNavigationController: UINavigationController {
 		return Theme.shared.activeCollection.statusBarStyle
 	}
 
+	open override var childForStatusBarStyle: UIViewController? {
+		return nil
+	}
+
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 

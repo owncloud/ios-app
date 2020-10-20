@@ -138,6 +138,14 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 		return displayIssues?.displayIssues.count ?? 0
 	}
 
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		guard let displayIssues = displayIssues, displayIssues.displayIssues.count == 1, displayIssues.displayIssues.first?.localizedTitle == headerTitle else {
+			return super.tableView(tableView, heightForHeaderInSection: section)
+		}
+
+		return 0
+	}
+
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: IssuesViewControllerCellIdentifier, for: indexPath)
 		let issue = (displayIssues?.displayIssues[indexPath.row])!

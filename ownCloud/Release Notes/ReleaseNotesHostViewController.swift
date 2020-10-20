@@ -167,7 +167,9 @@ extension ReleaseNotesHostViewController : Themeable {
 class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 	var shouldShowReleaseNotes: Bool {
-		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
+		if VendorServices.shared.isBranded {
+			return false
+		} else if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
 
 			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedSame {
 				return false

@@ -280,6 +280,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+			self.removeToolbar()
 			return self.makeContextMenu(for: indexPath, core: core, item: item, with: cell)
 		})
 	}

@@ -30,7 +30,7 @@ platform :ios do
     gym(
       workspace: "ownCloud.xcworkspace",
       scheme: "ownCloud",
-      codesigning_identity: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      codesigning_identity: "Apple Distribution: ownCloud GmbH (4AP2STM4H5)",
       export_method: "ad-hoc",
       export_options: {
         method: "ad-hoc",
@@ -38,7 +38,7 @@ platform :ios do
           "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app",
 	        "com.owncloud.ios-app.ownCloud-File-Provider" => "match AdHoc com.owncloud.ios-app.ownCloud-File-Provider",
 	        "com.owncloud.ios-app.ownCloud-File-ProviderUI" => "match AdHoc com.owncloud.ios-app.ownCloud-File-ProviderUI",
-	        "com.owncloud.ios-app.ownCloud-File-Intents" => "match AdHoc com.owncloud.ios-app.ownCloud-Intents",
+	        "com.owncloud.ios-app.ownCloud-Intents" => "match AdHoc com.owncloud.ios-app.ownCloud-Intents",
           "com.owncloud.ios-app.ownCloud-Share-Extension" => "match AdHoc com.owncloud.ios-app.ownCloud-Share-Extension"
           #Add more Provisioning Profiles when extensions are added
         }
@@ -96,6 +96,11 @@ platform :ios do
           build_emm_app = options[:build_emm_app]
         end
 
+        build_owncloud_online_app = true
+        if options[:build_owncloud_online_app] == false
+          build_owncloud_online_app = options[:build_owncloud_online_app]
+        end
+
         # Create Release Notes
         if create_release_notes
           puts("Creating Release Notes…")
@@ -131,6 +136,7 @@ platform :ios do
             deliver(
               skip_screenshots: skip_screenshots,
               skip_metadata: false,
+              metadata_path: "./metadata",
               submit_for_review: false,
               ignore_language_directory_validation: true,
               skip_binary_upload: false,
@@ -149,14 +155,6 @@ platform :ios do
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
-          # Set EMM Description
-          sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
-          sh "mv metadata/en-us/description-emm.txt metadata/en-us/description.txt"
-
-          # Set EMM App-Icon for AppStore Connect
-          sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
-          sh "mv metadata/app_icon-emm.jpg metadata/app_icon.jpg"
-
           # Build App
           owncloud_emm_build()
 
@@ -165,6 +163,7 @@ platform :ios do
             deliver(
               skip_screenshots: skip_screenshots,
               skip_metadata: false,
+              metadata_path: "./metadata-emm",
               submit_for_review: false,
               ignore_language_directory_validation: true,
               skip_binary_upload: false,
@@ -176,6 +175,46 @@ platform :ios do
             )
           end
       end
+
+      if build_owncloud_online_app
+        puts("Build ownCloud.online iOS App…")
+
+        # Moving the ownCloud.online Branding.plist to the correct place
+        sh "mv ../ownCloud/Resources/Theming/Branding.plist ../ownCloud/Resources/Theming/Branding-regular.plist"
+        sh "mv ../ownCloud/Resources/Theming/Branding-owncloud-online.plist ../ownCloud/Resources/Theming/Branding.plist"
+
+        # Set ownCloud.online Splashscreen Background for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background.png ../ownCloud/Resources/Theming/branding-splashscreen-background-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen-background.png"
+
+        # Set ownCloud.online Splashscreen Logo for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen.png ../ownCloud/Resources/Theming/branding-splashscreen-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen.png"
+
+        # Set ownCloud.online App-Icon for App Build
+        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
+        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+
+        # Build App
+        owncloud_online_build()
+
+        # Deliver
+        if deliver
+          deliver(
+            skip_screenshots: skip_screenshots,
+            skip_metadata: false,
+            metadata_path: "./metadata-owncloud-online",
+            submit_for_review: false,
+            ignore_language_directory_validation: true,
+            skip_binary_upload: false,
+            force: true,
+            overwrite_screenshots: create_screenshots,
+            app_identifier: "online.owncloud.ios-app",
+            skip_app_version_update: true,
+            ipa: "ownCloud.ipa"
+          )
+        end
+    end
   end
 
   lane :owncloud_regular_build do
@@ -190,11 +229,12 @@ platform :ios do
       ENTERPRISE_SHARE_EXTENSION_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Share-Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
       ENTERPRISE_TEAM: "4AP2STM4H5",
-      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH (4AP2STM4H5)",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -210,11 +250,12 @@ platform :ios do
       ENTERPRISE_SHARE_EXTENSION_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-Share-Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp.emm",
       ENTERPRISE_TEAM: "4AP2STM4H5",
-      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH (4AP2STM4H5)",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app.emm",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -230,11 +271,12 @@ lane :owncloud_online_build do
     ENTERPRISE_SHARE_EXTENSION_PROFILE: "ownCloud online AppStore Share Ext",
     ENTERPRISE_APP_FW_ID: "online.owncloud.ios-app.ownCloudApp",
     ENTERPRISE_TEAM: "4AP2STM4H5",
-    ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+    ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH",
     APP_GROUP_IDENTIFIERS: "group.online.owncloud.ios-app",
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Debug",
-    BETA_APP_ICON: true
+    BETA_APP_ICON: false,
+    APP_NAME: "ownCloud.online"
   )
 end
 
@@ -274,7 +316,8 @@ end
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
-      BETA_APP_ICON: true
+      BETA_APP_ICON: true,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -299,7 +342,9 @@ end
 
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
-    if File.exist?("../" + themePath)
+    if !values[:APP_NAME].nil?
+      appName = values[:APP_NAME]
+    elsif File.exist?("../" + themePath)
       tmpAppName = get_info_plist_value(path: themePath, key: "organizationName")
       if tmpAppName != ""
         appName = tmpAppName

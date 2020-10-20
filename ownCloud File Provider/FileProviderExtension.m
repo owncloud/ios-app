@@ -31,6 +31,8 @@
 {
 	NSFileCoordinator *_fileCoordinator;
 	NotificationMessagePresenter *_messagePresenter;
+
+	BOOL _skipAuthorizationFailure;
 }
 
 @property (nonatomic, readonly, strong) NSFileManager *fileManager;
@@ -1023,6 +1025,71 @@
 - (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCIssue *)issue
 {
 	OCLogDebug(@"CORE ERROR: error=%@, issue=%@", error, issue);
+
+	if ((issue != nil) && (error == nil))
+	{
+		// Turn issues that are just converted authorization errors back into errors and discard the issue
+		if ([issue.error isOCErrorWithCode:OCErrorAuthorizationFailed] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationNoMethodData] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMissingData])
+		{
+			error = issue.error;
+			issue = nil;
+		}
+	}
+
+	if ([error isOCErrorWithCode:OCErrorAuthorizationFailed])
+	{
+		// Make sure only the first auth failure will actually lead to an alert
+		// (otherwise alerts could keep getting enqueued while the first alert is being shown,
+		// and then be presented even though they're no longer relevant). It's ok to only show
+		// an alert for the first auth failure, because the options are "Continue offline" (=> no longer show them)
+		// and "Edit" (=> log out, go to bookmark editing)
+		BOOL doSkip = NO;
+
+		@synchronized(self)
+		{
+			doSkip = _skipAuthorizationFailure;  // Keep in mind OCSynchronized() contents is running as a block, so "return" in here wouldn't have the desired effect
+			_skipAuthorizationFailure = YES;
+		}
+
+		if (doSkip)
+		{
+			OCLogDebug(@"Skip authorization failure: %@", error);
+			return;
+		}
+
+		[NotificationManager.sharedNotificationManager requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable reqError) {
+			if (granted)
+			{
+				UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+
+				OCBookmark *bookmark;
+
+				content.title = OCLocalized(@"Authorization failed");
+
+				if ((OCBookmarkManager.sharedBookmarkManager.bookmarks.count > 1) &&
+				    (((bookmark = core.bookmark) != nil) &&
+				     (bookmark.shortName != nil))
+				   )
+				{
+					content.body = [NSString stringWithFormat:OCLocalized(@"Log into your account %@ in the app for more details."), bookmark.shortName];
+				}
+				else
+				{
+					content.body = OCLocalized(@"Log into your account in the app for more details.");
+				}
+
+				UNNotificationRequest *request;
+
+				request = [UNNotificationRequest requestWithIdentifier:ComposeNotificationIdentifier(NotificationAuthErrorForwarder, bookmark.uuid.UUIDString) content:content trigger:nil];
+
+				[NotificationManager.sharedNotificationManager addNotificationRequest:request withCompletionHandler:^(NSError * _Nonnull error) {
+					OCLogDebug(@"Add Notification error: %@", error);
+				}];
+			}
+		}];
+	}
 
 	if (issue.type == OCIssueTypeMultipleChoice)
 	{

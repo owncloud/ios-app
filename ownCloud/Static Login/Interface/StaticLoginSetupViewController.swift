@@ -19,15 +19,15 @@
 import ownCloudSDK
 import UIKit
 import ownCloudAppShared
-// import ownCloudMocking
 
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
 	var bookmark : OCBookmark?
+	var busySection : StaticTableViewSection?
 
+	private var urlString : String?
 	private var username : String?
 	private var password : String?
-
 	private var passwordRow : StaticTableViewRow?
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
@@ -43,6 +43,64 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		if profile.canConfigureURL {
+			self.addSection(urlSection())
+			if OCBookmarkManager.shared.bookmarks.count == 0, profile.promptForHelpURL != nil, profile.helpURLButtonString != nil, profile.helpURL != nil {
+				self.addSection(urlHelpSection())
+			}
+		} else {
+			proceedWithLogin()
+		}
+	}
+
+	override func updateViewConstraints() {
+		super.updateViewConstraints()
+		if tableView.contentSize.height > view.frame.size.height {
+			tableView.isScrollEnabled = true
+		} else {
+			tableView.isScrollEnabled = false
+		}
+	}
+
+	func urlSection() -> StaticTableViewSection {
+		var urlSection : StaticTableViewSection
+
+		urlSection = StaticTableViewSection(headerTitle: nil, identifier: "urlSection")
+		urlSection.addStaticHeader(title: profile.welcome!, message: profile.promptForURL)
+
+		urlSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+			if let self = self, let value = row.value as? String {
+				self.urlString = value
+			}
+			}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
+
+		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
+			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: "Cancel".localized)
+			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
+			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		} else {
+		let (proceedButton, _) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: nil)
+			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
+		}
+
+		return urlSection
+	}
+
+	func urlHelpSection() -> StaticTableViewSection {
+		var urlHelpSection : StaticTableViewSection
+
+		urlHelpSection = StaticTableViewSection(headerTitle: nil, identifier: "urlHelpSection")
+		if let message = profile.promptForHelpURL, let title = profile.helpURLButtonString {
+			let (proceedButton, _) = urlHelpSection.addButtonFooter(message: message, messageItemStyle: .welcomeMessage, proceedLabel: title, proceedItemStyle: .informal, cancelLabel: nil)
+				proceedButton?.addTarget(self, action: #selector(self.helpAction), for: .touchUpInside)
+		}
+
+		return urlHelpSection
+	}
+
 	func loginMaskSection() -> StaticTableViewSection {
 		var loginMaskSection : StaticTableViewSection
 
@@ -53,23 +111,23 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let value = row.value as? String {
 				self?.username = value
 			}
-		}, placeholder: "Username", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
+			}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, _) in
 			if let value = row.value as? String {
 				self?.password = value
 			}
-		}, placeholder: "Password", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
+			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
 		if let passwordRow = passwordRow {
 			loginMaskSection.add(row: passwordRow)
 		}
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
-			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
+			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, cancelLabel: "Cancel".localized)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {
-			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: nil)
+			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, cancelLabel: nil)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		}
 
@@ -112,7 +170,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		containerView.addSubview(centerView)
 
 		containerView.addThemeApplier({ (_, collection, _) in
-			messageLabel.applyThemeCollection(collection, itemStyle: .title)
+			messageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
 		})
 
 		messageLabel.text = message
@@ -152,22 +210,86 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		return _cookieStorage
 	}
 
-	private var _hostSimulator : OCConnectionHostSimulator?
-	var hostSimulator : OCConnectionHostSimulator? {
-		if _hostSimulator == nil {
-			// UNCOMMENT FOR HOST SIMULATOR: // _hostSimulator = OCHostSimulator.cookieRedirectSimulator(requestWithoutCookiesHandler: nil, requestForCookiesHandler: nil, requestWithCookiesHandler: nil)
-		}
-
-		return _hostSimulator
-	}
-
 	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
 		let connection = OCConnection(bookmark: bmark)
 
-		connection.hostSimulator = self.hostSimulator
+		connection.hostSimulator = OCHostSimulatorManager.shared.hostSimulator(forLocation: .accountSetup, for: self)
 		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
 
 		return connection
+	}
+
+	@objc func helpAction() {
+		if let helpURL = self.profile.helpURL {
+			let alert = ThemedAlertController(title: "Do you want to open the following URL?".localized,
+							  message: helpURL.absoluteString,
+							  preferredStyle: .alert)
+
+			let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+				UIApplication.shared.open(helpURL, options: [:], completionHandler: nil)
+			}
+			let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+			alert.addAction(okAction)
+			alert.addAction(cancelAction)
+			self.present(alert, animated: true)
+		}
+	}
+
+	@objc func proceedWithURL() {
+		var error = false
+		if let value = self.urlString, value.count > 0 {
+			if let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: value, protocolWasPrepended: nil) {
+				if let allowedHosts = self.profile.allowedHosts, allowedHosts.count > 0, let host = normalizedURL.host {
+					if !allowedHosts.contains(where: { (allowedHost) -> Bool in
+						return host.hasSuffix(allowedHost) ? true : false
+					}) {
+						error = true
+					}
+				}
+
+				if !error {
+					self.bookmark = OCBookmark(for: normalizedURL as URL)
+					self.proceedWithLogin()
+				}
+			} else {
+				error = true
+			}
+		} else {
+			error = true
+		}
+
+		if error {
+			let alert = ThemedAlertController(title: "Wrong URL".localized,
+							  message: "Please enter a valid URL".localized,
+							  preferredStyle: .alert)
+
+			let okAction = UIAlertAction(title: "OK".localized, style: .default)
+			alert.addAction(okAction)
+			self.present(alert, animated: true)
+		}
+	}
+
+	func proceedWithLogin() {
+		guard self.bookmark != nil else {
+			let alertController = ThemedAlertController(title: "Missing Profile URL".localized, message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.".localized, profile.name ?? ""), preferredStyle: .alert)
+
+			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+			self.loginViewController?.present(alertController, animated: true, completion: nil)
+			return
+		}
+
+		if let urlSection = self.sectionForIdentifier("urlSection") {
+			self.removeSection(urlSection)
+		}
+		if let urlHelpSection = self.sectionForIdentifier("urlHelpSection") {
+			self.removeSection(urlHelpSection)
+		}
+
+		busySection = self.busySection(message: "Contacting server…".localized)
+
+		self.addSection(busySection!)
+		self.determineSupportedAuthMethod()
 	}
 
 	@objc func startAuthentication(_ sender: Any?) {
@@ -247,7 +369,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 									}
 								})
 
-								self.present(issuesViewController, animated: true, completion: nil)
+								if let busySection = self.busySection, busySection.attached {
+									self.removeSection(busySection)
+								}
+								self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
 							}
 						}
 					})
@@ -283,30 +408,6 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		})
 	}
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-
-		guard self.bookmark != nil else {
-			let alertController = ThemedAlertController(title: "Missing Profile URL", message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.", profile.name ?? ""), preferredStyle: .alert)
-
-			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-			self.loginViewController?.present(alertController, animated: true, completion: nil)
-			return
-		}
-
-		busySection = self.busySection(message: "Contacting server…".localized)
-
-		self.addSection(busySection!)
-		self.determineSupportedAuthMethod()
-	}
-
-	var busySection : StaticTableViewSection?
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-	}
-
 	func determineSupportedAuthMethod(_ isInitialRequest: Bool = true) {
 		guard let bookmark = self.bookmark else { return }
 
@@ -323,7 +424,17 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					}
 				}, cancel: { () in
 					OnMainThread {
-						self.cancel(nil)
+						if self.profile.canConfigureURL {
+							if let busySection = self.busySection, busySection.attached {
+								self.removeSection(busySection)
+							}
+							self.addSection(self.urlSection())
+							if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil {
+								self.addSection(self.urlHelpSection())
+							}
+						} else {
+							self.cancel(nil)
+						}
 					}
 				})
 			}
@@ -412,7 +523,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 						}
 					})
 
-					self.present(issuesViewController, animated: true, completion: nil)
+					if let busySection = self.busySection, busySection.attached {
+						self.removeSection(busySection)
+					}
+					self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
 				}
 
 				return false
