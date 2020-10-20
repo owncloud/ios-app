@@ -42,7 +42,12 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
 	open var allowedPathFilter : ClientDirectoryPickerPathFilter?
 	open var navigationPathFilter : ClientDirectoryPickerPathFilter?
-	open var hasFavorites: Bool = true
+	open var hasFavorites: Bool = false
+
+	let favoriteQuery = OCQuery(condition: .require([
+		.where(.isFavorite, isEqualTo: true),
+		.where(.type, isEqualTo: OCItemType.collection.rawValue)
+	]), inputFilter:nil)
 
 	// MARK: - Init & deinit
 	convenience public init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
@@ -113,6 +118,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	// MARK: - ViewController lifecycle
 	override open func viewDidLoad() {
 		super.viewDidLoad()
+
+		favoriteQuery.delegate = self
+		self.core?.start(favoriteQuery)
 
 		// Adapt to disabled pull-to-refresh
 		self.tableView.alwaysBounceVertical = false
@@ -243,7 +251,6 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		if hasFavorites, indexPath.section == 0 {
 			selectFavoriteItem()
 		} else {
-
 			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
 				return
 			}
@@ -323,18 +330,17 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return
 		}
 
-		let favoriteQuery = OCQuery(condition: .require([
-			.where(.isFavorite, isEqualTo: true),
-			.where(.type, isEqualTo: OCItemType.collection.rawValue)
-		]), inputFilter:nil)
-
 		let customFileListController = QueryFileListTableViewController(core: core, query: favoriteQuery)
 		customFileListController.title = "Favorites".localized
 		customFileListController.isMoreButtonPermanentlyHidden = true
+		customFileListController.showSelectButton = false
 		customFileListController.pullToRefreshAction = { [weak self] (completion) in
 			self?.core?.refreshFavorites(completionHandler: { (_, _) in
 				completion()
 			})
+		}
+		if let cancelBarButton = cancelBarButton {
+			customFileListController.navigationItem.rightBarButtonItems = [cancelBarButton]
 		}
 
 		customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
@@ -350,5 +356,13 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 
 		self.navigationController?.pushViewController(customFileListController, animated: true)
+	}
+
+	open override func queryHasChangesAvailable(_ query: OCQuery) {
+		if query == favoriteQuery {
+			hasFavorites = (query.queryResults?.count ?? 0 > 0) ?  true : false
+		} else {
+			super.queryHasChangesAvailable(query)
+		}
 	}
 }

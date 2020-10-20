@@ -68,6 +68,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var openMultipleBarButtonItem: UIBarButtonItem?
 	public var isMoreButtonPermanentlyHidden: Bool = false
 	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?
+	public var showSelectButton: Bool = true
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
@@ -322,7 +323,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 			sortBar?.updateForCurrentTraitCollection()
-			sortBar?.showSelectButton = true
+			sortBar?.showSelectButton = showSelectButton
 
 			tableView.tableHeaderView = sortBar
 		}
@@ -501,6 +502,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		}
 
 		return super.tableView(tableView, contextMenuConfigurationForRowAt: indexPath, point: point)
+	}
+
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if isMoreButtonPermanentlyHidden {
+			return nil
+		}
+
+		return super.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
 	}
 }
 
