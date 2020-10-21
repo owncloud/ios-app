@@ -60,6 +60,8 @@
 		<string>iVBORw0KGgoAAAANSUhEUgAAADIAAAA1CAYAAAADOrgJAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAACbdjAAAiGQACp1QAAAlXAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADKgAwAEAAAAAQAAADUAAAAAfq3KHQAAAAlwSFlzAAALOAAACzAB01gejAAABMVJREFUaAXtmFuoFVUYgM3uqVkWFGl1jlniJQpDLIjkiCFRD1F0MYXC6CkDK6uHbkQE2UtQHnoIKQp6UAIJCyT0VIRWaCUnyW4e9iEqS+1iCd37vtpbZs+Zmb1m9trHh/YP35k9a/3/v+Zf869/rTljxnSlOwPdGfhfzMCRHY5S/xPqY/zZybGOiOi8B18LYT7MhHPBIP4Gx/kNavAJbIVN8B7Y37a0G8jRPMFSuBXOh4E6g1w/hf1wENSbCL0wAy4Fg/aNvQj98DWMujgBPvwwvA03wvFQVi7BYA38CE/ByTBqYspsgQ+hL9KoU/DzHOyB6yP5LHTjIPvgXjAtYstlOKzBM2A6dkTuwqt5bDp0UibhfGOdcbEHWonD3XBObMc5/nwbL8EbcCxEkcV4+QqmRvEW7sTUXQ/rwk3yNS2VltC5+SqZPVY1S+xRmb3hjVZCi4ppXVnGYrkdVpT0cAz6a8GN7oqStlnq59HoZDqplWQ5Vu+CAYWKi9OFahByHcQQq+RAFUe+0j0wr4Sx1cajRyOImIG4+D+HRVBK7kDbmQ2VM1D8CJJBxAzE57gN3vRHGdmB8pWBBtPQG4J0ELEDsQy7VlwzIyQr/z38nQ4hb+QC9Dxr9UCn5VcGsBQvCR3Ize/5AGXL6w+Q9SYabR7df4IvYQt49LgWToAqchVG74QabkDx5hbKpt1BaDxw2ev32D4K46GMnIiyb8bq2FKG0LiwQMtX+zuUffgsfSuR6VlGtLmolYELyk/SvFd/A31/QdZDVW3zW2QOhMprKC5OK6cX+0ko+OpMmyy5iUaPHzHFdHkFQj+q9qLrntUk6UDM2QNNGs03j3DrDMaWyTh8ItDpz+iNWFvpQKwynpXy5H06+uDbPIU22m/BtjfA3l3e52ySdCC+jQlQlD4f0G/prUFM8aS8LMChqViUNYdcWPenHLrL/2E67ISiRf4N/cPwHYRUukH0Won7SNCZaxuKl7fyVu8/hasn5LxgkqdfZ7wHroHV4KLNstNnkbgJn12k0Ojr58fDjZuAqwvvdch6qGQgaVeW+jvBDEjaLkgrJu5n8du3PELSa0SFzbBwhGZ+g1XEnf7lfJXMHsv8k3AxmH4NKVrwPtdAQ7HV1Rl2ls5spZjq9xv7WUjObtEbSZo7006ItvcnO1K/t3If6vNf0xf4+1DKSejt4yg2gikz6N11u8dyBppJ+34wJYNlDppWmnHBFs2KK7n9AyzToeIDDsE9OQZObl6QOSb/NW/g8mChRnGnn8tlxc04aw+bTbsn5lPLOlTfLzFL3VRvDqMY2Ftg6lWWB7B0gXksOFxyHwNvA/ehyjIWy03QX9lDe4aW270QJSvcaT+GqlUM00oyFyuDCD1lBA1yFlpfwKog7faVFuDCIMqU7+BR/c+Kx/j1EPoRFOw8obiC3/tgUaIt+k9Lqrv3MFwd2fs0/G2EHTA9su9cd56tdsNm6MvVCuvwKPQ0uE+4Dt0YR1WOY7TboQY7wTI5G7I2NJqb5DTulsCrcABWgwFVlpBBWzn3sGhl8R8TXq33g/AZmOu/gLPsl10vzIDJ4D/s1sFacONtS2IEkn4ATwSzwJy3KIwHj+yeqGuwC1wHtnWlOwPdGejOQLkZ+AcYaSym55uvpAAAAABJRU5ErkJggg==</string>
 		<key>star.fill</key>
 		<string>iVBORw0KGgoAAAANSUhEUgAAADYAAAA3CAYAAABHGbl4AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAB3HHAAAaZAADsgEAAA0dAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADagAwAEAAAAAQAAADcAAAAA1+0GLwAAAAlwSFlzAAALGwAACxgBDz3HvgAAAyRJREFUaAXtWcurTlEUP673+5Gu3BJh4BFFSSklGRDJ9UqZmDDxBxgwMTI2ZoJMPJIZJSXKY4JIbu4tkeSRVx5xr8fvx121725/59vfOWvv853sVb+7H2evx2+ddb59zr5ZliRlIGUgZSBlIH4GRsHlLeBUfNdhPW6F+d+DmB/W1T/rHTGcwAeJiZh9matlyzL8AMgdu11LFo6gNxikSO4XMMuxTnUqRinapTcMDLpVWVRgbDh8vgakDKW9VkEsqi7XOEiR3E+gEwgmoUvRLkMhQr9bZFC3ls/Sc0DKz24v142QxLsyhxRJ/gCmymLtNmQpNipD4TASnc0yqFP7BMHa5WePL9aJEGNd6kGKJL8BEwB1CVWKzcpQiIxBZ6MMNNsRDmPjMLceYMusUqSEGvXtdbv+avn92YtlA4NL+UtKUHz777D2EsBXtVw5gqtCpC6tVyKXgZjrNahdST5CvDNyb5VxcSb6V4B2JSNxHUeM4424vbqs8QMAN1Ix1C7te8S0AyglK6DdC7QLqRuIZXYpRobyRPRPAlWS4y/nYYCfQuqyGxY/AbEJPoPP1epsLINzMea5RSxy5+Ar2MuyxS3jxs79jh+MoQh+gW1u3pXIWnh9AWiTuwebCythZDidjv51QIvcCdgabdgv1O0opDVU6S2GX4dOlRq9gvb3UhaUlPlg9wNad6xPKa7SZvYokpLkLC8blUYpbi8bhEN/m2Mu6tQkeOPzIJnWanuisnA445uIFhnbzhKHP++psqXYShneR1Q8Z/SVysqRhzA8jLEz7RofxTruTdOAC546D7GuEtkJry4S5twbrNnkiG4/5nySssChG3zqDDyYJOz+VVzvyomCzxA/6209c3wwRz/IpbGw+rlBUNysDwE+zy9Pwo41sEOCd4Go0g1vZmal/xTzqwpEwrI2/50r9tjOK2CvsMppaJrO2T8LTClsMcvmQPcmYNvluUsU4a/bR0AC4AvwPiXP8p3Hw0+xf0fJdlMz6wynD9Bf1FSj9QX08RIQcp2tm2hdYzFUuNFyb+LZeyghmfPAY2ByKCfJbspAykDKwP+RgT/k5YRXgmClowAAAABJRU5ErkJggg==</string>
+		<key>rectangle.and.arrow.up.right.and.arrow.down.left</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAAC8AAAA7CAYAAADrYNMhAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABGlFAAAPowAD8kEAAA3rAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAC+gAwAEAAAAAQAAADsAAAAAKsqlggAAAAlwSFlzAAALGwAACyoB4k2TzwAAAvlJREFUaAXtmTmIFEEUhsdrPRAVRNREdF3NDLzAQDQQxFA01MTAC9lEzA02NhAzMwUTUQMPjBQTETQRDEUYURdFxQOPFby+H22mGaqrXs9WbTdsPfi2e+u9fv33m6rqmppOJ1uuQK5ArkCuQKACMwJ+l3sHjbtgJQy5Amq2TRDfhVvwBMxWR/wCsl6FEbgOL+EnTNbmkmAY9sEVGIU/ENXOke0SzI6atZdsEacP4GivKc6ZuscHWBonXWWW7XgeV3oHdGxIkdShRZ/qDzB9ujMdCVxNS2hU5VObxtA3WGy5kVW84qIPogqBv2k36TIFVdwkVfN+En+0JDf1LUuiiDH3rLmaEn8agccCIp/j3+aLaUr8WUTphSTTWFI/L9DMdhE2QhTbSZa7UTL5k2zCPQ6HQFOm15qqvEvUVhpvwmF46Arob2vLbKO+fRuOg9ZNJl1tqLyEa0Up4ddAZhJvCvqXL8nfsvDLpTuYdJmCSkljnlYJ1z1MS/WmxGtWKbpKueK1itNUn5+FyoOgQeoyTZNaoHmtKfGPvKo6ndf4VwRibKM6lCSyX2NhDgRfUk31ed/zaizo+0PQ2ig+KLoImBbi3/G094snzsfqCrzHtaza3fOEus18Qsd64c6zec7WFjSuRcNXj471+F7BFk9MXZe58qHEPvGF8FOhJDX9ycWnEq7njCr+c1/lUgqPLr68U7aO7OrjsbtKuT5RK//2f+Zhji/gZPlOCc6jitcKbzV0YRRSW1Txn1D7DEKbRLEeyiw+tJ7XRpA2/SdgN+wBvdgK9HVNm0Zn4A5MqYXEd1FzAPTTi8+e+pzTyWfuNqG1TVG0zZycL/5py9EqfiGCR6ZQtMZR0Kziv5Mp1O+DNzMGaJWqCSKaLSeT5vvUph0DffExmbXyb8imt+teU9bBg45wqXaKo5t+I9VS4QSoQrFM74o1MAbjsAqSmGadG/AF9LOj+uZk+UUOTY8XoJZwPfUgpuv05h0a5OK+azQZqBjZcgVyBXIFWlqBvzlogkNrEJLXAAAAAElFTkSuQmCC</string>
 	</dict>
 	<key>Versions</key>
 	<array>
@@ -751,6 +753,16 @@ Users can choose to prefer the original photo instead of an edited version and a
 			<array>
 				<dict>
 					<key>Title</key>
+					<string>Support for new Display Sizes</string>
+					<key>Subtitle</key>
+					<string>We supporting all upcoming new display sizes with native screen resolution.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>rectangle.and.arrow.up.right.and.arrow.down.left</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Favorites in Directory Picker</string>
 					<key>Subtitle</key>
 					<string>We added access to the favorite items directly from the directory picker.</string>
@@ -758,6 +770,16 @@ Users can choose to prefer the original photo instead of an edited version and a
 					<string>New</string>
 					<key>ImageName</key>
 					<string>star.fill</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Rename Filename</string>
+					<key>Subtitle</key>
+					<string>Now it is easier to rename a filename in the scan view by preselecting the filename.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>textbox</string>
 				</dict>
 				<dict>
 					<key>Title</key>
