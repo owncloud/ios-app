@@ -92,6 +92,15 @@ public class VendorServices : NSObject {
 		return URL(string: "https://owncloud.org/privacy-policy/")
 	}
 
+	public var termsOfUseURL: URL? {
+		if self.isBranded, let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let termsOfUse = urls["TermsOfUse"] as? String, let url = URL(string: termsOfUse) else { return nil }
+			return url
+		}
+
+		return URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
+	}
+
 	public var appName: String {
 		if self.isBranded, let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
 			return organizationName
