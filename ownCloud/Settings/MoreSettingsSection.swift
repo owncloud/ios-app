@@ -170,11 +170,14 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(recommendRow!)
 		}
 
-		if VendorServices.shared.privacyURL != nil {
-			rows.append(privacyPolicyRow!)
+		if let privacyPolicyRow = privacyPolicyRow {
+			rows.append(privacyPolicyRow)
+		}
+		if let termsOfUseRow = termsOfUseRow {
+			rows.append(termsOfUseRow)
 		}
 
-		rows.append(contentsOf: [termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
+		rows.append(contentsOf: [acknowledgementsRow!, appVersionRow!])
 
 		add(rows: rows)
 	}
