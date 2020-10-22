@@ -1,34 +1,15 @@
-• Image Metadata
-View metadata (EXIF, IPTC, Geolocation) on image files.
+• Support for new Display Sizes
+We supporting all upcoming new display sizes with native screen resolution.
 
-• Pro Photo Upload
-Two new settings give the user more control over photo uploads: 
-Users can choose to prefer the original photo instead of an edited version and also to upload the raw photo format, if available.
+• Favorites in Directory Picker
+We added access to the favorite items directly from the directory picker.
 
-• Fix: Media Upload Path
-Upload path for photo and video was not visible in settings for some cases.
+• Rename Filename
+Now it is easier to rename a filename in the scan view by preselecting the filename.
 
-• Fix: File List
-In some cases the file list was not presented.
+• Fix: Save Attachments from Mail.app
+Saving attachments from iOS Mail.app was broken via the share sheet.
 
-• Fix: Markup
-Markup mode was not enabled automatically when using iOS 14.
-
-• Fix: Shortcuts
-The Shortcuts in-app purchase could not be retrieved.
-
-• Fix: Share Sheet
-Share Sheet on iOS 12 could not be dismissed.
-
-• Fix: Multiple Selection
-Improved performance when selecting multiple items.
-
-• Fix: File Provider
-Some file types were grayed out and could not be opened.
-
-• Fix: General Improvements
-We made some internal improvements to make everything smoother and removed some edge cases.
-
-• Fix: Create Public Link
-The process of creating a public link on a federated share was broken
+• Fix: Authentication Error in FileProvider
+Notifies the user with a notification if authentication fails in File Provider.
 
