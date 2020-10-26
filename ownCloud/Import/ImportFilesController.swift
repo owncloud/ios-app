@@ -91,7 +91,7 @@ extension ImportFilesController {
 			var inboxURL = appGroupURL.appendingPathComponent("File-Import")
 			if !fileManager.fileExists(atPath: inboxURL.path) {
 				do {
-					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: nil)
+					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
 				} catch let error as NSError {
 					Log.debug("Error creating directory \(inboxURL) \(error.localizedDescription)")
 
@@ -104,7 +104,7 @@ extension ImportFilesController {
 			inboxURL = inboxURL.appendingPathComponent(uuid)
 			if !fileManager.fileExists(atPath: inboxURL.path) {
 				do {
-					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: nil)
+					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
 				} catch let error as NSError {
 					Log.debug("Error creating directory \(inboxURL) \(error.localizedDescription)")
 

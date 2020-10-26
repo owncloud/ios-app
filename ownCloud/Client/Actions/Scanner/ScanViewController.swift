@@ -402,7 +402,7 @@ class ScanViewController: StaticTableViewController {
 			DispatchQueue.global(qos: .userInitiated).async {
 				let tmpURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
 
-				try? FileManager.default.createDirectory(at: tmpURL, withIntermediateDirectories: true, attributes: nil)
+				try? FileManager.default.createDirectory(at: tmpURL, withIntermediateDirectories: true, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
 
 				var exportedURLs : [URL]?
 
