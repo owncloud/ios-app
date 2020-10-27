@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>Profiles</key>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>demo.ownCloud.com</string>
+			<key>name</key>
+			<string>ownCloud</string>
+			<key>welcome</key>
+			<string>Welcome to the ownCloud Demo Account</string>
+			<key>promptForPasswordAuth</key>
+			<string>Enter your username and password</string>
+			<key>promptForTokenAuth</key>
+			<string>Tap on &quot;Continue&quot; to login to the demo account.</string>
+			<key>promptForURL</key>
+			<string></string>
+			<key>promptForHelpURL</key>
+			<string>Get more information about ownCloud</string>
+			<key>helpURLButtonString</key>
+			<string>Visit ownCloud.com</string>
+			<key>bookmarkName</key>
+			<string>demo.ownCloud.com</string>
+			<key>url</key>
+			<string>https://demo.ownCloud.com</string>
+			<key>canConfigureURL</key>
+			<false/>
+			<key>helpURL</key>
+			<string>https://owncloud.com</string>
+			<key>allowedHosts</key>
+			<array>
+				<string>owncloud.online</string>
+				<string>owncloud.com</string>
+				<string>owncloud.team</string>
+			</array>
+			<key>allowedAuthenticationMethods</key>
+			<array>
+				<string>com.owncloud.basicauth</string>
+				<string>com.owncloud.oauth2</string>
+			</array>
+		</dict>
+	</array>
+</dict>
 </plist>

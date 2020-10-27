@@ -97,8 +97,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 			self.navigationController?.setToolbarHidden(!toolbarShown, animated: true)
 		}
 	}
-	init(with staticLoginBundle: StaticLoginBundle) {
+
+	var ignoreExistingBookmarks: Bool
+
+	init(with staticLoginBundle: StaticLoginBundle, ignore existing: Bool = false) {
 		loginBundle = staticLoginBundle
+		ignoreExistingBookmarks = existing
 
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -184,7 +188,16 @@ class StaticLoginViewController: UIViewController, Themeable {
 		}
 
 		self.navigationController?.toolbar.isTranslucent = false
-		self.toolbarShown = true
+		if !ignoreExistingBookmarks {
+			self.toolbarShown = true
+
+		} else {
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissView))
+		}
+	}
+
+	@objc func dismissView() {
+		self.dismiss(animated: true, completion: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -209,9 +222,11 @@ class StaticLoginViewController: UIViewController, Themeable {
 	@objc func showFirstScreen() {
 		var firstViewController : UIViewController?
 
-		if OCBookmarkManager.shared.bookmarks.count > 0 {
+		if OCBookmarkManager.shared.bookmarks.count > 0, !ignoreExistingBookmarks {
 			// Login selection view
 			firstViewController = self.buildBookmarkSelector()
+		} else if OCBookmarkManager.shared.bookmarks.count > 0, ignoreExistingBookmarks {
+			self.dismiss(animated: true, completion: nil)
 		} else {
 			// Setup flow
 			if loginBundle.profiles.count > 1 {

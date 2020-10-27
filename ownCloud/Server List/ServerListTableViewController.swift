@@ -89,12 +89,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.dragDelegate = self
  		extendedLayoutIncludesOpaqueBars = true
 
-		if VendorServices.shared.canAddAccount {
-			let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
-			addServerBarButtonItem.accessibilityLabel = "Add account".localized
-			addServerBarButtonItem.accessibilityIdentifier = "addAccount"
-			self.navigationItem.rightBarButtonItem = addServerBarButtonItem
-		}
+		setupAddBookmarkActions()
 
 		// This view is nil, when branded app version
 		if welcomeOverlayView != nil {
@@ -345,9 +340,77 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	func setupAddBookmarkActions() {
+		if VendorServices.shared.canAddAccount {
+			var addServerBarButtonItem: UIBarButtonItem!
+
+			if #available(iOS 14.0, *), OCBookmarkManager.shared.bookmarks.count == 0 {
+				addServerBarButtonItem = UIBarButtonItem(systemItem: .add, primaryAction: nil, menu: createAddBookmarkMenu())
+				welcomeAddServerButton.menu = createAddBookmarkMenu()
+				welcomeAddServerButton.showsMenuAsPrimaryAction = true
+			} else {
+				addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addBookmark))
+			}
+
+			addServerBarButtonItem.accessibilityLabel = "Add account".localized
+			addServerBarButtonItem.accessibilityIdentifier = "addAccount"
+			self.navigationItem.rightBarButtonItem = addServerBarButtonItem
+		}
+	}
+
+	@available(iOS 13.0, *)
+	func createAddBookmarkMenu() -> UIMenu {
+		let individualAction = UIAction(
+			title: "Individual Account".localized,
+			image: UIImage(systemName: "person.badge.plus")
+		) { (_) in
+			self.showBookmarkUI()
+		}
+
+		let demoAction = UIAction(
+			title: "Demo Account".localized,
+			image: UIImage(systemName: "globe")
+		) { (_) in
+			let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle, ignore: true)
+			let navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
+			self.navigationController?.present(navigationController, animated: true, completion: nil)
+		}
+
+		let menuActions = [individualAction, demoAction]
+
+		let addNewMenu = UIMenu(
+			title: "",
+			children: menuActions)
+
+		return addNewMenu
+	}
+
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		showBookmarkUI()
+		if OCBookmarkManager.shared.bookmarks.count == 0 {
+			let controller = ThemedAlertController(title: "Add account".localized, message: nil, preferredStyle: .alert)
+
+			let individualAction = UIAlertAction(title: "Individual Account".localized, style: .default, handler: { (_) in
+				self.showBookmarkUI()
+			})
+
+			controller.addAction(individualAction)
+
+			let demoAction = UIAlertAction(title: "Demo Account".localized, style: .default, handler: { (_) in
+				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle, ignore: true)
+				let navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
+				self.navigationController?.present(navigationController, animated: true, completion: nil)
+			})
+			controller.addAction(demoAction)
+
+			// Cancel button
+			let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
+			controller.addAction(cancelAction)
+
+			self.present(controller, animated: true)
+		} else {
+			self.showBookmarkUI()
+		}
 	}
 
 	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
@@ -499,6 +562,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if !self.ignoreServerListChanges {
 				self.tableView.reloadData()
 				self.updateNoServerMessageVisibility()
+				self.setupAddBookmarkActions()
 			}
 		}
 	}
