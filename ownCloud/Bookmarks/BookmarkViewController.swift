@@ -236,7 +236,7 @@ class BookmarkViewController: StaticTableViewController {
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
 		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
-		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
 
 		// Input focus tracking

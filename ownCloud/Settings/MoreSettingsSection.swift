@@ -141,7 +141,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		let localizedFooter = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown".localized)
+		let footerTitle = String(format: localizedFooter, VendorServices.shared.appName, appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown".localized)
 
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle

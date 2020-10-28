@@ -23,7 +23,7 @@ class SettingsTests: XCTestCase {
 
 	override func tearDown() {
 		//Reset status
-		EarlGrey.selectElement(with: grey_text(OCAppIdentity.shared.appName!)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text(VendorServices.shared.appName)).perform(grey_tap())
 		EarlGrey.waitForElement(accessibilityID: "addServer")
 	}
 

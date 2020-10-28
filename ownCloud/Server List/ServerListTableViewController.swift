@@ -311,7 +311,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				welcomeAddServerButton.accessibilityIdentifier = "addServer"
 				welcomeTitleLabel.text = "Welcome".localized
 				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
-				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
