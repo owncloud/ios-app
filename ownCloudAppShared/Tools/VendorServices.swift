@@ -106,7 +106,7 @@ public class VendorServices : NSObject {
 			return organizationName
 		}
 
-		return OCAppIdentity.shared.appName ?? "App"
+		return OCAppIdentity.shared.appDisplayName ?? "ownCloud"
 	}
 
 	public var feedbackMailEnabled: Bool {
@@ -192,10 +192,10 @@ public class VendorServices : NSObject {
 	// MARK: - Vendor services
 	public func recommendToFriend(from viewController: UIViewController) {
 
-		guard let appStoreLink = self.classSetting(forOCClassSettingsKey: .appStoreLink) as? String,
-			let appName = OCAppIdentity.shared.appName else {
+		guard let appStoreLink = self.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else {
 				return
 		}
+		let appName = VendorServices.shared.appName
 
 		let message = """
 		<p>I want to invite you to use \(appName) on your smartphone!</p>

@@ -135,7 +135,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	private func setupNavigationBar() {
-		self.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+		self.navigationItem.title = VendorServices.shared.appName
 
 		let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
 		self.navigationItem.setRightBarButton(itemCancel, animated: false)
@@ -217,7 +217,7 @@ class ShareViewController: MoreStaticTableViewController {
 					}
 					if !withBackButton {
 						directoryPickerViewController.navigationItem.setHidesBackButton(true, animated: false)
-						directoryPickerViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+						directoryPickerViewController.navigationItem.title = VendorServices.shared.appName
 					}
 					self.navigationController?.pushViewController(directoryPickerViewController, animated: withBackButton)
 				}
