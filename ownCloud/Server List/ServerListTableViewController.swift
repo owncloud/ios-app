@@ -360,8 +360,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	@available(iOS 13.0, *)
 	func createAddBookmarkMenu() -> UIMenu {
-		let individualAction = UIAction(
-			title: "Individual Account".localized,
+		let personalAction = UIAction(
+			title: "Personal Account".localized,
 			image: UIImage(systemName: "person.badge.plus")
 		) { (_) in
 			self.showBookmarkUI()
@@ -376,7 +376,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			self.navigationController?.present(navigationController, animated: true, completion: nil)
 		}
 
-		let menuActions = [individualAction, demoAction]
+		let menuActions = [personalAction, demoAction]
 
 		let addNewMenu = UIMenu(
 			title: "",
@@ -390,11 +390,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if OCBookmarkManager.shared.bookmarks.count == 0 {
 			let controller = ThemedAlertController(title: "Add account".localized, message: nil, preferredStyle: .alert)
 
-			let individualAction = UIAlertAction(title: "Individual Account".localized, style: .default, handler: { (_) in
+			let personalAction = UIAlertAction(title: "Personal Account".localized, style: .default, handler: { (_) in
 				self.showBookmarkUI()
 			})
 
-			controller.addAction(individualAction)
+			controller.addAction(personalAction)
 
 			let demoAction = UIAlertAction(title: "Demo Account".localized, style: .default, handler: { (_) in
 				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle, ignore: true)
