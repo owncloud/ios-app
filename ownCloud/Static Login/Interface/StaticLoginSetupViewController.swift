@@ -464,21 +464,23 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					authMethodKnown = true
 
 					OnMainThread {
-						self.tableView.performBatchUpdates({
-							self.removeSection(self.busySection!, animated: true)
+						self.removeSection(self.busySection!, animated: true)
 
-							let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
-							switch authMethodType {
-							case .passphrase:
-								if self.sectionForIdentifier("loginMaskSection") == nil {
-									self.addSection(self.loginMaskSection(), animated: true)
-								}
-							case .token:
-								if self.sectionForIdentifier("tokenMaskSection") == nil {
-									self.addSection(self.tokenMaskSection(), animated: true)
-								}
+						let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
+						switch authMethodType {
+						case .passphrase:
+							if self.sectionForIdentifier("loginMaskSection") == nil {
+								self.addSection(self.loginMaskSection())
 							}
-						}, completion: nil)
+						case .token:
+							if self.sectionForIdentifier("tokenMaskSection") == nil {
+								self.addSection(self.tokenMaskSection())
+							}
+						}
+						
+						if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil, self.sectionForIdentifier("urlHelpSection") == nil {
+							self.addSection(self.urlHelpSection())
+						}
 					}
 				}
 

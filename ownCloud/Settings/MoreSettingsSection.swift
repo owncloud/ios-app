@@ -57,11 +57,12 @@ class MoreSettingsSection: SettingsSection {
 			}
 		}, title: "Documentation".localized, accessoryType: .disclosureIndicator, identifier: "documentation")
 
-		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			if let url = VendorServices.shared.helpURL {
-				self?.openSFWebViewWithConfirmation(for: url)
-			}
-		}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
+
+		if let helpURL = VendorServices.shared.helpURL {
+			helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				self?.openSFWebViewWithConfirmation(for: helpURL)
+			}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
+		}
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
@@ -75,16 +76,17 @@ class MoreSettingsSection: SettingsSection {
 			}
 		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
-		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			if let url = VendorServices.shared.privacyURL {
-				self?.openSFWebViewWithConfirmation(for: url)
-			}
-		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
+		if let privacyURL = VendorServices.shared.privacyURL {
+			privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				self?.openSFWebViewWithConfirmation(for: privacyURL)
+			}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
+		}
 
-		termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
-			self?.openSFWebViewWithConfirmation(for: url!)
-		}, title: "Terms Of Use".localized, accessoryType: .disclosureIndicator, identifier: "terms-of-use")
+		if let termsOfUseURL = VendorServices.shared.termsOfUseURL {
+			termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				self?.openSFWebViewWithConfirmation(for: termsOfUseURL)
+			}, title: "Terms Of Use".localized, accessoryType: .disclosureIndicator, identifier: "terms-of-use")
+		}
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)
@@ -168,11 +170,14 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(recommendRow!)
 		}
 
-		if VendorServices.shared.privacyURL != nil {
-			rows.append(privacyPolicyRow!)
+		if let privacyPolicyRow = privacyPolicyRow {
+			rows.append(privacyPolicyRow)
+		}
+		if let termsOfUseRow = termsOfUseRow {
+			rows.append(termsOfUseRow)
 		}
 
-		rows.append(contentsOf: [termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
+		rows.append(contentsOf: [acknowledgementsRow!, appVersionRow!])
 
 		add(rows: rows)
 	}

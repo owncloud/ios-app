@@ -37,6 +37,8 @@ class OpenInAction: Action {
 	var interactionControllerDispatchGroup : DispatchGroup?
 	var interactionController : UIDocumentInteractionController?
 
+	var temporaryExportURL : URL?
+
 	override func run() {
 		guard context.items.count > 0, let hostViewController = context.viewController, let core = self.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
@@ -55,9 +57,45 @@ class OpenInAction: Action {
 				hostViewController?.present(alertController, animated: true)
 			} else {
 				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
+
+				// Create clones of the files with the item's name (which can differ from the file name on disk while a move or rename action is in progress)
+				guard let temporaryExportFolderURL = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("export-\(UUID().uuidString)", isDirectory: true) else { return }
+
+				var exportURLs : [URL] = []
+
+				do {
+					try FileManager.default.createDirectory(at: temporaryExportFolderURL, withIntermediateDirectories: true, attributes: [
+						.protectionKey : FileProtectionType.completeUntilFirstUserAuthentication
+					])
+
+					for file in files {
+						if let fileURL = file.url, let fileName = file.item?.name {
+							let temporaryItemSubFolderURL = temporaryExportFolderURL.appendingPathComponent("\(UUID().uuidString)", isDirectory: true)
+							let temporaryItemURL = temporaryItemSubFolderURL.appendingPathComponent(fileName)
+
+							try FileManager.default.createDirectory(at: temporaryItemSubFolderURL, withIntermediateDirectories: true, attributes: [
+								.protectionKey : FileProtectionType.completeUntilFirstUserAuthentication
+							])
+
+							try FileManager.default.copyItem(at: fileURL, to: temporaryItemURL)
+
+							exportURLs.append(temporaryItemURL)
+						}
+					}
+
+					Log.debug("Exporting \(exportURLs)")
+				} catch {
+					Log.error("Error preparing export for \(files) to temporary location \(temporaryExportFolderURL): \(error.localizedDescription)")
+					try? FileManager.default.removeItem(at: temporaryExportFolderURL)
+					return
+				}
+
+				// Store reference to temporary export root URL for later deletion
+				self.temporaryExportURL = temporaryExportFolderURL
+
 				// UIDocumentInteractionController can only be used with a single file
-				if files.count == 1 {
-					if let fileURL = files.first?.url {
+				if exportURLs.count == 1 {
+					if let fileURL = exportURLs.first {
 						// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
 						self.interactionControllerDispatchGroup = DispatchGroup()
 						self.interactionControllerDispatchGroup?.enter()
@@ -91,10 +129,11 @@ class OpenInAction: Action {
 					}
 				} else {
 					// Handle multiple files with a fallback solution
-					let urls = files.map { (file) -> URL in
-						return file.url!
+					let activityController = UIActivityViewController(activityItems: exportURLs, applicationActivities: nil)
+					activityController.completionWithItemsHandler = { (_, _, _, _) in
+						// Remove temporary export root URL with contents
+						try? FileManager.default.removeItem(at: temporaryExportFolderURL)
 					}
-					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
 
 					if UIDevice.current.isIpad {
 						if let sender = self.context.sender as? UITabBarController {
@@ -136,6 +175,14 @@ class OpenInAction: Action {
 
 extension OpenInAction : UIDocumentInteractionControllerDelegate {
 	func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
-		interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
+		if let temporaryExportURL = temporaryExportURL {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+				// Remove temporary export root URL with contents
+				// (wait 2 seconds since documentation is not clear about whether the file still needs to be around after this call)
+				try? FileManager.default.removeItem(at: temporaryExportURL)
+			})
+		}
+
+		self.interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
 	}
 }

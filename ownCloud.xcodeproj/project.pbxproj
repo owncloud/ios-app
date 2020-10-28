@@ -1624,7 +1624,6 @@
 				DCF4F1802051A91500189B9A /* Settings */,
 				39E42D152315286300B82AC3 /* Key Commands */,
 				DC422448207CAED60006A2A6 /* Theming */,
-				394E2005233E4765009D2897 /* Window */,
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
@@ -1786,13 +1785,6 @@
 				394A0AFC22EEFC2C00603813 /* Info.plist */,
 			);
 			path = ownCloudAppShared;
-			sourceTree = "<group>";
-		};
-		394E2005233E4765009D2897 /* Window */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Window;
 			sourceTree = "<group>";
 		};
 		395E16FB22F0691F00DE89A1 /* Intent */ = {
