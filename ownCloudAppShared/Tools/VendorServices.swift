@@ -303,7 +303,7 @@ extension VendorServices : OCClassSettingsSupport {
 				.isBetaBuild : false,
 				.showBetaWarning : false,
 				.enableUIAnimations: true,
-				.enableReviewPrompt: true,
+				.enableReviewPrompt: !VendorServices.shared.isBranded,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 				.feedbackEmail: "ios-app@owncloud.com",

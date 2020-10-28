@@ -74,7 +74,7 @@
 					<key>Title</key>
 					<string>Multiple Window Support</string>
 					<key>Subtitle</key>
-					<string>Starting with iPadOS 13 you can have multiple windows and app instances. Open your ownCloud accounts side by side, show a file preview in a new window or drag and drop files between two accounts. All windows will be restored, after the app was launched.</string>
+					<string>Starting with iPadOS 13 you can have multiple windows and app instances. Open your ${CFBundleDisplayName} accounts side by side, show a file preview in a new window or drag and drop files between two accounts. All windows will be restored, after the app was launched.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -209,7 +209,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Document Scanner</string>
 					<key>Subtitle</key>
-					<string>Scan your documents directly into your ownCloud. You do not longer need a third party app or import scanned documents. Our ownCloud app has an integrated document scanner. Tap on the &quot;+&quot; button to start your scan!</string>
+					<string>Scan your documents directly into your ${CFBundleDisplayName}. You do not longer need a third party app or import scanned documents. Our ${CFBundleDisplayName} app has an integrated document scanner. Tap on the &quot;+&quot; button to start your scan!</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -229,7 +229,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Shortcut Support</string>
 					<key>Subtitle</key>
-					<string>On iOS 13 you get great Shortcut support. We have added multiple action, to build your own scripts and automation for your ownCloud.</string>
+					<string>On iOS 13 you get great Shortcut support. We have added multiple action, to build your own scripts and automation for your ${CFBundleDisplayName}.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -400,7 +400,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Share Sheet</string>
 					<key>Subtitle</key>
-					<string>Our new share sheet imports nearly everything from nearly everywhere. Just tap on the share button and select the ownCloud app to save multiple files, photos, selected text, downloads and so much more.</string>
+					<string>Our new share sheet imports nearly everything from nearly everywhere. Just tap on the share button and select the ${CFBundleDisplayName} app to save multiple files, photos, selected text, downloads and so much more.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -410,7 +410,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Camera Access</string>
 					<key>Subtitle</key>
-					<string>Take a photo or video right from the app and upload it to your ownCloud.</string>
+					<string>Take a photo or video right from the app and upload it to your ${CFBundleDisplayName}.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>

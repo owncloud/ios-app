@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 import ownCloudAppShared
+// UNCOMMENT FOR HOST SIMULATOR: // import ownCloudMocking
 
 typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
 

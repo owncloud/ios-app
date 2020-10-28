@@ -36,6 +36,11 @@ Ad-Hoc Distribution IPA generation
 fastlane ios screenshots
 ```
 Generate the screenshots for the AppStore
+### ios prepare_metadata
+```
+fastlane ios prepare_metadata
+```
+Create Metadata Release Notes, Screenshots and push to git
 ### ios release_on_appstore
 ```
 fastlane ios release_on_appstore
