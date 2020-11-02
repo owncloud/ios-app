@@ -71,7 +71,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		urlSection = StaticTableViewSection(headerTitle: nil, identifier: "urlSection")
 		urlSection.addStaticHeader(title: profile.welcome!, message: profile.promptForURL)
 
-		urlSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+		urlSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, type) in
+			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
+				self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+			}
 			if let self = self, let value = row.value as? String {
 				self.urlString = value
 			}
@@ -107,13 +110,19 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		loginMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "loginMaskSection")
 		loginMaskSection.addStaticHeader(title: profile.welcome!, message: profile.promptForPasswordAuth)
 
-		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, type) in
+			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
+				self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+			}
 			if let value = row.value as? String {
 				self?.username = value
 			}
 			}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
 
-		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, _) in
+		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, type) in
+			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
+				self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+			}
 			if let value = row.value as? String {
 				self?.password = value
 			}
