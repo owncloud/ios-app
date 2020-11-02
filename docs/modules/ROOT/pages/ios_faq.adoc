@@ -25,10 +25,14 @@ Please contact your ownCloud administrator for more details.
 
 == Feature Requests
 
-=== Access full folder via FileProvider, not only single files
+=== FileProvider: Access full folder, not only single files
 
 This seems like a bigger challenge for us. We track the status here:
 https://github.com/owncloud/ios-app/issues/604
+
+=== FileProvider: Support "Recent items" and "Favorites"
+
+To support "Recent items" and "Favorites" in the iOS Files app, implementation of the https://developer.apple.com/documentation/fileprovider/content_and_change_tracking/defining_your_file_provider_s_content#2897861[Working Set] is needed. This is one of the next roadmap items, bu there's no ETA yet.
 
 === Text editing inside the iOS app
 
