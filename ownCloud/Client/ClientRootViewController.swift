@@ -442,6 +442,7 @@ extension ClientRootViewController : OCCoreDelegate {
 		if nsError == nil, let issueNSError = issue?.error as NSError? {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
 			if issueNSError.isOCError(withCode: .authorizationFailed) ||
+			   issueNSError.isOCError(withCode: .authorizationMethodNotAllowed) ||
 			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
 			   issueNSError.isOCError(withCode: .authorizationMissingData) {
 				nsError = issueNSError
@@ -476,6 +477,12 @@ extension ClientRootViewController : OCCoreDelegate {
 
 			if nsError.isOCError(withCode: .authorizationNoMethodData) || nsError.isOCError(withCode: .authorizationMissingData) {
 				authFailureMessage = "No authentication data has been found for this connection.".localized
+
+				isAuthFailure = true
+			}
+
+			if nsError.isOCError(withCode: .authorizationMethodNotAllowed) {
+				authFailureMessage = NSString(format: "Authentication with %@ is no longer allowed. Re-authentication needed.".localized as NSString, core.connection.authenticationMethod?.name ?? "??") as String
 
 				isAuthFailure = true
 			}
