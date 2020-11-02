@@ -248,7 +248,7 @@
          <EnvironmentVariable
             key = "oc:connection.connection-allowed-authentication-methods"
             value = "[com.owncloud.openid-connect,com.owncloud.oauth2]"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:connection.connection-allowed-authentication-methods"
