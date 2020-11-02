@@ -300,8 +300,8 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.isBetaBuild : false,
 				.showBetaWarning : false,
+				.isBetaBuild : false,
 				.enableUIAnimations: true,
 				.enableReviewPrompt: !VendorServices.shared.isBranded,
 
@@ -313,5 +313,65 @@ extension VendorServices : OCClassSettingsSupport {
 		}
 
 		return nil
+	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.showBetaWarning : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether a warning should be shown on the first run of a beta version.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.isBetaBuild : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls if the app is built for beta or release purposes.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.enableUIAnimations : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enable/disable UI animations.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.enableReviewPrompt : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enable/disable review prompt.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.appStoreLink : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "URL for the app in the App Store.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.feedbackEmail : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "Email address to send feedback to.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.recommendToFriendEnabled : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enables/disables the recommend to a friend entry in the settings.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.sendFeedbackEnabled : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enables/disables the send feedback entry in the settings.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
+		]
 	}
 }

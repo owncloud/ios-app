@@ -40,6 +40,32 @@
 	return (nil);
 }
 
++ (OCClassSettingsMetadataCollection)classSettingsMetadata
+{
+	return (@{
+		OCClassSettingsKeyDisplayShowHiddenFiles : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls whether hidden files (i.e. files starting with `.` ) should also be shown.",
+			OCClassSettingsMetadataKeyCategory	: @"Display Settings",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+		},
+
+		OCClassSettingsKeyDisplayPreventDraggingFiles : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls whether drag and drop should be prevented for items inside the app.",
+			OCClassSettingsMetadataKeyCategory	: @"Display Settings",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+		},
+
+		OCClassSettingsKeyDisplaySortFoldersFirst : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls whether folders are shown at the top.",
+			OCClassSettingsMetadataKeyCategory	: @"Display Settings",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+		}
+	});
+}
+
 #pragma mark - Singleton
 + (DisplaySettings *)sharedDisplaySettings
 {
