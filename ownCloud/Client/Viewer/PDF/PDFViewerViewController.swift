@@ -235,7 +235,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let pdfSearchController = PDFSearchViewController()
 		let searchNavigationController = ThemeNavigationController(rootViewController: pdfSearchController)
 		pdfSearchController.pdfDocument = pdfDocument
-		pdfSearchController.userSelectedMatchCallback = { (_, selection) in
+		// TODO: Interpret the search text and all the matches returned by search view controller
+		pdfSearchController.userSelectedMatchCallback = { (_, _, selection) in
 			DispatchQueue.main.async {
 				selection.color = UIColor.yellow
 				self.pdfView.setCurrentSelection(selection, animate: true)
