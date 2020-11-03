@@ -145,6 +145,13 @@ platform :ios do
 
         # Set options, which action should not performed, by default all actions will be performed
         # Disable all options: fastlane release_on_appstore create_release_notes:false create_screenshots:false deliver:false build_regular_app:false build_emm_app:false
+        
+        create_screenshots = true
+        skip_screenshots = false
+        if options[:create_screenshots] == false
+          create_screenshots = options[:create_screenshots]
+          skip_screenshots = true
+        end
 
         deliver = true
         if options[:deliver] == false
