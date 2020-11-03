@@ -64,6 +64,37 @@ platform :ios do
       )
     end
     
+
+  desc "Copies the branding assets from the themes repository to the ios-app repository"
+    lane :prepare_branding_assets do |options|
+    
+    if Dir.exist?("../../owncloud-themes") == false
+		UI.user_error!("Themes repository path does not exists!")
+    end
+    
+    sh "git -C ../../owncloud-themes pull"
+      
+    path = ""
+    customers = read_json(
+  		json_path: "../owncloud-themes/Customers.json"
+	)
+
+	customers.each do |customer|
+		if customer[:customer] == options[:CUSTOMER]
+       		path = "../../owncloud-themes/" + customer[:path] + "ios/"
+       		break
+    	end
+	end
+	
+	if path == ""
+		UI.user_error!("Customer not found!")
+	end
+	
+	sh "cp -R '" + path + "Theming/' ../ownCloud/Resources/Theming/"
+	sh "cp -R '" + path + "AppIcon.appiconset/' ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+      
+    end
+    
     
     desc "Create Metadata Release Notes, Screenshots and push to git"
       lane :prepare_metadata do |options|
@@ -317,7 +348,11 @@ lane :owncloud_online_build do
   )
 end
 
-  lane :owncloud_branding_build do
+  lane :owncloud_branding_build do |options|
+  	prepare_branding_assets(
+      CUSTOMER: options[:CUSTOMER]
+  	)
+  
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
       ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
@@ -337,7 +372,11 @@ end
     )
   end
 
-  lane :owncloud_branding_appstore_build do
+  lane :owncloud_branding_appstore_build do |options|
+    prepare_branding_assets(
+      CUSTOMER: options[:CUSTOMER]
+  	)
+  	
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.ios-app",
       ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
