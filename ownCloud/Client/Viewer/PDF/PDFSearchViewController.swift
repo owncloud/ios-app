@@ -22,7 +22,7 @@ import ownCloudAppShared
 
 class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Themeable, UISearchBarDelegate {
 
-    typealias PDFSearchMatchSelectedCallback = (PDFSelection) -> Void
+    typealias PDFSearchMatchSelectedCallback = ([PDFSelection], PDFSelection) -> Void
 
     fileprivate var searchController: UISearchController?
 
@@ -87,7 +87,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         typeDelayTimer?.invalidate()
         self.dismiss(animated: true) {
             if self.userSelectedMatchCallback != nil && self.selection != nil {
-                self.userSelectedMatchCallback!(self.selection!)
+				self.userSelectedMatchCallback!(self.matches, self.selection!)
             }
         }
     }
