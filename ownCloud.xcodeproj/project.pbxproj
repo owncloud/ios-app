@@ -22,6 +22,7 @@
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
 		02AE32E424D2FA8B00A19476 /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 02AE32E324D2FA8B00A19476 /* CrashReporter */; };
+		02D4C82A255208E60000E299 /* PDFSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D4C829255208E60000E299 /* PDFSearchResultsView.swift */; };
 		02DC7C9024CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */; };
 		02F2891424BFAF0100E3D35C /* MigrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2891024BFAF0100E3D35C /* MigrationViewController.swift */; };
 		02F2891524BFAF0100E3D35C /* Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2891124BFAF0100E3D35C /* Migration.swift */; };
@@ -884,6 +885,7 @@
 		02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNUserNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
 		0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+UniversalLinks.swift"; sourceTree = "<group>"; };
 		0287DD7C249131E000C912CA /* AppStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatistics.swift; sourceTree = "<group>"; };
+		02D4C829255208E60000E299 /* PDFSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFSearchResultsView.swift; sourceTree = "<group>"; };
 		02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPhotoUploadSettingsSection.swift; sourceTree = "<group>"; };
 		02F2890F24BFAF0100E3D35C /* LegacyCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyCredentials.swift; sourceTree = "<group>"; };
 		02F2891024BFAF0100E3D35C /* MigrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationViewController.swift; sourceTree = "<group>"; };
@@ -2504,6 +2506,7 @@
 			isa = PBXGroup;
 			children = (
 				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
+				02D4C829255208E60000E299 /* PDFSearchResultsView.swift */,
 				4C464BEB2187AF1500D30602 /* PDFOutlineViewController.swift */,
 				4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */,
 				4C464BEA2187AF1400D30602 /* PDFSearchViewController.swift */,
@@ -3927,6 +3930,7 @@
 				DCDF58B323CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift in Sources */,
 				39AFC3D8225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift in Sources */,
 				DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */,
+				02D4C82A255208E60000E299 /* PDFSearchResultsView.swift in Sources */,
 				39057AA3233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */,
 				DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */,
