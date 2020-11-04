@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudAppShared
+import ownCloudSDK
 
 enum IssueButtonStyle {
 	case plain
@@ -61,6 +62,7 @@ class IssuesViewController: UIViewController {
 	var tableView: UITableView?
 	private var bottomContainer: UIStackView?
 	var headerTitle: String?
+	var issueLevel: OCIssueLevel?
 	var buttons:[IssueButton]?
 	private var tableHeighConstraint: NSLayoutConstraint?
 	private var modalPresentationVC: UIViewControllerTransitioningDelegate?
@@ -190,7 +192,19 @@ extension IssuesViewController: UITableViewDelegate {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
 		cell.textLabel?.text = headerTitle ?? ""
 		cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
-		cell.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
+		var textColor = Theme.shared.activeCollection.tableRowColors.labelColor
+		if issueLevel != nil {
+			switch issueLevel {
+			case .warning:
+				textColor = Theme.shared.activeCollection.warningColor
+			case .informal:
+				textColor = Theme.shared.activeCollection.informativeColor
+			case .error:
+				textColor = Theme.shared.activeCollection.errorColor
+			case .none, .some(_): break
+			}
+		}
+		cell.textLabel?.textColor = textColor
 		cell.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 
 		let separatorView: UIView = UIView()
