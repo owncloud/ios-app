@@ -187,7 +187,7 @@ class MessageGroupCell: ThemeTableViewCell {
 			}
 
 			if let alertView = alertView, let containerView = containerView {
-				self.addSubview(containerView)
+				self.contentView.addSubview(containerView)
 
 				containerView.addSubview(alertView)
 
@@ -197,10 +197,10 @@ class MessageGroupCell: ThemeTableViewCell {
 				}
 
 				NSLayoutConstraint.activate([
-					containerView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: alertSpacing),
-					containerView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -alertSpacing),
-					containerView.topAnchor.constraint(equalTo: self.topAnchor, constant: alertSpacing),
-					containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: noBottomSpacing ? 0 : -alertSpacing),
+					containerView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: alertSpacing),
+					containerView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -alertSpacing),
+					containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: alertSpacing),
+					containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: noBottomSpacing ? 0 : -alertSpacing),
 
 					alertView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
 					alertView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
