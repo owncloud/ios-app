@@ -66,6 +66,9 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var duplicateMultipleBarButtonItem: UIBarButtonItem?
 	public var copyMultipleBarButtonItem: UIBarButtonItem?
 	public var openMultipleBarButtonItem: UIBarButtonItem?
+	public var isMoreButtonPermanentlyHidden: Bool = false
+	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?
+	public var showSelectButton: Bool = true
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
@@ -320,7 +323,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 			sortBar?.updateForCurrentTraitCollection()
-			sortBar?.showSelectButton = true
+			sortBar?.showSelectButton = showSelectButton
 
 			tableView.tableHeaderView = sortBar
 		}
@@ -407,6 +410,10 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			if let localID = newItem.localID as OCLocalID?, self.selectedItemIds.contains(localID) {
 				cell?.setSelected(true, animated: false)
 			}
+
+			if isMoreButtonPermanentlyHidden {
+				cell?.isMoreButtonPermanentlyHidden = true
+			}
 		}
 
 		return cell!
@@ -455,7 +462,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
-			super.tableView(tableView, didSelectRowAt: indexPath)
+			if let item = itemAt(indexPath: indexPath), item.type != .collection, isMoreButtonPermanentlyHidden {
+				return
+			}
+			if didSelectCellAction != nil {
+				didSelectCellAction?({ })
+			} else {
+				super.tableView(tableView, didSelectRowAt: indexPath)
+			}
 		} else {
 			if let multiSelectionSupport = self as? MultiSelectSupport {
 				if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
@@ -479,6 +493,23 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 				multiSelectionSupport.updateMultiselection()
 			}
 		}
+	}
+
+	@available(iOS 13.0, *)
+	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		if isMoreButtonPermanentlyHidden {
+			return nil
+		}
+
+		return super.tableView(tableView, contextMenuConfigurationForRowAt: indexPath, point: point)
+	}
+
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if isMoreButtonPermanentlyHidden {
+			return nil
+		}
+
+		return super.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
 	}
 }
 

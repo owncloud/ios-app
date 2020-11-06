@@ -575,12 +575,13 @@
 "All Files" = "All Files";
 
 /* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+"You are connected as\n%@" = "You are connected as\n%@";
 
 /* Release Notes */
 "Proceed" = "Fortsett";
-"New in ownCloud" = "New in ownCloud";
+"New in %@" = "New in %@";
 "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
+"Thank you for using %@.\n" = "Thank you for using %@.\n";
 
 /* Key Commands */
 "Select Next" = "Select Next";

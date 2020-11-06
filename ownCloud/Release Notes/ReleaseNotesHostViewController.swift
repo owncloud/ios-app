@@ -42,6 +42,8 @@ class ReleaseNotesHostViewController: UIViewController {
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appBuildNumber), forClassSettingsKey: .lastSeenReleaseNotesVersion)
 
+		let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+
 		let headerView = UIView()
 		headerView.backgroundColor = .clear
 		headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -56,7 +58,7 @@ class ReleaseNotesHostViewController: UIViewController {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
 
-		titleLabel.text = "New in ownCloud".localized
+		titleLabel.text = String(format:"New in %@".localized, appName)
 		titleLabel.textAlignment = .center
 		titleLabel.numberOfLines = 0
 		titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
@@ -93,8 +95,14 @@ class ReleaseNotesHostViewController: UIViewController {
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
 
-			let appName = OCAppIdentity.shared.appName ?? "ownCloud"
-			footerButton.setTitle(String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName), for: .normal)
+			let appName = VendorServices.shared.appName
+			var footerText = ""
+			if VendorServices.shared.isBranded {
+				footerText = String(format:"Thank you for using %@.\n".localized, appName)
+			} else {
+				footerText = String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName)
+			}
+			footerButton.setTitle(footerText, for: .normal)
 			footerButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
 			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			footerButton.titleLabel?.numberOfLines = 0
@@ -159,7 +167,9 @@ extension ReleaseNotesHostViewController : Themeable {
 class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 	var shouldShowReleaseNotes: Bool {
-		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
+		if VendorServices.shared.isBranded {
+			return false
+		} else if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
 
 			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedSame {
 				return false

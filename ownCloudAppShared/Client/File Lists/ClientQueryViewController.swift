@@ -114,6 +114,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
+		folderActionBarButton?.accessibilityLabel = "Actions".localized
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
 

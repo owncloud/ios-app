@@ -44,6 +44,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		super.init(style: style)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(openAccount(notification:)), name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -52,6 +53,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
@@ -309,7 +311,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				welcomeAddServerButton.accessibilityIdentifier = "addServer"
 				welcomeTitleLabel.text = "Welcome".localized
 				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
-				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
@@ -501,6 +503,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	@objc func openAccount(notification: NSNotification) {
+		if let bookmarkUUID = notification.object as? UUID,
+		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+		   	self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
+		}
+	}
+
 	// MARK: - Connect and locking
 	func isLocked(bookmark: OCBookmark, presentAlert: Bool = true) -> Bool {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
@@ -654,11 +663,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 			menuItems.append(openWindow)
 		}
-		let edit = UIAction(title: "Edit", image: UIImage(systemName: "gear")) { _ in
+		let edit = UIAction(title: "Edit".localized, image: UIImage(systemName: "gear")) { _ in
 			self.showBookmarkUI(edit: bookmark)
 		}
 		menuItems.append(edit)
-		let manage = UIAction(title: "Manage", image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
+		let manage = UIAction(title: "Manage".localized, image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
 			self.showBookmarkInfoUI(bookmark)
 		}
 		menuItems.append(manage)

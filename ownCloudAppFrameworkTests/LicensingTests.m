@@ -483,4 +483,13 @@ typedef void(^LicenseProviderBlock)(OCLicenseProvider *provider, OCLicenseProvid
 	[self waitForExpectationsWithTimeout:30 handler:nil];
 }
 
+- (void)testDateDecoding
+{
+	NSDate *date1 = [NSDate dateFromRFC3339DateString:@"2020-10-03T07:12:34Z"];
+	NSDate *date2 = [NSDate dateFromRFC3339DateString:@"2020-10-03T07:12:34.5670Z"]; // Test dates with microseconds in them: https://twitter.com/depth42/status/1314179664005525504?s=20
+
+	XCTAssert((date1 != nil), @"Decoding of date1 string failed");
+	XCTAssert((date2 != nil), @"Decoding of date2 string failed");
+}
+
 @end
