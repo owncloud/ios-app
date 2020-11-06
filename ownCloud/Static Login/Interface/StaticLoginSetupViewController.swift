@@ -486,10 +486,6 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 								self.addSection(self.tokenMaskSection())
 							}
 						}
-						
-						if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil, self.sectionForIdentifier("urlHelpSection") == nil {
-							self.addSection(self.urlHelpSection())
-						}
 					}
 				}
 
