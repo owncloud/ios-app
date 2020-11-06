@@ -4,7 +4,7 @@ We supporting all upcoming new display sizes with native screen resolution.
 • Favorites in Directory Picker
 We added access to the favorite items directly from the directory picker.
 
-• Rename Filename
+• Rename Filename in Scan View
 Now it is easier to rename a filename in the scan view by preselecting the filename.
 
 • Fix: Save Attachments from Mail.app
@@ -12,4 +12,7 @@ Saving attachments from iOS Mail.app was broken via the share sheet.
 
 • Fix: Authentication Error in FileProvider
 Notifies the user with a notification if authentication fails in File Provider.
+
+• Fix: New Folder in FileProvider
+A newly created folder in File Provider was not selectable.
 

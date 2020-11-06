@@ -773,7 +773,7 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Rename Filename</string>
+					<string>Rename Filename in Scan View</string>
 					<key>Subtitle</key>
 					<string>Now it is easier to rename a filename in the scan view by preselecting the filename.</string>
 					<key>Type</key>
