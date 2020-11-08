@@ -1,0 +1,705 @@
+
+tag::app[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|enable-review-prompt
+|bool 
+|`true` 
+|Enable/disable review prompt.
+
+|send-feedback-enabled
+|bool 
+|`true` 
+|Enables/disables the send feedback entry in the settings.
+
+|feedback-email
+|string 
+|`ios-app@owncloud.com` 
+|Email address to send feedback to.
+
+|app-store-link
+|string 
+|`https://itunes.apple.com/app/id1359583808?mt=8` 
+|URL for the app in the App Store.
+
+|recommend-to-friend-enabled
+|bool 
+|`true` 
+|Enables/disables the recommend to a friend entry in the settings.
+
+|is-beta-build
+|bool 
+|`false` 
+|Controls if the app is built for beta or release purposes.
+
+|show-beta-warning
+|bool 
+|`false` 
+|Controls whether a warning should be shown on the first run of a beta version.
+
+|enable-ui-animations
+|bool 
+|`true` 
+|Enable/disable UI animations.
+
+|=== 
+end::app[]
+
+
+tag::authentication[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|browser-session-class
+|string 
+|`operating-system` 
+|Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
+
+|browser-session-prefers-ephermal
+|bool 
+|`false` 
+|Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
+
+|browser-session-class
+|string 
+|`operating-system` 
+|Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
+
+|browser-session-prefers-ephermal
+|bool 
+|`false` 
+|Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
+
+|=== 
+end::authentication[]
+
+
+tag::bookmarks[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|url-editable
+|bool 
+|`true` 
+|Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
+
+|default-url
+|string 
+| 
+|The default URL for the creation of new bookmarks.
+
+|=== 
+end::bookmarks[]
+
+
+tag::connection[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|user-agent
+|string 
+|`ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})` 
+|A custom `User-Agent` to send with every HTTP request.
+
+The following placeholders can be used to make it dynamic:
+- `{{app.build}}`: the build number of the app (f.ex. `123`)
+- `{{app.version}}`: the version of the app (f.ex. `1.2`)
+- `{{app.part}}`: the part of the app (more exactly: the name of the main bundle) from which the request was sent (f.ex. `App`, `ownCloud File Provider`)
+- `{{device.model}}`: the model of the device running the app (f.ex. `iPhone`, `iPad`)
+- `{{device.model-id}}`: the model identifier of the device running the app (f.ex. `iPhone8,1`)
+- `{{os.name}}` : the name of the operating system running on the device (f.ex. `iOS`, `iPadOS`)
+- `{{os.version}}`: the version of operating system running on the device (f.ex. `13.2.2`)
+
+
+|cookie-support-enabled
+|bool 
+|`false` 
+|Enable or disable per-process, in-memory cookie storage.
+
+|cookie-support-enabled
+|bool 
+|`false` 
+|Enable or disable per-process, in-memory cookie storage.
+
+|action-concurrency-budgets
+|dictionary 
+|`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]` 
+|Concurrency budgets available for sync actions by action category.
+
+|action-concurrency-budgets
+|dictionary 
+|`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]` 
+|Concurrency budgets available for sync actions by action category.
+
+|plain-http-policy
+|string 
+|`warn` 
+|Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
+
+|always-request-private-link
+|bool 
+|`false` 
+|Controls whether private links are requested with regular PROPFINDs.
+
+|active-simulations
+|stringArray 
+|`[]` 
+|Active Host simulation extensions.
+
+|thumbnail-available-for-mime-type-prefixes
+|stringArray 
+|`[*]` 
+|Provide hints that thumbnails are available for items whose MIME-Type starts with any of the strings provided in this array. Providing an empty array turns off thumbnail loading. Providing `["*"]` turns on thumbnail loading for all items.
+
+|override-availability-signal
+|bool 
+| 
+|Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).
+
+|override-reachability-signal
+|bool 
+| 
+|Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).
+
+|thumbnail-available-for-mime-type-prefixes
+|stringArray 
+|`[*]` 
+|Provide hints that thumbnails are available for items whose MIME-Type starts with any of the strings provided in this array. Providing an empty array turns off thumbnail loading. Providing `["*"]` turns on thumbnail loading for all items.
+
+|override-availability-signal
+|bool 
+| 
+|Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).
+
+|override-reachability-signal
+|bool 
+| 
+|Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).
+
+|allow-background-url-sessions
+|bool 
+|`true` 
+|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
+
+|force-background-url-sessions
+|bool 
+|`false` 
+|Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
+
+|connection-minimum-server-version
+|string 
+|`10.0` 
+|The minimum server version required.
+
+|=== 
+end::connection[]
+
+
+tag::diagnostics[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|enabled
+|bool 
+|`false` 
+|Controls whether additional diagnostic options and information is available throughout the user interface.
+|=== 
+end::diagnostics[]
+
+
+tag::display settings[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|sort-folders-first
+|bool 
+|`false` 
+|Controls whether folders are shown at the top.
+
+|show-hidden-files
+|bool 
+|`false` 
+|Controls whether hidden files (i.e. files starting with `.` ) should also be shown.
+
+|prevent-dragging-files
+|bool 
+|`false` 
+|Controls whether drag and drop should be prevented for items inside the app.
+
+|=== 
+end::display settings[]
+
+
+tag::endpoints[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|endpoint-recipients
+|string 
+|`ocs/v2.php/apps/files_sharing/api/v1/sharees` 
+|Path of the sharing recipient API endpoint.
+
+|endpoint-webdav-meta
+|string 
+|`remote.php/dav/meta` 
+|Endpoint to use for WebDAV metadata.
+
+|endpoint-remote-shares
+|string 
+|`ocs/v2.php/apps/files_sharing/api/v1/remote_shares` 
+|Path of the remote shares API endpoint.
+
+|endpoint-webdav
+|string 
+|`remote.php/dav/files` 
+|Endpoint to use for WebDAV.
+
+|well-known
+|string 
+|`.well-known` 
+|Path of the .well-known endpoint.
+
+|endpoint-thumbnail
+|string 
+|`index.php/apps/files/api/v1/thumbnail` 
+|Path of the thumbnail endpoint.
+
+|endpoint-status
+|string 
+|`status.php` 
+|Endpoint to retrieve basic status information and detect an ownCloud installation.
+
+|endpoint-user
+|string 
+|`ocs/v2.php/cloud/user` 
+|Endpoint to use for retrieving information on logged in user.
+
+|endpoint-capabilities
+|string 
+|`ocs/v2.php/cloud/capabilities` 
+|Endpoint to use for retrieving server capabilities.
+
+|endpoint-shares
+|string 
+|`ocs/v2.php/apps/files_sharing/api/v1/shares` 
+|Path of the shares API endpoint.
+
+|=== 
+end::endpoints[]
+
+
+tag::licensing[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|disable-enterprise-licensing
+|bool 
+|`false` 
+|Enables/disables Enterprise licensing support.
+
+|disable-appstore-licensing
+|bool 
+|`false` 
+|Enables/disables App Store licensing support.
+
+|=== 
+end::licensing[]
+
+
+tag::logging[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|log-level
+|int 
+|`4` 
+|Log level
+
+|log-privacy-mask
+|bool 
+|`false` 
+|Controls whether certain objects in log statements should be masked for privacy.
+
+|log-enabled-components
+|stringArray 
+|`[writer.stderr writer.file option.log-requests-and-responses]` 
+|List of enabled logging system components.
+
+|log-only-tags
+|stringArray 
+| 
+|If set, omits all log messages not tagged with tags in this array.
+
+|log-format
+|string 
+|`text` 
+|Determines the format that log messages are saved in
+
+|log-omit-matching
+|stringArray 
+| 
+|If set, omits logs messages containing any of the exact terms in this array.
+
+|log-only-matching
+|stringArray 
+| 
+|If set, only logs messages containing at least one of the exact terms in this array.
+
+|log-synchronous
+|bool 
+|`false` 
+|Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
+
+|log-omit-tags
+|stringArray 
+| 
+|If set, omits all log messages tagged with tags in this array.
+
+|log-maximum-message-size
+|int 
+|`0` 
+|Maximum length of a log message before the message is truncated. A value of 0 means no limit.
+
+|log-colored
+|bool 
+|`false` 
+|Controls whether log levels should be replaced with colored emojis.
+
+|log-single-lined
+|bool 
+|`true` 
+|Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
+
+|log-blank-filtered-messages
+|bool 
+|`false` 
+|Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
+
+|=== 
+end::logging[]
+
+
+tag::oauth2[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|oa2-redirect-uri
+|string 
+|`oc://ios.owncloud.com` 
+|OAuth2 Redirect URI.
+
+|oa2-token-endpoint
+|string 
+|`index.php/apps/oauth2/api/v1/token` 
+|OAuth2 token endpoint.
+
+|oa2-client-id
+|string 
+|`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1` 
+|OAuth2 Client ID.
+
+|oa2-authorization-endpoint
+|string 
+|`index.php/apps/oauth2/authorize` 
+|OAuth2 authorization endpoint.
+
+|oa2-client-secret
+|string 
+|`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx` 
+|OAuth2 Client Secret.
+
+|oa2-redirect-uri
+|string 
+|`oc://ios.owncloud.com` 
+|OAuth2 Redirect URI.
+
+|oa2-token-endpoint
+|string 
+|`index.php/apps/oauth2/api/v1/token` 
+|OAuth2 token endpoint.
+
+|oa2-client-id
+|string 
+|`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1` 
+|OAuth2 Client ID.
+
+|oa2-authorization-endpoint
+|string 
+|`index.php/apps/oauth2/authorize` 
+|OAuth2 authorization endpoint.
+
+|oa2-client-secret
+|string 
+|`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx` 
+|OAuth2 Client Secret.
+
+|oa2-expiration-override-seconds
+|int 
+| 
+|OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)
+
+|oa2-expiration-override-seconds
+|int 
+| 
+|OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)
+
+|=== 
+end::oauth2[]
+
+
+tag::oidc[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|oidc-scope
+|string 
+|`openid offline_access email profile` 
+|OpenID Connect Scope
+
+|oidc-redirect-uri
+|string 
+|`oc://ios.owncloud.com` 
+|OpenID Connect Redirect URI
+
+|oidc-scope
+|string 
+|`openid offline_access email profile` 
+|OpenID Connect Scope
+
+|oidc-redirect-uri
+|string 
+|`oc://ios.owncloud.com` 
+|OpenID Connect Redirect URI
+
+|=== 
+end::oidc[]
+
+
+tag::policies[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|local-copy-expiration
+|int 
+|`604800` 
+|The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+
+|local-copy-expiration-enabled
+|bool 
+|`true` 
+|Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+
+|local-copy-expiration
+|int 
+|`604800` 
+|The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+
+|local-copy-expiration-enabled
+|bool 
+|`true` 
+|Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+
+|local-copy-expiration
+|int 
+|`604800` 
+|The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+
+|local-copy-expiration-enabled
+|bool 
+|`true` 
+|Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+
+|local-copy-expiration
+|int 
+|`604800` 
+|The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+
+|local-copy-expiration-enabled
+|bool 
+|`true` 
+|Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+
+|local-copy-expiration
+|int 
+|`604800` 
+|The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+
+|local-copy-expiration-enabled
+|bool 
+|`true` 
+|Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+
+|vacuum-sync-anchor-ttl
+|bool 
+|`60` 
+|Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+
+|vacuum-sync-anchor-ttl
+|bool 
+|`60` 
+|Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+
+|vacuum-sync-anchor-ttl
+|bool 
+|`60` 
+|Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+
+|vacuum-sync-anchor-ttl
+|bool 
+|`60` 
+|Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+
+|vacuum-sync-anchor-ttl
+|bool 
+|`60` 
+|Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+
+|=== 
+end::policies[]
+
+
+tag::privacy[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|add-accept-language-header
+|bool 
+|`true` 
+|Add an `Accept-Language` HTTP header using the preferred languages set on the device.
+
+|add-accept-language-header
+|bool 
+|`true` 
+|Add an `Accept-Language` HTTP header using the preferred languages set on the device.
+
+|=== 
+end::privacy[]
+
+
+tag::release notes[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|lastSeenReleaseNotesVersion
+|string 
+| 
+|The app version for which the release notes were last shown.
+
+|lastSeenAppVersion
+|string 
+| 
+|The last-seen app version.
+
+|=== 
+end::release notes[]
+
+
+tag::security[]
+[cols=4*,options=header] 
+|=== 
+|Key 
+|Type 
+|Default 
+|Description 
+
+
+|transparent-temporary-redirect
+|bool 
+|`true` 
+|Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
+
+|connection-certificate-extended-validation-rule
+|string 
+|`bookmarkCertificate == serverCertificate` 
+|Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.
+
+Examples of expressions:
+- `bookmarkCertificate == serverCertificate`: the whole certificate needs to be identical to the one stored in the bookmark during setup.
+- `bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData`:  the public key of the received certificate needs to be identical to the public key stored in the bookmark during setup.
+- `serverCertificate.passedValidationOrIsUserAccepted == true`: any certificate is accepted as long as it has passed validation by the OS or was accepted by the user.
+- `serverCertificate.commonName == "demo.owncloud.org"`: the common name of the certificate must be "demo.owncloud.org".
+- `serverCertificate.rootCertificate.commonName == "DST Root CA X3"`: the common name of the root certificate must be "DST Root CA X3".
+- `serverCertificate.parentCertificate.commonName == "Let's Encrypt Authority X3"`: the common name of the parent certificate must be "Let's Encrypt Authority X3".
+- `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == "2A 00 98 90 BD … F7"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.
+
+
+|connection-renewed-certificate-acceptance-rule
+|string 
+|`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))` 
+|Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
+
+|=== 
+end::security[]
+
+
