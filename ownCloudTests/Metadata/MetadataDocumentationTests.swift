@@ -29,17 +29,21 @@ class MetadataDocumentationTests: XCTestCase {
 			.externalDocumentationFolders : [ sdkDocsURL ]
 		])
 
-		guard let jsonData = try? JSONSerialization.data(withJSONObject: docDict, options: [.prettyPrinted, .sortedKeys, .fragmentsAllowed]) else {
-			XCTFail("Failed encoding documentation dictionary as JSON")
-			return
-		}
-
-		if let jsonString = String(data: jsonData, encoding: .utf8) {
-			Log.debug("\(jsonString)")
-
-			if let jsonPath = ProcessInfo.processInfo.environment["OC_SETTINGS_DOC_JSON"] {
-				try? jsonData.write(to: URL(fileURLWithPath: jsonPath), options: .atomicWrite)
+		if #available(iOS 13, *) {
+			guard let jsonData = try? JSONSerialization.data(withJSONObject: docDict, options: [.prettyPrinted, .sortedKeys, .fragmentsAllowed, .withoutEscapingSlashes]) else {
+				XCTFail("Failed encoding documentation dictionary as JSON")
+				return
 			}
+
+			if let jsonString = String(data: jsonData, encoding: .utf8) {
+				Log.debug("\(jsonString)")
+
+				if let jsonPath = ProcessInfo.processInfo.environment["OC_SETTINGS_DOC_JSON"] {
+					try? jsonData.write(to: URL(fileURLWithPath: jsonPath), options: .atomicWrite)
+				}
+			}
+		} else {
+			XCTFail("Test needs to be run on Simulator running iOS 13 or later")
 		}
 	}
 }
