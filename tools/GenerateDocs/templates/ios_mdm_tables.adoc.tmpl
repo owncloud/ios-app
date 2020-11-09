@@ -1,0 +1,32 @@
+{{- $config := .config }}
+{{- $categories := .config | jsonpath `$[*].category` | uniq | sort }}
+{{- range $index, $category := $categories }}
+tag::{{$category | strings.ToLower }}[]
+[cols=4*,options=header]
+|===
+|Key
+|Type
+|Default
+|Description
+
+{{$options := $config | jsonpath (print "$[?(@.category=='" $category "')]") }}
+{{- if eq (printf "%T" $options) "map[string]interface {}"}}
+{{- $option := $options }}
+|{{- $option.key}}
+|{{- $option.type}}
+|{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
+|{{- if has $option "description"}}{{$option.description}}{{end}}
+{{- else}}
+{{- range $statusIndex, $status := slice "supported" "advanced" "debugOnly"}}
+{{- range $optionIndex, $option := $options | jsonpath (print "$[?(@.status=='" $status "')]")}}
+|{{- $option.key}}
+|{{- $option.type}}
+|{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
+|{{- if has $option "description"}}{{$option.description}}{{end}}
+{{end}}
+{{- end}}
+{{- end}}
+|===
+end::{{$category | strings.ToLower }}[]
+
+{{end}}

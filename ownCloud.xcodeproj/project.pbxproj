@@ -1285,6 +1285,8 @@
 		DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EarlGrey+Tools.swift"; sourceTree = "<group>"; };
 		DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrandingClassSettingsSource.h; sourceTree = "<group>"; };
 		DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrandingClassSettingsSource.m; sourceTree = "<group>"; };
+		DCB3256A2559989200058EEB /* generate_docs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = generate_docs.sh; sourceTree = "<group>"; };
+		DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */ = {isa = PBXFileReference; lastKnownFileType = text; path = ios_mdm_tables.adoc.tmpl; sourceTree = "<group>"; };
 		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
 		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
@@ -2422,6 +2424,7 @@
 		DC7DBA3B207F86E900E7337D /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				DCB3256B255998A400058EEB /* GenerateDocs */,
 				DC7DBA35207F84BF00E7337D /* MakeTVG */,
 			);
 			name = Tools;
@@ -2509,6 +2512,23 @@
 				DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */,
 			);
 			path = Branding;
+			sourceTree = "<group>";
+		};
+		DCB3256B255998A400058EEB /* GenerateDocs */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3257525599BAC00058EEB /* templates */,
+				DCB3256A2559989200058EEB /* generate_docs.sh */,
+			);
+			path = GenerateDocs;
+			sourceTree = "<group>";
+		};
+		DCB3257525599BAC00058EEB /* templates */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */,
+			);
+			path = templates;
 			sourceTree = "<group>";
 		};
 		DCBF0A5E2280393A00465530 /* PDF */ = {
