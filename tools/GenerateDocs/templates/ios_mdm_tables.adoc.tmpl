@@ -3,7 +3,7 @@
 {{- range $index, $category := $categories }}
 tag::{{$category | strings.ToLower }}[]
 [cols=4*,options=header]
-|===
+|=== 
 |Key
 |Type
 |Default
@@ -13,12 +13,16 @@ tag::{{$category | strings.ToLower }}[]
 {{- if eq (printf "%T" $options) "map[string]interface {}"}}
 {{- $option := $options }}
 |{{- $option.key}}
-|{{- $option.type}}
-|{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
+|{{- $option.type}} 
+|{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}} 
 |{{- if has $option "description"}}{{$option.description}}{{end}}
 {{- else}}
 {{- range $statusIndex, $status := slice "supported" "advanced" "debugOnly"}}
-{{- range $optionIndex, $option := $options | jsonpath (print "$[?(@.status=='" $status "')]")}}
+{{- $statusOptions := $options | jsonpath (print "$[?(@.status=='" $status "')]")}}
+{{- if eq (printf "%T" $statusOptions) "map[string]interface {}"}}
+{{- $statusOptions = slice $statusOptions}}
+{{- end}}
+{{- range $optionIndex, $option := $statusOptions }}
 |{{- $option.key}}
 |{{- $option.type}}
 |{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
