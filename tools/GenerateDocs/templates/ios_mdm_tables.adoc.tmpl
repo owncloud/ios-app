@@ -8,6 +8,7 @@ tag::{{$category | strings.ToLower }}[]
 |Type
 |Default
 |Description
+|Status
 
 {{$options := $config | jsonpath (print "$[?(@.category=='" $category "')]") }}
 {{- if eq (printf "%T" $options) "map[string]interface {}"}}
@@ -23,6 +24,7 @@ tag::{{$category | strings.ToLower }}[]
 |{{- $option.type}}
 |{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
 |{{- if has $option "description"}}{{$option.description}}{{end}}
+|{{- $option.status}}
 {{end}}
 {{- end}}
 |===

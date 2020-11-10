@@ -6,47 +6,56 @@ tag::app[]
 |Type
 |Default
 |Description
+|Status
 
 
 |app-store-link
 |string
 |`https://itunes.apple.com/app/id1359583808?mt=8`
 |URL for the app in the App Store.
+|advanced
 
 |enable-review-prompt
 |bool
 |`true`
 |Enable/disable review prompt.
+|advanced
 
 |feedback-email
 |string
 |`ios-app@owncloud.com`
 |Email address to send feedback to.
+|advanced
 
 |recommend-to-friend-enabled
 |bool
 |`true`
 |Enables/disables the recommend to a friend entry in the settings.
+|advanced
 
 |send-feedback-enabled
 |bool
 |`true`
 |Enables/disables the send feedback entry in the settings.
+|advanced
 
 |enable-ui-animations
 |bool
 |`true`
 |Enable/disable UI animations.
+|debugOnly
 
 |is-beta-build
 |bool
 |`false`
 |Controls if the app is built for beta or release purposes.
+|debugOnly
 
 |show-beta-warning
 |bool
 |`false`
 |Controls whether a warning should be shown on the first run of a beta version.
+|debugOnly
 
 |===
 end::app[]
@@ -59,17 +68,20 @@ tag::authentication[]
 |Type
 |Default
 |Description
+|Status
 
 
 |browser-session-class
 |string
 |`operating-system`
 |Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
+|supported
 
 |browser-session-prefers-ephermal
 |bool
 |`false`
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
+|supported
 
 |===
 end::authentication[]
@@ -82,17 +94,20 @@ tag::bookmarks[]
 |Type
 |Default
 |Description
+|Status
 
 
 |default-url
 |string
 |
 |The default URL for the creation of new bookmarks.
+|supported
 
 |url-editable
 |bool
 |`true`
 |Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
+|supported
 
 |===
 end::bookmarks[]
@@ -105,12 +120,14 @@ tag::connection[]
 |Type
 |Default
 |Description
+|Status
 
 
 |cookie-support-enabled
 |bool
 |`false`
 |Enable or disable per-process, in-memory cookie storage.
+|supported
 
 |user-agent
 |string
@@ -126,56 +143,67 @@ The following placeholders can be used to make it dynamic:
 - `{{os.name}}` : the name of the operating system running on the device (f.ex. `iOS`, `iPadOS`)
 - `{{os.version}}`: the version of operating system running on the device (f.ex. `13.2.2`)
 
+|supported
 
 |always-request-private-link
 |bool
 |`false`
 |Controls whether private links are requested with regular PROPFINDs.
+|advanced
 
 |plain-http-policy
 |string
 |`warn`
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
+|advanced
 
 |action-concurrency-budgets
 |dictionary
 |`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
 |Concurrency budgets available for sync actions by action category.
+|advanced
 
 |allow-background-url-sessions
 |bool
 |`true`
 |Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
+|debugOnly
 
 |connection-minimum-server-version
 |string
 |`10.0`
 |The minimum server version required.
+|debugOnly
 
 |force-background-url-sessions
 |bool
 |`false`
 |Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
+|debugOnly
 
 |override-availability-signal
 |bool
 |
 |Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).
+|debugOnly
 
 |override-reachability-signal
 |bool
 |
 |Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).
+|debugOnly
 
 |thumbnail-available-for-mime-type-prefixes
 |stringArray
 |`[*]`
 |Provide hints that thumbnails are available for items whose MIME-Type starts with any of the strings provided in this array. Providing an empty array turns off thumbnail loading. Providing `["*"]` turns on thumbnail loading for all items.
+|debugOnly
 
 |active-simulations
 |stringArray
 |`[]`
 |Active Host simulation extensions.
+|debugOnly
 
 |===
 end::connection[]
@@ -188,12 +216,14 @@ tag::diagnostics[]
 |Type
 |Default
 |Description
+|Status
 
 
 |enabled
 |bool
 |`false`
 |Controls whether additional diagnostic options and information is available throughout the user interface.
+|advanced
 
 |===
 end::diagnostics[]
@@ -206,22 +236,26 @@ tag::display settings[]
 |Type
 |Default
 |Description
+|Status
 
 
 |prevent-dragging-files
 |bool
 |`false`
 |Controls whether drag and drop should be prevented for items inside the app.
+|advanced
 
 |show-hidden-files
 |bool
 |`false`
 |Controls whether hidden files (i.e. files starting with `.` ) should also be shown.
+|advanced
 
 |sort-folders-first
 |bool
 |`false`
 |Controls whether folders are shown at the top.
+|advanced
 
 |===
 end::display settings[]
@@ -234,57 +268,68 @@ tag::endpoints[]
 |Type
 |Default
 |Description
+|Status
 
 
 |endpoint-capabilities
 |string
 |`ocs/v2.php/cloud/capabilities`
 |Endpoint to use for retrieving server capabilities.
+|advanced
 
 |endpoint-recipients
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/sharees`
 |Path of the sharing recipient API endpoint.
+|advanced
 
 |endpoint-remote-shares
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/remote_shares`
 |Path of the remote shares API endpoint.
+|advanced
 
 |endpoint-shares
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/shares`
 |Path of the shares API endpoint.
+|advanced
 
 |endpoint-status
 |string
 |`status.php`
 |Endpoint to retrieve basic status information and detect an ownCloud installation.
+|advanced
 
 |endpoint-thumbnail
 |string
 |`index.php/apps/files/api/v1/thumbnail`
 |Path of the thumbnail endpoint.
+|advanced
 
 |endpoint-user
 |string
 |`ocs/v2.php/cloud/user`
 |Endpoint to use for retrieving information on logged in user.
+|advanced
 
 |endpoint-webdav
 |string
 |`remote.php/dav/files`
 |Endpoint to use for WebDAV.
+|advanced
 
 |endpoint-webdav-meta
 |string
 |`remote.php/dav/meta`
 |Endpoint to use for WebDAV metadata.
+|advanced
 
 |well-known
 |string
 |`.well-known`
 |Path of the .well-known endpoint.
+|advanced
 
 |===
 end::endpoints[]
@@ -297,17 +342,20 @@ tag::licensing[]
 |Type
 |Default
 |Description
+|Status
 
 
 |disable-appstore-licensing
 |bool
 |`false`
 |Enables/disables App Store licensing support.
+|debugOnly
 
 |disable-enterprise-licensing
 |bool
 |`false`
 |Enables/disables Enterprise licensing support.
+|debugOnly
 
 |===
 end::licensing[]
@@ -320,72 +368,86 @@ tag::logging[]
 |Type
 |Default
 |Description
+|Status
 
 
 |log-level
 |int
 |`4`
 |Log level
+|supported
 
 |log-privacy-mask
 |bool
 |`false`
 |Controls whether certain objects in log statements should be masked for privacy.
+|supported
 
 |log-blank-filtered-messages
 |bool
 |`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
+|advanced
 
 |log-colored
 |bool
 |`false`
 |Controls whether log levels should be replaced with colored emojis.
+|advanced
 
 |log-enabled-components
 |stringArray
 |`[writer.stderr writer.file option.log-requests-and-responses]`
 |List of enabled logging system components.
+|advanced
 
 |log-format
 |string
 |`text`
 |Determines the format that log messages are saved in
+|advanced
 
 |log-maximum-message-size
 |int
 |`0`
 |Maximum length of a log message before the message is truncated. A value of 0 means no limit.
+|advanced
 
 |log-omit-matching
 |stringArray
 |
 |If set, omits logs messages containing any of the exact terms in this array.
+|advanced
 
 |log-omit-tags
 |stringArray
 |
 |If set, omits all log messages tagged with tags in this array.
+|advanced
 
 |log-only-matching
 |stringArray
 |
 |If set, only logs messages containing at least one of the exact terms in this array.
+|advanced
 
 |log-only-tags
 |stringArray
 |
 |If set, omits all log messages not tagged with tags in this array.
+|advanced
 
 |log-single-lined
 |bool
 |`true`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
+|advanced
 
 |log-synchronous
 |bool
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
+|advanced
 
 |===
 end::logging[]
@@ -398,37 +460,44 @@ tag::oauth2[]
 |Type
 |Default
 |Description
+|Status
 
 
 |oa2-authorization-endpoint
 |string
 |`index.php/apps/oauth2/authorize`
 |OAuth2 authorization endpoint.
+|advanced
 
 |oa2-client-id
 |string
 |`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1`
 |OAuth2 Client ID.
+|advanced
 
 |oa2-client-secret
 |string
 |`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx`
 |OAuth2 Client Secret.
+|advanced
 
 |oa2-redirect-uri
 |string
 |`oc://ios.owncloud.com`
 |OAuth2 Redirect URI.
+|advanced
 
 |oa2-token-endpoint
 |string
 |`index.php/apps/oauth2/api/v1/token`
 |OAuth2 token endpoint.
+|advanced
 
 |oa2-expiration-override-seconds
 |int
 |
 |OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)
+|debugOnly
 
 |===
 end::oauth2[]
@@ -441,17 +510,20 @@ tag::oidc[]
 |Type
 |Default
 |Description
+|Status
 
 
 |oidc-redirect-uri
 |string
 |`oc://ios.owncloud.com`
 |OpenID Connect Redirect URI
+|supported
 
 |oidc-scope
 |string
 |`openid offline_access email profile`
 |OpenID Connect Scope
+|supported
 
 |===
 end::oidc[]
@@ -464,22 +536,26 @@ tag::policies[]
 |Type
 |Default
 |Description
+|Status
 
 
 |local-copy-expiration
 |int
 |`604800`
 |The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+|advanced
 
 |local-copy-expiration-enabled
 |bool
 |`true`
 |Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+|advanced
 
 |vacuum-sync-anchor-ttl
 |bool
 |`60`
 |Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+|debugOnly
 
 |===
 end::policies[]
@@ -492,12 +568,14 @@ tag::privacy[]
 |Type
 |Default
 |Description
+|Status
 
 
 |add-accept-language-header
 |bool
 |`true`
 |Add an `Accept-Language` HTTP header using the preferred languages set on the device.
+|advanced
 
 |===
 end::privacy[]
@@ -510,17 +588,20 @@ tag::release notes[]
 |Type
 |Default
 |Description
+|Status
 
 
 |lastSeenAppVersion
 |string
 |
 |The last-seen app version.
+|debugOnly
 
 |lastSeenReleaseNotesVersion
 |string
 |
 |The app version for which the release notes were last shown.
+|debugOnly
 
 |===
 end::release notes[]
@@ -533,6 +614,7 @@ tag::security[]
 |Type
 |Default
 |Description
+|Status
 
 
 |connection-certificate-extended-validation-rule
@@ -549,16 +631,19 @@ Examples of expressions:
 - `serverCertificate.parentCertificate.commonName == "Let's Encrypt Authority X3"`: the common name of the parent certificate must be "Let's Encrypt Authority X3".
 - `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == "2A 00 98 90 BD … F7"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.
 
+|advanced
 
 |connection-renewed-certificate-acceptance-rule
 |string
 |`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
+|advanced
 
 |transparent-temporary-redirect
 |bool
 |`true`
 |Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
+|advanced
 
 |===
 end::security[]
