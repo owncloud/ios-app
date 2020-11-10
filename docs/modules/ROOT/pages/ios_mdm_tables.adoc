@@ -191,9 +191,10 @@ tag::diagnostics[]
 
 
 |enabled
-|bool 
-|`false` 
+|bool
+|`false`
 |Controls whether additional diagnostic options and information is available throughout the user interface.
+
 |===
 end::diagnostics[]
 
@@ -494,9 +495,10 @@ tag::privacy[]
 
 
 |add-accept-language-header
-|bool 
-|`true` 
+|bool
+|`true`
 |Add an `Accept-Language` HTTP header using the preferred languages set on the device.
+
 |===
 end::privacy[]
 
