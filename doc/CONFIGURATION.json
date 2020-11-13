@@ -489,6 +489,7 @@
     "className" : "OCConnection",
     "defaultValue" : false,
     "description" : "Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.",
+    "flags" : 2,
     "flatIdentifier" : "connection.force-background-url-sessions",
     "key" : "force-background-url-sessions",
     "status" : "debugOnly",
@@ -847,6 +848,7 @@
     "className" : "OCLogger",
     "defaultValue" : 4,
     "description" : "Log level",
+    "flags" : 2,
     "flatIdentifier" : "log.log-level",
     "key" : "log-level",
     "possibleValues" : [
@@ -885,6 +887,7 @@
     "className" : "OCLogger",
     "defaultValue" : 0,
     "description" : "Maximum length of a log message before the message is truncated. A value of 0 means no limit.",
+    "flags" : 4,
     "flatIdentifier" : "log.log-maximum-message-size",
     "key" : "log-maximum-message-size",
     "status" : "advanced",
