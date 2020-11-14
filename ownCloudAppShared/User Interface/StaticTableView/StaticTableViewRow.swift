@@ -781,13 +781,17 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.identifier = identifier
 
 		let datePickerView = UIDatePicker()
+		datePickerView.translatesAutoresizingMaskIntoConstraints = false
 		datePickerView.date = dateValue
 		datePickerView.datePickerMode = .date
+		if #available(iOS 14, *) {
+			datePickerView.preferredDatePickerStyle = .wheels
+			datePickerView.setContentCompressionResistancePriority(.required, for: .vertical)
+		}
 		datePickerView.minimumDate = Date()
 		datePickerView.maximumDate = maximumDate
 		datePickerView.accessibilityIdentifier = identifier
 		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
-		datePickerView.translatesAutoresizingMaskIntoConstraints = false
 		datePickerView.setValue(Theme.shared.activeCollection.tableRowColors.labelColor, forKey: "textColor")
 
 		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
@@ -797,13 +801,24 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.value = dateValue
 		self.action = action
 
+		datePickerView.layoutIfNeeded()
+
 		if let cell = self.cell {
-			NSLayoutConstraint.activate([
-				datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
-				datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
-				datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
-				datePickerView.heightAnchor.constraint(equalToConstant: 216.0)
+			if #available(iOS 14, *) {
+				NSLayoutConstraint.activate([
+					datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
+					datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
+					datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+					datePickerView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
 				])
+			} else {
+				NSLayoutConstraint.activate([
+					datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
+					datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
+					datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+					datePickerView.heightAnchor.constraint(equalToConstant: 216.0)
+				])
+			}
 		}
 	}
 
