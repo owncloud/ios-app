@@ -24,6 +24,10 @@ typealias PDFSearchResultsViewUpdateHandler = (PDFSelection) -> Void
 
 class PDFSearchResultsView : UIView {
 
+	let roundedCornerRadius: CGFloat = 8.0
+	let stackViewSpacing: CGFloat = 8.0
+	let overlayAlpha: CGFloat = 0.8
+
 	private let closeButtton = UIButton()
 	private let backButton = UIButton()
 	private let forwardButton = UIButton()
@@ -56,11 +60,11 @@ class PDFSearchResultsView : UIView {
 	override init(frame: CGRect) {
 		super.init(frame: .zero)
 
-		self.backgroundColor = UIColor.init(white: 0, alpha: 0.8)
-		self.layer.cornerRadius = 8.0
+		self.backgroundColor = UIColor.init(white: 0, alpha: overlayAlpha)
+		self.layer.cornerRadius = roundedCornerRadius
 
 		stackView.axis = .horizontal
-		stackView.spacing = 8.0
+		stackView.spacing = stackViewSpacing
 		stackView.distribution = .equalSpacing
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -102,6 +106,8 @@ class PDFSearchResultsView : UIView {
 	required init(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+
+	// MARK: - Button actions
 
 	@objc private func close() {
 		closeHandler?()
