@@ -27,7 +27,7 @@ class PDFSearchResultsView : UIView {
 	private let closeButtton = UIButton()
 	private let backButton = UIButton()
 	private let forwardButton = UIButton()
-	private let searchTermLabel = UILabel()
+	private let searchTermButton = UIButton()
 
 	private let stackView = UIStackView()
 
@@ -36,9 +36,10 @@ class PDFSearchResultsView : UIView {
 	var currentMatch: PDFSelection? {
 		didSet {
 			if let match = currentMatch, let matches = self.matches {
-				if let index = matches.index(of: match), let text = match.string {
+				if let index = matches.index(of: match), let matchString = match.string {
 					currentIndex = index
-					searchTermLabel.text = "\(text) (\(index + 1) of \(matches.count))"
+					let searchResultsText = "\(matchString) (\(index + 1) of \(matches.count))"
+					searchTermButton.setTitle(searchResultsText, for: .normal)
 					backButton.isEnabled = currentIndex == 0 ? false : true
 					forwardButton.isEnabled = currentIndex == matches.count - 1 ? false : true
 
@@ -75,7 +76,7 @@ class PDFSearchResultsView : UIView {
 		NSLayoutConstraint.activate(constraints)
 
 		stackView.addArrangedSubview(backButton)
-		stackView.addArrangedSubview(searchTermLabel)
+		stackView.addArrangedSubview(searchTermButton)
 		stackView.addArrangedSubview(forwardButton)
 		stackView.addArrangedSubview(closeButtton)
 
@@ -89,7 +90,9 @@ class PDFSearchResultsView : UIView {
 			forwardButton.setImage(UIImage(systemName: "forward")?.tinted(with: .white), for: .normal)
 		}
 
-		searchTermLabel.textColor = .white
+		searchTermButton.titleLabel?.textColor = .white
+		searchTermButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+		searchTermButton.addTarget(self, action: #selector(resultsTextTapped), for: .touchUpInside)
 
 		self.translatesAutoresizingMaskIntoConstraints = false
 	}
@@ -115,6 +118,12 @@ class PDFSearchResultsView : UIView {
 		if let matches = self.matches, currentIndex < (matches.count - 1) {
 			self.currentMatch = matches[currentIndex + 1]
 			updateHandler?(self.currentMatch!)
+		}
+	}
+
+	@objc private func resultsTextTapped() {
+		if let match = self.currentMatch {
+			updateHandler?(match)
 		}
 	}
 }
