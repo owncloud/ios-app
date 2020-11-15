@@ -241,11 +241,14 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		pdfSearchController.pdfDocument = pdfDocument
 		// Interpret the search text and all the matches returned by search view controller
 		pdfSearchController.userSelectedMatchCallback = { (_, matches, selection) in
-			DispatchQueue.main.async {
-				selection.color = UIColor.yellow
-				self.searchResultsView.matches = matches
-				self.searchResultsView.currentMatch = selection
-				self.showSearchResultsView()
+			DispatchQueue.main.async { [weak self] in
+				if matches.count > 1 {
+					self?.searchResultsView.matches = matches
+					self?.searchResultsView.currentMatch = selection
+					self?.showSearchResultsView()
+				} else {
+					self?.jumpTo(selection)
+				}
 			}
 		}
 
@@ -367,8 +370,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		NSLayoutConstraint.activate(constraints)
 
 		self.searchResultsView.updateHandler = { selection in
-			self.pdfView.setCurrentSelection(selection, animate: true)
-			self.pdfView.scrollSelectionToVisible(nil)
+			self.jumpTo(selection)
 		}
 
 		self.searchResultsView.closeHandler = { [weak self] in
@@ -390,6 +392,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}, completion: { (complete) in
 			self.searchResultsView.isHidden = complete
 		})
+	}
+
+	private func jumpTo(_ selection: PDFSelection) {
+		selection.color = UIColor.yellow
+		self.pdfView.setCurrentSelection(selection, animate: true)
+		self.pdfView.scrollSelectionToVisible(nil)
 	}
 
 	fileprivate func selectPage(with label:String) {
