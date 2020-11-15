@@ -22,23 +22,27 @@ import PDFKit
 typealias PDFSearchResultsViewCloseHandler = () -> Void
 typealias PDFSearchResultsViewUpdateHandler = (PDFSelection) -> Void
 
-class PDFSearchResultsView : UIStackView {
+class PDFSearchResultsView : UIView {
 
 	private let closeButtton = UIButton()
 	private let backButton = UIButton()
 	private let forwardButton = UIButton()
 	private let searchTermLabel = UILabel()
 
+	private let stackView = UIStackView()
+
 	private var currentIndex = -1
 
 	var currentMatch: PDFSelection? {
 		didSet {
 			if let match = currentMatch, let matches = self.matches {
-				if let index = matches.index(of: match) {
+				if let index = matches.index(of: match), let text = match.string {
 					currentIndex = index
-					searchTermLabel.text = "Results \(index + 1) of \(matches.count)"
+					searchTermLabel.text = "\(text) (\(index + 1) of \(matches.count))"
 					backButton.isEnabled = currentIndex == 0 ? false : true
 					forwardButton.isEnabled = currentIndex == matches.count - 1 ? false : true
+
+					updateHandler?(match)
 				}
 			}
 		}
@@ -50,23 +54,44 @@ class PDFSearchResultsView : UIStackView {
 
 	override init(frame: CGRect) {
 		super.init(frame: .zero)
-		self.axis = .horizontal
 
-		self.backgroundColor = UIColor(white: 0.0, alpha: 0.2)
+		self.backgroundColor = UIColor.init(white: 0, alpha: 0.8)
+		self.layer.cornerRadius = 8.0
 
-//		closeButtton.translatesAutoresizingMaskIntoConstraints = false
-//		backButton.translatesAutoresizingMaskIntoConstraints = false
-//		forwardButton.translatesAutoresizingMaskIntoConstraints = false
-//		searchTermLabel.translatesAutoresizingMaskIntoConstraints = false
+		stackView.axis = .horizontal
+		stackView.spacing = 8.0
+		stackView.distribution = .equalSpacing
+		stackView.translatesAutoresizingMaskIntoConstraints = false
 
-		addArrangedSubview(backButton)
-		addArrangedSubview(searchTermLabel)
-		addArrangedSubview(forwardButton)
-		addArrangedSubview(closeButtton)
+		self.addSubview(stackView)
+
+		let viewDictionary = ["stackView": stackView]
+		var constraints: [NSLayoutConstraint] = []
+
+		let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[stackView]-|", metrics: nil, views: viewDictionary)
+		let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[stackView]-|", metrics: nil, views: viewDictionary)
+		constraints += vertical
+		constraints += horizontal
+		NSLayoutConstraint.activate(constraints)
+
+		stackView.addArrangedSubview(backButton)
+		stackView.addArrangedSubview(searchTermLabel)
+		stackView.addArrangedSubview(forwardButton)
+		stackView.addArrangedSubview(closeButtton)
 
 		closeButtton.addTarget(self, action: #selector(close), for: .touchUpInside)
 		backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
 		forwardButton.addTarget(self, action: #selector(forward), for: .touchUpInside)
+
+		if #available(iOS 13, *) {
+			closeButtton.setImage(UIImage(systemName: "xmark.circle")?.tinted(with: .white), for: .normal)
+			backButton.setImage(UIImage(systemName: "backward")?.tinted(with: .white), for: .normal)
+			forwardButton.setImage(UIImage(systemName: "forward")?.tinted(with: .white), for: .normal)
+		}
+
+		searchTermLabel.textColor = .white
+
+		self.translatesAutoresizingMaskIntoConstraints = false
 	}
 
 	required init(coder: NSCoder) {
@@ -88,7 +113,7 @@ class PDFSearchResultsView : UIStackView {
 	@objc private func forward() {
 		guard currentIndex >= 0 else { return }
 		if let matches = self.matches, currentIndex < (matches.count - 1) {
-			self.currentMatch = matches[currentIndex - 1]
+			self.currentMatch = matches[currentIndex + 1]
 			updateHandler?(self.currentMatch!)
 		}
 	}

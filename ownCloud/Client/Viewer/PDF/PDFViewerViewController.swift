@@ -104,6 +104,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	private var didSetupView : Bool = false
 
+	private let searchResultsView = PDFSearchResultsView()
+
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if let source = source, let document = PDFDocument(url: source) {
 			if !didSetupView {
@@ -157,6 +159,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			}
 
 			pdfView.document = document
+
+			setupSearchResultsView()
 
 			pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
 			pdfView.autoScales = true
@@ -235,16 +239,13 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let pdfSearchController = PDFSearchViewController()
 		let searchNavigationController = ThemeNavigationController(rootViewController: pdfSearchController)
 		pdfSearchController.pdfDocument = pdfDocument
-		// TODO: Interpret the search text and all the matches returned by search view controller
-		pdfSearchController.userSelectedMatchCallback = { (_, _, selection) in
+		// Interpret the search text and all the matches returned by search view controller
+		pdfSearchController.userSelectedMatchCallback = { (_, matches, selection) in
 			DispatchQueue.main.async {
 				selection.color = UIColor.yellow
-				self.pdfView.setCurrentSelection(selection, animate: true)
-				self.pdfView.scrollSelectionToVisible(nil)
-
-				DispatchQueue.main.asyncAfter(deadline: .now() + self.searchAnnotationDelay, execute: {
-					self.pdfView.clearSelection()
-				})
+				self.searchResultsView.matches = matches
+				self.searchResultsView.currentMatch = selection
+				self.showSearchResultsView()
 			}
 		}
 
@@ -349,6 +350,46 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			gotoButtonItem!,
 			searchButtonItem!,
 			outlineItem!]
+	}
+
+	private func setupSearchResultsView() {
+		self.searchResultsView.isHidden = true
+
+		self.pdfView.addSubview(searchResultsView)
+
+		let viewDictionary = ["searchResulsView": searchResultsView]
+		var constraints: [NSLayoutConstraint] = []
+
+		let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-20-[searchResulsView(40)]-(>=1)-|", metrics: nil, views: viewDictionary)
+		let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[searchResulsView]-20-|", metrics: nil, views: viewDictionary)
+		constraints += vertical
+		constraints += horizontal
+		NSLayoutConstraint.activate(constraints)
+
+		self.searchResultsView.updateHandler = { selection in
+			self.pdfView.setCurrentSelection(selection, animate: true)
+			self.pdfView.scrollSelectionToVisible(nil)
+		}
+
+		self.searchResultsView.closeHandler = { [weak self] in
+			self?.hideSearchResultsView()
+		}
+	}
+
+	private func showSearchResultsView() {
+		self.searchResultsView.isHidden = false
+		self.searchResultsView.alpha = 0.0
+		UIView.animate(withDuration: 0.25, animations: {
+			self.searchResultsView.alpha = 1.0
+		})
+	}
+
+	private func hideSearchResultsView() {
+		UIView.animate(withDuration: 0.25, animations: {
+			self.searchResultsView.alpha = 0.0
+		}, completion: { (complete) in
+			self.searchResultsView.isHidden = complete
+		})
 	}
 
 	fileprivate func selectPage(with label:String) {
