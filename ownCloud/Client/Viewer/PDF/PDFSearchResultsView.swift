@@ -91,8 +91,10 @@ class PDFSearchResultsView : UIView {
 		}
 
 		searchTermButton.titleLabel?.textColor = .white
-		searchTermButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+		searchTermButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
+		searchTermButton.titleLabel?.adjustsFontForContentSizeCategory = true
 		searchTermButton.addTarget(self, action: #selector(resultsTextTapped), for: .touchUpInside)
+		searchTermButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
 		self.translatesAutoresizingMaskIntoConstraints = false
 	}
