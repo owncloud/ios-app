@@ -38,7 +38,7 @@ class PDFSearchResultsView : UIView {
 			if let match = currentMatch, let matches = self.matches {
 				if let index = matches.index(of: match), let matchString = match.string {
 					currentIndex = index
-					let searchResultsText = "\(matchString) (\(index + 1) of \(matches.count))"
+					let searchResultsText = "\(matchString) (" + String(format: "%@ of %@".localized, "\(index + 1)", "\(matches.count)") + ")"
 					searchTermButton.setTitle(searchResultsText, for: .normal)
 					backButton.isEnabled = currentIndex == 0 ? false : true
 					forwardButton.isEnabled = currentIndex == matches.count - 1 ? false : true
@@ -85,9 +85,9 @@ class PDFSearchResultsView : UIView {
 		forwardButton.addTarget(self, action: #selector(forward), for: .touchUpInside)
 
 		if #available(iOS 13, *) {
-			closeButtton.setImage(UIImage(systemName: "xmark.circle")?.tinted(with: .white), for: .normal)
-			backButton.setImage(UIImage(systemName: "backward")?.tinted(with: .white), for: .normal)
-			forwardButton.setImage(UIImage(systemName: "forward")?.tinted(with: .white), for: .normal)
+			closeButtton.setImage(UIImage(systemName: "xmark")?.tinted(with: .white), for: .normal)
+			backButton.setImage(UIImage(systemName: "chevron.left")?.tinted(with: .white), for: .normal)
+			forwardButton.setImage(UIImage(systemName: "chevron.right")?.tinted(with: .white), for: .normal)
 		}
 
 		searchTermButton.titleLabel?.textColor = .white
