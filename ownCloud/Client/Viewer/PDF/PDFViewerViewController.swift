@@ -355,6 +355,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			outlineItem!]
 	}
 
+	// MARK: - Search results navigation
+
 	private func setupSearchResultsView() {
 		self.searchResultsView.isHidden = true
 
@@ -400,7 +402,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		self.pdfView.scrollSelectionToVisible(nil)
 	}
 
-	fileprivate func selectPage(with label:String) {
+	// MARK: - Current page selection
+
+	private func selectPage(with label:String) {
 		guard let pdf = pdfView.document else { return }
 
 		if let pageNr = Int(label) {
@@ -418,7 +422,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}
 	}
 
-	fileprivate func updatePageLabel() {
+	private func updatePageLabel() {
 		guard let pdf = pdfView.document else { return }
 
 		guard let page = pdfView.currentPage else { return }

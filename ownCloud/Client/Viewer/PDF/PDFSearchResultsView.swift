@@ -92,6 +92,10 @@ class PDFSearchResultsView : UIView {
 			closeButtton.setImage(UIImage(systemName: "xmark")?.tinted(with: .white), for: .normal)
 			backButton.setImage(UIImage(systemName: "chevron.left")?.tinted(with: .white), for: .normal)
 			forwardButton.setImage(UIImage(systemName: "chevron.right")?.tinted(with: .white), for: .normal)
+		} else {
+			closeButtton.setImage(UIImage(named: "xmark")?.tinted(with: .white), for: .normal)
+			backButton.setImage(UIImage(named: "chevron.left")?.tinted(with: .white), for: .normal)
+			forwardButton.setImage(UIImage(named: "chevron.right")?.tinted(with: .white), for: .normal)
 		}
 
 		searchTermButton.titleLabel?.textColor = .white
