@@ -61,8 +61,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			rootViewController = navigationController
 		}
 
-		window?.rootViewController = rootViewController!
-		window?.makeKeyAndVisible()
+		if !UIDevice.current.isIpad {
+			// Only set up window on non-iPad devices
+			window?.rootViewController = rootViewController!
+			window?.makeKeyAndVisible()
+		}
 
 		ImportFilesController.removeImportDirectory()
 
