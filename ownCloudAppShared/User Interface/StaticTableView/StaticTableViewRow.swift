@@ -804,21 +804,19 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		datePickerView.layoutIfNeeded()
 
 		if let cell = self.cell {
+			var constraints : [NSLayoutConstraint] = [
+				datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
+				datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
+				datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+			]
+
 			if #available(iOS 14, *) {
-				NSLayoutConstraint.activate([
-					datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
-					datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
-					datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
-					datePickerView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
-				])
+				constraints.append(datePickerView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor))
 			} else {
-				NSLayoutConstraint.activate([
-					datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
-					datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
-					datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
-					datePickerView.heightAnchor.constraint(equalToConstant: 216.0)
-				])
+				constraints.append(datePickerView.heightAnchor.constraint(equalToConstant: 216.0))
 			}
+
+			NSLayoutConstraint.activate(constraints);
 		}
 	}
 
