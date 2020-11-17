@@ -135,7 +135,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	private func setupNavigationBar() {
-		self.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+		self.navigationItem.title = VendorServices.shared.appName
 
 		let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
 		self.navigationItem.setRightBarButton(itemCancel, animated: false)
@@ -217,7 +217,7 @@ class ShareViewController: MoreStaticTableViewController {
 					}
 					if !withBackButton {
 						directoryPickerViewController.navigationItem.setHidesBackButton(true, animated: false)
-						directoryPickerViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+						directoryPickerViewController.navigationItem.title = VendorServices.shared.appName
 					}
 					self.navigationController?.pushViewController(directoryPickerViewController, animated: withBackButton)
 				}
@@ -282,12 +282,16 @@ class ShareViewController: MoreStaticTableViewController {
 							break
 						}
 
-						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
-							if type == "public.plain-text" || type == "public.url" {
+						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
 								asyncQueue.async({ (jobDone) in
 									if progressViewController?.cancelled == true {
 										jobDone()
 										return
+									}
+									// Workaround for saving attachements from Mail.app. Attachments from Mail.app contains two types e.g. "com.adobe.pdf" AND "public.file-url". For loading the file the type "public.file-url" is needed. Otherwise the resource could not be accessed (NSItemProviderSandboxedResource)
+									if attachment.registeredTypeIdentifiers.contains("public.file-url") {
+										type = "public.file-url"
 									}
 
 									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in

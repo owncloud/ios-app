@@ -38,7 +38,9 @@ extension AVCaptureDevice {
 		session.addOutput(output)
 		session.commitConfiguration()
 
-		return !output.availableRawPhotoPixelFormatTypes.isEmpty
+		guard let rawFileType = output.availableRawPhotoFileTypes.first else { return false }
+
+		return !output.supportedRawPhotoPixelFormatTypes(for: rawFileType).isEmpty
 	}
 
 	class func rawCameraDeviceAvailable() -> Bool {

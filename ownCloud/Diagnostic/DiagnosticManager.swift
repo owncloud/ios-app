@@ -19,14 +19,37 @@
 import UIKit
 import ownCloudSDK
 
-class DiagnosticManager: NSObject {
-	static var diagnosticsEnabledKey : String = "diagnostics-enabled"
+extension OCClassSettingsIdentifier {
+	static let diagnostics : OCClassSettingsIdentifier = OCClassSettingsIdentifier("diagnostics")
+}
 
+extension OCClassSettingsKey {
+	static let diagnosticsEnabled : OCClassSettingsKey = OCClassSettingsKey("enabled")
+}
+
+class DiagnosticManager: NSObject, OCClassSettingsSupport, OCClassSettingsUserPreferencesSupport {
+	// MARK: - Class settings support
+	static var classSettingsIdentifier: OCClassSettingsIdentifier {
+		return .diagnostics
+	}
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.diagnosticsEnabled : false
+		]
+	}
+
+	static func allowUserPreference(forClassSettingsKey key: OCClassSettingsKey) -> Bool {
+		return true
+	}
+
+	// MARK: - Shared instance
 	static var shared = DiagnosticManager()
 
+	// MARK: - Implementation
 	var enabled : Bool {
 		get {
-			if let enabledNumber = OCAppIdentity.shared.userDefaults?.object(forKey: DiagnosticManager.diagnosticsEnabledKey), let enabled = enabledNumber as? Bool {
+			if let enabled = self.classSetting(forOCClassSettingsKey: .diagnosticsEnabled) as? Bool {
 				return enabled
 			}
 
@@ -34,7 +57,7 @@ class DiagnosticManager: NSObject {
 		}
 
 		set {
-			OCAppIdentity.shared.userDefaults?.set(newValue, forKey: DiagnosticManager.diagnosticsEnabledKey)
+			DiagnosticManager.setUserPreferenceValue(newValue as NSSecureCoding, forClassSettingsKey: .diagnosticsEnabled)
 		}
 	}
 }

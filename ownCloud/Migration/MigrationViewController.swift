@@ -26,6 +26,7 @@ class MigrationViewController: UITableViewController, Themeable {
 	var migrationFinishedHandler: (() -> Void)?
 
 	var doneBarButtonItem: UIBarButtonItem?
+	var headerLabel = UILabel()
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: Migration.ActivityUpdateNotification, object: nil)
@@ -61,14 +62,14 @@ class MigrationViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		self.tableView.separatorColor = self.tableView.backgroundColor
+		headerLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
 	}
 
 	// MARK: - User Actions
 
 	@IBAction func finishMigration() {
-		self.dismiss(animated: true) {
-			self.migrationFinishedHandler?()
-		}
+		self.migrationFinishedHandler?()
+		self.dismiss(animated: true)
 	}
 
 	// MARK: - Table view data source
@@ -79,6 +80,60 @@ class MigrationViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return activities.count
+	}
+
+	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let rootView = UIView()
+
+		let backgroundImageView = UIImageView()
+		backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+		rootView.addSubview(backgroundImageView)
+
+		let headerLogoView = UIImageView()
+		headerLogoView.translatesAutoresizingMaskIntoConstraints = false
+		rootView.addSubview(headerLogoView)
+
+		headerLabel.translatesAutoresizingMaskIntoConstraints = false
+		rootView.addSubview(headerLabel)
+
+		NSLayoutConstraint.activate([
+			// Background image view
+			backgroundImageView.topAnchor.constraint(equalTo: rootView.topAnchor),
+			backgroundImageView.bottomAnchor.constraint(equalTo: rootView.bottomAnchor),
+			backgroundImageView.leftAnchor.constraint(equalTo: rootView.leftAnchor),
+			backgroundImageView.rightAnchor.constraint(equalTo: rootView.rightAnchor),
+
+			// Logo size
+			headerLogoView.leftAnchor.constraint(equalTo: rootView.leftAnchor),
+			headerLogoView.rightAnchor.constraint(equalTo: rootView.rightAnchor),
+			headerLogoView.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.5, constant: 0),
+			headerLogoView.topAnchor.constraint(equalTo: rootView.topAnchor, constant: 15),
+
+			// Header Label
+			headerLabel.leftAnchor.constraint(equalTo: rootView.leftAnchor, constant: 15),
+			headerLabel.rightAnchor.constraint(equalTo: rootView.rightAnchor, constant: -15),
+			headerLabel.topAnchor.constraint(equalTo: headerLogoView.bottomAnchor, constant: 10),
+			headerLabel.bottomAnchor.constraint(equalTo: rootView.bottomAnchor, constant: -15)
+		])
+
+		if let organizationLogoImage = UIImage(named: "branding-splashscreen") {
+			headerLogoView.image = organizationLogoImage
+			headerLogoView.contentMode = .scaleAspectFit
+		}
+
+		if let organizationBackgroundImage = UIImage(named: "branding-splashscreen-background") {
+			backgroundImageView.image = organizationBackgroundImage
+		}
+
+		headerLabel.text = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.".localized
+		headerLabel.textAlignment = .center
+		headerLabel.numberOfLines = 0
+
+		return rootView
+	}
+
+	open override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return self.view.frame.height * 0.35
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

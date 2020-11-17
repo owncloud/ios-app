@@ -345,8 +345,22 @@ class ScanViewController: StaticTableViewController {
 		// Save section
 
 		// - Name
-		fileNameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+		fileNameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, textField, type) in
 			self?.navigationItem.rightBarButtonItem?.isEnabled = ((row.value as? String)?.count ?? 0) > 0
+
+			if type == .didBegin, let nameTextField = textField as? UITextField {
+				if let name = nameTextField.text,
+					let self = self,
+					let exportFormat = self.exportFormat,
+					let range = name.range(of: ".\(exportFormat.suffix)"),
+					let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.utf16Offset(in: name)) {
+
+					nameTextField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
+
+				} else {
+					nameTextField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
+				}
+			}
 		}, placeholder: "Name".localized, value: fileName ?? "", keyboardType: .default, autocorrectionType: .no, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name", accessibilityLabel: "Name".localized)
 		saveSection.add(row: fileNameRow!)
 		self.addSection(saveSection)
@@ -388,7 +402,7 @@ class ScanViewController: StaticTableViewController {
 			DispatchQueue.global(qos: .userInitiated).async {
 				let tmpURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
 
-				try? FileManager.default.createDirectory(at: tmpURL, withIntermediateDirectories: true, attributes: nil)
+				try? FileManager.default.createDirectory(at: tmpURL, withIntermediateDirectories: true, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
 
 				var exportedURLs : [URL]?
 
