@@ -145,6 +145,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 		}
 
+		VendorServices.shared.onFirstLaunch {
+			OCAppIdentity.shared.keychain?.wipe()
+		}
+
 		setupAndHandleCrashReports()
 
 		return true
