@@ -109,7 +109,7 @@ public class PasscodeSetupCoordinator {
 					self.passcodeFromFirstStep = nil
 				}
 			}
-		})
+		}, hasCancelButton: !AppLockManager.shared.isPasscodeEnforced)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		if AppLockManager.shared.isPasscodeEnforced {
