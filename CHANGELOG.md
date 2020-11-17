@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Release version 11.4.3 (Mid-November 2020)
+
+- Fix: iOS 14 UI Adaptions (#834)
+
 ## Release version 11.4.2 (November 2020)
 
 - Support for new Display Sizes
