@@ -89,7 +89,7 @@ class AlertView: UIView, Themeable {
 //			optionButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 			optionButton.setContentCompressionResistancePriority(.required, for: .vertical)
 
-			optionButton.addTarget(self, action: #selector(optionSelected), for: .primaryActionTriggered)
+			optionButton.addTarget(self, action: #selector(optionSelected(sender:)), for: .primaryActionTriggered)
 
 			optionViews.append(optionButton)
 

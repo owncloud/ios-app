@@ -84,19 +84,10 @@ class BookmarkViewController: StaticTableViewController {
 		return _cookieStorage
 	}
 
-	private var _hostSimulator : OCConnectionHostSimulator?
-	var hostSimulator : OCConnectionHostSimulator? {
-		if _hostSimulator == nil {
-			// UNCOMMENT FOR HOST SIMULATOR: // _hostSimulator = OCHostSimulator.cookieRedirectSimulator(requestWithoutCookiesHandler: nil, requestForCookiesHandler: nil, requestWithCookiesHandler: nil)
-		}
-
-		return _hostSimulator
-	}
-
 	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
 		let connection = OCConnection(bookmark: bmark)
 
-		connection.hostSimulator = self.hostSimulator
+		connection.hostSimulator = OCHostSimulatorManager.shared.hostSimulator(forLocation: .accountSetup, for: self)
 		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
 
 		return connection
@@ -246,7 +237,7 @@ class BookmarkViewController: StaticTableViewController {
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
 		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
-		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
 
 		// Input focus tracking

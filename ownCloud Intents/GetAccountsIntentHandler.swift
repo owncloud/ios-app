@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class GetAccountsIntentHandler: NSObject, GetAccountsIntentHandling {
 
-    public func handle(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
+	func handle(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(GetAccountsIntentResponse(code: .disabled, userActivity: nil))
@@ -42,7 +42,7 @@ public class GetAccountsIntentHandler: NSObject, GetAccountsIntentHandling {
 		completion(GetAccountsIntentResponse.success(accountList: OCBookmarkManager.shared.accountList))
 	}
 
-    private func confirm(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
+	func confirm(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
         completion(GetAccountsIntentResponse(code: .ready, userActivity: nil))
 	}
 }

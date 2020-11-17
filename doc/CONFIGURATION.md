@@ -43,6 +43,15 @@ This document provides an overview over the available sections and variables.
 		- default: `true`
 
 
+## Diagnostics
+
+- **Section ID**: `diagnostics`
+
+- **Variables**:
+	- `enabled`: Controls whether additional diagnostic options and information is available throughout the user interface.
+		- type: Bool
+		- default: `false`
+
 ## Display Settings
 
 - **Section ID**: `display`

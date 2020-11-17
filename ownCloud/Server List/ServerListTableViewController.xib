@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,8 +22,8 @@
         <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <viewLayoutGuide key="safeArea" id="vLr-E1-eTs"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="dataSource" destination="-1" id="Tng-2m-Rnh"/>
                 <outlet property="delegate" destination="-1" id="9aC-8N-iBw"/>
@@ -35,22 +35,22 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
-                    <rect key="frame" x="39.5" y="121" width="241.5" height="326"/>
+                    <rect key="frame" x="40" y="121" width="240" height="326"/>
                     <subviews>
                         <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
-                            <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="128" id="r4R-sD-MMg"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8n-gy-7HF">
-                            <rect key="frame" x="0.0" y="158" width="241.5" height="41"/>
+                            <rect key="frame" x="0.0" y="158" width="240" height="41"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jaa-D8-ghC" customClass="ThemeButton" customModule="ownCloudAppShared">
-                            <rect key="frame" x="0.0" y="283" width="241.5" height="43"/>
+                            <rect key="frame" x="0.0" y="283" width="240" height="43"/>
                             <color key="backgroundColor" red="0.27450980390000002" green="0.54901960780000003" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
                             <accessibility key="accessibilityConfiguration" identifier="addServer"/>
                             <constraints>
@@ -65,7 +65,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IEC-5d-Hb5">
-                            <rect key="frame" x="0.0" y="217" width="241.5" height="41"/>
+                            <rect key="frame" x="0.0" y="217" width="240" height="41"/>
                             <string key="text">Thanks for choosing ownCloud!
 Start by adding your server.</string>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -73,12 +73,13 @@ Start by adding your server.</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7I-De-RhT" customClass="VectorImageView" customModule="ownCloudAppShared">
-                            <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" notEnabled="YES"/>
                             </accessibility>
                         </view>
                     </subviews>
+                    <viewLayoutGuide key="safeArea" id="xJw-Td-7h2"/>
                     <constraints>
                         <constraint firstItem="IEC-5d-Hb5" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="5VX-tG-MwV"/>
                         <constraint firstItem="c8n-gy-7HF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="9hZ-i6-GgM"/>
@@ -102,9 +103,9 @@ Start by adding your server.</string>
                         <constraint firstItem="c8n-gy-7HF" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="u0i-ca-Uiz"/>
                         <constraint firstItem="Jaa-D8-ghC" firstAttribute="top" secondItem="IEC-5d-Hb5" secondAttribute="bottom" constant="25" id="wen-iH-60d"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="xJw-Td-7h2"/>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="hcy-2V-cIV"/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="PJc-v9-DYn" firstAttribute="centerY" secondItem="T7c-kV-xII" secondAttribute="centerY" id="5HM-DO-dRS"/>
@@ -112,8 +113,12 @@ Start by adding your server.</string>
                 <constraint firstItem="PJc-v9-DYn" firstAttribute="centerX" secondItem="T7c-kV-xII" secondAttribute="centerX" id="87f-aj-n0g"/>
                 <constraint firstItem="PJc-v9-DYn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="T7c-kV-xII" secondAttribute="leading" constant="20" id="oMp-WQ-Udb"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="hcy-2V-cIV"/>
             <point key="canvasLocation" x="-997" y="370"/>
         </view>
     </objects>
+    <designables>
+        <designable name="Jaa-D8-ghC">
+            <size key="intrinsicContentSize" width="131" height="43"/>
+        </designable>
+    </designables>
 </document>

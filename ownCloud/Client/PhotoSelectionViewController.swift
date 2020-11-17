@@ -131,6 +131,12 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		super.viewDidLoad()
 		Theme.shared.register(client: self)
 
+		// Workaround for pan to multi-select which has beeen introduced in iOS 13 but stopped working on iOS 14
+		if #available(iOS 14, *) {
+			self.collectionView.allowsSelectionDuringEditing = true
+			self.collectionView.allowsMultipleSelectionDuringEditing = true
+		}
+
 		self.collectionView.allowsMultipleSelection = true
 		self.collectionView?.contentInsetAdjustmentBehavior = .always
 
@@ -198,6 +204,10 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		updateCachedAssets()
+		// Workaround for pan to multi-select which has beeen introduced in iOS 13 but stopped working on iOS 14
+		if #available(iOS 14, *) {
+			collectionView.isEditing = true
+		}
 	}
 
 	override func viewWillLayoutSubviews() {

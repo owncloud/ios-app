@@ -109,6 +109,14 @@
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
 
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+"Login" = "Login";
+"Wrong URL" = "Wrong URL";
+"Please enter a valid URL" = "Please enter a valid URL";
+"Missing Profile URL" = "Missing Profile URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
+
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
@@ -137,6 +145,7 @@
 "Access denied" = "Access denied";
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
 "No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Authentication with %@ is no longer allowed. Re-authentication needed.";
 "Sign in" = "Sign in";
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
@@ -582,13 +591,11 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
-/* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
-
 /* Release Notes */
 "Proceed" = "Proceed";
-"New in ownCloud" = "New in ownCloud";
+"New in %@" = "New in %@";
 "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
+"Thank you for using %@.\n" = "Thank you for using %@.\n";
 
 /* Key Commands */
 "Select Next" = "Select Next";
@@ -681,6 +688,8 @@
 "subscription" = "subscription";
 "Photo Pro Features" = "Photo Pro Features";
 "Image metadata, extended upload options" = "Image metadata, extended upload options";
+"Purchase" = "Purchase";
+"Subscribe" = "Subscribe";
 
 /* Share Sheet */
 "Save File" = "Save File";
@@ -700,6 +709,7 @@
 "Migrated" = "Migrated";
 "Failed to migrate" = "Failed to migrate";
 "Failed to access legacy user data" = "Failed to access legacy user data";
+"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
