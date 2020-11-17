@@ -608,6 +608,12 @@ extension ClientQueryViewController {
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
+			if #available(iOS 14.0, *) {
+				self.navigationItem.backButtonDisplayMode = .generic
+				let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+				self.title = lastPathComponent
+			}
+
 			let titleButton = UIButton()
 			titleButton.setTitle(lastPathComponent, for: .normal)
 			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
