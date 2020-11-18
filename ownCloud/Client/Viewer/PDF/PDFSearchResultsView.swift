@@ -65,7 +65,7 @@ class PDFSearchResultsView : UIView {
 
 		stackView.axis = .horizontal
 		stackView.spacing = stackViewSpacing
-		stackView.distribution = .equalSpacing
+		stackView.distribution = .fillProportionally
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 
 		self.addSubview(stackView)

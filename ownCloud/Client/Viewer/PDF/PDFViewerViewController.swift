@@ -365,7 +365,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let viewDictionary = ["searchResulsView": searchResultsView]
 		var constraints: [NSLayoutConstraint] = []
 
-		let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-20-[searchResulsView(40)]-(>=1)-|", metrics: nil, views: viewDictionary)
+		let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-20-[searchResulsView(48)]-(>=1)-|", metrics: nil, views: viewDictionary)
 		let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[searchResulsView]-20-|", metrics: nil, views: viewDictionary)
 		constraints += vertical
 		constraints += horizontal
