@@ -813,6 +813,23 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4.3</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: iOS 14 UI Adaptions</string>
+					<key>Subtitle</key>
+					<string>Fixed some problems on iOS 14, with unresponsive UI elements.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

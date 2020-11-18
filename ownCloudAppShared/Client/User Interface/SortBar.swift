@@ -70,6 +70,10 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public var showSelectButton: Bool = false {
 		didSet {
 			selectButton?.isHidden = !showSelectButton
+			selectButton?.accessibilityElementsHidden = !showSelectButton
+			selectButton?.isEnabled = showSelectButton
+
+			UIAccessibility.post(notification: .layoutChanged, argument: nil)
 		}
 	}
 
@@ -152,6 +156,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
 			sortSegmentedControl.isHidden = true
+			sortSegmentedControl.accessibilityElementsHidden = true
+			sortSegmentedControl.isEnabled = false
 			sortSegmentedControl.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
 
 			// Sort Button
@@ -171,6 +177,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			])
 
 			sortButton.isHidden = true
+			sortButton.accessibilityElementsHidden = true
+			sortButton.isEnabled = false
 			sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
 
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
@@ -186,7 +194,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
-				])
+			])
 		}
 
 		// Finalize view setup
@@ -194,6 +202,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
+		selectButton?.accessibilityElementsHidden = !showSelectButton
+		selectButton?.isEnabled = showSelectButton
 		updateForCurrentTraitCollection()
 	}
 
@@ -225,11 +235,21 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
 		case (.compact, .regular):
 			sortSegmentedControl?.isHidden = true
+			sortSegmentedControl?.accessibilityElementsHidden = true
+			sortSegmentedControl?.isEnabled = false
 			sortButton?.isHidden = false
+			sortButton?.accessibilityElementsHidden = false
+			sortButton?.isEnabled = true
 		default:
 			sortSegmentedControl?.isHidden = false
+			sortSegmentedControl?.accessibilityElementsHidden = false
+			sortSegmentedControl?.isEnabled = true
 			sortButton?.isHidden = true
+			sortButton?.accessibilityElementsHidden = true
+			sortButton?.isEnabled = false
 		}
+
+		UIAccessibility.post(notification: .layoutChanged, argument: nil)
 	}
 
 	// MARK: - Sort Direction Title
