@@ -398,8 +398,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	private func jumpTo(_ selection: PDFSelection) {
 		selection.color = UIColor.yellow
+		self.pdfView.go(to: selection)
 		self.pdfView.setCurrentSelection(selection, animate: true)
-		self.pdfView.scrollSelectionToVisible(nil)
+
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+			self.pdfView.setCurrentSelection(nil, animate: true)
+		}
 	}
 
 	// MARK: - Current page selection
