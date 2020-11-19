@@ -1,6 +1,6 @@
 
 tag::app[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -62,7 +62,7 @@ end::app[]
 
 
 tag::authentication[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -75,6 +75,18 @@ tag::authentication[]
 |string
 |`operating-system`
 |Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
+[cols="1,2"]
+!===
+! Value
+! Description
+! UIWebView
+! Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.
+
+! operating-system
+! Use ASWebAuthenticationSession for browser sessions.
+
+!===
+
 |supported
 
 |browser-session-prefers-ephermal
@@ -88,7 +100,7 @@ end::authentication[]
 
 
 tag::bookmarks[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -114,7 +126,7 @@ end::bookmarks[]
 
 
 tag::connection[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -203,6 +215,21 @@ The following placeholders can be used to make it dynamic:
 |stringArray
 |`[]`
 |Active Host simulation extensions.
+[cols="1,2"]
+!===
+! Value
+! Description
+! only-404
+! Return status code 404 for every request.
+
+! five-seconds-of-404
+! Return status code 404 for every request for the first five seconds.
+
+! reject-downloads-500
+! Reject Downloads with status 500 responses.
+
+!===
+
 |debugOnly
 
 |===
@@ -210,7 +237,7 @@ end::connection[]
 
 
 tag::diagnostics[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -230,7 +257,7 @@ end::diagnostics[]
 
 
 tag::display settings[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -262,7 +289,7 @@ end::display settings[]
 
 
 tag::endpoints[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -336,7 +363,7 @@ end::endpoints[]
 
 
 tag::licensing[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -362,7 +389,7 @@ end::licensing[]
 
 
 tag::logging[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -375,6 +402,30 @@ tag::logging[]
 |int
 |`4`
 |Log level
+[cols="1,2"]
+!===
+! Value
+! Description
+! 0
+! debug
+
+! 3
+! error
+
+! 4
+! off
+
+! 2
+! warning
+
+! -1
+! verbose
+
+! 1
+! info
+
+!===
+
 |supported
 
 |log-privacy-mask
@@ -399,12 +450,42 @@ tag::logging[]
 |stringArray
 |`[writer.stderr writer.file option.log-requests-and-responses]`
 |List of enabled logging system components.
+[cols="1,2"]
+!===
+! Value
+! Description
+! option.log-requests-and-responses
+! Log HTTP requests and responses
+
+! writer.stderr
+! Standard error output
+
+! writer.file
+! Log file
+
+!===
+
 |advanced
 
 |log-format
 |string
 |`text`
 |Determines the format that log messages are saved in
+[cols="1,2"]
+!===
+! Value
+! Description
+! json-composed
+! A simpler JSON version where details are already merged into the message.
+
+! text
+! Standard logging as text.
+
+! json
+! Detailed JSON (one line per message).
+
+!===
+
 |advanced
 
 |log-maximum-message-size
@@ -454,7 +535,7 @@ end::logging[]
 
 
 tag::oauth2[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -504,7 +585,7 @@ end::oauth2[]
 
 
 tag::oidc[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -530,7 +611,7 @@ end::oidc[]
 
 
 tag::policies[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -562,7 +643,7 @@ end::policies[]
 
 
 tag::privacy[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -582,7 +663,7 @@ end::privacy[]
 
 
 tag::release notes[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
@@ -608,7 +689,7 @@ end::release notes[]
 
 
 tag::security[]
-[cols=4*,options=header]
+[cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
 |Type
