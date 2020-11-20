@@ -801,6 +801,16 @@ Users can choose to prefer the original photo instead of an edited version and a
 					<key>ImageName</key>
 					<string>bandage</string>
 				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: New Folder in FileProvider</string>
+					<key>Subtitle</key>
+					<string>A newly created folder in File Provider was not selectable.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
 			</array>
 		</dict>
 	</array>
