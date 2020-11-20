@@ -79,10 +79,10 @@ tag::authentication[]
 !===
 ! Value
 ! Description
-! UIWebView
+! `UIWebView`
 ! Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.
 
-! operating-system
+! `operating-system`
 ! Use ASWebAuthenticationSession for browser sessions.
 
 !===
@@ -219,13 +219,13 @@ The following placeholders can be used to make it dynamic:
 !===
 ! Value
 ! Description
-! only-404
+! `only-404`
 ! Return status code 404 for every request.
 
-! five-seconds-of-404
+! `five-seconds-of-404`
 ! Return status code 404 for every request for the first five seconds.
 
-! reject-downloads-500
+! `reject-downloads-500`
 ! Reject Downloads with status 500 responses.
 
 !===
@@ -406,22 +406,22 @@ tag::logging[]
 !===
 ! Value
 ! Description
-! 0
+! `0`
 ! debug
 
-! 3
+! `3`
 ! error
 
-! 4
+! `4`
 ! off
 
-! 2
+! `2`
 ! warning
 
-! -1
+! `-1`
 ! verbose
 
-! 1
+! `1`
 ! info
 
 !===
@@ -454,13 +454,13 @@ tag::logging[]
 !===
 ! Value
 ! Description
-! option.log-requests-and-responses
+! `option.log-requests-and-responses`
 ! Log HTTP requests and responses
 
-! writer.stderr
+! `writer.stderr`
 ! Standard error output
 
-! writer.file
+! `writer.file`
 ! Log file
 
 !===
@@ -475,13 +475,13 @@ tag::logging[]
 !===
 ! Value
 ! Description
-! json-composed
+! `json-composed`
 ! A simpler JSON version where details are already merged into the message.
 
-! text
+! `text`
 ! Standard logging as text.
 
-! json
+! `json`
 ! Detailed JSON (one line per message).
 
 !===

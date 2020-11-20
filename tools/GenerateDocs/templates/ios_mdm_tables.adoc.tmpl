@@ -31,7 +31,7 @@ tag::{{$category | strings.ToLower }}[]
 ! Description
 
 {{- range $possibleValueIndex, $possibleValue := $option.possibleValues }}
-! {{ $possibleValue.value }}
+! `{{ $possibleValue.value }}`
 ! {{ $possibleValue.description }}
 {{end}}
 !===
