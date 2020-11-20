@@ -111,7 +111,7 @@ platform :ios do
           skip_screenshots = true
         end
         
-        output_path = options[:metadata_path] + "en-US/release_notes.txt"
+        output_path = options[:metadata_path]
         
         # Create Release Notes
         if create_release_notes
