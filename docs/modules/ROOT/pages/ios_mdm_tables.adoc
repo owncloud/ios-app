@@ -47,13 +47,13 @@ tag::app[]
 
 |is-beta-build
 |bool
-|`false`
+|`true`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
 |show-beta-warning
 |bool
-|`false`
+|`true`
 |Controls whether a warning should be shown on the first run of a beta version.
 |debugOnly
 
@@ -724,6 +724,18 @@ Examples of expressions:
 |bool
 |`true`
 |Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
+|advanced
+
+|allow
+|stringArray
+|
+|List of settings (as flat identifiers) users are allowed to change. If this list is specified, only these settings can be changed by the user.
+|advanced
+
+|disallow
+|stringArray
+|
+|List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.
 |advanced
 
 |===
