@@ -694,12 +694,12 @@
     "key" : "active-simulations",
     "possibleValues" : [
       {
-        "description" : "Return status code 404 for every request.",
-        "value" : "only-404"
-      },
-      {
         "description" : "Return status code 404 for every request for the first five seconds.",
         "value" : "five-seconds-of-404"
+      },
+      {
+        "description" : "Return status code 404 for every request.",
+        "value" : "only-404"
       },
       {
         "description" : "Reject Downloads with status 500 responses.",
@@ -827,12 +827,12 @@
         "value" : "option.log-requests-and-responses"
       },
       {
-        "description" : "Standard error output",
-        "value" : "writer.stderr"
-      },
-      {
         "description" : "Log file",
         "value" : "writer.file"
+      },
+      {
+        "description" : "Standard error output",
+        "value" : "writer.stderr"
       }
     ],
     "status" : "advanced",
@@ -850,16 +850,16 @@
     "key" : "log-format",
     "possibleValues" : [
       {
+        "description" : "Detailed JSON (one line per message).",
+        "value" : "json"
+      },
+      {
         "description" : "A simpler JSON version where details are already merged into the message.",
         "value" : "json-composed"
       },
       {
         "description" : "Standard logging as text.",
         "value" : "text"
-      },
-      {
-        "description" : "Detailed JSON (one line per message).",
-        "value" : "json"
       }
     ],
     "status" : "advanced",
@@ -877,8 +877,20 @@
     "key" : "log-level",
     "possibleValues" : [
       {
+        "description" : "verbose",
+        "value" : -1
+      },
+      {
         "description" : "debug",
         "value" : 0
+      },
+      {
+        "description" : "info",
+        "value" : 1
+      },
+      {
+        "description" : "warning",
+        "value" : 2
       },
       {
         "description" : "error",
@@ -887,18 +899,6 @@
       {
         "description" : "off",
         "value" : 4
-      },
-      {
-        "description" : "warning",
-        "value" : 2
-      },
-      {
-        "description" : "verbose",
-        "value" : -1
-      },
-      {
-        "description" : "info",
-        "value" : 1
       }
     ],
     "status" : "supported",

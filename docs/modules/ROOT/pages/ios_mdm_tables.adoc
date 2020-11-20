@@ -219,11 +219,11 @@ The following placeholders can be used to make it dynamic:
 !===
 ! Value
 ! Description
-! `only-404`
-! Return status code 404 for every request.
-
 ! `five-seconds-of-404`
 ! Return status code 404 for every request for the first five seconds.
+
+! `only-404`
+! Return status code 404 for every request.
 
 ! `reject-downloads-500`
 ! Reject Downloads with status 500 responses.
@@ -406,23 +406,23 @@ tag::logging[]
 !===
 ! Value
 ! Description
+! `-1`
+! verbose
+
 ! `0`
 ! debug
+
+! `1`
+! info
+
+! `2`
+! warning
 
 ! `3`
 ! error
 
 ! `4`
 ! off
-
-! `2`
-! warning
-
-! `-1`
-! verbose
-
-! `1`
-! info
 
 !===
 
@@ -457,11 +457,11 @@ tag::logging[]
 ! `option.log-requests-and-responses`
 ! Log HTTP requests and responses
 
-! `writer.stderr`
-! Standard error output
-
 ! `writer.file`
 ! Log file
+
+! `writer.stderr`
+! Standard error output
 
 !===
 
@@ -475,14 +475,14 @@ tag::logging[]
 !===
 ! Value
 ! Description
+! `json`
+! Detailed JSON (one line per message).
+
 ! `json-composed`
 ! A simpler JSON version where details are already merged into the message.
 
 ! `text`
 ! Standard logging as text.
-
-! `json`
-! Detailed JSON (one line per message).
 
 !===
 
