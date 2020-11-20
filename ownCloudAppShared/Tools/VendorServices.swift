@@ -300,8 +300,8 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.showBetaWarning : false,
-				.isBetaBuild : false,
+				.isBetaBuild : true,
+				.showBetaWarning : true,
 				.enableUIAnimations: true,
 				.enableReviewPrompt: !VendorServices.shared.isBranded,
 

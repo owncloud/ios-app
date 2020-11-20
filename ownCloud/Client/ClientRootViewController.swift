@@ -25,7 +25,7 @@ protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling {
+class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling, UINavigationControllerDelegate {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -277,6 +277,18 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		})
 	}
 
+	func navigationController(_ navigationController: UINavigationController,
+							  willShow viewController: UIViewController,
+							  animated: Bool) {
+		if viewController == emptyViewController {
+				closeClient()
+				if #available(iOS 13.0, *) {
+					// Prevent re-opening of items on next launch in case user has returned to the bookmark list
+					view.window?.windowScene?.userActivity = nil
+				}
+		}
+	}
+
 	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
@@ -290,6 +302,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				}
 
 				let emptyViewController = self.emptyViewController
+				emptyViewController.navigationController?.delegate = self
 				if VendorServices.shared.isBranded, !VendorServices.shared.canAddAccount {
 					emptyViewController.navigationItem.title = "Manage".localized
 				} else {

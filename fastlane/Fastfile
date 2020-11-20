@@ -601,12 +601,9 @@ end
       commit = last_git_commit
       short_hash = commit[:abbreviated_commit_hash] # short sha of commit
       sh "brew install librsvg"
-      sh "brew unlink pango"
-      sh "brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/7cf3b63be191cb2ce4cd86f4406915128ec97432/Formula/pango.rb"
-      sh "brew switch pango 1.42.4_1 "
       sh "sed -e \"s/\#version#/" + version + "/\" -e \"s/\#githash#/" + short_hash + "/\" badge.svg > badge_tmp.svg"
       sh "rsvg-convert badge_tmp.svg > badge.png"
-      sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
+      add_badge(custom: "fastlane/badge.png")
     end
 
     #Create the build
