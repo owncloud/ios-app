@@ -137,7 +137,7 @@ tag::connection[]
 
 |cookie-support-enabled
 |bool
-|`false`
+|`true`
 |Enable or disable per-process, in-memory cookie storage.
 |supported
 
@@ -227,6 +227,9 @@ The following placeholders can be used to make it dynamic:
 
 ! `reject-downloads-500`
 ! Reject Downloads with status 500 responses.
+
+! `simple-apm`
+! Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.
 
 !===
 
@@ -720,12 +723,6 @@ Examples of expressions:
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
 |advanced
 
-|transparent-temporary-redirect
-|bool
-|`true`
-|Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
-|advanced
-
 |allow
 |stringArray
 |
@@ -737,6 +734,12 @@ Examples of expressions:
 |
 |List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.
 |advanced
+
+|transparent-temporary-redirect
+|bool
+|`false`
+|Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
+|debugOnly
 
 |===
 end::security[]

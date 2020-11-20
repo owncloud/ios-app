@@ -530,12 +530,12 @@
     "category" : "Security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).",
     "flags" : 4,
     "flatIdentifier" : "connection.transparent-temporary-redirect",
     "key" : "transparent-temporary-redirect",
-    "status" : "advanced",
+    "status" : "debugOnly",
     "type" : "bool"
   },
   {
@@ -590,7 +590,7 @@
     "category" : "Connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
-    "defaultValue" : false,
+    "defaultValue" : true,
     "description" : "Enable or disable per-process, in-memory cookie storage.",
     "flatIdentifier" : "core.cookie-support-enabled",
     "key" : "cookie-support-enabled",
@@ -704,6 +704,10 @@
       {
         "description" : "Reject Downloads with status 500 responses.",
         "value" : "reject-downloads-500"
+      },
+      {
+        "description" : "Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.",
+        "value" : "simple-apm"
       }
     ],
     "status" : "debugOnly",

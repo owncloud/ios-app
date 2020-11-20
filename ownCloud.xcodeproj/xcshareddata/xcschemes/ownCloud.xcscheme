@@ -262,7 +262,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:core.cookie-support-enabled"
-            value = "true"
+            value = "false"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -278,6 +278,11 @@
          <EnvironmentVariable
             key = "oc:host-simulator.active-simulations"
             value = "[five-seconds-of-404]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[simple-apm]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
