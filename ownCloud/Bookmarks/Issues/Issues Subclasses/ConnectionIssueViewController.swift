@@ -91,6 +91,7 @@ class ConnectionIssueViewController: IssuesViewController {
 			}
 
 			self.headerTitle = useTitle
+			self.issueLevel = displayLevel
 			self.buttons = useButtons
 		}
 	}
@@ -138,11 +139,14 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 		return displayIssues?.displayIssues.count ?? 0
 	}
 
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return super.tableView(tableView, heightForHeaderInSection: section)
+	}
+
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: IssuesViewControllerCellIdentifier, for: indexPath)
 		let issue = (displayIssues?.displayIssues[indexPath.row])!
 		cell.detailTextLabel?.text = issue.localizedDescription
-		cell.textLabel?.text = issue.localizedTitle
 		cell.textLabel?.numberOfLines = 0
 
 		var color: UIColor = .black
@@ -166,7 +170,9 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 
 		cell.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
 		cell.textLabel?.textColor = color
-		cell.textLabel?.text = issue.localizedTitle ?? ""
+		if issue.localizedTitle != headerTitle {
+			cell.textLabel?.text = issue.localizedTitle ?? ""
+		}
 
 		cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
 		cell.detailTextLabel?.text = issue.localizedDescription ?? ""

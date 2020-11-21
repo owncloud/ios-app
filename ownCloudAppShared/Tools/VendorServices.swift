@@ -92,12 +92,21 @@ public class VendorServices : NSObject {
 		return URL(string: "https://owncloud.org/privacy-policy/")
 	}
 
+	public var termsOfUseURL: URL? {
+		if self.isBranded, let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let termsOfUse = urls["TermsOfUse"] as? String, let url = URL(string: termsOfUse) else { return nil }
+			return url
+		}
+
+		return URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
+	}
+
 	public var appName: String {
 		if self.isBranded, let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
 			return organizationName
 		}
 
-		return OCAppIdentity.shared.appName ?? "App"
+		return OCAppIdentity.shared.appDisplayName ?? "ownCloud"
 	}
 
 	public var feedbackMailEnabled: Bool {
@@ -128,7 +137,8 @@ public class VendorServices : NSObject {
 	}
 
 	public var isBranded: Bool {
-		if let themingValues = self.brandingProperties, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
+		guard let themingValues = self.brandingProperties else { return false }
+		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
 			return true
 		}
 
@@ -143,16 +153,20 @@ public class VendorServices : NSObject {
 		return false
 	}
 
-	public var hasBrandedLogin: Bool {
-		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil {
-			return true
-		}
-
-		return false
-	}
-
 	public var canAddAccount: Bool {
 		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
+			if canAddAccount, self.hasBrandedProfiles {
+				return true
+			}
+
+			return false
+		}
+
+		return true
+	}
+
+	public var canEditAccount: Bool {
+		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canEditAccount"] as? Bool {
 			if canAddAccount, self.hasBrandedProfiles {
 				return true
 			}
@@ -178,10 +192,10 @@ public class VendorServices : NSObject {
 	// MARK: - Vendor services
 	public func recommendToFriend(from viewController: UIViewController) {
 
-		guard let appStoreLink = self.classSetting(forOCClassSettingsKey: .appStoreLink) as? String,
-			let appName = OCAppIdentity.shared.appName else {
+		guard let appStoreLink = self.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else {
 				return
 		}
+		let appName = VendorServices.shared.appName
 
 		let message = """
 		<p>I want to invite you to use \(appName) on your smartphone!</p>
@@ -286,10 +300,10 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.isBetaBuild : false,
-				.showBetaWarning : false,
+				.isBetaBuild : true,
+				.showBetaWarning : true,
 				.enableUIAnimations: true,
-				.enableReviewPrompt: true,
+				.enableReviewPrompt: !VendorServices.shared.isBranded,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 				.feedbackEmail: "ios-app@owncloud.com",

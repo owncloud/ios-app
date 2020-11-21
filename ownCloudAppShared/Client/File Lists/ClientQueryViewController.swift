@@ -114,6 +114,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
+		folderActionBarButton?.accessibilityLabel = "Actions".localized
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
 
@@ -607,6 +608,12 @@ extension ClientQueryViewController {
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
+			if #available(iOS 14.0, *) {
+				self.navigationItem.backButtonDisplayMode = .generic
+				let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+				self.title = lastPathComponent
+			}
+
 			let titleButton = UIButton()
 			titleButton.setTitle(lastPathComponent, for: .normal)
 			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)

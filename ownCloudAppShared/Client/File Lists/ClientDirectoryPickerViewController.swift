@@ -42,6 +42,18 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
 	open var allowedPathFilter : ClientDirectoryPickerPathFilter?
 	open var navigationPathFilter : ClientDirectoryPickerPathFilter?
+	private var hasFavorites: Bool = false
+	private var showFavorites: Bool {
+		if directoryPath == "/", hasFavorites == true {
+			return true
+		}
+		return false
+	}
+
+	let favoriteQuery = OCQuery(condition: .require([
+		.where(.isFavorite, isEqualTo: true),
+		.where(.type, isEqualTo: OCItemType.collection.rawValue)
+	]), inputFilter:nil)
 
 	// MARK: - Init & deinit
 	convenience public init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
@@ -113,6 +125,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 
+		favoriteQuery.delegate = self
+		self.core?.start(favoriteQuery)
+
 		// Adapt to disabled pull-to-refresh
 		self.tableView.alwaysBounceVertical = false
 
@@ -128,6 +143,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 
 		sortBar?.showSelectButton = false
+		tableView.dragInteractionEnabled = false
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {
@@ -171,7 +187,42 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return allowNavigation
 	}
 
+	// MARK: - Table view data source
+
+	override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if showFavorites, indexPath.section == 0 {
+			return estimatedTableRowHeight
+		}
+
+		return UITableView.automaticDimension
+	}
+
+	override open func numberOfSections(in tableView: UITableView) -> Int {
+		if showFavorites {
+			return 2
+		}
+		return 1
+	}
+
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if showFavorites, section == 0 {
+			return 1
+		}
+
+		return self.items.count
+	}
+
 	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		if showFavorites, indexPath.section == 0 {
+			let cellStyle = UITableViewCell.CellStyle.default
+			let cell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
+			cell.textLabel?.text = "Favorites".localized
+			cell.imageView?.image = UIImage(named: "star")!.paddedTo(width: 40)
+			cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+
+			return cell
+		}
+
 		let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
 		if let clientItemCell = cell as? ClientItemCell {
@@ -183,7 +234,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+		if showFavorites, indexPath.section == 0 {
+			return true
+		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return true
 		}
 
@@ -191,7 +244,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+		if showFavorites, indexPath.section == 0 {
+			return indexPath
+		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return indexPath
 		}
 
@@ -199,14 +254,18 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
-			return
+		if showFavorites, indexPath.section == 0 {
+			selectFavoriteItem()
+		} else {
+			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
+				return
+			}
+
+			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+			pickerController.cancelAction = cancelAction
+
+			self.navigationController?.pushViewController(pickerController, animated: true)
 		}
-
-		let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
-		pickerController.cancelAction = cancelAction
-
-		self.navigationController?.pushViewController(pickerController, animated: true)
 	}
 
 	override open func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -215,6 +274,11 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		return .none
+	}
+
+	@available(iOS 13.0, *)
+	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		return nil
 	}
 
 	// MARK: - Actions
@@ -263,6 +327,46 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			let createFolderAction = actions.first
 			createFolderAction?.progressHandler = makeActionProgressHandler()
 			createFolderAction?.run()
+		}
+	}
+
+	func selectFavoriteItem() {
+		guard let core = self.core else {
+			return
+		}
+
+		let customFileListController = QueryFileListTableViewController(core: core, query: favoriteQuery)
+		customFileListController.title = "Favorites".localized
+		customFileListController.isMoreButtonPermanentlyHidden = true
+		customFileListController.showSelectButton = false
+		customFileListController.pullToRefreshAction = { [weak self] (completion) in
+			self?.core?.refreshFavorites(completionHandler: { (_, _) in
+				completion()
+			})
+		}
+		if let cancelBarButton = cancelBarButton {
+			customFileListController.navigationItem.rightBarButtonItems = [cancelBarButton]
+		}
+
+		customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
+			guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
+				return
+			}
+
+			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: self?.allowedPathFilter, navigationPathFilter: self?.navigationPathFilter, choiceHandler: choiceHandler)
+			pickerController.cancelAction = self?.cancelAction
+
+			self?.navigationController?.pushViewController(pickerController, animated: true)
+		}
+
+		self.navigationController?.pushViewController(customFileListController, animated: true)
+	}
+
+	open override func queryHasChangesAvailable(_ query: OCQuery) {
+		if query == favoriteQuery {
+			hasFavorites = (query.queryResults?.count ?? 0 > 0) ?  true : false
+		} else {
+			super.queryHasChangesAvailable(query)
 		}
 	}
 }

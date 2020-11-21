@@ -38,7 +38,7 @@ platform :ios do
           "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app",
 	        "com.owncloud.ios-app.ownCloud-File-Provider" => "match AdHoc com.owncloud.ios-app.ownCloud-File-Provider",
 	        "com.owncloud.ios-app.ownCloud-File-ProviderUI" => "match AdHoc com.owncloud.ios-app.ownCloud-File-ProviderUI",
-	        "com.owncloud.ios-app.ownCloud-File-Intents" => "match AdHoc com.owncloud.ios-app.ownCloud-Intents",
+	        "com.owncloud.ios-app.ownCloud-Intents" => "match AdHoc com.owncloud.ios-app.ownCloud-Intents",
           "com.owncloud.ios-app.ownCloud-Share-Extension" => "match AdHoc com.owncloud.ios-app.ownCloud-Share-Extension"
           #Add more Provisioning Profiles when extensions are added
         }
@@ -63,17 +63,89 @@ platform :ios do
         skip_app_version_update: true
       )
     end
+    
+
+  desc "Copies the branding assets from the themes repository to the ios-app repository"
+    lane :prepare_branding_assets do |options|
+    
+    if Dir.exist?("../../owncloud-themes") == false
+		UI.user_error!("Themes repository path does not exists!")
+    end
+    
+    sh "git -C ../../owncloud-themes pull"
+      
+    path = ""
+    customers = read_json(
+  		json_path: "../owncloud-themes/Customers.json"
+	)
+
+	customers.each do |customer|
+		if customer[:customer] == options[:CUSTOMER]
+       		path = "../../owncloud-themes/" + customer[:path] + "ios/"
+       		break
+    	end
+	end
+	
+	if path == ""
+		UI.user_error!("Customer not found!")
+	end
+	
+	sh "cp -R '" + path + "Theming/' ../ownCloud/Resources/Theming/"
+	sh "cp -R '" + path + "AppIcon.appiconset/' ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+      
+    end
+    
+    
+    desc "Create Metadata Release Notes, Screenshots and push to git"
+      lane :prepare_metadata do |options|
+        
+        create_release_notes = true
+        if options[:create_release_notes] == false
+          create_release_notes = options[:create_release_notes]
+        end
+
+        create_screenshots = true
+        skip_screenshots = false
+        if options[:create_screenshots] == false
+          create_screenshots = options[:create_screenshots]
+          skip_screenshots = true
+        end
+        
+        output_path = options[:metadata_path]
+        
+        # Create Release Notes
+        if create_release_notes
+          puts("Creating Release Notes…")
+          release_notes(
+            xcodeproj: "ownCloud.xcodeproj",
+            version_key: "APP_SHORT_VERSION",
+            path: "ownCloud/Release Notes/ReleaseNotes.plist",
+            app_name: options[:app_name],
+            output_path: output_path
+          )
+        end
+
+        # Create Screenshots
+        if create_screenshots
+          puts("Creating Screenshots…")
+          reset_simulators
+          snapshot
+          frameit(white: false, path: './fastlane/screenshots')
+        end
+
+        # Push Release Notes or Screenshot changes to git
+        if create_release_notes || create_screenshots
+          puts("Push changes to git…")
+          #push_to_git_remote
+        end
+      end
 
     desc "Create Release Notes, Screenshots, Build, Upload of regular iOS App and EMM App"
       lane :release_on_appstore do |options|
 
         # Set options, which action should not performed, by default all actions will be performed
         # Disable all options: fastlane release_on_appstore create_release_notes:false create_screenshots:false deliver:false build_regular_app:false build_emm_app:false
-        create_release_notes = true
-        if options[:create_release_notes] == false
-          create_release_notes = options[:create_release_notes]
-        end
-
+        
         create_screenshots = true
         skip_screenshots = false
         if options[:create_screenshots] == false
@@ -96,32 +168,22 @@ platform :ios do
           build_emm_app = options[:build_emm_app]
         end
 
-        # Create Release Notes
-        if create_release_notes
-          puts("Creating Release Notes…")
-          release_notes(
-            xcodeproj: "ownCloud.xcodeproj",
-            version_key: "APP_SHORT_VERSION",
-            path: "ownCloud/Release Notes/ReleaseNotes.plist"
-          )
-        end
-
-        # Create Screenshots
-        if create_screenshots
-          puts("Creating Screenshots…")
-          reset_simulators
-          snapshot
-          frameit(white: false, path: './fastlane/screenshots')
-        end
-
-        # Push Release Notes or Screenshot changes to git
-        if create_release_notes || create_screenshots
-          puts("Push changes to git…")
-          push_to_git_remote
+        build_owncloud_online_app = true
+        if options[:build_owncloud_online_app] == false
+          build_owncloud_online_app = options[:build_owncloud_online_app]
         end
 
         # Update Bundle IDs and Build App
         if build_regular_app
+          puts("Prepare Metadata…")
+          # Prepare Metadata
+          prepare_metadata(
+          	create_release_notes: options[:create_release_notes],
+          	create_screenshots: options[:create_screenshots],
+          	app_name: "ownCloud",
+          	metadata_path: 'fastlane/metadata/en-US/release_notes.txt'
+          )
+          
           puts("Build regular iOS App…")
           # Build App
           owncloud_regular_build()
@@ -131,6 +193,7 @@ platform :ios do
             deliver(
               skip_screenshots: skip_screenshots,
               skip_metadata: false,
+              metadata_path: "./metadata",
               submit_for_review: false,
               ignore_language_directory_validation: true,
               skip_binary_upload: false,
@@ -144,27 +207,29 @@ platform :ios do
         end
 
         if build_emm_app
+          puts("Prepare Metadata…")
+          # Prepare Metadata
+          prepare_metadata(
+          	create_release_notes: options[:create_release_notes],
+          	create_screenshots: options[:create_screenshots],
+          	app_name: "ownCloud",
+          	metadata_path: 'fastlane/metadata-emm/en-US/release_notes.txt'
+          )
+          
           puts("Build EMM iOS App…")
           # Set EMM App-Icon for App Build
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
-          # Set EMM Description
-          sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
-          sh "mv metadata/en-us/description-emm.txt metadata/en-us/description.txt"
-
-          # Set EMM App-Icon for AppStore Connect
-          sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
-          sh "mv metadata/app_icon-emm.jpg metadata/app_icon.jpg"
-
           # Build App
           owncloud_emm_build()
-
+          
           # Deliver
           if deliver
             deliver(
               skip_screenshots: skip_screenshots,
               skip_metadata: false,
+              metadata_path: "./metadata-emm",
               submit_for_review: false,
               ignore_language_directory_validation: true,
               skip_binary_upload: false,
@@ -176,6 +241,55 @@ platform :ios do
             )
           end
       end
+
+      if build_owncloud_online_app
+          puts("Prepare Metadata…")
+          # Prepare Metadata
+          prepare_metadata(
+          	create_release_notes: options[:create_release_notes],
+          	create_screenshots: options[:create_screenshots],
+          	app_name: "ownCloud.online",
+          	metadata_path: 'fastlane/metadata-owncloud-online/en-US/release_notes.txt'
+          )
+          
+        puts("Build ownCloud.online iOS App…")
+
+        # Moving the ownCloud.online Branding.plist to the correct place
+        sh "mv ../ownCloud/Resources/Theming/Branding.plist ../ownCloud/Resources/Theming/Branding-regular.plist"
+        sh "mv ../ownCloud/Resources/Theming/Branding-owncloud-online.plist ../ownCloud/Resources/Theming/Branding.plist"
+
+        # Set ownCloud.online Splashscreen Background for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background.png ../ownCloud/Resources/Theming/branding-splashscreen-background-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen-background.png"
+
+        # Set ownCloud.online Splashscreen Logo for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen.png ../ownCloud/Resources/Theming/branding-splashscreen-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen.png"
+
+        # Set ownCloud.online App-Icon for App Build
+        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
+        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+
+        # Build App
+        owncloud_online_build()
+
+        # Deliver
+        if deliver
+          deliver(
+            skip_screenshots: skip_screenshots,
+            skip_metadata: false,
+            metadata_path: "./metadata-owncloud-online",
+            submit_for_review: false,
+            ignore_language_directory_validation: true,
+            skip_binary_upload: false,
+            force: true,
+            overwrite_screenshots: create_screenshots,
+            app_identifier: "online.owncloud.ios-app",
+            skip_app_version_update: true,
+            ipa: "ownCloud.ipa"
+          )
+        end
+    end
   end
 
   lane :owncloud_regular_build do
@@ -194,7 +308,8 @@ platform :ios do
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -214,7 +329,8 @@ platform :ios do
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app.emm",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -234,11 +350,16 @@ lane :owncloud_online_build do
     APP_GROUP_IDENTIFIERS: "group.online.owncloud.ios-app",
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Debug",
-    BETA_APP_ICON: true
+    BETA_APP_ICON: false,
+    APP_NAME: "ownCloud.online"
   )
 end
 
-  lane :owncloud_branding_build do
+  lane :owncloud_branding_build do |options|
+  	prepare_branding_assets(
+      CUSTOMER: options[:CUSTOMER]
+  	)
+  
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
       ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
@@ -250,10 +371,34 @@ end
       ENTERPRISE_SHARE_EXTENSION_PROFILE: "Enterprise Distribution iOS Neo Share Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
       ENTERPRISE_TEAM: "5QNK8L2PSC",
-      ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
+      BETA_APP_ICON: false
+    )
+  end
+
+  lane :owncloud_branding_appstore_build do |options|
+    prepare_branding_assets(
+      CUSTOMER: options[:CUSTOMER]
+  	)
+  	
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.ios-app",
+      ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
+      ENTERPRISE_FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Intents",
+      ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Share-Extension",
+      ENTERPRISE_SHARE_EXTENSION_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Share-Extension",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
+      ENTERPRISE_TEAM: "4AP2STM4H5",
+      ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH (4AP2STM4H5)",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
+      EXPORT_METHOD: "app-store",
+      CONFIGURATION: "Release",
       BETA_APP_ICON: false
     )
   end
@@ -270,11 +415,12 @@ end
       ENTERPRISE_SHARE_EXTENSION_PROFILE: "Enterprise Distribution iOS Neo Share Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
       ENTERPRISE_TEAM: "5QNK8L2PSC",
-      ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
-      BETA_APP_ICON: true
+      BETA_APP_ICON: true,
+      APP_NAME: "ownCloud"
     )
   end
 
@@ -299,7 +445,9 @@ end
 
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
-    if File.exist?("../" + themePath)
+    if !values[:APP_NAME].nil?
+      appName = values[:APP_NAME]
+    elsif File.exist?("../" + themePath)
       tmpAppName = get_info_plist_value(path: themePath, key: "organizationName")
       if tmpAppName != ""
         appName = tmpAppName
@@ -453,12 +601,9 @@ end
       commit = last_git_commit
       short_hash = commit[:abbreviated_commit_hash] # short sha of commit
       sh "brew install librsvg"
-      sh "brew unlink pango"
-      sh "brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/7cf3b63be191cb2ce4cd86f4406915128ec97432/Formula/pango.rb"
-      sh "brew switch pango 1.42.4_1 "
       sh "sed -e \"s/\#version#/" + version + "/\" -e \"s/\#githash#/" + short_hash + "/\" badge.svg > badge_tmp.svg"
       sh "rsvg-convert badge_tmp.svg > badge.png"
-      sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
+      add_badge(custom: "fastlane/badge.png")
     end
 
     #Create the build

@@ -7,3 +7,8 @@
 */
 
 "The destination folder couldn't be found on this server. Moving items across servers is currently not supported." = "The destination folder couldn't be found on this server. Moving items across servers is currently not supported.";
+
+"Authorization failed" = "Authorization failed";
+
+"Log into your account %@ in the app for more details." = "Log into your account %@ in the app for more details.";
+"Log into your account in the app for more details." = "Log into your account in the app for more details.";

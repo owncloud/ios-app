@@ -58,6 +58,10 @@
 		<string>iVBORw0KGgoAAAANSUhEUgAAADMAAAAyCAYAAADx/eOPAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAlNUAAAIIwAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADOgAwAEAAAAAQAAADIAAAAATgNwogAAAAlwSFlzAAALQQAACxMBQdw15AAAAzZJREFUaAXtmUuITXEcx4eJmUEZpRkhDTINg1ggCwuN92NkZYXZTCmmkZViNxtRNlYWKLOxYetRaoSVhCJihpBBeSYu8vp8y82Z27nO+T/OOffe7q8+dc+c3/P/Ov//f2pqqlJtgWoLmLTAKBPl/+jW8q4FpsME+AZv4SF8hlTEpZhGMtwGW2EF5OAZfII6aIIZcA8uQD/chZKSiWRzGD7CedgJ0yBMGvjjKjgGb+ASLIGSkE6yeAlnoNUwo3Ho7wMNPxVXD5lJH5FfwVrHDJqxV4/ehCmOvqzM1ZIa75rgPkRz9QgMwVQfDuP62I/iA5gc18BA7xC6d2C8gY21qlYpjfHZ1h6iDc+hcipazU1jLOb3YYebm0jrSWhoLnZEajoo7ML2uoO9iWkXyloQEhFN0EFwXbniJleL4mNIpHc0V56Ayw4BcyM5gHa/kUVMZa0yR2Pq+lJrw5F2Cd4b8CpOt/jK0sCPFoK5BvojVEePePr3oFbSBjFtUUyvxWgy6gM5nHYlxNO+T7ttKwnrmfq/nnJWHt2MFFMbUisJKyZfRCpbjIKsVciXgr/Ffgwr5hfWr6HYGSW2cwtFbWSth3dYMcpB25j5+pGiaEluB8W2kmLFaGleaeXR3mgBpj/gkb2LcEsdbV+AVra0pI9Ax5MKpsOYLivSkDqCqPGWJRVsO45vQbGh6DNuD86u+HRY6EtFaFu+p/CF52fdA2hPlvitzWKCvIeFkIRoTl4G3QekIt1EeQ660PMpWopPwDUY49NxlK+DKDyFeVGKMd/rSH4afoM+0Pq+pCq7ifYOuhyjtmJ/AwZAW5fMClpOcF07DYBOoybSjLLmxgdQw0g6INOCNET2gr4Lt0H3akuhAYKiOTETdLtzFnShrqE1C4Kiu+gc5HvI11AOxoj8rUm7GU7CEGgropPiIGjBUILqhYvQC1qCi8lqXmReUDA5bd/ngJbzdmgCE1mDcr4gNUomPWSScJSurra+goacCrI+QmNbErKOLCqqoPWVVtAGCtL/RitmyG0MFKSbmzYoa9lE9vkeqoiCOgMFDfO7say7h+R1XfwdfkILlL3oQ7qo7KuoFlBtgRJpgT/C2JGU4Z0tSQAAAABJRU5ErkJggg==</string>
 		<key>arrowshape.turn.up.left.circle</key>
 		<string>iVBORw0KGgoAAAANSUhEUgAAADIAAAA1CAYAAAADOrgJAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAACbdjAAAiGQACp1QAAAlXAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADKgAwAEAAAAAQAAADUAAAAAfq3KHQAAAAlwSFlzAAALOAAACzAB01gejAAABMVJREFUaAXtmFuoFVUYgM3uqVkWFGl1jlniJQpDLIjkiCFRD1F0MYXC6CkDK6uHbkQE2UtQHnoIKQp6UAIJCyT0VIRWaCUnyW4e9iEqS+1iCd37vtpbZs+Zmb1m9trHh/YP35k9a/3/v+Zf869/rTljxnSlOwPdGfhfzMCRHY5S/xPqY/zZybGOiOi8B18LYT7MhHPBIP4Gx/kNavAJbIVN8B7Y37a0G8jRPMFSuBXOh4E6g1w/hf1wENSbCL0wAy4Fg/aNvQj98DWMujgBPvwwvA03wvFQVi7BYA38CE/ByTBqYspsgQ+hL9KoU/DzHOyB6yP5LHTjIPvgXjAtYstlOKzBM2A6dkTuwqt5bDp0UibhfGOdcbEHWonD3XBObMc5/nwbL8EbcCxEkcV4+QqmRvEW7sTUXQ/rwk3yNS2VltC5+SqZPVY1S+xRmb3hjVZCi4ppXVnGYrkdVpT0cAz6a8GN7oqStlnq59HoZDqplWQ5Vu+CAYWKi9OFahByHcQQq+RAFUe+0j0wr4Sx1cajRyOImIG4+D+HRVBK7kDbmQ2VM1D8CJJBxAzE57gN3vRHGdmB8pWBBtPQG4J0ELEDsQy7VlwzIyQr/z38nQ4hb+QC9Dxr9UCn5VcGsBQvCR3Ize/5AGXL6w+Q9SYabR7df4IvYQt49LgWToAqchVG74QabkDx5hbKpt1BaDxw2ev32D4K46GMnIiyb8bq2FKG0LiwQMtX+zuUffgsfSuR6VlGtLmolYELyk/SvFd/A31/QdZDVW3zW2QOhMprKC5OK6cX+0ko+OpMmyy5iUaPHzHFdHkFQj+q9qLrntUk6UDM2QNNGs03j3DrDMaWyTh8ItDpz+iNWFvpQKwynpXy5H06+uDbPIU22m/BtjfA3l3e52ySdCC+jQlQlD4f0G/prUFM8aS8LMChqViUNYdcWPenHLrL/2E67ISiRf4N/cPwHYRUukH0Won7SNCZaxuKl7fyVu8/hasn5LxgkqdfZ7wHroHV4KLNstNnkbgJn12k0Ojr58fDjZuAqwvvdch6qGQgaVeW+jvBDEjaLkgrJu5n8du3PELSa0SFzbBwhGZ+g1XEnf7lfJXMHsv8k3AxmH4NKVrwPtdAQ7HV1Rl2ls5spZjq9xv7WUjObtEbSZo7006ItvcnO1K/t3If6vNf0xf4+1DKSejt4yg2gikz6N11u8dyBppJ+34wJYNlDppWmnHBFs2KK7n9AyzToeIDDsE9OQZObl6QOSb/NW/g8mChRnGnn8tlxc04aw+bTbsn5lPLOlTfLzFL3VRvDqMY2Ftg6lWWB7B0gXksOFxyHwNvA/ehyjIWy03QX9lDe4aW270QJSvcaT+GqlUM00oyFyuDCD1lBA1yFlpfwKog7faVFuDCIMqU7+BR/c+Kx/j1EPoRFOw8obiC3/tgUaIt+k9Lqrv3MFwd2fs0/G2EHTA9su9cd56tdsNm6MvVCuvwKPQ0uE+4Dt0YR1WOY7TboQY7wTI5G7I2NJqb5DTulsCrcABWgwFVlpBBWzn3sGhl8R8TXq33g/AZmOu/gLPsl10vzIDJ4D/s1sFacONtS2IEkn4ATwSzwJy3KIwHj+yeqGuwC1wHtnWlOwPdGejOQLkZ+AcYaSym55uvpAAAAABJRU5ErkJggg==</string>
+		<key>star.fill</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAADYAAAA3CAYAAABHGbl4AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAB3HHAAAaZAADsgEAAA0dAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADagAwAEAAAAAQAAADcAAAAA1+0GLwAAAAlwSFlzAAALGwAACxgBDz3HvgAAAyRJREFUaAXtWcurTlEUP673+5Gu3BJh4BFFSSklGRDJ9UqZmDDxBxgwMTI2ZoJMPJIZJSXKY4JIbu4tkeSRVx5xr8fvx121725/59vfOWvv853sVb+7H2evx2+ddb59zr5ZliRlIGUgZSBlIH4GRsHlLeBUfNdhPW6F+d+DmB/W1T/rHTGcwAeJiZh9matlyzL8AMgdu11LFo6gNxikSO4XMMuxTnUqRinapTcMDLpVWVRgbDh8vgakDKW9VkEsqi7XOEiR3E+gEwgmoUvRLkMhQr9bZFC3ls/Sc0DKz24v142QxLsyhxRJ/gCmymLtNmQpNipD4TASnc0yqFP7BMHa5WePL9aJEGNd6kGKJL8BEwB1CVWKzcpQiIxBZ6MMNNsRDmPjMLceYMusUqSEGvXtdbv+avn92YtlA4NL+UtKUHz777D2EsBXtVw5gqtCpC6tVyKXgZjrNahdST5CvDNyb5VxcSb6V4B2JSNxHUeM4424vbqs8QMAN1Ix1C7te8S0AyglK6DdC7QLqRuIZXYpRobyRPRPAlWS4y/nYYCfQuqyGxY/AbEJPoPP1epsLINzMea5RSxy5+Ar2MuyxS3jxs79jh+MoQh+gW1u3pXIWnh9AWiTuwebCythZDidjv51QIvcCdgabdgv1O0opDVU6S2GX4dOlRq9gvb3UhaUlPlg9wNad6xPKa7SZvYokpLkLC8blUYpbi8bhEN/m2Mu6tQkeOPzIJnWanuisnA445uIFhnbzhKHP++psqXYShneR1Q8Z/SVysqRhzA8jLEz7RofxTruTdOAC546D7GuEtkJry4S5twbrNnkiG4/5nySssChG3zqDDyYJOz+VVzvyomCzxA/6209c3wwRz/IpbGw+rlBUNysDwE+zy9Pwo41sEOCd4Go0g1vZmal/xTzqwpEwrI2/50r9tjOK2CvsMppaJrO2T8LTClsMcvmQPcmYNvluUsU4a/bR0AC4AvwPiXP8p3Hw0+xf0fJdlMz6wynD9Bf1FSj9QX08RIQcp2tm2hdYzFUuNFyb+LZeyghmfPAY2ByKCfJbspAykDKwP+RgT/k5YRXgmClowAAAABJRU5ErkJggg==</string>
+		<key>rectangle.and.arrow.up.right.and.arrow.down.left</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAAC8AAAA7CAYAAADrYNMhAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABGlFAAAPowAD8kEAAA3rAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAC+gAwAEAAAAAQAAADsAAAAAKsqlggAAAAlwSFlzAAALGwAACyoB4k2TzwAAAvlJREFUaAXtmTmIFEEUhsdrPRAVRNREdF3NDLzAQDQQxFA01MTAC9lEzA02NhAzMwUTUQMPjBQTETQRDEUYURdFxQOPFby+H22mGaqrXs9WbTdsPfi2e+u9fv33m6rqmppOJ1uuQK5ArkCuQKACMwJ+l3sHjbtgJQy5Amq2TRDfhVvwBMxWR/wCsl6FEbgOL+EnTNbmkmAY9sEVGIU/ENXOke0SzI6atZdsEacP4GivKc6ZuscHWBonXWWW7XgeV3oHdGxIkdShRZ/qDzB9ujMdCVxNS2hU5VObxtA3WGy5kVW84qIPogqBv2k36TIFVdwkVfN+En+0JDf1LUuiiDH3rLmaEn8agccCIp/j3+aLaUr8WUTphSTTWFI/L9DMdhE2QhTbSZa7UTL5k2zCPQ6HQFOm15qqvEvUVhpvwmF46Arob2vLbKO+fRuOg9ZNJl1tqLyEa0Up4ddAZhJvCvqXL8nfsvDLpTuYdJmCSkljnlYJ1z1MS/WmxGtWKbpKueK1itNUn5+FyoOgQeoyTZNaoHmtKfGPvKo6ndf4VwRibKM6lCSyX2NhDgRfUk31ed/zaizo+0PQ2ig+KLoImBbi3/G094snzsfqCrzHtaza3fOEus18Qsd64c6zec7WFjSuRcNXj471+F7BFk9MXZe58qHEPvGF8FOhJDX9ycWnEq7njCr+c1/lUgqPLr68U7aO7OrjsbtKuT5RK//2f+Zhji/gZPlOCc6jitcKbzV0YRRSW1Txn1D7DEKbRLEeyiw+tJ7XRpA2/SdgN+wBvdgK9HVNm0Zn4A5MqYXEd1FzAPTTi8+e+pzTyWfuNqG1TVG0zZycL/5py9EqfiGCR6ZQtMZR0Kziv5Mp1O+DNzMGaJWqCSKaLSeT5vvUph0DffExmbXyb8imt+teU9bBg45wqXaKo5t+I9VS4QSoQrFM74o1MAbjsAqSmGadG/AF9LOj+uZk+UUOTY8XoJZwPfUgpuv05h0a5OK+azQZqBjZcgVyBXIFWlqBvzlogkNrEJLXAAAAAElFTkSuQmCC</string>
 	</dict>
 	<key>Versions</key>
 	<array>
@@ -70,7 +74,7 @@
 					<key>Title</key>
 					<string>Multiple Window Support</string>
 					<key>Subtitle</key>
-					<string>Starting with iPadOS 13 you can have multiple windows and app instances. Open your ownCloud accounts side by side, show a file preview in a new window or drag and drop files between two accounts. All windows will be restored, after the app was launched.</string>
+					<string>Starting with iPadOS 13 you can have multiple windows and app instances. Open your ${CFBundleDisplayName} accounts side by side, show a file preview in a new window or drag and drop files between two accounts. All windows will be restored, after the app was launched.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -205,7 +209,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Document Scanner</string>
 					<key>Subtitle</key>
-					<string>Scan your documents directly into your ownCloud. You do not longer need a third party app or import scanned documents. Our ownCloud app has an integrated document scanner. Tap on the &quot;+&quot; button to start your scan!</string>
+					<string>Scan your documents directly into your ${CFBundleDisplayName}. You do not longer need a third party app or import scanned documents. Our ${CFBundleDisplayName} app has an integrated document scanner. Tap on the &quot;+&quot; button to start your scan!</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -225,7 +229,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Shortcut Support</string>
 					<key>Subtitle</key>
-					<string>On iOS 13 you get great Shortcut support. We have added multiple action, to build your own scripts and automation for your ownCloud.</string>
+					<string>On iOS 13 you get great Shortcut support. We have added multiple action, to build your own scripts and automation for your ${CFBundleDisplayName}.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -396,7 +400,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Share Sheet</string>
 					<key>Subtitle</key>
-					<string>Our new share sheet imports nearly everything from nearly everywhere. Just tap on the share button and select the ownCloud app to save multiple files, photos, selected text, downloads and so much more.</string>
+					<string>Our new share sheet imports nearly everything from nearly everywhere. Just tap on the share button and select the ${CFBundleDisplayName} app to save multiple files, photos, selected text, downloads and so much more.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -406,7 +410,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Camera Access</string>
 					<key>Subtitle</key>
-					<string>Take a photo or video right from the app and upload it to your ownCloud.</string>
+					<string>Take a photo or video right from the app and upload it to your ${CFBundleDisplayName}.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -644,7 +648,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<string>Pro Photo Upload</string>
 					<key>Subtitle</key>
 					<string>Two new settings give the user more control over photo uploads: 
-Prefer original photo instead of edited version is picked when uploading and prefer raw photo format, if available.</string>
+Users can choose to prefer the original photo instead of an edited version and also to upload the raw photo format, if available.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -654,7 +658,7 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: Media Upload Path</string>
 					<key>Subtitle</key>
-					<string>Upload Path for photo and video was not visible in settings for some cases.</string>
+					<string>Upload path for photo and video was not visible in settings for some cases.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -674,7 +678,7 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: Markup</string>
 					<key>Subtitle</key>
-					<string>Markup mode was not enabled automatically on iOS 14.</string>
+					<string>Markup mode was not enabled automatically when using iOS 14.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -684,7 +688,7 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: Shortcuts</string>
 					<key>Subtitle</key>
-					<string>Shortcuts In-App purchase could not retrieved.</string>
+					<string>The Shortcuts in-app purchase could not be retrieved.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -694,7 +698,7 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: Share Sheet</string>
 					<key>Subtitle</key>
-					<string>Share Sheet on iOS 12 could not dismissed.</string>
+					<string>Share Sheet on iOS 12 could not be dismissed.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -704,7 +708,7 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: Multiple Selection</string>
 					<key>Subtitle</key>
-					<string>Improved performance during multiple selection.</string>
+					<string>Improved performance when selecting multiple items.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -714,7 +718,7 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: File Provider</string>
 					<key>Subtitle</key>
-					<string>Some file types was grayed out and cannot be opened.</string>
+					<string>Some file types were grayed out and could not be opened.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -734,7 +738,91 @@ Prefer original photo instead of edited version is picked when uploading and pre
 					<key>Title</key>
 					<string>Fix: Create Public Link</string>
 					<key>Subtitle</key>
-					<string>Creating a public link over a federated share was broken</string>
+					<string>The process of creating a public link on a federated share was broken</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4.2</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Support for new Display Sizes</string>
+					<key>Subtitle</key>
+					<string>We supporting all upcoming new display sizes with native screen resolution.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>rectangle.and.arrow.up.right.and.arrow.down.left</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Favorites in Directory Picker</string>
+					<key>Subtitle</key>
+					<string>We added access to the favorite items directly from the directory picker.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>star.fill</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Rename Filename in Scan View</string>
+					<key>Subtitle</key>
+					<string>Now it is easier to rename a filename in the scan view by preselecting the filename.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>textbox</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Save Attachments from Mail.app</string>
+					<key>Subtitle</key>
+					<string>Saving attachments from iOS Mail.app was broken via the share sheet.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Authentication Error in FileProvider</string>
+					<key>Subtitle</key>
+					<string>Notifies the user with a notification if authentication fails in File Provider.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: New Folder in FileProvider</string>
+					<key>Subtitle</key>
+					<string>A newly created folder in File Provider was not selectable.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4.3</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: iOS 14 UI Adaptions</string>
+					<key>Subtitle</key>
+					<string>Fixed some problems on iOS 14, with unresponsive UI elements.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>

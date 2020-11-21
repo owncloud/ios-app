@@ -26,6 +26,8 @@ class StaticLoginStepViewController : StaticTableViewController {
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		self.tableView.backgroundColor = .clear
 	}
 
 	init(loginViewController theLoginViewController: StaticLoginViewController) {
@@ -132,11 +134,34 @@ extension StaticTableViewSection {
 	}
 
 	@discardableResult
-	func addButtonFooter(proceedLabel: String? = nil, cancelLabel : String? = nil, topSpacing : CGFloat = 30) -> (UIButton?, UIButton?) {
+	func addButtonFooter(message: String? = nil, messageItemStyle: ThemeItemStyle = .title, proceedLabel: String? = nil, proceedItemStyle: ThemeItemStyle = .approval, cancelLabel : String? = nil, topSpacing : CGFloat = 30) -> (UIButton?, UIButton?) {
 		let containerView = FullWidthHeaderView()
 		var continueButton : ThemeButton?
 		var cancelButton : UIButton?
 		var constraints : [NSLayoutConstraint] = []
+		var topAnchor = containerView.topAnchor
+
+		if message != nil {
+			let titleLabel = UILabel()
+			titleLabel.translatesAutoresizingMaskIntoConstraints = false
+			titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+			titleLabel.text = message
+			titleLabel.textAlignment = .center
+			titleLabel.numberOfLines = 0
+			containerView.addSubview(titleLabel)
+
+			containerView.addThemeApplier({ (_, collection, _) in
+				titleLabel.applyThemeCollection(collection, itemStyle: messageItemStyle)
+			})
+
+			NSLayoutConstraint.activate([
+				titleLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+				titleLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+				titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: topSpacing)
+			])
+			topAnchor = titleLabel.bottomAnchor
+		}
 
 		if proceedLabel != nil {
 			continueButton = ThemeButton()
@@ -147,7 +172,7 @@ extension StaticTableViewSection {
 			containerView.addSubview(continueButton!)
 
 			constraints += [
-				continueButton!.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topSpacing),
+				continueButton!.topAnchor.constraint(equalTo: topAnchor, constant: topSpacing),
 				continueButton!.leftAnchor.constraint(equalTo: containerView.leftAnchor),
 				continueButton!.rightAnchor.constraint(equalTo: containerView.rightAnchor)
 			]
@@ -183,7 +208,7 @@ extension StaticTableViewSection {
 		NSLayoutConstraint.activate(constraints)
 
 		containerView.addThemeApplier({ [weak continueButton, cancelButton] (_, collection, _) in
-			continueButton?.applyThemeCollection(collection, itemStyle: .approval)
+			continueButton?.applyThemeCollection(collection, itemStyle: proceedItemStyle)
 			cancelButton?.applyThemeCollection(collection)
 		})
 		self.footerView = containerView

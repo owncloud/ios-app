@@ -1129,3 +1129,21 @@ extension AlertViewController {
 		}
 	}
 }
+
+extension MoreViewController {
+	open override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissCard), discoverabilityTitle: "Close".localized)
+		shortcuts.append(cancelCommand)
+
+		return shortcuts
+	}
+
+	open override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	@objc func dismissCard(_ sender: Any?) {
+		self.dismiss(animated: false, completion: nil)
+	}
+}
