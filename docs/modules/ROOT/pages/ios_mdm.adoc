@@ -626,6 +626,16 @@ AppConfig conformant spec file tailored to administrator needs and containing on
 6. Navigate to menu:Policies and Configs[Add New > Apple > iOS/tvOS > Managed App Config]
 7. Upload the generated plist and specify name, bundle ID, and description
 
+== Example: Deployment with Jamf Pro
+
+1. Open https://appconfig.jamfresearch.com[AppConfig Generator].
+2. Upload a specfile.xml.
+3. Change the configuration options.
+4. Copy Dictionary (button).
+5. Open Jamf Pro.
+6. Navigate to menu:Devices[Mobile Device Apps > ownCloud - File Sync and Share > iOS/tvOS > App Configuration > Edit]
+7. Paste the generated Dictionary into the "Preferences" field.
+
 == References
 
 * <https://www.appconfig.org>

@@ -33,9 +33,13 @@ class StaticLoginBundle: NSObject {
 		let bundle = StaticLoginBundle()
 
 		if let bundleValues = VendorServices.shared.brandingProperties {
-			if let logoImage = UIImage(named: "branding-login-logo.png"), let backgroundImage = UIImage(named: "branding-login-background.png"), let organizationName = bundleValues["organizationName"] as? String {
+			if let organizationName = bundleValues["organizationName"] as? String {
 				bundle.organizationName = organizationName
+			}
+			if let logoImage = UIImage(named: "branding-login-logo.png") {
 				bundle.organizationLogoImage = logoImage
+			}
+			if let backgroundImage = UIImage(named: "branding-login-background.png") {
 				bundle.organizationBackgroundImage = backgroundImage
 			}
 
@@ -59,6 +63,15 @@ class StaticLoginBundle: NSObject {
 						if let promptForTokenAuth = profile["promptForTokenAuth"] as? String {
 							staticloginProfile.promptForTokenAuth = promptForTokenAuth
 						}
+						if let promptForURL = profile["promptForURL"] as? String {
+							staticloginProfile.promptForURL = promptForURL
+						}
+						if let promptForHelpURL = profile["promptForHelpURL"] as? String {
+							staticloginProfile.promptForHelpURL = promptForHelpURL
+						}
+						if let helpURLButtonString = profile["helpURLButtonString"] as? String {
+							staticloginProfile.helpURLButtonString = helpURLButtonString
+						}
 						if let welcome = profile["welcome"] as? String {
 							staticloginProfile.welcome = welcome
 						}
@@ -68,8 +81,17 @@ class StaticLoginBundle: NSObject {
 						if let url = profile["url"] as? String {
 							staticloginProfile.url = URL(string: url)
 						}
+						if let helpURL = profile["helpURL"] as? String {
+							staticloginProfile.helpURL = URL(string: helpURL)
+						}
+						if let canConfigureURL = profile["canConfigureURL"] as? Bool {
+							staticloginProfile.canConfigureURL = canConfigureURL
+						}
 						if let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
 							staticloginProfile.allowedAuthenticationMethods = allowedAuthenticationMethods as? [OCAuthenticationMethodIdentifier]
+						}
+						if let allowedHosts = profile["allowedHosts"] as? NSArray {
+							staticloginProfile.allowedHosts = allowedHosts as? [String]
 						}
 
 						return staticloginProfile

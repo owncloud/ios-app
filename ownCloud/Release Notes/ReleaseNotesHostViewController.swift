@@ -95,6 +95,7 @@ class ReleaseNotesHostViewController: UIViewController {
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
 
+			let appName = VendorServices.shared.appName
 			var footerText = ""
 			if VendorServices.shared.isBranded {
 				footerText = String(format:"Thank you for using %@.\n".localized, appName)
@@ -167,7 +168,9 @@ extension ReleaseNotesHostViewController : Themeable {
 class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
 	var shouldShowReleaseNotes: Bool {
-		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
+		if VendorServices.shared.isBranded {
+			return false
+		} else if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
 
 			if lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedDescending || lastSeenReleaseNotesVersion.compare(VendorServices.shared.appBuildNumber, options: .numeric) == .orderedSame {
 				return false

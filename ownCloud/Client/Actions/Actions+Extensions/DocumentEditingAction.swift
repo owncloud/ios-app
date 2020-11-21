@@ -72,7 +72,7 @@ class DocumentEditingAction : Action {
 					return
 				}
 
-				let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+				let appName = VendorServices.shared.appName
 				let alertController = ThemedAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
 
 				hostViewController?.present(alertController, animated: true)

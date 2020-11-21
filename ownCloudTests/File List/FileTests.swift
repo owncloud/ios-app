@@ -46,7 +46,7 @@ class FileTests: XCTestCase {
 
 		let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
-		rootViewController.afterCoreStart(nil) {
+		rootViewController.afterCoreStart(nil, completionHandler: { (_) in
 			let navigationController = UserInterfaceContext.shared.currentWindow?.rootViewController
 			let transitionDelegate = PushTransitionDelegate()
 
@@ -55,7 +55,7 @@ class FileTests: XCTestCase {
 			rootViewController.modalPresentationStyle = .custom
 
 			navigationController?.present(rootViewController, animated: true)
-		}
+		})
 	}
 
 	func dismissFileList() {

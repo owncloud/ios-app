@@ -24,6 +24,7 @@
 {
 	static dispatch_once_t onceToken = 0;
 	static NSDateFormatter *rfc3339DateFormatter;
+	static NSDateFormatter *rfc3339DateFormatterWithMicroseconds;
 	NSDate *parsedDate = nil;
 
 	dispatch_once(&onceToken, ^{
@@ -35,6 +36,12 @@
 			rfc3339DateFormatter.locale = posixLocale;
 			rfc3339DateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 			rfc3339DateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ";
+
+			// Safeguard against receipts with higher precision as reported here: https://twitter.com/depth42/status/1314179664005525504?s=20
+			rfc3339DateFormatterWithMicroseconds = [[NSDateFormatter alloc] init];
+			rfc3339DateFormatterWithMicroseconds.locale = posixLocale;
+			rfc3339DateFormatterWithMicroseconds.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+			rfc3339DateFormatterWithMicroseconds.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSSZZZ";
 		}
 	});
 
@@ -56,7 +63,10 @@
 			dateString = [dateString stringByReplacingOccurrencesOfString:@":" withString:@"" options:0 range:NSMakeRange(timezoneDelimiterRange.location, [dateString length]-timezoneDelimiterRange.location)];
 		}
 
-		parsedDate = [rfc3339DateFormatter dateFromString:dateString];
+		if ((parsedDate = [rfc3339DateFormatter dateFromString:dateString]) == nil)
+		{
+			parsedDate = [rfc3339DateFormatterWithMicroseconds dateFromString:dateString];
+		}
 	}
 
 	return (parsedDate);

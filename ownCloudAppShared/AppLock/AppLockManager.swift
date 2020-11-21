@@ -227,7 +227,7 @@ public class AppLockManager: NSObject {
 						let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelPressed))
 						passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
 					}
-					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+					passcodeViewController.navigationItem.title = VendorServices.shared.appName
 
 					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
 
@@ -436,7 +436,7 @@ public class AppLockManager: NSObject {
 
 			// Check if the device can evaluate the policy.
 			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
-				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared.appName!) as String
+				let reason = NSString.init(format: "Unlock %@".localized as NSString, VendorServices.shared.appName) as String
 
 				performPasscodeViewControllerUpdates { (passcodeViewController) in
 					OnMainThread {

@@ -1,5 +1,32 @@
 # ChangeLog
 
+## Release version 11.4.3 (Mid-November 2020)
+
+- Fix: iOS 14 UI Adaptions (#834)
+
+## Release version 11.4.2 (November 2020)
+
+- Support for new Display Sizes
+- Favorites in Directory Picker (#814)
+- Rename Filename in Scan View (#822)
+- Fix: Save Attachments from Mail.app (#816)
+- Fix: Authentication Error in FileProvider (#808)
+- Fix: New Folder in FileProvider (#827)
+
+## Release version 11.4.1 (September 2020)
+
+- Image Metadata (#679)
+- Pro Photo Upload (#685, #688)
+- Fix: Media Upload Path (#784)
+- Fix: File List (#786)
+- Fix: Markup (#783)
+- Fix: Shortcuts (#785)
+- Fix: Share Sheet (#782)
+- Fix: Multiple Selection (#735)
+- Fix: File Provider (#747)
+- Fix: General Improvements (#790, #792, #793)
+- Fix: Create Public Link (#803)
+
 ## Release version 11.4 (August 2020)
 
 - Branding Support (#2, #120)
