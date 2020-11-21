@@ -99,7 +99,7 @@ class MediaUploadQueue : OCActivitySource {
 
 		var uploadStorageAlreadyProcessing = false
 		var uploadStorageQueueEmpty = false
-		var needsSchedulingCountAtEntry = _needsSchedulingCountByBookmarkUUID[bookmark.uuid]
+		let needsSchedulingCountAtEntry = _needsSchedulingCountByBookmarkUUID[bookmark.uuid]
 
 		// Avoid race conditions by performing checks and modifications atomically
 		bookmark.modifyMediaUploadStorage { (mediaUploadStorage) -> MediaUploadStorage in
