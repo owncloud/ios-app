@@ -93,6 +93,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		didSet {
 			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
 			pageCountLabel.isHidden = fullScreen
+			pageCountContainerView.isHidden = fullScreen
 			setupConstraints()
 		}
 	}
@@ -146,6 +147,11 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pageCountContainerView.addSubview(pageCountLabel)
 
 				pageCountLabel._setupPdfInfoLabel()
+
+				pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
+				pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
+				pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
+				pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
 				containerView.addArrangedSubview(pageCountContainerView)
 
 				self.view.addSubview(containerView)
@@ -153,12 +159,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				if #available(iOS 13, *) {
 					self.view.backgroundColor = self.pdfView.backgroundColor
 					thumbnailView.backgroundColor = self.pdfView.backgroundColor
+					pageCountContainerView.backgroundColor = self.pdfView.backgroundColor
 				} else {
 					self.view.backgroundColor = .gray
 					thumbnailView.backgroundColor = .gray
+					pageCountContainerView.backgroundColor = .gray
 				}
-
-				pageCountContainerView.backgroundColor = UIColor.gray
 
 				setupConstraints()
 
@@ -381,12 +387,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
 				thumbnailView.isHidden = true
 		}
-
-		let pageLabelHeightMultiplier: CGFloat = thumbnailView.isHidden == false ? 0.9 : 0.0
-		pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
-		pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
-		pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
-		pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: pageLabelHeightMultiplier).isActive = true
 
 		self.activeViewConstraints = constraints
 
