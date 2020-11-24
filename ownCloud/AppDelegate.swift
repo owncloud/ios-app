@@ -60,11 +60,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 			rootViewController = navigationController
 		}
-        
+
         // Only set up window on non-iPad devices and not on macOS 11 (Apple Silicon) which is >= iOS 14
         if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
             // do not set the rootViewController for iOS app on Mac
-        } else if !UIDevice.current.isIpad {
+        } else {
             window?.rootViewController = rootViewController!
             window?.makeKeyAndVisible()
         }
