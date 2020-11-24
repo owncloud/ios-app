@@ -286,6 +286,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[bogus-apm]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:connection.connection-allowed-authentication-methods"
             value = "[openid-connect,oauth2]"
             isEnabled = "NO">
