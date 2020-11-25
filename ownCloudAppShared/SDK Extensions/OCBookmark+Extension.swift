@@ -37,6 +37,14 @@ public extension OCBookmark {
 		return nil
 	}
 
+	var isPassphraseBased : Bool? {
+		if let authenticationMethodIdentifier = self.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
+			return authenticationMethodClass.type == .passphrase
+		}
+
+		return nil
+	}
+
 	var scanForAuthenticationMethodsRequired : Bool? {
 		get {
 			return self.userInfo.object(forKey: OCBookmarkUserInfoKey.scanForAuthenticationMethodsRequired ) as? Bool
