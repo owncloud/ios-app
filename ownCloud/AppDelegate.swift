@@ -71,7 +71,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ImportFilesController.removeImportDirectory()
 
-		AppLockManager.shared.showLockscreenIfNeeded()
+		if AppLockManager.supportedOnDevice {
+			AppLockManager.shared.showLockscreenIfNeeded()
+		}
 
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
