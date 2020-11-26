@@ -118,10 +118,11 @@ class OpenInAction: Action {
 							self.interactionController?.presentOptionsMenu(from: sourceRect, in: sender.view, animated: true)
 						} else if let barButtonItem = self.context.sender as? UIBarButtonItem {
 							self.interactionController?.presentOptionsMenu(from: barButtonItem, animated: true)
-						} else if let cell = self.context.sender as? UITableViewCell, let clientQueryViewController = viewController as? ClientQueryViewController {
-							if let indexPath = clientQueryViewController.tableView.indexPath(for: cell) {
-								let cellRect = clientQueryViewController.tableView.rectForRow(at: indexPath)
-								self.interactionController?.presentOptionsMenu(from: cellRect, in: clientQueryViewController.tableView, animated: true)
+						} else if let cell = self.context.sender as? UICollectionViewCell, let clientQueryViewController = viewController as? ClientQueryViewController {
+							if let indexPath = clientQueryViewController.collectionView.indexPath(for: cell) {
+								let cellRect = clientQueryViewController.collectionView.layoutAttributesForItem(at: indexPath)
+								// TODO:
+								//self.interactionController?.presentOptionsMenu(from: cellRect?.frame, in: clientQueryViewController.tableView, animated: true)
 							}
 						} else {
 							self.interactionController?.presentOptionsMenu(from: viewController.view.frame, in: viewController.view, animated: true)

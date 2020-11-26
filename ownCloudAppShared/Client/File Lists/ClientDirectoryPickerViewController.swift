@@ -129,7 +129,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.core?.start(favoriteQuery)
 
 		// Adapt to disabled pull-to-refresh
-		self.tableView.alwaysBounceVertical = false
+		//self.tableView.alwaysBounceVertical = false
 
 		// Select button creation
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
@@ -143,7 +143,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 
 		sortBar?.showSelectButton = false
-		tableView.dragInteractionEnabled = false
+		//tableView.dragInteractionEnabled = false
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {
@@ -188,23 +188,23 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	// MARK: - Table view data source
-
+/*
 	override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if showFavorites, indexPath.section == 0 {
 			return estimatedTableRowHeight
 		}
 
 		return UITableView.automaticDimension
-	}
+	}*/
 
-	override open func numberOfSections(in tableView: UITableView) -> Int {
+	override open func numberOfSections(in collectionView: UICollectionView) -> Int {
 		if showFavorites {
 			return 2
 		}
 		return 1
 	}
 
-	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if showFavorites, section == 0 {
 			return 1
 		}
@@ -212,18 +212,21 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return self.items.count
 	}
 
-	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if showFavorites, indexPath.section == 0 {
 			let cellStyle = UITableViewCell.CellStyle.default
-			let cell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
+			//TODO:
+			let cell = ThemeCollectionViewCell()
+			/*
+			//let cell = ThemeCollectionViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
 			cell.textLabel?.text = "Favorites".localized
 			cell.imageView?.image = UIImage(named: "star")!.paddedTo(width: 40)
 			cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-
+*/
 			return cell
 		}
 
-		let cell = super.tableView(tableView, cellForRowAt: indexPath)
+		let cell = super.collectionView(collectionView, cellForItemAt: indexPath)
 
 		if let clientItemCell = cell as? ClientItemCell {
 			clientItemCell.isMoreButtonPermanentlyHidden = true
@@ -233,7 +236,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return cell
 	}
 
-	override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+	override open func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
 		if showFavorites, indexPath.section == 0 {
 			return true
 		} else if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
@@ -242,7 +245,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		return false
 	}
-
+/*
 	override open func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 		if showFavorites, indexPath.section == 0 {
 			return indexPath
@@ -251,9 +254,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 
 		return nil
-	}
+	}*/
 
-	override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if showFavorites, indexPath.section == 0 {
 			selectFavoriteItem()
 		} else {
@@ -267,7 +270,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			self.navigationController?.pushViewController(pickerController, animated: true)
 		}
 	}
-
+/*
 	override open func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
 	}
@@ -275,9 +278,9 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		return .none
 	}
-
+*/
 	@available(iOS 13.0, *)
-	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+	open override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 		return nil
 	}
 
@@ -349,7 +352,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 
 		customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
-			guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
+			guard let favoriteIndexPath = customFileListController.collectionView?.indexPathsForSelectedItems?.first, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
 				return
 			}
 

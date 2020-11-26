@@ -29,7 +29,7 @@ public struct OCItemDraggingValue {
 	var bookmarkUUID : String
 }
 
-open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
+open class ClientQueryViewController: QueryFileListTableViewController, UIPopoverPresentationControllerDelegate {
 	public var folderActionBarButton: UIBarButtonItem?
 	public var plusBarButton: UIBarButtonItem?
 
@@ -40,6 +40,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+	var footer : ClientFooterCollectionReusableView?
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -108,9 +109,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.tableView.dragDelegate = self
-		self.tableView.dropDelegate = self
-		self.tableView.dragInteractionEnabled = true
+		self.collectionView.register(ClientFooterCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "Footer")
+
+		self.collectionView.dragDelegate = self
+		//self.collectionView.dropDelegate = self
+		self.collectionView.dragInteractionEnabled = true
+		//self.tableView.allowsMultipleSelectionDuringEditing = true
 
 		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
@@ -145,7 +149,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		// Width is ignored and set by the UITableView when assigning to tableFooterView property
 		frame.size.height = floor(self.quotaLabel.frame.size.height * 2.0)
 		quotaLabel.frame = frame
-		self.tableView.tableFooterView = quotaLabel
+		footer?.updateFooter(text: text)
 	}
 
 	// MARK: - Theme support
@@ -157,6 +161,32 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Table view delegate
 
+	open override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		// If not in multiple-selection mode, just navigate to the file or folder (collection)
+		//if !self.tableView.isEditing {
+		super.collectionView(collectionView, didSelectItemAt: indexPath)
+		//} else {*/
+			//updateMultiSelectionUI()
+		//}
+	}
+
+	open override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+		switch kind {
+		case UICollectionView.elementKindSectionHeader:
+			return super.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
+		case UICollectionView.elementKindSectionFooter:
+			if let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath) as? ClientFooterCollectionReusableView {
+				self.footer = footer
+
+				return footer
+			}
+		default:
+			return UICollectionReusableView()
+		}
+		return UICollectionReusableView()
+	}
+/*
 	open override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
 		return true
 	}
@@ -187,7 +217,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		} else {
 			return UITableViewDropProposal(operation: .copy)
 		}
-	}
+	}*/
 
 	open func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
 		guard let tabBarController = self.tabBarController as? ToolAndTabBarToggling else { return }
@@ -346,7 +376,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - ClientItemCell item resolution
 	open override func item(for cell: ClientItemCell) -> OCItem? {
-		guard let indexPath = self.tableView.indexPath(for: cell) else {
+		guard let indexPath = self.collectionView.indexPath(for: cell) else {
 			return nil
 		}
 
@@ -379,14 +409,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	// MARK: - Reloads
 	open override func restoreSelectionAfterTableReload() {
 		// Restore previously selected items
-		guard tableView.isEditing else { return }
+		//guard tableView.isEditing else { return }
 
 		guard selectedItemIds.count > 0 else { return }
 
 		for row in 0..<self.items.count {
 			if let itemLocalID = self.items[row].localID as OCLocalID? {
 				if selectedItemIds.contains(itemLocalID) {
-					self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
+					//self.collectionView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
 				}
 			}
 		}
@@ -488,22 +518,29 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 	}
 }
 
-extension ClientQueryViewController: UITableViewDragDelegate {
+extension ClientQueryViewController: UICollectionViewDragDelegate {
+
+	public func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+
+		return []
+	}
+
+	/*
 	public func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 
 		if DisplaySettings.shared.preventDraggingFiles {
 			return [UIDragItem]()
 		}
-
+/*
 		if !self.tableView.isEditing {
 			if let multiSelectSupport = self as? MultiSelectSupport {
 				multiSelectSupport.populateToolbar()
 			}
-		}
+		}*/
 
 		var selectedItems = [OCItemDraggingValue]()
 		// Add Items from Multiselection too
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+		if let selectedIndexPaths = self.collectionView.indexPathsForSelectedRows {
 			if selectedIndexPaths.count > 0 {
 				for indexPath in selectedIndexPaths {
 					if let selectedItem : OCItem = itemAt(indexPath: indexPath), let uuid = core?.bookmark.uuid.uuidString {
@@ -557,7 +594,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		if !self.tableView.isEditing {
 			removeToolbar()
 		}
-	}
+	}*/
 
 	public func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
 		let item = draggingValue.item

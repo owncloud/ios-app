@@ -51,7 +51,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 	// MARK: - Toolbar actions handling multiple selected items
 	fileprivate func updateSelectDeselectAllButton() {
 		var selectedCount = 0
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+		if let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems {
 			selectedCount = selectedIndexPaths.count
 		}
 
@@ -103,6 +103,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 	}
 
 	@objc public func exitMultiselection() {
+		/*
 		if self.tableView.isEditing {
 			self.tableView.setEditing(false, animated: true)
 
@@ -111,7 +112,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 			sortBar?.showSelectButton = true
 
 			if #available(iOS 13, *) {
-				self.tableView.overrideUserInterfaceStyle = .unspecified
+				self.collectionView.overrideUserInterfaceStyle = .unspecified
 			}
 
 			self.navigationItem.rightBarButtonItems = self.regularRightBarButtons
@@ -121,7 +122,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 			self.regularLeftBarButtons = nil
 
 			exitedMultiselection()
-		}
+		}*/
 	}
 
 	@objc public func exitedMultiselection() {
@@ -169,17 +170,17 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 	@objc public func enterMultiselection() {
 
 		if #available(iOS 13, *) {
-			self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+			self.collectionView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 		}
-
+/*
 		if !self.tableView.isEditing {
 			self.regularLeftBarButtons = self.navigationItem.leftBarButtonItems
 			self.regularRightBarButtons = self.navigationItem.rightBarButtonItems
-		}
+		}*/
 
 		updateMultiselection()
 
-		self.tableView.setEditing(true, animated: true)
+		//self.tableView.setEditing(true, animated: true)
 		sortBar?.showSelectButton = false
 
 		populateToolbar()
@@ -192,7 +193,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 		(0..<self.items.count).map { (item) -> IndexPath in
 			return IndexPath(item: item, section: 0)
 			}.forEach { (indexPath) in
-				self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+				self.collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
 		}
 		selectedItemIds = self.items.compactMap({$0.localID as OCLocalID?})
 		self.actionContext?.replace(items: self.items)
@@ -202,8 +203,8 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 
 	@objc public func deselectAllItems(_ sender: UIBarButtonItem) {
 
-		self.tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
-			self.tableView.deselectRow(at: indexPath, animated: true)
+		self.collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
+			self.collectionView.deselectItem(at: indexPath, animated: true)
 		})
 		selectedItemIds.removeAll()
 		self.actionContext?.removeAllItems()

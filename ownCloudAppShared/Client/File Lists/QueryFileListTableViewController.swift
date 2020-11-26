@@ -223,6 +223,11 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	// MARK: - SortBarDelegate
 	open var shallShowSortBar = true
 
+	public func sortBar(_ sortBar: SortBar, didUpdateLayout: SortLayout) {
+		self.currentCollectionViewLayout = didUpdateLayout
+		self.collectionView.setCollectionViewLayout(createLayout(), animated: false)
+	}
+
 	open func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query.sortComparator = sortMethod.comparator(direction: sortDirection)
@@ -275,10 +280,10 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 							self.messageView?.message(show: false)
 						}
 
-						self.tableView.reloadData()
+						self.collectionView.reloadData()
 					case .targetRemoved:
 						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-						self.tableView.reloadData()
+						self.collectionView.reloadData()
 
 					default:
 						self.messageView?.message(show: false)
@@ -298,14 +303,16 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.searchController?.searchBar.applyThemeCollection(collection)
-		tableView.sectionIndexColor = collection.tintColor
+		//collectionView.sectionIndexColor = collection.tintColor
 	}
 
 	// MARK: - Events
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.tableView.allowsMultipleSelectionDuringEditing = true
+		if #available(iOSApplicationExtension 14.0, *) {
+			self.collectionView.allowsMultipleSelectionDuringEditing = true
+		}
 
 		searchController = UISearchController(searchResultsController: nil)
 		searchController?.searchResultsUpdater = self
@@ -318,15 +325,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 		self.definesPresentationContext = true
 
-		if shallShowSortBar {
-			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
-			sortBar?.delegate = self
-			sortBar?.sortMethod = self.sortMethod
-			sortBar?.updateForCurrentTraitCollection()
-			sortBar?.showSelectButton = showSelectButton
-
-			tableView.tableHeaderView = sortBar
-		}
+		self.collectionView.register(ClientHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
 
 		messageView = MessageView(add: self.view)
 
@@ -385,13 +384,35 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		return query
 	}
 
-	// MARK: - Table view data source
-	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	// MARK: - Collection view data source
+	open override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.items.count
 	}
 
-	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
+	open override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+		switch kind {
+		case UICollectionView.elementKindSectionHeader:
+			if let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as? ClientHeaderCollectionReusableView {
+
+				sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.collectionView.frame.width, height: 40), sortMethod: sortMethod)
+				if let sortBar = sortBar {
+					sortBar.delegate = self
+					sortBar.sortMethod = self.sortMethod
+					sortBar.updateForCurrentTraitCollection()
+					header.addSubview(sortBar)
+
+					return header
+				}
+			}
+		default:
+			return UICollectionReusableView()
+		}
+		return UICollectionReusableView()
+	}
+
+	open override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 		if let newItem = itemAt(indexPath: indexPath) {
 
 			cell?.accessibilityIdentifier = newItem.name
@@ -408,7 +429,8 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			}
 
 			if let localID = newItem.localID as OCLocalID?, self.selectedItemIds.contains(localID) {
-				cell?.setSelected(true, animated: false)
+				// TODO
+				//cell?.setSelected(true, animated: false)
 			}
 
 			if isMoreButtonPermanentlyHidden {
@@ -421,44 +443,51 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	// MARK: - Table view delegate
 
-	open override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+	open override func indexTitles(for collectionView: UICollectionView) -> [String]? {
 		if sortMethod == .alphabetically {
 			var indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 			if sortDirection == .descendant {
 				indexTitles.reverse()
 			}
-			if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
+			//TODO:
+			/*
+			if Int(collectionView.estimatedRowHeight) * self.items.count > Int(collectionView.visibleSize.height), indexTitles.count > 1 {
 				return indexTitles
-			}
+			}*/
 		}
 
 		return []
 	}
 
-	override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+	override open func collectionView(_ collectionView: UICollectionView,
+									  indexPathForIndexTitle title: String,
+								  at index: Int) -> IndexPath {
 		let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
 
 		if let firstItem = firstItem {
 			if let itemIndex = self.items.index(of: firstItem) {
 				OnMainThread {
-					tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+					// TODO:
+					//collectionView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
 				}
 			}
 		}
 
-		return 0
+		return IndexPath(row: 0, section: 0)
 	}
 
 	open func toggleSelectMode() {
 		if let multiSelectionSupport = self as? MultiSelectSupport {
+			/*
 			if !tableView.isEditing {
 				multiSelectionSupport.enterMultiselection()
 			} else {
 				multiSelectionSupport.exitMultiselection()
-			}
+			}*/
 		}
 	}
 
+	/*
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
@@ -522,5 +551,6 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		if let multiSelectionSupport = self as? MultiSelectSupport {
 			multiSelectionSupport.enterMultiselection()
 		}
-	}
+	}*/
 }
+

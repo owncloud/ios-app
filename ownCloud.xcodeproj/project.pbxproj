@@ -107,6 +107,10 @@
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
 		39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */; };
 		39F48A6A24D89D7E0000E3F9 /* branding-bookmark-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6524D847D70000E3F9 /* branding-bookmark-icon.png */; };
+		39FE1F7B256E6B5300D0D72A /* ThemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FE1F7A256E6B5300D0D72A /* ThemeCollectionViewCell.swift */; };
+		39FE1F8A256E6E2100D0D72A /* ClientHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FE1F89256E6E2100D0D72A /* ClientHeaderCollectionReusableView.swift */; };
+		39FE1F94256E6E5300D0D72A /* ThemeCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FE1F93256E6E5300D0D72A /* ThemeCollectionReusableView.swift */; };
+		39FE1F9E256E705500D0D72A /* ClientFooterCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FE1F9D256E705500D0D72A /* ClientFooterCollectionReusableView.swift */; };
 		46B9D336BF7FE50321823888 /* Pods_ownCloudScreenshotsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */; };
 		4C05D8A5238708D40073EF50 /* MediaUploadStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */; };
 		4C11EE5B22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C11EE5A22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift */; };
@@ -1041,6 +1045,10 @@
 		39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-splashscreen-background.png"; path = "ownCloud/Resources/Theming/branding-splashscreen-background.png"; sourceTree = SOURCE_ROOT; };
 		39F689A922EF5EDC00E63429 /* ownCloud Intents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ownCloud Intents.entitlements"; sourceTree = "<group>"; };
 		39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDirectoryListingIntentHandler.swift; sourceTree = "<group>"; };
+		39FE1F7A256E6B5300D0D72A /* ThemeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ThemeCollectionViewCell.swift; path = UI/ThemeCollectionViewCell.swift; sourceTree = "<group>"; };
+		39FE1F89256E6E2100D0D72A /* ClientHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
+		39FE1F93256E6E5300D0D72A /* ThemeCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollectionReusableView.swift; sourceTree = "<group>"; };
+		39FE1F9D256E705500D0D72A /* ClientFooterCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientFooterCollectionReusableView.swift; sourceTree = "<group>"; };
 		3D753147564B1E4F47826109 /* Pods-ownCloud Screenshots Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloud Screenshots Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloud Screenshots Tests/Pods-ownCloud Screenshots Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		42866B2892DC9EDC65D844E7 /* Pods_ownCloud_Screenshots_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloud_Screenshots_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadStorage.swift; sourceTree = "<group>"; };
@@ -2123,6 +2131,7 @@
 				DC7DBA27207F6DFD00E7337D /* UI */,
 				DC7DBA26207F6DEE00E7337D /* Resources */,
 				DC7DBA21207F672700E7337D /* TVG */,
+				39FE1F7A256E6B5300D0D72A /* ThemeCollectionViewCell.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -2391,6 +2400,7 @@
 				DC243BF92317B446004FBB5C /* ThemeWindow.swift */,
 				DCAB9CC823417243009091B6 /* ThemedAlertController.swift */,
 				3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */,
+				39FE1F93256E6E5300D0D72A /* ThemeCollectionReusableView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2730,6 +2740,8 @@
 				3912208123436EB80026C290 /* SortMethod.swift */,
 				39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+				39FE1F89256E6E2100D0D72A /* ClientHeaderCollectionReusableView.swift */,
+				39FE1F9D256E705500D0D72A /* ClientFooterCollectionReusableView.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -3972,14 +3984,17 @@
 			files = (
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
+				39FE1F94256E6E5300D0D72A /* ThemeCollectionReusableView.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,
 				DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */,
 				DC0A355724C0E35B00FB58FC /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
+				39FE1F9E256E705500D0D72A /* ClientFooterCollectionReusableView.swift in Sources */,
 				DC0A359224C0E55800FB58FC /* UIColor+Extension.swift in Sources */,
 				DCE4E45024C1E0400051722F /* UIButton+Extension.swift in Sources */,
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
 				DC0A358124C0E43C00FB58FC /* ThemeProvider.swift in Sources */,
+				39FE1F7B256E6B5300D0D72A /* ThemeCollectionViewCell.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
 				DCE4E45824C1F0F40051722F /* ClientDirectoryPickerViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
@@ -4006,6 +4021,7 @@
 				391C79A824E186DC00CB6333 /* OCBookmark+Extension.swift in Sources */,
 				DC0A358A24C0E44B00FB58FC /* ThemeButton.swift in Sources */,
 				DC0A355424C0E2C200FB58FC /* SortBar.swift in Sources */,
+				39FE1F8A256E6E2100D0D72A /* ClientHeaderCollectionReusableView.swift in Sources */,
 				DCE4E45924C1F0F70051722F /* ClientQueryViewController.swift in Sources */,
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,

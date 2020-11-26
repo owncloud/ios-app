@@ -33,20 +33,19 @@ class LibrarySharesTableViewController: FileListTableViewController {
 	}
 
 	override func registerCellClasses() {
-		self.tableView.register(ShareClientItemCell.self, forCellReuseIdentifier: "itemCell")
+		self.collectionView.register(ShareClientItemCell.self, forCellWithReuseIdentifier: "itemCell")
 	}
 
 	// MARK: - Table view data source
 	func shareAtIndexPath(_ indexPath : IndexPath) -> OCShare {
 		return shares[indexPath.row]
 	}
-
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.shares.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ShareClientItemCell
+	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "itemCell", for: indexPath) as? ShareClientItemCell
 		let newItem = shareAtIndexPath(indexPath)
 
 		cell?.accessibilityIdentifier = newItem.name

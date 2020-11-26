@@ -25,9 +25,10 @@ public protocol ClientItemCellDelegate: class {
 	func messageButtonTapped(cell: ClientItemCell)
 
 	func hasMessage(for item: OCItem) -> Bool
+	func currentLayout() -> SortLayout
 }
 
-open class ClientItemCell: ThemeTableViewCell, ItemContainer {
+open class ClientItemCell: ThemeCollectionViewCell, ItemContainer {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -40,6 +41,8 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
+	private let inset = CGFloat(10)
+	let seperatorView = UIView()
 
 	open weak var delegate: ClientItemCellDelegate? {
 		didSet {
@@ -67,10 +70,13 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	open var sharedStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 	open var publicLinkStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 	open var cloudStatusIconViewRightMarginConstraint : NSLayoutConstraint?
+	open var sharedStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
+	open var publicLinkStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
 
 	open var activeThumbnailRequestProgress : Progress?
 
 	open var hasMessageForItem : Bool = false
+	var subviewConstraints: [NSLayoutConstraint]?
 
 	open var isMoreButtonPermanentlyHidden = false {
 		didSet {
@@ -94,6 +100,14 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 	open weak var core : OCCore?
 
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+
+		prepareViewAndConstraints()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
+	}
+/*
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
@@ -111,7 +125,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if #available(iOS 13.4, *) {
 			PointerEffect.install(on: self.contentView, effectStyle: .hover)
 		}
-	}
+	}*/
 
 	required public init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -124,6 +138,126 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 		self.localID = nil
 		self.core = nil
+	}
+
+	open override func layoutIfNeeded() {
+		super.layoutIfNeeded()
+		//setNeedsUpdateConstraints()
+
+		switch delegate?.currentLayout() {
+		case .list:
+			activateListConstraints()
+		case .grid:
+			activateGridConstraints()
+		case .none:
+			activateListConstraints()
+		}
+	}
+
+	func activateGridConstraints() {
+
+		print("activateGridConstraints")
+		titleLabel.numberOfLines = 2
+		detailLabel.numberOfLines = 2
+
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+		if let subviewConstraints = subviewConstraints {
+			NSLayoutConstraint.deactivate(subviewConstraints)
+		}
+
+		subviewConstraints = [
+			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 0),
+			iconView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 0),
+			//iconView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -verticalIconMargin),
+			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
+			//iconView.heightAnchor.constraint(equalTo: iconView.widthAnchor, constant: 0),
+			//iconView.heightAnchor.constraint(equalToConstant: 80),
+
+			titleLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
+			titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 0),
+			titleLabel.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: verticalIconMargin),
+			titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: 0),
+			detailLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
+			detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -horizontalMargin),
+			detailLabel.bottomAnchor.constraint(equalTo: moreButton.topAnchor, constant: -verticalIconMargin),
+			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 0),
+			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+			moreButtonWidthConstraint!,
+
+			cloudStatusIconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+			sharedStatusIconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+			publicLinkStatusIconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+
+			cloudStatusIconView.leftAnchor.constraint(lessThanOrEqualTo: self.contentView.leftAnchor, constant: spacing),
+			cloudStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight)
+
+			]
+		if let subviewConstraints = subviewConstraints {
+			NSLayoutConstraint.activate(subviewConstraints)
+		}
+	}
+
+	func activateListConstraints() {
+
+		print("activateListConstraints")
+
+		titleLabel.numberOfLines = 1
+		detailLabel.numberOfLines = 1
+
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+		if let subviewConstraints = subviewConstraints {
+			NSLayoutConstraint.deactivate(subviewConstraints)
+		}
+
+		subviewConstraints = [
+			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
+			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
+			iconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -spacing),
+			//iconView.widthAnchor.constraint(greaterThanOrEqualToConstant: 40),
+			//iconView.widthAnchor.constraint(lessThanOrEqualToConstant: 140),
+			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
+			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
+			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
+
+			titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+
+			cloudStatusIconView.leftAnchor.constraint(lessThanOrEqualTo: iconView.rightAnchor, constant: spacing),
+			sharedStatusIconViewLeftMarginConstraint!,
+			publicLinkStatusIconViewLeftMarginConstraint!,
+			detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor, constant: smallSpacing),
+
+			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
+			titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5),
+			//titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
+			detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
+			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
+
+			cloudStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+			sharedStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+			publicLinkStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+
+			cloudStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+
+			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+			moreButtonWidthConstraint!,
+			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+
+			seperatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: inset),
+			seperatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+			seperatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+			seperatorView.heightAnchor.constraint(equalToConstant: 0.5)
+		]
+
+		if let subviewConstraints = subviewConstraints {
+			NSLayoutConstraint.activate(subviewConstraints)
+		}
 	}
 
 	func prepareViewAndConstraints() {
@@ -255,6 +389,8 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
 			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
 		])
+
+		activateGridConstraints()
 	}
 
 	// MARK: - Present item
@@ -312,8 +448,6 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
  				}
  			})
  		}
-
-		self.accessoryType = .none
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
@@ -523,12 +657,12 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			self.contentView.layoutIfNeeded()
 		}
 	}
-
+/*
 	override open func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
 		setMoreButton(hidden: editing, animated: animated)
-	}
+	}*/
 
 	// MARK: - Actions
 	@objc open func moreButtonTapped() {

@@ -32,8 +32,13 @@ public protocol InlineMessageSupport {
 	func showInlineMessageFor(item: OCItem)
 }
 
-open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
+open class FileListTableViewController: UICollectionViewController, ClientItemCellDelegate, Themeable {
+	public func currentLayout() -> SortLayout {
+		return currentCollectionViewLayout
+	}
+
 	open weak var core : OCCore?
+	public var currentCollectionViewLayout: SortLayout = .list
 
 	public let estimatedTableRowHeight : CGFloat = 62
 
@@ -42,10 +47,138 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	public init(core inCore: OCCore, style: UITableView.Style = .plain) {
 		core = inCore
-		super.init(style: style)
+
+		super.init(collectionViewLayout: UICollectionViewLayout())
+		self.collectionView.setCollectionViewLayout(createLayout(), animated: false)
+		self.collectionView.alwaysBounceVertical = true
+		self.collectionView.contentInsetAdjustmentBehavior = .always
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 	}
+
+	enum SectionLayoutKind: Int, CaseIterable {
+	 case list, grid5, grid3
+	 func columnCount(for width: CGFloat) -> Int {
+		 let wideMode = width > 400
+		 switch self {
+		 case .grid3:
+			 return wideMode ? 6 : 3
+
+		 case .grid5:
+			 return wideMode ? 10 : 5
+
+		 case .list:
+			 return wideMode ? 2 : 1
+		 }
+	 }
+ }
+ /*
+ func configureDataSource() {
+	 dataSource = UICollectionViewDiffableDataSource<SectionLayoutKind, Int>(collectionView: collectionView) {
+		 (collectionView: UICollectionView, indexPath: IndexPath, identifier: Int) -> UICollectionViewCell? in
+		 let section = SectionLayoutKind(rawValue: indexPath.section)!
+		 if section == .list {
+			 if let cell = collectionView.dequeueReusableCell(
+				 withReuseIdentifier: ListCell.reuseIdentifier,
+				 for: indexPath) as? ListCell {
+				 cell.label.text = "\(identifier)"
+				 return cell
+			 } else {
+				 fatalError("Cannot create new cell")
+			 }
+		 } else {
+			 if let cell = collectionView.dequeueReusableCell(
+				 withReuseIdentifier: TextCell.reuseIdentifier,
+				 for: indexPath) as? TextCell {
+				 cell.label.text = "\(identifier)"
+				 cell.contentView.backgroundColor = .cornflowerBlue
+				 cell.contentView.layer.borderColor = UIColor.black.cgColor
+				 cell.contentView.layer.borderWidth = 1
+				 cell.contentView.layer.cornerRadius = section == .grid5 ? 8 : 0
+				 cell.label.textAlignment = .center
+				 cell.label.font = UIFont.preferredFont(forTextStyle: .title1)
+				 return cell
+			 } else {
+				 fatalError("Cannot create new cell")
+			 }
+		 }
+	 }
+
+	 // initial data
+	 let itemsPerSection = 10
+	 var snapshot = NSDiffableDataSourceSnapshot<SectionLayoutKind, Int>()
+	 SectionLayoutKind.allCases.forEach {
+		 snapshot.appendSections([$0])
+		 let itemOffset = $0.rawValue * itemsPerSection
+		 let itemUpperbound = itemOffset + itemsPerSection
+		 snapshot.appendItems(Array(itemOffset..<itemUpperbound))
+	 }
+	 dataSource.apply(snapshot, animatingDifferences: false)
+ }
+*/
+ public func createLayout() -> UICollectionViewLayout {
+	 if #available(iOS 13.0, *) {
+		 /*
+		 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+											   heightDimension: .fractionalHeight(1.0))
+	 let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+	 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+										   heightDimension: .absolute(62))
+	 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+													  subitems: [item])
+
+	 let section = NSCollectionLayoutSection(group: group)
+
+	 let layout = UICollectionViewCompositionalLayout(section: section)
+
+	 return layout
+*/
+		 let layout = UICollectionViewCompositionalLayout {
+			 (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+			 guard let layoutKind = SectionLayoutKind(rawValue: sectionIndex) else { return nil }
+
+			 let columns = layoutKind.columnCount(for: layoutEnvironment.container.effectiveContentSize.width)
+
+			 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+												  heightDimension: .fractionalHeight(1.0))
+			 let item = NSCollectionLayoutItem(layoutSize: itemSize)
+			 item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+
+			 let groupHeight = layoutKind == .list ?
+				 NSCollectionLayoutDimension.absolute(63) : NSCollectionLayoutDimension.fractionalWidth(0.2)
+			 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+													heightDimension: groupHeight)
+			 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
+
+			 let section = NSCollectionLayoutSection(group: group)
+
+			 let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+														  heightDimension: .estimated(44))
+			 let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+				 layoutSize: headerFooterSize,
+				 elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+			 let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
+				 layoutSize: headerFooterSize,
+				 elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+			 section.boundarySupplementaryItems = [sectionHeader, sectionFooter]
+
+			 //section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+			 return section
+		 }
+		 return layout
+	 }
+
+	 let layout = UICollectionViewFlowLayout()
+	 layout.itemSize = CGSize(width: 362, height: 62)
+	 layout.minimumInteritemSpacing = 0
+	 layout.minimumLineSpacing = 0
+	 layout.headerReferenceSize = CGSize(width: 0, height: 40)
+	 layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+	 layout.footerReferenceSize = CGSize(width: 0, height: 60)
+
+	 return layout
+ }
 
 	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -75,7 +208,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 	}
 
 	open func itemAt(indexPath : IndexPath) -> OCItem? {
-		return (self.tableView.cellForRow(at: indexPath) as? ClientItemCell)?.item
+		return (self.collectionView.cellForItem(at: indexPath) as? ClientItemCell)?.item
 	}
 
 	// MARK: - ClientItemCellDelegate
@@ -128,7 +261,6 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 		self.navigationController?.navigationBar.prefersLargeTitles = false
 		Theme.shared.register(client: self, applyImmediately: true)
-		self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
 		self.registerCellClasses()
 
@@ -136,16 +268,16 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 			pullToRefreshControl = UIRefreshControl()
 			pullToRefreshControl?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 			pullToRefreshControl?.addTarget(self, action: #selector(self.pullToRefreshTriggered), for: .valueChanged)
-			self.tableView.insertSubview(pullToRefreshControl!, at: 0)
-			tableView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
-			tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+			self.collectionView.insertSubview(pullToRefreshControl!, at: 0)
+			collectionView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
+			//collectionView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
 		}
 
-		self.addThemableBackgroundView()
+		//self.addThemableBackgroundView()
 	}
 
 	open func registerCellClasses() {
-		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
+		collectionView.register(ClientItemCell.self, forCellWithReuseIdentifier: "itemCell")
 	}
 
 	// MARK: - Pull-to-refresh handling
@@ -213,7 +345,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		if !ifNeeded || (ifNeeded && tableReloadNeeded) {
-			self.tableView.reloadData()
+			self.collectionView.reloadData()
 
 			if viewControllerVisible {
 				tableReloadNeeded = false
@@ -235,16 +367,16 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		return nil
 	}
 
-	// MARK: - Table view data source
-	open override func numberOfSections(in tableView: UITableView) -> Int {
+	// MARK: - Collection view data source
+	open override func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
 	}
 
-	// MARK: - Table view delegate
-	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView.deselectRow(at: indexPath, animated: true)
+	// MARK: - Collection view delegate
+	open override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		//collectionView.deselectRow(at: indexPath, animated: true)
 
-		if !self.tableView.isEditing {
+		//if !self.collectionView.isEditing {
 			guard let rowItem : OCItem = itemAt(indexPath: indexPath) else {
 				return
 			}
@@ -252,9 +384,9 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 			if let openItemHandler = self as? OpenItemHandling {
 				openItemHandler.open(item: rowItem, animated: true, pushViewController: true)
 			}
-		}
+		//}
 	}
-
+/*
 	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
 			return nil
@@ -314,11 +446,11 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		return UIMenu(title: "", children: [mainMenu])
-	}
+	}*/
 
 	// MARK: - Themable
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tableView.applyThemeCollection(collection)
+		self.collectionView.applyThemeCollection(collection)
 		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
 
 		if event == .update {

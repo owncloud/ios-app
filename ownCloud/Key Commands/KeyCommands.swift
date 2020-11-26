@@ -297,6 +297,34 @@ extension ClientRootViewController {
 	}
 }
 
+extension UICollectionViewController {
+
+	@objc func selectNext(sender: UIKeyCommand) {
+		if let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first, selectedIndexPath.row < (self.collectionView.numberOfItems(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
+			self.collectionView.selectItem(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .centeredVertically)
+		} else if self.collectionView.numberOfItems(inSection: 0) ?? 0 > 0 {
+			self.collectionView.selectItem(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
+		}
+	}
+
+	@objc func selectPrevious(sender: UIKeyCommand) {
+		if let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first, selectedIndexPath.row > 0 {
+			self.collectionView.selectItem(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .centeredVertically)
+		}
+	}
+
+	@objc func selectCurrent(sender: UIKeyCommand) {
+		if let delegate = collectionView.delegate, let collectionView = collectionView, let indexPath = collectionView.indexPathsForSelectedItems?.first {
+			collectionView.deselectItem(at: indexPath, animated: true)
+			delegate.collectionView!(collectionView, didSelectItemAt: indexPath)
+		}
+	}
+
+	override open var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
 extension UITableViewController {
 
 	@objc func selectNext(sender: UIKeyCommand) {
@@ -590,7 +618,7 @@ extension ClientQueryViewController {
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
-		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+		if let selectedRow = self.collectionView?.indexPathsForSelectedItems?.first?.row {
 			if selectedRow < self.items.count - 1 {
 				shortcuts.append(nextObjectCommand)
 			}
@@ -604,7 +632,7 @@ extension ClientQueryViewController {
 
 		if let core = core, let rootItem = query.rootItem {
 			var item = rootItem
-			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+			if let indexPath = self.collectionView.indexPathsForSelectedItems?.first, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
@@ -625,7 +653,7 @@ extension ClientQueryViewController {
 	@objc func performFolderAction(_ command : UIKeyCommand) {
 		if let core = core, let rootItem = query.rootItem {
 			var item = rootItem
-			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+			if let indexPath = self.collectionView.indexPathsForSelectedItems?.first, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
@@ -658,7 +686,7 @@ extension LibrarySharesTableViewController {
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
-		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+		if let selectedRow = self.collectionView.indexPathsForSelectedItems?.first?.row {
 			if selectedRow < self.shares.count - 1 {
 				shortcuts.append(nextObjectCommand)
 			}
@@ -703,7 +731,7 @@ extension QueryFileListTableViewController {
 
 		if let core = core, let rootItem = query.rootItem {
 			var item = rootItem
-			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+			if let indexPath = self.collectionView.indexPathsForSelectedItems?.first, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
 			}
 			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
@@ -727,7 +755,7 @@ extension QueryFileListTableViewController {
 			shortcuts.append(sortCommand)
 		}
 
-		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+		if let selectedRow = self.collectionView.indexPathsForSelectedItems?.first?.row {
 			if selectedRow < self.items.count - 1 {
 				shortcuts.append(nextObjectCommand)
 			}
@@ -754,8 +782,8 @@ extension QueryFileListTableViewController {
 			if let firstItem = firstItem {
 				if let itemIndex = self.items.index(of: firstItem) {
 					let indexPath = IndexPath(row: itemIndex, section: 0)
-					tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: false)
-					tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
+					collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+					collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredVertically)
 				}
 			}
 		}
@@ -764,7 +792,7 @@ extension QueryFileListTableViewController {
 	@objc func performMoreItemAction(_ command : UIKeyCommand) {
 		if let core = core, let rootItem = query.rootItem {
 			var item = rootItem
-			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+			if let indexPath = self.collectionView.indexPathsForSelectedItems?.first, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
@@ -798,23 +826,23 @@ extension QueryFileListTableViewController {
 	}
 
 	@objc func selectLastPageObject() {
-		if self.items.count > 0, let lastCell = tableView.visibleCells.last, let indexPath = tableView.indexPath(for: lastCell) {
-			self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-			tableView.selectRow(at: indexPath, animated: true, scrollPosition: .top)
+		if self.items.count > 0, let lastCell = collectionView.visibleCells.last, let indexPath = collectionView.indexPath(for: lastCell) {
+			collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+			collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
 			}
 	}
 
 	@objc func scrollToFirstRow() {
 		if self.items.count > 0 {
-			self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
-			tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
+			self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
+			self.collectionView.selectItem(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
 			}
 		}
 
 		@objc func scrollToLastRow() {
 			if self.items.count > 0 {
-				self.tableView.scrollToRow(at: IndexPath(row: self.items.count - 1, section: 0), at: .bottom, animated: true)
-				tableView.selectRow(at: IndexPath(row: self.items.count - 1, section: 0), animated: true, scrollPosition: .bottom)
+				self.collectionView.scrollToItem(at: IndexPath(row: self.items.count - 1, section: 0), at: .bottom, animated: true)
+			 self.collectionView.selectItem(at: IndexPath(row: self.items.count - 1, section: 0), animated: true, scrollPosition: .bottom)
 			}
 	}
 }
@@ -914,7 +942,7 @@ extension PhotoSelectionViewController {
 	override var canBecomeFirstResponder: Bool {
 		return true
 	}
-
+	/*
     @objc func selectCurrent() {
         guard let focussedIndexPath = focussedIndexPath else { return }
 		if let isSelected = collectionView?.indexPathsForSelectedItems?.contains(focussedIndexPath), isSelected {
@@ -956,7 +984,7 @@ extension PhotoSelectionViewController {
         }
 
         self.focussedIndexPath = IndexPath(item: focussedItem - 1, section: 0)
-    }
+    }*/
 
     private var lastIndexPath: IndexPath {
         return IndexPath(item: collectionView.numberOfItems(inSection: 0) - 1, section: 0)

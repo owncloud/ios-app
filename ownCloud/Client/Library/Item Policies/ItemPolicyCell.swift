@@ -22,10 +22,10 @@ import ownCloudAppShared
 
 class ItemPolicyCell: ClientItemResolvingCell {
 	var iconSize : CGSize = CGSize(width: 40, height: 40)
-
+/*
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
-	}
+	}*/
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")

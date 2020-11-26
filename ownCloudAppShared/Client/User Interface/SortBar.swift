@@ -18,6 +18,11 @@
 
 import UIKit
 
+public enum SortLayout: Int {
+	case list = 0
+	case grid = 1
+}
+
 public class SegmentedControl: UISegmentedControl {
 	var oldValue : Int!
 
@@ -44,6 +49,8 @@ public protocol SortBarDelegate: class {
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 
+	func sortBar(_ sortBar: SortBar, didUpdateLayout: SortLayout)
+
 	func toggleSelectMode()
 }
 
@@ -67,6 +74,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public var sortSegmentedControl: SegmentedControl?
 	public var sortButton: UIButton?
 	public var selectButton: UIButton?
+	public var layoutButton: UIButton?
 	public var showSelectButton: Bool = false {
 		didSet {
 			selectButton?.isHidden = !showSelectButton
@@ -76,6 +84,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			UIAccessibility.post(notification: .layoutChanged, argument: nil)
 		}
 	}
+	var currentLayout: SortLayout = .list
 
 	public var sortMethod: SortMethod {
 		didSet {
@@ -112,16 +121,18 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public init(frame: CGRect, sortMethod: SortMethod) {
 		sortSegmentedControl = SegmentedControl()
 		selectButton = UIButton()
+		layoutButton = UIButton()
 		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
 
 		super.init(frame: frame)
 
-		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let selectButton = selectButton {
+		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let selectButton = selectButton, let layoutButton = layoutButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
+			layoutButton.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
@@ -129,6 +140,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			self.addSubview(sortSegmentedControl)
 			self.addSubview(sortButton)
 			self.addSubview(selectButton)
+			self.addSubview(layoutButton)
 
 			// Sort segmented control
 			NSLayoutConstraint.activate([
@@ -185,15 +197,26 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
 			selectButton.accessibilityLabel = "Enter multiple selection".localized
+
+			layoutButton.setImage(UIImage(named: "ic_pdf_outline")?.tinted(with: Theme.shared.activeCollection.navigationBarColors.tintColor ?? .white), for: .normal)
+			layoutButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
+			layoutButton.addTarget(self, action: #selector(presentLayoutButtonOptions), for: .touchUpInside)
+
 			if #available(iOS 13.4, *) {
 				selectButton.isPointerInteractionEnabled = true
+				layoutButton.isPointerInteractionEnabled = true
 			}
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
-				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
+				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width),
+
+				layoutButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+				layoutButton.rightAnchor.constraint(equalTo: selectButton.leftAnchor, constant: -rightPadding),
+				layoutButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
+				layoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
 		}
 
@@ -220,6 +243,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton?.applyThemeCollection(collection)
 		self.selectButton?.applyThemeCollection(collection)
+		self.layoutButton?.applyThemeCollection(collection)
 		self.sortSegmentedControl?.applyThemeCollection(collection)
 		self.backgroundColor = collection.navigationBarColors.backgroundColor
 	}
@@ -268,6 +292,23 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - Actions
+
+	@objc private func presentLayoutButtonOptions(_ sender : UIButton) {
+
+		delegate.
+
+		print("--> presentLayoutButtonOptions \(currentLayout)")
+		switch currentLayout {
+		case .list:
+		self.layoutButton?.setImage(UIImage(named: "ic_pdf_view_multipage")?.tinted(with: Theme.shared.activeCollection.navigationBarColors.tintColor ?? .white), for: .normal)
+			currentLayout = .grid
+		case .grid:
+		self.layoutButton?.setImage(UIImage(named: "ic_pdf_outline")?.tinted(with: Theme.shared.activeCollection.navigationBarColors.tintColor ?? .white), for: .normal)
+			currentLayout = .list
+		}
+		delegate?.sortBar(self, didUpdateLayout: currentLayout)
+	}
+
 	@objc private func presentSortButtonOptions(_ sender : UIButton) {
 		let tableViewController = SortMethodTableViewController()
 		tableViewController.modalPresentationStyle = .popover

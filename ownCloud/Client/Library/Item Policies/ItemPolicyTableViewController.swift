@@ -93,8 +93,8 @@ class ItemPolicyTableViewController : FileListTableViewController {
 	}
 
 	override func registerCellClasses() {
-		self.tableView.register(ItemPolicyCell.self, forCellReuseIdentifier: "itemCell")
-		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "metaCell")
+		self.collectionView.register(ItemPolicyCell.self, forCellWithReuseIdentifier: "itemCell")
+		self.collectionView.register(ThemeTableViewCell.self, forCellWithReuseIdentifier: "metaCell")
 	}
 
 	// MARK: - Table view data source
@@ -113,11 +113,11 @@ class ItemPolicyTableViewController : FileListTableViewController {
 		return nil
 	}
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	override func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return (itemPolicies.count > 0) ? 2 : 0
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if let section = ItemPolicySectionIndex(rawValue: section) {
 			switch section {
 				case .all: 	return 1
@@ -128,6 +128,8 @@ class ItemPolicyTableViewController : FileListTableViewController {
 		}
 	}
 
+	// TODO:
+	/*
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if let section = ItemPolicySectionIndex(rawValue: section) {
 			switch section {
@@ -137,29 +139,28 @@ class ItemPolicyTableViewController : FileListTableViewController {
 		} else {
 			return nil
 		}
-	}
+	}*/
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let section = ItemPolicySectionIndex(rawValue: indexPath.section) {
 			switch section {
 				case .all:
-					let cell = tableView.dequeueReusableCell(withIdentifier: "metaCell", for: indexPath) as? ThemeTableViewCell
-
+					let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "metaCell", for: indexPath) as? ThemeCollectionViewCell
+/*
 					cell?.textLabel?.text = "All Files".localized
 					cell?.imageView?.image = UIImage(named: "cloud-available-offline")?.tinted(with: Theme.shared.activeCollection.tableRowColors.labelColor)?.paddedTo(width: 60)
 					cell?.accessoryType = .disclosureIndicator
-
+*/
 					return cell!
 
 				case .policies:
-					let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ItemPolicyCell
-					let itemPolicy = itemPolicyAt(indexPath)
-
+					let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "itemCell", for: indexPath) as? ItemPolicyCell
+/*
 					cell?.accessibilityIdentifier = itemPolicy.path ?? itemPolicy.localID
 					cell?.core = self.core
 					cell?.itemPolicy = itemPolicy
 					cell?.isMoreButtonPermanentlyHidden = true
-
+*/
 					if cell?.delegate == nil {
 						cell?.delegate = self
 					}
@@ -168,10 +169,10 @@ class ItemPolicyTableViewController : FileListTableViewController {
 			}
 		}
 
-		return UITableViewCell()
+		return UICollectionViewCell()
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if let section = ItemPolicySectionIndex(rawValue: indexPath.section) {
 			var query : OCQuery?
 			var title : String?
@@ -187,7 +188,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 							query = self.query(forItem: item)
 							title = item.name
 						} else {
-							super.tableView(tableView, didSelectRowAt: indexPath)
+							super.collectionView(collectionView, didSelectItemAt: indexPath)
 						}
 					}
 			}
@@ -200,7 +201,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 			}
 		}
 	}
-
+/*
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		if let section = ItemPolicySectionIndex(rawValue: indexPath.section), section == .policies {
 			return UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: "Make unavailable offline".localized, handler: { [weak self] (_, _, completionHandler) in
@@ -212,7 +213,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 		} else {
 			return nil
 		}
-	}
+	}*/
 
 	// MARK: - Theming
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
