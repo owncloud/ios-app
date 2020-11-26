@@ -830,6 +830,33 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4.4</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: iPad on iOS 12</string>
+					<key>Subtitle</key>
+					<string>UI on iPad with iOS 12 does not appeared</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Improvements on Apple Silicon macOS</string>
+					<key>Subtitle</key>
+					<string>Fixed a crash and some improvements when running on macOS 11 Apple Silicon</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
