@@ -57,7 +57,6 @@ class MoreSettingsSection: SettingsSection {
 			}
 		}, title: "Documentation".localized, accessoryType: .disclosureIndicator, identifier: "documentation")
 
-
 		if let helpURL = VendorServices.shared.helpURL {
 			helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 				self?.openSFWebViewWithConfirmation(for: helpURL)
