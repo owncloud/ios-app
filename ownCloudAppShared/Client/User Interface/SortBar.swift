@@ -200,7 +200,12 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			layoutButton.setImage(UIImage(named: "ic_pdf_outline")?.tinted(with: Theme.shared.activeCollection.navigationBarColors.tintColor ?? .white), for: .normal)
 			layoutButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
-			layoutButton.addTarget(self, action: #selector(presentLayoutButtonOptions), for: .touchUpInside)
+			//layoutButton.addTarget(self, action: #selector(presentLayoutButtonOptions), for: .touchUpInside)
+			if #available(iOSApplicationExtension 14.0, *) {
+				layoutButton.menu = createMenu()
+			} else {
+				// Fallback on earlier versions
+			}
 
 			if #available(iOS 13.4, *) {
 				selectButton.isPointerInteractionEnabled = true
@@ -209,14 +214,14 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
+				selectButton.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width),
 
 				layoutButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 				layoutButton.rightAnchor.constraint(equalTo: selectButton.leftAnchor, constant: -rightPadding),
-				layoutButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
-				layoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
+				layoutButton.heightAnchor.constraint(equalToConstant: 60.0),
+				layoutButton.widthAnchor.constraint(equalToConstant: 44.0)
 			])
 		}
 
@@ -295,7 +300,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 	@objc private func presentLayoutButtonOptions(_ sender : UIButton) {
 
-		delegate.
 
 		print("--> presentLayoutButtonOptions \(currentLayout)")
 		switch currentLayout {
@@ -307,6 +311,61 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			currentLayout = .list
 		}
 		delegate?.sortBar(self, didUpdateLayout: currentLayout)
+	}
+
+	@available(iOSApplicationExtension 13.0, *)
+	func createMenu() -> UIMenu {
+
+	  let photoAction = UIAction(
+		title: "Liste",
+		image: UIImage(systemName: "list.bullet")
+	  ) { (_) in
+		print("New Photo from Camera")
+	  }
+
+		let fromWebAction = UIAction(
+	   title: "Raster",
+	   image: UIImage(systemName: "square.grid.2x2")
+	 ) { (_) in
+	   print("Photo from the internet")
+	 }
+	   fromWebAction.state = .on
+
+	  let albumAction = UIAction(
+		title: "Symbole",
+		image: UIImage(systemName: "photo")
+	  ) { (_) in
+		print("Photo from photo album")
+	  }
+
+		let albumAction1 = UIAction(
+	   title: "Klein",
+	   image: nil
+	 ) { (_) in
+	   print("Photo from photo album")
+	 }
+
+		let albumAction2 = UIAction(
+	   title: "Medium",
+	   image: nil
+	 ) { (_) in
+	   print("Photo from photo album")
+	 }
+
+		let albumAction3 = UIAction(
+	   title: "Groß",
+	   image: nil
+	 ) { (_) in
+	   print("Photo from photo album")
+	 }
+
+	  let menuActions = [photoAction, fromWebAction, albumAction, albumAction1, albumAction2, albumAction3]
+
+	  let addNewMenu = UIMenu(
+		title: "",
+		children: menuActions)
+
+	  return addNewMenu
 	}
 
 	@objc private func presentSortButtonOptions(_ sender : UIButton) {
