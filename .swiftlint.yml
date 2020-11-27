@@ -32,6 +32,8 @@ disabled_rules:
     - vertical_parameter_alignment
     - function_body_length
     - implicit_getter
+    - computed_accessors_order
+    - unneeded_notification_center_removal
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

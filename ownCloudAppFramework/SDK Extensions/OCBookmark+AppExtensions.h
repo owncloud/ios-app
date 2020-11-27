@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCBookmark (AppExtensions)
 
-@property(readonly,strong,nonatomic,nullable) NSString *userName;
 @property(strong,nonatomic,nullable) NSString *displayName;
 @property(readonly,strong,nonatomic) NSString *shortName;
 
