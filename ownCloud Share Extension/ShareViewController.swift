@@ -37,11 +37,13 @@ class ShareViewController: MoreStaticTableViewController {
 		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
-		AppLockManager.shared.passwordViewHostViewController = self
-		AppLockManager.shared.cancelAction = { [weak self] in
-			self?.returnCores(completion: {
-				self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-			})
+		if AppLockManager.supportedOnDevice {
+			AppLockManager.shared.passwordViewHostViewController = self
+			AppLockManager.shared.cancelAction = { [weak self] in
+				self?.returnCores(completion: {
+					self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+				})
+			}
 		}
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
@@ -54,7 +56,10 @@ class ShareViewController: MoreStaticTableViewController {
 
 		if !willAppearInitial {
 			willAppearInitial = true
-			AppLockManager.shared.showLockscreenIfNeeded()
+
+			if AppLockManager.supportedOnDevice {
+				AppLockManager.shared.showLockscreenIfNeeded()
+			}
 
 			if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
 				appexNavigationController.dismissalAction = { [weak self] (_) in
