@@ -33,6 +33,13 @@ static NSString *sOCCoreFPServiceSessionKey = @"sOCCoreFPServiceSessionKey";
 {
 	OCFileProviderServiceSession *session;
 
+	if (!OCVault.hostHasFileProvider)
+	{
+		OCLogError(@"Attempt to acquire file provider service host failed due to missing File Provider");
+		completionHandler(OCError(OCErrorFeatureNotImplemented), nil, ^{});
+		return;
+	}
+
 	@synchronized(sOCCoreFPServiceSessionKey)
 	{
 		if ((session = objc_getAssociatedObject(self, (__bridge void *)sOCCoreFPServiceSessionKey)) == nil)

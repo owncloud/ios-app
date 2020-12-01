@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Release version 11.4.4 (End-November 2020)
+
+- Fix: iPad on iOS 12 (#4293)
+- Fix: Improvements on Apple Silicon macOS
+
 ## Release version 11.4.3 (Mid-November 2020)
 
 - Fix: iOS 14 UI Adaptions (#834)

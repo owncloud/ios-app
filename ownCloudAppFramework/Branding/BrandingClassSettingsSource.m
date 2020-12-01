@@ -68,7 +68,7 @@
 	return (OCClassSettingsSourceIdentifierBranding);
 }
 
-- (NSDictionary <NSString *, id> *)flatSettingsDictionary
+- (NSDictionary <OCClassSettingsFlatIdentifier, id> *)flatSettingsDictionary
 {
 	return ([BrandingClassSettingsSource.brandingProperties objectForKey:@"Configuration"]);
 }

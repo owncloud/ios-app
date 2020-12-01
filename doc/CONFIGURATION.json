@@ -1,0 +1,1051 @@
+[
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : "https://itunes.apple.com/app/id1359583808?mt=8",
+    "description" : "URL for the app in the App Store.",
+    "flatIdentifier" : "app.app-store-link",
+    "key" : "app-store-link",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Enable/disable review prompt.",
+    "flatIdentifier" : "app.enable-review-prompt",
+    "key" : "enable-review-prompt",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Enable/disable UI animations.",
+    "flatIdentifier" : "app.enable-ui-animations",
+    "key" : "enable-ui-animations",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : "ios-app@owncloud.com",
+    "description" : "Email address to send feedback to.",
+    "flatIdentifier" : "app.feedback-email",
+    "key" : "feedback-email",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Controls if the app is built for beta or release purposes.",
+    "flatIdentifier" : "app.is-beta-build",
+    "key" : "is-beta-build",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Enables/disables the recommend to a friend entry in the settings.",
+    "flatIdentifier" : "app.recommend-to-friend-enabled",
+    "key" : "recommend-to-friend-enabled",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Enables/disables the send feedback entry in the settings.",
+    "flatIdentifier" : "app.send-feedback-enabled",
+    "key" : "send-feedback-enabled",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Controls whether a warning should be shown on the first run of a beta version.",
+    "flatIdentifier" : "app.show-beta-warning",
+    "key" : "show-beta-warning",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "index.php/apps/oauth2/authorize",
+    "description" : "OAuth2 authorization endpoint.",
+    "flatIdentifier" : "authentication-oauth2.oa2-authorization-endpoint",
+    "key" : "oa2-authorization-endpoint",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1",
+    "description" : "OAuth2 Client ID.",
+    "flatIdentifier" : "authentication-oauth2.oa2-client-id",
+    "key" : "oa2-client-id",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx",
+    "description" : "OAuth2 Client Secret.",
+    "flatIdentifier" : "authentication-oauth2.oa2-client-secret",
+    "key" : "oa2-client-secret",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "description" : "OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)",
+    "flatIdentifier" : "authentication-oauth2.oa2-expiration-override-seconds",
+    "key" : "oa2-expiration-override-seconds",
+    "status" : "debugOnly",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "oc://ios.owncloud.com",
+    "description" : "OAuth2 Redirect URI.",
+    "flatIdentifier" : "authentication-oauth2.oa2-redirect-uri",
+    "key" : "oa2-redirect-uri",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "index.php/apps/oauth2/api/v1/token",
+    "description" : "OAuth2 token endpoint.",
+    "flatIdentifier" : "authentication-oauth2.oa2-token-endpoint",
+    "key" : "oa2-token-endpoint",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OIDC",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "oc://ios.owncloud.com",
+    "description" : "OpenID Connect Redirect URI",
+    "flatIdentifier" : "authentication-oauth2.oidc-redirect-uri",
+    "key" : "oidc-redirect-uri",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OIDC",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "openid offline_access email profile",
+    "description" : "OpenID Connect Scope",
+    "flatIdentifier" : "authentication-oauth2.oidc-scope",
+    "key" : "oidc-scope",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Authentication",
+    "classIdentifier" : "authentication",
+    "className" : "OCAuthenticationMethod",
+    "defaultValue" : "operating-system",
+    "description" : "Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.",
+    "flatIdentifier" : "authentication.browser-session-class",
+    "key" : "browser-session-class",
+    "possibleValues" : [
+      {
+        "description" : "Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.",
+        "value" : "UIWebView"
+      },
+      {
+        "description" : "Use ASWebAuthenticationSession for browser sessions.",
+        "value" : "operating-system"
+      }
+    ],
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Authentication",
+    "classIdentifier" : "authentication",
+    "className" : "OCAuthenticationMethod",
+    "defaultValue" : false,
+    "description" : "Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.",
+    "flatIdentifier" : "authentication.browser-session-prefers-ephermal",
+    "key" : "browser-session-prefers-ephermal",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Bookmarks",
+    "classIdentifier" : "bookmark",
+    "className" : "ownCloud.BookmarkViewController",
+    "description" : "The default URL for the creation of new bookmarks.",
+    "flatIdentifier" : "bookmark.default-url",
+    "key" : "default-url",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Bookmarks",
+    "classIdentifier" : "bookmark",
+    "className" : "ownCloud.BookmarkViewController",
+    "defaultValue" : true,
+    "description" : "Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.",
+    "flatIdentifier" : "bookmark.url-editable",
+    "key" : "url-editable",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : true,
+    "description" : "Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.allow-background-url-sessions",
+    "key" : "allow-background-url-sessions",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : true,
+    "description" : "Allow the use of cellular connections.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.allow-cellular",
+    "key" : "allow-cellular",
+    "status" : "recommended",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : false,
+    "description" : "Controls whether private links are requested with regular PROPFINDs.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.always-request-private-link",
+    "key" : "always-request-private-link",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "trailing",
+    "category" : "Security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "description" : "Array of allowed authentication methods. Nil/Missing for no restrictions.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-allowed-authentication-methods",
+    "key" : "connection-allowed-authentication-methods",
+    "possibleValues" : [
+      {
+        "description" : "Basic Auth",
+        "value" : "com.owncloud.basicauth"
+      },
+      {
+        "description" : "OAuth2",
+        "value" : "com.owncloud.oauth2"
+      },
+      {
+        "description" : "OpenID Connect",
+        "value" : "com.owncloud.openid-connect"
+      }
+    ],
+    "status" : "recommended",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "bookmarkCertificate == serverCertificate",
+    "description" : "Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.\n\nExamples of expressions:\n- `bookmarkCertificate == serverCertificate`: the whole certificate needs to be identical to the one stored in the bookmark during setup.\n- `bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData`:  the public key of the received certificate needs to be identical to the public key stored in the bookmark during setup.\n- `serverCertificate.passedValidationOrIsUserAccepted == true`: any certificate is accepted as long as it has passed validation by the OS or was accepted by the user.\n- `serverCertificate.commonName == \"demo.owncloud.org\"`: the common name of the certificate must be \"demo.owncloud.org\".\n- `serverCertificate.rootCertificate.commonName == \"DST Root CA X3\"`: the common name of the root certificate must be \"DST Root CA X3\".\n- `serverCertificate.parentCertificate.commonName == \"Let's Encrypt Authority X3\"`: the common name of the parent certificate must be \"Let's Encrypt Authority X3\".\n- `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == \"2A 00 98 90 BD … F7\"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.\n",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-certificate-extended-validation-rule",
+    "key" : "connection-certificate-extended-validation-rule",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "10.0",
+    "description" : "The minimum server version required.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-minimum-server-version",
+    "key" : "connection-minimum-server-version",
+    "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "trailing",
+    "category" : "Security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : [
+      "com.owncloud.openid-connect",
+      "com.owncloud.oauth2",
+      "com.owncloud.basicauth"
+    ],
+    "description" : "Array of authentication methods in order of preference (most preferred first).",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-preferred-authentication-methods",
+    "key" : "connection-preferred-authentication-methods",
+    "possibleValues" : [
+      {
+        "description" : "Basic Auth",
+        "value" : "com.owncloud.basicauth"
+      },
+      {
+        "description" : "OAuth2",
+        "value" : "com.owncloud.oauth2"
+      },
+      {
+        "description" : "OpenID Connect",
+        "value" : "com.owncloud.openid-connect"
+      }
+    ],
+    "status" : "recommended",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))",
+    "description" : "Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-renewed-certificate-acceptance-rule",
+    "key" : "connection-renewed-certificate-acceptance-rule",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "ocs/v2.php/cloud/capabilities",
+    "description" : "Endpoint to use for retrieving server capabilities.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-capabilities",
+    "key" : "endpoint-capabilities",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "ocs/v2.php/apps/files_sharing/api/v1/sharees",
+    "description" : "Path of the sharing recipient API endpoint.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-recipients",
+    "key" : "endpoint-recipients",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "ocs/v2.php/apps/files_sharing/api/v1/remote_shares",
+    "description" : "Path of the remote shares API endpoint.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-remote-shares",
+    "key" : "endpoint-remote-shares",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "ocs/v2.php/apps/files_sharing/api/v1/shares",
+    "description" : "Path of the shares API endpoint.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-shares",
+    "key" : "endpoint-shares",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "status.php",
+    "description" : "Endpoint to retrieve basic status information and detect an ownCloud installation.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-status",
+    "key" : "endpoint-status",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "index.php/apps/files/api/v1/thumbnail",
+    "description" : "Path of the thumbnail endpoint.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-thumbnail",
+    "key" : "endpoint-thumbnail",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "ocs/v2.php/cloud/user",
+    "description" : "Endpoint to use for retrieving information on logged in user.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-user",
+    "key" : "endpoint-user",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "remote.php/dav/files",
+    "description" : "Endpoint to use for WebDAV.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-webdav",
+    "key" : "endpoint-webdav",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "remote.php/dav/meta",
+    "description" : "Endpoint to use for WebDAV metadata.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-webdav-meta",
+    "key" : "endpoint-webdav-meta",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : false,
+    "description" : "Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.",
+    "flags" : 2,
+    "flatIdentifier" : "connection.force-background-url-sessions",
+    "key" : "force-background-url-sessions",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "warn",
+    "description" : "Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.plain-http-policy",
+    "key" : "plain-http-policy",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : true,
+    "description" : "Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).",
+    "flags" : 4,
+    "flatIdentifier" : "connection.transparent-temporary-redirect",
+    "key" : "transparent-temporary-redirect",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : ".well-known",
+    "description" : "Path of the .well-known endpoint.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.well-known",
+    "key" : "well-known",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "defaultValue" : {
+      "actions" : 10,
+      "all" : 0,
+      "download" : 3,
+      "download-wifi-and-cellular" : 3,
+      "download-wifi-only" : 2,
+      "transfer" : 6,
+      "upload" : 3,
+      "upload-cellular-and-wifi" : 3,
+      "upload-wifi-only" : 2
+    },
+    "description" : "Concurrency budgets available for sync actions by action category.",
+    "flatIdentifier" : "core.action-concurrency-budgets",
+    "key" : "action-concurrency-budgets",
+    "status" : "advanced",
+    "type" : "dictionary"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Privacy",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "defaultValue" : true,
+    "description" : "Add an `Accept-Language` HTTP header using the preferred languages set on the device.",
+    "flatIdentifier" : "core.add-accept-language-header",
+    "key" : "add-accept-language-header",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "defaultValue" : false,
+    "description" : "Enable or disable per-process, in-memory cookie storage.",
+    "flatIdentifier" : "core.cookie-support-enabled",
+    "key" : "cookie-support-enabled",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "description" : "Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).",
+    "flatIdentifier" : "core.override-availability-signal",
+    "key" : "override-availability-signal",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "description" : "Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).",
+    "flatIdentifier" : "core.override-reachability-signal",
+    "key" : "override-reachability-signal",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "defaultValue" : [
+      "*"
+    ],
+    "description" : "Provide hints that thumbnails are available for items whose MIME-Type starts with any of the strings provided in this array. Providing an empty array turns off thumbnail loading. Providing `[\"*\"]` turns on thumbnail loading for all items.",
+    "flatIdentifier" : "core.thumbnail-available-for-mime-type-prefixes",
+    "key" : "thumbnail-available-for-mime-type-prefixes",
+    "status" : "debugOnly",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Diagnostics",
+    "classIdentifier" : "diagnostics",
+    "className" : "ownCloud.DiagnosticManager",
+    "defaultValue" : false,
+    "description" : "Controls whether additional diagnostic options and information is available throughout the user interface.",
+    "flatIdentifier" : "diagnostics.enabled",
+    "key" : "enabled",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Display Settings",
+    "classIdentifier" : "display",
+    "className" : "DisplaySettings",
+    "defaultValue" : false,
+    "description" : "Controls whether drag and drop should be prevented for items inside the app.",
+    "flatIdentifier" : "display.prevent-dragging-files",
+    "key" : "prevent-dragging-files",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Display Settings",
+    "classIdentifier" : "display",
+    "className" : "DisplaySettings",
+    "defaultValue" : false,
+    "description" : "Controls whether hidden files (i.e. files starting with `.` ) should also be shown.",
+    "flatIdentifier" : "display.show-hidden-files",
+    "key" : "show-hidden-files",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Display Settings",
+    "classIdentifier" : "display",
+    "className" : "DisplaySettings",
+    "defaultValue" : false,
+    "description" : "Controls whether folders are shown at the top.",
+    "flatIdentifier" : "display.sort-folders-first",
+    "key" : "sort-folders-first",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "host-simulator",
+    "className" : "OCHostSimulatorManager",
+    "defaultValue" : [
+
+    ],
+    "description" : "Active Host simulation extensions.",
+    "flatIdentifier" : "host-simulator.active-simulations",
+    "key" : "active-simulations",
+    "possibleValues" : [
+      {
+        "description" : "Return status code 404 for every request for the first five seconds.",
+        "value" : "five-seconds-of-404"
+      },
+      {
+        "description" : "Return status code 404 for every request.",
+        "value" : "only-404"
+      },
+      {
+        "description" : "Reject Downloads with status 500 responses.",
+        "value" : "reject-downloads-500"
+      }
+    ],
+    "status" : "debugOnly",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "classIdentifier" : "http",
+    "className" : "OCHTTPPipeline",
+    "defaultValue" : "ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})",
+    "description" : "A custom `User-Agent` to send with every HTTP request.\n\nThe following placeholders can be used to make it dynamic:\n- `{{app.build}}`: the build number of the app (f.ex. `123`)\n- `{{app.version}}`: the version of the app (f.ex. `1.2`)\n- `{{app.part}}`: the part of the app (more exactly: the name of the main bundle) from which the request was sent (f.ex. `App`, `ownCloud File Provider`)\n- `{{device.model}}`: the model of the device running the app (f.ex. `iPhone`, `iPad`)\n- `{{device.model-id}}`: the model identifier of the device running the app (f.ex. `iPhone8,1`)\n- `{{os.name}}` : the name of the operating system running on the device (f.ex. `iOS`, `iPadOS`)\n- `{{os.version}}`: the version of operating system running on the device (f.ex. `13.2.2`)\n",
+    "flatIdentifier" : "http.user-agent",
+    "key" : "user-agent",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Policies",
+    "classIdentifier" : "item-policy",
+    "className" : "OCItemPolicyProcessor",
+    "defaultValue" : 604800,
+    "description" : "The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.",
+    "flatIdentifier" : "item-policy.local-copy-expiration",
+    "key" : "local-copy-expiration",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Policies",
+    "classIdentifier" : "item-policy",
+    "className" : "OCItemPolicyProcessor",
+    "defaultValue" : true,
+    "description" : "Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.",
+    "flatIdentifier" : "item-policy.local-copy-expiration-enabled",
+    "key" : "local-copy-expiration-enabled",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Policies",
+    "classIdentifier" : "item-policy",
+    "className" : "OCItemPolicyProcessor",
+    "defaultValue" : 60,
+    "description" : "Number of seconds since the removal of an item after which the metadata entry may be finally removed.",
+    "flatIdentifier" : "item-policy.vacuum-sync-anchor-ttl",
+    "key" : "vacuum-sync-anchor-ttl",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Licensing",
+    "classIdentifier" : "licensing",
+    "className" : "OCLicenseManager",
+    "defaultValue" : false,
+    "description" : "Enables/disables App Store licensing support.",
+    "flatIdentifier" : "licensing.disable-appstore-licensing",
+    "key" : "disable-appstore-licensing",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Licensing",
+    "classIdentifier" : "licensing",
+    "className" : "OCLicenseManager",
+    "defaultValue" : false,
+    "description" : "Enables/disables Enterprise licensing support.",
+    "flatIdentifier" : "licensing.disable-enterprise-licensing",
+    "key" : "disable-enterprise-licensing",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : false,
+    "description" : "Controls whether filtered out messages should still be logged, but with the message replaced with `-`.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-blank-filtered-messages",
+    "key" : "log-blank-filtered-messages",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : false,
+    "description" : "Controls whether log levels should be replaced with colored emojis.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-colored",
+    "key" : "log-colored",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "trailing",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : [
+      "writer.stderr",
+      "writer.file",
+      "option.log-requests-and-responses"
+    ],
+    "description" : "List of enabled logging system components.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-enabled-components",
+    "key" : "log-enabled-components",
+    "possibleValues" : [
+      {
+        "description" : "Log HTTP requests and responses",
+        "value" : "option.log-requests-and-responses"
+      },
+      {
+        "description" : "Log file",
+        "value" : "writer.file"
+      },
+      {
+        "description" : "Standard error output",
+        "value" : "writer.stderr"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : "text",
+    "description" : "Determines the format that log messages are saved in",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-format",
+    "key" : "log-format",
+    "possibleValues" : [
+      {
+        "description" : "Detailed JSON (one line per message).",
+        "value" : "json"
+      },
+      {
+        "description" : "A simpler JSON version where details are already merged into the message.",
+        "value" : "json-composed"
+      },
+      {
+        "description" : "Standard logging as text.",
+        "value" : "text"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : 4,
+    "description" : "Log level",
+    "flags" : 2,
+    "flatIdentifier" : "log.log-level",
+    "key" : "log-level",
+    "possibleValues" : [
+      {
+        "description" : "verbose",
+        "value" : -1
+      },
+      {
+        "description" : "debug",
+        "value" : 0
+      },
+      {
+        "description" : "info",
+        "value" : 1
+      },
+      {
+        "description" : "warning",
+        "value" : 2
+      },
+      {
+        "description" : "error",
+        "value" : 3
+      },
+      {
+        "description" : "off",
+        "value" : 4
+      }
+    ],
+    "status" : "supported",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : 0,
+    "description" : "Maximum length of a log message before the message is truncated. A value of 0 means no limit.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-maximum-message-size",
+    "key" : "log-maximum-message-size",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "description" : "If set, omits logs messages containing any of the exact terms in this array.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-omit-matching",
+    "key" : "log-omit-matching",
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "description" : "If set, omits all log messages tagged with tags in this array.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-omit-tags",
+    "key" : "log-omit-tags",
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "description" : "If set, only logs messages containing at least one of the exact terms in this array.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-only-matching",
+    "key" : "log-only-matching",
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "description" : "If set, omits all log messages not tagged with tags in this array.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-only-tags",
+    "key" : "log-only-tags",
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : false,
+    "description" : "Controls whether certain objects in log statements should be masked for privacy.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-privacy-mask",
+    "key" : "log-privacy-mask",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : true,
+    "description" : "Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-single-lined",
+    "key" : "log-single-lined",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : false,
+    "description" : "Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).",
+    "flags" : 4,
+    "flatIdentifier" : "log.log-synchronous",
+    "key" : "log-synchronous",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Release Notes",
+    "classIdentifier" : "releasenotes",
+    "className" : "ownCloud.ReleaseNotesDatasource",
+    "description" : "The last-seen app version.",
+    "flatIdentifier" : "releasenotes.lastSeenAppVersion",
+    "key" : "lastSeenAppVersion",
+    "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Release Notes",
+    "classIdentifier" : "releasenotes",
+    "className" : "ownCloud.ReleaseNotesDatasource",
+    "description" : "The app version for which the release notes were last shown.",
+    "flatIdentifier" : "releasenotes.lastSeenReleaseNotesVersion",
+    "key" : "lastSeenReleaseNotesVersion",
+    "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "classIdentifier" : "user-settings",
+    "className" : "OCClassSettingsUserPreferences",
+    "description" : "List of settings (as flat identifiers) users are allowed to change. If this list is specified, only these settings can be changed by the user.",
+    "flatIdentifier" : "user-settings.allow",
+    "key" : "allow",
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "classIdentifier" : "user-settings",
+    "className" : "OCClassSettingsUserPreferences",
+    "description" : "List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.",
+    "flatIdentifier" : "user-settings.disallow",
+    "key" : "disallow",
+    "status" : "advanced",
+    "type" : "stringArray"
+  }
+]

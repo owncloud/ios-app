@@ -25,6 +25,15 @@ public class AppLockManager: NSObject {
 	// MARK: - UI
 	private var userDefaults: UserDefaults
 
+	// MARK: - Availability
+	public static var supportedOnDevice : Bool {
+		if #available(iOS 14, *), ProcessInfo.processInfo.isiOSAppOnMac {
+			return false
+		}
+
+		return true
+	}
+
 	// MARK: - State
 	private var lastApplicationBackgroundedDate : Date? {
 		didSet {
@@ -149,15 +158,19 @@ public class AppLockManager: NSObject {
 
 		super.init()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.updateLockscreens), name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		if AppLockManager.supportedOnDevice {
+			NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(self.updateLockscreens), name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		}
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-		NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-		NotificationCenter.default.removeObserver(self, name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		if AppLockManager.supportedOnDevice {
+			NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+			NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+			NotificationCenter.default.removeObserver(self, name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		}
 	}
 
 	// MARK: - Show / Dismiss Passcode View

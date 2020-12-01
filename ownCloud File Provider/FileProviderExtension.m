@@ -1031,6 +1031,8 @@
 		// Turn issues that are just converted authorization errors back into errors and discard the issue
 		if ([issue.error isOCErrorWithCode:OCErrorAuthorizationFailed] ||
 		    [issue.error isOCErrorWithCode:OCErrorAuthorizationNoMethodData] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMethodNotAllowed] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMethodUnknown] ||
 		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMissingData])
 		{
 			error = issue.error;
@@ -1108,6 +1110,18 @@
 	return (@{
 			OCClassSettingsKeyFileProviderSkipLocalErrorChecks : @(NO)
 		});
+}
+
++ (OCClassSettingsMetadataCollection)classSettingsMetadata
+{
+	return (@{
+		OCClassSettingsKeyFileProviderSkipLocalErrorChecks : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Skip some local error checks in the FileProvider to easily provoke errors.",
+			OCClassSettingsMetadataKeyCategory	: @"File Provider",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusDebugOnly
+		}
+	});
 }
 
 - (BOOL)skipLocalErrorChecks

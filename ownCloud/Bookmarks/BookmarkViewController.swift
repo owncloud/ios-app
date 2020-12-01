@@ -275,7 +275,9 @@ class BookmarkViewController: StaticTableViewController {
 					}
 				}
 
-				self.usernameRow?.enabled = (bookmark?.authenticationMethodIdentifier == nil)
+				self.usernameRow?.enabled =
+					(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
+					((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
 
 				self.navigationItem.title = "Edit account".localized
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
@@ -929,16 +931,30 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .bookmark {
-			/*
 			return [
-				.bookmarkDefaultURL : "http://demo.owncloud.org/",
-				.bookmarkURLEditable : false
+				.bookmarkURLEditable : true
 			]
-			*/
-			return [ : ]
 		}
 
 		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.bookmarkDefaultURL : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "The default URL for the creation of new bookmarks.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.bookmarkURLEditable : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported
+			]
+		]
 	}
 }
 

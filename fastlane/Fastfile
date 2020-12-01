@@ -501,21 +501,37 @@ end
       entitlements_file: "ownCloud/ownCloud.entitlements",
       app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
+    update_keychain_access_groups(
+      entitlements_file: "ownCloud/ownCloud.entitlements",
+      identifiers: [ENTERPRISE_TEAM + "." + APP_GROUP_IDENTIFIERS]
+	)
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud File Provider/ownCloud_File_Provider.entitlements",
       app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
+    update_keychain_access_groups(
+      entitlements_file: "ownCloud File Provider/ownCloud_File_Provider.entitlements",
+      identifiers: [ENTERPRISE_TEAM + "." + APP_GROUP_IDENTIFIERS]
+	)
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud Intents/ownCloud Intents.entitlements",
       app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
+    update_keychain_access_groups(
+      entitlements_file: "ownCloud Intents/ownCloud Intents.entitlements",
+      identifiers: [ENTERPRISE_TEAM + "." + APP_GROUP_IDENTIFIERS]
+	)
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud Share Extension/ownCloud Share Extension.entitlements",
       app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
+    update_keychain_access_groups(
+      entitlements_file: "ownCloud Share Extension/ownCloud Share Extension.entitlements",
+      identifiers: [ENTERPRISE_TEAM + "." + APP_GROUP_IDENTIFIERS]
+	)
 
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
 
