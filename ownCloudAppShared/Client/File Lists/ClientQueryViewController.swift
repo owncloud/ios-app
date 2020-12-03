@@ -40,6 +40,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+	
+	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -479,11 +481,29 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 			} else {
 				// Import Items from outside
 				let typeIdentifiers = item.dragItem.itemProvider.registeredTypeIdentifiers
+				let preferredUTIs = [
+					kUTTypeImage,
+					kUTTypeMovie,
+					kUTTypePDF,
+					kUTTypeData
+				]
 				var useUTI : String?
+				var useIndex : Int = Int.max
 				
 				for typeIdentifier in typeIdentifiers {
-					if UTTypeConformsTo(typeIdentifier as CFString, kUTTypeData) {
-						useUTI = typeIdentifier
+					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn.") {
+						for preferredUTI in preferredUTIs {
+							let conforms = UTTypeConformsTo(typeIdentifier as CFString, preferredUTI)
+							
+							// Log.log("\(preferredUTI) vs \(typeIdentifier) -> \(conforms)")
+
+							if conforms {
+								if let utiIndex = preferredUTIs.index(of: preferredUTI), utiIndex < useIndex {
+									useUTI = typeIdentifier
+									useIndex = utiIndex
+								}
+							}
+						}
 					}
 				}
 			
@@ -580,7 +600,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 			case .collection:
 				guard let data = item.serializedData() else { return nil }
 
-				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: "com.owncloud.ios-app.item-data")
+				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: ItemDataUTI)
 				let dragItem = UIDragItem(itemProvider: itemProvider)
 
 				dragItem.localObject = draggingValue
@@ -593,8 +613,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 				let mimeTypeCF = itemMimeType as CFString
 				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
 
-				guard let data = item.serializedData() else { return nil }
-				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: "com.owncloud.ios-app.item-data")
+				let itemProvider = NSItemProvider()
 				
 				itemProvider.suggestedName = item.name
 
@@ -623,13 +642,20 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 							completionHandler(fileURL, true, nil)
 
 							if let claim = file?.claim, let item = item, let self = self {
-								self.core?.remove(claim, on: item, afterDeallocationOf: [self])
+								self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
 							}
 						})
 					}
 					
 					return progress
 				})
+
+				itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
+					guard let data = item.serializedData() else { return nil }
+					completionHandler(data, nil)
+	
+					return nil
+				}
 
 				let dragItem = UIDragItem(itemProvider: itemProvider)
 				dragItem.localObject = draggingValue
