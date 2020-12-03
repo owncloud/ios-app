@@ -527,4 +527,15 @@ extension AppLockManager: OCClassSettingsSupport {
 			.passcodeEnforced : false
 		]
 	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			OCClassSettingsKey.passcodeEnforced: [
+				OCClassSettingsMetadataKey.type: OCClassSettingsMetadataType.boolean,
+				OCClassSettingsMetadataKey.description: "Controls wether the user MUST establish a passcode upon app installation",
+				OCClassSettingsMetadataKey.category: "Passcode",
+				OCClassSettingsMetadataKey.status: OCClassSettingsKeyStatus.advanced
+			]
+		]
+	}
 }
