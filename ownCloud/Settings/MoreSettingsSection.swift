@@ -98,6 +98,19 @@ class MoreSettingsSection: SettingsSection {
 					textViewController.title = "Acknowledgements".localized
 
 					if licenses != nil {
+						let titleAttributes : [NSAttributedString.Key : Any] = [
+							.font : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize * 1.5)
+						]
+
+						let textAttributes : [NSAttributedString.Key : Any] = [
+							.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
+							.foregroundColor : UIColor.darkGray
+						]
+
+					   	// Preamble
+						licenseText.append(NSAttributedString(string: "Acknowledgements".localized + "\n", attributes: titleAttributes))
+						licenseText.append(NSAttributedString(string: "\n" + "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.".localized + "\n\n", attributes: textAttributes))
+
 						for licenseExtensionMatch in licenses! {
 							let extensionObject = licenseExtensionMatch.extension.provideObject(for: context)
 
@@ -105,17 +118,14 @@ class MoreSettingsSection: SettingsSection {
 							   let licenseTitle = licenseDict["title"] as? String,
 							   let licenseURL = licenseDict["url"] as? URL {
 							   	// Title
-								licenseText.append(NSAttributedString(string: licenseTitle + "\n", attributes: [.font : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize * 1.5)]))
+								licenseText.append(NSAttributedString(string: licenseTitle + "\n", attributes: titleAttributes))
 
 								// License text
 								do {
 									var encoding : String.Encoding = .utf8
 									let licenseFileContents = try String(contentsOf: licenseURL, usedEncoding: &encoding)
 
-									licenseText.append(NSAttributedString(string: "\n" + licenseFileContents + "\n\n", attributes: [
-										.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
-										.foregroundColor : UIColor.darkGray
-									]))
+									licenseText.append(NSAttributedString(string: "\n" + licenseFileContents + "\n\n", attributes: textAttributes))
 								} catch {
 								}
 							}
