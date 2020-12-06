@@ -176,6 +176,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
 			pdfView.autoScales = true
 			updatePageLabel()
+			setThumbnailPosition()
 
 			completion(true)
 
@@ -211,7 +212,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		self.thumbnailViewPosition = .bottom
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -236,11 +236,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
 		if #available(iOS 13, *) {
 			coordinator.animate(alongsideTransition: nil) { (_) in
-				if newCollection.verticalSizeClass == .regular {
-					self.thumbnailViewPosition = .bottom
-				} else {
-					self.thumbnailViewPosition = .right
-				}
+				self.setThumbnailPosition()
 				self.calculateThumbnailSize()
 			}
 		}
@@ -324,6 +320,14 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - Private helpers
+
+	private func setThumbnailPosition() {
+		if UIScreen.main.traitCollection.verticalSizeClass == .regular {
+			self.thumbnailViewPosition = .bottom
+		} else {
+			self.thumbnailViewPosition = .right
+		}
+	}
 
 	private func calculateThumbnailSize() {
 		let maxHeight = floor( min(self.thumbnailView.bounds.size.height, self.thumbnailView.bounds.size.width)  * 0.6)
