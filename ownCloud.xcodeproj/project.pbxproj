@@ -913,7 +913,7 @@
 		236735A521217C3500E5834A /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
 		23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSettingsSection.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		239F437D20D0EE6300B1276D /* icon-search.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; name = "icon-search.tvg"; path = "../../ownCloud/Resources/icon-search.tvg"; sourceTree = "<group>"; };
+		239F437D20D0EE6300B1276D /* icon-search.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; name = "icon-search.tvg"; path = "../img/filetypes-tvg/icon-search.tvg"; sourceTree = "<group>"; };
 		23BEF1172076667F00DD2E6F /* IssuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesViewController.swift; sourceTree = "<group>"; };
 		23C5652F212167BD00BD4B47 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
 		23C56536212167BE00BD4B47 /* CardTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitionDelegate.swift; sourceTree = "<group>"; };
@@ -1202,7 +1202,7 @@
 		DC33939F22E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPolicyTableViewController.swift; sourceTree = "<group>"; };
 		DC3393A122E0A71100DD3DA4 /* ItemPolicyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPolicyCell.swift; sourceTree = "<group>"; };
 		DC3393A322E0A75C00DD3DA4 /* ClientItemResolvingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemResolvingCell.swift; sourceTree = "<group>"; };
-		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-available-offline.tvg"; path = "../../ownCloud/Resources/icon-available-offline.tvg"; sourceTree = "<group>"; };
+		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-available-offline.tvg"; path = "../img/filetypes-tvg/icon-available-offline.tvg"; sourceTree = "<group>"; };
 		DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceSession.h; sourceTree = "<group>"; };
 		DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceSession.m; sourceTree = "<group>"; };
 		DC36886024DDA3C300333600 /* ProgressIndicatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorViewController.swift; sourceTree = "<group>"; };
@@ -2704,7 +2704,6 @@
 				239F437D20D0EE6300B1276D /* icon-search.tvg */,
 			);
 			name = TVGs;
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		DCD1301923A25D0500255779 /* Transactions */ = {
