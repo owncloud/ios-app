@@ -122,9 +122,10 @@ class UploadMediaAction: UploadBaseAction {
 
 			if #available(iOS 14, *) {
 				picker = PhotoPickerPresenter()
-				(picker as? PhotoPickerPresenter)?.present(in: viewController, with: { (assets) in
-					self.completed()
+				(picker as? PhotoPickerPresenter)?.present(in: viewController, with: { [weak self] (assets) in
+					self?.completed()
 					addAssetsToQueue(assets: assets)
+					self?.picker = nil
 				})
 			} else {
 				let photoAlbumViewController = PhotoAlbumTableViewController()
