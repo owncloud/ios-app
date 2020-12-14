@@ -61,15 +61,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			rootViewController = navigationController
 		}
 
-		if !UIDevice.current.isIpad {
-			// Only set up window on non-iPad devices
+		// Only set up window on non-iPad devices and not on macOS 11 (Apple Silicon) which is >= iOS 14
+		if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+			// do not set the rootViewController for iOS app on Mac
+		} else {
 			window?.rootViewController = rootViewController!
 			window?.makeKeyAndVisible()
 		}
 
 		ImportFilesController.removeImportDirectory()
 
-		AppLockManager.shared.showLockscreenIfNeeded()
+		if AppLockManager.supportedOnDevice {
+			AppLockManager.shared.showLockscreenIfNeeded()
+		}
 
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
@@ -133,6 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.plcrashreporter", bundleOf: AppDelegate.self, title: "PLCrashReporter", resourceName: "PLCrashReporter", fileExtension: "LICENSE"))
 
 		// Initially apply theme based on light / dark mode
 		ThemeStyle.considerAppearanceUpdate()

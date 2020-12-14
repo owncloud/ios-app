@@ -1,3 +1,6 @@
-• Fix: iOS 14 UI Adaptions
-Fixed some problems on iOS 14, with unresponsive UI elements.
+• Fix: iPad on iOS 12
+UI on iPad with iOS 12 does not appeared
+
+• Fix: Improvements on Apple Silicon macOS
+Fixed a crash and some improvements when running on macOS 11 Apple Silicon
 

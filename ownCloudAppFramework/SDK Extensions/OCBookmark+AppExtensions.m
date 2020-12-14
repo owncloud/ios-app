@@ -20,22 +20,6 @@
 
 @implementation OCBookmark (AppExtensions)
 
-- (NSString *)userName
-{
-	Class authenticationMethodClass;
-	NSString *userName = nil;
-
-	if ((self.authenticationData != nil) &&
-	    (self.authenticationMethodIdentifier != nil) &&
-	    ((authenticationMethodClass = [OCAuthenticationMethod registeredAuthenticationMethodForIdentifier:self.authenticationMethodIdentifier]) != nil) &&
-	    ((userName = [authenticationMethodClass userNameFromAuthenticationData:self.authenticationData]) != nil))
-	{
-		return (userName);
-	}
-
-	return (nil);
-}
-
 - (NSString *)displayName
 {
 	return ((NSString *)self.userInfo[OCBookmarkUserInfoKeyDisplayName]);

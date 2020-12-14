@@ -17,12 +17,23 @@
  */
 
 import UIKit
+import ownCloudSDK
 import ownCloudAppShared
 
 @objc(ShareNavigationController)
 class ShareNavigationController: AppExtensionNavigationController {
 	override func setupViewControllers() {
-		self.setViewControllers([ShareViewController(style: .grouped)], animated: false)
+		if OCVault.hostHasFileProvider {
+			self.setViewControllers([ShareViewController(style: .grouped)], animated: false)
+		} else {
+			let viewController = StaticTableViewController(style: .grouped)
+			viewController.addSection(StaticTableViewSection(headerTitle: nil, rows: [
+				StaticTableViewRow(message: "The share extension is not available on this system.".localized, title: "Share Extension unavailable".localized, icon: nil, tintIcon: false, style: .warning, titleMessageSpacing: 10, imageSpacing: 0, padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), identifier: "error-message")
+			]))
+			viewController.navigationItem.title = OCAppIdentity.shared.appDisplayName
+
+			self.setViewControllers([viewController], animated: false)
+		}
 	}
 }
 

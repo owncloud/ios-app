@@ -456,6 +456,7 @@ extension ClientRootViewController : OCCoreDelegate {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
 			if issueNSError.isOCError(withCode: .authorizationFailed) ||
 			   issueNSError.isOCError(withCode: .authorizationMethodNotAllowed) ||
+			   issueNSError.isOCError(withCode: .authorizationMethodUnknown) ||
 			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
 			   issueNSError.isOCError(withCode: .authorizationMissingData) {
 				nsError = issueNSError
