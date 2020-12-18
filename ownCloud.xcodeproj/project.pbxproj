@@ -191,6 +191,7 @@
 		DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */ = {isa = PBXBuildFile; fileRef = DC049154258C00C400DEDC27 /* OCFileProviderServiceStandby.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC049157258C00C400DEDC27 /* OCFileProviderServiceStandby.m in Sources */ = {isa = PBXBuildFile; fileRef = DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */; };
 		DC04920B258CB06A00DEDC27 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC04920A258CB06A00DEDC27 /* PocketSVG */; };
+		DC0492B1258CC4EE00DEDC27 /* PocketSVG.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */; };
 		DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC080CE3238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.m */; };
 		DC080CE6238AE3F40044C5D2 /* OCLicenseAppStoreProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC080CE2238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC080CF0238C8D850044C5D2 /* StoreKit.framework */; };
@@ -1124,6 +1125,7 @@
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		DC049154258C00C400DEDC27 /* OCFileProviderServiceStandby.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceStandby.h; sourceTree = "<group>"; };
 		DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceStandby.m; sourceTree = "<group>"; };
+		DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PocketSVG.LICENSE; sourceTree = "<group>"; };
 		DC080CE2238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreProvider.h; sourceTree = "<group>"; };
 		DC080CE3238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreProvider.m; sourceTree = "<group>"; };
 		DC080CE7238BD71F0044C5D2 /* OCLicenseAppStoreItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreItem.h; sourceTree = "<group>"; };
@@ -1753,6 +1755,7 @@
 				395E16FB22F0691F00DE89A1 /* Intent */,
 				DCE4E4C024C255A70051722F /* App Extensions */,
 				394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */,
+				DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */,
 				394A0AFC22EEFC2C00603813 /* Info.plist */,
 			);
 			path = ownCloudAppShared;
@@ -3123,7 +3126,7 @@
 				394A0AF522EEFC2C00603813 /* Sources */,
 				394A0AF622EEFC2C00603813 /* Frameworks */,
 				394A0AF722EEFC2C00603813 /* Resources */,
-				DC049259258CB33600DEDC27 /* Copy PocketSVG license */,
+				DC049259258CB33600DEDC27 /* Copy PocketSVG license (inactive) */,
 			);
 			buildRules = (
 			);
@@ -3543,6 +3546,7 @@
 				DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */,
 				DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */,
 				DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */,
+				DC0492B1258CC4EE00DEDC27 /* PocketSVG.LICENSE in Resources */,
 				DCE4E48A24C1FB750051722F /* application.tvg in Resources */,
 				DCE4E49024C1FB750051722F /* folder-shared.tvg in Resources */,
 				DCE4E4A224C1FB750051722F /* x-office-spreadsheet.tvg in Resources */,
@@ -3681,7 +3685,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DC049259258CB33600DEDC27 /* Copy PocketSVG license */ = {
+		DC049259258CB33600DEDC27 /* Copy PocketSVG license (inactive) */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3690,14 +3694,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Copy PocketSVG license";
+			name = "Copy PocketSVG license (inactive)";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\ncp \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n";
+			shellScript = "# echo \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n# cp \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n";
 		};
 		DC63207821FCA6A4007EC0A8 /* Copy libzip license */ = {
 			isa = PBXShellScriptBuildPhase;
