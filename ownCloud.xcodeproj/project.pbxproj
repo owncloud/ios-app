@@ -190,6 +190,7 @@
 		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
 		DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */ = {isa = PBXBuildFile; fileRef = DC049154258C00C400DEDC27 /* OCFileProviderServiceStandby.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC049157258C00C400DEDC27 /* OCFileProviderServiceStandby.m in Sources */ = {isa = PBXBuildFile; fileRef = DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */; };
+		DC04920B258CB06A00DEDC27 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC04920A258CB06A00DEDC27 /* PocketSVG */; };
 		DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC080CE3238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.m */; };
 		DC080CE6238AE3F40044C5D2 /* OCLicenseAppStoreProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC080CE2238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC080CF0238C8D850044C5D2 /* StoreKit.framework */; };
@@ -334,8 +335,6 @@
 		DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; };
 		DC7C101124B5FA7700227085 /* OCBookmark+AppExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = DC7C100E24B5F81E00227085 /* OCBookmark+AppExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = DC7C100F24B5F81E00227085 /* OCBookmark+AppExtensions.m */; };
-		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
-		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC7DBA37207F84BF00E7337D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA36207F84BF00E7337D /* main.swift */; };
 		DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82D6F923171339001551C5 /* ScanAction.swift */; };
 		DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */; };
@@ -410,7 +409,6 @@
 		DCE20272249AB50E0015A22A /* OCMessage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */; };
 		DCE28F602433683700879DEC /* ClientSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE28F5F2433683700879DEC /* ClientSessionManager.swift */; };
 		DCE442CE2387452000940A6D /* LicensingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0856B2293F1FD008CC05C /* LicensingTests.m */; };
-		DCE4E42C24C10E0D0051722F /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E200B233E477F009D2897 /* OpenItemUserActivity.swift */; };
 		DCE4E43524C1999A0051722F /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
 		DCE4E43724C19A910051722F /* LicenseRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */; };
@@ -667,34 +665,6 @@
 			remoteGlobalIDString = DCE93FE221FCA42C000E14F2;
 			remoteInfo = libzip;
 		};
-		DC7DBA17207F59D200E7337D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C79800BB1A21CB5300380860;
-			remoteInfo = "PocketSVG (iOS)";
-		};
-		DC7DBA19207F59D200E7337D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C79800F51A21CDFD00380860;
-			remoteInfo = "PocketSVG (Mac)";
-		};
-		DC7DBA1B207F59D200E7337D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B0B5922B20752E980009ECA2;
-			remoteInfo = PocketSVGTests;
-		};
-		DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C79800BA1A21CB5300380860;
-			remoteInfo = "PocketSVG (iOS)";
-		};
 		DC8EB26D23927FE7009148F9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
@@ -764,13 +734,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
 			remoteInfo = ownCloudApp;
-		};
-		DCE4E42524C10E050051722F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C79800BA1A21CB5300380860;
-			remoteInfo = "PocketSVG (iOS)";
 		};
 		DCE4E47024C1F5610051722F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -856,7 +819,6 @@
 				394A0B0122EEFC2C00603813 /* ownCloudAppShared.framework in Copy Frameworks */,
 				DCC085722293F1FD008CC05C /* ownCloudApp.framework in Copy Frameworks */,
 				DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */,
-				DC7DBA20207F5A0400E7337D /* PocketSVG.framework in Copy Frameworks */,
 				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in Copy Frameworks */,
 				DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */,
 			);
@@ -1259,7 +1221,6 @@
 		DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCCore+BundleImport.m"; sourceTree = "<group>"; };
 		DC7C100E24B5F81E00227085 /* OCBookmark+AppExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCBookmark+AppExtensions.h"; sourceTree = "<group>"; };
 		DC7C100F24B5F81E00227085 /* OCBookmark+AppExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCBookmark+AppExtensions.m"; sourceTree = "<group>"; };
-		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
 		DC7DBA28207F71D600E7337D /* VectorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImage.swift; sourceTree = "<group>"; };
 		DC7DBA2A207F71E400E7337D /* VectorImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImageView.swift; sourceTree = "<group>"; };
@@ -1438,13 +1399,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */,
 				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
 				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
+				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
 				DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */,
 				DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
-				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1465,7 +1425,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE4E42C24C10E0D0051722F /* PocketSVG.framework in Frameworks */,
+				DC04920B258CB06A00DEDC27 /* PocketSVG in Frameworks */,
 				DCDC0ACF23CD186400DFE36D /* ownCloudApp.framework in Frameworks */,
 				394A0B0A22EEFCF500603813 /* ownCloudSDK.framework in Frameworks */,
 			);
@@ -2370,20 +2330,9 @@
 			isa = PBXGroup;
 			children = (
 				DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */,
-				DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */,
 			);
 			name = External;
 			path = ownCloud;
-			sourceTree = "<group>";
-		};
-		DC7DBA12207F59D200E7337D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DC7DBA18207F59D200E7337D /* PocketSVG.framework */,
-				DC7DBA1A207F59D200E7337D /* PocketSVG.framework */,
-				DC7DBA1C207F59D200E7337D /* PocketSVGTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		DC7DBA21207F672700E7337D /* TVG */ = {
@@ -3116,7 +3065,6 @@
 				233BDE99204FEFE500C06732 /* Frameworks */,
 				233BDE9A204FEFE500C06732 /* Resources */,
 				DC85573420513CCC00189B9A /* Copy Frameworks */,
-				DC01CDCA212ECEB000FC8E38 /* Copy PocketSVG license */,
 				DC63207821FCA6A4007EC0A8 /* Copy libzip license */,
 				23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */,
 				DCC6567020C9B7E400110A97 /* Embed App Extensions */,
@@ -3125,7 +3073,6 @@
 			);
 			dependencies = (
 				DC63207D21FCA71B007EC0A8 /* PBXTargetDependency */,
-				DC7DBA1E207F59F200E7337D /* PBXTargetDependency */,
 				DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
@@ -3134,6 +3081,7 @@
 				39A7138622E79C6700089423 /* PBXTargetDependency */,
 				394A0AFF22EEFC2C00603813 /* PBXTargetDependency */,
 				DCE4E47124C1F5610051722F /* PBXTargetDependency */,
+				DC0491AA258CAF9800DEDC27 /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			packageProductDependencies = (
@@ -3175,15 +3123,19 @@
 				394A0AF522EEFC2C00603813 /* Sources */,
 				394A0AF622EEFC2C00603813 /* Frameworks */,
 				394A0AF722EEFC2C00603813 /* Resources */,
+				DC049259258CB33600DEDC27 /* Copy PocketSVG license */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DCE4E42624C10E050051722F /* PBXTargetDependency */,
+				DC0491D8258CB00000DEDC27 /* PBXTargetDependency */,
 				DCDC0ACE23CD185F00DFE36D /* PBXTargetDependency */,
 				394A0B0C22EEFD2800603813 /* PBXTargetDependency */,
 			);
 			name = ownCloudAppShared;
+			packageProductDependencies = (
+				DC04920A258CB06A00DEDC27 /* PocketSVG */,
+			);
 			productName = ownCloudAppShared;
 			productReference = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */;
 			productType = "com.apple.product-type.framework";
@@ -3335,7 +3287,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1160;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
@@ -3432,6 +3384,7 @@
 			mainGroup = 233BDE93204FEFE500C06732;
 			packageReferences = (
 				024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */,
+				DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */,
 			);
 			productRefGroup = 233BDE9D204FEFE500C06732 /* Products */;
 			projectDirPath = "";
@@ -3447,10 +3400,6 @@
 				{
 					ProductGroup = 239369712076110900BCE21A /* Products */;
 					ProjectRef = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
-				},
-				{
-					ProductGroup = DC7DBA12207F59D200E7337D /* Products */;
-					ProjectRef = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -3517,27 +3466,6 @@
 			fileType = wrapper.cfbundle;
 			path = ownCloudMockingTests.xctest;
 			remoteRef = DC0196A720F754CA00C41B78 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DC7DBA18207F59D200E7337D /* PocketSVG.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PocketSVG.framework;
-			remoteRef = DC7DBA17207F59D200E7337D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DC7DBA1A207F59D200E7337D /* PocketSVG.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PocketSVG.framework;
-			remoteRef = DC7DBA19207F59D200E7337D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DC7DBA1C207F59D200E7337D /* PocketSVGTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = PocketSVGTests.xctest;
-			remoteRef = DC7DBA1B207F59D200E7337D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DCE93FF321FCA434000E14F2 /* libzip.framework */ = {
@@ -3753,21 +3681,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DC01CDCA212ECEB000FC8E38 /* Copy PocketSVG license */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy PocketSVG license";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "echo \"${PROJECT_DIR}/external/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\ncp \"${PROJECT_DIR}/external/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n";
-		};
-		DC63207821FCA6A4007EC0A8 /* Copy libzip license */ = {
+		DC049259258CB33600DEDC27 /* Copy PocketSVG license */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3776,10 +3690,30 @@
 			);
 			inputPaths = (
 			);
+			name = "Copy PocketSVG license";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\ncp \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n";
+		};
+		DC63207821FCA6A4007EC0A8 /* Copy libzip license */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PROJECT_DIR}/external/libzip/LICENSE",
+			);
+			inputPaths = (
+			);
 			name = "Copy libzip license";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/libzip.LICENSE",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4257,6 +4191,14 @@
 			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 59056CAF22414F3C00A18A22 /* PBXContainerItemProxy */;
 		};
+		DC0491AA258CAF9800DEDC27 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = DC0491A9258CAF9800DEDC27 /* PocketSVG */;
+		};
+		DC0491D8258CB00000DEDC27 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = DC0491D7258CB00000DEDC27 /* PocketSVG */;
+		};
 		DC0A359B24C0EBD800FB58FC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ownCloudSDK;
@@ -4308,11 +4250,6 @@
 			name = libzip;
 			targetProxy = DC774E6622F44F65000B11A1 /* PBXContainerItemProxy */;
 		};
-		DC7DBA1E207F59F200E7337D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "PocketSVG (iOS)";
-			targetProxy = DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */;
-		};
 		DC8EB26E23927FE7009148F9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = openssl;
@@ -4362,11 +4299,6 @@
 			isa = PBXTargetDependency;
 			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
 			targetProxy = DCDC0ACD23CD185F00DFE36D /* PBXContainerItemProxy */;
-		};
-		DCE4E42624C10E050051722F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "PocketSVG (iOS)";
-			targetProxy = DCE4E42524C10E050051722F /* PBXContainerItemProxy */;
 		};
 		DCE4E47124C1F5610051722F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5307,6 +5239,14 @@
 				minimumVersion = 1.7.0;
 			};
 		};
+		DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pocketsvg/PocketSVG.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -5319,6 +5259,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */;
 			productName = CrashReporter;
+		};
+		DC0491A9258CAF9800DEDC27 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
+		};
+		DC0491D7258CB00000DEDC27 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
+		};
+		DC04920A258CB06A00DEDC27 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
