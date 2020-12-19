@@ -183,7 +183,7 @@
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
-		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 		DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */; };
 		DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
@@ -4559,6 +4559,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Debug;
 		};
@@ -4615,6 +4616,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Release;
 		};
