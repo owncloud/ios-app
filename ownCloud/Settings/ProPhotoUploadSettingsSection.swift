@@ -58,28 +58,39 @@ extension AVCaptureDevice {
 }
 
 extension UserDefaults {
-	enum ProPhotoUploadSettingsKeys : String {
+	enum ProMediaUploadSettingsKeys : String {
 		case PreferOriginals = "pro-photo-upload-prefer-originals"
 		case PreferRAW = "pro-photo-upload-prefer-raw"
+		case PreferOriginalVideos = "pro-video-upload-prefer-originals"
 	}
 
 	public var preferOriginalPhotos: Bool {
 		set {
-			self.set(newValue, forKey: ProPhotoUploadSettingsKeys.PreferOriginals.rawValue)
+			self.set(newValue, forKey: ProMediaUploadSettingsKeys.PreferOriginals.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: ProPhotoUploadSettingsKeys.PreferOriginals.rawValue)
+			return self.bool(forKey: ProMediaUploadSettingsKeys.PreferOriginals.rawValue)
 		}
 	}
 
 	public var preferRawPhotos: Bool {
 		set {
-			self.set(newValue, forKey: ProPhotoUploadSettingsKeys.PreferRAW.rawValue)
+			self.set(newValue, forKey: ProMediaUploadSettingsKeys.PreferRAW.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: ProPhotoUploadSettingsKeys.PreferRAW.rawValue)
+			return self.bool(forKey: ProMediaUploadSettingsKeys.PreferRAW.rawValue)
+		}
+	}
+
+	public var preferOriginalVideos: Bool {
+		set {
+			self.set(newValue, forKey: ProMediaUploadSettingsKeys.PreferRAW.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: ProMediaUploadSettingsKeys.PreferRAW.rawValue)
 		}
 	}
 }
@@ -107,5 +118,13 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 
 			self.add(row: preferRawRow)
 		}
+
+		let preferOriginalVideosRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			if let enableSwitch = sender as? UISwitch {
+				userDefaults.preferOriginalVideos = enableSwitch.isOn
+			}
+			}, title: "Prefer original videos".localized, value: self.userDefaults.preferOriginalVideos, identifier: "prefer-original-videos")
+
+		self.add(row: preferOriginalVideosRow)
 	}
 }

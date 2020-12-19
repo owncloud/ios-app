@@ -341,7 +341,7 @@ extension PHAsset {
 	- parameter utisToConvert: list of file UTIs for media formats which shall be converted to MP4 format
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
-	func exportVideo(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+	func exportVideo(fileName:String, utisToConvert:[String] = [], preferOriginal:Bool = false, completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		var outError: Error?
 		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName)
@@ -349,7 +349,7 @@ extension PHAsset {
 		let videoRequestOptions = PHVideoRequestOptions()
 		videoRequestOptions.isNetworkAccessAllowed = true
 		// Take care that in case of edited video, the edited content is used
-		videoRequestOptions.version = .current
+		videoRequestOptions.version = preferOriginal ? .original : .current
 		videoRequestOptions.deliveryMode = .highQualityFormat
 
 		// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
@@ -411,8 +411,10 @@ extension PHAsset {
 			}
 
 		} else if self.mediaType == .video {
+			let preferOriginal = preferredResourceTypes.contains(.video)
 			exportVideo(fileName: fileName,
-						utisToConvert: utisToConvert) { (url, error) in
+						utisToConvert: utisToConvert,
+						preferOriginal: preferOriginal) { (url, error) in
 				completion(url, error)
 			}
 		} else {
