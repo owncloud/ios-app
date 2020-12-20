@@ -33,7 +33,9 @@ class SettingsViewController: StaticTableViewController {
 		}
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
-			self.addSection(SecuritySettingsSection(userDefaults: userDefaults))
+			if AppLockManager.supportedOnDevice {
+				self.addSection(SecuritySettingsSection(userDefaults: userDefaults))
+			}
 			self.addSection(UserInterfaceSettingsSection(userDefaults: userDefaults))
 			self.addSection(DataSettingsSection(userDefaults: userDefaults))
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
@@ -50,8 +52,8 @@ class SettingsViewController: StaticTableViewController {
 		}
 	}
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        VendorServices.shared.considerReviewPrompt()
-    }
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		VendorServices.shared.considerReviewPrompt()
+	}
 }

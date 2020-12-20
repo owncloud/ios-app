@@ -502,7 +502,7 @@ extension PHAsset {
 			var exportedAssetURL: URL?
 			var outError: Error?
 
-			_ = autoreleasepool {
+			autoreleasepool {
 
 				// Synchronously export asset
 				let semaphore = DispatchSemaphore(value: 0)
