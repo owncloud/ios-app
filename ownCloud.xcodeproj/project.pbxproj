@@ -258,6 +258,7 @@
 		DC0A359E24C0EBE500FB58FC /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DC0A359F24C0EBE500FB58FC /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */; };
+		DC0A5C432550C70800E6674B /* class-settings-sdk in Resources */ = {isa = PBXBuildFile; fileRef = DC0A5C422550C70800E6674B /* class-settings-sdk */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
@@ -271,6 +272,7 @@
 		DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = DC23D1D7238F390200423F62 /* OCLicenseAppStoreReceipt.m */; };
 		DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */ = {isa = PBXBuildFile; fileRef = DC23D1D6238F390200423F62 /* OCLicenseAppStoreReceipt.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
+		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
 		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */; };
@@ -1162,6 +1164,7 @@
 		DC080CE8238BD71F0044C5D2 /* OCLicenseAppStoreItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreItem.m; sourceTree = "<group>"; };
 		DC080CF0238C8D850044C5D2 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInterfaceContext.swift; sourceTree = "<group>"; };
+		DC0A5C422550C70800E6674B /* class-settings-sdk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "class-settings-sdk"; path = "ios-sdk/doc/class-settings-sdk"; sourceTree = SOURCE_ROOT; };
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
@@ -1177,6 +1180,7 @@
 		DC243BF92317B446004FBB5C /* ThemeWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeWindow.swift; sourceTree = "<group>"; };
 		DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
 		DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCItem+FileProviderItem.m"; sourceTree = "<group>"; };
 		DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -1285,6 +1289,8 @@
 		DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EarlGrey+Tools.swift"; sourceTree = "<group>"; };
 		DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrandingClassSettingsSource.h; sourceTree = "<group>"; };
 		DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrandingClassSettingsSource.m; sourceTree = "<group>"; };
+		DCB3256A2559989200058EEB /* generate_docs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = generate_docs.sh; sourceTree = "<group>"; };
+		DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */ = {isa = PBXFileReference; lastKnownFileType = text; path = ios_mdm_tables.adoc.tmpl; sourceTree = "<group>"; };
 		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
 		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
@@ -1639,6 +1645,7 @@
 		233BDEB3204FEFE500C06732 /* ownCloudTests */ = {
 			isa = PBXGroup;
 			children = (
+				DC26ADBD2550C02F0059680D /* Metadata */,
 				EA9337DC2226DAE00054971F /* Settings */,
 				59B09E5B21AD61DD007827B8 /* Resources */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
@@ -1881,7 +1888,8 @@
 				3931206A2326451900E8DFBA /* Branding.plist */,
 			);
 			name = Theming;
-			sourceTree = "<unknown>";
+			path = ownCloud/Resources/Theming;
+			sourceTree = SOURCE_ROOT;
 		};
 		39E42D152315286300B82AC3 /* Key Commands */ = {
 			isa = PBXGroup;
@@ -2187,6 +2195,15 @@
 			path = Scanner;
 			sourceTree = "<group>";
 		};
+		DC26ADBD2550C02F0059680D /* Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				DC0A5C422550C70800E6674B /* class-settings-sdk */,
+				DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */,
+			);
+			path = Metadata;
+			sourceTree = "<group>";
+		};
 		DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */ = {
 			isa = PBXGroup;
 			children = (
@@ -2411,6 +2428,7 @@
 		DC7DBA3B207F86E900E7337D /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				DCB3256B255998A400058EEB /* GenerateDocs */,
 				DC7DBA35207F84BF00E7337D /* MakeTVG */,
 			);
 			name = Tools;
@@ -2499,6 +2517,23 @@
 				DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */,
 			);
 			path = Branding;
+			sourceTree = "<group>";
+		};
+		DCB3256B255998A400058EEB /* GenerateDocs */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3257525599BAC00058EEB /* templates */,
+				DCB3256A2559989200058EEB /* generate_docs.sh */,
+			);
+			path = GenerateDocs;
+			sourceTree = "<group>";
+		};
+		DCB3257525599BAC00058EEB /* templates */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */,
+			);
+			path = templates;
 			sourceTree = "<group>";
 		};
 		DCBF0A5E2280393A00465530 /* PDF */ = {
@@ -3108,10 +3143,10 @@
 			buildPhases = (
 				CCD5F274B7E08D493D596856 /* [CP] Check Pods Manifest.lock */,
 				233BDEAC204FEFE500C06732 /* Sources */,
+				FF929A2C3849C01CA20C4475 /* [CP] Embed Pods Frameworks */,
+				D9876310DCEA650662AA6AF7 /* EarlGrey Copy Files */,
 				233BDEAD204FEFE500C06732 /* Frameworks */,
 				233BDEAE204FEFE500C06732 /* Resources */,
-				D9876310DCEA650662AA6AF7 /* EarlGrey Copy Files */,
-				FF929A2C3849C01CA20C4475 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3538,6 +3573,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				595E2C9F21EE4BF300F0E95D /* PropfindResponseNewFolder.xml in Resources */,
+				DC0A5C432550C70800E6674B /* class-settings-sdk in Resources */,
 				59B09E6621AD61DD007827B8 /* test_certificate.cer in Resources */,
 				59B09E6421AD61DD007827B8 /* PropfindResponse.xml in Resources */,
 			);
@@ -3680,12 +3716,13 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks.sh",
+				"${PODS_ROOT}/EarlGrey/EarlGrey/EarlGrey.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EarlGrey.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3747,12 +3784,13 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh",
+				"${PODS_ROOT}/EarlGrey/EarlGrey/EarlGrey.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EarlGrey.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3966,6 +4004,7 @@
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
 				59538A0B21E4C301005E543B /* MockOCQuery.swift in Sources */,
+				DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */,
 				5971CF3A22046F530052FE9A /* MockClientRootViewController.swift in Sources */,
 				59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */,
 				59538A1C21E77FB7005E543B /* MockOCCore.swift in Sources */,
@@ -4516,6 +4555,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Debug;
 		};
@@ -4572,6 +4612,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
+				VALIDATE_WORKSPACE = YES;
 			};
 			name = Release;
 		};
