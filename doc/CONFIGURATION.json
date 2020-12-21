@@ -2,6 +2,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : "https://itunes.apple.com/app/id1359583808?mt=8",
@@ -14,6 +15,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : true,
@@ -26,6 +28,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : true,
@@ -38,6 +41,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : "ios-app@owncloud.com",
@@ -50,6 +54,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : true,
@@ -62,6 +67,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : true,
@@ -74,6 +80,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : true,
@@ -86,6 +93,7 @@
   {
     "autoExpansion" : "none",
     "category" : "App",
+    "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
     "defaultValue" : true,
@@ -98,6 +106,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OAuth2",
+    "categoryTag" : "oauth2",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "index.php/apps/oauth2/authorize",
@@ -110,6 +119,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OAuth2",
+    "categoryTag" : "oauth2",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1",
@@ -122,6 +132,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OAuth2",
+    "categoryTag" : "oauth2",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx",
@@ -134,6 +145,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OAuth2",
+    "categoryTag" : "oauth2",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "description" : "OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)",
@@ -145,6 +157,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OAuth2",
+    "categoryTag" : "oauth2",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "oc://ios.owncloud.com",
@@ -157,6 +170,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OAuth2",
+    "categoryTag" : "oauth2",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "index.php/apps/oauth2/api/v1/token",
@@ -169,6 +183,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OIDC",
+    "categoryTag" : "oidc",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "oc://ios.owncloud.com",
@@ -181,6 +196,7 @@
   {
     "autoExpansion" : "none",
     "category" : "OIDC",
+    "categoryTag" : "oidc",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "openid offline_access email profile",
@@ -193,6 +209,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Authentication",
+    "categoryTag" : "authentication",
     "classIdentifier" : "authentication",
     "className" : "OCAuthenticationMethod",
     "defaultValue" : "operating-system",
@@ -215,6 +232,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Authentication",
+    "categoryTag" : "authentication",
     "classIdentifier" : "authentication",
     "className" : "OCAuthenticationMethod",
     "defaultValue" : false,
@@ -227,6 +245,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Bookmarks",
+    "categoryTag" : "bookmarks",
     "classIdentifier" : "bookmark",
     "className" : "ownCloud.BookmarkViewController",
     "description" : "The default URL for the creation of new bookmarks.",
@@ -238,6 +257,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Bookmarks",
+    "categoryTag" : "bookmarks",
     "classIdentifier" : "bookmark",
     "className" : "ownCloud.BookmarkViewController",
     "defaultValue" : true,
@@ -250,6 +270,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : true,
@@ -263,6 +284,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : true,
@@ -276,6 +298,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : false,
@@ -289,6 +312,7 @@
   {
     "autoExpansion" : "trailing",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "description" : "Array of allowed authentication methods. Nil/Missing for no restrictions.",
@@ -315,6 +339,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "bookmarkCertificate == serverCertificate",
@@ -328,6 +353,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "10.0",
@@ -341,6 +367,7 @@
   {
     "autoExpansion" : "trailing",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : [
@@ -372,6 +399,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))",
@@ -385,6 +413,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "ocs/v2.php/cloud/capabilities",
@@ -398,6 +427,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "ocs/v2.php/apps/files_sharing/api/v1/sharees",
@@ -411,6 +441,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "ocs/v2.php/apps/files_sharing/api/v1/remote_shares",
@@ -424,6 +455,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "ocs/v2.php/apps/files_sharing/api/v1/shares",
@@ -437,6 +469,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "status.php",
@@ -450,6 +483,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "index.php/apps/files/api/v1/thumbnail",
@@ -463,6 +497,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "ocs/v2.php/cloud/user",
@@ -476,6 +511,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "remote.php/dav/files",
@@ -489,6 +525,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "remote.php/dav/meta",
@@ -502,6 +539,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : false,
@@ -515,6 +553,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "warn",
@@ -528,19 +567,21 @@
   {
     "autoExpansion" : "none",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).",
     "flags" : 4,
     "flatIdentifier" : "connection.transparent-temporary-redirect",
     "key" : "transparent-temporary-redirect",
-    "status" : "advanced",
+    "status" : "debugOnly",
     "type" : "bool"
   },
   {
     "autoExpansion" : "none",
     "category" : "Endpoints",
+    "categoryTag" : "endpoints",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : ".well-known",
@@ -554,6 +595,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
     "defaultValue" : {
@@ -576,6 +618,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Privacy",
+    "categoryTag" : "privacy",
     "classIdentifier" : "core",
     "className" : "OCCore",
     "defaultValue" : true,
@@ -588,9 +631,10 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
-    "defaultValue" : false,
+    "defaultValue" : true,
     "description" : "Enable or disable per-process, in-memory cookie storage.",
     "flatIdentifier" : "core.cookie-support-enabled",
     "key" : "cookie-support-enabled",
@@ -600,6 +644,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
     "description" : "Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).",
@@ -611,6 +656,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
     "description" : "Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).",
@@ -622,6 +668,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
     "defaultValue" : [
@@ -636,6 +683,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Diagnostics",
+    "categoryTag" : "diagnostics",
     "classIdentifier" : "diagnostics",
     "className" : "ownCloud.DiagnosticManager",
     "defaultValue" : false,
@@ -648,6 +696,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Display Settings",
+    "categoryTag" : "displaysettings",
     "classIdentifier" : "display",
     "className" : "DisplaySettings",
     "defaultValue" : false,
@@ -660,6 +709,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Display Settings",
+    "categoryTag" : "displaysettings",
     "classIdentifier" : "display",
     "className" : "DisplaySettings",
     "defaultValue" : false,
@@ -672,6 +722,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Display Settings",
+    "categoryTag" : "displaysettings",
     "classIdentifier" : "display",
     "className" : "DisplaySettings",
     "defaultValue" : false,
@@ -684,6 +735,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "host-simulator",
     "className" : "OCHostSimulatorManager",
     "defaultValue" : [
@@ -702,8 +754,16 @@
         "value" : "only-404"
       },
       {
+        "description" : "Redirect any request without cookies to a bogus endpoint for 30 seconds, then to a cookie-setting endpoint, where cookies are set - and then redirect back.",
+        "value" : "recovering-apm"
+      },
+      {
         "description" : "Reject Downloads with status 500 responses.",
         "value" : "reject-downloads-500"
+      },
+      {
+        "description" : "Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.",
+        "value" : "simple-apm"
       }
     ],
     "status" : "debugOnly",
@@ -712,6 +772,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "http",
     "className" : "OCHTTPPipeline",
     "defaultValue" : "ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})",
@@ -724,6 +785,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Policies",
+    "categoryTag" : "policies",
     "classIdentifier" : "item-policy",
     "className" : "OCItemPolicyProcessor",
     "defaultValue" : 604800,
@@ -736,6 +798,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Policies",
+    "categoryTag" : "policies",
     "classIdentifier" : "item-policy",
     "className" : "OCItemPolicyProcessor",
     "defaultValue" : true,
@@ -748,6 +811,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Policies",
+    "categoryTag" : "policies",
     "classIdentifier" : "item-policy",
     "className" : "OCItemPolicyProcessor",
     "defaultValue" : 60,
@@ -760,6 +824,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Licensing",
+    "categoryTag" : "licensing",
     "classIdentifier" : "licensing",
     "className" : "OCLicenseManager",
     "defaultValue" : false,
@@ -772,6 +837,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Licensing",
+    "categoryTag" : "licensing",
     "classIdentifier" : "licensing",
     "className" : "OCLicenseManager",
     "defaultValue" : false,
@@ -784,6 +850,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : false,
@@ -797,6 +864,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : false,
@@ -810,6 +878,7 @@
   {
     "autoExpansion" : "trailing",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : [
@@ -841,6 +910,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : "text",
@@ -868,6 +938,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : 4,
@@ -907,6 +978,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : 0,
@@ -920,6 +992,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "description" : "If set, omits logs messages containing any of the exact terms in this array.",
@@ -932,6 +1005,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "description" : "If set, omits all log messages tagged with tags in this array.",
@@ -944,6 +1018,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "description" : "If set, only logs messages containing at least one of the exact terms in this array.",
@@ -956,6 +1031,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "description" : "If set, omits all log messages not tagged with tags in this array.",
@@ -968,6 +1044,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : false,
@@ -981,6 +1058,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : true,
@@ -994,6 +1072,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Logging",
+    "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : false,
@@ -1007,6 +1086,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Release Notes",
+    "categoryTag" : "releasenotes",
     "classIdentifier" : "releasenotes",
     "className" : "ownCloud.ReleaseNotesDatasource",
     "description" : "The last-seen app version.",
@@ -1018,6 +1098,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Release Notes",
+    "categoryTag" : "releasenotes",
     "classIdentifier" : "releasenotes",
     "className" : "ownCloud.ReleaseNotesDatasource",
     "description" : "The app version for which the release notes were last shown.",
@@ -1029,6 +1110,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "user-settings",
     "className" : "OCClassSettingsUserPreferences",
     "description" : "List of settings (as flat identifiers) users are allowed to change. If this list is specified, only these settings can be changed by the user.",
@@ -1040,6 +1122,7 @@
   {
     "autoExpansion" : "none",
     "category" : "Security",
+    "categoryTag" : "security",
     "classIdentifier" : "user-settings",
     "className" : "OCClassSettingsUserPreferences",
     "description" : "List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.",
