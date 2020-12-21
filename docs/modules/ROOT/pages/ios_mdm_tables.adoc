@@ -137,7 +137,7 @@ tag::connection[]
 
 |cookie-support-enabled
 |bool
-|`false`
+|`true`
 |Enable or disable per-process, in-memory cookie storage.
 |supported
 
@@ -225,8 +225,14 @@ The following placeholders can be used to make it dynamic:
 ! `only-404`
 ! Return status code 404 for every request.
 
+! `recovering-apm`
+! Redirect any request without cookies to a bogus endpoint for 30 seconds, then to a cookie-setting endpoint, where cookies are set - and then redirect back.
+
 ! `reject-downloads-500`
 ! Reject Downloads with status 500 responses.
+
+! `simple-apm`
+! Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.
 
 !===
 
@@ -256,7 +262,7 @@ tag::diagnostics[]
 end::diagnostics[]
 
 
-tag::display settings[]
+tag::displaysettings[]
 [cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
@@ -285,7 +291,7 @@ tag::display settings[]
 |advanced
 
 |===
-end::display settings[]
+end::displaysettings[]
 
 
 tag::endpoints[]
@@ -662,7 +668,7 @@ tag::privacy[]
 end::privacy[]
 
 
-tag::release notes[]
+tag::releasenotes[]
 [cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
@@ -685,7 +691,7 @@ tag::release notes[]
 |debugOnly
 
 |===
-end::release notes[]
+end::releasenotes[]
 
 
 tag::security[]
@@ -720,12 +726,6 @@ Examples of expressions:
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
 |advanced
 
-|transparent-temporary-redirect
-|bool
-|`true`
-|Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
-|advanced
-
 |allow
 |stringArray
 |
@@ -737,6 +737,12 @@ Examples of expressions:
 |
 |List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.
 |advanced
+
+|transparent-temporary-redirect
+|bool
+|`false`
+|Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
+|debugOnly
 
 |===
 end::security[]
