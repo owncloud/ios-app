@@ -50,7 +50,7 @@ class DiagnosticManager: NSObject, OCClassSettingsSupport, OCClassSettingsUserPr
 				.description	: "Controls whether additional diagnostic options and information is available throughout the user interface.",
 				.category	: "Diagnostics",
 				.status		: OCClassSettingsKeyStatus.advanced
-			]
+			],
 		]
 	}
 
