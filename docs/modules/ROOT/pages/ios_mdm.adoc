@@ -41,7 +41,7 @@ include::./ios_mdm_tables.adoc[tag=actions]
 ==== Display Settings
 To customize file list UI behevior, following settings are available: 
 
-// include::./ios_mdm_tables.adoc[tag=display settings]
+// include::./ios_mdm_tables.adoc[tag=displaysettings]
 
 ==== Passcode Enforcement
 If your organization policies require users to use a passcode as an additional security barrier for managed apps, the below setting will allow to enforce this requirement.

@@ -1,4 +1,156 @@
 
+tag::actions[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|com.owncloud.action.collaborate.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.copy.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.createFolder.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.delete.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.discardscene.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.duplicate.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.favorite.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.links.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.makeAvailableOffline.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.makeUnavailableOffline.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.markup.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.mediaediting.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.move.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.openin.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.openscene.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.rename.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.scan.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.show-exif.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.unfavorite.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.unshare.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.upload.camera_media.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.uploadfile.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|com.owncloud.action.uploadphotos.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced
+
+|===
+end::actions[]
+
+
 tag::app[]
 [cols="1,2,3,4a,5",options=header]
 |=== 
@@ -614,6 +766,26 @@ tag::oidc[]
 
 |===
 end::oidc[]
+
+
+tag::passcode[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|enforced
+|bool
+|`false`
+|Controls wether the user MUST establish a passcode upon app installation
+|advanced
+
+|===
+end::passcode[]
 
 
 tag::policies[]
