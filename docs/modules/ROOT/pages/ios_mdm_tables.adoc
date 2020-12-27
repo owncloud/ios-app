@@ -135,6 +135,12 @@ tag::connection[]
 |Status
 
 
+|allow-cellular
+|bool
+|`true`
+|Allow the use of cellular connections.
+|recommended
+
 |cookie-support-enabled
 |bool
 |`true`
@@ -703,6 +709,48 @@ tag::security[]
 |Description
 |Status
 
+
+|connection-allowed-authentication-methods
+|stringArray
+|
+|Array of allowed authentication methods. Nil/Missing for no restrictions.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
+|recommended
+
+|connection-preferred-authentication-methods
+|stringArray
+|`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
+|Array of authentication methods in order of preference (most preferred first).
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
+|recommended
 
 |connection-certificate-extended-validation-rule
 |string
