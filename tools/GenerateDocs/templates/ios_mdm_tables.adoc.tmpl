@@ -1,7 +1,7 @@
 {{- $config := .config }}
-{{- $categories := .config | jsonpath `$[*].category` | uniq | sort }}
-{{- range $index, $category := $categories }}
-tag::{{$category | strings.ToLower }}[]
+{{- $categoryTags := .config | jsonpath `$[*].categoryTag` | uniq | sort }}
+{{- range $index, $categoryTag := $categoryTags }}
+tag::{{$categoryTag | strings.ToLower }}[]
 [cols="1,2,3,4a,5",options=header]
 |=== 
 |Key
@@ -10,11 +10,11 @@ tag::{{$category | strings.ToLower }}[]
 |Description
 |Status
 
-{{$options := $config | jsonpath (print "$[?(@.category=='" $category "')]") }}
+{{$options := $config | jsonpath (print "$[?(@.categoryTag=='" $categoryTag "')]") }}
 {{- if eq (printf "%T" $options) "map[string]interface {}"}}
 {{- $options = slice $options}}
 {{- end}}
-{{- range $statusIndex, $status := slice "supported" "advanced" "debugOnly"}}
+{{- range $statusIndex, $status := slice "recommended" "supported" "advanced" "debugOnly"}}
 {{- $statusOptions := $options | jsonpath (print "$[?(@.status=='" $status "')]")}}
 {{- if eq (printf "%T" $statusOptions) "map[string]interface {}"}}
 {{- $statusOptions = slice $statusOptions}}
@@ -40,6 +40,6 @@ tag::{{$category | strings.ToLower }}[]
 {{end}}
 {{- end}}
 |===
-end::{{$category | strings.ToLower }}[]
+end::{{$categoryTag | strings.ToLower }}[]
 
 {{end}}
