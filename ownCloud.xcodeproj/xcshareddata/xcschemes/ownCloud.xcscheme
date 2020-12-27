@@ -193,7 +193,7 @@
          <EnvironmentVariable
             key = "oc:log.log-level"
             value = "-1"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-colored"
