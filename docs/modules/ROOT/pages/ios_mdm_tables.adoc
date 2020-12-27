@@ -460,7 +460,7 @@ tag::logging[]
 
 |log-enabled-components
 |stringArray
-|`[writer.stderr writer.file option.log-requests-and-responses]`
+|`[writer.stderr writer.file]`
 |List of enabled logging system components.
 [cols="1,2"]
 !===
