@@ -9,6 +9,15 @@
           "revision": "4637a7854de2cc5c354d46fb931d74bdbc2c043e",
           "version": "1.7.0"
         }
+      },
+      {
+        "package": "PocketSVG",
+        "repositoryURL": "https://github.com/pocketsvg/PocketSVG.git",
+        "state": {
+          "branch": null,
+          "revision": "51d4fd9ae48e79207034afdd53f365fc2b9d6068",
+          "version": "2.7.0"
+        }
       }
     ]
   },
