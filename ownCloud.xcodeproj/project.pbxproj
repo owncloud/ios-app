@@ -311,6 +311,8 @@
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
 		DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
+		DC65D0CA259D26BD0042571D /* OCFileProviderServiceStandby.m in Sources */ = {isa = PBXBuildFile; fileRef = DC65D0C3259D26BD0042571D /* OCFileProviderServiceStandby.m */; };
+		DC65D0CB259D26BD0042571D /* OCFileProviderServiceStandby.h in Headers */ = {isa = PBXBuildFile; fileRef = DC65D0C9259D26BD0042571D /* OCFileProviderServiceStandby.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC66F39C239659C000CF4812 /* OCASN1.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F39A239659C000CF4812 /* OCASN1.h */; };
 		DC66F39D239659C000CF4812 /* OCASN1.m in Sources */ = {isa = PBXBuildFile; fileRef = DC66F39B239659C000CF4812 /* OCASN1.m */; };
 		DC66F3A523965A1400CF4812 /* NSDate+RFC3339.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F3A323965A1400CF4812 /* NSDate+RFC3339.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1231,6 +1233,8 @@
 		DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientActivityCell.swift; sourceTree = "<group>"; };
 		DC63208621FCEE5D007EC0A8 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
+		DC65D0C3259D26BD0042571D /* OCFileProviderServiceStandby.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceStandby.m; sourceTree = "<group>"; };
+		DC65D0C9259D26BD0042571D /* OCFileProviderServiceStandby.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceStandby.h; sourceTree = "<group>"; };
 		DC66F39A239659C000CF4812 /* OCASN1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCASN1.h; sourceTree = "<group>"; };
 		DC66F39B239659C000CF4812 /* OCASN1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCASN1.m; sourceTree = "<group>"; };
 		DC66F3A323965A1400CF4812 /* NSDate+RFC3339.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC3339.h"; sourceTree = "<group>"; };
@@ -2837,6 +2841,8 @@
 				DCF2DA7F24C836240026D790 /* OCBookmark+FPServices.h */,
 				DCF2DA7C24C835BF0026D790 /* OCVault+FPServices.m */,
 				DCF2DA7B24C835BF0026D790 /* OCVault+FPServices.h */,
+				DC65D0C3259D26BD0042571D /* OCFileProviderServiceStandby.m */,
+				DC65D0C9259D26BD0042571D /* OCFileProviderServiceStandby.h */,
 				DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */,
 				DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */,
 				DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */,
@@ -3052,6 +3058,7 @@
 				DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */,
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
+				DC65D0CB259D26BD0042571D /* OCFileProviderServiceStandby.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */,
 			);
@@ -4131,6 +4138,7 @@
 				DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */,
 				DC080CF3238C92480044C5D2 /* OCLicenseAppStoreItem.m in Sources */,
 				DCFEFE982368D099009A142F /* OCLicenseEnvironment.m in Sources */,
+				DC65D0CA259D26BD0042571D /* OCFileProviderServiceStandby.m in Sources */,
 				DC36885924DC98BF00333600 /* OCFileProviderServiceSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -71,6 +71,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	var messageSelector : MessageSelector?
 
+	var fpServiceStandby : OCFileProviderServiceStandby?
+
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
@@ -158,6 +160,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		}
 
 		if self.coreRequested {
+			self.fpServiceStandby?.stop()
 			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 		}
 	}
@@ -180,6 +183,12 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
+
+			// Set up FP standby
+			if let core = core {
+				self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
+				self.fpServiceStandby?.start()
+			}
 		}, completionHandler: { (core, error) in
 			if error == nil {
 				// Core is ready
