@@ -196,6 +196,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.log-enabled-components"
+            value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:log.log-colored"
             value = "true"
             isEnabled = "YES">
