@@ -81,9 +81,14 @@
 		[weakConnection invalidate];
 	};
 
+	OCLogDebug(@"FileProviderServiceSource[%p].shouldAcceptNewConnection[enter]", self.fileProviderExtension);
+
 	[self.fileProviderExtension.core scheduleInCoreQueue:^{
+		OCLogDebug(@"FileProviderServiceSource[%p].shouldAcceptNewConnection[done]", self.fileProviderExtension);
 		[newConnection resume];
 	}];
+
+	OCLogDebug(@"FileProviderServiceSource[%p].shouldAcceptNewConnection[core]: %@", self.fileProviderExtension, self.fileProviderExtension.core);
 
 	return (YES);
 }

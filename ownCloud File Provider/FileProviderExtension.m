@@ -48,6 +48,8 @@
 {
 	[self setupCrashReporting];
 
+	[OCLogger logLevel]; // Make sure +logLevel is called in File Provider, to properly set up the log level
+
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
 	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
@@ -128,6 +130,7 @@
 
 		OCLogDebug(@"Returning OCCore for FileProvider %@", self);
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
+		_core = nil;
 	}
 }
 
@@ -938,7 +941,7 @@
 {
 	BOOL isSpecialItem = [itemIdentifier isEqual:self.bookmark.fpServicesURLComponentName];
 
-	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (%d)", OCLogPrivate(itemIdentifier), isSpecialItem);
+	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (isSpecialItem: %d, core: %@)", OCLogPrivate(itemIdentifier), isSpecialItem, self.core);
 
 	if (isSpecialItem)
 	{
@@ -987,6 +990,8 @@
 
 - (OCCore *)core
 {
+	OCLogDebug(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
+
 	@synchronized(self)
 	{
 		if (_core == nil)
@@ -1018,6 +1023,8 @@
 			OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 		}
 	}
+
+	OCLogDebug(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, _core, self.bookmark);
 
 	return (_core);
 }

@@ -107,9 +107,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
+         runnableDebuggingMode = "0"
          BundleIdentifier = "com.apple.DocumentsApp"
-         RemotePath = "/var/containers/Bundle/Application/CC7CBD37-6E2F-48F6-B68C-2AD36F379B02/Files.app">
+         RemotePath = "/var/containers/Bundle/Application/992AF78C-7B9A-4EBF-AB5B-BA3202AD7B9D/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -129,12 +129,12 @@
          <EnvironmentVariable
             key = "oc:log.log-synchronous"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-colored"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:file-provider.skip-local-error-checks"
@@ -144,7 +144,7 @@
          <EnvironmentVariable
             key = "oc:log.log-single-lined"
             value = "false"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
