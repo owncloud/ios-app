@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1210"
+   LastUpgradeVersion = "1230"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -192,7 +192,12 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-level"
-            value = "0"
+            value = "-1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-enabled-components"
+            value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -262,7 +267,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:core.cookie-support-enabled"
-            value = "true"
+            value = "false"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -278,6 +283,16 @@
          <EnvironmentVariable
             key = "oc:host-simulator.active-simulations"
             value = "[five-seconds-of-404]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[simple-apm]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[recovering-apm]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable

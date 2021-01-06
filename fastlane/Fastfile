@@ -613,14 +613,14 @@ end
       version_key: "APP_SHORT_VERSION"
     )
 
-    if values[:BETA_APP_ICON]
-      commit = last_git_commit
-      short_hash = commit[:abbreviated_commit_hash] # short sha of commit
-      sh "brew install librsvg"
-      sh "sed -e \"s/\#version#/" + version + "/\" -e \"s/\#githash#/" + short_hash + "/\" badge.svg > badge_tmp.svg"
-      sh "rsvg-convert badge_tmp.svg > badge.png"
-      add_badge(custom: "fastlane/badge.png")
-    end
+    #if values[:BETA_APP_ICON]
+    #  commit = last_git_commit
+    #  short_hash = commit[:abbreviated_commit_hash] # short sha of commit
+    #  sh "brew install librsvg"
+    #  sh "sed -e \"s/\#version#/" + version + "/\" -e \"s/\#githash#/" + short_hash + "/\" badge.svg > badge_tmp.svg"
+    #  sh "rsvg-convert badge_tmp.svg > badge.png"
+    #  add_badge(custom: "fastlane/badge.png")
+    #end
 
     #Create the build
     gym(

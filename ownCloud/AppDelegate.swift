@@ -136,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
-		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: AppDelegate.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.plcrashreporter", bundleOf: AppDelegate.self, title: "PLCrashReporter", resourceName: "PLCrashReporter", fileExtension: "LICENSE"))
 
 		// Initially apply theme based on light / dark mode

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1210"
+   LastUpgradeVersion = "1230"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -109,7 +109,7 @@
       <RemoteRunnable
          runnableDebuggingMode = "1"
          BundleIdentifier = "com.apple.DocumentsApp"
-         RemotePath = "/var/containers/Bundle/Application/CC7CBD37-6E2F-48F6-B68C-2AD36F379B02/Files.app">
+         RemotePath = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/Applications/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -123,7 +123,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "oc:log.log-level"
-            value = "0"
+            value = "-1"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable

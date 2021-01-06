@@ -1159,8 +1159,7 @@
     "className" : "OCLogger",
     "defaultValue" : [
       "writer.stderr",
-      "writer.file",
-      "option.log-requests-and-responses"
+      "writer.file"
     ],
     "description" : "List of enabled logging system components.",
     "flags" : 4,

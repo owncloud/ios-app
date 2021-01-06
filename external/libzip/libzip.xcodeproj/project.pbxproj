@@ -453,7 +453,7 @@
 		DCE93FDA21FCA42B000E14F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
 					DCE93FE221FCA42C000E14F2 = {
