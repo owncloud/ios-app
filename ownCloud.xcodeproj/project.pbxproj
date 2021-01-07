@@ -1014,6 +1014,22 @@
 		39CD755123D787E400193950 /* DocumentEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentEditingAction.swift; sourceTree = "<group>"; };
 		39CD755323D8392D00193950 /* EditDocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentViewController.swift; sourceTree = "<group>"; };
 		39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
+		39D8397F25A7219100FAA0A8 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D8398925A7219300FAA0A8 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D8399325A7219600FAA0A8 /* eu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eu; path = eu.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D8399D25A7219700FAA0A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39D839A725A7219900FAA0A8 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D839B925A7219B00FAA0A8 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39D839CB25A7219D00FAA0A8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D839D525A7219F00FAA0A8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D839E725A721A100FAA0A8 /* mk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mk; path = mk.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D839F925A721A300FAA0A8 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39D83A0B25A721A500FAA0A8 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39D83A1525A721A700FAA0A8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39D83A2725A721A900FAA0A8 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39D83A3125A721AB00FAA0A8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D83A4325A721AC00FAA0A8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Intents.strings; sourceTree = "<group>"; };
+		39D83A4D25A721AE00FAA0A8 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Intents.strings"; sourceTree = "<group>"; };
 		39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethodTableViewController.swift; sourceTree = "<group>"; };
 		39DF779224EA73B40066E8F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39DF77AD24EA7F0A0066E8F0 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -4345,6 +4361,22 @@
 			children = (
 				39057AA9233BA7A60008E6C0 /* Base */,
 				39057AB1233BA7AE0008E6C0 /* en */,
+				39D8397F25A7219100FAA0A8 /* sq */,
+				39D8398925A7219300FAA0A8 /* ar */,
+				39D8399325A7219600FAA0A8 /* eu */,
+				39D8399D25A7219700FAA0A8 /* zh-Hans */,
+				39D839A725A7219900FAA0A8 /* cs */,
+				39D839B925A7219B00FAA0A8 /* en-GB */,
+				39D839CB25A7219D00FAA0A8 /* de */,
+				39D839D525A7219F00FAA0A8 /* ko */,
+				39D839E725A721A100FAA0A8 /* mk */,
+				39D839F925A721A300FAA0A8 /* nb-NO */,
+				39D83A0B25A721A500FAA0A8 /* nn-NO */,
+				39D83A1525A721A700FAA0A8 /* pt-BR */,
+				39D83A2725A721A900FAA0A8 /* pt-PT */,
+				39D83A3125A721AB00FAA0A8 /* ru */,
+				39D83A4325A721AC00FAA0A8 /* es */,
+				39D83A4D25A721AE00FAA0A8 /* th-TH */,
 			);
 			name = Intents.intentdefinition;
 			sourceTree = "<group>";
@@ -4460,8 +4492,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 11.4.4;
-				APP_VERSION = 179;
+				APP_SHORT_VERSION = 11.4.5;
+				APP_VERSION = 181;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4523,8 +4555,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 11.4.4;
-				APP_VERSION = 179;
+				APP_SHORT_VERSION = 11.4.5;
+				APP_VERSION = 181;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4579,8 +4611,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.4.4;
-				APP_VERSION = 179;
+				APP_SHORT_VERSION = 11.4.5;
+				APP_VERSION = 181;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -4612,8 +4644,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.4.4;
-				APP_VERSION = 179;
+				APP_SHORT_VERSION = 11.4.5;
+				APP_VERSION = 181;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
