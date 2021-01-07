@@ -975,7 +975,7 @@
 
 			if (bookmark == nil)
 			{
-				OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+				OCLogDebug(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 
 				[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
 
