@@ -1,8 +1,8 @@
 //
-//  OCFileProviderService.h
-//  ownCloud
+//  OCFileProviderServiceStandby.h
+//  ownCloudApp
 //
-//  Created by Felix Schwarz on 22.07.20.
+//  Created by Felix Schwarz on 17.12.20.
 //  Copyright © 2020 ownCloud GmbH. All rights reserved.
 //
 
@@ -21,11 +21,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol OCFileProviderServicesHost
+@interface OCFileProviderServiceStandby : NSObject
 
-- (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler;
+- (instancetype)initWithCore:(OCCore *)core;
 
-- (void)processSyncRecordsIfNeeded;
+- (void)start;
+- (void)stop;
 
 @end
 

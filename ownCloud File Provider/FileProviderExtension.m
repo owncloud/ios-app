@@ -48,6 +48,8 @@
 {
 	[self setupCrashReporting];
 
+	[OCLogger logLevel]; // Make sure +logLevel is called in File Provider, to properly set up the log level
+
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
 	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
@@ -128,6 +130,7 @@
 
 		OCLogDebug(@"Returning OCCore for FileProvider %@", self);
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
+		_core = nil;
 	}
 }
 
@@ -938,7 +941,7 @@
 {
 	BOOL isSpecialItem = [itemIdentifier isEqual:self.bookmark.fpServicesURLComponentName];
 
-	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (%d)", OCLogPrivate(itemIdentifier), isSpecialItem);
+	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (isSpecialItem: %d, core: %@)", OCLogPrivate(itemIdentifier), isSpecialItem, self.core);
 
 	if (isSpecialItem)
 	{
@@ -953,73 +956,123 @@
 #pragma mark - Core
 - (OCBookmark *)bookmark
 {
+	OCBookmark *bookmark = nil;
+
 	@synchronized(self)
 	{
-		if (_bookmark == nil)
+		bookmark = _bookmark;
+	}
+
+	if (bookmark == nil)
+	{
+		NSFileProviderDomainIdentifier domainIdentifier;
+
+		if ((domainIdentifier = self.domain.identifier) != nil)
 		{
-			NSFileProviderDomainIdentifier domainIdentifier;
+			NSUUID *bookmarkUUID = [[NSUUID alloc] initWithUUIDString:domainIdentifier];
 
-			if ((domainIdentifier = self.domain.identifier) != nil)
+			bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+
+			if (bookmark == nil)
 			{
-				NSUUID *bookmarkUUID = [[NSUUID alloc] initWithUUIDString:domainIdentifier];
+				OCLogDebug(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 
-				_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+				[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
 
-				if (_bookmark == nil)
+				bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+
+				if (bookmark == nil)
 				{
-					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+				}
+			}
 
-					[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
-
-					_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
-
-					if (_bookmark == nil)
-					{
-						OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
-					}
+			@synchronized(self)
+			{
+				if ((_bookmark == nil) && (bookmark != nil))
+				{
+					_bookmark = bookmark;
 				}
 			}
 		}
 	}
 
-	return (_bookmark);
+	return (bookmark);
 }
 
 - (OCCore *)core
 {
+	OCLogDebug(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
+
+	OCBookmark *bookmark = self.bookmark;
+	__block OCCore *retCore = nil;
+
 	@synchronized(self)
 	{
-		if (_core == nil)
-		{
-			if (self.bookmark != nil)
-			{
-				OCLogDebug(@"Requesting OCCore for FileProvider %@", self);
+		retCore = _core;
+	}
 
-				OCSyncExec(waitForCore, {
-					[[OCCoreManager sharedCoreManager] requestCoreForBookmark:self.bookmark setup:^(OCCore *core, NSError *error) {
-						self->_core = core;
-						core.delegate = self;
-					} completionHandler:^(OCCore *core, NSError *error) {
+	if (retCore == nil)
+	{
+		if (bookmark != nil)
+		{
+			OCLogDebug(@"Requesting OCCore for FileProvider %@", self);
+
+			OCSyncExec(waitForCore, {
+			 	__block BOOL hasCore = NO;
+
+				[[OCCoreManager sharedCoreManager] requestCoreForBookmark:bookmark setup:^(OCCore *core, NSError *error) {
+					@synchronized(self)
+					{
+						hasCore = (self->_core != nil);
+
+						if (!hasCore)
+						{
+							self->_core = core;
+							core.delegate = self;
+							retCore = core;
+						}
+						else
+						{
+							retCore = self->_core;
+						}
+					}
+				} completionHandler:^(OCCore *core, NSError *error) {
+					if (!hasCore)
+					{
 						self->_core = core;
 
 						if ((self->_messagePresenter = [[NotificationMessagePresenter alloc] initForBookmarkUUID:core.bookmark.uuid]) != nil)
 						{
 							[core.messageQueue addPresenter:self->_messagePresenter];
 						}
+					}
+					else
+					{
+						retCore = self->_core;
+					}
 
-						OCSyncExecDone(waitForCore);
-					}];
-				});
-			}
-		}
+					OCSyncExecDone(waitForCore);
 
-		if (_core == nil)
-		{
-			OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					if (hasCore)
+					{
+						// Balance out unrequired request for core
+						[OCCoreManager.sharedCoreManager returnCoreForBookmark:bookmark completionHandler:nil];
+					}
+				}];
+			});
 		}
 	}
 
-	return (_core);
+	if (retCore == nil)
+	{
+		OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+	}
+
+	OCLogDebug(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);
+
+	return (retCore);
+
 }
 
 - (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCIssue *)issue

@@ -68,7 +68,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		__weak OCLicenseAppStoreProvider *weakSelf = self;
 
 		[OCIPNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged withHandler:^(OCIPNotificationCenter * _Nonnull notificationCenter, id  _Nonnull observer, OCIPCNotificationName  _Nonnull notificationName) {
-			OCLogDebug(@"Received AppStoreProviderDataChanged notification");
+			OCWLogDebug(@"Received AppStoreProviderDataChanged notification");
 			[weakSelf loadReceipt];
 		}];
 	}
