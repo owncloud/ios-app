@@ -857,6 +857,33 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4.5</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Crash in Detail View</string>
+					<key>Subtitle</key>
+					<string>Fixed a crash when selecting an item, which is still uploading</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Upload Improvements</string>
+					<key>Subtitle</key>
+					<string>Fixed some problems when uploading items in the background or from the share sheet</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

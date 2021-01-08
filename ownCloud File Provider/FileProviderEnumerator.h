@@ -26,7 +26,7 @@
 {
 	__weak FileProviderExtension *_fileProviderExtension;
 
-	OCCore *_core;
+	__weak OCCore *_core;
 	OCBookmark *_bookmark;
 	NSFileProviderItemIdentifier _enumeratedItemIdentifier;
 

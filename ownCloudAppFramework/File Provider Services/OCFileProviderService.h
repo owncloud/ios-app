@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler;
 
+- (void)processSyncRecordsIfNeeded;
+
 @end
 
 NS_ASSUME_NONNULL_END

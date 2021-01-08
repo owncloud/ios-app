@@ -22,6 +22,7 @@
 @interface OCFileProviderServiceStandby ()
 {
 	OCFileProviderServiceSession *_session;
+	__weak id<OCFileProviderServicesHost> _host;
 	BOOL _sessionUsageIncremented;
 }
 @end
@@ -35,6 +36,8 @@
 		if (OCVault.hostHasFileProvider)
 		{
 			_session = [[OCFileProviderServiceSession alloc] initWithBookmark:core.bookmark];
+
+			[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_appStateChange:) name:UIApplicationDidBecomeActiveNotification object:nil];
 		}
 	}
 
@@ -44,14 +47,18 @@
 - (void)start
 {
 	[_session acquireFileProviderServicesHostWithCompletionHandler:^(NSError * _Nullable error, id<OCFileProviderServicesHost> _Nullable host, void (^ _Nullable doneHandler)(void)) {
-		OCLogDebug(@"Acquired file provider service with error=%@", error);
+		OCLogDebug(@"Acquired file provider service with host=%@, error=%@", host, error);
 
 		// Keep session open
 		if (error == nil)
 		{
 			[self->_session incrementSessionUsage];
+			self->_host = host;
 			self->_sessionUsageIncremented = YES;
 		}
+
+		// Trigger sync record processing
+		[host processSyncRecordsIfNeeded];
 
 		if (doneHandler != nil)
 		{
@@ -64,6 +71,8 @@
 
 - (void)stop
 {
+	_host = nil;
+
 	if (_sessionUsageIncremented)
 	{
 		_sessionUsageIncremented = NO;
@@ -72,6 +81,15 @@
 
 		// Balance previous retainSession() call and allow session to close
 		[_session decrementSessionUsage];
+	}
+}
+
+- (void)_appStateChange:(NSNotification *)notification
+{
+	if (_host != nil)
+	{
+		OCLogDebug(@"Sending processSyncRecordsIfNeeded to file provider service");
+		[_host processSyncRecordsIfNeeded];
 	}
 }
 

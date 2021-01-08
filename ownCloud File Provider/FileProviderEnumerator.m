@@ -127,7 +127,15 @@
 	if ((_core == nil) && (_query == nil))
 	{
 		[[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore *core, NSError *error) {
-			self->_core = core;
+			if (self->_core != nil)
+			{
+				// Already has a core - balance duplicate requested core
+				[[OCCoreManager sharedCoreManager] returnCoreForBookmark:core.bookmark completionHandler:nil];
+			}
+			else
+			{
+				self->_core = core;
+			}
 
 			if (error != nil)
 			{

@@ -1,6 +1,6 @@
-• Fix: iPad on iOS 12
-UI on iPad with iOS 12 does not appeared
+• Fix: Crash in Detail View
+Fixed a crash when selecting an item, which is still uploading
 
-• Fix: Improvements on Apple Silicon macOS
-Fixed a crash and some improvements when running on macOS 11 Apple Silicon
+• Fix: Upload Improvements
+Fixed some problems when uploading items in the background or from the share sheet
 
