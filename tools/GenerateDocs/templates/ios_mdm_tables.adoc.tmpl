@@ -36,7 +36,7 @@ tag::{{$categoryTag | strings.ToLower }}[]
 {{end}}
 !===
 {{end}}
-|{{- $option.status}}
+|{{- $option.status}}{{if ne $option.status "debugOnly"}} `candidate`{{end}}
 {{end}}
 {{- end}}
 |===

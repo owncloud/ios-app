@@ -876,7 +876,7 @@
     "type" : "bool"
   },
   {
-    "autoExpansion" : "trailing",
+    "autoExpansion" : "none",
     "category" : "Logging",
     "categoryTag" : "logging",
     "classIdentifier" : "log",

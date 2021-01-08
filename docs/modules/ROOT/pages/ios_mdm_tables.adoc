@@ -13,31 +13,31 @@ tag::app[]
 |string
 |`https://itunes.apple.com/app/id1359583808?mt=8`
 |URL for the app in the App Store.
-|advanced
+|advanced `candidate`
 
 |enable-review-prompt
 |bool
 |`true`
 |Enable/disable review prompt.
-|advanced
+|advanced `candidate`
 
 |feedback-email
 |string
 |`ios-app@owncloud.com`
 |Email address to send feedback to.
-|advanced
+|advanced `candidate`
 
 |recommend-to-friend-enabled
 |bool
 |`true`
 |Enables/disables the recommend to a friend entry in the settings.
-|advanced
+|advanced `candidate`
 
 |send-feedback-enabled
 |bool
 |`true`
 |Enables/disables the send feedback entry in the settings.
-|advanced
+|advanced `candidate`
 
 |enable-ui-animations
 |bool
@@ -87,13 +87,13 @@ tag::authentication[]
 
 !===
 
-|supported
+|supported `candidate`
 
 |browser-session-prefers-ephermal
 |bool
 |`false`
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
-|supported
+|supported `candidate`
 
 |===
 end::authentication[]
@@ -113,13 +113,13 @@ tag::bookmarks[]
 |string
 |
 |The default URL for the creation of new bookmarks.
-|supported
+|supported `candidate`
 
 |url-editable
 |bool
 |`true`
 |Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
-|supported
+|supported `candidate`
 
 |===
 end::bookmarks[]
@@ -139,13 +139,13 @@ tag::connection[]
 |bool
 |`true`
 |Allow the use of cellular connections.
-|recommended
+|recommended `candidate`
 
 |cookie-support-enabled
 |bool
 |`true`
 |Enable or disable per-process, in-memory cookie storage.
-|supported
+|supported `candidate`
 
 |user-agent
 |string
@@ -161,25 +161,25 @@ The following placeholders can be used to make it dynamic:
 - `{{os.name}}` : the name of the operating system running on the device (f.ex. `iOS`, `iPadOS`)
 - `{{os.version}}`: the version of operating system running on the device (f.ex. `13.2.2`)
 
-|supported
+|supported `candidate`
 
 |always-request-private-link
 |bool
 |`false`
 |Controls whether private links are requested with regular PROPFINDs.
-|advanced
+|advanced `candidate`
 
 |plain-http-policy
 |string
 |`warn`
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
-|advanced
+|advanced `candidate`
 
 |action-concurrency-budgets
 |dictionary
 |`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
 |Concurrency budgets available for sync actions by action category.
-|advanced
+|advanced `candidate`
 
 |allow-background-url-sessions
 |bool
@@ -262,7 +262,7 @@ tag::diagnostics[]
 |bool
 |`false`
 |Controls whether additional diagnostic options and information is available throughout the user interface.
-|advanced
+|advanced `candidate`
 
 |===
 end::diagnostics[]
@@ -282,19 +282,19 @@ tag::displaysettings[]
 |bool
 |`false`
 |Controls whether drag and drop should be prevented for items inside the app.
-|advanced
+|advanced `candidate`
 
 |show-hidden-files
 |bool
 |`false`
 |Controls whether hidden files (i.e. files starting with `.` ) should also be shown.
-|advanced
+|advanced `candidate`
 
 |sort-folders-first
 |bool
 |`false`
 |Controls whether folders are shown at the top.
-|advanced
+|advanced `candidate`
 
 |===
 end::displaysettings[]
@@ -314,61 +314,61 @@ tag::endpoints[]
 |string
 |`ocs/v2.php/cloud/capabilities`
 |Endpoint to use for retrieving server capabilities.
-|advanced
+|advanced `candidate`
 
 |endpoint-recipients
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/sharees`
 |Path of the sharing recipient API endpoint.
-|advanced
+|advanced `candidate`
 
 |endpoint-remote-shares
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/remote_shares`
 |Path of the remote shares API endpoint.
-|advanced
+|advanced `candidate`
 
 |endpoint-shares
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/shares`
 |Path of the shares API endpoint.
-|advanced
+|advanced `candidate`
 
 |endpoint-status
 |string
 |`status.php`
 |Endpoint to retrieve basic status information and detect an ownCloud installation.
-|advanced
+|advanced `candidate`
 
 |endpoint-thumbnail
 |string
 |`index.php/apps/files/api/v1/thumbnail`
 |Path of the thumbnail endpoint.
-|advanced
+|advanced `candidate`
 
 |endpoint-user
 |string
 |`ocs/v2.php/cloud/user`
 |Endpoint to use for retrieving information on logged in user.
-|advanced
+|advanced `candidate`
 
 |endpoint-webdav
 |string
 |`remote.php/dav/files`
 |Endpoint to use for WebDAV.
-|advanced
+|advanced `candidate`
 
 |endpoint-webdav-meta
 |string
 |`remote.php/dav/meta`
 |Endpoint to use for WebDAV metadata.
-|advanced
+|advanced `candidate`
 
 |well-known
 |string
 |`.well-known`
 |Path of the .well-known endpoint.
-|advanced
+|advanced `candidate`
 
 |===
 end::endpoints[]
@@ -438,25 +438,25 @@ tag::logging[]
 
 !===
 
-|supported
+|supported `candidate`
 
 |log-privacy-mask
 |bool
 |`false`
 |Controls whether certain objects in log statements should be masked for privacy.
-|supported
+|supported `candidate`
 
 |log-blank-filtered-messages
 |bool
 |`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
-|advanced
+|advanced `candidate`
 
 |log-colored
 |bool
 |`false`
 |Controls whether log levels should be replaced with colored emojis.
-|advanced
+|advanced `candidate`
 
 |log-enabled-components
 |stringArray
@@ -477,7 +477,7 @@ tag::logging[]
 
 !===
 
-|advanced
+|advanced `candidate`
 
 |log-format
 |string
@@ -498,49 +498,49 @@ tag::logging[]
 
 !===
 
-|advanced
+|advanced `candidate`
 
 |log-maximum-message-size
 |int
 |`0`
 |Maximum length of a log message before the message is truncated. A value of 0 means no limit.
-|advanced
+|advanced `candidate`
 
 |log-omit-matching
 |stringArray
 |
 |If set, omits logs messages containing any of the exact terms in this array.
-|advanced
+|advanced `candidate`
 
 |log-omit-tags
 |stringArray
 |
 |If set, omits all log messages tagged with tags in this array.
-|advanced
+|advanced `candidate`
 
 |log-only-matching
 |stringArray
 |
 |If set, only logs messages containing at least one of the exact terms in this array.
-|advanced
+|advanced `candidate`
 
 |log-only-tags
 |stringArray
 |
 |If set, omits all log messages not tagged with tags in this array.
-|advanced
+|advanced `candidate`
 
 |log-single-lined
 |bool
 |`true`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
-|advanced
+|advanced `candidate`
 
 |log-synchronous
 |bool
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
-|advanced
+|advanced `candidate`
 
 |===
 end::logging[]
@@ -560,31 +560,31 @@ tag::oauth2[]
 |string
 |`index.php/apps/oauth2/authorize`
 |OAuth2 authorization endpoint.
-|advanced
+|advanced `candidate`
 
 |oa2-client-id
 |string
 |`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1`
 |OAuth2 Client ID.
-|advanced
+|advanced `candidate`
 
 |oa2-client-secret
 |string
 |`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx`
 |OAuth2 Client Secret.
-|advanced
+|advanced `candidate`
 
 |oa2-redirect-uri
 |string
 |`oc://ios.owncloud.com`
 |OAuth2 Redirect URI.
-|advanced
+|advanced `candidate`
 
 |oa2-token-endpoint
 |string
 |`index.php/apps/oauth2/api/v1/token`
 |OAuth2 token endpoint.
-|advanced
+|advanced `candidate`
 
 |oa2-expiration-override-seconds
 |int
@@ -610,13 +610,13 @@ tag::oidc[]
 |string
 |`oc://ios.owncloud.com`
 |OpenID Connect Redirect URI
-|supported
+|supported `candidate`
 
 |oidc-scope
 |string
 |`openid offline_access email profile`
 |OpenID Connect Scope
-|supported
+|supported `candidate`
 
 |===
 end::oidc[]
@@ -636,13 +636,13 @@ tag::policies[]
 |int
 |`604800`
 |The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
-|advanced
+|advanced `candidate`
 
 |local-copy-expiration-enabled
 |bool
 |`true`
 |Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
-|advanced
+|advanced `candidate`
 
 |vacuum-sync-anchor-ttl
 |bool
@@ -668,7 +668,7 @@ tag::privacy[]
 |bool
 |`true`
 |Add an `Accept-Language` HTTP header using the preferred languages set on the device.
-|advanced
+|advanced `candidate`
 
 |===
 end::privacy[]
@@ -729,7 +729,7 @@ tag::security[]
 
 !===
 
-|recommended
+|recommended `candidate`
 
 |connection-preferred-authentication-methods
 |stringArray
@@ -750,7 +750,7 @@ tag::security[]
 
 !===
 
-|recommended
+|recommended `candidate`
 
 |connection-certificate-extended-validation-rule
 |string
@@ -766,25 +766,25 @@ Examples of expressions:
 - `serverCertificate.parentCertificate.commonName == "Let's Encrypt Authority X3"`: the common name of the parent certificate must be "Let's Encrypt Authority X3".
 - `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == "2A 00 98 90 BD … F7"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.
 
-|advanced
+|advanced `candidate`
 
 |connection-renewed-certificate-acceptance-rule
 |string
 |`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
-|advanced
+|advanced `candidate`
 
 |allow
 |stringArray
 |
 |List of settings (as flat identifiers) users are allowed to change. If this list is specified, only these settings can be changed by the user.
-|advanced
+|advanced `candidate`
 
 |disallow
 |stringArray
 |
 |List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.
-|advanced
+|advanced `candidate`
 
 |transparent-temporary-redirect
 |bool
