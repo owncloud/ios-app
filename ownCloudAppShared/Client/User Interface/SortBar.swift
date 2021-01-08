@@ -135,8 +135,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
 				sortSegmentedControl.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-				sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor, constant: leftPadding),
-				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+				sortSegmentedControl.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: leftPadding),
+				sortSegmentedControl.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
 
 			var longestTitleWidth : CGFloat = 0.0
@@ -172,8 +172,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			NSLayoutConstraint.activate([
 				sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				sortButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
-				sortButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: leftPadding),
-				sortButton.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+				sortButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leftPadding),
+				sortButton.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
 
 			sortButton.isHidden = true
@@ -191,7 +191,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
+				selectButton.trailingAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
