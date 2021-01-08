@@ -612,6 +612,18 @@ tag::oidc[]
 |OpenID Connect Redirect URI
 |supported `candidate`
 
+|oidc-register-client
+|bool
+|`true`
+|Use OpenID Connect Dynamic Client Registration if the `.well-known/openid-configuration` provides a `registration_endpoint`. If this option is enabled and a registration endpoint is available, `oa2-client-id` and `oa2-client-secret` will be ignored.
+|supported `candidate`
+
+|oidc-register-client-name-template
+|string
+|`ownCloud/{{os.name}} {{app.version}}`
+|Client Name Template to use during OpenID Connect Dynamic Client Registration. In addition to the placeholders available for `http.user-agent`, `{{url.hostname}}` can also be used.
+|supported `candidate`
+
 |oidc-scope
 |string
 |`openid offline_access email profile`
