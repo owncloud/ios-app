@@ -86,11 +86,11 @@ extension UserDefaults {
 
 	public var preferOriginalVideos: Bool {
 		set {
-			self.set(newValue, forKey: ProMediaUploadSettingsKeys.PreferRAW.rawValue)
+			self.set(newValue, forKey: ProMediaUploadSettingsKeys.PreferOriginalVideos.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: ProMediaUploadSettingsKeys.PreferRAW.rawValue)
+			return self.bool(forKey: ProMediaUploadSettingsKeys.PreferOriginalVideos.rawValue)
 		}
 	}
 }
@@ -109,15 +109,13 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 
 		self.add(row: preferOriginalsRow)
 
-		if AVCaptureDevice.rawCameraDeviceAvailable() {
-			let preferRawRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-				if let enableSwitch = sender as? UISwitch {
-					userDefaults.preferRawPhotos = enableSwitch.isOn
-				}
-				}, title: "Prefer RAW photos".localized, value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
+        let preferRawRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let enableSwitch = sender as? UISwitch {
+                userDefaults.preferRawPhotos = enableSwitch.isOn
+            }
+            }, title: "Prefer RAW photos".localized, value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
 
-			self.add(row: preferRawRow)
-		}
+        self.add(row: preferRawRow)
 
 		let preferOriginalVideosRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
