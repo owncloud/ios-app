@@ -448,11 +448,7 @@ extension ClientRootViewController : Themeable {
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
-		self.handleIssue(for: core, error: error, issue: issue, allowSkipping: true)
-	}
-
-	func handleIssue(for core: OCCore, error: Error?, issue inIssue: OCIssue?, allowSkipping: Bool) {
+	func core(_ core: OCCore, handleError error: Error?, issue inIssue: OCIssue?) {
 		var issue = inIssue
 		var isAuthFailure : Bool = false
 		var authFailureMessage : String?
