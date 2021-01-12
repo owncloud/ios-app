@@ -147,7 +147,7 @@ open class MoreViewHeader: UIView {
 			NSLayoutConstraint.activate([
 				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),
 				favoriteButton.heightAnchor.constraint(equalToConstant: favoriteSize.height),
-				favoriteButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -15),
+				favoriteButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -10),
 				favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 				favoriteButton.leadingAnchor.constraint(equalTo: labelContainerView.trailingAnchor, constant: 10)
 				])
