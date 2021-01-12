@@ -472,6 +472,7 @@ class BookmarkViewController: StaticTableViewController {
 			}
 
 			options[.presentingViewControllerKey] = self
+			options[.requiredUsernameKey] = connectionBookmark.userName
 
 			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
 
