@@ -657,8 +657,10 @@ extension ClientRootViewController : OCCoreDelegate {
 								}
 							} else {
 								// Error updating authentication -> inform the user and provide option to retry
-								self.alertQueue.async { [weak self] (queueCompletionHandler) in
-									self?.presentAuthAlert(for: editBookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
+								if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
+									self.alertQueue.async { [weak self] (queueCompletionHandler) in
+										self?.presentAuthAlert(for: editBookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
+									}
 								}
 							}
 						})
