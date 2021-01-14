@@ -287,9 +287,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
 		popoverPresentationController?.delegate = self
-		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
+		popoverPresentationController?.sourceRect = CGRect(x: sender.frame.size.width - 12, y: 0, width: 10, height: sender.frame.size.height)
 		popoverPresentationController?.permittedArrowDirections = .up
-		popoverPresentationController?.popoverLayoutMargins = UIEdgeInsets(top: 0, left: 17, bottom: 0, right: 0)
 
 		delegate?.sortBar(self, presentViewController: tableViewController, animated: true, completionHandler: nil)
 	}
