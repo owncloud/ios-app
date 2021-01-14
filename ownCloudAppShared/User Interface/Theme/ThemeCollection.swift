@@ -187,7 +187,7 @@ public class ThemeCollection : NSObject {
 
 		self.darkBrandColors = colors.resolveThemeColorCollection("darkBrandColors", ThemeColorCollection(
 			backgroundColor: darkColor,
-			tintColor: lightColor.lighter(0.2),
+			tintColor: lightColor,
 			labelColor: UIColor.white,
 			secondaryLabelColor: UIColor.lightGray,
 			symbolColor: UIColor.white,
@@ -238,18 +238,18 @@ public class ThemeCollection : NSObject {
 		self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
 			backgroundColor: tableBackgroundColor,
 			tintColor: nil,
-			labelColor: UIColor.black,
-			secondaryLabelColor: UIColor.gray,
-			symbolColor: darkColor,
+			labelColor: darkColor,
+			secondaryLabelColor: UIColor(hex: 0x55606C),
+			symbolColor: UIColor(hex: 0x55606C),
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		))
 
 		self.tableRowHighlightColors = colors.resolveThemeColorCollection("Table.tableRowHighlightColors", ThemeColorCollection(
 			backgroundColor: UIColor.white.darker(0.1),
 			tintColor: nil,
-			labelColor: UIColor.black,
-			secondaryLabelColor: UIColor.gray,
-			symbolColor: darkColor,
+			labelColor: darkColor,
+			secondaryLabelColor: UIColor(hex: 0x55606C),
+			symbolColor: UIColor(hex: 0x55606C),
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		))
 
@@ -319,8 +319,8 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", ThemeColorCollection(
 					backgroundColor: UIColor.white.darker(0.05),
-					tintColor: nil,
-					labelColor: UIColor.black,
+					tintColor: darkColor,
+					labelColor: darkColor,
 					secondaryLabelColor: UIColor.gray,
 					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
@@ -358,6 +358,7 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
+				self.toolbarColors.secondaryLabelColor = .lightGray
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 

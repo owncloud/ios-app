@@ -58,7 +58,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	// MARK: - Constants
 	let sideButtonsSize: CGSize = CGSize(width: 44.0, height: 44.0)
 	let leftPadding: CGFloat = 20.0
-	let rightPadding: CGFloat = 20.0
+	let rightPadding: CGFloat = 9.0
 	let topPadding: CGFloat = 10.0
 	let bottomPadding: CGFloat = 10.0
 
@@ -136,7 +136,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
 				sortSegmentedControl.centerXAnchor.constraint(equalTo: self.centerXAnchor),
 				sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor, constant: leftPadding),
-				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -leftPadding)
 			])
 
 			var longestTitleWidth : CGFloat = 0.0
@@ -289,6 +289,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		popoverPresentationController?.delegate = self
 		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
 		popoverPresentationController?.permittedArrowDirections = .up
+		popoverPresentationController?.popoverLayoutMargins = UIEdgeInsets(top: 0, left: 17, bottom: 0, right: 0)
 
 		delegate?.sortBar(self, presentViewController: tableViewController, animated: true, completionHandler: nil)
 	}

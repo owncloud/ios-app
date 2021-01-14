@@ -21,13 +21,13 @@ import ownCloudSDK
 
 // MARK: - ownCloud brand colors
 extension UIColor {
-	static var ownCloudLightColor : UIColor { return UIColor(hex: 0x468CC8) }
-	static var ownCloudDarkColor : UIColor { return UIColor(hex: 0x1D293B) }
+	static var ownCloudLightColor : UIColor { return UIColor(hex: 0x4E85C8) }
+	static var ownCloudDarkColor : UIColor { return UIColor(hex: 0x041E42) }
 }
 
 extension ThemeStyle {
 	static public var ownCloudLight : ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Light".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
+		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Light".localized, lightColor: .ownCloudDarkColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
 	}
 
 	static public var ownCloudDark : ThemeStyle {

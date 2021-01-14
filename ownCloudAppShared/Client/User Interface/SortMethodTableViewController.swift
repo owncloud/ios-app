@@ -36,27 +36,28 @@ class SortMethodTableViewController: StaticTableViewController {
 
 		var rows : [StaticTableViewRow] = []
 		let contentHeight : CGFloat = rowHeight * CGFloat(SortMethod.all.count) - 1
-		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
+		let contentWidth : CGFloat = maxContentWidth
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
 		for method in SortMethod.all {
-			var title = method.localizedName()
+			let title = method.localizedName()
+			var sortDirectionTitle = ""
 
 			if sortBarDelegate?.sortMethod == method {
 				if sortBarDelegate?.sortDirection == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
-					title = String(format: "%@ ↓", method.localizedName())
+					sortDirectionTitle = "↓"
 				} else {
-					title = String(format: "%@ ↑", method.localizedName())
+					sortDirectionTitle = "↑"
 				}
 			}
 
-			let aRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			let aRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				guard let self = self else { return }
 
 				self.sortBar?.sortMethod = method
 
 				self.dismiss(animated: false, completion: nil)
-				}, title: title)
+			}, title: title, subtitle: sortDirectionTitle, style: .value1, accessoryType: .none, identifier: nil)
 			rows.append(aRow)
 		}
 

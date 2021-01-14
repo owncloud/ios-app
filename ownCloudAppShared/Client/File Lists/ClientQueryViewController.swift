@@ -112,7 +112,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
 		folderActionBarButton?.accessibilityLabel = "Actions".localized
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
