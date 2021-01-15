@@ -239,8 +239,8 @@ public class ThemeCollection : NSObject {
 			backgroundColor: tableBackgroundColor,
 			tintColor: nil,
 			labelColor: darkColor,
-			secondaryLabelColor: UIColor(hex: 0x55606C),
-			symbolColor: UIColor(hex: 0x55606C),
+			secondaryLabelColor: UIColor(hex: 0x475770),
+			symbolColor: UIColor(hex: 0x475770),
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		))
 
@@ -248,8 +248,8 @@ public class ThemeCollection : NSObject {
 			backgroundColor: UIColor.white.darker(0.1),
 			tintColor: nil,
 			labelColor: darkColor,
-			secondaryLabelColor: UIColor(hex: 0x55606C),
-			symbolColor: UIColor(hex: 0x55606C),
+			secondaryLabelColor: UIColor(hex: 0x475770),
+			symbolColor: UIColor(hex: 0x475770),
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		))
 
@@ -319,7 +319,7 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", ThemeColorCollection(
 					backgroundColor: UIColor.white.darker(0.05),
-					tintColor: darkColor,
+					tintColor: nil,
 					labelColor: darkColor,
 					secondaryLabelColor: UIColor.gray,
 					symbolColor: darkColor,

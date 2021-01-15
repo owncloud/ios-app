@@ -27,7 +27,7 @@ extension UIColor {
 
 extension ThemeStyle {
 	static public var ownCloudLight : ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Light".localized, lightColor: .ownCloudDarkColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
+		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Light".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
 	}
 
 	static public var ownCloudDark : ThemeStyle {
