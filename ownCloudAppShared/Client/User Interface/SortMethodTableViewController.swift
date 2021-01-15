@@ -57,7 +57,7 @@ class SortMethodTableViewController: StaticTableViewController {
 				self.sortBar?.sortMethod = method
 
 				self.dismiss(animated: false, completion: nil)
-			}, title: title, subtitle: sortDirectionTitle, style: .value1, accessoryType: .none, identifier: nil)
+			}, title: title, subtitle: sortDirectionTitle, style: .value1, accessoryType: .none, identifier: nil, withButtonStyle: true)
 			rows.append(aRow)
 		}
 
