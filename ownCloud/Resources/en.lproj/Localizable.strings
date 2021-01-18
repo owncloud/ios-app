@@ -692,6 +692,9 @@
 "Purchase" = "Purchase";
 "Subscribe" = "Subscribe";
 
+"No accounts found" = "No accounts found";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "In order to accurately determine your current licensing status, please add one or more accounts first.";
+
 /* Share Sheet */
 "Save File" = "Save File";
 "Choose an account and folder to import into." = "Choose an account and folder to import into.";
