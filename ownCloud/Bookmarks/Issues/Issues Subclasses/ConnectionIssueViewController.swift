@@ -32,6 +32,8 @@ class ConnectionIssueViewController: IssuesViewController {
 	private var displayIssues : DisplayIssues?
 	private var dismissedHandler : (() -> Void)?
 
+	var bookmark : OCBookmark?
+
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 	}
@@ -42,12 +44,13 @@ class ConnectionIssueViewController: IssuesViewController {
 		displayIssues = issues
 	}
 
-	convenience init(displayIssues issues: DisplayIssues?, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void, dismissedHandler dismissedHandlerBlock: (() -> Void)? = nil) {
+	convenience init(displayIssues issues: DisplayIssues?, title: String? = nil, bookmark: OCBookmark? = nil, completion:@escaping (ConnectionResponse) -> Void, dismissedHandler dismissedHandlerBlock: (() -> Void)? = nil) {
 		var useButtons : [IssueButton]?
 		var useTitle = title
 
 		self.init(displayIssues: issues, buttons: nil, title: useTitle)
 
+		self.bookmark = bookmark
 		self.dismissedHandler = dismissedHandlerBlock
 
 		if let displayLevel = issues?.displayLevel {
@@ -111,20 +114,14 @@ class ConnectionIssueViewController: IssuesViewController {
 
 extension ConnectionIssueViewController {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCIssueType.certificate {
-			let certificateViewController = CertificateViewController()
-			certificateViewController.modalPresentationStyle = .overCurrentContext
+		if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == .certificate, let certificate = issue.certificate {
+			let certificateViewController = ThemeCertificateViewController(certificate: certificate, compare: bookmark?.certificate)
 
-			if let certificateNodes = OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
-				let certDetails: NSAttributedString = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes)
-
-				OnMainThread {
-					certificateViewController.localizedDescription = certDetails
-				}
-			}) {
-				certificateViewController.localizedDescription = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes)
-				self.present(certificateViewController, animated: true, completion: nil)
+			if bookmark?.certificate != nil {
+				certificateViewController.showDifferences = true
 			}
+
+			self.present(ThemeNavigationController(rootViewController: certificateViewController), animated: true, completion: nil)
 		}
 	}
 }

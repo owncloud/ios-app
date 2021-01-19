@@ -185,11 +185,10 @@ class BookmarkViewController: StaticTableViewController {
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
-					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
+				let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
+				let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
-					self?.present(navigationController, animated: true, completion: nil)
-				}
+				self?.present(navigationController, animated: true, completion: nil)
 			}
 		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 

@@ -267,7 +267,6 @@
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
 		DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */; };
-		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
 		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
@@ -1156,7 +1155,6 @@
 		DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssuesDismissalAnimator.swift; sourceTree = "<group>"; };
 		DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssuesPresentationAnimator.swift; sourceTree = "<group>"; };
-		DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
 		DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		DC23D1D6238F390200423F62 /* OCLicenseAppStoreReceipt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreReceipt.h; sourceTree = "<group>"; };
@@ -2151,7 +2149,6 @@
 		DC1B2704209CF0D3004715E1 /* Issues Subclasses */ = {
 			isa = PBXGroup;
 			children = (
-				DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */,
 				DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */,
 			);
 			path = "Issues Subclasses";
@@ -3816,7 +3813,6 @@
 				DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */,
 				0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */,
 				4C9BFA2323158C3F0059CA3E /* PreviewViewController.swift in Sources */,
-				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
 				DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */,
 				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,

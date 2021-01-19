@@ -591,7 +591,7 @@ extension ClientRootViewController : OCCoreDelegate {
 					if presentIssue?.type == .multipleChoice {
 						presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
 					} else {
-						presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
+						presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), bookmark: self?.bookmark, completion: { (response) in
 							switch response {
 								case .cancel:
 									presentIssue?.reject()
