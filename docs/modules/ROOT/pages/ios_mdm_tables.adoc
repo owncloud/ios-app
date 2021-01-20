@@ -9,49 +9,49 @@ tag::app[]
 |Status
 
 
-|app-store-link
+|app.app-store-link
 |string
 |`https://itunes.apple.com/app/id1359583808?mt=8`
 |URL for the app in the App Store.
 |advanced `candidate`
 
-|enable-review-prompt
+|app.enable-review-prompt
 |bool
 |`true`
 |Enable/disable review prompt.
 |advanced `candidate`
 
-|feedback-email
+|app.feedback-email
 |string
 |`ios-app@owncloud.com`
 |Email address to send feedback to.
 |advanced `candidate`
 
-|recommend-to-friend-enabled
+|app.recommend-to-friend-enabled
 |bool
 |`true`
 |Enables/disables the recommend to a friend entry in the settings.
 |advanced `candidate`
 
-|send-feedback-enabled
+|app.send-feedback-enabled
 |bool
 |`true`
 |Enables/disables the send feedback entry in the settings.
 |advanced `candidate`
 
-|enable-ui-animations
+|app.enable-ui-animations
 |bool
 |`true`
 |Enable/disable UI animations.
 |debugOnly
 
-|is-beta-build
+|app.is-beta-build
 |bool
 |`true`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
-|show-beta-warning
+|app.show-beta-warning
 |bool
 |`true`
 |Controls whether a warning should be shown on the first run of a beta version.
@@ -71,7 +71,7 @@ tag::authentication[]
 |Status
 
 
-|browser-session-class
+|authentication.browser-session-class
 |string
 |`operating-system`
 |Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
@@ -89,7 +89,7 @@ tag::authentication[]
 
 |supported `candidate`
 
-|browser-session-prefers-ephermal
+|authentication.browser-session-prefers-ephermal
 |bool
 |`false`
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
@@ -109,13 +109,13 @@ tag::bookmarks[]
 |Status
 
 
-|default-url
+|bookmark.default-url
 |string
 |
 |The default URL for the creation of new bookmarks.
 |supported `candidate`
 
-|url-editable
+|bookmark.url-editable
 |bool
 |`true`
 |Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
@@ -135,19 +135,19 @@ tag::connection[]
 |Status
 
 
-|allow-cellular
+|connection.allow-cellular
 |bool
 |`true`
 |Allow the use of cellular connections.
 |recommended `candidate`
 
-|cookie-support-enabled
+|core.cookie-support-enabled
 |bool
 |`true`
 |Enable or disable per-process, in-memory cookie storage.
 |supported `candidate`
 
-|user-agent
+|http.user-agent
 |string
 |`ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})`
 |A custom `User-Agent` to send with every HTTP request.
@@ -163,61 +163,61 @@ The following placeholders can be used to make it dynamic:
 
 |supported `candidate`
 
-|always-request-private-link
+|connection.always-request-private-link
 |bool
 |`false`
 |Controls whether private links are requested with regular PROPFINDs.
 |advanced `candidate`
 
-|plain-http-policy
+|connection.plain-http-policy
 |string
 |`warn`
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
 |advanced `candidate`
 
-|action-concurrency-budgets
+|core.action-concurrency-budgets
 |dictionary
 |`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
 |Concurrency budgets available for sync actions by action category.
 |advanced `candidate`
 
-|allow-background-url-sessions
+|connection.allow-background-url-sessions
 |bool
 |`true`
 |Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
 |debugOnly
 
-|force-background-url-sessions
+|connection.force-background-url-sessions
 |bool
 |`false`
 |Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
 |debugOnly
 
-|minimum-server-version
+|connection.minimum-server-version
 |string
 |`10.0`
 |The minimum server version required.
 |debugOnly
 
-|override-availability-signal
+|core.override-availability-signal
 |bool
 |
 |Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).
 |debugOnly
 
-|override-reachability-signal
+|core.override-reachability-signal
 |bool
 |
 |Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).
 |debugOnly
 
-|thumbnail-available-for-mime-type-prefixes
+|core.thumbnail-available-for-mime-type-prefixes
 |stringArray
 |`[*]`
 |Provide hints that thumbnails are available for items whose MIME-Type starts with any of the strings provided in this array. Providing an empty array turns off thumbnail loading. Providing `["*"]` turns on thumbnail loading for all items.
 |debugOnly
 
-|active-simulations
+|host-simulator.active-simulations
 |stringArray
 |`[]`
 |Active Host simulation extensions.
@@ -258,7 +258,7 @@ tag::diagnostics[]
 |Status
 
 
-|enabled
+|diagnostics.enabled
 |bool
 |`false`
 |Controls whether additional diagnostic options and information is available throughout the user interface.
@@ -278,19 +278,19 @@ tag::displaysettings[]
 |Status
 
 
-|prevent-dragging-files
+|display.prevent-dragging-files
 |bool
 |`false`
 |Controls whether drag and drop should be prevented for items inside the app.
 |advanced `candidate`
 
-|show-hidden-files
+|display.show-hidden-files
 |bool
 |`false`
 |Controls whether hidden files (i.e. files starting with `.` ) should also be shown.
 |advanced `candidate`
 
-|sort-folders-first
+|display.sort-folders-first
 |bool
 |`false`
 |Controls whether folders are shown at the top.
@@ -310,61 +310,61 @@ tag::endpoints[]
 |Status
 
 
-|endpoint-capabilities
+|connection.endpoint-capabilities
 |string
 |`ocs/v2.php/cloud/capabilities`
 |Endpoint to use for retrieving server capabilities.
 |advanced `candidate`
 
-|endpoint-recipients
+|connection.endpoint-recipients
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/sharees`
 |Path of the sharing recipient API endpoint.
 |advanced `candidate`
 
-|endpoint-remote-shares
+|connection.endpoint-remote-shares
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/remote_shares`
 |Path of the remote shares API endpoint.
 |advanced `candidate`
 
-|endpoint-shares
+|connection.endpoint-shares
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/shares`
 |Path of the shares API endpoint.
 |advanced `candidate`
 
-|endpoint-status
+|connection.endpoint-status
 |string
 |`status.php`
 |Endpoint to retrieve basic status information and detect an ownCloud installation.
 |advanced `candidate`
 
-|endpoint-thumbnail
+|connection.endpoint-thumbnail
 |string
 |`index.php/apps/files/api/v1/thumbnail`
 |Path of the thumbnail endpoint.
 |advanced `candidate`
 
-|endpoint-user
+|connection.endpoint-user
 |string
 |`ocs/v2.php/cloud/user`
 |Endpoint to use for retrieving information on logged in user.
 |advanced `candidate`
 
-|endpoint-webdav
+|connection.endpoint-webdav
 |string
 |`remote.php/dav/files`
 |Endpoint to use for WebDAV.
 |advanced `candidate`
 
-|endpoint-webdav-meta
+|connection.endpoint-webdav-meta
 |string
 |`remote.php/dav/meta`
 |Endpoint to use for WebDAV metadata.
 |advanced `candidate`
 
-|well-known
+|connection.well-known
 |string
 |`.well-known`
 |Path of the .well-known endpoint.
@@ -384,13 +384,13 @@ tag::licensing[]
 |Status
 
 
-|disable-appstore-licensing
+|licensing.disable-appstore-licensing
 |bool
 |`false`
 |Enables/disables App Store licensing support.
 |debugOnly
 
-|disable-enterprise-licensing
+|licensing.disable-enterprise-licensing
 |bool
 |`false`
 |Enables/disables Enterprise licensing support.
@@ -410,7 +410,7 @@ tag::logging[]
 |Status
 
 
-|level
+|log.level
 |int
 |`4`
 |Log level
@@ -440,25 +440,25 @@ tag::logging[]
 
 |supported `candidate`
 
-|privacy-mask
+|log.privacy-mask
 |bool
 |`false`
 |Controls whether certain objects in log statements should be masked for privacy.
 |supported `candidate`
 
-|blank-filtered-messages
+|log.blank-filtered-messages
 |bool
 |`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
 |advanced `candidate`
 
-|colored
+|log.colored
 |bool
 |`false`
 |Controls whether log levels should be replaced with colored emojis.
 |advanced `candidate`
 
-|enabled-components
+|log.enabled-components
 |stringArray
 |`[writer.stderr writer.file]`
 |List of enabled logging system components.
@@ -479,7 +479,7 @@ tag::logging[]
 
 |advanced `candidate`
 
-|format
+|log.format
 |string
 |`text`
 |Determines the format that log messages are saved in
@@ -500,43 +500,43 @@ tag::logging[]
 
 |advanced `candidate`
 
-|maximum-message-size
+|log.maximum-message-size
 |int
 |`0`
 |Maximum length of a log message before the message is truncated. A value of 0 means no limit.
 |advanced `candidate`
 
-|omit-matching
+|log.omit-matching
 |stringArray
 |
 |If set, omits logs messages containing any of the exact terms in this array.
 |advanced `candidate`
 
-|omit-tags
+|log.omit-tags
 |stringArray
 |
 |If set, omits all log messages tagged with tags in this array.
 |advanced `candidate`
 
-|only-matching
+|log.only-matching
 |stringArray
 |
 |If set, only logs messages containing at least one of the exact terms in this array.
 |advanced `candidate`
 
-|only-tags
+|log.only-tags
 |stringArray
 |
 |If set, omits all log messages not tagged with tags in this array.
 |advanced `candidate`
 
-|single-lined
+|log.single-lined
 |bool
 |`true`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
 |advanced `candidate`
 
-|synchronous
+|log.synchronous
 |bool
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
@@ -556,37 +556,37 @@ tag::oauth2[]
 |Status
 
 
-|oa2-authorization-endpoint
+|authentication-oauth2.oa2-authorization-endpoint
 |string
 |`index.php/apps/oauth2/authorize`
 |OAuth2 authorization endpoint.
 |advanced `candidate`
 
-|oa2-client-id
+|authentication-oauth2.oa2-client-id
 |string
 |`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1`
 |OAuth2 Client ID.
 |advanced `candidate`
 
-|oa2-client-secret
+|authentication-oauth2.oa2-client-secret
 |string
 |`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx`
 |OAuth2 Client Secret.
 |advanced `candidate`
 
-|oa2-redirect-uri
+|authentication-oauth2.oa2-redirect-uri
 |string
 |`oc://ios.owncloud.com`
 |OAuth2 Redirect URI.
 |advanced `candidate`
 
-|oa2-token-endpoint
+|authentication-oauth2.oa2-token-endpoint
 |string
 |`index.php/apps/oauth2/api/v1/token`
 |OAuth2 token endpoint.
 |advanced `candidate`
 
-|oa2-expiration-override-seconds
+|authentication-oauth2.oa2-expiration-override-seconds
 |int
 |
 |OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)
@@ -606,25 +606,25 @@ tag::oidc[]
 |Status
 
 
-|oidc-redirect-uri
+|authentication-oauth2.oidc-redirect-uri
 |string
 |`oc://ios.owncloud.com`
 |OpenID Connect Redirect URI
 |supported `candidate`
 
-|oidc-register-client
+|authentication-oauth2.oidc-register-client
 |bool
 |`true`
 |Use OpenID Connect Dynamic Client Registration if the `.well-known/openid-configuration` provides a `registration_endpoint`. If this option is enabled and a registration endpoint is available, `oa2-client-id` and `oa2-client-secret` will be ignored.
 |supported `candidate`
 
-|oidc-register-client-name-template
+|authentication-oauth2.oidc-register-client-name-template
 |string
 |`ownCloud/{{os.name}} {{app.version}}`
 |Client Name Template to use during OpenID Connect Dynamic Client Registration. In addition to the placeholders available for `http.user-agent`, `{{url.hostname}}` can also be used.
 |supported `candidate`
 
-|oidc-scope
+|authentication-oauth2.oidc-scope
 |string
 |`openid offline_access email profile`
 |OpenID Connect Scope
@@ -644,19 +644,19 @@ tag::policies[]
 |Status
 
 
-|local-copy-expiration
+|item-policy.local-copy-expiration
 |int
 |`604800`
 |The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
 |advanced `candidate`
 
-|local-copy-expiration-enabled
+|item-policy.local-copy-expiration-enabled
 |bool
 |`true`
 |Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
 |advanced `candidate`
 
-|vacuum-sync-anchor-ttl
+|item-policy.vacuum-sync-anchor-ttl
 |bool
 |`60`
 |Number of seconds since the removal of an item after which the metadata entry may be finally removed.
@@ -676,7 +676,7 @@ tag::privacy[]
 |Status
 
 
-|add-accept-language-header
+|core.add-accept-language-header
 |bool
 |`true`
 |Add an `Accept-Language` HTTP header using the preferred languages set on the device.
@@ -696,13 +696,13 @@ tag::releasenotes[]
 |Status
 
 
-|lastSeenAppVersion
+|releasenotes.lastSeenAppVersion
 |string
 |
 |The last-seen app version.
 |debugOnly
 
-|lastSeenReleaseNotesVersion
+|releasenotes.lastSeenReleaseNotesVersion
 |string
 |
 |The app version for which the release notes were last shown.
@@ -722,7 +722,7 @@ tag::security[]
 |Status
 
 
-|allowed-authentication-methods
+|connection.allowed-authentication-methods
 |stringArray
 |
 |Array of allowed authentication methods. Nil/Missing for no restrictions.
@@ -743,7 +743,7 @@ tag::security[]
 
 |recommended `candidate`
 
-|preferred-authentication-methods
+|connection.preferred-authentication-methods
 |stringArray
 |`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
 |Array of authentication methods in order of preference (most preferred first).
@@ -764,31 +764,31 @@ tag::security[]
 
 |recommended `candidate`
 
-|certificate-extended-validation-rule
+|connection.certificate-extended-validation-rule
 |string
 |`bookmarkCertificate == serverCertificate`
 |Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.
 |advanced `candidate`
 
-|renewed-certificate-acceptance-rule
+|connection.renewed-certificate-acceptance-rule
 |string
 |`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
 |advanced `candidate`
 
-|allow
+|user-settings.allow
 |stringArray
 |
 |List of settings (as flat identifiers) users are allowed to change. If this list is specified, only these settings can be changed by the user.
 |advanced `candidate`
 
-|disallow
+|user-settings.disallow
 |stringArray
 |
 |List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.
 |advanced `candidate`
 
-|transparent-temporary-redirect
+|connection.transparent-temporary-redirect
 |bool
 |`false`
 |Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
