@@ -475,32 +475,6 @@
     "categoryTag" : "oidc",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
-    "defaultValue" : true,
-    "description" : "Use OpenID Connect Dynamic Client Registration if the `.well-known/openid-configuration` provides a `registration_endpoint`. If this option is enabled and a registration endpoint is available, `oa2-client-id` and `oa2-client-secret` will be ignored.",
-    "flatIdentifier" : "authentication-oauth2.oidc-register-client",
-    "key" : "oidc-register-client",
-    "status" : "supported",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "OIDC",
-    "categoryTag" : "oidc",
-    "classIdentifier" : "authentication-oauth2",
-    "className" : "OCAuthenticationMethodOAuth2",
-    "defaultValue" : "ownCloud/{{os.name}} {{app.version}}",
-    "description" : "Client Name Template to use during OpenID Connect Dynamic Client Registration. In addition to the placeholders available for `http.user-agent`, `{{url.hostname}}` can also be used.",
-    "flatIdentifier" : "authentication-oauth2.oidc-register-client-name-template",
-    "key" : "oidc-register-client-name-template",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "OIDC",
-    "categoryTag" : "oidc",
-    "classIdentifier" : "authentication-oauth2",
-    "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "openid offline_access email profile",
     "description" : "OpenID Connect Scope",
     "flatIdentifier" : "authentication-oauth2.oidc-scope",
@@ -598,6 +572,20 @@
     "type" : "bool"
   },
   {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : false,
+    "description" : "Controls whether private links are requested with regular PROPFINDs.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.always-request-private-link",
+    "key" : "always-request-private-link",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
     "autoExpansion" : "trailing",
     "category" : "Security",
     "categoryTag" : "security",
@@ -605,8 +593,8 @@
     "className" : "OCConnection",
     "description" : "Array of allowed authentication methods. Nil/Missing for no restrictions.",
     "flags" : 4,
-    "flatIdentifier" : "connection.allowed-authentication-methods",
-    "key" : "allowed-authentication-methods",
+    "flatIdentifier" : "connection.connection-allowed-authentication-methods",
+    "key" : "connection-allowed-authentication-methods",
     "possibleValues" : [
       {
         "description" : "Basic Auth",
@@ -626,17 +614,63 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Security",
+    "categoryTag" : "security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "bookmarkCertificate == serverCertificate",
+    "description" : "Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.\n\nExamples of expressions:\n- `bookmarkCertificate == serverCertificate`: the whole certificate needs to be identical to the one stored in the bookmark during setup.\n- `bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData`:  the public key of the received certificate needs to be identical to the public key stored in the bookmark during setup.\n- `serverCertificate.passedValidationOrIsUserAccepted == true`: any certificate is accepted as long as it has passed validation by the OS or was accepted by the user.\n- `serverCertificate.commonName == \"demo.owncloud.org\"`: the common name of the certificate must be \"demo.owncloud.org\".\n- `serverCertificate.rootCertificate.commonName == \"DST Root CA X3\"`: the common name of the root certificate must be \"DST Root CA X3\".\n- `serverCertificate.parentCertificate.commonName == \"Let's Encrypt Authority X3\"`: the common name of the parent certificate must be \"Let's Encrypt Authority X3\".\n- `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == \"2A 00 98 90 BD … F7\"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.\n",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-certificate-extended-validation-rule",
+    "key" : "connection-certificate-extended-validation-rule",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Connection",
     "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
-    "defaultValue" : false,
-    "description" : "Controls whether private links are requested with regular PROPFINDs.",
+    "defaultValue" : "10.0",
+    "description" : "The minimum server version required.",
     "flags" : 4,
-    "flatIdentifier" : "connection.always-request-private-link",
-    "key" : "always-request-private-link",
-    "status" : "advanced",
-    "type" : "bool"
+    "flatIdentifier" : "connection.connection-minimum-server-version",
+    "key" : "connection-minimum-server-version",
+    "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "trailing",
+    "category" : "Security",
+    "categoryTag" : "security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : [
+      "com.owncloud.openid-connect",
+      "com.owncloud.oauth2",
+      "com.owncloud.basicauth"
+    ],
+    "description" : "Array of authentication methods in order of preference (most preferred first).",
+    "flags" : 4,
+    "flatIdentifier" : "connection.connection-preferred-authentication-methods",
+    "key" : "connection-preferred-authentication-methods",
+    "possibleValues" : [
+      {
+        "description" : "Basic Auth",
+        "value" : "com.owncloud.basicauth"
+      },
+      {
+        "description" : "OAuth2",
+        "value" : "com.owncloud.oauth2"
+      },
+      {
+        "description" : "OpenID Connect",
+        "value" : "com.owncloud.openid-connect"
+      }
+    ],
+    "status" : "recommended",
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
@@ -644,11 +678,11 @@
     "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
-    "defaultValue" : "bookmarkCertificate == serverCertificate",
-    "description" : "Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.",
+    "defaultValue" : "(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))",
+    "description" : "Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.",
     "flags" : 4,
-    "flatIdentifier" : "connection.certificate-extended-validation-rule",
-    "key" : "certificate-extended-validation-rule",
+    "flatIdentifier" : "connection.connection-renewed-certificate-acceptance-rule",
+    "key" : "connection-renewed-certificate-acceptance-rule",
     "status" : "advanced",
     "type" : "string"
   },
@@ -798,71 +832,11 @@
     "categoryTag" : "connection",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
-    "defaultValue" : "10.0",
-    "description" : "The minimum server version required.",
-    "flags" : 4,
-    "flatIdentifier" : "connection.minimum-server-version",
-    "key" : "minimum-server-version",
-    "status" : "debugOnly",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Connection",
-    "categoryTag" : "connection",
-    "classIdentifier" : "connection",
-    "className" : "OCConnection",
     "defaultValue" : "warn",
     "description" : "Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.",
     "flags" : 4,
     "flatIdentifier" : "connection.plain-http-policy",
     "key" : "plain-http-policy",
-    "status" : "advanced",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "trailing",
-    "category" : "Security",
-    "categoryTag" : "security",
-    "classIdentifier" : "connection",
-    "className" : "OCConnection",
-    "defaultValue" : [
-      "com.owncloud.openid-connect",
-      "com.owncloud.oauth2",
-      "com.owncloud.basicauth"
-    ],
-    "description" : "Array of authentication methods in order of preference (most preferred first).",
-    "flags" : 4,
-    "flatIdentifier" : "connection.preferred-authentication-methods",
-    "key" : "preferred-authentication-methods",
-    "possibleValues" : [
-      {
-        "description" : "Basic Auth",
-        "value" : "com.owncloud.basicauth"
-      },
-      {
-        "description" : "OAuth2",
-        "value" : "com.owncloud.oauth2"
-      },
-      {
-        "description" : "OpenID Connect",
-        "value" : "com.owncloud.openid-connect"
-      }
-    ],
-    "status" : "recommended",
-    "type" : "stringArray"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Security",
-    "categoryTag" : "security",
-    "classIdentifier" : "connection",
-    "className" : "OCConnection",
-    "defaultValue" : "(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))",
-    "description" : "Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.",
-    "flags" : 4,
-    "flatIdentifier" : "connection.renewed-certificate-acceptance-rule",
-    "key" : "renewed-certificate-acceptance-rule",
     "status" : "advanced",
     "type" : "string"
   },
@@ -1158,8 +1132,8 @@
     "defaultValue" : false,
     "description" : "Controls whether filtered out messages should still be logged, but with the message replaced with `-`.",
     "flags" : 4,
-    "flatIdentifier" : "log.blank-filtered-messages",
-    "key" : "blank-filtered-messages",
+    "flatIdentifier" : "log.log-blank-filtered-messages",
+    "key" : "log-blank-filtered-messages",
     "status" : "advanced",
     "type" : "bool"
   },
@@ -1172,25 +1146,26 @@
     "defaultValue" : false,
     "description" : "Controls whether log levels should be replaced with colored emojis.",
     "flags" : 4,
-    "flatIdentifier" : "log.colored",
-    "key" : "colored",
+    "flatIdentifier" : "log.log-colored",
+    "key" : "log-colored",
     "status" : "advanced",
     "type" : "bool"
   },
   {
-    "autoExpansion" : "none",
+    "autoExpansion" : "trailing",
     "category" : "Logging",
     "categoryTag" : "logging",
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : [
       "writer.stderr",
-      "writer.file"
+      "writer.file",
+      "option.log-requests-and-responses"
     ],
     "description" : "List of enabled logging system components.",
     "flags" : 4,
-    "flatIdentifier" : "log.enabled-components",
-    "key" : "enabled-components",
+    "flatIdentifier" : "log.log-enabled-components",
+    "key" : "log-enabled-components",
     "possibleValues" : [
       {
         "description" : "Log HTTP requests and responses",
@@ -1217,8 +1192,8 @@
     "defaultValue" : "text",
     "description" : "Determines the format that log messages are saved in",
     "flags" : 4,
-    "flatIdentifier" : "log.format",
-    "key" : "format",
+    "flatIdentifier" : "log.log-format",
+    "key" : "log-format",
     "possibleValues" : [
       {
         "description" : "Detailed JSON (one line per message).",
@@ -1245,8 +1220,8 @@
     "defaultValue" : 4,
     "description" : "Log level",
     "flags" : 2,
-    "flatIdentifier" : "log.level",
-    "key" : "level",
+    "flatIdentifier" : "log.log-level",
+    "key" : "log-level",
     "possibleValues" : [
       {
         "description" : "verbose",
@@ -1285,8 +1260,8 @@
     "defaultValue" : 0,
     "description" : "Maximum length of a log message before the message is truncated. A value of 0 means no limit.",
     "flags" : 4,
-    "flatIdentifier" : "log.maximum-message-size",
-    "key" : "maximum-message-size",
+    "flatIdentifier" : "log.log-maximum-message-size",
+    "key" : "log-maximum-message-size",
     "status" : "advanced",
     "type" : "int"
   },
@@ -1298,8 +1273,8 @@
     "className" : "OCLogger",
     "description" : "If set, omits logs messages containing any of the exact terms in this array.",
     "flags" : 4,
-    "flatIdentifier" : "log.omit-matching",
-    "key" : "omit-matching",
+    "flatIdentifier" : "log.log-omit-matching",
+    "key" : "log-omit-matching",
     "status" : "advanced",
     "type" : "stringArray"
   },
@@ -1311,8 +1286,8 @@
     "className" : "OCLogger",
     "description" : "If set, omits all log messages tagged with tags in this array.",
     "flags" : 4,
-    "flatIdentifier" : "log.omit-tags",
-    "key" : "omit-tags",
+    "flatIdentifier" : "log.log-omit-tags",
+    "key" : "log-omit-tags",
     "status" : "advanced",
     "type" : "stringArray"
   },
@@ -1324,8 +1299,8 @@
     "className" : "OCLogger",
     "description" : "If set, only logs messages containing at least one of the exact terms in this array.",
     "flags" : 4,
-    "flatIdentifier" : "log.only-matching",
-    "key" : "only-matching",
+    "flatIdentifier" : "log.log-only-matching",
+    "key" : "log-only-matching",
     "status" : "advanced",
     "type" : "stringArray"
   },
@@ -1337,8 +1312,8 @@
     "className" : "OCLogger",
     "description" : "If set, omits all log messages not tagged with tags in this array.",
     "flags" : 4,
-    "flatIdentifier" : "log.only-tags",
-    "key" : "only-tags",
+    "flatIdentifier" : "log.log-only-tags",
+    "key" : "log-only-tags",
     "status" : "advanced",
     "type" : "stringArray"
   },
@@ -1351,8 +1326,8 @@
     "defaultValue" : false,
     "description" : "Controls whether certain objects in log statements should be masked for privacy.",
     "flags" : 4,
-    "flatIdentifier" : "log.privacy-mask",
-    "key" : "privacy-mask",
+    "flatIdentifier" : "log.log-privacy-mask",
+    "key" : "log-privacy-mask",
     "status" : "supported",
     "type" : "bool"
   },
@@ -1365,8 +1340,8 @@
     "defaultValue" : true,
     "description" : "Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.",
     "flags" : 4,
-    "flatIdentifier" : "log.single-lined",
-    "key" : "single-lined",
+    "flatIdentifier" : "log.log-single-lined",
+    "key" : "log-single-lined",
     "status" : "advanced",
     "type" : "bool"
   },
@@ -1379,8 +1354,8 @@
     "defaultValue" : false,
     "description" : "Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).",
     "flags" : 4,
-    "flatIdentifier" : "log.synchronous",
-    "key" : "synchronous",
+    "flatIdentifier" : "log.log-synchronous",
+    "key" : "log-synchronous",
     "status" : "advanced",
     "type" : "bool"
   },
