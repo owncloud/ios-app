@@ -20,10 +20,16 @@
 #import <ownCloudApp/ownCloudApp.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
+@interface OCCore (setNeedsToProcessSyncRecords)
+- (void)setNeedsToProcessSyncRecords;
+@end
+
 @interface FileProviderServiceSource () <NSXPCListenerDelegate, OCFileProviderServicesHost>
 {
 	NSFileProviderServiceName _serviceName;
 	NSXPCListener *_listener;
+	OCBookmark *_bookmark;
+	__weak OCCore *_core;
 }
 @end
 
@@ -37,6 +43,7 @@
 	{
 		_serviceName = serviceName;
 		_fileProviderExtension = fileProviderExtension;
+		_bookmark = _fileProviderExtension.bookmark;
 	}
 
 	return (self);
@@ -44,6 +51,13 @@
 
 - (void)dealloc
 {
+	OCLogDebug(@"FileProviderServiceSource Dealloc");
+
+	if ((_bookmark != nil) && (_core != nil))
+	{
+		[OCCoreManager.sharedCoreManager returnCoreForBookmark:_bookmark completionHandler:nil];
+	}
+
 	[_listener invalidate];
 }
 
@@ -81,9 +95,18 @@
 		[weakConnection invalidate];
 	};
 
-	[self.fileProviderExtension.core scheduleInCoreQueue:^{
-		[newConnection resume];
+	OCLogDebug(@"FileProviderServiceSource[%p].shouldAcceptNewConnection[enter]", self.fileProviderExtension);
+
+	[OCCoreManager.sharedCoreManager requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore * _Nullable core, NSError * _Nullable error) {
+		self->_core = core;
+
+		[core scheduleInCoreQueue:^{
+			OCLogDebug(@"FileProviderServiceSource[%p].shouldAcceptNewConnection[done]", self.fileProviderExtension);
+			[newConnection resume];
+		}];
 	}];
+
+	OCLogDebug(@"FileProviderServiceSource[%p].shouldAcceptNewConnection[core]: %@", self.fileProviderExtension, self.fileProviderExtension.core);
 
 	return (YES);
 }
@@ -91,17 +114,23 @@
 #pragma mark - Service API
 - (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler
 {
-	return ([_fileProviderExtension.core importItemNamed:newFileName
-							  at:parentItem
-						     fromURL:inputFileURL
-					    isSecurityScoped:isSecurityScoped
-						     options:@{
-							     OCCoreOptionImportByCopying : @(importByCopying),
-							     OCCoreOptionAutomaticConflictResolutionNameStyle : @(nameStyle)
-						     }
-				placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
+	return ([_core importItemNamed:newFileName
+				    at:parentItem
+			       fromURL:inputFileURL
+		      isSecurityScoped:isSecurityScoped
+			       options:@{
+				       OCCoreOptionImportByCopying : @(importByCopying),
+				       OCCoreOptionAutomaticConflictResolutionNameStyle : @(nameStyle)
+			       }
+	  placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
 		completionHandler(error);
 	} resultHandler:nil]);
+}
+
+- (void)processSyncRecordsIfNeeded
+{
+	OCLogDebug(@"Process sync records if needed for %@", _fileProviderExtension.core);
+	[_core setNeedsToProcessSyncRecords];
 }
 
 @end

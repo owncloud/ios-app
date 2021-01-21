@@ -648,7 +648,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView,
 	contextMenuConfigurationForRowAt indexPath: IndexPath,
 	point: CGPoint) -> UIContextMenuConfiguration? {
-		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+		if !self.isEditing, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
 				return self.makeContextMenu(for: indexPath, with: bookmark)
 			})
@@ -734,6 +734,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
+		if self.isEditing {
+			return []
+		}
+
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
 			destructiveTitle = "Logout".localized
@@ -774,6 +778,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		return [deleteRowAction, editRowAction, manageRowAction]
+	}
+
+	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		if self.isEditing {
+			return true
+		}
+
+		return false
 	}
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -891,7 +903,7 @@ extension ServerListTableViewController : ClientSessionManagerDelegate {
 extension ServerListTableViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+		if !self.isEditing, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			let userActivity = bookmark.openAccountUserActivity
 			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
 			itemProvider.registerObject(userActivity, visibility: .all)

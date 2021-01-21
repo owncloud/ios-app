@@ -31,10 +31,16 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 			UIBarButtonItem(title: "Restore purchases".localized, style: .plain, target: self, action: #selector(restorePurchases)),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		]
+
+		NotificationCenter.default.addObserver(self, selector: #selector(bookmarkManagerListUpdated(_:)), name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -50,6 +56,12 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		super.viewWillDisappear(animated)
 
 		self.navigationController?.isToolbarHidden = true
+	}
+
+	@objc func bookmarkManagerListUpdated(_ notification: Notification?) {
+		OnMainThread { [weak self] in
+			self?.generateContent()
+		}
 	}
 
 	func provideContent() {
@@ -68,9 +80,27 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		})
 	}
 
+	private weak var proFeaturesSection : StaticTableViewSection?
+	private weak var noBookmarksSection : StaticTableViewSection?
+
 	func generateContent() {
-		if self.sections.count == 0 {
-			let section = StaticTableViewSection(headerTitle: "Pro Features".localized)
+		if OCBookmarkManager.shared.bookmarks.count == 0 {
+			if noBookmarksSection == nil {
+				let section = StaticTableViewSection(headerTitle: "", identifier: "no-bookmarks")
+
+				section.add(row: StaticTableViewRow(message: "In order to accurately determine your current licensing status, please add one or more accounts first.".localized, title: "No accounts found".localized, style: .warning))
+
+				noBookmarksSection = section
+				self.addSection(section)
+			}
+		} else {
+			if let noBookmarksSection = noBookmarksSection {
+				self.removeSection(noBookmarksSection)
+			}
+		}
+
+		if proFeaturesSection == nil {
+			let section = StaticTableViewSection(headerTitle: "Pro Features".localized, identifier: "pro-features")
 			let environment = OCLicenseEnvironment()
 
 			if let iapMessages = OCLicenseManager.shared.inAppPurchaseMessage(forFeature: nil) {
@@ -85,7 +115,10 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 				}
 			}
 
-			self.addSection(section)
+			if section.rows.count > 0 {
+				proFeaturesSection = section
+				self.addSection(section)
+			}
 		}
 	}
 

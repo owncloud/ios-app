@@ -20,7 +20,7 @@ tag::{{$categoryTag | strings.ToLower }}[]
 {{- $statusOptions = slice $statusOptions}}
 {{- end}}
 {{- range $optionIndex, $option := $statusOptions }}
-|{{- $option.key}}
+|{{- $option.flatIdentifier}}
 |{{- $option.type}}
 |{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
 |{{- if has $option "description"}}{{$option.description}}{{end}}
@@ -36,7 +36,7 @@ tag::{{$categoryTag | strings.ToLower }}[]
 {{end}}
 !===
 {{end}}
-|{{- $option.status}}
+|{{- $option.status}}{{if ne $option.status "debugOnly"}} `candidate`{{end}}
 {{end}}
 {{- end}}
 |===

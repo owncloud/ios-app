@@ -1,0 +1,476 @@
+"08siGk" = "File";
+
+"0jWfGg" = "Check if path ${path} exists in ${account}";
+
+"0n7uf3" = "This folder already exists in the given path";
+
+"0pF5fq" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"0xydIy" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"1KMplM" = "The given path does not exists";
+
+"1UkR2J" = "Save File";
+
+"1rpPPR" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"2IChwb" = "Get a directory listing for the given account and path";
+
+"2etfeF-8CnkN3" = "Just to confirm, you wanted ‘Name’?";
+
+"2etfeF-E5BAmD" = "Just to confirm, you wanted ‘Shared’?";
+
+"2etfeF-eZdCum" = "Just to confirm, you wanted ‘Size’?";
+
+"2etfeF-lsb3bf" = "Just to confirm, you wanted ‘Date’?";
+
+"2etfeF-vY7pxV" = "Just to confirm, you wanted ‘Type’?";
+
+"30uTS2" = "Delete Path Item";
+
+"38884k" = "Which File do you need?";
+
+"38uTf2" = "Creation Date";
+
+"3BsNkC" = "Server URL";
+
+"3allZk" = "Path";
+
+"3dRWka" = "The given path does not exists";
+
+"3uG0po" = "For which path you want the file info?";
+
+"4BnO3u" = "Select the account";
+
+"4HFDB7" = "File Info";
+
+"4JjSYi" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"4U4XOu" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"4WGDPz" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"4eTrn2" = "The account with the given UUID does not exists";
+
+"5bfpVi" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"5bvXKH" = "Where to save the file?";
+
+"5tW7cP-ZB0VB7" = "Just to confirm, you wanted ‘Descending’?";
+
+"5tW7cP-tHgDsi" = "Just to confirm, you wanted ‘Ascending’?";
+
+"61YuKy" = "The account with the given UUID does not exists";
+
+"65dv1W" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"6JHJJP" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"6JcpPy" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"6a3odp" = "Save File ${file} to ${path} in ${account}";
+
+"6oQ3E3" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"6xEiIO" = "true";
+
+"74Rz1p" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"79FdrK" = "Check if path ${path} exists in ${account}";
+
+"7NRaX2" = "Just to confirm, you wanted ‘${account}’?";
+
+"7Rco9W" = "Get File Info for ${path} in ${account}";
+
+"7bVLsg" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"7leZJ9" = "The account with the given UUID does not exists";
+
+"81IjYk" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"8CnkN3" = "Name";
+
+"8ZZD23" = "Get Account";
+
+"8Ziepl" = "Get File";
+
+"8a8rsQ" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"8xEyec" = "Which one?";
+
+"9eAgmm" = "Which one?";
+
+"9tIXKj" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"9uzczk" = "There are ${count} options matching ‘${account}’.";
+
+"A3Pv0a" = "File Info";
+
+"ABZOUR" = "The account with the given UUID does not exists";
+
+"AG0qbP" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"AQ4lsZ" = "Create Folder";
+
+"AtUMKl" = "The account with the given UUID does not exists";
+
+"Aviuqh" = "This folder already exists in the given path";
+
+"B1lmXQ" = "File Name (optional)";
+
+"BOHYUX" = "Path Exists";
+
+"C4qdxp" = "The account with the given UUID does not exists";
+
+"Cfk0HW" = "Account";
+
+"CtNzv7" = "The account with the given UUID does not exists";
+
+"CwmgYp" = "Sorting Type";
+
+"Czb1hO" = "There are ${count} options matching ‘${path}’.";
+
+"D3oUHR" = "Get Account with ${accountUUID}";
+
+"DSSHvU" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"Dt0MVQ" = "Account UUID";
+
+"E5BAmD" = "Shared";
+
+"Ed4d2z" = "/";
+
+"Ezlwwe" = "Just to confirm, you wanted ‘${account}’?";
+
+"FZOxYk" = "Name";
+
+"Fe4YSc" = "There are ${count} options matching ‘${account}’.";
+
+"GAhtDQ" = "Account";
+
+"GJ25u2" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"GOVcde" = "Path";
+
+"GUKqkE" = "The file already exists and overwrite file is disabled.";
+
+"HTGZys" = "Which one?";
+
+"Iej0wL" = "Account";
+
+"IklOI3" = "Sort by";
+
+"Iq98sA" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"JPFL0e" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"KHwW13" = "Where to create the folder?";
+
+"KpcaUP" = "true";
+
+"Kr0sps" = "The account with the given UUID does not exists";
+
+"LJUrKB" = "File Path";
+
+"LdHBeL" = "Retrieve file infos for the given path";
+
+"LiNwxr" = "Which one?";
+
+"MGAYW2" = "Get File Info";
+
+"MRTQ9c" = "Creation Date Timestamp";
+
+"N181Er" = "The given path does not exists";
+
+"NEiHz6" = "The given path does not exists";
+
+"OBFBYf" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"OmLLGX" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"P6Xeu7" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"PHyaws" = "Get Directory Listing";
+
+"PthGCb" = "Check if the given path exists";
+
+"Q5StNV" = "Which one?";
+
+"QIKvUr" = "The account with the given UUID does not exists";
+
+"R54XCc" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"Rh6ICd" = "Create Folder ${name} in ${path} for ${account}";
+
+"SP1wR2" = "The account with the given UUID does not exists";
+
+"SW8AiH" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"TjffcC" = "Delete Item at path ${path} in ${account}";
+
+"U3l2bk" = "Get the account for the given account UUID";
+
+"UaOocE" = "The file already exists and overwrite file is disabled.";
+
+"UdyMQ5" = "The account with the given UUID does not exists";
+
+"Ul4Kf0" = "Account List";
+
+"VHlRdG" = "Select the account";
+
+"VSQYEZ" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"VYw9o4" = "Enter the UUID for the account you want";
+
+"Vg8Ky0" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"W2jbjk" = "Name of the folder";
+
+"WDPKZp" = "The given path does not exists";
+
+"WfA15u" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"X0Zskf" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"X2zTIZ" = "Overwrite file if already exists";
+
+"XEIycV" = "Directory Listing";
+
+"XKCjDe" = "Get Accounts";
+
+"XVBTsw" = "Account";
+
+"XmX9YS" = "Create a folder with the given name into the path.";
+
+"Y16qbv" = "Just to confirm, you wanted ‘${account}’?";
+
+"Y87IjO" = "The given path does not exists";
+
+"YDTXfI" = "Select the account";
+
+"YNY6aQ" = "Overwrite existing File";
+
+"YkRxhp" = "Which one?";
+
+"YzkaES" = "File";
+
+"ZB0VB7" = "Descending";
+
+"ZRW2EV" = "Name";
+
+"ZWoKzx" = "The given path does not exists";
+
+"ZXvi1J-ZB0VB7" = "There are ${count} options matching ‘Descending’.";
+
+"ZXvi1J-tHgDsi" = "There are ${count} options matching ‘Ascending’.";
+
+"ZhFjkx" = "Path";
+
+"a5zbSk-8CnkN3" = "There are ${count} options matching ‘Name’.";
+
+"a5zbSk-E5BAmD" = "There are ${count} options matching ‘Shared’.";
+
+"a5zbSk-eZdCum" = "There are ${count} options matching ‘Size’.";
+
+"a5zbSk-lsb3bf" = "There are ${count} options matching ‘Date’.";
+
+"a5zbSk-vY7pxV" = "There are ${count} options matching ‘Type’.";
+
+"axuc4N" = "Get Directory Listing for ${path} from ${account}";
+
+"b4VIz0" = "Optional file name for saving file";
+
+"b4pgUO" = "There are ${count} options matching ‘${account}’.";
+
+"bPAspK" = "false";
+
+"bfU2dy" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"c8L2xN" = "Which one?";
+
+"cDQ3EQ" = "File Extension (optional)";
+
+"ceG0fs" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"cfhOuF" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"ctet5s" = "The given path does not exists";
+
+"d8ddSN" = "Which one?";
+
+"dCe7NY" = "Get Account with ${accountUUID}";
+
+"dH8vD7" = "Just to confirm, you wanted ‘${account}’?";
+
+"dRSMFQ" = "Optional file extension for saving file";
+
+"dWm6eD" = "The account with the given UUID does not exists";
+
+"dlIKxE" = "Path";
+
+"ds6RJ5" = "Path Exists";
+
+"dtUvRf" = "Save a file into the path in account";
+
+"e5LXg2" = "Select the account";
+
+"eATsqP" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"eGjKAM" = "Path";
+
+"eJ8Zop" = "There are ${count} options matching ‘${account}’.";
+
+"eZdCum" = "Size";
+
+"eg3e3D" = "false";
+
+"fjiVU2" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"fotVdI" = "Select the account";
+
+"g1Zin1" = "The account with the given UUID does not exists";
+
+"gDQ2EW" = "Uuid";
+
+"gFiypL" = "Sort Direction";
+
+"gYCA4r" = "Delete Item at path ${path} in ${account}";
+
+"ggYJ45" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"gxBJkl" = "Here is your account list";
+
+"hL4u0G" = "Path";
+
+"hLfV0h" = "The account with the given UUID does not exists";
+
+"iDEwxe" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"icA1AQ" = "true";
+
+"idUnAy" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"ijKWiB" = "Which file to save?";
+
+"iyefxU" = "Which one?";
+
+"j7guHG" = "Get Account List";
+
+"je9RXz" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"jkLupt" = "Delete the given path in account";
+
+"kfmZUU" = "Get File ${path} from ${account}";
+
+"l1ScV6" = "The given path does not exists";
+
+"lIGrzU" = "Is Favorite";
+
+"lNNcvh" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"lUzgvo" = "The account with the given UUID does not exists";
+
+"leB73e" = "The given path does not exists";
+
+"lrF7G0" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"lsb3bf" = "Date";
+
+"lyQhRe" = "Last Modified Timestamp";
+
+"m6tE77" = "Local ID";
+
+"mJL3AY" = "Just to confirm, you wanted ‘${account}’?";
+
+"mRWXIl" = "Account";
+
+"mqKEhg" = "Just to confirm, you wanted ‘${account}’?";
+
+"nZsCMf" = "Sorting Direction";
+
+"nvFl2W" = "Get file for the given path in account";
+
+"o7aBS2" = "Just to confirm, you wanted ‘${account}’?";
+
+"odUmdN" = "Select the account";
+
+"ogx9ZM" = "There are ${count} options matching ‘${account}’.";
+
+"pDN16g" = "false";
+
+"pLbUOb" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"q5bi2K" = "There are ${count} options matching ‘${account}’.";
+
+"qD6IIc" = "Last Modified";
+
+"qWXOGM" = "For which path you want the file info?";
+
+"rzbAOP" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"sKUo1c" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"sLw6L8" = "The given path does not exists";
+
+"sdm6CF" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"sf57GO" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"sxd9RH" = "Account";
+
+"tHgDsi" = "Ascending";
+
+"tMYYpx" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"tiHX6L" = "Account";
+
+"tiPumg" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"u8abus" = "Path";
+
+"uP1q1e" = "Account";
+
+"unxhTD" = "Path";
+
+"uo96Pp" = "Which path should be used?";
+
+"upG52E" = "Which one?";
+
+"vY7pxV" = "Type";
+
+"vhZe7o" = "For which path you want the file info?";
+
+"wK4bqS" = "Get a list of all configured accounts";
+
+"wPdYjH" = "Account";
+
+"wbCXnN" = "Size";
+
+"wwyxxS" = "Just to confirm, you wanted ‘${path}’?";
+
+"xIWWfW" = "The account with the given UUID does not exists";
+
+"xZDy1P" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"xaKzfr" = "Select the account";
+
+"xgwnia" = "The given path does not exists";
+
+"xseRVY" = "File ID";
+
+"xzMJ1y" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+
+"y8oko2" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"yTzyi1" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
+
+"yeD8D7" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"yrLv2M" = "Here is your account list";
+
+"zAG76o" = "There are ${count} options matching ‘${account}’.";
+
+"zKRAWH" = "Mime Type";
+
+"znA04X" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
+

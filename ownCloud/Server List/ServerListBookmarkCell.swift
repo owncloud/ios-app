@@ -67,20 +67,20 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 			iconView.widthAnchor.constraint(equalToConstant: 40),
 			iconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
-			iconView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
-			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -25),
-			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -25),
+			iconView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+			iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -25),
+			iconView.trailingAnchor.constraint(equalTo: detailLabel.leadingAnchor, constant: -25),
 
-			titleLabel.rightAnchor.constraint(equalTo: infoView.leftAnchor),
+			titleLabel.trailingAnchor.constraint(equalTo: infoView.leadingAnchor),
 			titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
 			titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5),
 
-			detailLabel.rightAnchor.constraint(equalTo: infoView.leftAnchor),
+			detailLabel.trailingAnchor.constraint(equalTo: infoView.leadingAnchor),
 			detailLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
 
 			infoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
 			infoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-			infoView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20)
+			infoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
 		])
 
 		infoView.setContentHuggingPriority(.required, for: .horizontal)

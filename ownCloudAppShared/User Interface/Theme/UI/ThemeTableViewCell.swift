@@ -24,11 +24,17 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 	var updateLabelColors : Bool = true
 
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		if style == .default {
+			// This is a workaround, because some cells with style .default does not support automatically Right-to-Left UI support. When switching to style .subtitle, the style will be kept, if no subtitle was set ant the RtL support will work on this cells
+			super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+		} else {
+			super.init(style: style, reuseIdentifier: reuseIdentifier)
+		}
 	}
 
 	convenience public init(withLabelColorUpdates labelColorUpdates: Bool, style: UITableViewCell.CellStyle = .default, reuseIdentifier: String? = nil) {
 		self.init(style: style, reuseIdentifier: reuseIdentifier)
+
 		updateLabelColors = labelColorUpdates
 	}
 
