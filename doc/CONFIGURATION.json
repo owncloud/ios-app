@@ -537,7 +537,7 @@
     "classIdentifier" : "bookmark",
     "className" : "ownCloud.BookmarkViewController",
     "defaultValue" : true,
-    "description" : "Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.",
+    "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
     "flatIdentifier" : "bookmark.url-editable",
     "key" : "url-editable",
     "status" : "supported",
