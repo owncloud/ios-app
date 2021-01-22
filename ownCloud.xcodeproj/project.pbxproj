@@ -236,7 +236,6 @@
 		DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */; };
 		DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */; };
 		DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */; };
-		DC0A358124C0E43C00FB58FC /* ThemeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C31F9622F1C52C0023923D /* ThemeProvider.swift */; };
 		DC0A358224C0E44200FB58FC /* TVGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA53207FA80C00E7337D /* TVGImage.swift */; };
 		DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA28207F71D600E7337D /* VectorImage.swift */; };
 		DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA2A207F71E400E7337D /* VectorImageView.swift */; };
@@ -275,6 +274,9 @@
 		DC20DE6B21C01B210096000B /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */ = {isa = PBXBuildFile; fileRef = DC23D1D7238F390200423F62 /* OCLicenseAppStoreReceipt.m */; };
 		DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */ = {isa = PBXBuildFile; fileRef = DC23D1D6238F390200423F62 /* OCLicenseAppStoreReceipt.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC24B28725BA2A2E005783E2 /* Branding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC24B27125B9DF31005783E2 /* Branding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC24B29825BA2A34005783E2 /* Branding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24B27225B9DF31005783E2 /* Branding.m */; };
+		DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B2AA25BA316D005783E2 /* Branding+App.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
@@ -976,7 +978,6 @@
 		39B39446238532DC00892E8D /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		39B394482385334D00892E8D /* ThemeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeView.swift; sourceTree = "<group>"; };
 		39BE385C23435AFE0062A2FE /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
-		39C31F9622F1C52C0023923D /* ThemeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProvider.swift; sourceTree = "<group>"; };
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		39CC8B36228D5B890020253B /* ShareClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClientItemCell.swift; sourceTree = "<group>"; };
 		39CD755123D787E400193950 /* DocumentEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentEditingAction.swift; sourceTree = "<group>"; };
@@ -1163,6 +1164,9 @@
 		DC23D1D7238F390200423F62 /* OCLicenseAppStoreReceipt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreReceipt.m; sourceTree = "<group>"; };
 		DC243BF92317B446004FBB5C /* ThemeWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeWindow.swift; sourceTree = "<group>"; };
 		DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
+		DC24B27125B9DF31005783E2 /* Branding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Branding.h; sourceTree = "<group>"; };
+		DC24B27225B9DF31005783E2 /* Branding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Branding.m; sourceTree = "<group>"; };
+		DC24B2AA25BA316D005783E2 /* Branding+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Branding+App.swift"; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -1759,6 +1763,7 @@
 		394A0AFA22EEFC2C00603813 /* ownCloudAppShared */ = {
 			isa = PBXGroup;
 			children = (
+				DC24B2A925BA3154005783E2 /* Branding */,
 				DCCE54092080175B00067D1D /* TVGs */,
 				DCE4E43824C19A950051722F /* Licensing */,
 				DC0A354F24C0E18800FB58FC /* AppLock */,
@@ -2114,7 +2119,6 @@
 				DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */,
 				DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */,
 				DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */,
-				39C31F9622F1C52C0023923D /* ThemeProvider.swift */,
 				DC7DBA27207F6DFD00E7337D /* UI */,
 				DC7DBA26207F6DEE00E7337D /* Resources */,
 				DC7DBA21207F672700E7337D /* TVG */,
@@ -2166,6 +2170,14 @@
 				DC66F3A923965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h */,
 			);
 			path = Receipt;
+			sourceTree = "<group>";
+		};
+		DC24B2A925BA3154005783E2 /* Branding */ = {
+			isa = PBXGroup;
+			children = (
+				DC24B2AA25BA316D005783E2 /* Branding+App.swift */,
+			);
+			path = Branding;
 			sourceTree = "<group>";
 		};
 		DC255E432319AD13007279B1 /* Scanner */ = {
@@ -2485,6 +2497,8 @@
 		DCB2C05C250C1ECD001083CA /* Branding */ = {
 			isa = PBXGroup;
 			children = (
+				DC24B27225B9DF31005783E2 /* Branding.m */,
+				DC24B27125B9DF31005783E2 /* Branding.h */,
 				DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */,
 				DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */,
 			);
@@ -3043,6 +3057,7 @@
 				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
 				DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */,
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
+				DC24B28725BA2A2E005783E2 /* Branding.h in Headers */,
 				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
 				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
 				DCC832F3242CC28900153F8C /* NotificationManager.h in Headers */,
@@ -3986,7 +4001,6 @@
 				DC0A359224C0E55800FB58FC /* UIColor+Extension.swift in Sources */,
 				DCE4E45024C1E0400051722F /* UIButton+Extension.swift in Sources */,
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
-				DC0A358124C0E43C00FB58FC /* ThemeProvider.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
 				DCE4E45824C1F0F40051722F /* ClientDirectoryPickerViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
@@ -3996,6 +4010,7 @@
 				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
 				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
+				DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */,
 				DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,
@@ -4113,6 +4128,7 @@
 				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,
 				DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */,
+				DC24B29825BA2A34005783E2 /* Branding.m in Sources */,
 				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
 				DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */,

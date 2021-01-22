@@ -17,50 +17,13 @@
  */
 
 #import "BrandingClassSettingsSource.h"
+#import "Branding.h"
 
 @implementation BrandingClassSettingsSource
 
 + (void)load
 {
 	[OCClassSettings.sharedSettings insertSource:[BrandingClassSettingsSource new] before:OCClassSettingsSourceIdentifierUserPreferences after:nil];
-}
-
-+ (NSURL *)brandingURL
-{
-	NSBundle *appBundle;
-
-	if ((appBundle = NSBundle.mainBundle) != nil)
-	{
-		if ([appBundle.bundleURL.pathExtension isEqual:@"appex"])
-		{
-			// Find container app bundle (ownCloud.app/PlugIns/Extension.appex)
-			appBundle = [NSBundle bundleWithURL:appBundle.bundleURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent];
-		}
-	}
-
-	return ([appBundle URLForResource:@"Branding" withExtension:@"plist"]);
-}
-
-+ (NSDictionary<NSString *, id> *)brandingProperties
-{
-	static NSDictionary<NSString *, id> *brandingProperties;
-	static dispatch_once_t onceToken;
-
-	dispatch_once(&onceToken, ^{
-		NSData *brandingPlistData;
-
-		if ((brandingPlistData = [NSData dataWithContentsOfURL:BrandingClassSettingsSource.brandingURL]) != nil)
-		{
-			NSError *error = nil;
-
-			if ((brandingProperties = [NSPropertyListSerialization propertyListWithData:brandingPlistData options:NSPropertyListImmutable format:NULL error:&error]) == nil)
-			{
-				OCLogError(@"Error parsing %@: %@", BrandingClassSettingsSource.brandingURL, error);
-			}
-		}
-	});
-
-	return (brandingProperties);
 }
 
 - (OCClassSettingsSourceIdentifier)settingsSourceIdentifier
@@ -70,7 +33,34 @@
 
 - (NSDictionary <OCClassSettingsFlatIdentifier, id> *)flatSettingsDictionary
 {
-	return ([BrandingClassSettingsSource.brandingProperties objectForKey:@"Configuration"]);
+	NSDictionary <OCClassSettingsFlatIdentifier, id> *flatSettingsDict = Branding.sharedBranding.brandingProperties;
+
+	if (Branding.sharedBranding.brandingPropertiesFromLocalFile)
+	{
+		// Support "Configuration" dictionary only for branding properties coming from (legacy) local files
+		NSDictionary <OCClassSettingsFlatIdentifier, id> *legacyConfiguration = [flatSettingsDict objectForKey:@"Configuration"];
+
+		// If a "Configuration" dictionary is provided, use it as base layer, but copy the brandingProperties on top
+		if (legacyConfiguration != nil)
+		{
+			NSMutableDictionary <OCClassSettingsFlatIdentifier, id> *combinedSettings;
+
+			if ((combinedSettings = [legacyConfiguration mutableCopy]) != nil)
+			{
+				[combinedSettings addEntriesFromDictionary:flatSettingsDict];
+
+				combinedSettings[@"Configuration"] = nil; // Remove "Configuration"
+
+				flatSettingsDict = combinedSettings;
+			}
+		}
+	}
+	else
+	{
+		// Branding properties from remote location - TOOD: strip anything but OCClassSettingsSourceIdentifierBranding parameters
+	}
+
+	return (flatSettingsDict);
 }
 
 @end

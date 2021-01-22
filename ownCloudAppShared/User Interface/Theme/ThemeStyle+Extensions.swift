@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudApp
 
 @available(iOS 13.0, *)
 extension UIUserInterfaceStyle {
@@ -198,16 +199,7 @@ extension ThemeStyle {
 	}
 
 	static public func registerDefaultStyles() {
-		if VendorServices.shared.isBranded, let brandingURL = VendorServices.shared.brandingURL {
-			let themeProvider = ThemeProvider(plist: brandingURL)
-
-			var isDefault = true
-			for theme in themeProvider.themes {
-				let themeExtension = theme.themeStyleExtension(isDefault: isDefault)
-				OCExtensionManager.shared.addExtension(themeExtension)
-				isDefault = false
-			}
-		} else {
+		if !Branding.shared.setupThemeStyles() {
 			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
 			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
 			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())

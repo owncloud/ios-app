@@ -171,7 +171,7 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(helpRow!)
 		}
 
-		if let sendFeedbackEnabled = VendorServices.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
+		if VendorServices.shared.feedbackMail != nil {
 			rows.append(sendFeedbackRow!)
 		}
 
