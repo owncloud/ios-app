@@ -1,5 +1,5 @@
 //
-//  MoreViewController.swift
+//  FrameViewController.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 25/07/2018.
@@ -17,15 +17,12 @@
  */
 
 import UIKit
-import ownCloudSDK
 
-open class MoreViewController: UIViewController, CardPresentationSizing {
+open class FrameViewController: UIViewController, CardPresentationSizing {
 
-	private var item: OCItem?
-	private weak var core: OCCore?
-
-	private var headerView: UIView
-	private var viewController: UIViewController
+	public var headerView: UIView
+	public var footerView: UIView?
+	public var viewController: UIViewController
 
 	public var fitsOnScreen : Bool = false {
 		didSet {
@@ -35,17 +32,9 @@ open class MoreViewController: UIViewController, CardPresentationSizing {
 		}
 	}
 
-	public init(item: OCItem, core: OCCore, header: UIView, viewController: UIViewController) {
-		self.item = item
-		self.core = core
+	public init(header: UIView, footer: UIView? = nil, viewController: UIViewController) {
 		self.headerView = header
-		self.viewController = viewController
-
-		super.init(nibName: nil, bundle: nil)
-	}
-
-	public init(header: UIView, viewController: UIViewController) {
-		self.headerView = header
+		self.footerView = footer
 		self.viewController = viewController
 
 		super.init(nibName: nil, bundle: nil)
@@ -75,13 +64,28 @@ open class MoreViewController: UIViewController, CardPresentationSizing {
 			headerView.topAnchor.constraint(equalTo: view.topAnchor)
 		])
 
+		var viewControllerBottomConstraint = view.bottomAnchor
+
+		if let footerView = footerView {
+			footerView.translatesAutoresizingMaskIntoConstraints = false
+
+			view.addSubview(footerView)
+			NSLayoutConstraint.activate([
+				footerView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+				footerView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+				footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+			])
+
+			viewControllerBottomConstraint = footerView.topAnchor
+		}
+
 		self.addChild(viewController)
 		view.addSubview(viewController.view)
 		viewController.didMove(toParent: self)
 
 		viewController.view.translatesAutoresizingMaskIntoConstraints = false
 
-		let bottomConstraint = viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+		let bottomConstraint = viewController.view.bottomAnchor.constraint(equalTo: viewControllerBottomConstraint)
 		bottomConstraint.priority = UILayoutPriority(rawValue: 999)
 
 		NSLayoutConstraint.activate([
@@ -105,14 +109,19 @@ open class MoreViewController: UIViewController, CardPresentationSizing {
 
 		if self.view != nil {
 			let headerSize = headerView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .defaultLow)
+			var footerSize : CGSize = .zero
+
+			if let footerView = footerView {
+				footerSize = footerView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .defaultLow)
+			}
 
 			size.width = targetSize.width
-			size.height = headerSize.height
+			size.height = headerSize.height + footerSize.height
 
 			if let scrollView = viewController.view as? UIScrollView {
 				size.height += scrollView.contentSize.height
 			} else {
-				let bodySize = viewController.view.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: targetSize.height-headerSize.height),
+				let bodySize = viewController.view.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: targetSize.height-headerSize.height-footerSize.height),
 										   withHorizontalFittingPriority: horizontalFittingPriority,
 										   verticalFittingPriority: verticalFittingPriority)
 				size.height += bodySize.height
@@ -131,7 +140,7 @@ open class MoreViewController: UIViewController, CardPresentationSizing {
 	}
 }
 
-extension MoreViewController: Themeable {
+extension FrameViewController: Themeable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.headerView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}

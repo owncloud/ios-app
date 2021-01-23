@@ -365,23 +365,25 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 									self.passwordRow?.textField?.becomeFirstResponder()
 								}
 							} else {
-								let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
-									switch response {
-									case .cancel:
-										issue?.reject()
+								if let loginViewController = self.loginViewController, let issue = issue {
 
-									case .approve:
-										issue?.approve()
-										self?.startAuthentication(nil)
-
-									case .dismiss: break
+									if let busySection = self.busySection, busySection.attached {
+										self.removeSection(busySection)
 									}
-								})
 
-								if let busySection = self.busySection, busySection.attached {
-									self.removeSection(busySection)
+									IssuesCardViewController.present(on: loginViewController, issue: issue, completion: { [weak self, weak issue] (response) in
+										switch response {
+										case .cancel:
+											issue?.reject()
+
+										case .approve:
+											issue?.approve()
+											self?.startAuthentication(nil)
+
+										case .dismiss: break
+										}
+									})
 								}
-								self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
 							}
 						}
 					})
@@ -512,28 +514,29 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	func show(issue: OCIssue?, proceed: (() -> Void)? = nil, cancel: (() -> Void)? = nil) -> Bool {
 		if let displayIssues = issue?.prepareForDisplay() {
-			if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
+			if displayIssues.isAtLeast(level: .warning) {
 				// Present issues if the level is >= warning
 				OnMainThread {
-					let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { (response) in
-						switch response {
-							case .cancel:
-								issue?.reject()
-								cancel?()
-
-							case .approve:
-								issue?.approve()
-								proceed?()
-
-							case .dismiss:
-								cancel?()
+					if let loginViewController = self.loginViewController, let issue = issue {
+						if let busySection = self.busySection, busySection.attached {
+							self.removeSection(busySection)
 						}
-					})
 
-					if let busySection = self.busySection, busySection.attached {
-						self.removeSection(busySection)
+						IssuesCardViewController.present(on: loginViewController, issue: issue, displayIssues: displayIssues, completion: { [weak issue] (response) in
+							switch response {
+								case .cancel:
+									issue?.reject()
+									cancel?()
+
+								case .approve:
+									issue?.approve()
+									proceed?()
+
+								case .dismiss:
+									cancel?()
+							}
+						})
 					}
-					self.loginViewController?.present(issuesViewController, animated: true, completion: nil)
 				}
 
 				return false

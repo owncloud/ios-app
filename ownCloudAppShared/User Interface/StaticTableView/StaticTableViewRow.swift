@@ -125,7 +125,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
 
@@ -140,7 +140,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellStyle = UITableViewCell.CellStyle.subtitle
 		}
 
-		self.cell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
+		let themeCell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
+		themeCell.messageStyle = messageStyle
+
+		self.cell = themeCell
 		if subtitle != nil {
 			self.cell?.detailTextLabel?.text = subtitle
 			self.cell?.detailTextLabel?.numberOfLines = 0

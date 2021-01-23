@@ -21,7 +21,20 @@ import UIKit
 open class ThemeTableViewCell: UITableViewCell, Themeable {
 	private var themeRegistered = false
 
-	var updateLabelColors : Bool = true
+	public var updateLabelColors : Bool = true
+
+	public var messageStyle : StaticTableViewRowMessageStyle?
+
+	public struct CellStyleSet {
+		public var theme: Theme
+		public var collection: ThemeCollection
+		public var backgroundColor: UIColor?
+		public var textColor: UIColor?
+	}
+
+	public typealias CellStyler = (_ cell: ThemeTableViewCell, _ styleSet: CellStyleSet) -> Bool
+
+	public var cellStyler : CellStyler?
 
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -56,8 +69,45 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 		let state = ThemeItemState(selected: self.isSelected)
 
 		if updateLabelColors {
-			self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
-			self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
+			if let messageStyle = messageStyle {
+				var textColor, backgroundColor : UIColor?
+				var doStyle = true
+
+				switch messageStyle {
+					case .plain:
+						textColor = collection.tintColor
+						backgroundColor = collection.tableRowColors.backgroundColor
+
+					case .confirmation:
+						textColor = collection.approvalColors.normal.foreground
+						backgroundColor = collection.approvalColors.normal.background
+
+					case .warning:
+						textColor = .black
+						backgroundColor = .systemYellow
+
+					case .alert:
+						textColor = collection.destructiveColors.normal.foreground
+						backgroundColor = collection.destructiveColors.normal.background
+
+					case let .custom(customTextColor, customBackgroundColor, _):
+						textColor = customTextColor
+						backgroundColor = customBackgroundColor
+				}
+
+				if let cellStyler = cellStyler, cellStyler(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor)) {
+					doStyle = false
+				}
+
+				if doStyle {
+					self.textLabel?.textColor = textColor
+					self.detailTextLabel?.textColor = textColor
+					self.backgroundColor = backgroundColor
+				}
+			} else {
+				self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
+				self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
+			}
 		}
 	}
 
