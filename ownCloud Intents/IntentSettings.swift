@@ -87,4 +87,15 @@ extension IntentSettings: OCClassSettingsSupport {
 			.shortcutsEnabled : true
 		]
 	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.shortcutsEnabled : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether Shortcuts support is enabled.",
+				.category	: "Shortcuts",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
+		]
+	}
 }

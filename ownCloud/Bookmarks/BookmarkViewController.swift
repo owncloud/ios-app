@@ -931,16 +931,30 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .bookmark {
-			/*
 			return [
-				.bookmarkDefaultURL : "http://demo.owncloud.org/",
-				.bookmarkURLEditable : false
+				.bookmarkURLEditable : true
 			]
-			*/
-			return [ : ]
 		}
 
 		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.bookmarkDefaultURL : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "The default URL for the creation of new bookmarks.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.bookmarkURLEditable : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported
+			]
+		]
 	}
 }
 

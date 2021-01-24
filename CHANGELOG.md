@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Release version 11.4.5 (January 2021)
+
+- Fix: Crash in Detail View (#855)
+- Fix: Upload Improvements (PR #857)
+
 ## Release version 11.4.4 (End-November 2020)
 
 - Fix: iPad on iOS 12 (#4293)

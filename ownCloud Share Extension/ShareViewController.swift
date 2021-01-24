@@ -304,30 +304,41 @@ class ShareViewController: MoreStaticTableViewController {
 										if error == nil {
 											var data : Data?
 											var tempFilePath : String?
+											var tempFileURL : URL?
 
 											if let text = item as? String { // Save plain text content
 												let ext = self.utiToFileExtension(type)
 												tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
 												data = Data(text.utf8)
 											} else if let url = item as? URL { // Download URL content
-												do {
-													tempFilePath = NSTemporaryDirectory() + url.lastPathComponent
-													data = try Data(contentsOf: url)
-												} catch {
-													jobDone()
+												if url.isFileURL {
+													tempFileURL = URL(fileURLWithPath: NSTemporaryDirectory() + url.lastPathComponent)
+													if let tempFileURL = tempFileURL {
+														try? FileManager.default.copyItem(at: url, to: tempFileURL)
+													}
+												} else {
+													do {
+														tempFilePath = NSTemporaryDirectory() + url.lastPathComponent
+														data = try Data(contentsOf: url)
+													} catch {
+														jobDone()
+													}
 												}
 											}
 
-											if let data = data, let tempFilePath = tempFilePath {
+											if tempFileURL == nil, let data = data, let tempFilePath = tempFilePath {
 												FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
+												tempFileURL = URL(fileURLWithPath: tempFilePath)
+											}
 
-												serviceSession.importThroughFileProvider(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, completion: { (error) in
-													try? FileManager.default.removeItem(atPath: tempFilePath)
+											if let tempFileURL = tempFileURL {
+												serviceSession.importThroughFileProvider(url: tempFileURL, to: targetDirectory, completion: { (error) in
+													try? FileManager.default.removeItem(at: tempFileURL)
 
 													if let error = error {
-														Log.error("Error importing item at \(tempFilePath) through file provider: \(String(describing: error))")
+														Log.error("Error importing item at \(tempFileURL) through file provider: \(String(describing: error))")
 
-														self.showAlert(title: NSString(format: "Error importing %@".localized as NSString, (tempFilePath as NSString).lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
+														self.showAlert(title: NSString(format: "Error importing %@".localized as NSString, tempFileURL.lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
 															if !doContinue {
 																importError = error
 																progressViewController?.cancel()

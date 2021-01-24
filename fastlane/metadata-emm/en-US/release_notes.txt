@@ -1,3 +1,6 @@
-• Fix: iOS 14 UI Adaptions
-Fixed some problems on iOS 14, with unresponsive UI elements.
+• Fix: Crash in Detail View
+Fixed a crash when selecting an item, which is still uploading
+
+• Fix: Upload Improvements
+Fixed some problems when uploading items in the background or from the share sheet
 

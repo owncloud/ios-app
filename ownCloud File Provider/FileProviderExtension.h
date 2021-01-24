@@ -21,11 +21,11 @@
 
 @interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCClassSettingsSupport, OCLogTagging>
 {
-	OCCore *_core;
+	__weak OCCore *_core;
 	OCBookmark *_bookmark;
 }
 
-@property(strong,nonatomic,readonly) OCCore *core;
+@property(weak,nonatomic,readonly) OCCore *core;
 @property(strong,nonatomic,readonly) OCBookmark *bookmark;
 
 @end
