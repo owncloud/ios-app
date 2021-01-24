@@ -23,12 +23,19 @@ import Photos
 import PhotosUI
 
 @available(iOS 14, *)
-class PhotoPickerPresenter: PHPickerViewControllerDelegate {
+class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLibraryChangeObserver {
 
 	typealias AssetSelectionHandler = ([PHAsset]) -> Void
 
 	var completionHandler: AssetSelectionHandler?
 	var parentViewController: UIViewController?
+
+	private var assetIdentifiers = [String]()
+
+	override init() {
+		super.init()
+		PHPhotoLibrary.shared().register(self)
+	}
 
 	var pickerViewController: UIViewController {
 		var configuration = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
@@ -40,38 +47,73 @@ class PhotoPickerPresenter: PHPickerViewControllerDelegate {
 		return pickerViewController
 	}
 
+	// MARK: - PHPickerViewControllerDelegate
+
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 
 		picker.dismiss(animated: true)
 
 		OnBackgroundQueue {
 
-			var assets = [PHAsset]()
-
 			// Get asset identifiers
-			var identifiers = [String]()
 			for result in results {
 				if let identifier = result.assetIdentifier {
-					identifiers.append(identifier)
+					self.assetIdentifiers.append(identifier)
 				}
 			}
 
 			// Fetch corresponding assets
-			let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
-			fetchResult.enumerateObjects({ (asset, _, _) in
-				assets.append(asset)
-			})
+			let assets = self.attemptAssetsFetch()
 
 			OnMainThread {
-				self.completionHandler?(assets)
+				if results.count == assets.count{
+					self.completionHandler?(assets)
+				} else {
+					self.presentLimitedLibraryPicker()
+				}
 			}
 		}
+	}
+
+	private func presentLimitedLibraryPicker() {
+		guard let viewController = self.parentViewController else { return }
+		let library = PHPhotoLibrary.shared()
+		library.presentLimitedLibraryPicker(from: viewController)
+	}
+
+	private func attemptAssetsFetch() -> [PHAsset] {
+		// Fetch corresponding assets
+		var assets = [PHAsset]()
+
+		let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: assetIdentifiers, options: nil)
+		fetchResult.enumerateObjects({ (asset, _, _) in
+			assets.append(asset)
+		})
+
+		return assets
 	}
 
 	func present(in viewController:UIViewController, with completion:@escaping AssetSelectionHandler) {
 		self.parentViewController = viewController
 		self.completionHandler = completion
 		viewController.present(self.pickerViewController, animated: true)
+	}
+
+	// MARK: - PHPhotoLibraryChangeObserver
+
+	func photoLibraryDidChange(_ changeInstance: PHChange) {
+		OnMainThread {
+			let assets = self.attemptAssetsFetch()
+			if assets.count > 0 {
+				self.completionHandler?(assets)
+			} else {
+				let alert = ThemedAlertController(title: "Limited Photo Access".localized, message: "Access for the media selected for upload is limited".localized, preferredStyle: .alert)
+
+				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+				self.parentViewController?.present(alert, animated: true)
+			}
+		}
 	}
 }
 

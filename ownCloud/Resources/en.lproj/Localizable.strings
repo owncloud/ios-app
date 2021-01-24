@@ -836,3 +836,7 @@
 "Prefer unedited photos" = "Prefer unedited photos";
 "Prefer RAW photos" = "Prefer RAW photos";
 "Prefer original videos" = "Prefer original videos";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Limited Photo Access";
+"Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
