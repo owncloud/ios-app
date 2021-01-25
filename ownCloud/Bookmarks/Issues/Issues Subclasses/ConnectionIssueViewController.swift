@@ -115,14 +115,14 @@ extension ConnectionIssueViewController {
 			let certificateViewController = CertificateViewController()
 			certificateViewController.modalPresentationStyle = .overCurrentContext
 
-			if let certificateNodes = OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
-				let certDetails: NSAttributedString = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes)
+			if let certificate = issue.certificate, let certificateNodes = OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: certificate, differencesFrom: nil, withValidationCompletionHandler: { (certificateNodes) in
+				let certDetails: NSAttributedString = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes, colors: nil)
 
 				OnMainThread {
 					certificateViewController.localizedDescription = certDetails
 				}
 			}) {
-				certificateViewController.localizedDescription = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes)
+				certificateViewController.localizedDescription = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes, colors: nil)
 				self.present(certificateViewController, animated: true, completion: nil)
 			}
 		}
