@@ -208,25 +208,25 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		sharedStatusIconViewZeroWidthConstraint = sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
 		publicLinkStatusIconViewZeroWidthConstraint = publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
 
-		cloudStatusIconViewRightMarginConstraint = sharedStatusIconView.leftAnchor.constraint(equalTo: cloudStatusIconView.rightAnchor)
-		sharedStatusIconViewRightMarginConstraint = publicLinkStatusIconView.leftAnchor.constraint(equalTo: sharedStatusIconView.rightAnchor)
-		publicLinkStatusIconViewRightMarginConstraint = detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor)
+		cloudStatusIconViewRightMarginConstraint = sharedStatusIconView.leadingAnchor.constraint(equalTo: cloudStatusIconView.trailingAnchor)
+		sharedStatusIconViewRightMarginConstraint = publicLinkStatusIconView.leadingAnchor.constraint(equalTo: sharedStatusIconView.trailingAnchor)
+		publicLinkStatusIconViewRightMarginConstraint = detailLabel.leadingAnchor.constraint(equalTo: publicLinkStatusIconView.trailingAnchor)
 
 		NSLayoutConstraint.activate([
-			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
-			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
+			iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+			iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
-			titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
-			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+			titleLabel.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: 0),
+			detailLabel.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: 0),
 
 			cloudStatusIconViewZeroWidthConstraint!,
 			sharedStatusIconViewZeroWidthConstraint!,
 			publicLinkStatusIconViewZeroWidthConstraint!,
 
-			cloudStatusIconView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: spacing),
+			cloudStatusIconView.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: spacing),
 			cloudStatusIconViewRightMarginConstraint!,
 			sharedStatusIconViewRightMarginConstraint!,
 			publicLinkStatusIconViewRightMarginConstraint!,
@@ -248,10 +248,10 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			moreButtonWidthConstraint!,
-			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+			moreButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
 
-			messageButton.leftAnchor.constraint(equalTo: moreButton.leftAnchor),
-			messageButton.rightAnchor.constraint(equalTo: moreButton.rightAnchor),
+			messageButton.leadingAnchor.constraint(equalTo: moreButton.leadingAnchor),
+			messageButton.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor),
 			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
 			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
 		])
