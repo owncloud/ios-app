@@ -80,16 +80,16 @@ public class AppStatistics {
 			}
 
 			// Reset update launch date if current version is different compared to stored ones
-			if let lastVersion = userDefaults.object(forKey: UserDefaultsKeys.lastInstalledVersion.rawValue) as? String {
-				if lastVersion != appVersion {
+			if let lastInstalledVersion = userDefaults.object(forKey: UserDefaultsKeys.lastInstalledVersion.rawValue) as? String {
+				if lastInstalledVersion != appVersion {
 					self.updateDate = Date()
 				}
 			}
 
 			// Update user defaults except for review prompt time stamp updated separately
-			userDefaults.set(self.launchDate, forKey:  UserDefaultsKeys.firstLaunchDate.rawValue)
+			userDefaults.set(self.launchDate, forKey: UserDefaultsKeys.firstLaunchDate.rawValue)
+			userDefaults.set(self.updateDate, forKey: UserDefaultsKeys.updateDate.rawValue)
 			userDefaults.set(self.appVersion, forKey: UserDefaultsKeys.lastInstalledVersion.rawValue)
-			userDefaults.set(self.updateDate, forKey:  UserDefaultsKeys.firstLaunchDate.rawValue)
 
 			// Persist user defaults
 			userDefaults.synchronize()
