@@ -655,24 +655,19 @@ extension ClientRootViewController : OCCoreDelegate {
 								OCSynchronized(self) {
 									self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
 								}
-							} else {
+							} else if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
 								// Error updating authentication -> inform the user and provide option to retry
-								if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
-									self.alertQueue.async { [weak self] (queueCompletionHandler) in
-										self?.presentAuthAlert(for: editBookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
-									}
+								self.alertQueue.async { [weak self] (queueCompletionHandler) in
+									self?.presentAuthAlert(for: editBookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
 								}
 							}
 						})
 					}
 				}
 
-				if notifyAuthDelegate {
-					if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
-						authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
-					}
+				if notifyAuthDelegate, let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+					authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
 				}
-
 			}))
 		}
 
