@@ -242,13 +242,11 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 
 				try FileManager.default.copyItem(atPath: logRecord.url.path, toPath: shareableLogURL.path)
 			} catch {
+				Log.error("Error providing copy of log \(logRecord.url.path) at \(shareableLogURL.path): \(error)")
 			}
 		
 			completionHandler(shareableLogURL, shareableFileName, {
-				do {
-					try FileManager.default.removeItem(at: shareableLogURL)
-				} catch {
-				}
+				try? FileManager.default.removeItem(at: shareableLogURL)
 			})
 		} else {
 			completionHandler(logRecord.url, shareableFileName, nil)
