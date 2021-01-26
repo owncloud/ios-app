@@ -131,7 +131,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
+		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
@@ -575,8 +575,8 @@ class BookmarkViewController: StaticTableViewController {
 							case .edit:
 								// Update original bookmark
 								self?.originalBookmark?.setValuesFrom(bookmark)
-								if !OCBookmarkManager.shared.updateBookmark(bookmark) {
-									Log.error("Changes to \(bookmark) not saved as it's not tracked by OCBookmarkManager!")
+								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
 								}
 							}
 
