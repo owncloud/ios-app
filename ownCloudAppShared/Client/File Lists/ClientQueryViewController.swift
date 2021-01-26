@@ -112,11 +112,11 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		var rightInset : CGFloat = 4
+		var rightInset : CGFloat = 2
 		var leftInset : CGFloat = 0
 		if self.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
 			rightInset = 0
-			leftInset = 3
+			leftInset = 2
 		}
 
 		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
