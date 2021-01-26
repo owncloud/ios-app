@@ -18,8 +18,8 @@ jobs:
           go-version: '1.14'
       - run: |
              go version
-             go get github.com/Masterminds/sprig/v3
-             go get github.com/go-test/deep
-             go github.com/spf13/pflag
+             go get -u github.com/Masterminds/sprig/v3
+             go get -u github.com/go-test/deep
+             go get -u github.com/spf13/pflag
              go run .github/workflows/calens/main.go
              
