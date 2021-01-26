@@ -109,12 +109,12 @@ open class MoreViewHeader: UIView {
 		labelContainerView.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		NSLayoutConstraint.activate([
-			titleLabel.leftAnchor.constraint(equalTo: labelContainerView.leftAnchor),
-			titleLabel.rightAnchor.constraint(equalTo: labelContainerView.rightAnchor),
+			titleLabel.leadingAnchor.constraint(equalTo: labelContainerView.leadingAnchor),
+			titleLabel.trailingAnchor.constraint(equalTo: labelContainerView.trailingAnchor),
 			titleLabel.topAnchor.constraint(equalTo: labelContainerView.topAnchor),
 
-			detailLabel.leftAnchor.constraint(equalTo: labelContainerView.leftAnchor),
-			detailLabel.rightAnchor.constraint(equalTo: labelContainerView.rightAnchor),
+			detailLabel.leadingAnchor.constraint(equalTo: labelContainerView.leadingAnchor),
+			detailLabel.trailingAnchor.constraint(equalTo: labelContainerView.trailingAnchor),
 			detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
 			detailLabel.bottomAnchor.constraint(equalTo: labelContainerView.bottomAnchor)
 		])
@@ -126,11 +126,11 @@ open class MoreViewHeader: UIView {
 			iconView.widthAnchor.constraint(equalToConstant: thumbnailSize.width),
 			iconView.heightAnchor.constraint(equalToConstant: thumbnailSize.height),
 
-			iconView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 20),
+			iconView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 20),
 			iconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
 			iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).with(priority: .defaultHigh),
 
-			labelContainerView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: 15),
+			labelContainerView.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 15),
 			labelContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 			labelContainerView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 20),
 			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -20).with(priority: .defaultHigh)
@@ -147,21 +147,21 @@ open class MoreViewHeader: UIView {
 			NSLayoutConstraint.activate([
 				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),
 				favoriteButton.heightAnchor.constraint(equalToConstant: favoriteSize.height),
-				favoriteButton.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -15),
+				favoriteButton.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -10),
 				favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-				favoriteButton.leftAnchor.constraint(equalTo: labelContainerView.rightAnchor, constant: 10)
+				favoriteButton.leadingAnchor.constraint(equalTo: labelContainerView.trailingAnchor, constant: 10)
 				])
 		} else if showActivityIndicator {
 			self.addSubview(activityIndicator)
 
 			NSLayoutConstraint.activate([
 				activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-				activityIndicator.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -15),
-				activityIndicator.leftAnchor.constraint(equalTo: labelContainerView.rightAnchor, constant: 10)
+				activityIndicator.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -15),
+				activityIndicator.leadingAnchor.constraint(equalTo: labelContainerView.trailingAnchor, constant: 10)
 				])
 		} else {
 			NSLayoutConstraint.activate([
-				labelContainerView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -20)
+				labelContainerView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -20)
 			])
 		}
 

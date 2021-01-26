@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 
-	public func handle(intent: PathExistsIntent, completion: @escaping (PathExistsIntentResponse) -> Void) {
+	func handle(intent: PathExistsIntent, completion: @escaping (PathExistsIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(PathExistsIntentResponse(code: .disabled, userActivity: nil))
@@ -62,7 +62,7 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 		}
 	}
 
-	public func resolveAccount(for intent: PathExistsIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+	func resolveAccount(for intent: PathExistsIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -70,11 +70,11 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 		}
 	}
 
-	public func provideAccountOptions(for intent: PathExistsIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+	func provideAccountOptions(for intent: PathExistsIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	public func resolvePath(for intent: PathExistsIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	func resolvePath(for intent: PathExistsIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {

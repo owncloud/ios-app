@@ -105,10 +105,17 @@ extension ServerListTableViewController {
 
 extension BookmarkViewController {
 	override var keyCommands: [UIKeyCommand]? {
-		return [
-			UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized),
-			UIKeyCommand(input: "C", modifierFlags: [.command], action: #selector(handleContinue), discoverabilityTitle: "Continue".localized)
-		]
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+		let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		shortcuts.append(cancelCommand)
+
+		let continueCommand = UIKeyCommand(input: "C", modifierFlags: [.command], action: #selector(handleContinue), discoverabilityTitle: "Continue".localized)
+		shortcuts.append(continueCommand)
+
+		return shortcuts
 	}
 
 	override var canBecomeFirstResponder: Bool {
@@ -1120,5 +1127,23 @@ extension AlertViewController {
 
 			alertView?.selectOption(option: self.options[offset])
 		}
+	}
+}
+
+extension MoreViewController {
+	open override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissCard), discoverabilityTitle: "Close".localized)
+		shortcuts.append(cancelCommand)
+
+		return shortcuts
+	}
+
+	open override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	@objc func dismissCard(_ sender: Any?) {
+		self.dismiss(animated: false, completion: nil)
 	}
 }

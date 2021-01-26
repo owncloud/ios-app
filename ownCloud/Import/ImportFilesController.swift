@@ -91,7 +91,7 @@ extension ImportFilesController {
 			var inboxURL = appGroupURL.appendingPathComponent("File-Import")
 			if !fileManager.fileExists(atPath: inboxURL.path) {
 				do {
-					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: nil)
+					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
 				} catch let error as NSError {
 					Log.debug("Error creating directory \(inboxURL) \(error.localizedDescription)")
 
@@ -104,7 +104,7 @@ extension ImportFilesController {
 			inboxURL = inboxURL.appendingPathComponent(uuid)
 			if !fileManager.fileExists(atPath: inboxURL.path) {
 				do {
-					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: nil)
+					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: [ .protectionKey : FileProtectionType.completeUntilFirstUserAuthentication])
 				} catch let error as NSError {
 					Log.debug("Error creating directory \(inboxURL) \(error.localizedDescription)")
 
@@ -193,7 +193,7 @@ extension ImportFilesController {
 			if let core = core, error == nil {
 				OnMainThread { [weak core] in
 					let waitGroup = DispatchGroup()
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
 						if let targetDirectory = selectedDirectory {
 							for importFile in self.importFiles {
 								let name = importFile.url.lastPathComponent

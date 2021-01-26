@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1160"
+   LastUpgradeVersion = "1230"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -44,8 +44,13 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-level"
+            key = "oc:log.level"
             value = "0"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "OC_SETTINGS_DOC_JSON"
+            value = "${PROJECT_DIR}/doc/CONFIGURATION.json"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -186,57 +191,67 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-level"
+            key = "oc:log.level"
+            value = "-1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.level"
             value = "0"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-colored"
+            key = "oc:log.enabled-components"
+            value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.colored"
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-synchronous"
+            key = "oc:log.synchronous"
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-only-tags"
+            key = "oc:log.only-tags"
             value = "[CORE]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-only-tags"
+            key = "oc:log.only-tags"
             value = "[Request,Response,Cookies]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-omit-tags"
+            key = "oc:log.omit-tags"
             value = "[BGMAN]"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-blank-filtered-messages"
+            key = "oc:log.blank-filtered-messages"
             value = "true"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-single-lined"
+            key = "oc:log.single-lined"
             value = "false"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-maximum-message-size"
+            key = "oc:log.maximum-message-size"
             value = "100000"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-format"
+            key = "oc:log.format"
             value = "string:json"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-format"
+            key = "oc:log.format"
             value = "string:json-composed"
             isEnabled = "NO">
          </EnvironmentVariable>
@@ -246,19 +261,49 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:connection.connection-allowed-authentication-methods"
+            key = "oc:connection.allowed-authentication-methods"
             value = "[com.owncloud.openid-connect,com.owncloud.oauth2]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:connection.connection-allowed-authentication-methods"
+            key = "oc:connection.allowed-authentication-methods"
             value = "[com.owncloud.basicauth]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:core.cookie-support-enabled"
-            value = "true"
-            isEnabled = "YES">
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[reject-downloads-500]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[only-404]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[five-seconds-of-404]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[simple-apm]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[recovering-apm]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.allowed-authentication-methods"
+            value = "[openid-connect,oauth2]"
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

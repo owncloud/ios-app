@@ -24,7 +24,7 @@ import ownCloudAppShared
 @available(iOS 13.0, *)
 public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
-	public func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
+	func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(GetFileInfoIntentResponse(code: .disabled, userActivity: nil))
@@ -69,6 +69,8 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 				fileInfo.isFavorite = targetItem.isFavorite
 				fileInfo.mimeType = targetItem.mimeType
 				fileInfo.size = NSNumber(value: targetItem.size)
+				fileInfo.fileID = targetItem.fileID
+				fileInfo.localID = targetItem.localID
 
 				completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
 			} else if core != nil {
@@ -79,7 +81,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 		}
 	}
 
-	public func resolveAccount(for intent: GetFileInfoIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+	func resolveAccount(for intent: GetFileInfoIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
 		} else {
@@ -87,11 +89,11 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 		}
 	}
 
-	public func provideAccountOptions(for intent: GetFileInfoIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+	func provideAccountOptions(for intent: GetFileInfoIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
-	public func resolvePath(for intent: GetFileInfoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+	func resolvePath(for intent: GetFileInfoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {

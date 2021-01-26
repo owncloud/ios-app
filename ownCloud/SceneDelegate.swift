@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window = ThemeWindow(windowScene: windowScene)
 			var navigationController: UINavigationController?
 
-			if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
+			if VendorServices.shared.isBranded {
 				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
 				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
 				navigationController?.setNavigationBarHidden(true, animated: false)
@@ -85,7 +85,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		return scene.userActivity
 	}
 
-    @discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
+	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
 		guard let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
 			return false
 		}
@@ -105,12 +105,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window?.windowScene?.userActivity = activity
 
 			return true
-        }
+		}
 
 		return false
 	}
 
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
 		if let urlContext = URLContexts.first, urlContext.url.matchesAppScheme {
 			openPrivateLink(url: urlContext.url, in: scene)
 		} else {
@@ -118,20 +118,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
 		}
-    }
+	}
 
-    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-            let url = userActivity.webpageURL else {
-                return
-        }
+	func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+			let url = userActivity.webpageURL else {
+				return
+		}
 
 		guard let windowScene = scene as? UIWindowScene else { return }
 
 		guard let window =  windowScene.windows.first else { return }
 
 		url.resolveAndPresent(in: window)
-    }
+	}
 
 	private func openPrivateLink(url:URL, in scene:UIScene?) {
 		if url.privateLinkItemID() != nil {

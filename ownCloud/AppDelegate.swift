@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
+		if VendorServices.shared.isBranded {
 			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
 			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
 			navigationController?.setNavigationBarHidden(true, animated: false)
@@ -61,12 +61,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			rootViewController = navigationController
 		}
 
-		window?.rootViewController = rootViewController!
-		window?.makeKeyAndVisible()
+		// Only set up window on non-iPad devices and not on macOS 11 (Apple Silicon) which is >= iOS 14
+		if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+			// do not set the rootViewController for iOS app on Mac
+		} else {
+			window?.rootViewController = rootViewController!
+			window?.makeKeyAndVisible()
+		}
 
 		ImportFilesController.removeImportDirectory()
 
-		AppLockManager.shared.showLockscreenIfNeeded()
+		if AppLockManager.supportedOnDevice {
+			AppLockManager.shared.showLockscreenIfNeeded()
+		}
 
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
@@ -104,6 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only
@@ -128,7 +136,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
-		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: AppDelegate.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.plcrashreporter", bundleOf: AppDelegate.self, title: "PLCrashReporter", resourceName: "PLCrashReporter", fileExtension: "LICENSE"))
 
 		// Initially apply theme based on light / dark mode
 		ThemeStyle.considerAppearanceUpdate()
@@ -223,7 +232,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 }
-
 
 extension UserInterfaceContext : UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {

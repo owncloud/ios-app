@@ -59,7 +59,15 @@ class ClientAuthenticationUpdater: NSObject {
 			let tempConnection = OCConnection(bookmark: tempBookmark)
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
+			tempBookmark.setLastUserName(bookmark.userName)
+
+			if let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+				tempConnection.cookieStorage = OCHTTPCookieStorage()
+				Log.debug("Created cookie storage \(String(describing: tempConnection.cookieStorage)) for client auth updater")
+			}
+
 			options[.presentingViewControllerKey] = viewController
+			options[.requiredUsernameKey] = bookmark.userName
 
 			tempBookmark.authenticationMethodIdentifier = authenticationMethodID
 

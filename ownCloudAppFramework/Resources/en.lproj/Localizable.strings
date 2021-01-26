@@ -8,6 +8,8 @@
 
 "App Store" = "App Store";
 "Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version." = "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version.";
+
 "Purchased App Version" = "Purchased App Version";
 "Receipt Date" = "Receipt Date";
 "Manage subscription" = "Manage subscription";
@@ -40,4 +42,4 @@
 "%lu year" = "%lu year";
 "%lu years" = "%lu years";
 
-"%@ already unlocked for %@." = "%@ already unlocked huhu for %@.";
+"%@ already unlocked for %@." = "%@ already unlocked for %@.";

@@ -87,6 +87,7 @@ class MessageGroupCell: ThemeTableViewCell {
 
 		let messages = messageGroup.messages
 		let multiMessage = messages.count > 1
+		let multiMessageCount = messages.count
 
 		if let choices = message.choices {
 			for choice in choices {
@@ -160,11 +161,12 @@ class MessageGroupCell: ThemeTableViewCell {
 				if showAllLabel == nil {
 					showAllLabel = UIButton(type: .system)
 					showAllLabel?.translatesAutoresizingMaskIntoConstraints = false
-					showAllLabel?.setTitle("Show all".localized, for: .normal)
 					showAllLabel?.addTarget(self, action: #selector(showAllIssues), for: .primaryActionTriggered)
 
 					applyAllContainer?.addSubview(showAllLabel!)
 				}
+
+				showAllLabel?.setTitle("\("Show all".localized) (\(multiMessageCount))", for: .normal)
 
 				if setupLayout, let applyAllContainer = applyAllContainer, let applyAllSwitch = applyAllSwitch, let applyAllLabel = applyAllLabel, let showAllLabel = showAllLabel {
 					NSLayoutConstraint.activate([
@@ -185,7 +187,7 @@ class MessageGroupCell: ThemeTableViewCell {
 			}
 
 			if let alertView = alertView, let containerView = containerView {
-				self.addSubview(containerView)
+				self.contentView.addSubview(containerView)
 
 				containerView.addSubview(alertView)
 
@@ -195,10 +197,10 @@ class MessageGroupCell: ThemeTableViewCell {
 				}
 
 				NSLayoutConstraint.activate([
-					containerView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: alertSpacing),
-					containerView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -alertSpacing),
-					containerView.topAnchor.constraint(equalTo: self.topAnchor, constant: alertSpacing),
-					containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: noBottomSpacing ? 0 : -alertSpacing),
+					containerView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: alertSpacing),
+					containerView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -alertSpacing),
+					containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: alertSpacing),
+					containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: noBottomSpacing ? 0 : -alertSpacing),
 
 					alertView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
 					alertView.rightAnchor.constraint(equalTo: containerView.rightAnchor),

@@ -1,9 +1,81 @@
 # ChangeLog
 
+## Release version 11.4.5 (January 2021)
+
+- Fix: Crash in Detail View (#855)
+- Fix: Upload Improvements (PR #857)
+
+## Release version 11.4.4 (End-November 2020)
+
+- Fix: iPad on iOS 12 (#4293)
+- Fix: Improvements on Apple Silicon macOS
+
+## Release version 11.4.3 (Mid-November 2020)
+
+- Fix: iOS 14 UI Adaptions (#834)
+
+## Release version 11.4.2 (November 2020)
+
+- Support for new Display Sizes
+- Favorites in Directory Picker (#814)
+- Rename Filename in Scan View (#822)
+- Fix: Save Attachments from Mail.app (#816)
+- Fix: Authentication Error in FileProvider (#808)
+- Fix: New Folder in FileProvider (#827)
+
+## Release version 11.4.1 (September 2020)
+
+- Image Metadata (#679)
+- Pro Photo Upload (#685, #688)
+- Fix: Media Upload Path (#784)
+- Fix: File List (#786)
+- Fix: Markup (#783)
+- Fix: Shortcuts (#785)
+- Fix: Share Sheet (#782)
+- Fix: Multiple Selection (#735)
+- Fix: File Provider (#747)
+- Fix: General Improvements (#790, #792, #793)
+- Fix: Create Public Link (#803)
+
+## Release version 11.4 (August 2020)
+
+- Branding Support (#2, #120)
+- Migration (#270)
+- Cellular Options (PR #709)
+- Share Sheet (#539)
+- Camera Access (#615)
+- Better Issue Handling (#362, #505, #513, #585, SDK: #63)
+- Folders on top (#431)
+- Contextual Menu (#717)
+- Multitouch gestures (#725)
+- Inline Authentication (PR #682)
+- Image Upload: Change file name (PR #714)
+- App Version Information (#740)
+- Improved Media Upload (#647)
+- Media Streaming (#766)
+- Public Link Creation (#671)
+- Diagnostics (PR #762)
+- Item Counter (PR #771)
+- Universal Links / Deep Linking (PR #609)
+- Shortcuts: Get File Info
+- Fix: Avoid duplicate photo upload (PR #714)
+- Fix: Markup (#729, 698)
+- Fix: Audio Playback (#683)
+- Fix: Serveral UI Improvements (PR #654, #264)
+- Fix: File Provider (#754, …)
+- Fix: Quick Access (#745)
+- Fix: Sort by Type (#670)
+
+## Release version 1.3.2 (April 2020)
+
+- iPad: Mouse and Trackpad support (#655)
+- Fix: Shortcut - Save Action (#651)
+- Fix: Keep open files up-to-date (#630)
+
 ## Release version 1.3.1 (March 2020)
 
 - Fix: Shortcut - Save Action (#622)
-- Fix: Markup Documents (#617, #618
+- Fix: Markup Documents (#617, #618)
 - Fix: Offline Usage (#3828)
 - Fix: Available Offline (PR #616)
 - Fix: Permissions (#623)

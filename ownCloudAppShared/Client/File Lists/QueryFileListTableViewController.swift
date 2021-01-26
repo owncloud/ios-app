@@ -33,11 +33,9 @@ public extension OCQueryState {
 
 public protocol MultiSelectSupport {
 	func setupMultiselection()
-
 	func enterMultiselection()
-	func updateMultiselection()
 	func exitMultiselection()
-
+	func updateMultiselection()
 	func populateToolbar()
 }
 
@@ -51,12 +49,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	public var items : [OCItem] = []
 
+	public var selectedItemIds = [OCLocalID]()
+
+	public var actionContext: ActionContext?
 	public var actions : [Action]?
 
 	public var selectDeselectAllButtonItem: UIBarButtonItem?
 	public var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
-	public var selectedItemIds = Set<OCLocalID>()
 	public var regularLeftBarButtons : [UIBarButtonItem]?
 	public var regularRightBarButtons : [UIBarButtonItem]?
 
@@ -66,6 +66,9 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var duplicateMultipleBarButtonItem: UIBarButtonItem?
 	public var copyMultipleBarButtonItem: UIBarButtonItem?
 	public var openMultipleBarButtonItem: UIBarButtonItem?
+	public var isMoreButtonPermanentlyHidden: Bool = false
+	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?
+	public var showSelectButton: Bool = true
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
@@ -250,6 +253,12 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 					self.items = changeSet?.queryResult ?? []
 
+					// Setup new action context
+					if let core = self.core {
+						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+						self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
+					}
+
 					switch query.state {
 					case .contentsFromCache, .idle, .waitingForServerReply:
 						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
@@ -266,9 +275,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 							self.messageView?.message(show: false)
 						}
 
-						let indexPath = self.tableView.indexPathForSelectedRow
 						self.tableView.reloadData()
-						self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 					case .targetRemoved:
 						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 						self.tableView.reloadData()
@@ -316,7 +323,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 			sortBar?.updateForCurrentTraitCollection()
-			sortBar?.showSelectButton = true
+			sortBar?.showSelectButton = showSelectButton
 
 			tableView.tableHeaderView = sortBar
 		}
@@ -399,6 +406,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			if newItem.displaysDifferent(than: cell?.item, in: core) {
 				cell?.item = newItem
 			}
+
+			if let localID = newItem.localID as OCLocalID?, self.selectedItemIds.contains(localID) {
+				cell?.setSelected(true, animated: false)
+			}
+
+			if isMoreButtonPermanentlyHidden {
+				cell?.isMoreButtonPermanentlyHidden = true
+			}
 		}
 
 		return cell!
@@ -447,16 +462,54 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
-			super.tableView(tableView, didSelectRowAt: indexPath)
-		} else if let multiSelectionSupport = self as? MultiSelectSupport {
-			multiSelectionSupport.updateMultiselection()
+			if let item = itemAt(indexPath: indexPath), item.type != .collection, isMoreButtonPermanentlyHidden {
+				return
+			}
+			if didSelectCellAction != nil {
+				didSelectCellAction?({ })
+			} else {
+				super.tableView(tableView, didSelectRowAt: indexPath)
+			}
+		} else {
+			if let multiSelectionSupport = self as? MultiSelectSupport {
+				if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
+					if !selectedItemIds.contains(itemLocalID as OCLocalID) {
+						selectedItemIds.append(itemLocalID as OCLocalID)
+					}
+					self.actionContext?.add(item: item)
+				}
+				multiSelectionSupport.updateMultiselection()
+			}
 		}
 	}
 
 	open override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		if tableView.isEditing, let multiSelectionSupport = self as? MultiSelectSupport {
-			multiSelectionSupport.updateMultiselection()
+		if tableView.isEditing {
+			if let multiSelectionSupport = self as? MultiSelectSupport {
+				if let item = itemAt(indexPath: indexPath), let itemLocalID = item.localID {
+					selectedItemIds.removeAll(where: {$0 as String == itemLocalID})
+					self.actionContext?.remove(item: item)
+				}
+				multiSelectionSupport.updateMultiselection()
+			}
 		}
+	}
+
+	@available(iOS 13.0, *)
+	open override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		if isMoreButtonPermanentlyHidden {
+			return nil
+		}
+
+		return super.tableView(tableView, contextMenuConfigurationForRowAt: indexPath, point: point)
+	}
+
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if isMoreButtonPermanentlyHidden {
+			return nil
+		}
+
+		return super.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
 	}
 }
 

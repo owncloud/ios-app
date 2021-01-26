@@ -28,6 +28,7 @@ import ownCloudAppShared
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
 
+	private var documentationRow: StaticTableViewRow?
 	private var helpRow: StaticTableViewRow?
 	private var sendFeedbackRow: StaticTableViewRow?
 	private var recommendRow: StaticTableViewRow?
@@ -50,11 +51,17 @@ class MoreSettingsSection: SettingsSection {
 
 	private func createRows() {
 
-		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			if let url = VendorServices.shared.helpURL {
+		documentationRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			if let url = VendorServices.shared.documentationURL {
 				self?.openSFWebViewWithConfirmation(for: url)
 			}
-		}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
+		}, title: "Documentation".localized, accessoryType: .disclosureIndicator, identifier: "documentation")
+
+		if let helpURL = VendorServices.shared.helpURL {
+			helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				self?.openSFWebViewWithConfirmation(for: helpURL)
+			}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
+		}
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
@@ -68,16 +75,17 @@ class MoreSettingsSection: SettingsSection {
 			}
 		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
-		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			if let url = VendorServices.shared.privacyURL {
-				self?.openSFWebViewWithConfirmation(for: url)
-			}
-		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
+		if let privacyURL = VendorServices.shared.privacyURL {
+			privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				self?.openSFWebViewWithConfirmation(for: privacyURL)
+			}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
+		}
 
-		termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
-			self?.openSFWebViewWithConfirmation(for: url!)
-		}, title: "Terms Of Use".localized, accessoryType: .disclosureIndicator, identifier: "terms-of-use")
+		if let termsOfUseURL = VendorServices.shared.termsOfUseURL {
+			termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				self?.openSFWebViewWithConfirmation(for: termsOfUseURL)
+			}, title: "Terms Of Use".localized, accessoryType: .disclosureIndicator, identifier: "terms-of-use")
+		}
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)
@@ -90,6 +98,19 @@ class MoreSettingsSection: SettingsSection {
 					textViewController.title = "Acknowledgements".localized
 
 					if licenses != nil {
+						let titleAttributes : [NSAttributedString.Key : Any] = [
+							.font : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize * 1.5)
+						]
+
+						let textAttributes : [NSAttributedString.Key : Any] = [
+							.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
+							.foregroundColor : UIColor.darkGray
+						]
+
+					   	// Preamble
+						licenseText.append(NSAttributedString(string: "Acknowledgements".localized + "\n", attributes: titleAttributes))
+						licenseText.append(NSAttributedString(string: "\n" + "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.".localized + "\n\n", attributes: textAttributes))
+
 						for licenseExtensionMatch in licenses! {
 							let extensionObject = licenseExtensionMatch.extension.provideObject(for: context)
 
@@ -97,17 +118,14 @@ class MoreSettingsSection: SettingsSection {
 							   let licenseTitle = licenseDict["title"] as? String,
 							   let licenseURL = licenseDict["url"] as? URL {
 							   	// Title
-								licenseText.append(NSAttributedString(string: licenseTitle + "\n", attributes: [.font : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize * 1.5)]))
+								licenseText.append(NSAttributedString(string: licenseTitle + "\n", attributes: titleAttributes))
 
 								// License text
 								do {
 									var encoding : String.Encoding = .utf8
 									let licenseFileContents = try String(contentsOf: licenseURL, usedEncoding: &encoding)
 
-									licenseText.append(NSAttributedString(string: "\n" + licenseFileContents + "\n\n", attributes: [
-										.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
-										.foregroundColor : UIColor.darkGray
-									]))
+									licenseText.append(NSAttributedString(string: "\n" + licenseFileContents + "\n\n", attributes: textAttributes))
 								} catch {
 								}
 							}
@@ -132,7 +150,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		let localizedFooter = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown".localized)
+		let footerTitle = String(format: localizedFooter, VendorServices.shared.appName, appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown".localized)
 
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle
@@ -144,6 +162,10 @@ class MoreSettingsSection: SettingsSection {
 	// MARK: - Update UI
 	func updateUI() {
 		var rows : [StaticTableViewRow] = []
+
+		if VendorServices.shared.documentationURL != nil {
+			rows.append(documentationRow!)
+		}
 
 		if VendorServices.shared.helpURL != nil {
 			rows.append(helpRow!)
@@ -157,11 +179,14 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(recommendRow!)
 		}
 
-		if VendorServices.shared.privacyURL != nil {
-			rows.append(privacyPolicyRow!)
+		if let privacyPolicyRow = privacyPolicyRow {
+			rows.append(privacyPolicyRow)
+		}
+		if let termsOfUseRow = termsOfUseRow {
+			rows.append(termsOfUseRow)
 		}
 
-		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
+		rows.append(contentsOf: [acknowledgementsRow!, appVersionRow!])
 
 		add(rows: rows)
 	}

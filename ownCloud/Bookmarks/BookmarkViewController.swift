@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 import ownCloudAppShared
+// UNCOMMENT FOR HOST SIMULATOR: // import ownCloudMocking
 
 typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
 
@@ -72,6 +73,26 @@ class BookmarkViewController: StaticTableViewController {
 
 	private var mode : BookmarkViewControllerMode
 
+	// MARK: - Connection instantiation
+	private var _cookieStorage : OCHTTPCookieStorage?
+	var cookieStorage : OCHTTPCookieStorage? {
+		if _cookieStorage == nil, let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+			_cookieStorage = OCHTTPCookieStorage()
+			Log.debug("Created cookie storage \(String(describing: _cookieStorage))")
+		}
+
+		return _cookieStorage
+	}
+
+	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
+		let connection = OCConnection(bookmark: bmark)
+
+		connection.hostSimulator = OCHostSimulatorManager.shared.hostSimulator(forLocation: .accountSetup, for: self)
+		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
+
+		return connection
+	}
+
 	// MARK: - Init & Deinit
 	init(_ editBookmark: OCBookmark?, removeAuthDataFromCopy: Bool = false) {
 		// Determine mode
@@ -110,7 +131,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
+		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
@@ -164,11 +185,10 @@ class BookmarkViewController: StaticTableViewController {
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
-					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
+				let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
+				let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
-					self?.present(navigationController, animated: true, completion: nil)
-				}
+				self?.present(navigationController, animated: true, completion: nil)
 			}
 		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
@@ -216,7 +236,7 @@ class BookmarkViewController: StaticTableViewController {
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
 		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
-		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
 
 		// Input focus tracking
@@ -254,7 +274,9 @@ class BookmarkViewController: StaticTableViewController {
 					}
 				}
 
-				self.usernameRow?.enabled = (bookmark?.authenticationMethodIdentifier == nil)
+				self.usernameRow?.enabled =
+					(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
+					((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
 
 				self.navigationItem.title = "Edit account".localized
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
@@ -374,7 +396,7 @@ class BookmarkViewController: StaticTableViewController {
 				bookmark?.url = serverURL
 
 				if let connectionBookmark = bookmark {
-					let connection = OCConnection(bookmark: connectionBookmark)
+					let connection = instantiateConnection(for: connectionBookmark)
 					let previousCertificate = bookmark?.certificate
 
 					hud?.present(on: self, label: "Contacting server…".localized)
@@ -439,7 +461,7 @@ class BookmarkViewController: StaticTableViewController {
 		if let connectionBookmark = bookmark {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
-			let connection = OCConnection(bookmark: connectionBookmark)
+			let connection = instantiateConnection(for: connectionBookmark)
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 				if OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
@@ -449,6 +471,7 @@ class BookmarkViewController: StaticTableViewController {
 			}
 
 			options[.presentingViewControllerKey] = self
+			options[.requiredUsernameKey] = connectionBookmark.userName
 
 			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
 
@@ -538,7 +561,7 @@ class BookmarkViewController: StaticTableViewController {
 		if isBookmarkComplete(bookmark: bookmark) {
 			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
 
-			let connection = OCConnection(bookmark: bookmark)
+			let connection = instantiateConnection(for: bookmark)
 
 			connection.connect { [weak self] (error, issue) in
 				if let strongSelf = self {
@@ -553,8 +576,8 @@ class BookmarkViewController: StaticTableViewController {
 							case .edit:
 								// Update original bookmark
 								self?.originalBookmark?.setValuesFrom(bookmark)
-								if !OCBookmarkManager.shared.updateBookmark(bookmark) {
-									Log.error("Changes to \(bookmark) not saved as it's not tracked by OCBookmarkManager!")
+								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
 								}
 							}
 
@@ -908,16 +931,30 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .bookmark {
-			/*
 			return [
-				.bookmarkDefaultURL : "http://demo.owncloud.org/",
-				.bookmarkURLEditable : false
+				.bookmarkURLEditable : true
 			]
-			*/
-			return [ : ]
 		}
 
 		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.bookmarkDefaultURL : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "The default URL for the creation of new bookmarks.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.bookmarkURLEditable : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported
+			]
+		]
 	}
 }
 

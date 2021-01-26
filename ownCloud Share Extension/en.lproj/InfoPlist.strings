@@ -17,3 +17,6 @@
  */
 
 "CFBundleDisplayName" = "Share to ownCloud";
+
+"The Share Extension is not available on this system." = "The Share Extension is not available on this system.";
+"Share Extension unavailable" = "Share Extension unavailable";

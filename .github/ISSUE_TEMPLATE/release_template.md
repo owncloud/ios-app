@@ -8,6 +8,9 @@ assignees: ''
 ---
 
 Release a new version
+
+Xcode version to work with:
+
 ## TASKS:
 
 ### Git & Code

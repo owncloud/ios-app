@@ -37,11 +37,13 @@ class ShareViewController: MoreStaticTableViewController {
 		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
-		AppLockManager.shared.passwordViewHostViewController = self
-		AppLockManager.shared.cancelAction = { [weak self] in
-			self?.returnCores(completion: {
-				self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-			})
+		if AppLockManager.supportedOnDevice {
+			AppLockManager.shared.passwordViewHostViewController = self
+			AppLockManager.shared.cancelAction = { [weak self] in
+				self?.returnCores(completion: {
+					self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+				})
+			}
 		}
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
@@ -54,7 +56,10 @@ class ShareViewController: MoreStaticTableViewController {
 
 		if !willAppearInitial {
 			willAppearInitial = true
-			AppLockManager.shared.showLockscreenIfNeeded()
+
+			if AppLockManager.supportedOnDevice {
+				AppLockManager.shared.showLockscreenIfNeeded()
+			}
 
 			if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
 				appexNavigationController.dismissalAction = { [weak self] (_) in
@@ -135,7 +140,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	private func setupNavigationBar() {
-		self.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+		self.navigationItem.title = VendorServices.shared.appName
 
 		let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
 		self.navigationItem.setRightBarButton(itemCancel, animated: false)
@@ -173,7 +178,7 @@ class ShareViewController: MoreStaticTableViewController {
 		self.requestCore(for: bookmark, completionHandler: { (core, error) in
 			if let core = core, error == nil {
 				OnMainThread {
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory, _) in
 						if let targetDirectory = selectedDirectory {
 							if let vault = core?.vault {
 								self.fpServiceSession = OCFileProviderServiceSession(vault: vault)
@@ -194,7 +199,9 @@ class ShareViewController: MoreStaticTableViewController {
 														progressViewController.dismiss(animated: false)
 													} else {
 														self?.extensionContext?.completeRequest(returningItems: [], completionHandler: { (_) in
-															progressViewController.dismiss(animated: false)
+															OnMainThread {
+																progressViewController.dismiss(animated: false)
+															}
 														})
 													}
 												}
@@ -207,17 +214,15 @@ class ShareViewController: MoreStaticTableViewController {
 					})
 
 					directoryPickerViewController.cancelAction = { [weak self] in
-						self?.dismiss(animated: true, completion: {
-							self?.returnCores(completion: {
-								OnMainThread {
-									self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-								}
-							})
+						self?.returnCores(completion: {
+							OnMainThread {
+								self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+							}
 						})
 					}
 					if !withBackButton {
 						directoryPickerViewController.navigationItem.setHidesBackButton(true, animated: false)
-						directoryPickerViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+						directoryPickerViewController.navigationItem.title = VendorServices.shared.appName
 					}
 					self.navigationController?.pushViewController(directoryPickerViewController, animated: withBackButton)
 				}
@@ -282,12 +287,16 @@ class ShareViewController: MoreStaticTableViewController {
 							break
 						}
 
-						if let type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
-							if type == "public.plain-text" || type == "public.url" {
+						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
 								asyncQueue.async({ (jobDone) in
 									if progressViewController?.cancelled == true {
 										jobDone()
 										return
+									}
+									// Workaround for saving attachements from Mail.app. Attachments from Mail.app contains two types e.g. "com.adobe.pdf" AND "public.file-url". For loading the file the type "public.file-url" is needed. Otherwise the resource could not be accessed (NSItemProviderSandboxedResource)
+									if attachment.registeredTypeIdentifiers.contains("public.file-url") {
+										type = "public.file-url"
 									}
 
 									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in
@@ -295,30 +304,41 @@ class ShareViewController: MoreStaticTableViewController {
 										if error == nil {
 											var data : Data?
 											var tempFilePath : String?
+											var tempFileURL : URL?
 
 											if let text = item as? String { // Save plain text content
 												let ext = self.utiToFileExtension(type)
 												tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
 												data = Data(text.utf8)
 											} else if let url = item as? URL { // Download URL content
-												do {
-													tempFilePath = NSTemporaryDirectory() + url.lastPathComponent
-													data = try Data(contentsOf: url)
-												} catch {
-													jobDone()
+												if url.isFileURL {
+													tempFileURL = URL(fileURLWithPath: NSTemporaryDirectory() + url.lastPathComponent)
+													if let tempFileURL = tempFileURL {
+														try? FileManager.default.copyItem(at: url, to: tempFileURL)
+													}
+												} else {
+													do {
+														tempFilePath = NSTemporaryDirectory() + url.lastPathComponent
+														data = try Data(contentsOf: url)
+													} catch {
+														jobDone()
+													}
 												}
 											}
 
-											if let data = data, let tempFilePath = tempFilePath {
+											if tempFileURL == nil, let data = data, let tempFilePath = tempFilePath {
 												FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
+												tempFileURL = URL(fileURLWithPath: tempFilePath)
+											}
 
-												serviceSession.importThroughFileProvider(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, completion: { (error) in
-													try? FileManager.default.removeItem(atPath: tempFilePath)
+											if let tempFileURL = tempFileURL {
+												serviceSession.importThroughFileProvider(url: tempFileURL, to: targetDirectory, completion: { (error) in
+													try? FileManager.default.removeItem(at: tempFileURL)
 
 													if let error = error {
-														Log.error("Error importing item at \(tempFilePath) through file provider: \(String(describing: error))")
+														Log.error("Error importing item at \(tempFileURL) through file provider: \(String(describing: error))")
 
-														self.showAlert(title: NSString(format: "Error importing %@".localized as NSString, (tempFilePath as NSString).lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
+														self.showAlert(title: NSString(format: "Error importing %@".localized as NSString, tempFileURL.lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
 															if !doContinue {
 																importError = error
 																progressViewController?.cancel()

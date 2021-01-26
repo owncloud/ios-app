@@ -25,7 +25,7 @@ protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling {
+class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling, UINavigationControllerDelegate {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -33,6 +33,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
+	private var coreRequested : Bool = false
 	var filesNavigationController : ThemeNavigationController?
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
@@ -69,6 +70,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	}
 
 	var messageSelector : MessageSelector?
+
+	var fpServiceStandby : OCFileProviderServiceStandby?
 
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
@@ -156,12 +159,16 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.messageQueue.remove(presenter: cardMessagePresenter)
 		}
 
-		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		if self.coreRequested {
+			self.fpServiceStandby?.stop()
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		}
 	}
 
 	// MARK: - Startup
-	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
+	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping ((_ error: Error?) -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.coreRequested = true
 			self.core = core
 			core?.delegate = self
 
@@ -176,20 +183,29 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
+
+			// Set up FP standby
+			if let core = core {
+				self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
+				self.fpServiceStandby?.start()
+			}
 		}, completionHandler: { (core, error) in
 			if error == nil {
+				// Core is ready
 				self.coreReady(lastVisibleItemId)
-			}
 
-			// Start showing connection status
-			OnMainThread { [weak self] () in
-				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
-					self?.updateConnectionStatusSummary()
-				})
+				// Start showing connection status
+				OnMainThread { [weak self] () in
+					self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
+						self?.updateConnectionStatusSummary()
+					})
+				}
+			} else {
+				Log.error("Error requesting/starting core: \(String(describing: error))")
 			}
 
 			OnMainThread {
-				completionHandler()
+				completionHandler(error)
 			}
 		})
 	}
@@ -270,6 +286,18 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		})
 	}
 
+	func navigationController(_ navigationController: UINavigationController,
+							  willShow viewController: UIViewController,
+							  animated: Bool) {
+		if viewController == emptyViewController {
+				closeClient()
+				if #available(iOS 13.0, *) {
+					// Prevent re-opening of items on next launch in case user has returned to the bookmark list
+					view.window?.windowScene?.userActivity = nil
+				}
+		}
+	}
+
 	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
@@ -283,7 +311,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				}
 
 				let emptyViewController = self.emptyViewController
-				if VendorServices.shared.isBranded {
+				emptyViewController.navigationController?.delegate = self
+				if VendorServices.shared.isBranded, !VendorServices.shared.canAddAccount {
 					emptyViewController.navigationItem.title = "Manage".localized
 				} else {
 					emptyViewController.navigationItem.title = "Accounts".localized
@@ -435,7 +464,10 @@ extension ClientRootViewController : OCCoreDelegate {
 		if nsError == nil, let issueNSError = issue?.error as NSError? {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
 			if issueNSError.isOCError(withCode: .authorizationFailed) ||
+			   issueNSError.isOCError(withCode: .authorizationMethodNotAllowed) ||
+			   issueNSError.isOCError(withCode: .authorizationMethodUnknown) ||
 			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
+			   issueNSError.isOCError(withCode: .authorizationNotMatchingRequiredUserID) ||
 			   issueNSError.isOCError(withCode: .authorizationMissingData) {
 				nsError = issueNSError
 				issue = nil
@@ -473,6 +505,12 @@ extension ClientRootViewController : OCCoreDelegate {
 				isAuthFailure = true
 			}
 
+			if nsError.isOCError(withCode: .authorizationMethodNotAllowed) {
+				authFailureMessage = NSString(format: "Authentication with %@ is no longer allowed. Re-authentication needed.".localized as NSString, core.connection.authenticationMethod?.name ?? "??") as String
+
+				isAuthFailure = true
+			}
+
 			if isAuthFailure {
 				// Make sure only the first auth failure will actually lead to an alert
 				// (otherwise alerts could keep getting enqueued while the first alert is being shown,
@@ -499,46 +537,8 @@ extension ClientRootViewController : OCCoreDelegate {
 				var queueCompletionHandlerScheduled : Bool = false
 
 				if isAuthFailure {
-					let alertController = ThemedAlertController(title: authFailureTitle,
-										message: authFailureMessage,
-										preferredStyle: .alert)
+					self?.presentAuthAlert(for: editBookmark, error: nsError, title: authFailureTitle, message: authFailureMessage, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
 
-					alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
-						queueCompletionHandler()
-					}))
-
-					if authFailureHasEditOption {
-						alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
-							queueCompletionHandler()
-
-							var notifyAuthDelegate = true
-
-							if let bookmark = self?.bookmark {
-								let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
-
-								if updater.canUpdateInline, let self = self {
-									notifyAuthDelegate = false
-
-									updater.updateAuthenticationData(on: self, completion: { (error) in
-										if error == nil {
-											OCSynchronized(self) {
-												self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
-											}
-										}
-									})
-								}
-							}
-
-							if notifyAuthDelegate {
-								if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
-									authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
-								}
-							}
-
-						}))
-					}
-
-					self?.present(alertController, animated: true, completion: nil)
 					queueCompletionHandlerScheduled = true
 
 					return
@@ -601,6 +601,11 @@ extension ClientRootViewController : OCCoreDelegate {
 				// Create connection
  				let connection = OCConnection(bookmark: clonedBookmark)
 
+				if let cookieSupportEnabled = OCCore.classSetting(forOCClassSettingsKey: .coreCookieSupportEnabled) as? Bool, cookieSupportEnabled == true {
+					connection.cookieStorage = OCHTTPCookieStorage()
+					Log.debug("Created cookie storage \(String(describing: connection.cookieStorage)) for client root view auth method detection")
+				}
+
 				connection.prepareForSetup(options: nil, completionHandler: { (issue, suggestedURL, supportedMethods, preferredMethods) in
 					Log.debug("Preparing for handling authentication error: issue=\(issue?.description ?? "nil"), suggestedURL=\(suggestedURL?.absoluteString ?? "nil"), supportedMethods: \(supportedMethods?.description ?? "nil"), preferredMethods: \(preferredMethods?.description ?? "nil"), existingAuthMethod: \(self.bookmark.authenticationMethodIdentifier?.rawValue ?? "nil"))")
 
@@ -622,6 +627,51 @@ extension ClientRootViewController : OCCoreDelegate {
 		} else {
 			presentAlert(authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, nil)
 		}
+	}
+
+	func presentAuthAlert(for editBookmark: OCBookmark, error nsError: NSError?, title authFailureTitle: String, message authFailureMessage: String?, ignoreLabel authFailureIgnoreLabel: String, ignoreStyle authFailureIgnoreStyle: UIAlertAction.Style, hasEditOption authFailureHasEditOption: Bool, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?, completionHandler: @escaping () -> Void) {
+		let alertController = ThemedAlertController(title: authFailureTitle,
+							message: authFailureMessage,
+							preferredStyle: .alert)
+
+		alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
+			completionHandler()
+		}))
+
+		if authFailureHasEditOption {
+			alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { [weak self] (_) in
+				completionHandler()
+
+				var notifyAuthDelegate = true
+
+				if let bookmark = self?.bookmark {
+					let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+
+					if updater.canUpdateInline, let self = self {
+						notifyAuthDelegate = false
+
+						updater.updateAuthenticationData(on: self, completion: { (error) in
+							if error == nil {
+								OCSynchronized(self) {
+									self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
+								}
+							} else if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
+								// Error updating authentication -> inform the user and provide option to retry
+								self.alertQueue.async { [weak self] (queueCompletionHandler) in
+									self?.presentAuthAlert(for: editBookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
+								}
+							}
+						})
+					}
+				}
+
+				if notifyAuthDelegate, let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+					authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+				}
+			}))
+		}
+
+		self.present(alertController, animated: true, completion: nil)
 	}
 
 	func presentAlertAsCard(viewController: UIViewController, withHandle: Bool = false, dismissable: Bool = true) {

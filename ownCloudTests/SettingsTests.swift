@@ -10,6 +10,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import ownCloudMocking
+import ownCloudAppShared
 
 @testable import ownCloud
 
@@ -23,7 +24,7 @@ class SettingsTests: XCTestCase {
 
 	override func tearDown() {
 		//Reset status
-		EarlGrey.selectElement(with: grey_text(OCAppIdentity.shared.appName!)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text(VendorServices.shared.appName)).perform(grey_tap())
 		EarlGrey.waitForElement(accessibilityID: "addServer")
 	}
 
@@ -45,6 +46,7 @@ class SettingsTests: XCTestCase {
 
 		//Assert
 		EarlGrey.selectElement(with: grey_accessibilityID("show-hidden-files-switch")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("sort-folders-first")).assert(grey_sufficientlyVisible())
 		EarlGrey.selectElement(with: grey_accessibilityID("prevent-dragging-files-switch")).assert(grey_sufficientlyVisible())
 	}
 	

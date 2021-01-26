@@ -44,6 +44,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		super.init(style: style)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(openAccount(notification:)), name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -52,6 +53,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
@@ -216,9 +218,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			considerBetaWarning()
 		}
 
-        if !shownFirstTime {
-            VendorServices.shared.considerReviewPrompt()
-        }
+		if !shownFirstTime {
+			VendorServices.shared.considerReviewPrompt()
+		}
 	}
 
 	@objc func considerAutoLogin() -> Bool {
@@ -309,7 +311,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				welcomeAddServerButton.accessibilityIdentifier = "addServer"
 				welcomeTitleLabel.text = "Welcome".localized
 				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
-				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
@@ -501,10 +503,19 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	@objc func openAccount(notification: NSNotification) {
+		if let bookmarkUUID = notification.object as? UUID,
+		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+		   	self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
+		}
+	}
+
 	// MARK: - Connect and locking
 	func isLocked(bookmark: OCBookmark, presentAlert: Bool = true) -> Bool {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
+
+	weak var activeClientRootViewController : ClientRootViewController?
 
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
@@ -537,32 +548,42 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		clientRootViewController.authDelegate = self
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart(lastVisibleItemId) {
-			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
-			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
-				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
-
-				// Set up custom push transition for presentation
-
+		clientRootViewController.afterCoreStart(lastVisibleItemId, completionHandler: { (error) in
+			if self.lastSelectedBookmark?.uuid == bookmark.uuid, // Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+			   self.activeClientRootViewController == nil { // Make sure we don't present this ClientRootViewController while still presenting another
 				if let fromViewController = self.pushFromViewController ?? self.navigationController {
-					let transitionDelegate = PushTransitionDelegate()
+				   	if let error = error {
+						let alert = UIAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+						alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
-					clientRootViewController.transitioningDelegate = transitionDelegate
-					clientRootViewController.modalPresentationStyle = .custom
+						fromViewController.present(alert, animated: true)
 
-					fromViewController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
+					} else {
+						OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
-						// Present message if one was provided
-						if let message = message {
-							self.presentInClient(message: message)
-						}
-					})
+						self.activeClientRootViewController = clientRootViewController // save this ClientRootViewController as the active one (only weakly referenced)
+
+						// Set up custom push transition for presentation
+						let transitionDelegate = PushTransitionDelegate()
+
+						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+						clientRootViewController.transitioningDelegate = transitionDelegate
+						clientRootViewController.modalPresentationStyle = .custom
+
+						fromViewController.present(clientRootViewController, animated: animated, completion: {
+							self.resetPreviousBookmarkSelection(bookmark)
+
+							// Present message if one was provided
+							if let message = message {
+								self.presentInClient(message: message)
+							}
+						})
+					}
 				}
 			}
 			self.didUpdateServerList()
-		}
+		})
 	}
 
 	func didUpdateServerList() {
@@ -623,7 +644,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView,
 	contextMenuConfigurationForRowAt indexPath: IndexPath,
 	point: CGPoint) -> UIContextMenuConfiguration? {
-		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+		if !self.isEditing, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
 				return self.makeContextMenu(for: indexPath, with: bookmark)
 			})
@@ -642,11 +663,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 			menuItems.append(openWindow)
 		}
-		let edit = UIAction(title: "Edit", image: UIImage(systemName: "gear")) { _ in
+		let edit = UIAction(title: "Edit".localized, image: UIImage(systemName: "gear")) { _ in
 			self.showBookmarkUI(edit: bookmark)
 		}
 		menuItems.append(edit)
-		let manage = UIAction(title: "Manage", image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
+		let manage = UIAction(title: "Manage".localized, image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
 			self.showBookmarkInfoUI(bookmark)
 		}
 		menuItems.append(manage)
@@ -709,6 +730,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
+		if self.isEditing {
+			return []
+		}
+
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
 			destructiveTitle = "Logout".localized
@@ -749,6 +774,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		return [deleteRowAction, editRowAction, manageRowAction]
+	}
+
+	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		if self.isEditing {
+			return true
+		}
+
+		return false
 	}
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -866,7 +899,7 @@ extension ServerListTableViewController : ClientSessionManagerDelegate {
 extension ServerListTableViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+		if !self.isEditing, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			let userActivity = bookmark.openAccountUserActivity
 			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
 			itemProvider.registerObject(userActivity, visibility: .all)

@@ -25,6 +25,15 @@ public class AppLockManager: NSObject {
 	// MARK: - UI
 	private var userDefaults: UserDefaults
 
+	// MARK: - Availability
+	public static var supportedOnDevice : Bool {
+		if #available(iOS 14, *), ProcessInfo.processInfo.isiOSAppOnMac {
+			return false
+		}
+
+		return true
+	}
+
 	// MARK: - State
 	private var lastApplicationBackgroundedDate : Date? {
 		didSet {
@@ -145,15 +154,19 @@ public class AppLockManager: NSObject {
 
 		super.init()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.updateLockscreens), name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		if AppLockManager.supportedOnDevice {
+			NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(self.updateLockscreens), name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		}
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-		NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-		NotificationCenter.default.removeObserver(self, name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		if AppLockManager.supportedOnDevice {
+			NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+			NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+			NotificationCenter.default.removeObserver(self, name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+		}
 	}
 
 	// MARK: - Show / Dismiss Passcode View
@@ -169,7 +182,7 @@ public class AppLockManager: NSObject {
 		}
 	}
 
-	func dismissLockscreen(animated:Bool) {
+	public func dismissLockscreen(animated:Bool) {
 		if animated {
 			let animationGroup = DispatchGroup()
 
@@ -223,7 +236,7 @@ public class AppLockManager: NSObject {
 						let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelPressed))
 						passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
 					}
-					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+					passcodeViewController.navigationItem.title = VendorServices.shared.appName
 
 					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
 
@@ -432,7 +445,7 @@ public class AppLockManager: NSObject {
 
 			// Check if the device can evaluate the policy.
 			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
-				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared.appName!) as String
+				let reason = NSString.init(format: "Unlock %@".localized as NSString, VendorServices.shared.appName) as String
 
 				performPasscodeViewControllerUpdates { (passcodeViewController) in
 					OnMainThread {

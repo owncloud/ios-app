@@ -265,13 +265,12 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		})
 	}
 
-	convenience public init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience public init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil, withButtonStyle : Bool = false) {
 		self.init()
 		type = .subtitleRow
 
 		self.identifier = identifier
-
-		self.cell = ThemeTableViewCell(style: style, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(withLabelColorUpdates: !withButtonStyle, style: style, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.detailTextLabel?.text = subtitle
 		self.cell?.accessoryType = accessoryType
@@ -288,6 +287,18 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			if let value = row.value as? String {
 				row.cell?.detailTextLabel?.text = value
 			}
+		}
+
+		if withButtonStyle {
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			let textColor = themeCollection.tintColor
+
+			self?.cell?.textLabel?.textColor = textColor
+			self?.cell?.detailTextLabel?.textColor = textColor
+
+			self?.cell?.textLabel?.highlightedTextColor = themeCollection.tableRowHighlightColors.labelColor
+			self?.cell?.detailTextLabel?.highlightedTextColor = themeCollection.tableRowHighlightColors.labelColor
+			}, applyImmediately: true)
 		}
 	}
 
@@ -751,12 +762,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self?.cell?.tintColor = themeCollection.tintColor
 
 			if selectedTextColor != nil {
-
 				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
 			}
 
 			if backgroundColor != nil {
-
 				self?.cell?.backgroundColor = backgroundColor
 			}
 
@@ -781,29 +790,42 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.identifier = identifier
 
 		let datePickerView = UIDatePicker()
+		datePickerView.translatesAutoresizingMaskIntoConstraints = false
 		datePickerView.date = dateValue
 		datePickerView.datePickerMode = .date
+		if #available(iOS 14, *) {
+			datePickerView.preferredDatePickerStyle = .wheels
+			datePickerView.setContentCompressionResistancePriority(.required, for: .vertical)
+		}
 		datePickerView.minimumDate = Date()
 		datePickerView.maximumDate = maximumDate
 		datePickerView.accessibilityIdentifier = identifier
 		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
-		datePickerView.translatesAutoresizingMaskIntoConstraints = false
 		datePickerView.setValue(Theme.shared.activeCollection.tableRowColors.labelColor, forKey: "textColor")
 
 		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = .none
-		self.cell?.addSubview(datePickerView)
+		self.cell?.contentView.addSubview(datePickerView)
 
 		self.value = dateValue
 		self.action = action
 
+		datePickerView.layoutIfNeeded()
+
 		if let cell = self.cell {
-			NSLayoutConstraint.activate([
-				datePickerView.leftAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.leftAnchor),
-				datePickerView.rightAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.rightAnchor),
-				datePickerView.topAnchor.constraint(equalTo: cell.topAnchor),
-				datePickerView.heightAnchor.constraint(equalToConstant: 216.0)
-				])
+			var constraints : [NSLayoutConstraint] = [
+				datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
+				datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
+				datePickerView.topAnchor.constraint(equalTo: cell.contentView.topAnchor)
+			]
+
+			if #available(iOS 14, *) {
+				constraints.append(datePickerView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor))
+			} else {
+				constraints.append(datePickerView.heightAnchor.constraint(equalToConstant: 216.0))
+			}
+
+			NSLayoutConstraint.activate(constraints)
 		}
 	}
 
@@ -827,7 +849,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		cell?.selectionStyle = .none
-		cell?.addSubview(slider)
+		cell?.contentView.addSubview(slider)
 		type = .slider
 
 		self.value = value
@@ -835,10 +857,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		if let cell = self.cell {
 			NSLayoutConstraint.activate([
-				slider.leftAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.leftAnchor, constant: 20),
-				slider.rightAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.rightAnchor, constant: -20),
-				slider.topAnchor.constraint(equalTo: cell.topAnchor),
-				slider.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
+				slider.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor, constant: 20),
+				slider.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor, constant: -20),
+				slider.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+				slider.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
 			])
 		}
 	}
@@ -853,7 +875,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		cell?.selectionStyle = .none
-		cell?.addSubview(customView)
+		cell?.contentView.addSubview(customView)
 
 		self.action = action
 
@@ -864,10 +886,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			// Insets
 			constraints = [
-				customView.leftAnchor.constraint(equalTo: cell.leftAnchor, constant: inset?.left ?? 0),
-				customView.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: -(inset?.right ?? 0)),
-				customView.topAnchor.constraint(equalTo: cell.topAnchor, constant: inset?.top ?? 0),
-				customView.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -(inset?.bottom ?? 0))
+				customView.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: inset?.left ?? 0),
+				customView.rightAnchor.constraint(equalTo: cell.contentView.rightAnchor, constant: -(inset?.right ?? 0)),
+				customView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: inset?.top ?? 0),
+				customView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -(inset?.bottom ?? 0))
 			]
 
 			// Fixed height

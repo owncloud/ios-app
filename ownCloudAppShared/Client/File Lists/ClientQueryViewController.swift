@@ -77,9 +77,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 						if let self = self {
 							if self.items.count == 1 {
-								footerText = String(format: "%@ item | ", "\(self.items.count)") + (footerText ?? "")
+								footerText = String(format: "%@ item | ".localized, "\(self.items.count)") + (footerText ?? "")
 							} else if self.items.count > 1 {
-								footerText = String(format: "%@ items | ", "\(self.items.count)") + (footerText ?? "")
+								footerText = String(format: "%@ items | ".localized, "\(self.items.count)") + (footerText ?? "")
 							}
 						}
 					}
@@ -112,8 +112,16 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+		var rightInset : CGFloat = 4
+		var leftInset : CGFloat = 0
+		if self.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+			rightInset = 0
+			leftInset = 3
+		}
+
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
+		folderActionBarButton?.accessibilityLabel = "Actions".localized
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
 
@@ -213,12 +221,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			}
 		}
 
-	}
-
-	open func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
-		if !self.tableView.isEditing {
-			removeToolbar()
-		}
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
@@ -384,14 +386,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	// MARK: - Reloads
 	open override func restoreSelectionAfterTableReload() {
 		// Restore previously selected items
-		if tableView.isEditing && selectedItemIds.count > 0 {
-			var selectedItems = [OCItem]()
-			for row in 0..<self.items.count {
-				if let itemLocalID = self.items[row].localID as OCLocalID? {
-					if selectedItemIds.contains(itemLocalID) {
-						selectedItems.append(self.items[row])
-						self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
-					}
+		guard tableView.isEditing else { return }
+
+		guard selectedItemIds.count > 0 else { return }
+
+		for row in 0..<self.items.count {
+			if let itemLocalID = self.items[row].localID as OCLocalID? {
+				if selectedItemIds.contains(itemLocalID) {
+					self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
 				}
 			}
 		}
@@ -558,6 +560,12 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		return []
 	}
 
+	public func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
+		if !self.tableView.isEditing {
+			removeToolbar()
+		}
+	}
+
 	public func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
 		let item = draggingValue.item
 		if let core = self.core {
@@ -607,6 +615,12 @@ extension ClientQueryViewController {
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
+			if #available(iOS 14.0, *) {
+				self.navigationItem.backButtonDisplayMode = .generic
+				let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+				self.title = lastPathComponent
+			}
+
 			let titleButton = UIButton()
 			titleButton.setTitle(lastPathComponent, for: .normal)
 			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)

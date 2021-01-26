@@ -31,6 +31,8 @@
 {
 	NSFileCoordinator *_fileCoordinator;
 	NotificationMessagePresenter *_messagePresenter;
+
+	BOOL _skipAuthorizationFailure;
 }
 
 @property (nonatomic, readonly, strong) NSFileManager *fileManager;
@@ -45,6 +47,8 @@
 - (instancetype)init
 {
 	[self setupCrashReporting];
+
+	[OCLogger logLevel]; // Make sure +logLevel is called in File Provider, to properly set up the log level
 
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
@@ -126,6 +130,7 @@
 
 		OCLogDebug(@"Returning OCCore for FileProvider %@", self);
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
+		_core = nil;
 	}
 }
 
@@ -936,7 +941,7 @@
 {
 	BOOL isSpecialItem = [itemIdentifier isEqual:self.bookmark.fpServicesURLComponentName];
 
-	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (%d)", OCLogPrivate(itemIdentifier), isSpecialItem);
+	OCTLogDebug(@[@"FPServices"], @"request for supported services sources for item identifier %@ (isSpecialItem: %d, core: %@)", OCLogPrivate(itemIdentifier), isSpecialItem, self.core);
 
 	if (isSpecialItem)
 	{
@@ -951,78 +956,195 @@
 #pragma mark - Core
 - (OCBookmark *)bookmark
 {
+	OCBookmark *bookmark = nil;
+
 	@synchronized(self)
 	{
-		if (_bookmark == nil)
+		bookmark = _bookmark;
+	}
+
+	if (bookmark == nil)
+	{
+		NSFileProviderDomainIdentifier domainIdentifier;
+
+		if ((domainIdentifier = self.domain.identifier) != nil)
 		{
-			NSFileProviderDomainIdentifier domainIdentifier;
+			NSUUID *bookmarkUUID = [[NSUUID alloc] initWithUUIDString:domainIdentifier];
 
-			if ((domainIdentifier = self.domain.identifier) != nil)
+			bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+
+			if (bookmark == nil)
 			{
-				NSUUID *bookmarkUUID = [[NSUUID alloc] initWithUUIDString:domainIdentifier];
+				OCLogDebug(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 
-				_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+				[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
 
-				if (_bookmark == nil)
+				bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+
+				if (bookmark == nil)
 				{
-					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+				}
+			}
 
-					[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
-
-					_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
-
-					if (_bookmark == nil)
-					{
-						OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
-					}
+			@synchronized(self)
+			{
+				if ((_bookmark == nil) && (bookmark != nil))
+				{
+					_bookmark = bookmark;
 				}
 			}
 		}
 	}
 
-	return (_bookmark);
+	return (bookmark);
 }
 
 - (OCCore *)core
 {
+	OCLogDebug(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
+
+	OCBookmark *bookmark = self.bookmark;
+	__block OCCore *retCore = nil;
+
 	@synchronized(self)
 	{
-		if (_core == nil)
-		{
-			if (self.bookmark != nil)
-			{
-				OCLogDebug(@"Requesting OCCore for FileProvider %@", self);
+		retCore = _core;
+	}
 
-				OCSyncExec(waitForCore, {
-					[[OCCoreManager sharedCoreManager] requestCoreForBookmark:self.bookmark setup:^(OCCore *core, NSError *error) {
-						self->_core = core;
-						core.delegate = self;
-					} completionHandler:^(OCCore *core, NSError *error) {
+	if (retCore == nil)
+	{
+		if (bookmark != nil)
+		{
+			OCLogDebug(@"Requesting OCCore for FileProvider %@", self);
+
+			OCSyncExec(waitForCore, {
+			 	__block BOOL hasCore = NO;
+
+				[[OCCoreManager sharedCoreManager] requestCoreForBookmark:bookmark setup:^(OCCore *core, NSError *error) {
+					@synchronized(self)
+					{
+						hasCore = (self->_core != nil);
+
+						if (!hasCore)
+						{
+							self->_core = core;
+							core.delegate = self;
+							retCore = core;
+						}
+						else
+						{
+							retCore = self->_core;
+						}
+					}
+				} completionHandler:^(OCCore *core, NSError *error) {
+					if (!hasCore)
+					{
 						self->_core = core;
 
 						if ((self->_messagePresenter = [[NotificationMessagePresenter alloc] initForBookmarkUUID:core.bookmark.uuid]) != nil)
 						{
 							[core.messageQueue addPresenter:self->_messagePresenter];
 						}
+					}
+					else
+					{
+						retCore = self->_core;
+					}
 
-						OCSyncExecDone(waitForCore);
-					}];
-				});
-			}
-		}
+					OCSyncExecDone(waitForCore);
 
-		if (_core == nil)
-		{
-			OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					if (hasCore)
+					{
+						// Balance out unrequired request for core
+						[OCCoreManager.sharedCoreManager returnCoreForBookmark:bookmark completionHandler:nil];
+					}
+				}];
+			});
 		}
 	}
 
-	return (_core);
+	if (retCore == nil)
+	{
+		OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+	}
+
+	OCLogDebug(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);
+
+	return (retCore);
+
 }
 
 - (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCIssue *)issue
 {
 	OCLogDebug(@"CORE ERROR: error=%@, issue=%@", error, issue);
+
+	if ((issue != nil) && (error == nil))
+	{
+		// Turn issues that are just converted authorization errors back into errors and discard the issue
+		if ([issue.error isOCErrorWithCode:OCErrorAuthorizationFailed] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationNoMethodData] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMethodNotAllowed] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMethodUnknown] ||
+		    [issue.error isOCErrorWithCode:OCErrorAuthorizationMissingData])
+		{
+			error = issue.error;
+			issue = nil;
+		}
+	}
+
+	if ([error isOCErrorWithCode:OCErrorAuthorizationFailed])
+	{
+		// Make sure only the first auth failure will actually lead to an alert
+		// (otherwise alerts could keep getting enqueued while the first alert is being shown,
+		// and then be presented even though they're no longer relevant). It's ok to only show
+		// an alert for the first auth failure, because the options are "Continue offline" (=> no longer show them)
+		// and "Edit" (=> log out, go to bookmark editing)
+		BOOL doSkip = NO;
+
+		@synchronized(self)
+		{
+			doSkip = _skipAuthorizationFailure;  // Keep in mind OCSynchronized() contents is running as a block, so "return" in here wouldn't have the desired effect
+			_skipAuthorizationFailure = YES;
+		}
+
+		if (doSkip)
+		{
+			OCLogDebug(@"Skip authorization failure: %@", error);
+			return;
+		}
+
+		[NotificationManager.sharedNotificationManager requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable reqError) {
+			if (granted)
+			{
+				UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+
+				OCBookmark *bookmark;
+
+				content.title = OCLocalized(@"Authorization failed");
+
+				if ((OCBookmarkManager.sharedBookmarkManager.bookmarks.count > 1) &&
+				    (((bookmark = core.bookmark) != nil) &&
+				     (bookmark.shortName != nil))
+				   )
+				{
+					content.body = [NSString stringWithFormat:OCLocalized(@"Log into your account %@ in the app for more details."), bookmark.shortName];
+				}
+				else
+				{
+					content.body = OCLocalized(@"Log into your account in the app for more details.");
+				}
+
+				UNNotificationRequest *request;
+
+				request = [UNNotificationRequest requestWithIdentifier:ComposeNotificationIdentifier(NotificationAuthErrorForwarder, bookmark.uuid.UUIDString) content:content trigger:nil];
+
+				[NotificationManager.sharedNotificationManager addNotificationRequest:request withCompletionHandler:^(NSError * _Nonnull error) {
+					OCLogDebug(@"Add Notification error: %@", error);
+				}];
+			}
+		}];
+	}
 
 	if (issue.type == OCIssueTypeMultipleChoice)
 	{
@@ -1041,6 +1163,18 @@
 	return (@{
 			OCClassSettingsKeyFileProviderSkipLocalErrorChecks : @(NO)
 		});
+}
+
++ (OCClassSettingsMetadataCollection)classSettingsMetadata
+{
+	return (@{
+		OCClassSettingsKeyFileProviderSkipLocalErrorChecks : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Skip some local error checks in the FileProvider to easily provoke errors.",
+			OCClassSettingsMetadataKeyCategory	: @"File Provider",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusDebugOnly
+		}
+	});
 }
 
 - (BOOL)skipLocalErrorChecks

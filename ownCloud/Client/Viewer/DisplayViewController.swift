@@ -363,7 +363,7 @@ class DisplayViewController: UIViewController {
 
 	func renderSpecificView(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
-		fatalError("*** Subclass must implement renderSpecificView() method ***")
+		completion(true)
 	}
 
 	// Override in subclasses and implement specific checks if required
@@ -647,6 +647,5 @@ extension DisplayViewController : Themeable {
 		metadataInfoLabel.applyThemeCollection(collection)
 		showPreviewButton.applyThemeCollection(collection)
 		infoLabel.applyThemeCollection(collection)
-		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
