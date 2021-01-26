@@ -9,17 +9,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-16.04
-    strategy:
-      matrix:
-        go: [ '1.14' ]
-    name: Go ${{ matrix.go }} sample
+    name: Run Calens Go Script
     steps:
       - uses: actions/checkout@v2
       - name: Setup go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go }}
-      - run: |
-          echo "::set-env name=GOPATH::$(go env GOPATH)"
-          echo "::add-path::$(go env GOPATH)/bin"
-          go run .github/workflows/calens/main.go
+          go-version: '1.14'
+	    env:
+		  GOPROXY: "https://proxy.golang.org"
+      - run: go run .github/workflows/calens/main.go
