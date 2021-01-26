@@ -59,6 +59,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	let sideButtonsSize: CGSize = CGSize(width: 44.0, height: 44.0)
 	let leftPadding: CGFloat = 20.0
 	let rightPadding: CGFloat = 20.0
+	let rightSelectButtonPadding: CGFloat = 8.0
 	let topPadding: CGFloat = 10.0
 	let bottomPadding: CGFloat = 10.0
 
@@ -135,8 +136,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
 				sortSegmentedControl.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-				sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor, constant: leftPadding),
-				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+				sortSegmentedControl.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: leftPadding),
+				sortSegmentedControl.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
 
 			var longestTitleWidth : CGFloat = 0.0
@@ -172,8 +173,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			NSLayoutConstraint.activate([
 				sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				sortButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
-				sortButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: leftPadding),
-				sortButton.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+				sortButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leftPadding),
+				sortButton.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
 
 			sortButton.isHidden = true
@@ -191,7 +192,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
+				selectButton.trailingAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightSelectButtonPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
@@ -287,7 +288,12 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
 		popoverPresentationController?.delegate = self
-		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
+
+		if self.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+			popoverPresentationController?.sourceRect = CGRect(x: 5, y: 0, width: 10, height: sender.frame.size.height)
+		} else {
+			popoverPresentationController?.sourceRect = CGRect(x: sender.frame.size.width - 12, y: 0, width: 10, height: sender.frame.size.height)
+		}
 		popoverPresentationController?.permittedArrowDirections = .up
 
 		delegate?.sortBar(self, presentViewController: tableViewController, animated: true, completionHandler: nil)
