@@ -19,4 +19,9 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: ${{ matrix.go }}
-      - run: go run .github/workflows/calens/main.go
+	    env:
+		  GOPROXY: "https://proxy.golang.org"
+      - run: |
+          echo "::set-env name=GOPATH::$(go env GOPATH)"
+          echo "::add-path::$(go env GOPATH)/bin"
+          go run .github/workflows/calens/main.go
