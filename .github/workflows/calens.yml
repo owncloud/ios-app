@@ -16,5 +16,10 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '1.14'
-      - run: go get github.com/restic/calens
+      - run: |
+             go version
+             go get github.com/Masterminds/sprig/v3
+             go get github.com/go-test/deep
+             go github.com/spf13/pflag
              go run .github/workflows/calens/main.go
+             
