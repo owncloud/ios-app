@@ -19,10 +19,6 @@ Details
 
    https://github.com/owncloud/ios-app/issues/847
 
-ChangeLog
-=========
-
-
 ## Release version 11.4.5 (January 2021)
 
 - Fix: Crash in Detail View (#855)
