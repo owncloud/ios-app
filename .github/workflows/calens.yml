@@ -18,7 +18,9 @@ jobs:
         with:
           options: -v ${{github.workspace}}:/workspace -w /workspace
           image: toolhippie/calens:latest
-          run: calens
+          run: |
+            calens
+            git status
       - name: Commit files
         run: |
             ls -la ${{github.workspace}}
