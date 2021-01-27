@@ -20,8 +20,7 @@ jobs:
           image: toolhippie/calens:latest
           run: |
             calens
-            git status
+            ls -la CHANGELOG.md
       - name: Commit files
         run: |
-            ls -la ${{github.workspace}}
-            cat ${{github.workspace}}/CHANGELOG.md
+            ls -la ${{github.workspace}}/CHANGELOG.md
