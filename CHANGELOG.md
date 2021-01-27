@@ -8,11 +8,20 @@ ownCloud admins and users.
 Summary
 -------
 
+* Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
 * Change - Video upload improvements: [#847](https://github.com/owncloud/ios-app/issues/847)
 * Change - Improved Right-to-Left Language UI-Design: [#861](https://github.com/owncloud/ios-app/issues/861)
 
 Details
 -------
+
+* Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
+
+   - A PDF file can be opened in fullscreen view and hides unnecessary UI elements. (Tap to trigger
+   full screen view) - Thumbnails positioned based on vertical size class after rotating the
+   device to give the displayed document more screen real estate.
+
+   https://github.com/owncloud/ios-app/issues/428
 
 * Change - Video upload improvements: [#847](https://github.com/owncloud/ios-app/issues/847)
 
