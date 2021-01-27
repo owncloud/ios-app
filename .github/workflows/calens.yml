@@ -34,5 +34,5 @@ jobs:
              github_token: ${{ secrets.GITHUB_TOKEN }}
              branch: ${{ github.ref }}
       - name: Exit without Commit
-        if: error()  
+        if: failure()  
         run: echo "Nothing to commit!"
