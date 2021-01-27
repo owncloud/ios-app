@@ -1,0 +1,5 @@
+Change: Improved Right-to-Left Language UI-Design
+
+Fixed missing views, which missed Right-to-Left language support.
+
+https://github.com/owncloud/ios-app/issues/861
