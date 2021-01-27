@@ -5,17 +5,20 @@ on:
     branches:
     - fix/*
     - feature/*
+    - milestone/*
 
 jobs:
   build:
     runs-on: ubuntu-16.04
-    name: Run Calens Go Script
+    name: Generate Calens Changelog
     steps:
       - uses: actions/checkout@v2
-      - name: Setup go
+      - name: Run Calens Docker
         uses: addnab/docker-run-action@v1
         with:
           options: -v ${{github.workspace}}:/workspace -w /workspace
           image: toolhippie/calens:latest
-          run: calens
+          run: | 
+            calens
+            cat CHANGELOG.md
              
