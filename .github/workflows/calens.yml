@@ -17,5 +17,5 @@ jobs:
         with:
           options: -v ${{github.workspace}}:/workspace
           image: toolhippie/calens:latest
-          run: calens t /workspace/changelog/CHANGELOG.tmpl
+          run: calens template /workspace/changelog/CHANGELOG.tmpl
              
