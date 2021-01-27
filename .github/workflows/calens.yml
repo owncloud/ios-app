@@ -22,17 +22,6 @@ jobs:
             calens >| CHANGELOG.md
             ls -la CHANGELOG.md
       - name: Commit files
-        if: success()  
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -m "Calens: Updated changelog" -a
-      - name: Push changes
-        if: success()  
-        uses: ad-m/github-push-action@master
-        with:
-             github_token: ${{ secrets.GITHUB_TOKEN }}
-             branch: ${{ github.ref }}
-      - name: Exit without Commit
-        if: failure()  
-        run: echo "Nothing to commit!"
+        - uses: stefanzweifel/git-auto-commit-action@v4
+          with:
+            commit_message: Calens changelog updated
