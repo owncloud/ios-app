@@ -17,5 +17,5 @@ jobs:
         with:
           options: -v ${{github.workspace}}:/workspace
           image: toolhippie/calens:latest
-          run: calens version
+          run: ls /github/workspace
              
