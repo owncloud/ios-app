@@ -19,7 +19,7 @@ jobs:
           options: -v ${{github.workspace}}:/workspace -w /workspace
           image: toolhippie/calens:latest
           run: |
-            calens
+            calens >| CHANGELOG.md
             ls -la CHANGELOG.md
             cat CHANGELOG.md
       - name: Commit files
