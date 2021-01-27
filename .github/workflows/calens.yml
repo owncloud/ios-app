@@ -15,7 +15,7 @@ jobs:
       - name: Setup go
         uses: addnab/docker-run-action@v1
         with:
-          options: -v "${{github.workspace}}:/workspace" -w /workspace
+          options: -v ${{github.workspace}}:/workspace -w /workspace
           image: toolhippie/calens:latest
           run: calens
              
