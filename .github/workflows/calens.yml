@@ -21,6 +21,8 @@ jobs:
           run: |
             calens
             ls -la CHANGELOG.md
+            cat CHANGELOG.md
       - name: Commit files
         run: |
             ls -la ${{github.workspace}}/CHANGELOG.md
+            cat ${{github.workspace}}/CHANGELOG.md
