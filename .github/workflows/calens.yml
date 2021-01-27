@@ -32,3 +32,5 @@ jobs:
         with:
              github_token: ${{ secrets.GITHUB_TOKEN }}
              branch: ${{ github.ref }}
+        if: failure()
+            run: echo "Nothing to commit. Changelog file was up to date."
