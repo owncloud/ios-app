@@ -203,6 +203,7 @@ public class AppLockManager: NSObject {
 		} else {
 			self.lockscreenOpen = false
 		}
+		successAction?()
 	}
 
 	// MARK: - Lock window management
@@ -217,6 +218,7 @@ public class AppLockManager: NSObject {
 	private var applockWindowByWindow : NSMapTable<ThemeWindow, AppLockWindow> = NSMapTable.weakToStrongObjects()
 
 	open var cancelAction : (() -> Void)?
+	open var successAction : (() -> Void)?
 
 	@objc private func cancelPressed () {
 		cancelAction?()

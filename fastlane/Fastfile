@@ -298,6 +298,8 @@ platform :ios do
       ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
       ENTERPRISE_FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
       ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_UI_ID: "com.owncloud.ios-app.ownCloud-File-ProviderUI",
+      ENTERPRISE_FP_UI_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-ProviderUI",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Intents",
       ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Share-Extension",
@@ -319,6 +321,8 @@ platform :ios do
       ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app.emm",
       ENTERPRISE_FP_ID: "com.owncloud.ios-app.emm.ownCloud-File-Provider",
       ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-File-Provider",
+      ENTERPRISE_FP_UI_ID: "com.owncloud.ios-app.emm.ownCloud-File-ProviderUI",
+      ENTERPRISE_FP_UI_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-File-ProviderUI",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.emm.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-Intents",
       ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.ios-app.emm.ownCloud-Share-Extension",
@@ -340,6 +344,8 @@ lane :owncloud_online_build do
     ENTERPRISE_APP_PROFILE: "ownCloud online AppStore",
     ENTERPRISE_FP_ID: "online.owncloud.ios-app.DocumentProvider",
     ENTERPRISE_FP_PROFILE: "ownCloud online AppStore DocumentProvider",
+    ENTERPRISE_FP_UI_ID: "online.owncloud.ios-app.DocumentProviderUI",
+    ENTERPRISE_FP_UI_PROFILE: "ownCloud online AppStore DocumentProviderUI",
     ENTERPRISE_INTENT_ID: "online.owncloud.ios-app.Intents",
     ENTERPRISE_INTENT_PROFILE: "ownCloud online AppStore Intents",
     ENTERPRISE_SHARE_EXTENSION_ID: "online.owncloud.ios-app.ShareExtApp",
@@ -365,6 +371,8 @@ end
       ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
       ENTERPRISE_FP_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-Provider",
       ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
+      ENTERPRISE_FP_UI_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI",
+      ENTERPRISE_FP_UI_PROFILE: "Enterprise Distribution iOS Neo File ProviderUI",
       ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
       ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.enterprise.ios-app.ownCloud-Share-Extension",
@@ -389,6 +397,8 @@ end
       ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
       ENTERPRISE_FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
       ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_UI_ID: "com.owncloud.ios-app.ownCloud-File-ProviderUI",
+      ENTERPRISE_FP_UI_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-ProviderUI",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Intents",
       ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Share-Extension",
@@ -409,6 +419,8 @@ end
       ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
       ENTERPRISE_FP_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-Provider",
       ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
+      ENTERPRISE_FP_UI_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI",
+      ENTERPRISE_FP_UI_PROFILE: "Enterprise Distribution iOS Neo File ProviderUI",
       ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
       ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
       ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.enterprise.ios-app.ownCloud-Share-Extension",
@@ -431,6 +443,8 @@ end
     ENTERPRISE_APP_PROFILE = values[:ENTERPRISE_APP_PROFILE]
     ENTERPRISE_FP_ID = values[:ENTERPRISE_FP_ID]
     ENTERPRISE_FP_PROFILE = values[:ENTERPRISE_FP_PROFILE]
+    ENTERPRISE_FP_UI_ID = values[:ENTERPRISE_FP_UI_ID]
+    ENTERPRISE_FP_UI_PROFILE = values[:ENTERPRISE_FP_UI_PROFILE]
     ENTERPRISE_INTENT_ID = values[:ENTERPRISE_INTENT_ID]
     ENTERPRISE_INTENT_PROFILE = values[:ENTERPRISE_INTENT_PROFILE]
     ENTERPRISE_SHARE_EXTENSION_ID = values[:ENTERPRISE_SHARE_EXTENSION_ID]
@@ -461,8 +475,8 @@ end
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleName", value: appName)
 
-    set_info_plist_value(path: "ownCloud File ProviderUI/Info.plist", key: "CFBundleDisplayName", value: appName)
-    set_info_plist_value(path: "ownCloud File ProviderUI/Info.plist", key: "CFBundleName", value: appName)
+    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleDisplayName", value: appName)
+    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleName", value: appName)
 
     set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleDisplayName", value: "Share to " + appName)
     set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleName", value: appName)
@@ -477,6 +491,12 @@ end
       xcodeproj: "ownCloud.xcodeproj",
       plist_path: "ownCloud File Provider/Info.plist",
       app_identifier: ENTERPRISE_FP_ID
+    )
+
+    update_app_identifier(
+      xcodeproj: "ownCloud.xcodeproj",
+      plist_path: "ownCloud File Provider UI/Info.plist",
+      app_identifier: ENTERPRISE_FP_UI_ID
     )
 
     update_app_identifier(
@@ -516,6 +536,15 @@ end
 	)
 
     update_app_group_identifiers(
+      entitlements_file: "ownCloud File Provider UI/ownCloud_File_Provider_UI.entitlements",
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
+    )
+    update_keychain_access_groups(
+      entitlements_file: "ownCloud File Provider UI/ownCloud_File_Provider_UI.entitlements",
+      identifiers: [ENTERPRISE_TEAM + "." + APP_GROUP_IDENTIFIERS]
+	)
+
+    update_app_group_identifiers(
       entitlements_file: "ownCloud Intents/ownCloud Intents.entitlements",
       app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
@@ -534,13 +563,12 @@ end
 	)
 
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
     set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-
     set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-
     set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
     set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
 
@@ -562,6 +590,16 @@ end
       profile_name: ENTERPRISE_FP_PROFILE,
       bundle_identifier: ENTERPRISE_FP_ID,
       targets: ["ownCloud File Provider"]
+    )
+
+    automatic_code_signing(
+      path: "ownCloud.xcodeproj",
+      use_automatic_signing: false,
+      team_id: ENTERPRISE_TEAM,
+      code_sign_identity: ENTERPRISE_IDENTITY,
+      profile_name: ENTERPRISE_FP_UI_PROFILE,
+      bundle_identifier: ENTERPRISE_FP_UI_ID,
+      targets: ["ownCloud File Provider UI"]
     )
 
     automatic_code_signing(

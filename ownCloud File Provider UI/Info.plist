@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>$(PRODUCT_NAME) File ProviderUI</string>
+	<string>ownCloud</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,9 +15,9 @@
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
-	<string>XPC!</string>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(APP_SHORT_VERSION)</string>
+	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>$(APP_VERSION)</string>
 	<key>NSExtension</key>
@@ -28,7 +28,7 @@
 				<key>NSExtensionFileProviderActionActivationRule</key>
 				<string>TRUEPREDICATE</string>
 				<key>NSExtensionFileProviderActionIdentifier</key>
-				<string>com.mycompany.FileProviderUI.CustomAction</string>
+				<string>com.owncloud.FileProviderUI.CustomAction</string>
 				<key>NSExtensionFileProviderActionName</key>
 				<string>Custom Action</string>
 			</dict>
@@ -38,5 +38,11 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.fileprovider-actionsui</string>
 	</dict>
+	<key>OCAppGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+	<key>OCAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
 </dict>
 </plist>
