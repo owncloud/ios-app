@@ -103,9 +103,7 @@
 		39DC7CD325C2E1570001E08C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DC7CD125C2E1570001E08C /* MainInterface.storyboard */; };
 		39DC7CD725C2E1570001E08C /* ownCloud File Provider UI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39DC7CCD25C2E1570001E08C /* ownCloud File Provider UI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39DC7CE725C305E40001E08C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
-		39DC7CE825C305E40001E08C /* ownCloudApp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DC7CF425C305E80001E08C /* ownCloudAppShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; };
-		39DC7CF525C305E80001E08C /* ownCloudAppShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DF77AB24EA7BBC0066E8F0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE0FC4923E42ACB0037B4AD /* Localizable.strings */; };
 		39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DF77BF24EA842C0066E8F0 /* LaunchScreen.storyboard */; };
 		39E104CA24C585C30085FDDD /* (null) in Resources */ = {isa = PBXBuildFile; };
@@ -801,18 +799,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		39DC7CEB25C305E40001E08C /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				39DC7CF525C305E80001E08C /* ownCloudAppShared.framework in Embed Frameworks */,
-				39DC7CE825C305E40001E08C /* ownCloudApp.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3256,7 +3242,6 @@
 				39DC7CC925C2E1570001E08C /* Sources */,
 				39DC7CCA25C2E1570001E08C /* Frameworks */,
 				39DC7CCB25C2E1570001E08C /* Resources */,
-				39DC7CEB25C305E40001E08C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
