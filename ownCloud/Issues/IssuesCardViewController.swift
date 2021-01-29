@@ -21,22 +21,15 @@ import ownCloudAppShared
 
 class CardCellBackgroundView : UIView {
 	init(backgroundColor: UIColor, insets: NSDirectionalEdgeInsets, cornerRadius: CGFloat) {
-		super.init(frame: .zero)
+		super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
-		let backgroundView = UIView(frame: .zero)
-		backgroundView.translatesAutoresizingMaskIntoConstraints = false
+		let backgroundView = UIView(frame: CGRect(x: insets.leading, y: insets.top, width: frame.size.width - insets.leading - insets.trailing, height: frame.size.height - insets.top - insets.bottom))
 
 		backgroundView.layer.backgroundColor = backgroundColor.cgColor
 		backgroundView.layer.cornerRadius = cornerRadius
+		backgroundView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
 		addSubview(backgroundView)
-
-		NSLayoutConstraint.activate([
-			backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.leading),
-			backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.trailing),
-			backgroundView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
-			backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
-		])
 	}
 
 	required init?(coder: NSCoder) {
@@ -153,18 +146,24 @@ class IssuesCardViewController: StaticTableViewController {
 
 		let section = StaticTableViewSection()
 
-		let cellStyler : ThemeTableViewCell.CellStyler = { (cell, style) in
-			cell.textLabel?.textColor = style.textColor
-			cell.textLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.1, weight: .semibold)
+		let horizontalMargin : CGFloat = 25
+		let verticalMargin : CGFloat = 10
+		let backgroundHorizontalMargin : CGFloat = 15
+		let backgroundVerticalMargin : CGFloat = 2
+		let backgroundCornerRadius : CGFloat = 5
 
-			cell.detailTextLabel?.textColor = style.textColor
-			cell.detailTextLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize, weight: .regular)
+		let cellStyler : ThemeTableViewCell.CellStyler = { (cell, style) in
+			cell.primaryTextLabel?.textColor = style.textColor
+			cell.primaryTextLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.1, weight: .semibold)
+
+			cell.primaryDetailTextLabel?.textColor = style.textColor
+			cell.primaryDetailTextLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize, weight: .regular)
 
 			if let backgroundColor = style.backgroundColor {
-				let edgeInsets = NSDirectionalEdgeInsets(top: 2, leading: 15, bottom: 2, trailing: 15)
+				let edgeInsets = NSDirectionalEdgeInsets(top: backgroundVerticalMargin, leading: backgroundHorizontalMargin, bottom: backgroundVerticalMargin, trailing: backgroundHorizontalMargin)
 
-				cell.backgroundView = CardCellBackgroundView(backgroundColor: backgroundColor, insets: edgeInsets, cornerRadius: 5)
-				cell.selectedBackgroundView = CardCellBackgroundView(backgroundColor: backgroundColor.darker(0.07), insets: edgeInsets, cornerRadius: 5)
+				cell.backgroundView = CardCellBackgroundView(backgroundColor: backgroundColor, insets: edgeInsets, cornerRadius: backgroundCornerRadius)
+				cell.selectedBackgroundView = CardCellBackgroundView(backgroundColor: backgroundColor.darker(0.07), insets: edgeInsets, cornerRadius: backgroundCornerRadius)
 			}
 
 			return true
@@ -196,7 +195,20 @@ class IssuesCardViewController: StaticTableViewController {
 
 						self?.present(ThemeNavigationController(rootViewController: certificateViewController), animated: true, completion: nil)
 					}
-				}, title: issueTitle, subtitle: issue.localizedDescription, messageStyle: messageStyle, accessoryType: (issue.type == .certificate) ? .disclosureIndicator : .none )
+				}, title: issueTitle, subtitle: issue.localizedDescription, messageStyle: messageStyle, recreatedLabelLayout: { (cell, textLabel, detailLabel) in
+					NSLayoutConstraint.activate([
+						textLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: verticalMargin),
+
+						textLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: horizontalMargin),
+						textLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -horizontalMargin),
+
+						detailLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: horizontalMargin),
+						detailLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -horizontalMargin),
+
+						detailLabel.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1),
+						detailLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -verticalMargin)
+					])
+				}, accessoryType: (issue.type == .certificate) ? .disclosureIndicator : .none)
 
 				(row.cell as? ThemeTableViewCell)?.cellStyler = cellStyler
 

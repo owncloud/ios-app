@@ -125,7 +125,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, recreatedLabelLayout : ThemeTableViewCell.CellLayouter? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
 
@@ -140,20 +140,20 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellStyle = UITableViewCell.CellStyle.subtitle
 		}
 
-		let themeCell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, reuseIdentifier: nil)
+		let themeCell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, recreatedLabelLayout: recreatedLabelLayout, reuseIdentifier: nil)
 		themeCell.messageStyle = messageStyle
 
 		self.cell = themeCell
 		if subtitle != nil {
-			self.cell?.detailTextLabel?.text = subtitle
-			self.cell?.detailTextLabel?.numberOfLines = 0
+			themeCell.primaryDetailTextLabel?.text = subtitle
+			themeCell.primaryDetailTextLabel?.numberOfLines = 0
 		}
-		self.cell?.textLabel?.text = title
-		self.cell?.textLabel?.textAlignment = alignment
-		self.cell?.accessoryType = accessoryType
-		self.cell?.imageView?.image = image
+		themeCell.primaryTextLabel?.text = title
+		themeCell.primaryTextLabel?.textAlignment = alignment
+		themeCell.accessoryType = accessoryType
+		themeCell.imageView?.image = image
 		if accessoryView != nil {
-			self.cell?.accessoryView = accessoryView
+			themeCell.accessoryView = accessoryView
 		}
 
 		if #available(iOS 13.4, *), let cell = self.cell {
@@ -163,14 +163,14 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
 			self?.cell?.accessoryView?.tintColor = themeCollection.tableRowColors.labelColor
-			})
+		})
 
-		self.cell?.accessibilityIdentifier = identifier
+		themeCell.accessibilityIdentifier = identifier
 
 		if rowWithAction != nil {
 			self.action = rowWithAction
 		} else {
-			self.cell?.selectionStyle = .none
+			themeCell.selectionStyle = .none
 		}
 	}
 
