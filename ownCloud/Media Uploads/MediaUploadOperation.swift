@@ -174,6 +174,10 @@ class MediaUploadOperation : Operation {
 			if userDefaults.preferRawPhotos {
 				preferredResourceTypes.append(.alternatePhoto)
 			}
+
+			if userDefaults.preferOriginalVideos {
+				preferredResourceTypes.append(.video)
+			}
 		}
 
 		if let result = asset.upload(with: core,

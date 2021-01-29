@@ -21,8 +21,8 @@ import ownCloudSDK
 
 // MARK: - ownCloud brand colors
 extension UIColor {
-	static var ownCloudLightColor : UIColor { return UIColor(hex: 0x468CC8) }
-	static var ownCloudDarkColor : UIColor { return UIColor(hex: 0x1D293B) }
+	static var ownCloudLightColor : UIColor { return UIColor(hex: 0x4E85C8) }
+	static var ownCloudDarkColor : UIColor { return UIColor(hex: 0x041E42) }
 }
 
 extension ThemeStyle {

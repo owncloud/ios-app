@@ -47,7 +47,12 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 	public var cellStyler : CellStyler?
 
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		if style == .default {
+			// This is a workaround, because some cells with style .default does not support automatically Right-to-Left UI support. When switching to style .subtitle, the style will be kept, if no subtitle was set ant the RtL support will work on this cells
+			super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+		} else {
+			super.init(style: style, reuseIdentifier: reuseIdentifier)
+		}
 	}
 
 	public typealias CellLayouter = (_ cell: ThemeTableViewCell, _ textLabel: UILabel, _ detailLabel : UILabel) -> Void
@@ -69,6 +74,7 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 
 	convenience public init(withLabelColorUpdates labelColorUpdates: Bool, style: UITableViewCell.CellStyle = .default, recreatedLabelLayout : CellLayouter? = nil, reuseIdentifier: String? = nil) {
 		self.init(style: style, reuseIdentifier: reuseIdentifier)
+
 		if let recreatedLabelLayout = recreatedLabelLayout {
 			if style == .subtitle {
 				let replacementTextLabel = UILabel()
@@ -98,6 +104,7 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 				recreatedLabelLayout(self, replacementTextLabel, replacementDetailLabel)
 			}
 		}
+
 		updateLabelColors = labelColorUpdates
 	}
 

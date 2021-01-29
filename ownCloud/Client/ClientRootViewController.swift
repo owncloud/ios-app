@@ -467,6 +467,7 @@ extension ClientRootViewController : OCCoreDelegate {
 			   issueNSError.isOCError(withCode: .authorizationMethodNotAllowed) ||
 			   issueNSError.isOCError(withCode: .authorizationMethodUnknown) ||
 			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
+			   issueNSError.isOCError(withCode: .authorizationNotMatchingRequiredUserID) ||
 			   issueNSError.isOCError(withCode: .authorizationMissingData) {
 				nsError = issueNSError
 				issue = nil
@@ -536,46 +537,8 @@ extension ClientRootViewController : OCCoreDelegate {
 				var queueCompletionHandlerScheduled : Bool = false
 
 				if isAuthFailure {
-					let alertController = ThemedAlertController(title: authFailureTitle,
-										message: authFailureMessage,
-										preferredStyle: .alert)
+					self?.presentAuthAlert(for: editBookmark, error: nsError, title: authFailureTitle, message: authFailureMessage, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
 
-					alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
-						queueCompletionHandler()
-					}))
-
-					if authFailureHasEditOption {
-						alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
-							queueCompletionHandler()
-
-							var notifyAuthDelegate = true
-
-							if let bookmark = self?.bookmark {
-								let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
-
-								if updater.canUpdateInline, let self = self {
-									notifyAuthDelegate = false
-
-									updater.updateAuthenticationData(on: self, completion: { (error) in
-										if error == nil {
-											OCSynchronized(self) {
-												self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
-											}
-										}
-									})
-								}
-							}
-
-							if notifyAuthDelegate {
-								if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
-									authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
-								}
-							}
-
-						}))
-					}
-
-					self?.present(alertController, animated: true, completion: nil)
 					queueCompletionHandlerScheduled = true
 
 					return
@@ -670,6 +633,51 @@ extension ClientRootViewController : OCCoreDelegate {
 		} else {
 			presentAlert(authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, nil)
 		}
+	}
+
+	func presentAuthAlert(for editBookmark: OCBookmark, error nsError: NSError?, title authFailureTitle: String, message authFailureMessage: String?, ignoreLabel authFailureIgnoreLabel: String, ignoreStyle authFailureIgnoreStyle: UIAlertAction.Style, hasEditOption authFailureHasEditOption: Bool, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?, completionHandler: @escaping () -> Void) {
+		let alertController = ThemedAlertController(title: authFailureTitle,
+							message: authFailureMessage,
+							preferredStyle: .alert)
+
+		alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
+			completionHandler()
+		}))
+
+		if authFailureHasEditOption {
+			alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { [weak self] (_) in
+				completionHandler()
+
+				var notifyAuthDelegate = true
+
+				if let bookmark = self?.bookmark {
+					let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+
+					if updater.canUpdateInline, let self = self {
+						notifyAuthDelegate = false
+
+						updater.updateAuthenticationData(on: self, completion: { (error) in
+							if error == nil {
+								OCSynchronized(self) {
+									self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
+								}
+							} else if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
+								// Error updating authentication -> inform the user and provide option to retry
+								self.alertQueue.async { [weak self] (queueCompletionHandler) in
+									self?.presentAuthAlert(for: editBookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailureIgnoreLabel, ignoreStyle: authFailureIgnoreStyle, hasEditOption: authFailureHasEditOption, preferredAuthenticationMethods: preferredAuthenticationMethods, completionHandler: queueCompletionHandler)
+								}
+							}
+						})
+					}
+				}
+
+				if notifyAuthDelegate, let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+					authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+				}
+			}))
+		}
+
+		self.present(alertController, animated: true, completion: nil)
 	}
 
 	func presentAlertAsCard(viewController: UIViewController, withHandle: Bool = false, dismissable: Bool = true) {
