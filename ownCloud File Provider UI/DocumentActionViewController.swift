@@ -23,19 +23,36 @@ import ownCloudAppShared
 
 class DocumentActionViewController: FPUIActionExtensionViewController {
 
-    override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
-    }
+	@IBOutlet var label : UILabel!
+	@IBOutlet var button : ThemeButton!
 
-    override func prepare(forError error: Error) {
-		AppLockManager.shared.passwordViewHostViewController = self
-		AppLockManager.shared.cancelAction = { [weak self] in
-			self?.extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
-		}
-		AppLockManager.shared.successAction = { [weak self] in
-			self?.extensionContext.completeRequest()
-		}
+	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
+	}
 
-		AppLockManager.shared.showLockscreenIfNeeded()
-    }
+	override func prepare(forError error: Error) {
+		if AppLockManager.supportedOnDevice {
+			AppLockManager.shared.passwordViewHostViewController = self
+			AppLockManager.shared.cancelAction = { [weak self] in
+				self?.extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+			}
+			AppLockManager.shared.successAction = { [weak self] in
+				self?.extensionContext.completeRequest()
+			}
+
+			AppLockManager.shared.showLockscreenIfNeeded()
+		} else {
+			let collection = Theme.shared.activeCollection
+			self.view.backgroundColor = collection.toolbarColors.backgroundColor
+			label.textColor = collection.toolbarColors.labelColor
+			button.setTitleColor(collection.toolbarColors.labelColor, for: .normal)
+			button.backgroundColor = collection.neutralColors.normal.background
+			label.text = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized
+			button.setTitle("Cancel".localized, for: .normal)
+		}
+	}
+
+	@IBAction func cancelScreen() {
+		extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+	}
 
 }

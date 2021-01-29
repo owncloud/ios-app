@@ -304,6 +304,7 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
 
 /* Certificate management */
 
