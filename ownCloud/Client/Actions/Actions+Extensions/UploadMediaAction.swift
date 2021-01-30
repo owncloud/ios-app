@@ -78,7 +78,18 @@ class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLib
 	private func presentLimitedLibraryPicker() {
 		guard let viewController = self.parentViewController else { return }
 		let library = PHPhotoLibrary.shared()
-		library.presentLimitedLibraryPicker(from: viewController)
+
+		let alert = ThemedAlertController(title: "Limited Photo Access".localized, message: "Access for the media selected for upload is limited".localized, preferredStyle: .alert)
+
+		alert.addAction(UIAlertAction(title: "Change".localized, style: .default, handler: {_ in
+			library.presentLimitedLibraryPicker(from: viewController)
+		}))
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
+			self.assetIdentifiers.removeAll()
+		}))
+
+		self.parentViewController?.present(alert, animated: true)
+
 	}
 
 	private func attemptAssetsFetch() -> [PHAsset] {
@@ -107,7 +118,7 @@ class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLib
 			if assets.count > 0 {
 				self.completionHandler?(assets)
 			} else {
-				let alert = ThemedAlertController(title: "Limited Photo Access".localized, message: "Access for the media selected for upload is limited".localized, preferredStyle: .alert)
+				let alert = ThemedAlertController(title: "Limited Photo Access".localized, message: "No Access to the media selected for upload".localized, preferredStyle: .alert)
 
 				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 

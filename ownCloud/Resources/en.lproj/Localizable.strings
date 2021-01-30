@@ -840,3 +840,4 @@
 /* Limited photo library access */
 "Limited Photo Access" = "Limited Photo Access";
 "Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
+"No Access to the media selected for upload" = "No Access to the media selected for upload";
