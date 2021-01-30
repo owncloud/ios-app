@@ -131,7 +131,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
+		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
@@ -185,11 +185,10 @@ class BookmarkViewController: StaticTableViewController {
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
-					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
+				let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
+				let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
-					self?.present(navigationController, animated: true, completion: nil)
-				}
+				self?.present(navigationController, animated: true, completion: nil)
 			}
 		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
@@ -472,6 +471,7 @@ class BookmarkViewController: StaticTableViewController {
 			}
 
 			options[.presentingViewControllerKey] = self
+			options[.requiredUsernameKey] = connectionBookmark.userName
 
 			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
 
@@ -576,8 +576,8 @@ class BookmarkViewController: StaticTableViewController {
 							case .edit:
 								// Update original bookmark
 								self?.originalBookmark?.setValuesFrom(bookmark)
-								if !OCBookmarkManager.shared.updateBookmark(bookmark) {
-									Log.error("Changes to \(bookmark) not saved as it's not tracked by OCBookmarkManager!")
+								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
 								}
 							}
 

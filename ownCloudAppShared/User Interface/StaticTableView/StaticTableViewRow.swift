@@ -265,13 +265,12 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		})
 	}
 
-	convenience public init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience public init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil, withButtonStyle : Bool = false) {
 		self.init()
 		type = .subtitleRow
 
 		self.identifier = identifier
-
-		self.cell = ThemeTableViewCell(style: style, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(withLabelColorUpdates: !withButtonStyle, style: style, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.detailTextLabel?.text = subtitle
 		self.cell?.accessoryType = accessoryType
@@ -288,6 +287,18 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			if let value = row.value as? String {
 				row.cell?.detailTextLabel?.text = value
 			}
+		}
+
+		if withButtonStyle {
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			let textColor = themeCollection.tintColor
+
+			self?.cell?.textLabel?.textColor = textColor
+			self?.cell?.detailTextLabel?.textColor = textColor
+
+			self?.cell?.textLabel?.highlightedTextColor = themeCollection.tableRowHighlightColors.labelColor
+			self?.cell?.detailTextLabel?.highlightedTextColor = themeCollection.tableRowHighlightColors.labelColor
+			}, applyImmediately: true)
 		}
 	}
 
@@ -751,12 +762,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self?.cell?.tintColor = themeCollection.tintColor
 
 			if selectedTextColor != nil {
-
 				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
 			}
 
 			if backgroundColor != nil {
-
 				self?.cell?.backgroundColor = backgroundColor
 			}
 
