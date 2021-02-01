@@ -29,7 +29,7 @@ extension Action {
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		let header = MoreViewHeader(for: item, with: core)
-		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
+		let moreViewController = FrameViewController(header: header, viewController: tableViewController)
 
 		if core.connectionStatus == .online {
 			if core.connection.capabilities?.sharingAPIEnabled == 1 {
@@ -103,7 +103,7 @@ extension Action {
 							} else {
 								let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
 
-								viewController.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
+								viewController.present(asCard: FrameViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
 							}
 						}
 					})
@@ -200,7 +200,7 @@ private extension Action {
 		return shareRows
 	}
 
-	private class func updateSharingSection(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController, contentViewController: MoreViewController) {
+	private class func updateSharingSection(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController, contentViewController: FrameViewController) {
 		if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
 			tableViewController.removeSection(section)
 		}

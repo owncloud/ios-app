@@ -254,12 +254,12 @@ extension ImportFilesController {
 		})
 	}
 
-	func cardViewController(for url: URL) -> MoreViewController? {
+	func cardViewController(for url: URL) -> FrameViewController? {
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		header = MoreViewHeader(url: url)
 		guard let header = header else { return nil }
 
-		let moreViewController = MoreViewController(header: header, viewController: tableViewController)
+		let moreViewController = FrameViewController(header: header, viewController: tableViewController)
 
 		let title = NSAttributedString(string: "Save File".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 

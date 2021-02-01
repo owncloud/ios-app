@@ -422,10 +422,12 @@ class BookmarkViewController: StaticTableViewController {
 
 							if issue != nil {
 								// Parse issue for display
-								if let displayIssues = issue?.prepareForDisplay() {
-									if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
+								if let issue = issue {
+									let displayIssues = issue.prepareForDisplay()
+
+									if displayIssues.isAtLeast(level: .warning) {
 										// Present issues if the level is >= warning
-										let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { [weak self] (response) in
+										IssuesCardViewController.present(on: self, issue: issue, displayIssues: displayIssues, completion: { [weak self, weak issue] (response) in
 											switch response {
 												case .cancel:
 													issue?.reject()
@@ -439,11 +441,9 @@ class BookmarkViewController: StaticTableViewController {
 													self?.bookmark?.url = nil
 											}
 										})
-
-										self.present(issuesViewController, animated: true, completion: nil)
 									} else {
 										// Do not present issues
-										issue?.approve()
+										issue.approve()
 										continueToNextStep()
 									}
 								}
@@ -503,8 +503,8 @@ class BookmarkViewController: StaticTableViewController {
 							self.updateInputFocus(fallbackRow: self.passwordRow)
 						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
 							// User cancelled authorization, no reaction needed
-						} else {
-							let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+						} else if let issue = issue {
+							IssuesCardViewController.present(on: self, issue: issue, completion: { [weak self, weak issue] (response) in
 								switch response {
 									case .cancel:
 										issue?.reject()
@@ -516,8 +516,6 @@ class BookmarkViewController: StaticTableViewController {
 									case .dismiss: break
 								}
 							})
-
-							self.present(issuesViewController, animated: true, completion: nil)
 						}
 					})
 				}
@@ -598,10 +596,10 @@ class BookmarkViewController: StaticTableViewController {
 					} else {
 						OnMainThread {
 							hudCompletion({
-								if issue != nil {
+								if let issue = issue {
 									self?.bookmark?.authenticationData = nil
 
-									let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+									IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
 										switch response {
 											case .cancel:
 												issue?.reject()
@@ -613,8 +611,6 @@ class BookmarkViewController: StaticTableViewController {
 											case .dismiss: break
 										}
 									})
-
-									strongSelf.present(issuesViewController, animated: true, completion: nil)
 								} else {
 									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								}

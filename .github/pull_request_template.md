@@ -40,4 +40,8 @@ Please note that any kind of change first has to be submitted to the master bran
 - [ ] I have read the [**CONTRIBUTING**](https://github.com/owncloud/ios-app/blob/master/CONTRIBUTING.md) document.
 - [ ] I have added tests to cover my changes.
 - [ ] All new and existing tests passed.
+- [ ] Added changelog files for the fixed issues in folder changelog/unreleased
+- [ ] For Milestone PRs:
+	- [ ] Created a folder for the new version like $majorVersion.$minorVersion.$patchVersion_YYYY-MM-DD
+	- [ ] Moved all changelog files from the unreleased folder to the new version folder
 
