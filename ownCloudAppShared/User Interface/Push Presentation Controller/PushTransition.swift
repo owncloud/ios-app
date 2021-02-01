@@ -38,16 +38,24 @@ public class PushTransition: NSObject, UIViewControllerAnimatedTransitioning {
 		   let toViewController = transitionContext.viewController(forKey: .to) {
 
 			if dismissTransition {
+				var toViewControllerTranslationXMultiplier : CGFloat = -0.5
+				var fromViewControllerTranslationXMultiplier : CGFloat = 1
+				if fromViewController.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+					toViewControllerTranslationXMultiplier = 1
+					fromViewControllerTranslationXMultiplier = -0.5
+				}
+
 				fromViewController.view.frame = transitionContext.initialFrame(for: fromViewController)
 				toViewController.view.frame = transitionContext.finalFrame(for: toViewController)
 
 				transitionContext.containerView.insertSubview(toViewController.view, belowSubview: fromViewController.view)
 
 				fromViewController.view.transform = .identity
-				toViewController.view.transform = CGAffineTransform(translationX: -0.5 * toViewController.view.frame.size.width, y: 0)
+
+				toViewController.view.transform = CGAffineTransform(translationX: toViewControllerTranslationXMultiplier * toViewController.view.frame.size.width, y: 0)
 
 				UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0, options: [ .curveEaseInOut ], animations: {
-					fromViewController.view.transform = CGAffineTransform(translationX: fromViewController.view.frame.size.width, y: 0)
+					fromViewController.view.transform = CGAffineTransform(translationX: fromViewControllerTranslationXMultiplier * fromViewController.view.frame.size.width, y: 0)
 					toViewController.view.transform = .identity
 				}, completion: { _ in
 					let window = fromViewController.view.window
@@ -67,15 +75,22 @@ public class PushTransition: NSObject, UIViewControllerAnimatedTransitioning {
 					}
 				})
 			} else {
+				var toViewControllerTranslationXMultiplier : CGFloat = 1
+				var fromViewControllerTranslationXMultiplier : CGFloat = -0.5
+				if fromViewController.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+					toViewControllerTranslationXMultiplier = -0.5
+					fromViewControllerTranslationXMultiplier = 1
+				}
+
 				fromViewController.view.frame = transitionContext.finalFrame(for: fromViewController)
 				toViewController.view.frame = transitionContext.finalFrame(for: toViewController)
 
 				transitionContext.containerView.insertSubview(toViewController.view, aboveSubview: fromViewController.view)
 
-				toViewController.view.transform = CGAffineTransform(translationX: toViewController.view.frame.size.width, y: 0)
+				toViewController.view.transform = CGAffineTransform(translationX: toViewControllerTranslationXMultiplier * toViewController.view.frame.size.width, y: 0)
 
 				UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0, options: [ .curveEaseInOut ], animations: {
-					fromViewController.view.transform = CGAffineTransform(translationX: -0.5 * fromViewController.view.frame.size.width, y: 0)
+					fromViewController.view.transform = CGAffineTransform(translationX: fromViewControllerTranslationXMultiplier * fromViewController.view.frame.size.width, y: 0)
 					toViewController.view.transform = .identity
 				}, completion: { _ in
 					fromViewController.view.transform = .identity

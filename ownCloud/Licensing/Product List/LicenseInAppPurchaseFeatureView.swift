@@ -131,6 +131,6 @@ class LicenseInAppPurchaseFeatureView: UIView, Themeable {
 	@objc func takeOffer() {
 		let offersViewController = LicenseOffersViewController(withFeature: feature.identifier, in: environment)
 
-		baseViewController?.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
+		baseViewController?.present(asCard: FrameViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
 	}
 }

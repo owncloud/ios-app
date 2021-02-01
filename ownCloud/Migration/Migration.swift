@@ -261,7 +261,7 @@ class Migration {
 
 				let displayIssues = issue.prepareForDisplay()
 
-				guard displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue else {
+				guard displayIssues.isAtLeast(level: .warning) else {
 					connectGroup.leave()
 					return
 				}
@@ -269,7 +269,7 @@ class Migration {
 				if let parentViewController = parentViewController {
 					// Present issues if the level is >= warning
 					DispatchQueue.main.async {
-						let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { (response) in
+						IssuesCardViewController.present(on: parentViewController, issue: issue, displayIssues: displayIssues, completion: { (response) in
 							Log.debug(tagged: ["MIGRATION"], "User responded to the issue with \(response)")
 
 							switch response {
@@ -285,7 +285,6 @@ class Migration {
 							connectGroup.leave()
 						})
 
-						parentViewController.present(issuesViewController, animated: true, completion: nil)
 						Log.debug(tagged: ["MIGRATION"], "Presenting the issue to the user")
 					}
 				} else {

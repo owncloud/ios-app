@@ -29,7 +29,7 @@ extension Action {
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		let header = MoreViewHeader(for: item, with: core)
-		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
+		let moreViewController = FrameViewController(header: header, viewController: tableViewController)
 
 		if core.connectionStatus == .online {
 			if core.connection.capabilities?.sharingAPIEnabled == 1 {
@@ -103,7 +103,7 @@ extension Action {
 							} else {
 								let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
 
-								viewController.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
+								viewController.present(asCard: FrameViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
 							}
 						}
 					})
@@ -177,7 +177,7 @@ private extension Action {
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: userTitle, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: userTitle, style: .plain, image: nil, imageWidth: nil, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if item.isShareable {
 			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
@@ -191,7 +191,7 @@ private extension Action {
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: linkTitle, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: linkTitle, style: .plain, image: nil, imageWidth: nil, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
 			shareRows.append(publicLinkRow)
@@ -200,7 +200,7 @@ private extension Action {
 		return shareRows
 	}
 
-	private class func updateSharingSection(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController, contentViewController: MoreViewController) {
+	private class func updateSharingSection(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController, contentViewController: FrameViewController) {
 		if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
 			tableViewController.removeSection(section)
 		}
@@ -218,7 +218,7 @@ private extension Action {
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: title, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
+		}, title: title, style: .plain, image: nil, imageWidth:nil, imageTintColorKey: nil, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "group")))
 
 		return addGroupRow
 	}
@@ -230,7 +230,7 @@ private extension Action {
 							 andPresent: PublicLinkTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-			}, title: "Links".localized, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
+			}, title: "Links".localized, style: .plain, image: nil, imageWidth: nil, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "link")))
 
 		return addGroupRow
 	}

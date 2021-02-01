@@ -415,7 +415,7 @@ open class Action : NSObject {
 
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.perform()
-		}, title: name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: name, style: actionExtension.category == .destructive ? .destructive : .plain, image: nil, imageWidth: nil, alignment: .left, identifier: actionExtension.identifier.rawValue, accessoryView: UIImageView(image: self.icon))
 	}
 
 	open func provideContextualAction() -> UIContextualAction? {
