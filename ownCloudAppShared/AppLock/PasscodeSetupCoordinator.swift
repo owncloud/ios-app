@@ -115,8 +115,16 @@ public class PasscodeSetupCoordinator {
 		if AppLockManager.shared.isPasscodeEnforced {
 			passcodeViewController?.errorMessage = "You are required to set the passcode".localized
 		}
+        
+        if parentViewController.presentedViewController != nil {
+            parentViewController.dismiss(animated: false) { [weak self] in
+                guard let passcodeController = self?.passcodeViewController else { return }
+                self?.parentViewController.present(passcodeController, animated: false, completion: nil)
+            }
+        } else {
+            parentViewController.present(passcodeViewController!, animated: true, completion: nil)
+        }
 
-		parentViewController.present(passcodeViewController!, animated: true, completion: nil)
 	}
 
 	public func startBiometricalFlow(_ enable:Bool) {
