@@ -19,19 +19,6 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
-import CoreServices
-
-extension OCItem {
-	var isPlayable: Bool {
-		guard let mime = self.mimeType else { return false }
-
-		guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mime as CFString, nil) else {
-			return false
-		}
-
-		return UTTypeConformsTo(uti.takeUnretainedValue(), kUTTypeAudiovisualContent)
-	}
-}
 
 class DisplayHostViewController: UIPageViewController {
 
