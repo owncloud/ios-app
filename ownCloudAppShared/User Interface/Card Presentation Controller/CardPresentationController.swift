@@ -288,7 +288,9 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 		switch velocity {
 			case _ where velocity >= 2000:
-				dismissView()
+				if dismissable {
+					dismissView()
+				}
 
 			case _ where velocity < 0:
 				if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.3) {
@@ -302,7 +304,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 					nextPosition = .open
 				} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
 					nextPosition = .half
-				} else {
+				} else if dismissable {
 					dismissView()
 				}
 
@@ -384,9 +386,12 @@ extension UIViewController {
 	open func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
 		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self, withHandle: withHandle, dismissable: dismissable)
 
-		viewController.transitioningDelegate = animator
+		viewController.transitioningDelegate = animator // .transitioningDelegate is only weak!
 		viewController.modalPresentationStyle = .custom
 
-		present(viewController, animated: animated, completion: completion)
+		present(viewController, animated: animated, completion: {
+			_ = animator // Keep reference to CardTransitionDelegate around (could be dropped prematurely otherwise)
+			completion?()
+		})
 	}
 }
