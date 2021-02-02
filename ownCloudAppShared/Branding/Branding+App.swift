@@ -42,7 +42,7 @@ extension Branding : BrandingInitialization {
 			.sendFeedbackAddress : "ios-app@owncloud.com",
 
 			.canAddAccount : true,
-			.canEditAccount : true,
+			.canEditAccount : true
 
 //			.profileDefinitions : [],
 //			.themeGenericColors : [:],

@@ -66,7 +66,7 @@ class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLib
 			let assets = self.attemptAssetsFetch()
 
 			OnMainThread {
-				if results.count == assets.count{
+				if results.count == assets.count {
 					self.completionHandler?(assets)
 				} else {
 					self.presentLimitedLibraryPicker()

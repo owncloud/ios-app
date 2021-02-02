@@ -241,7 +241,7 @@ extension VendorServices : OCClassSettingsSupport {
 				.enableReviewPrompt: !VendorServices.shared.isBranded,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
-				.recommendToFriendEnabled: !VendorServices.shared.isBranded,
+				.recommendToFriendEnabled: !VendorServices.shared.isBranded
 			]
 		}
 
@@ -290,7 +290,7 @@ extension VendorServices : OCClassSettingsSupport {
 				.description	: "Enables/disables the recommend to a friend entry in the settings.",
 				.category	: "App",
 				.status		: OCClassSettingsKeyStatus.advanced
-			],
+			]
 		]
 	}
 }
