@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02072E5F23E46022006548A7 /* UIWindow+Extension.swift */; };
 		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
+		0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0234EF072515138A00AE921A /* PasscodeSetupCoordinator.swift */; };
 		024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 024F3A2024A3AB410083E11E /* CrashReporter */; };
 		025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */; };
 		025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */; };
@@ -33,7 +34,6 @@
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
 		233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */; };
 		23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */; };
-		23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BEF1172076667F00DD2E6F /* IssuesViewController.swift */; };
 		23D5241521491C670002C566 /* DisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D5241421491C670002C566 /* DisplayViewController.swift */; };
 		23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */; };
 		23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */; };
@@ -182,7 +182,7 @@
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
-		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 		DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */; };
 		DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
@@ -264,10 +264,6 @@
 		DC0A5C432550C70800E6674B /* class-settings-sdk in Resources */ = {isa = PBXBuildFile; fileRef = DC0A5C422550C70800E6674B /* class-settings-sdk */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
-		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
-		DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */; };
-		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
-		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC20DE6A21C01B210096000B /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
@@ -276,6 +272,7 @@
 		DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */ = {isa = PBXBuildFile; fileRef = DC23D1D6238F390200423F62 /* OCLicenseAppStoreReceipt.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC24B28725BA2A2E005783E2 /* Branding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC24B27125B9DF31005783E2 /* Branding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC24B29825BA2A34005783E2 /* Branding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24B27225B9DF31005783E2 /* Branding.m */; };
+		DC24B31D25BB6FC4005783E2 /* IssuesCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */; };
 		DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B2AA25BA316D005783E2 /* Branding+App.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
@@ -418,7 +415,7 @@
 		DCE4E43924C19AB20051722F /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
 		DCE4E43A24C19ADC0051722F /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
 		DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
-		DCE4E43C24C19B660051722F /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236735A521217C3500E5834A /* MoreViewController.swift */; };
+		DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236735A521217C3500E5834A /* FrameViewController.swift */; };
 		DCE4E43E24C19C3E0051722F /* Action+UserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */; };
 		DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */; };
 		DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
@@ -846,6 +843,7 @@
 /* Begin PBXFileReference section */
 		02072E5F23E46022006548A7 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
 		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
+		0234EF072515138A00AE921A /* PasscodeSetupCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeSetupCoordinator.swift; sourceTree = "<group>"; };
 		025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayExifMetadataAction.swift; sourceTree = "<group>"; };
 		025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadataViewController.swift; sourceTree = "<group>"; };
 		025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsViewController.swift; sourceTree = "<group>"; };
@@ -877,11 +875,10 @@
 		233BDEB6204FEFE500C06732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
 		233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */ = {isa = PBXFileReference; indentWidth = 8; lastKnownFileType = sourcecode.swift; path = SecuritySettingsSection.swift; sourceTree = "<group>"; tabWidth = 8; usesTabs = 1; };
-		236735A521217C3500E5834A /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
+		236735A521217C3500E5834A /* FrameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameViewController.swift; sourceTree = "<group>"; };
 		23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSettingsSection.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		239F437D20D0EE6300B1276D /* icon-search.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; name = "icon-search.tvg"; path = "../img/filetypes-tvg/icon-search.tvg"; sourceTree = "<group>"; };
-		23BEF1172076667F00DD2E6F /* IssuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesViewController.swift; sourceTree = "<group>"; };
 		23C5652F212167BD00BD4B47 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
 		23C56536212167BE00BD4B47 /* CardTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitionDelegate.swift; sourceTree = "<group>"; };
 		23D5241421491C670002C566 /* DisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayViewController.swift; sourceTree = "<group>"; };
@@ -1155,10 +1152,6 @@
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
 		DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmark+Extension.swift"; sourceTree = "<group>"; };
 		DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
-		DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssuesDismissalAnimator.swift; sourceTree = "<group>"; };
-		DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssuesPresentationAnimator.swift; sourceTree = "<group>"; };
-		DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
-		DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		DC23D1D6238F390200423F62 /* OCLicenseAppStoreReceipt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreReceipt.h; sourceTree = "<group>"; };
 		DC23D1D7238F390200423F62 /* OCLicenseAppStoreReceipt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreReceipt.m; sourceTree = "<group>"; };
@@ -1167,6 +1160,7 @@
 		DC24B27125B9DF31005783E2 /* Branding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Branding.h; sourceTree = "<group>"; };
 		DC24B27225B9DF31005783E2 /* Branding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Branding.m; sourceTree = "<group>"; };
 		DC24B2AA25BA316D005783E2 /* Branding+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Branding+App.swift"; sourceTree = "<group>"; };
+		DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesCardViewController.swift; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -1547,16 +1541,6 @@
 			path = Migration;
 			sourceTree = "<group>";
 		};
-		23031768205AA1DB006C4DAF /* Issues */ = {
-			isa = PBXGroup;
-			children = (
-				23BEF1172076667F00DD2E6F /* IssuesViewController.swift */,
-				DC1B26FD209CF0D2004715E1 /* Issues Animators */,
-				DC1B2704209CF0D3004715E1 /* Issues Subclasses */,
-			);
-			path = Issues;
-			sourceTree = "<group>";
-		};
 		233BDE93204FEFE500C06732 = {
 			isa = PBXGroup;
 			children = (
@@ -1604,6 +1588,7 @@
 				3968C878239C54AC00AC28AC /* Release Notes */,
 				233BDE9F204FEFE500C06732 /* AppDelegate.swift */,
 				3961281522F8730A0087BD3A /* SceneDelegate.swift */,
+				DCD502B325BC3432007F9087 /* Issues */,
 				DCF4F1612051925A00189B9A /* Bookmarks */,
 				DC8EB26F239308C3009148F9 /* Licensing */,
 				4C51727422DE04BD001BC97F /* Tasks */,
@@ -2102,6 +2087,7 @@
 		DC0A354F24C0E18800FB58FC /* AppLock */ = {
 			isa = PBXGroup;
 			children = (
+				0234EF072515138A00AE921A /* PasscodeSetupCoordinator.swift */,
 				593BAB96209F8A0500023634 /* AppLockManager.swift */,
 				597A404820AD59EF00B028B2 /* AppLockWindow.swift */,
 				593BAB44209AE1BC00023634 /* PasscodeViewController.swift */,
@@ -2141,24 +2127,6 @@
 				39664AD9242CD3A800B6121A /* PointerEffect.swift */,
 			);
 			path = "Cursor Support";
-			sourceTree = "<group>";
-		};
-		DC1B26FD209CF0D2004715E1 /* Issues Animators */ = {
-			isa = PBXGroup;
-			children = (
-				DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */,
-				DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */,
-			);
-			path = "Issues Animators";
-			sourceTree = "<group>";
-		};
-		DC1B2704209CF0D3004715E1 /* Issues Subclasses */ = {
-			isa = PBXGroup;
-			children = (
-				DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */,
-				DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */,
-			);
-			path = "Issues Subclasses";
 			sourceTree = "<group>";
 		};
 		DC23D1D0238F38DF00423F62 /* Receipt */ = {
@@ -2708,6 +2676,14 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		DCD502B325BC3432007F9087 /* Issues */ = {
+			isa = PBXGroup;
+			children = (
+				DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */,
+			);
+			path = Issues;
+			sourceTree = "<group>";
+		};
 		DCDC208923991296003CFF5B /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2780,7 +2756,7 @@
 		DCE4E43624C19A3B0051722F /* More */ = {
 			isa = PBXGroup;
 			children = (
-				236735A521217C3500E5834A /* MoreViewController.swift */,
+				236735A521217C3500E5834A /* FrameViewController.swift */,
 				232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */,
 				232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */,
 			);
@@ -2875,7 +2851,6 @@
 		DCF4F1612051925A00189B9A /* Bookmarks */ = {
 			isa = PBXGroup;
 			children = (
-				23031768205AA1DB006C4DAF /* Issues */,
 				DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */,
 				4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */,
 			);
@@ -3816,7 +3791,6 @@
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
 				3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */,
-				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
 				DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
@@ -3831,7 +3805,6 @@
 				DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */,
 				0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */,
 				4C9BFA2323158C3F0059CA3E /* PreviewViewController.swift in Sources */,
-				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
 				DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */,
 				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,
@@ -3921,7 +3894,6 @@
 				DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */,
 				DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */,
 				6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */,
-				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
 				DCFB74C121AD5C88005796AF /* StaticLoginStepViewController.swift in Sources */,
 				02F2891424BFAF0100E3D35C /* MigrationViewController.swift in Sources */,
 				DC4D5A0A247C1398008ADDB6 /* MessageGroup.swift in Sources */,
@@ -3937,8 +3909,7 @@
 				02DC7C9024CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift in Sources */,
 				DCC832F6242CC5F700153F8C /* CardIssueMessagePresenter.swift in Sources */,
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,
-				DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */,
-				23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */,
+				DC24B31D25BB6FC4005783E2 /* IssuesCardViewController.swift in Sources */,
 				DC62514C225D254500736874 /* UploadBaseAction.swift in Sources */,
 				4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */,
 				DC3393A222E0A71100DD3DA4 /* ItemPolicyCell.swift in Sources */,
@@ -4011,6 +3982,7 @@
 				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
 				DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */,
+				0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */,
 				DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,
@@ -4043,7 +4015,7 @@
 				DC0A357124C0E42700FB58FC /* StaticTableViewRow.swift in Sources */,
 				DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
-				DCE4E43C24C19B660051722F /* MoreViewController.swift in Sources */,
+				DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */,
 				DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */,
 				DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */,
 				DC0A357824C0E43700FB58FC /* CardPresentationController.swift in Sources */,
@@ -4491,7 +4463,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_SHORT_VERSION = 11.5;
-				APP_VERSION = 180;
+				APP_VERSION = 185;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4555,7 +4527,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_SHORT_VERSION = 11.5;
-				APP_VERSION = 180;
+				APP_VERSION = 185;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4612,7 +4584,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_SHORT_VERSION = 11.5;
-				APP_VERSION = 180;
+				APP_VERSION = 185;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -4645,7 +4617,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APP_SHORT_VERSION = 11.5;
-				APP_VERSION = 180;
+				APP_VERSION = 185;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4944,7 +4916,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				APP_SHORT_VERSION = 11.5;
-				APP_VERSION = 180;
+				APP_VERSION = 185;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
@@ -4988,7 +4960,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				APP_SHORT_VERSION = 11.5;
-				APP_VERSION = 180;
+				APP_VERSION = 185;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;

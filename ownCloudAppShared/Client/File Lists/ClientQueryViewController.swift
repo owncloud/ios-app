@@ -40,6 +40,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+	
+	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -112,7 +114,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+		var rightInset : CGFloat = 2
+		var leftInset : CGFloat = 0
+		if self.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+			rightInset = 0
+			leftInset = 2
+		}
+
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
 		folderActionBarButton?.accessibilityLabel = "Actions".localized
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
@@ -476,10 +485,38 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 						}
 					}
 				}
-			// Import Items from outside
 			} else {
-				guard let UTI = item.dragItem.itemProvider.registeredTypeIdentifiers.last else { return }
-				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: UTI) { (url, _ error) in
+				// Import Items from outside
+				let typeIdentifiers = item.dragItem.itemProvider.registeredTypeIdentifiers
+				let preferredUTIs = [
+					kUTTypeImage,
+					kUTTypeMovie,
+					kUTTypePDF,
+					kUTTypeData
+				]
+				var useUTI : String?
+				var useIndex : Int = Int.max
+				
+				for typeIdentifier in typeIdentifiers {
+					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn.") {
+						for preferredUTI in preferredUTIs {
+							let conforms = UTTypeConformsTo(typeIdentifier as CFString, preferredUTI)
+							
+							// Log.log("\(preferredUTI) vs \(typeIdentifier) -> \(conforms)")
+
+							if conforms {
+								if let utiIndex = preferredUTIs.index(of: preferredUTI), utiIndex < useIndex {
+									useUTI = typeIdentifier
+									useIndex = utiIndex
+								}
+							}
+						}
+					}
+				}
+			
+				guard let loadUTI = useUTI else { return }
+
+				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: loadUTI) { (url, _ error) in
 					guard let url = url else { return }
 					self.upload(itemURL: url, name: url.lastPathComponent)
 				}
@@ -561,38 +598,77 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 	public func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
 		let item = draggingValue.item
-		if let core = self.core {
-			switch item.type {
-			case .collection:
-				guard let data = item.serializedData() else { return nil }
-				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
-				let dragItem = UIDragItem(itemProvider: itemProvider)
-				dragItem.localObject = draggingValue
-				return dragItem
-			case .file:
-				guard let itemMimeType = item.mimeType else { return nil }
-				let mimeTypeCF = itemMimeType as CFString
-
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() else { return nil }
-
-				if let fileData = NSData(contentsOf: core.localURL(for: item)) {
-					let rawUtiString = rawUti as String
-					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUtiString)
-					itemProvider.suggestedName = item.name
-					let dragItem = UIDragItem(itemProvider: itemProvider)
-					dragItem.localObject = draggingValue
-					return dragItem
-				} else {
-					guard let data = item.serializedData() else { return nil }
-					let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
-					let dragItem = UIDragItem(itemProvider: itemProvider)
-					dragItem.localObject = draggingValue
-					return dragItem
-				}
-			}
+		
+		guard let core = self.core else {
+			return nil
 		}
 
-		return nil
+		switch item.type {
+			case .collection:
+				guard let data = item.serializedData() else { return nil }
+
+				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: ItemDataUTI)
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+
+				dragItem.localObject = draggingValue
+
+				return dragItem
+				
+			case .file:
+				guard let itemMimeType = item.mimeType else { return nil }
+
+				let mimeTypeCF = itemMimeType as CFString
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
+
+				let itemProvider = NSItemProvider()
+				
+				itemProvider.suggestedName = item.name
+
+				itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
+					var progress : Progress?
+				
+					guard let core = core else {
+						completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
+						return nil
+					}
+					
+					if let localFileURL = core.localCopy(of: item) {
+						// Provide local copies directly
+						completionHandler(localFileURL, true, nil)
+					} else {
+						// Otherwise download the file and provide it when done
+						progress = core.downloadItem(item, options: [
+							.returnImmediatelyIfOfflineOrUnavailable : true,
+							.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
+						], resultHandler: { [weak self] (error, core, item, file) in
+							guard error == nil, let fileURL = file?.url else {
+								completionHandler(nil, false, error)
+								return
+							}
+							
+							completionHandler(fileURL, true, nil)
+
+							if let claim = file?.claim, let item = item, let self = self {
+								self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
+							}
+						})
+					}
+					
+					return progress
+				})
+
+				itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
+					guard let data = item.serializedData() else { return nil }
+					completionHandler(data, nil)
+	
+					return nil
+				}
+
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+				dragItem.localObject = draggingValue
+
+				return dragItem
+		}
 	}
 }
 

@@ -62,6 +62,14 @@
 		<string>iVBORw0KGgoAAAANSUhEUgAAADYAAAA3CAYAAABHGbl4AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAB3HHAAAaZAADsgEAAA0dAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADagAwAEAAAAAQAAADcAAAAA1+0GLwAAAAlwSFlzAAALGwAACxgBDz3HvgAAAyRJREFUaAXtWcurTlEUP673+5Gu3BJh4BFFSSklGRDJ9UqZmDDxBxgwMTI2ZoJMPJIZJSXKY4JIbu4tkeSRVx5xr8fvx121725/59vfOWvv853sVb+7H2evx2+ddb59zr5ZliRlIGUgZSBlIH4GRsHlLeBUfNdhPW6F+d+DmB/W1T/rHTGcwAeJiZh9matlyzL8AMgdu11LFo6gNxikSO4XMMuxTnUqRinapTcMDLpVWVRgbDh8vgakDKW9VkEsqi7XOEiR3E+gEwgmoUvRLkMhQr9bZFC3ls/Sc0DKz24v142QxLsyhxRJ/gCmymLtNmQpNipD4TASnc0yqFP7BMHa5WePL9aJEGNd6kGKJL8BEwB1CVWKzcpQiIxBZ6MMNNsRDmPjMLceYMusUqSEGvXtdbv+avn92YtlA4NL+UtKUHz777D2EsBXtVw5gqtCpC6tVyKXgZjrNahdST5CvDNyb5VxcSb6V4B2JSNxHUeM4424vbqs8QMAN1Ix1C7te8S0AyglK6DdC7QLqRuIZXYpRobyRPRPAlWS4y/nYYCfQuqyGxY/AbEJPoPP1epsLINzMea5RSxy5+Ar2MuyxS3jxs79jh+MoQh+gW1u3pXIWnh9AWiTuwebCythZDidjv51QIvcCdgabdgv1O0opDVU6S2GX4dOlRq9gvb3UhaUlPlg9wNad6xPKa7SZvYokpLkLC8blUYpbi8bhEN/m2Mu6tQkeOPzIJnWanuisnA445uIFhnbzhKHP++psqXYShneR1Q8Z/SVysqRhzA8jLEz7RofxTruTdOAC546D7GuEtkJry4S5twbrNnkiG4/5nySssChG3zqDDyYJOz+VVzvyomCzxA/6209c3wwRz/IpbGw+rlBUNysDwE+zy9Pwo41sEOCd4Go0g1vZmal/xTzqwpEwrI2/50r9tjOK2CvsMppaJrO2T8LTClsMcvmQPcmYNvluUsU4a/bR0AC4AvwPiXP8p3Hw0+xf0fJdlMz6wynD9Bf1FSj9QX08RIQcp2tm2hdYzFUuNFyb+LZeyghmfPAY2ByKCfJbspAykDKwP+RgT/k5YRXgmClowAAAABJRU5ErkJggg==</string>
 		<key>rectangle.and.arrow.up.right.and.arrow.down.left</key>
 		<string>iVBORw0KGgoAAAANSUhEUgAAAC8AAAA7CAYAAADrYNMhAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABGlFAAAPowAD8kEAAA3rAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAC+gAwAEAAAAAQAAADsAAAAAKsqlggAAAAlwSFlzAAALGwAACyoB4k2TzwAAAvlJREFUaAXtmTmIFEEUhsdrPRAVRNREdF3NDLzAQDQQxFA01MTAC9lEzA02NhAzMwUTUQMPjBQTETQRDEUYURdFxQOPFby+H22mGaqrXs9WbTdsPfi2e+u9fv33m6rqmppOJ1uuQK5ArkCuQKACMwJ+l3sHjbtgJQy5Amq2TRDfhVvwBMxWR/wCsl6FEbgOL+EnTNbmkmAY9sEVGIU/ENXOke0SzI6atZdsEacP4GivKc6ZuscHWBonXWWW7XgeV3oHdGxIkdShRZ/qDzB9ujMdCVxNS2hU5VObxtA3WGy5kVW84qIPogqBv2k36TIFVdwkVfN+En+0JDf1LUuiiDH3rLmaEn8agccCIp/j3+aLaUr8WUTphSTTWFI/L9DMdhE2QhTbSZa7UTL5k2zCPQ6HQFOm15qqvEvUVhpvwmF46Arob2vLbKO+fRuOg9ZNJl1tqLyEa0Up4ddAZhJvCvqXL8nfsvDLpTuYdJmCSkljnlYJ1z1MS/WmxGtWKbpKueK1itNUn5+FyoOgQeoyTZNaoHmtKfGPvKo6ndf4VwRibKM6lCSyX2NhDgRfUk31ed/zaizo+0PQ2ig+KLoImBbi3/G094snzsfqCrzHtaza3fOEus18Qsd64c6zec7WFjSuRcNXj471+F7BFk9MXZe58qHEPvGF8FOhJDX9ycWnEq7njCr+c1/lUgqPLr68U7aO7OrjsbtKuT5RK//2f+Zhji/gZPlOCc6jitcKbzV0YRRSW1Txn1D7DEKbRLEeyiw+tJ7XRpA2/SdgN+wBvdgK9HVNm0Zn4A5MqYXEd1FzAPTTi8+e+pzTyWfuNqG1TVG0zZycL/5py9EqfiGCR6ZQtMZR0Kziv5Mp1O+DNzMGaJWqCSKaLSeT5vvUph0DffExmbXyb8imt+teU9bBg45wqXaKo5t+I9VS4QSoQrFM74o1MAbjsAqSmGadG/AF9LOj+uZk+UUOTY8XoJZwPfUgpuv05h0a5OK+azQZqBjZcgVyBXIFWlqBvzlogkNrEJLXAAAAAElFTkSuQmCC</string>
+		<key>arrow.up.left.and.arrow.down.right</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAADMAAAAxCAYAAAB3aZEhAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAARrdAAAD6gAkGscAAH+LAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADOgAwAEAAAAAQAAADEAAAAAAMt5IQAAAAlwSFlzAAALHQAACyUBs4xsHQAAAktJREFUaAXtmb1OFFEYhgfBxVBBZaOXYUFhPFSUxIbSa/ACNBJ+TSytDVcCDKG2MbHDZP1DCxNaAonwvGQPmYznzMLMyHxDzpc8zO75gfc5Z3Z2mc2yVGkF0grcZAUmIoOnaJ+H+5H+cc2fGPBn3KC2+xU6VC9pfAc7cAwPAkzSFivN3Y51/q/2mMwcf/AjPIYXcATmKyaj4B9gFvZgAcwLVckMENgCVQ4S+glmq0pmepS6KORoMytUJaOd8VUU0g798B2WjteVUeay0HdLIspSJeNPs2LmopCjw5RQlUyszwvtIyOhb2CiYoHHhfNCOQMdmBCqK0P+y9fQBMccdFH4Cp1WExkF3wQv5HjcqVBTGfJnG3APcnDQmVAbMuTP1kA7tA8OhnDr1ZaMgq9CcYeGarzNisl8JkSd/2VWmKcdysHBEHpfOu302pnpvclIYJGjTrtUaQXSCjRbgUGz6XZmPyXKF9CNkjtR61g0EXrO/IeWVkJCh/CoRqgD5iyF5sU+AYTGttn2il92Djk8g1ZuknQlQ/7stX5QOThoLNSlDPmvhHSj0cER1K6uZRTc75AX+lXXxoKMF9KnbQktQC0hKzIS8heF2kKWZCSkU+4vVAmpP1jWZBTyDZxDTOhUg0JlUUY5VyC2Q2caECqrMsq6CiGh3u2MX/j1gFBvZSS1WRLq5WkmEV9veeBPuaFvLB+7es0sE+RJOczoua5kWv2TEnoj/Q26UfIe/qmuZAYkqbpzM0m/vq4vl74B1yV7t9yRnqcVSCtw8xW4AGLQa0Iaa7hCAAAAAElFTkSuQmCC</string>
+		<key>text.alignright</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAADUAAAAoCAYAAABerrI1AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABK8DAAAQXQAAA8AAAAANAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADWgAwAEAAAAAQAAACgAAAAALQUdrwAAAAlwSFlzAAALRQAAC1sB4u2y/wAAANlJREFUaAXtlrENwkAMRYOUFsQIEQMwAxKjsAEtLQNkBCagQ/RMQIeYAHpKJODT25HOycEV76RrbP9v+1WuKh4EiiOw0kQv/XfBf+1RG3kJxScduRJSDw3xhc6DAAQgAAEIQODfBLouishsW4nmEWFAs5Nmb+lqK9gjdpT20kOfIj2nFFMLAQhAAAIQgEBGAt6ZNFPPZca+Q1ifZHK1jLwzqVFx6UvdvKWsRYlBAAIQgAAEIJCRgHcmRVuOJZxGxYm6u+qflmbopQ5qsrAaZYht5Nlm8MXyZwQ+jr83O3m7psgAAAAASUVORK5CYII=</string>
+		<key>paintbrush</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAADYAAABFCAYAAAAB8xWyAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAACvq9AAAm/AACsHcAAAl3AAOgAQADAAAAAQABAACgAgAEAAAAAQAAADagAwAEAAAAAQAAAEUAAAAApThRpgAAAAlwSFlzAAALFwAACzABJaKpbwAABI5JREFUaAXtmGvIDVsYx93vIQdRJLkkucvdB8r9dpBbJxFvHOmcI+UcPiAkhS8unxD5IiJKLif3VymXcjmUks7rdXeOw3FLuRS/f/Zi2s3MXrP3zLx7NE/99qy9Zq1nPf9n1qw1M5UqpZZmIM1AmoE0A2kG0gykGYgrA1XjGigzThuOa2AM3IV/IRKrEolXd6cNqS6FFvAWzoEEJt5+Q8EFqJxRMoLjSxib+Z/YwxEi/zUr+uH8T7w43U8ds4Tpb6LFdUDAIxdRpiqx4hagYKtR4XEcRn3ipuUZgh7pIchZbcSNc1YWa7k5gen+qmEZYGLELUXQRktRptlQCpqWRXvlqhPcA+gEQc2I+zFoxzjaz2OQPwsYaAh9deWKSlxtAroPA6EQk7gXUDTi1hDMwUIUOfrupPweKlxcZ4JQlvU0H4bdwsknkLjxYTjMx0ctOt2ARfl0dunTizqJMlSYuG0EcQzMUzzFguwAvY0oc4xdnF5NyqBJQVK+dR5E0Ygxx+vUzYTYVst+DPY/uD3BUx3Y9GJaDkaQjrugLsjMVtD7y9/wfifgqhTOgTJ4HH6HsMw5BV/jdLaLY82Qiy71eVetoOcj+BlK4G9QRkdDGLYKJ+ZKnaTc2sOp9sqP0MjjfKBqDVoOrRy9fqB8FU5Aod9RdBUkSsmaCn5Wn5NaSMz09Gvre06D3gO3DErcX7ADChE3hf668lUhl62mwb5cjXKdb0ADfV3q49OwMefCEOczxNdTcyiVQ7OvNXkWetDvlUXfOMTpvr4PbS3iydlEN+p/oBfBXKZpeQ0KnZZu48yi8gG0dzuZb90kOj6FrhYOohA3g3G1GuvjUOimuV0R4qYz7mMI6wHANTFxi/uJKJ5APm/irgL8KoOK0z6Xzz03jX7/gM3094s30LmoxWlP0xeu7oGiCqnxXPzonuti4U+PPrZXzixUPS38RtJEryiXYI+ldxtxE/GlrSX0J3ebGCVoLTyHzaCAbU1tr4DbPadX/2fQF2I1CVoHr2Ev5Lv7G3H78aE9T6bVT6IG6E9c1oCB9NApQYegB7hZSyqPgM0qZsS9o732KC3psYnSk/o80AKhbxm55v1u2pRCkE38Nu3XQy2IxdoxynnQSjbYYsSetNGeUw/Mamlz5WbT/izEYv0ZRVlfAjbvRgrqNPyhQsZsxf1C+1OmU5THpjhX5icHGGQobZWIull9conT4qNNeGJWv0j+bsDr9oCeNWUXe/TxEteG9nqvWunRL/Tqh3js5fBag7JWK62MbjaKSmU9+2o52xpxwzKV8q/3qhWZ/5EftDLpY0odx0ia/6orBy0MTqvMn8uw0FnpUdZjkhLwAt7AfIjNFKj2leaZEbVw6BOXhIlu4DR9SboDNZ2VPmW16wTZCfLpEt4pfcsrcbhbRllZ3gUSbkxXVaJ0JRJho4hSAXvdU0bEJgqHzZ+kHLcR6Blo6BGw7ind/GbKejQrvupqhLQFFLw+lHaAFqCreRTKoCMk1rQ866H2JXyAm7AcKuTmZ9xIzLlwRDJA6jTNQJqBNANpBtIMpBn4jjPwGXuy45Ouy5hGAAAAAElFTkSuQmCC</string>
+		<key>lock.shield</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAADAAAAA2CAYAAACBWxqaAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABHfJAAAP3QAADzAAAAA1AAOgAQADAAAAAQABAACgAgAEAAAAAQAAADCgAwAEAAAAAQAAADYAAAAArZm05AAAAAlwSFlzAAALFwAAC0gBwkRakQAAA4ZJREFUaAXtmFuITVEYx8ctt9wakowZxSSTaESYF8eQ3HNJlBgeiJS8KIYQIw8eEF6mpEZTQ5oIL2MKD0qJxLhfIjHjXphy5/cfnTo5Z699W3vOTO2vfufs9voua31r7W/vtXJyYokzEGcgzkA2M9ApwuAd8T0S+sH7CONYd12Ex33QCHfgCTyHCiiENim96dUauApNoAEo+0kZy8Uh0ExcgdXQB7IqHYg+BY7DJzgL86EzOElXGpZCHXyBaigF+Wo1ySfSdngKj2ALDAK/UoDBTngGWmZbYTBEIv9nroooky1F0sM+HU5AM5wDzaS1ArMYZ1rX12EdRLl2c/G/ERpAMzwVQkkx1p9hVigvwYz1rCi2llpg2YVlpU9rPZCLoBZURm9DDQRJwmns1oOjmCqGjAaCHlSvomflJIyBg7AftJYnwlG4ACvhN3iRxyipD47iNgAF/+lond6wl1sKOBpUWpNyiQsN4CKUQwV4EcVWHxxFFcCW9MfRWlgOqZ1P+n/LxSrYBN2TN8P+2xxAgs7cBNOSu0Z7I5SAFbE5AFWLhx569QCdfA96nlRsDqAbEb96iCod6VoRmwOw0iG/Ttr9ANzKqJeEDENJNX8SaGnMBZNog5OAabABXkJgsTGAA0SfndKDHinXTpcqowtBn9RlTkpe7ttYQnppBZUwti0xbQxAnw9BJXQ1sjGAoJ23YhcPwEoaQziJZyBE8rya/jEpus3Ad4xDVwpTB1zaFPuHScdtADqICnJkYorpp02xP5gM3AZwD+NxJge0GafYxdZtazke+/suPozN2h5+g6EGrRu0aRBBqDf4nUBbM/Q06HhqqkHrmEFzBW3au/odgBIzz+C3jrZKQ3tLk5czyQI0b4H2s7UtVuk/Q7g1ArqkN2W8o87fhaaMrf8Ot3bQVgTagoYWfSJro14a2pO7Ax0KqPrNcVf1p7EEdQ1imT8zX9rlaGt2IouRwPkbOAw23w+5+DsDH2EGRCp5eL8MDVBsIdJMfLwCHblod9cqotOyzaAd1W4Isifoi52qmyrYHvBaAFC1J6NwpcypopT4cLsAXWVdB796WWVVNBs6LtRs6NnoBU6iF+Mp0NnQNshK1ombUbR+6+EFpG7yk8p64enbSjqFyZtt8b+MTr2DasiD4XAeXkNk5RHfVmUA3qrgF+hz+AjooW13ojWvGh9LnIE4A3EGMmfgL1hCpIHRaszPAAAAAElFTkSuQmCC</string>
 	</dict>
 	<key>Versions</key>
 	<array>
@@ -877,6 +885,113 @@ Users can choose to prefer the original photo instead of an edited version and a
 					<string>Fix: Upload Improvements</string>
 					<key>Subtitle</key>
 					<string>Fixed some problems when uploading items in the background or from the share sheet</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.5</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Full Screen PDF View</string>
+					<key>Subtitle</key>
+					<string>A PDF file can be opened in fullscreen view and hides unnecessary UI elements.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>arrow.up.left.and.arrow.down.right</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Video Upload Improvements</string>
+					<key>Subtitle</key>
+					<string>Added an option to allow uploading original videos like slow motion, unedited version without re-encoding</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>camera</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Right-to-Left Language UI Improvements</string>
+					<key>Subtitle</key>
+					<string>We improved our App UI for Right-to-Left languages</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>text.alignright</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>UI Improvements</string>
+					<key>Subtitle</key>
+					<string>The app is using the ownCloud colors and we also polished some UI elements</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintbrush</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Login Improvements</string>
+					<key>Subtitle</key>
+					<string>User login to a bookmark is only possible with the same user ID</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Certificate Changed</string>
+					<key>Subtitle</key>
+					<string>Show certificate changes in a comparison view</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock.shield</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Improved Drag &amp; Drop</string>
+					<key>Subtitle</key>
+					<string>Improved Drag &amp; Drop and now it is possible for non local files</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>hand.draw</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Bookmark name editing</string>
+					<key>Subtitle</key>
+					<string>Editing the bookmark name was not possible</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Sync</string>
+					<key>Subtitle</key>
+					<string>Fixed some problems with items in stuck</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Media Playback</string>
+					<key>Subtitle</key>
+					<string>Media Player stopped playing, if there was a non media file item in the folder.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>

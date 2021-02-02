@@ -35,16 +35,6 @@
 		</string>
 		<stringArray keyName="connection.connection-allowed-authentication-methods">
 		</stringArray>
-		<boolean keyName="connection.connection-strict-bookmark-certificate-enforcement">
-			<defaultValue>
-				<value>true</value> 
-			</defaultValue>
-		</boolean>
-		<boolean keyName="connection.connection-insert-x-request-id">
-			<defaultValue>
-				<value>true</value> 
-			</defaultValue>
-		</boolean>
 		<string keyName="connection.endpoint-capabilities">
 			<defaultValue>
 				<value>ocs/v1.php/cloud/capabilities</value> 
@@ -65,6 +55,22 @@
 				<value>remote.php/dav/files</value> 
 			</defaultValue>
 		</string>
+        <integer keyName="log.log-level">
+            <defaultValue>
+                <value>4</value>
+            </defaultValue>
+            <constraints  min="0" max="4" >
+            </constraints>
+        </integer>
+        <boolean keyName="log.log-privacy-mask">
+        </boolean>
+         <string keyName="log.log-format">
+            <defaultValue>
+                <value>text</value> 
+            </defaultValue>
+        </string>
+        <boolean keyName="passcode.enforced">
+        </boolean>
 	</dict>
 <presentation defaultLocale="en-US">
     <fieldGroup>
@@ -131,25 +137,6 @@
     <fieldGroup>
         <name>
             <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
-            <language value="en-US">Connection</language>
-        </name>
-        <field keyName="connection.connection-strict-bookmark-certificate-enforcement" type="checkbox">
-            <label>
-                <language value="en-US">Strict Certificate Enforcement</language>
-            </label>
-            <description>
-                <language value="en-US">Require the certificate stored in the connection's bookmark if the connection's state is active.</language>
-            </description>
-        </field>
-        <field keyName="connection.connection-insert-x-request-id" type="checkbox">
-            <label>
-                <language value="en-US">Insert X-Request-ID</language>
-            </label>
-        </field>
-    </fieldGroup>
-    <fieldGroup>
-        <name>
-            <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
             <language value="en-US">Endpoints</language>
         </name>
         <field keyName="connection.endpoint-capabilities" type="input">
@@ -171,6 +158,48 @@
             <label>
                 <language value="en-US">WebDAV Endpoint</language>
             </label>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <language value="en-US">Logging</language>
+        </name>
+        <field keyName="log.log-level" type="input">
+            <label>
+                <language value="en-US">Log Level</language>
+            </label>
+            <description>
+                <language value="en-US">0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off</language>
+            </description>
+        </field>
+        <field keyName="log.log-privacy-mask" type="checkbox">
+            <label>
+                <language value="en-US">Log Privacy Mask</language>
+            </label>
+            <description>
+                <language value="en-US">Hide private user's data</language>
+            </description>
+        </field>
+        <field keyName="log.log-format" type="input">
+            <label>
+                <language value="en-US">Log format</language>
+            </label>
+            <description>
+                <language value="en-US">Options: text, json, json-composed</language>
+            </description>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <language value="en-US">Passcode</language>
+        </name>
+        <field keyName="passcode.enforced" type="checkbox">
+            <label>
+                <language value="en-US">Enforce passcode</language>
+            </label>
+            <description>
+                <language value="en-US">User is forced to set up passcode</language>
+            </description>
         </field>
     </fieldGroup>
 	</presentation>

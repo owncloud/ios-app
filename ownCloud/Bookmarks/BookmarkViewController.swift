@@ -131,7 +131,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
+		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
@@ -185,11 +185,10 @@ class BookmarkViewController: StaticTableViewController {
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
-					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
+				let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
+				let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
-					self?.present(navigationController, animated: true, completion: nil)
-				}
+				self?.present(navigationController, animated: true, completion: nil)
 			}
 		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
@@ -423,10 +422,12 @@ class BookmarkViewController: StaticTableViewController {
 
 							if issue != nil {
 								// Parse issue for display
-								if let displayIssues = issue?.prepareForDisplay() {
-									if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
+								if let issue = issue {
+									let displayIssues = issue.prepareForDisplay()
+
+									if displayIssues.isAtLeast(level: .warning) {
 										// Present issues if the level is >= warning
-										let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { [weak self] (response) in
+										IssuesCardViewController.present(on: self, issue: issue, displayIssues: displayIssues, completion: { [weak self, weak issue] (response) in
 											switch response {
 												case .cancel:
 													issue?.reject()
@@ -440,11 +441,9 @@ class BookmarkViewController: StaticTableViewController {
 													self?.bookmark?.url = nil
 											}
 										})
-
-										self.present(issuesViewController, animated: true, completion: nil)
 									} else {
 										// Do not present issues
-										issue?.approve()
+										issue.approve()
 										continueToNextStep()
 									}
 								}
@@ -472,6 +471,7 @@ class BookmarkViewController: StaticTableViewController {
 			}
 
 			options[.presentingViewControllerKey] = self
+			options[.requiredUsernameKey] = connectionBookmark.userName
 
 			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
 
@@ -503,8 +503,8 @@ class BookmarkViewController: StaticTableViewController {
 							self.updateInputFocus(fallbackRow: self.passwordRow)
 						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
 							// User cancelled authorization, no reaction needed
-						} else {
-							let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+						} else if let issue = issue {
+							IssuesCardViewController.present(on: self, issue: issue, completion: { [weak self, weak issue] (response) in
 								switch response {
 									case .cancel:
 										issue?.reject()
@@ -516,8 +516,6 @@ class BookmarkViewController: StaticTableViewController {
 									case .dismiss: break
 								}
 							})
-
-							self.present(issuesViewController, animated: true, completion: nil)
 						}
 					})
 				}
@@ -576,8 +574,8 @@ class BookmarkViewController: StaticTableViewController {
 							case .edit:
 								// Update original bookmark
 								self?.originalBookmark?.setValuesFrom(bookmark)
-								if !OCBookmarkManager.shared.updateBookmark(bookmark) {
-									Log.error("Changes to \(bookmark) not saved as it's not tracked by OCBookmarkManager!")
+								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
 								}
 							}
 
@@ -598,10 +596,10 @@ class BookmarkViewController: StaticTableViewController {
 					} else {
 						OnMainThread {
 							hudCompletion({
-								if issue != nil {
+								if let issue = issue {
 									self?.bookmark?.authenticationData = nil
 
-									let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+									IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
 										switch response {
 											case .cancel:
 												issue?.reject()
@@ -613,8 +611,6 @@ class BookmarkViewController: StaticTableViewController {
 											case .dismiss: break
 										}
 									})
-
-									strongSelf.present(issuesViewController, animated: true, completion: nil)
 								} else {
 									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								}

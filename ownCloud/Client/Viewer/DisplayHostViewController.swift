@@ -35,7 +35,13 @@ class DisplayHostViewController: UIPageViewController {
 	private var initialItem: OCItem
 	private var displayedIndex: Int?
 
-	public var items: [OCItem]?
+	public var items: [OCItem]? {
+		didSet {
+			playableItems = items?.filter({ $0.isPlayable })
+		}
+	}
+
+	private var playableItems: [OCItem]?
 
 	private var query: OCQuery
 	private var queryStarted : Bool = false
@@ -215,12 +221,13 @@ class DisplayHostViewController: UIPageViewController {
 		return nil
 	}
 
-	private func viewControllerAtIndex(index: Int) -> UIViewController? {
-		guard let items = items else { return nil }
+	private func viewControllerAtIndex(index: Int, includeOnlyMediaItems: Bool = false) -> UIViewController? {
 
-		guard index >= 0, index < items.count else { return nil }
+		guard let processedItems = includeOnlyMediaItems ? playableItems : items else { return nil }
 
-		let item = items[index]
+		guard index >= 0, index < processedItems.count else { return nil }
+
+		let item = processedItems[index]
 
 		let viewController = self.viewController(for: item)
 		(viewController as? DisplayViewController)?.itemIndex = index
@@ -262,24 +269,26 @@ class DisplayHostViewController: UIPageViewController {
 
 extension DisplayHostViewController: UIPageViewControllerDataSource {
 
-	private func vendNewViewController(from viewController:UIViewController, _ position:PagePosition) -> UIViewController? {
+	private func vendNewViewController(from viewController:UIViewController, _ position:PagePosition, includeOnlyMediaItems: Bool = false) -> UIViewController? {
 		guard let displayViewController = viewControllers?.first as? DisplayViewController else { return nil }
-		guard let item = displayViewController.item, let items = self.items else { return nil }
+		guard let item = displayViewController.item else { return nil }
+
+		guard let processedItems = includeOnlyMediaItems ? playableItems : items else { return nil }
 
 		// Is the item assigned to the currently visible view controller still available?
-		let index = items.firstIndex(where: {$0.localID == item.localID})
+		let index = processedItems.firstIndex(where: {$0.localID == item.localID})
 
 		if index != nil {
 			// If so, then vend view controller with the item next to the current item
-			if let nextIndex = computeNewIndex(for: index!, itemCount:items.count, position: position) {
-				return viewControllerAtIndex(index: nextIndex)
+			if let nextIndex = computeNewIndex(for: index!, itemCount:processedItems.count, position: position) {
+				return viewControllerAtIndex(index: nextIndex, includeOnlyMediaItems: includeOnlyMediaItems)
 			}
 
 		} else {
 			// Currently visible item was deleted or moved, use it's old index to find a new one
 			if let index = displayViewController.itemIndex {
-				if let nextIndex = computeNewIndex(for: index, itemCount:items.count, position: position, indexFound: false) {
-					return viewControllerAtIndex(index: nextIndex)
+				if let nextIndex = computeNewIndex(for: index, itemCount:processedItems.count, position: position, indexFound: false) {
+					return viewControllerAtIndex(index: nextIndex, includeOnlyMediaItems: includeOnlyMediaItems)
 				}
 			}
 		}
@@ -322,7 +331,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 
 extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = .black
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
 
@@ -330,7 +339,7 @@ extension DisplayHostViewController {
 
 	@objc private func handleMediaPlaybackFinished(notification:Notification) {
 		if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
-			if let vc = vendNewViewController(from: mediaController, .after) {
+			if let vc = vendNewViewController(from: mediaController, .after, includeOnlyMediaItems: true) {
 				self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
 			}
 		}
@@ -338,7 +347,7 @@ extension DisplayHostViewController {
 
     @objc private func handlePlayNextMedia(notification:Notification) {
         if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
-            if let vc = vendNewViewController(from: mediaController, .after) {
+            if let vc = vendNewViewController(from: mediaController, .after, includeOnlyMediaItems: true) {
                 self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
             }
         }
@@ -346,7 +355,7 @@ extension DisplayHostViewController {
 
     @objc private func handlePlayPreviousMedia(notification:Notification) {
         if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
-            if let vc = vendNewViewController(from: mediaController, .before) {
+            if let vc = vendNewViewController(from: mediaController, .before, includeOnlyMediaItems: true) {
                 self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
             }
         }

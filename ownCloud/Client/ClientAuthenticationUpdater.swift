@@ -67,6 +67,7 @@ class ClientAuthenticationUpdater: NSObject {
 			}
 
 			options[.presentingViewControllerKey] = viewController
+			options[.requiredUsernameKey] = bookmark.userName
 
 			tempBookmark.authenticationMethodIdentifier = authenticationMethodID
 
