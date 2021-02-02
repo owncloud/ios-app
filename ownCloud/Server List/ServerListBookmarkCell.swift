@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class ServerListBookmarkCell : ThemeTableViewCell {
@@ -48,7 +49,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		infoView.translatesAutoresizingMaskIntoConstraints = false
 
 		iconView.contentMode = .scaleAspectFit
-		iconView.image = UIImage(named: "branding-bookmark-icon")
+		iconView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true

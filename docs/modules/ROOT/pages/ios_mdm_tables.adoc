@@ -173,22 +173,10 @@ tag::app[]
 |Enable/disable review prompt.
 |advanced `candidate`
 
-|app.feedback-email
-|string
-|`ios-app@owncloud.com`
-|Email address to send feedback to.
-|advanced `candidate`
-
 |app.recommend-to-friend-enabled
 |bool
 |`true`
 |Enables/disables the recommend to a friend entry in the settings.
-|advanced `candidate`
-
-|app.send-feedback-enabled
-|bool
-|`true`
-|Enables/disables the send feedback entry in the settings.
 |advanced `candidate`
 
 |app.enable-ui-animations
@@ -275,6 +263,92 @@ tag::bookmarks[]
 
 |===
 end::bookmarks[]
+
+
+tag::branding[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|branding.app-name
+|string
+|
+|App name to use throughout the app.
+|supported `candidate`
+
+|branding.organization-name
+|string
+|
+|Organization name to use throughout the app.
+|supported `candidate`
+
+|branding.can-add-account
+|bool
+|`true`
+|Controls whether the user can add accounts.
+|advanced `candidate`
+
+|branding.can-edit-account
+|bool
+|`true`
+|Controls whether the user can edit accounts.
+|advanced `candidate`
+
+|branding.profile-definitions
+|dictionaryArray
+|
+|Array of dictionaries, each specifying a static profile.
+|advanced `candidate`
+
+|branding.send-feedback-address
+|string
+|`ios-app@owncloud.com`
+|Email address to send feedback to. Set to `null` to disable this feature.
+|advanced `candidate`
+
+|branding.theme-definitions
+|dictionaryArray
+|
+|Array of dictionaries, each specifying a theme.
+|advanced `candidate`
+
+|branding.theme-generic-colors
+|dictionary
+|
+|Dictionary defining generic colors that can be used in the definitions.
+|advanced `candidate`
+
+|branding.url-documentation
+|urlString
+|`https://doc.owncloud.com/ios-app/`
+|URL to documentation for the app. Opened when selecting "Documentation" in the settings.
+|advanced `candidate`
+
+|branding.url-help
+|urlString
+|`https://www.owncloud.com/help`
+|URL to help for the app. Opened when selecting "Help" in the settings.
+|advanced `candidate`
+
+|branding.url-privacy
+|urlString
+|`https://owncloud.org/privacy-policy/`
+|URL to privacy information for the app. Opened when selecting "Privacy" in the settings.
+|advanced `candidate`
+
+|branding.url-terms-of-use
+|urlString
+|`https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE`
+|URL to terms of use for the app. Opened when selecting "Terms Of Use" in the settings.
+|advanced `candidate`
+
+|===
+end::branding[]
 
 
 tag::connection[]

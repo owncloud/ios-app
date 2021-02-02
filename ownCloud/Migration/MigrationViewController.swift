@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudApp
 import ownCloudAppShared
 
 class MigrationViewController: UITableViewController, Themeable {
@@ -116,12 +117,12 @@ class MigrationViewController: UITableViewController, Themeable {
 			headerLabel.bottomAnchor.constraint(equalTo: rootView.bottomAnchor, constant: -15)
 		])
 
-		if let organizationLogoImage = UIImage(named: "branding-splashscreen") {
+		if let organizationLogoImage = Branding.shared.brandedImageNamed(.splashscreenLogo) {
 			headerLogoView.image = organizationLogoImage
 			headerLogoView.contentMode = .scaleAspectFit
 		}
 
-		if let organizationBackgroundImage = UIImage(named: "branding-splashscreen-background") {
+		if let organizationBackgroundImage = Branding.shared.brandedImageNamed(.splashscreenBackground) {
 			backgroundImageView.image = organizationBackgroundImage
 		}
 

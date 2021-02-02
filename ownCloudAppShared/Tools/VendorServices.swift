@@ -52,85 +52,36 @@ public class VendorServices : NSObject {
 		return ""
 	}
 
-	public var brandingURL : URL? {
-		return Bundle.main.url(forResource: "Branding", withExtension: "plist")
-	}
-
-	public func brandingURLFor(name: String) -> URL? {
-		return Bundle.main.url(forResource: name, withExtension: "plist")
-	}
-
-	public var brandingProperties : NSDictionary? {
-		var themingValues : NSDictionary?
-
-		if let url = self.brandingURL {
-			themingValues = NSDictionary(contentsOf: url)
-		}
-
-		return themingValues
-	}
-
 	public var documentationURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let documentation = urls["Documentation"] as? String, let url = URL(string: documentation) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://doc.owncloud.com/ios-app/")
+		return Branding.shared.documentationURL
 	}
 
 	public var helpURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String, let url = URL(string: help) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://www.owncloud.com/help")
+		return Branding.shared.helpURL
 	}
 
 	public var privacyURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String, let url = URL(string: privacy) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://owncloud.org/privacy-policy/")
+		return Branding.shared.privacyURL
 	}
 
 	public var termsOfUseURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let termsOfUse = urls["TermsOfUse"] as? String, let url = URL(string: termsOfUse) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
+		return Branding.shared.termsOfUseURL
 	}
 
 	public var appName: String {
-		if self.isBranded, let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
+		if let appName = Branding.shared.appName {
+			return appName
+		}
+
+		if let organizationName = Branding.shared.organizationName {
 			return organizationName
 		}
 
 		return OCAppIdentity.shared.appDisplayName ?? "ownCloud"
 	}
 
-	public var feedbackMailEnabled: Bool {
-		if self.isBranded, let bundleValues = self.brandingProperties {
-			guard bundleValues["feedbackMail"] != nil else { return false }
-			return true
-		}
-
-		return true
-	}
-
 	public var feedbackMail: String? {
-		if self.isBranded, let bundleValues = self.brandingProperties, let feedbackMail = bundleValues["feedbackMail"] as? String {
-			return feedbackMail
-		} else if let feedbackMail = self.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String {
-			return feedbackMail
-		}
-
-		return nil
+		return Branding.shared.feedbackEmailAddress
 	}
 
 	public var isBetaBuild: Bool {
@@ -142,44 +93,15 @@ public class VendorServices : NSObject {
 	}
 
 	public var isBranded: Bool {
-		guard let themingValues = self.brandingProperties else { return false }
-		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
-			return true
-		}
-
-		return false
-	}
-
-	public var hasBrandedProfiles: Bool {
-		if let themingValues = self.brandingProperties, let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
-			return true
-		}
-
-		return false
+		return Branding.shared.isBranded
 	}
 
 	public var canAddAccount: Bool {
-		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
-			if canAddAccount, self.hasBrandedProfiles {
-				return true
-			}
-
-			return false
-		}
-
-		return true
+		return Branding.shared.canAddAccount
 	}
 
 	public var canEditAccount: Bool {
-		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canEditAccount"] as? Bool {
-			if canAddAccount, self.hasBrandedProfiles {
-				return true
-			}
-
-			return false
-		}
-
-		return true
+		return Branding.shared.canEditAccount
 	}
 
 	public var showBetaWarning: Bool {
@@ -304,9 +226,7 @@ public extension OCClassSettingsKey {
 	static let enableReviewPrompt = OCClassSettingsKey("enable-review-prompt")
 
 	static let appStoreLink = OCClassSettingsKey("app-store-link")
-	static let feedbackEmail = OCClassSettingsKey("feedback-email")
 	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
-	static let sendFeedbackEnabled = OCClassSettingsKey("send-feedback-enabled")
 }
 
 extension VendorServices : OCClassSettingsSupport {
@@ -321,9 +241,7 @@ extension VendorServices : OCClassSettingsSupport {
 				.enableReviewPrompt: !VendorServices.shared.isBranded,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
-				.feedbackEmail: "ios-app@owncloud.com",
 				.recommendToFriendEnabled: !VendorServices.shared.isBranded,
-				.sendFeedbackEnabled: (VendorServices.shared.feedbackMailEnabled)
 			]
 		}
 
@@ -367,26 +285,12 @@ extension VendorServices : OCClassSettingsSupport {
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
-			.feedbackEmail : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "Email address to send feedback to.",
-				.category	: "App",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
-
 			.recommendToFriendEnabled : [
 				.type 		: OCClassSettingsMetadataType.boolean,
 				.description	: "Enables/disables the recommend to a friend entry in the settings.",
 				.category	: "App",
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
-
-			.sendFeedbackEnabled : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Enables/disables the send feedback entry in the settings.",
-				.category	: "App",
-				.status		: OCClassSettingsKeyStatus.advanced
-			]
 		]
 	}
 }
