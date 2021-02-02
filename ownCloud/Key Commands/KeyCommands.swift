@@ -123,34 +123,6 @@ extension BookmarkViewController {
 	}
 }
 
-extension IssuesViewController {
-	override var keyCommands: [UIKeyCommand]? {
-		var shortcuts = [UIKeyCommand]()
-
-		if let buttons = buttons {
-			var counter = 1
-			for button in buttons {
-				let command = UIKeyCommand(input: String(counter), modifierFlags: [.command], action: #selector(issueButtonPressed), discoverabilityTitle: button.title)
-				shortcuts.append(command)
-				counter += 1
-			}
-		}
-
-		return shortcuts
-	}
-
-	@objc func issueButtonPressed(_ command : UIKeyCommand) {
-		guard let button = buttons?.first(where: {$0.title == command.discoverabilityTitle}) else { return }
-
-		let buttonPressed: IssueButton = button
-		buttonPressed.action()
-	}
-
-	override var canBecomeFirstResponder: Bool {
-		return true
-	}
-}
-
 extension UIAlertController {
 
     typealias AlertHandler = @convention(block) (UIAlertAction) -> Void
@@ -1130,11 +1102,25 @@ extension AlertViewController {
 	}
 }
 
-extension MoreViewController {
+extension FrameViewController {
 	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
-		let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissCard), discoverabilityTitle: "Close".localized)
-		shortcuts.append(cancelCommand)
+
+		if let issuesCard = self.viewController as? IssuesCardViewController {
+			if let buttons = issuesCard.alertView?.optionViews {
+				var counter = 1
+				for button in buttons {
+					if let buttonTitle = button.currentTitle {
+						let command = UIKeyCommand(input: String(counter), modifierFlags: [.command], action: #selector(issueButtonPressed), discoverabilityTitle: buttonTitle)
+						shortcuts.append(command)
+					}
+					counter += 1
+				}
+			}
+		} else {
+			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissCard), discoverabilityTitle: "Close".localized)
+			shortcuts.append(cancelCommand)
+		}
 
 		return shortcuts
 	}
@@ -1145,5 +1131,13 @@ extension MoreViewController {
 
 	@objc func dismissCard(_ sender: Any?) {
 		self.dismiss(animated: false, completion: nil)
+	}
+
+	@objc func issueButtonPressed(_ command : UIKeyCommand) {
+		if let issuesCard = self.viewController as? IssuesCardViewController, let alertView = issuesCard.alertView {
+			guard let button = alertView.optionViews.first(where: {$0.currentTitle == command.discoverabilityTitle}) else { return }
+
+			alertView.optionSelected(sender: button)
+		}
 	}
 }

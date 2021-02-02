@@ -24,6 +24,10 @@ struct DisplayIssues {
 	var displayLevel : OCIssueLevel //!< The issue level to be used for display
 	var displayIssues: [OCIssue] //!< The selection of issues to be used for display
 	var primaryCertificate : OCCertificate? //!< The first certificate found among the issues
+
+	func isAtLeast(level minLevel: OCIssueLevel) -> Bool {
+		return displayLevel.rawValue >= minLevel.rawValue
+	}
 }
 
 extension OCIssue {

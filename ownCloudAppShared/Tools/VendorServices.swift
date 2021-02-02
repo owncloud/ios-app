@@ -265,14 +265,14 @@ public class VendorServices : NSObject {
 		// Make sure there is at least one bookmark configured, to not bother users who have never configured any accounts
 		guard OCBookmarkManager.shared.bookmarks.count > 0 else { return }
 
-		// Make sure at least 14 days have elapsed since the first launch of the app
-		guard AppStatistics.shared.timeIntervalSinceFirstLaunch.days >= 14 else { return }
+		// Make sure at least 7 days have elapsed since the first launch of the app
+		guard AppStatistics.shared.timeIntervalSinceFirstLaunch.days >= 7 else { return }
 
 		// Make sure at least 7 days have elapsed since first launch of current version
 		guard AppStatistics.shared.timeIntervalSinceUpdate.days >= 7 else { return }
 
-		// Make sure at least 230 have elapsed since last prompting
-		AppStatistics.shared.requestAppStoreReview(onceInDays: 230)
+		// Make sure at least 122 have elapsed since last prompting (Apple allows to show the dialog 3 times per 365 days)
+		AppStatistics.shared.requestAppStoreReview(onceInDays: 122)
 	}
 
 	public func onFirstLaunch(executeBlock:() -> Void) {
