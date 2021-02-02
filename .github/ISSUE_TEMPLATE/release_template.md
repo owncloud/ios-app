@@ -21,6 +21,8 @@ Xcode version to work with:
 - [ ] [TRFX] Check for missing translations. Ping @cscherm
 - [ ] [DIS] Update [changelog](https://github.com/owncloud/ios-app/blob/master/CHANGELOG.md)
 - [ ] [DEV] Update In-App Release Notes (changelog) in ownCloud/Release Notes/ReleaseNotes.plist
+- [ ] [DEV] Changelog: Created a folder for the new version like $majorVersion.$minorVersion.$patchVersion_YYYY-MM-DD
+- [ ] [DEV] Changelog: Moved all changelog files from the unreleased folder to the new version folder
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
 - [ ] [DOC] Update user manual with the new functionalities
