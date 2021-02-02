@@ -939,6 +939,16 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Certificate Changes</string>
+					<key>Subtitle</key>
+					<string>Show certificate changes in a comparison view</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock.shield</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Login Improvements</string>
 					<key>Subtitle</key>
 					<string>User login to a bookmark is only possible with the same user ID</string>
@@ -949,19 +959,9 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Certificate Changed</string>
-					<key>Subtitle</key>
-					<string>Show certificate changes in a comparison view</string>
-					<key>Type</key>
-					<string>New</string>
-					<key>ImageName</key>
-					<string>lock.shield</string>
-				</dict>
-				<dict>
-					<key>Title</key>
 					<string>Improved Drag &amp; Drop</string>
 					<key>Subtitle</key>
-					<string>Improved Drag &amp; Drop and now it is possible for non local files</string>
+					<string>We improved Drag &amp; Drop and now it is also possible for non local files</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
