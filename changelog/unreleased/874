@@ -1,0 +1,5 @@
+Change: New Issue view / presentation
+
+As fixing an iPad layout issue in the old issues view proved too cumbersome, I've replaced the entire implementation with a new issue view, based on code already there and in use for cards and tables.
+
+https://github.com/owncloud/ios-app/pull/874

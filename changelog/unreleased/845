@@ -1,0 +1,5 @@
+Fix: Improved AppStore Review Request Time
+
+Changed request time for In-App review and fixed storing the first launch date
+
+https://github.com/owncloud/ios-app/pull/845

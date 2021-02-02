@@ -1,0 +1,9 @@
+Fix: Fix bookmark name editing
+
+When editing bookmarks:
+
+- if a name was set, it wasn't shown in the edit interface
+- bookmark name edits/additions would get lost
+- bookmark name edits would not be presented in the list unless scrolling out of view and back in
+
+https://github.com/owncloud/ios-app/pull/877

@@ -1,0 +1,6 @@
+Change: Corporate Color + UI Refinements
+
+The corporate color of the UI themes was updated and furthermore some colors was adopted for a better contrast.
+This PR includes also some refinements for some UI elements.
+
+https://github.com/owncloud/ios-app/issues/860

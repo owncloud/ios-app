@@ -1,0 +1,6 @@
+Change: New photo picker / permissions model for iOS 14
+
+- Using new PHPhotoPicker introduced in iOS14 instead of our custom picker.
+- Dealing with the photo permission model introduced in iOS14 where user can grant access just to specific photo assets or albums
+
+https://github.com/owncloud/ios-app/issues/851

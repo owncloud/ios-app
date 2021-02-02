@@ -1,0 +1,6 @@
+Fix: Added paragraph on top of Acknowledgements page
+
+- adds a paragraph on top of the Acknowledgements to provide additional context
+- adds PLCrashReporter license to acknowledgements
+
+https://github.com/owncloud/enterprise/issues/4284

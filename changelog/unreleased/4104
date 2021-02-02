@@ -1,0 +1,6 @@
+Change: MDM Enhancements
+
+- Passcode lock enforcement via class setting. User can be forced to set-up a passcode when he first starts the app
+- Auto-generated MDM documentation
+
+https://github.com/owncloud/enterprise/issues/4104

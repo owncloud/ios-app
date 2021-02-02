@@ -1,0 +1,7 @@
+Fix: Fixed Branded UI on iPad
+
+- UI fix for branded login on the iPad
+- Fill color for branded button was not used
+
+https://github.com/owncloud/enterprise/issues/4367
+https://github.com/owncloud/enterprise/issues/4366

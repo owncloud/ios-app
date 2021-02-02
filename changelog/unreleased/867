@@ -1,0 +1,5 @@
+Fix: Changed wording in documentation
+
+Changed wording so it no longer suggests username is editable
+
+https://github.com/owncloud/ios-app/pull/867
