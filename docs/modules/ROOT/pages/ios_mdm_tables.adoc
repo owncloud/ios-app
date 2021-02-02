@@ -1,4 +1,156 @@
 
+tag::actions[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|action.com.owncloud.action.collaborate.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.copy.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.createFolder.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.delete.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.discardscene.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.duplicate.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.favorite.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.links.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.makeAvailableOffline.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.makeUnavailableOffline.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.markup.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.mediaediting.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.move.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.openin.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.openscene.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.rename.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.scan.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.show-exif.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.unfavorite.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.unshare.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.upload.camera_media.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.uploadfile.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.uploadphotos.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|===
+end::actions[]
+
+
 tag::app[]
 [cols="1,2,3,4a,5",options=header]
 |=== 
@@ -187,16 +339,16 @@ The following placeholders can be used to make it dynamic:
 |Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
 |debugOnly
 
+|connection.connection-minimum-server-version
+|string
+|`10.0`
+|The minimum server version required.
+|debugOnly
+
 |connection.force-background-url-sessions
 |bool
 |`false`
 |Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
-|debugOnly
-
-|connection.minimum-server-version
-|string
-|`10.0`
-|The minimum server version required.
 |debugOnly
 
 |core.override-availability-signal
@@ -410,7 +562,7 @@ tag::logging[]
 |Status
 
 
-|log.level
+|log.log-level
 |int
 |`4`
 |Log level
@@ -440,27 +592,27 @@ tag::logging[]
 
 |supported `candidate`
 
-|log.privacy-mask
+|log.log-privacy-mask
 |bool
 |`false`
 |Controls whether certain objects in log statements should be masked for privacy.
 |supported `candidate`
 
-|log.blank-filtered-messages
+|log.log-blank-filtered-messages
 |bool
 |`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
 |advanced `candidate`
 
-|log.colored
+|log.log-colored
 |bool
 |`false`
 |Controls whether log levels should be replaced with colored emojis.
 |advanced `candidate`
 
-|log.enabled-components
+|log.log-enabled-components
 |stringArray
-|`[writer.stderr writer.file]`
+|`[writer.stderr writer.file option.log-requests-and-responses]`
 |List of enabled logging system components.
 [cols="1,2"]
 !===
@@ -479,7 +631,7 @@ tag::logging[]
 
 |advanced `candidate`
 
-|log.format
+|log.log-format
 |string
 |`text`
 |Determines the format that log messages are saved in
@@ -500,43 +652,43 @@ tag::logging[]
 
 |advanced `candidate`
 
-|log.maximum-message-size
+|log.log-maximum-message-size
 |int
 |`0`
 |Maximum length of a log message before the message is truncated. A value of 0 means no limit.
 |advanced `candidate`
 
-|log.omit-matching
+|log.log-omit-matching
 |stringArray
 |
 |If set, omits logs messages containing any of the exact terms in this array.
 |advanced `candidate`
 
-|log.omit-tags
+|log.log-omit-tags
 |stringArray
 |
 |If set, omits all log messages tagged with tags in this array.
 |advanced `candidate`
 
-|log.only-matching
+|log.log-only-matching
 |stringArray
 |
 |If set, only logs messages containing at least one of the exact terms in this array.
 |advanced `candidate`
 
-|log.only-tags
+|log.log-only-tags
 |stringArray
 |
 |If set, omits all log messages not tagged with tags in this array.
 |advanced `candidate`
 
-|log.single-lined
+|log.log-single-lined
 |bool
 |`true`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
 |advanced `candidate`
 
-|log.synchronous
+|log.log-synchronous
 |bool
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
@@ -612,18 +764,6 @@ tag::oidc[]
 |OpenID Connect Redirect URI
 |supported `candidate`
 
-|authentication-oauth2.oidc-register-client
-|bool
-|`true`
-|Use OpenID Connect Dynamic Client Registration if the `.well-known/openid-configuration` provides a `registration_endpoint`. If this option is enabled and a registration endpoint is available, `oa2-client-id` and `oa2-client-secret` will be ignored.
-|supported `candidate`
-
-|authentication-oauth2.oidc-register-client-name-template
-|string
-|`ownCloud/{{os.name}} {{app.version}}`
-|Client Name Template to use during OpenID Connect Dynamic Client Registration. In addition to the placeholders available for `http.user-agent`, `{{url.hostname}}` can also be used.
-|supported `candidate`
-
 |authentication-oauth2.oidc-scope
 |string
 |`openid offline_access email profile`
@@ -632,6 +772,26 @@ tag::oidc[]
 
 |===
 end::oidc[]
+
+
+tag::passcode[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|passcode.enforced
+|bool
+|`false`
+|Controls wether the user MUST establish a passcode upon app installation
+|advanced `candidate`
+
+|===
+end::passcode[]
 
 
 tag::policies[]
@@ -722,7 +882,7 @@ tag::security[]
 |Status
 
 
-|connection.allowed-authentication-methods
+|connection.connection-allowed-authentication-methods
 |stringArray
 |
 |Array of allowed authentication methods. Nil/Missing for no restrictions.
@@ -743,7 +903,7 @@ tag::security[]
 
 |recommended `candidate`
 
-|connection.preferred-authentication-methods
+|connection.connection-preferred-authentication-methods
 |stringArray
 |`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
 |Array of authentication methods in order of preference (most preferred first).
@@ -764,13 +924,23 @@ tag::security[]
 
 |recommended `candidate`
 
-|connection.certificate-extended-validation-rule
+|connection.connection-certificate-extended-validation-rule
 |string
 |`bookmarkCertificate == serverCertificate`
 |Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.
+
+Examples of expressions:
+- `bookmarkCertificate == serverCertificate`: the whole certificate needs to be identical to the one stored in the bookmark during setup.
+- `bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData`:  the public key of the received certificate needs to be identical to the public key stored in the bookmark during setup.
+- `serverCertificate.passedValidationOrIsUserAccepted == true`: any certificate is accepted as long as it has passed validation by the OS or was accepted by the user.
+- `serverCertificate.commonName == "demo.owncloud.org"`: the common name of the certificate must be "demo.owncloud.org".
+- `serverCertificate.rootCertificate.commonName == "DST Root CA X3"`: the common name of the root certificate must be "DST Root CA X3".
+- `serverCertificate.parentCertificate.commonName == "Let's Encrypt Authority X3"`: the common name of the parent certificate must be "Let's Encrypt Authority X3".
+- `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == "2A 00 98 90 BD … F7"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.
+
 |advanced `candidate`
 
-|connection.renewed-certificate-acceptance-rule
+|connection.connection-renewed-certificate-acceptance-rule
 |string
 |`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02072E5F23E46022006548A7 /* UIWindow+Extension.swift */; };
 		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
+		0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0234EF072515138A00AE921A /* PasscodeSetupCoordinator.swift */; };
 		024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 024F3A2024A3AB410083E11E /* CrashReporter */; };
 		025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */; };
 		025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */; };
@@ -181,7 +182,7 @@
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
-		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 		DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */; };
 		DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
@@ -840,6 +841,7 @@
 /* Begin PBXFileReference section */
 		02072E5F23E46022006548A7 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
 		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
+		0234EF072515138A00AE921A /* PasscodeSetupCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeSetupCoordinator.swift; sourceTree = "<group>"; };
 		025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayExifMetadataAction.swift; sourceTree = "<group>"; };
 		025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadataViewController.swift; sourceTree = "<group>"; };
 		025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsViewController.swift; sourceTree = "<group>"; };
@@ -2080,6 +2082,7 @@
 		DC0A354F24C0E18800FB58FC /* AppLock */ = {
 			isa = PBXGroup;
 			children = (
+				0234EF072515138A00AE921A /* PasscodeSetupCoordinator.swift */,
 				593BAB96209F8A0500023634 /* AppLockManager.swift */,
 				597A404820AD59EF00B028B2 /* AppLockWindow.swift */,
 				593BAB44209AE1BC00023634 /* PasscodeViewController.swift */,
@@ -3964,6 +3967,7 @@
 				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
 				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
+				0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */,
 				DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,

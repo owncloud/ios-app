@@ -22,6 +22,11 @@ import ownCloudSDK
 import ownCloudApp
 
 public class VendorServices : NSObject {
+
+	enum UserDefaultsKeys: String {
+		case notFirstAppLaunch
+	}
+
 	// MARK: - App version information
 	public var appVersion: String {
 		if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
@@ -268,6 +273,16 @@ public class VendorServices : NSObject {
 
 		// Make sure at least 122 have elapsed since last prompting (Apple allows to show the dialog 3 times per 365 days)
 		AppStatistics.shared.requestAppStoreReview(onceInDays: 122)
+	}
+
+	public func onFirstLaunch(executeBlock:() -> Void) {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+		guard userDefaults.bool(forKey: UserDefaultsKeys.notFirstAppLaunch.rawValue) == false else { return }
+
+		executeBlock()
+
+		userDefaults.setValue(true, forKey: UserDefaultsKeys.notFirstAppLaunch.rawValue)
+		userDefaults.synchronize()
 	}
 }
 
