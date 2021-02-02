@@ -1,4 +1,4 @@
-Fix: Media Player Behaviour
+Bugfix: Media Player Behaviour
 
 Fix for an issue when playing multiple items in the same directory. If e.g. image item is the next one, multi media playback would stop.
 

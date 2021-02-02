@@ -1,4 +1,4 @@
-Fix: Fixed Branded UI on iPad
+Bugfix: Fixed Branded UI on iPad
 
 - UI fix for branded login on the iPad
 - Fill color for branded button was not used
