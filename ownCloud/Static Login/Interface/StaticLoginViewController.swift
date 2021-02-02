@@ -21,6 +21,7 @@ import ownCloudSDK
 import ownCloudAppShared
 
 class StaticLoginViewController: UIViewController, Themeable {
+	private let maximumContentWidth : CGFloat = 400
 	let loginBundle : StaticLoginBundle
 
 	var backgroundImageView : UIImageView?
@@ -153,10 +154,22 @@ class StaticLoginViewController: UIViewController, Themeable {
 			// Content
 				// Content container
 				contentContainerView!.topAnchor.constraint(equalTo: headerContainerView!.bottomAnchor),
-				contentContainerView!.bottomAnchor.constraint(equalTo: rootView.bottomAnchor),
-				contentContainerView!.leftAnchor.constraint(equalTo: rootView.leftAnchor),
-				contentContainerView!.rightAnchor.constraint(equalTo: rootView.rightAnchor)
+				contentContainerView!.bottomAnchor.constraint(equalTo: rootView.bottomAnchor)
 		])
+
+		if UIDevice.current.isIpad {
+			NSLayoutConstraint.activate([
+				contentContainerView!.leadingAnchor.constraint(equalTo: rootView.leadingAnchor).with(priority: .defaultLow),
+				contentContainerView!.trailingAnchor.constraint(equalTo: rootView.trailingAnchor).with(priority: .defaultLow),
+				contentContainerView!.widthAnchor.constraint(lessThanOrEqualToConstant: maximumContentWidth).with(priority: .defaultHigh),
+				contentContainerView!.centerXAnchor.constraint(equalTo: rootView.centerXAnchor)
+			])
+		} else {
+			NSLayoutConstraint.activate([
+				contentContainerView!.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
+				contentContainerView!.trailingAnchor.constraint(equalTo: rootView.trailingAnchor)
+			])
+		}
 
 		self.view = rootView
 
