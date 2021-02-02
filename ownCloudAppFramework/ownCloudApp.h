@@ -69,3 +69,5 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/NotificationManager.h>
 #import <ownCloudApp/NotificationMessagePresenter.h>
 #import <ownCloudApp/NotificationAuthErrorForwarder.h>
+
+#import <ownCloudApp/Branding.h>

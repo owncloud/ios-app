@@ -1,6 +1,30 @@
-• Fix: Crash in Detail View
-Fixed a crash when selecting an item, which is still uploading
+• Full Screen PDF View
+A PDF file can be opened in fullscreen view and hides unnecessary UI elements.
 
-• Fix: Upload Improvements
-Fixed some problems when uploading items in the background or from the share sheet
+• Video Upload Improvements
+Added an option to allow uploading original videos like slow motion, unedited version without re-encoding
+
+• Right-to-Left Language UI Improvements
+We improved our App UI for Right-to-Left languages
+
+• UI Improvements
+The app is using the ownCloud colors and we also polished some UI elements
+
+• Certificate Changes
+Show certificate changes in a comparison view
+
+• Login Improvements
+User login to a bookmark is only possible with the same user ID
+
+• Improved Drag & Drop
+We improved Drag & Drop and now it is also possible for non local files
+
+• Fix: Bookmark name editing
+Editing the bookmark name was not possible
+
+• Fix: Sync
+Fixed some problems with items in stuck
+
+• Fix: Media Playback
+Media Player stopped playing, if there was a non media file item in the folder.
 

@@ -18,8 +18,20 @@
 
 import UIKit
 import ownCloudSDK
+import CoreServices
 
 extension OCItem {
+    
+    public var isPlayable: Bool {
+        guard let mime = self.mimeType else { return false }
+
+        guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mime as CFString, nil) else {
+            return false
+        }
+
+        return UTTypeConformsTo(uti.takeUnretainedValue(), kUTTypeAudiovisualContent)
+    }
+    
 	static private let iconNamesByMIMEType : [String:String] = {
 		var mimeTypeToIconMap :  [String:String] = [
 			// List taken from https://github.com/owncloud/core/blob/master/core/js/mimetypelist.js

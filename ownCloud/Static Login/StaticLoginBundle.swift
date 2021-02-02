@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class StaticLoginBundle: NSObject {
@@ -31,73 +32,22 @@ class StaticLoginBundle: NSObject {
 
 	static var defaultBundle : StaticLoginBundle {
 		let bundle = StaticLoginBundle()
+		let branding = Branding.shared
 
-		if let bundleValues = VendorServices.shared.brandingProperties {
-			if let organizationName = bundleValues["organizationName"] as? String {
+		if branding.isBranded {
+			if let organizationName = branding.organizationName {
 				bundle.organizationName = organizationName
 			}
-			if let logoImage = UIImage(named: "branding-login-logo.png") {
+			if let logoImage = branding.brandedImageNamed(.loginLogo) {
 				bundle.organizationLogoImage = logoImage
 			}
-			if let backgroundImage = UIImage(named: "branding-login-background.png") {
+			if let backgroundImage = branding.brandedImageNamed(.loginBackground) {
 				bundle.organizationBackgroundImage = backgroundImage
 			}
 
-			if let profileValues = bundleValues["Profiles"] as? NSArray {
-				let profiles = profileValues.map { (profile) -> StaticLoginProfile? in
-					if let profile = profile as? NSDictionary {
-						let staticloginProfile = StaticLoginProfile()
-
-						if let identifier = profile["identifier"] as? String {
-							staticloginProfile.identifier = identifier
-						}
-						if let name = profile["name"] as? String {
-							staticloginProfile.name = name
-						}
-						if let prompt = profile["promptForTokenAuth"] as? String {
-							staticloginProfile.promptForTokenAuth = prompt
-						}
-						if let promptForPasswordAuth = profile["promptForPasswordAuth"] as? String {
-							staticloginProfile.promptForPasswordAuth = promptForPasswordAuth
-						}
-						if let promptForTokenAuth = profile["promptForTokenAuth"] as? String {
-							staticloginProfile.promptForTokenAuth = promptForTokenAuth
-						}
-						if let promptForURL = profile["promptForURL"] as? String {
-							staticloginProfile.promptForURL = promptForURL
-						}
-						if let promptForHelpURL = profile["promptForHelpURL"] as? String {
-							staticloginProfile.promptForHelpURL = promptForHelpURL
-						}
-						if let helpURLButtonString = profile["helpURLButtonString"] as? String {
-							staticloginProfile.helpURLButtonString = helpURLButtonString
-						}
-						if let welcome = profile["welcome"] as? String {
-							staticloginProfile.welcome = welcome
-						}
-						if let bookmarkName = profile["bookmarkName"] as? String {
-							staticloginProfile.bookmarkName = bookmarkName
-						}
-						if let url = profile["url"] as? String {
-							staticloginProfile.url = URL(string: url)
-						}
-						if let helpURL = profile["helpURL"] as? String {
-							staticloginProfile.helpURL = URL(string: helpURL)
-						}
-						if let canConfigureURL = profile["canConfigureURL"] as? Bool {
-							staticloginProfile.canConfigureURL = canConfigureURL
-						}
-						if let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
-							staticloginProfile.allowedAuthenticationMethods = allowedAuthenticationMethods as? [OCAuthenticationMethodIdentifier]
-						}
-						if let allowedHosts = profile["allowedHosts"] as? NSArray {
-							staticloginProfile.allowedHosts = allowedHosts as? [String]
-						}
-
-						return staticloginProfile
-					}
-
-					return nil
+			if let profileDefinitions = branding.profileDefinitions {
+				let profiles = profileDefinitions.map { (profile) -> StaticLoginProfile? in
+					return StaticLoginProfile(from: profile)
 				} as? [StaticLoginProfile]
 
 			       bundle.profiles = profiles!

@@ -41,6 +41,7 @@ public enum ThemeItemStyle {
 	case bigMessage
 
 	case purchase
+	case welcome
 }
 
 public enum ThemeItemState {
@@ -84,6 +85,9 @@ public extension NSObject {
 
 				case .purchase:
 					themeButton.themeColorCollection = collection.purchaseColors
+
+				case .welcome:
+					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection

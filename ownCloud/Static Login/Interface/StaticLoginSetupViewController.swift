@@ -81,11 +81,11 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
-			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: "Cancel".localized)
+			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, proceedItemStyle: .welcome, cancelLabel: "Cancel".localized)
 			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {
-		let (proceedButton, _) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: nil)
+		let (proceedButton, _) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, proceedItemStyle: .welcome, cancelLabel: nil)
 			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
 		}
 
@@ -132,11 +132,11 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		}
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
-			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, cancelLabel: "Cancel".localized)
+			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, proceedItemStyle: .welcome, cancelLabel: "Cancel".localized)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {
-			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, cancelLabel: nil)
+			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login".localized, proceedItemStyle: .welcome, cancelLabel: nil)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		}
 
@@ -154,7 +154,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {
-			let (proceedButton, _) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: nil)
+			let (proceedButton, _) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", proceedItemStyle: .welcome, cancelLabel: nil)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		}
 
@@ -402,7 +402,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		messageSection.addStaticHeader(title: "Setup complete".localized)
 
-		let (proceedButton, showAccountsList) = messageSection.addButtonFooter(proceedLabel: "Connect".localized, cancelLabel: "Show accounts".localized)
+		let (proceedButton, showAccountsList) = messageSection.addButtonFooter(proceedLabel: "Connect".localized, proceedItemStyle: .welcome, cancelLabel: "Show accounts".localized)
 
 		proceedButton?.addTarget(self, action: #selector(self.connectToBookmark), for: .touchUpInside)
 		showAccountsList?.addTarget(loginViewController, action: #selector(loginViewController?.showFirstScreen), for: .touchUpInside)
