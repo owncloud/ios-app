@@ -90,7 +90,7 @@ How the authentication credentials can be managed depends on the authentication 
 |OAuth2 Authentication
 
 |In the screenshot below, the user is authenticated using Basic Authentication.
-In this instance, they will be able to update their username and password, as well as delete their authentication data.
+In this instance, they will be able to enter a different password, as well as delete their authentication data.
 image:07_Account_edit.png[ownCloud iOS App - Authenticating users using Basic Authentication]
 |In the screenshot above, the user is authenticated using OAuth2 authentication.
 In this instance, they will only be able to delete their authentication data.
