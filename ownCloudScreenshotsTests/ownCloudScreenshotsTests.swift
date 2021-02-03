@@ -20,7 +20,6 @@ import XCTest
 import EarlGrey
 import LocalAuthentication
 import ownCloudSDK
-import ownCloudAppShared
 
 class ScreenshotsTests: XCTestCase {
 
@@ -45,6 +44,10 @@ class ScreenshotsTests: XCTestCase {
 		app.launchArguments += ["UI-Testing"]
 		setupSnapshot(app)
 		app.launch()
+
+		if app.alerts.count > 0 {
+			app.alerts["“ownCloud” Would Like to Send You Notifications"].scrollViews.otherElements.buttons["Allow"].tap()
+		}
 
 		snapshot("10_ios_accounts_welcome_demo")
 
@@ -73,7 +76,7 @@ class ScreenshotsTests: XCTestCase {
 		preparePhotos(app: app)
 		prepareQuickAccess(app: app)
 
-		if UIDevice.current.isIpad {
+		if UIDevice.current.userInterfaceIdiom == .pad {
 			prepareMultipleWindows(app: app)
 		}
 
@@ -101,8 +104,24 @@ class ScreenshotsTests: XCTestCase {
 			app.textFields["row-name-name"].typeText(serverDescription)
 
 			app.navigationBars[localizedString(key: "Add account")]/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continue\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+
+			dismissKeyboardIfPresent(app: app)
 		} else {
 			XCTFail("Error: Adding Login failed")
+		}
+	}
+
+	func dismissKeyboardIfPresent(app: XCUIApplication) {
+		if app.keyboards.element(boundBy: 0).exists {
+			if UIDevice.current.userInterfaceIdiom == .pad {
+				app.keyboards.buttons["Hide keyboard"].tap()
+
+				if app.toolbars.buttons["Done"].exists {
+					app.toolbars.buttons["Done"].tap()
+				}
+			} else {
+				app.toolbars.buttons["Done"].tap()
+			}
 		}
 	}
 
@@ -156,7 +175,7 @@ class ScreenshotsTests: XCTestCase {
 		sleep(5)
 
 		snapshot("20_ios_files_list_demo")
-		app.navigationBars[localizedString(key: "Show parent paths")].buttons["ownCloud"].tap()
+		app.navigationBars["Photos"].buttons["ownCloud"].tap()
 	}
 
 	func prepareQuickAccess(app: XCUIApplication) {
