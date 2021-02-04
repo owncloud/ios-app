@@ -45,9 +45,12 @@ class ScreenshotsTests: XCTestCase {
 		setupSnapshot(app)
 		app.launch()
 
-		if app.alerts.count > 0 {
-			app.alerts["“ownCloud” Would Like to Send You Notifications"].scrollViews.otherElements.buttons["Allow"].tap()
+		addUIInterruptionMonitor(withDescription: "System Dialog") {
+			(alert) -> Bool in
+			alert.buttons["Allow"].tap()
+			return true
 		}
+		app.tap()
 
 		snapshot("10_ios_accounts_welcome_demo")
 
@@ -56,19 +59,35 @@ class ScreenshotsTests: XCTestCase {
 		snapshot("60_ios_settings_demo")
 		app.navigationBars.element(boundBy: 0).buttons.element(boundBy: 0).tap()
 
+		if waitForAddAccountButton(app: app) != .completed {
+			XCTFail("Error: Account Button not available")
+		}
 		//Add account
 		let credentials : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : serverDescription]
 		addAccount(app: app, credentials: credentials)
+
+		if waitForAddAccountButton(app: app) != .completed {
+			XCTFail("Error: Account Button not available")
+		}
+
 		//Add account
 		let credentialsDemo : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : "demo@demo.owncloud.com"]
 		addAccount(app: app, credentials: credentialsDemo)
+
+		if waitForAddAccountButton(app: app) != .completed {
+			XCTFail("Error: Account Button not available")
+		}
+
 		//Add account
 		let credentialsDemo2 : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : "admin@demo.owncloud.com"]
 		addAccount(app: app, credentials: credentialsDemo2)
 
-		snapshot("11_ios_accounts_list_demo")
-
+		// Workaround: Open the File List to dismiss keyboard
 		prepareFileList(app: app)
+		app.navigationBars["ownCloud"].buttons["Accounts"].tap()
+		snapshot("11_ios_accounts_list_demo")
+		prepareFileList(app: app)
+
 		if waitForDocumentsCell(app: app) != .completed {
 			XCTFail("Error: File list not loaded")
 		}
@@ -89,8 +108,6 @@ class ScreenshotsTests: XCTestCase {
 			app.navigationBars.element(boundBy: 0).buttons[localizedString(key: "Add account")].tap()
 			app.textFields["row-url-url"].typeText(url)
 
-			print(app.navigationBars.element(boundBy: 0).buttons)
-
 			app.navigationBars[localizedString(key: "Add account")]/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continue\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 
 			if waitForUserNameTextField(app: app) != .completed {
@@ -104,24 +121,8 @@ class ScreenshotsTests: XCTestCase {
 			app.textFields["row-name-name"].typeText(serverDescription)
 
 			app.navigationBars[localizedString(key: "Add account")]/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continue\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-
-			dismissKeyboardIfPresent(app: app)
 		} else {
 			XCTFail("Error: Adding Login failed")
-		}
-	}
-
-	func dismissKeyboardIfPresent(app: XCUIApplication) {
-		if app.keyboards.element(boundBy: 0).exists {
-			if UIDevice.current.userInterfaceIdiom == .pad {
-				app.keyboards.buttons["Hide keyboard"].tap()
-
-				if app.toolbars.buttons["Done"].exists {
-					app.toolbars.buttons["Done"].tap()
-				}
-			} else {
-				app.toolbars.buttons["Done"].tap()
-			}
 		}
 	}
 
@@ -203,6 +204,15 @@ class ScreenshotsTests: XCTestCase {
 	}
 
 	// MARK: - Waiters
+
+	func waitForAddAccountButton(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.navigationBars.element(boundBy: 0).buttons[localizedString(key: "Add account")]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
 
 	func waitForAccountList(app: XCUIApplication) -> XCTWaiter.Result {
 		let tablesQuery = app.tables
