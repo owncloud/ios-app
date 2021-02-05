@@ -166,6 +166,8 @@ class IssuesCardViewController: StaticTableViewController {
 				cell.selectedBackgroundView = CardCellBackgroundView(backgroundColor: backgroundColor.darker(0.07), insets: edgeInsets, cornerRadius: backgroundCornerRadius)
 			}
 
+			cell.tintColor = style.textColor
+
 			return true
 		}
 
@@ -209,6 +211,12 @@ class IssuesCardViewController: StaticTableViewController {
 						detailLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -verticalMargin)
 					])
 				}, accessoryType: (issue.type == .certificate) ? .disclosureIndicator : .none)
+
+				if #available(iOS 13.0, *), row.cell?.accessoryType == .disclosureIndicator {
+					// On iOS 13+, chevrons created via .accessoryType are not using the .tintColor anymore
+					let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
+					(row.cell as? ThemeTableViewCell)?.accessoryView = chevronImageView
+				}
 
 				(row.cell as? ThemeTableViewCell)?.cellStyler = cellStyler
 
