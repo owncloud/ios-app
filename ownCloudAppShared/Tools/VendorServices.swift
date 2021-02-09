@@ -199,7 +199,6 @@ public class VendorServices : NSObject {
 
 	public func onFirstLaunch(executeBlock:() -> Void) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
-        guard let versionString = OCAppIdentity.shared.appVersion, let appVersion = Int(versionString), appVersion > 185 else { return }
 		guard userDefaults.bool(forKey: UserDefaultsKeys.notFirstAppLaunch.rawValue) == false else { return }
 
 		executeBlock()
