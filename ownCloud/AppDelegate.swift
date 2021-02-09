@@ -153,9 +153,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 		}
 
-		VendorServices.shared.onFirstLaunch {
-			OCAppIdentity.shared.keychain?.wipe()
-		}
+		// TODO: determine the purpose of below code and ensure it only runs when it should, not on first launch of the first update from any version < 11.5
+
+		// VendorServices.shared.onFirstLaunch {
+		// 	OCAppIdentity.shared.keychain?.wipe()
+		// }
 
 		setupAndHandleCrashReports()
 
