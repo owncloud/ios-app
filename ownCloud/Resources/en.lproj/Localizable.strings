@@ -594,6 +594,9 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+
 /* Release Notes */
 "Proceed" = "Proceed";
 "New in %@" = "New in %@";
