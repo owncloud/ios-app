@@ -41,6 +41,7 @@ public enum ThemeItemStyle {
 	case bigMessage
 
 	case purchase
+	case welcome
 }
 
 public enum ThemeItemState {
@@ -85,6 +86,9 @@ public extension NSObject {
 				case .purchase:
 					themeButton.themeColorCollection = collection.purchaseColors
 
+				case .welcome:
+					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
+
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
 			}
@@ -121,7 +125,7 @@ public extension NSObject {
 		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
 			tabBar.tintColor = collection.toolbarColors.tintColor
-			tabBar.unselectedItemTintColor = collection.toolbarColors.filledColorPairCollection.normal.foreground.darker(0.25)
+			tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
 		}
 
 		if let tableView = self as? UITableView {

@@ -22,6 +22,11 @@ import ownCloudSDK
 import ownCloudApp
 
 public class VendorServices : NSObject {
+
+	enum UserDefaultsKeys: String {
+		case notFirstAppLaunch
+	}
+
 	// MARK: - App version information
 	public var appVersion: String {
 		if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
@@ -47,85 +52,36 @@ public class VendorServices : NSObject {
 		return ""
 	}
 
-	public var brandingURL : URL? {
-		return Bundle.main.url(forResource: "Branding", withExtension: "plist")
-	}
-
-	public func brandingURLFor(name: String) -> URL? {
-		return Bundle.main.url(forResource: name, withExtension: "plist")
-	}
-
-	public var brandingProperties : NSDictionary? {
-		var themingValues : NSDictionary?
-
-		if let url = self.brandingURL {
-			themingValues = NSDictionary(contentsOf: url)
-		}
-
-		return themingValues
-	}
-
 	public var documentationURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let documentation = urls["Documentation"] as? String, let url = URL(string: documentation) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://doc.owncloud.com/ios-app/")
+		return Branding.shared.documentationURL
 	}
 
 	public var helpURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String, let url = URL(string: help) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://www.owncloud.com/help")
+		return Branding.shared.helpURL
 	}
 
 	public var privacyURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String, let url = URL(string: privacy) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://owncloud.org/privacy-policy/")
+		return Branding.shared.privacyURL
 	}
 
 	public var termsOfUseURL: URL? {
-		if self.isBranded, let themingValues = self.brandingProperties {
-			guard let urls = themingValues["URLs"] as? NSDictionary, let termsOfUse = urls["TermsOfUse"] as? String, let url = URL(string: termsOfUse) else { return nil }
-			return url
-		}
-
-		return URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
+		return Branding.shared.termsOfUseURL
 	}
 
 	public var appName: String {
-		if self.isBranded, let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
+		if let appName = Branding.shared.appName {
+			return appName
+		}
+
+		if let organizationName = Branding.shared.organizationName {
 			return organizationName
 		}
 
 		return OCAppIdentity.shared.appDisplayName ?? "ownCloud"
 	}
 
-	public var feedbackMailEnabled: Bool {
-		if self.isBranded, let bundleValues = self.brandingProperties {
-			guard bundleValues["feedbackMail"] != nil else { return false }
-			return true
-		}
-
-		return true
-	}
-
 	public var feedbackMail: String? {
-		if self.isBranded, let bundleValues = self.brandingProperties, let feedbackMail = bundleValues["feedbackMail"] as? String {
-			return feedbackMail
-		} else if let feedbackMail = self.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String {
-			return feedbackMail
-		}
-
-		return nil
+		return Branding.shared.feedbackEmailAddress
 	}
 
 	public var isBetaBuild: Bool {
@@ -137,44 +93,15 @@ public class VendorServices : NSObject {
 	}
 
 	public var isBranded: Bool {
-		guard let themingValues = self.brandingProperties else { return false }
-		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
-			return true
-		}
-
-		return false
-	}
-
-	public var hasBrandedProfiles: Bool {
-		if let themingValues = self.brandingProperties, let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
-			return true
-		}
-
-		return false
+		return Branding.shared.isBranded
 	}
 
 	public var canAddAccount: Bool {
-		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
-			if canAddAccount, self.hasBrandedProfiles {
-				return true
-			}
-
-			return false
-		}
-
-		return true
+		return Branding.shared.canAddAccount
 	}
 
 	public var canEditAccount: Bool {
-		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canEditAccount"] as? Bool {
-			if canAddAccount, self.hasBrandedProfiles {
-				return true
-			}
-
-			return false
-		}
-
-		return true
+		return Branding.shared.canEditAccount
 	}
 
 	public var showBetaWarning: Bool {
@@ -260,14 +187,24 @@ public class VendorServices : NSObject {
 		// Make sure there is at least one bookmark configured, to not bother users who have never configured any accounts
 		guard OCBookmarkManager.shared.bookmarks.count > 0 else { return }
 
-		// Make sure at least 14 days have elapsed since the first launch of the app
-		guard AppStatistics.shared.timeIntervalSinceFirstLaunch.days >= 14 else { return }
+		// Make sure at least 7 days have elapsed since the first launch of the app
+		guard AppStatistics.shared.timeIntervalSinceFirstLaunch.days >= 7 else { return }
 
 		// Make sure at least 7 days have elapsed since first launch of current version
 		guard AppStatistics.shared.timeIntervalSinceUpdate.days >= 7 else { return }
 
-		// Make sure at least 230 have elapsed since last prompting
-		AppStatistics.shared.requestAppStoreReview(onceInDays: 230)
+		// Make sure at least 122 have elapsed since last prompting (Apple allows to show the dialog 3 times per 365 days)
+		AppStatistics.shared.requestAppStoreReview(onceInDays: 122)
+	}
+
+	public func onFirstLaunch(executeBlock:() -> Void) {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+		guard userDefaults.bool(forKey: UserDefaultsKeys.notFirstAppLaunch.rawValue) == false else { return }
+
+		executeBlock()
+
+		userDefaults.setValue(true, forKey: UserDefaultsKeys.notFirstAppLaunch.rawValue)
+		userDefaults.synchronize()
 	}
 }
 
@@ -289,9 +226,7 @@ public extension OCClassSettingsKey {
 	static let enableReviewPrompt = OCClassSettingsKey("enable-review-prompt")
 
 	static let appStoreLink = OCClassSettingsKey("app-store-link")
-	static let feedbackEmail = OCClassSettingsKey("feedback-email")
 	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
-	static let sendFeedbackEnabled = OCClassSettingsKey("send-feedback-enabled")
 }
 
 extension VendorServices : OCClassSettingsSupport {
@@ -306,12 +241,56 @@ extension VendorServices : OCClassSettingsSupport {
 				.enableReviewPrompt: !VendorServices.shared.isBranded,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
-				.feedbackEmail: "ios-app@owncloud.com",
-				.recommendToFriendEnabled: !VendorServices.shared.isBranded,
-				.sendFeedbackEnabled: (VendorServices.shared.feedbackMailEnabled)
+				.recommendToFriendEnabled: !VendorServices.shared.isBranded
 			]
 		}
 
 		return nil
+	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.showBetaWarning : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether a warning should be shown on the first run of a beta version.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.isBetaBuild : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls if the app is built for beta or release purposes.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.enableUIAnimations : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enable/disable UI animations.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.enableReviewPrompt : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enable/disable review prompt.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.appStoreLink : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "URL for the app in the App Store.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.recommendToFriendEnabled : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enables/disables the recommend to a friend entry in the settings.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
+		]
 	}
 }

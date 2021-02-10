@@ -210,6 +210,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			settingsBarButtonItem
 		]
 
+		if AppLockManager.shared.passcode == nil && AppLockManager.shared.isPasscodeEnforced {
+			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
+		}
+
 		if showBetaWarning, shownFirstTime {
 			showBetaWarning = !considerAutoLogin()
 		}

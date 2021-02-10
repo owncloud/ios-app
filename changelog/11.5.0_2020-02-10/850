@@ -1,0 +1,9 @@
+Change: Enhanced drag & drop support
+
+Fix drag and drop and improve support to run the iOS app on M1 Macs:
+
+- add drag-out support for files that are not locally available yet
+- improve drag-in support for files, picking the best available representation that can be retrieved as data
+- support for drag & drop in the log file browser
+
+https://github.com/owncloud/ios-app/pull/850

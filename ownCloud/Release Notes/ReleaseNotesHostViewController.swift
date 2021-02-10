@@ -103,6 +103,7 @@ class ReleaseNotesHostViewController: UIViewController {
 				footerText = String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName)
 			}
 			footerButton.setTitle(footerText, for: .normal)
+
 			footerButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
 			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			footerButton.titleLabel?.numberOfLines = 0
@@ -239,6 +240,10 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 	}
 }
 
+public extension OCClassSettingsIdentifier {
+	static let releasenotes = OCClassSettingsIdentifier("releasenotes")
+}
+
 extension OCClassSettingsKey {
 	 // Available since version 1.3.0
 	static let lastSeenReleaseNotesVersion = OCClassSettingsKey("lastSeenReleaseNotesVersion")
@@ -246,13 +251,27 @@ extension OCClassSettingsKey {
 }
 
 extension ReleaseNotesDatasource : OCClassSettingsSupport {
-	static let classSettingsIdentifier : OCClassSettingsIdentifier = .app
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .releasenotes
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .app {
-			return nil
-		}
-
 		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.lastSeenReleaseNotesVersion : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "The app version for which the release notes were last shown.",
+				.category	: "Release Notes",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.lastSeenAppVersion : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "The last-seen app version.",
+				.category	: "Release Notes",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			]
+		]
 	}
 }

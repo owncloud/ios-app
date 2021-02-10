@@ -77,8 +77,8 @@ class LicenseOffersViewController: StaticTableViewController {
 	}
 
 	func composeSections() {
-		let iapSection = StaticTableViewSection(headerTitle: "Purchase")
-		let subSection = StaticTableViewSection(headerTitle: "Subscribe")
+		let iapSection = StaticTableViewSection(headerTitle: "Purchase".localized)
+		let subSection = StaticTableViewSection(headerTitle: "Subscribe".localized)
 
 		if let feature = OCLicenseManager.shared.feature(withIdentifier: featureIdentifier) {
 			if let offers = OCLicenseManager.shared.offers(for: feature) {

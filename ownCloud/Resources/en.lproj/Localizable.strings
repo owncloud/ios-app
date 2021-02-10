@@ -34,6 +34,7 @@
 "Cancel" = "Cancel";
 "Approve" = "Approve";
 "Error" = "Error";
+"Issues" = "Issues";
 "Review Connection" = "Review Connection";
 "Authenticated via" = "Authenticated via";
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
@@ -200,6 +201,7 @@
 "Privacy Policy" = "Privacy Policy";
 "Terms Of Use" = "Terms Of Use";
 "Acknowledgements" = "Acknowledgements";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
 "Immediately" = "Immediately";
@@ -303,6 +305,7 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
+"You are required to set the passcode" = "You are required to set the passcode";
 
 /* Certificate management */
 
@@ -591,6 +594,9 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+
 /* Release Notes */
 "Proceed" = "Proceed";
 "New in %@" = "New in %@";
@@ -690,6 +696,9 @@
 "Image metadata, extended upload options" = "Image metadata, extended upload options";
 "Purchase" = "Purchase";
 "Subscribe" = "Subscribe";
+
+"No accounts found" = "No accounts found";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "In order to accurately determine your current licensing status, please add one or more accounts first.";
 
 /* Share Sheet */
 "Save File" = "Save File";
@@ -831,4 +840,9 @@
 "Extended upload settings" = "Extended upload settings";
 "Prefer unedited photos" = "Prefer unedited photos";
 "Prefer RAW photos" = "Prefer RAW photos";
+"Prefer original videos" = "Prefer original videos";
 
+/* Limited photo library access */
+"Limited Photo Access" = "Limited Photo Access";
+"Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
+"No Access to the media selected for upload" = "No Access to the media selected for upload";

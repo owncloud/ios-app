@@ -26,11 +26,13 @@ class AlertOption : NSObject {
 	var label : String
 	var handler : ChoiceHandler
 	var type : OCIssueChoiceType
+	var accessibilityIdentifier : String?
 
-	init(label: String, type: OCIssueChoiceType, handler: @escaping ChoiceHandler) {
+	init(label: String, type: OCIssueChoiceType, accessibilityIdentifier : String? = nil, handler: @escaping ChoiceHandler) {
 		self.label = label
 		self.type = type
 		self.handler = handler
+		self.accessibilityIdentifier = accessibilityIdentifier
 
 		super.init()
 	}
@@ -53,11 +55,12 @@ class AlertView: UIView, Themeable {
 
 	var optionViews : [ThemeButton] = []
 
-	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, options: [AlertOption]) {
+	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, contentPadding: CGFloat = 20, options: [AlertOption]) {
 		self.localizedHeader = localizedHeader
 		self.localizedTitle = localizedTitle
 		self.localizedDescription = localizedDescription
 		self.options = options
+		self.contentPadding = contentPadding
 
 		super.init(frame: .zero)
 
@@ -83,10 +86,9 @@ class AlertView: UIView, Themeable {
 			optionButton.setTitle(option.label, for: .normal)
 			optionButton.tag = optionIdx
 			optionButton.translatesAutoresizingMaskIntoConstraints = false
+			optionButton.accessibilityIdentifier = option.accessibilityIdentifier
 
-//			optionButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			optionButton.setContentHuggingPriority(.required, for: .vertical)
-//			optionButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 			optionButton.setContentCompressionResistancePriority(.required, for: .vertical)
 
 			optionButton.addTarget(self, action: #selector(optionSelected(sender:)), for: .primaryActionTriggered)
@@ -110,7 +112,7 @@ class AlertView: UIView, Themeable {
 	private let headerTextHorizontalInset : CGFloat = 20
 	private let headerTextVerticalInset : CGFloat = 7
 	private let titleAndDescriptionSpacing : CGFloat = 5
-	private let contentPadding : CGFloat = 20
+	private var contentPadding : CGFloat = 20
 	private let optionInnerSpacing : CGFloat = 10
 
 	private let headerLabelFontSize : CGFloat = 14
@@ -176,32 +178,45 @@ class AlertView: UIView, Themeable {
 			self.addSubview(headerContainer)
 
 			NSLayoutConstraint.activate([
-				headerLabel.leftAnchor.constraint(equalTo: headerContainer.leftAnchor, constant: headerTextHorizontalInset),
-				headerLabel.rightAnchor.constraint(equalTo: headerContainer.rightAnchor, constant: -headerTextHorizontalInset),
+				headerLabel.leadingAnchor.constraint(equalTo: headerContainer.leadingAnchor, constant: headerTextHorizontalInset),
+				headerLabel.trailingAnchor.constraint(equalTo: headerContainer.trailingAnchor, constant: -headerTextHorizontalInset),
 				headerLabel.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: headerTextVerticalInset),
 				headerLabel.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -headerTextVerticalInset),
 
 				headerContainer.topAnchor.constraint(equalTo: enclosure.topAnchor),
-				headerContainer.leftAnchor.constraint(equalTo: enclosure.leftAnchor),
-				headerContainer.rightAnchor.constraint(equalTo: enclosure.rightAnchor)
+				headerContainer.leadingAnchor.constraint(equalTo: enclosure.leadingAnchor),
+				headerContainer.trailingAnchor.constraint(equalTo: enclosure.trailingAnchor)
 			])
 		}
 
-		NSLayoutConstraint.activate([
-			titleLabel.topAnchor.constraint(equalTo: ((localizedHeader != nil) ? headerContainer.bottomAnchor : enclosure.topAnchor), constant: contentPadding),
-			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -titleAndDescriptionSpacing),
-			descriptionLabel.bottomAnchor.constraint(equalTo: optionStackView.topAnchor, constant: -contentPadding),
-			optionStackView.bottomAnchor.constraint(equalTo: enclosure.bottomAnchor, constant: -contentPadding),
+		if localizedHeader == nil, localizedTitle == "", localizedDescription == "" {
+			titleLabel.removeFromSuperview()
+			descriptionLabel.removeFromSuperview()
 
-			titleLabel.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: contentPadding),
-			titleLabel.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -contentPadding),
+			NSLayoutConstraint.activate([
+				optionStackView.topAnchor.constraint(equalTo: enclosure.topAnchor, constant: contentPadding),
+				optionStackView.bottomAnchor.constraint(equalTo: enclosure.bottomAnchor, constant: -contentPadding),
 
-			descriptionLabel.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: contentPadding),
-			descriptionLabel.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -contentPadding),
+				optionStackView.leadingAnchor.constraint(equalTo: enclosure.leadingAnchor, constant: contentPadding),
+				optionStackView.trailingAnchor.constraint(equalTo: enclosure.trailingAnchor, constant: -contentPadding)
+			])
+		} else {
+			NSLayoutConstraint.activate([
+				titleLabel.topAnchor.constraint(equalTo: ((localizedHeader != nil) ? headerContainer.bottomAnchor : enclosure.topAnchor), constant: contentPadding),
+				titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -titleAndDescriptionSpacing),
+				descriptionLabel.bottomAnchor.constraint(equalTo: optionStackView.topAnchor, constant: -contentPadding),
+				optionStackView.bottomAnchor.constraint(equalTo: enclosure.bottomAnchor, constant: -contentPadding),
 
-			optionStackView.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: contentPadding),
-			optionStackView.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -contentPadding)
-		])
+				titleLabel.leadingAnchor.constraint(equalTo: enclosure.leadingAnchor, constant: contentPadding),
+				titleLabel.trailingAnchor.constraint(equalTo: enclosure.trailingAnchor, constant: -contentPadding),
+
+				descriptionLabel.leadingAnchor.constraint(equalTo: enclosure.leadingAnchor, constant: contentPadding),
+				descriptionLabel.trailingAnchor.constraint(equalTo: enclosure.trailingAnchor, constant: -contentPadding),
+
+				optionStackView.leadingAnchor.constraint(equalTo: enclosure.leadingAnchor, constant: contentPadding),
+				optionStackView.trailingAnchor.constraint(equalTo: enclosure.trailingAnchor, constant: -contentPadding)
+			])
+		}
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

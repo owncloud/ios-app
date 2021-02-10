@@ -113,4 +113,22 @@ extension OCLicenseManager : OCClassSettingsSupport {
 			.disableEnterpriseLicensing : false
 		]
 	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.disableAppStoreLicensing : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enables/disables App Store licensing support.",
+				.category	: "Licensing",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			],
+
+			.disableEnterpriseLicensing : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enables/disables Enterprise licensing support.",
+				.category	: "Licensing",
+				.status		: OCClassSettingsKeyStatus.debugOnly
+			]
+		]
+	}
 }

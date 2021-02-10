@@ -1165,6 +1165,18 @@
 		});
 }
 
++ (OCClassSettingsMetadataCollection)classSettingsMetadata
+{
+	return (@{
+		OCClassSettingsKeyFileProviderSkipLocalErrorChecks : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Skip some local error checks in the FileProvider to easily provoke errors.",
+			OCClassSettingsMetadataKeyCategory	: @"File Provider",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusDebugOnly
+		}
+	});
+}
+
 - (BOOL)skipLocalErrorChecks
 {
 	return (((NSNumber *)[self classSettingForOCClassSettingsKey:OCClassSettingsKeyFileProviderSkipLocalErrorChecks]).boolValue);

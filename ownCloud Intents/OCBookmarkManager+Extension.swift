@@ -36,7 +36,7 @@ extension OCBookmarkManager {
 		return accountList
 	}
 
-	public func bookmark(for uuidString: String) -> OCBookmark? {
+	func bookmark(for uuidString: String) -> OCBookmark? {
 		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
 	}
 

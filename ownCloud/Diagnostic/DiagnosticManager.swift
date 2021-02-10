@@ -43,6 +43,17 @@ class DiagnosticManager: NSObject, OCClassSettingsSupport, OCClassSettingsUserPr
 		return true
 	}
 
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.diagnosticsEnabled : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether additional diagnostic options and information is available throughout the user interface.",
+				.category	: "Diagnostics",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
+		]
+	}
+
 	// MARK: - Shared instance
 	static var shared = DiagnosticManager()
 

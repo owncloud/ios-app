@@ -2,17 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>canAddAccount</key>
+	<key>branding.can-add-account</key>
 	<false/>
-	<key>canEditAccount</key>
+	<key>branding.can-edit-account</key>
 	<true/>
-	<key>organizationName</key>
+	<key>branding.organization-name</key>
 	<string>ownCloud.online</string>
-	<key>feedbackMail</key>
+	<key>branding.send-feedback-address</key>
 	<string></string>
-	<key>Configuration</key>
-	<dict/>
-	<key>Profiles</key>
+	<key>branding.profile-definitions</key>
 	<array>
 		<dict>
 			<key>identifier</key>
@@ -52,14 +50,11 @@
 			</array>
 		</dict>
 	</array>
-	<key>URLs</key>
-	<dict>
-		<key>Help</key>
-		<string>https://owncloud.online/faq/</string>
-		<key>Privacy</key>
-		<string>https://owncloud.online/privacy-policy/</string>
-	</dict>
-	<key>Generic</key>
+	<key>branding.url-help</key>
+	<string>https://owncloud.online/faq/</string>
+	<key>branding.url-privacy</key>
+	<string>https://owncloud.online/privacy-policy/</string>
+	<key>branding.theme-generic-colors</key>
 	<dict>
 		<key>Corporate</key>
 		<dict>
@@ -155,7 +150,7 @@
 			<string>#777777</string>
 		</dict>
 	</dict>
-	<key>Themes</key>
+	<key>branding.theme-definitions</key>
 	<array>
 		<dict>
 			<key>Name</key>

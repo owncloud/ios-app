@@ -337,59 +337,11 @@ extension PHAsset {
 
 	/**
 	Method for exporting video assets
-	- parameter resources: array of PHAssetResource objects belonging to PHAsset
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for media formats which shall be converted to MP4 format
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
-	func exportVideo(resources:[PHAssetResource], fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
-
-		var resourceToExport:PHAssetResource?
-
-		// For edited video pick the edited version
-		resourceToExport = resources.filter({$0.type == .fullSizeVideo}).first
-
-		// If edited video is not avaialable, pick the original
-		if resourceToExport == nil {
-			resourceToExport = resources.filter({$0.type == .video}).first
-		}
-
-		// No resource found?
-		guard let resource = resourceToExport else {
-			completionHandler(nil, NSError(ocError: .internal))
-			return
-		}
-
-		// Allow to request resource underlying data from network (iCloud in this case)
-		let requestOptions = PHAssetResourceRequestOptions()
-		requestOptions.isNetworkAccessAllowed = true
-
-		// Prepare export URL and remove path extension which will depend on output format
-
-		// Check if conversion is required?
-		if utisToConvert.contains(resource.uniformTypeIdentifier) {
-			exportVideo(fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
-				completionHandler(url, error)
-			}
-		} else {
-			var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
-			// Append correct file extension to export URL
-			exportURL = exportURL.appendingPathExtension(resource.fileExtension)
-
-			// Write the file to disc
-			PHAssetResourceManager.default().writeData(for: resource, toFile: exportURL, options: requestOptions) { (error) in
-				completionHandler(exportURL, error)
-			}
-		}
-	}
-
-	/**
-	Method for exporting video assets
-	- parameter fileName: name for the exported asset including file extension
-	- parameter utisToConvert: list of file UTIs for media formats which shall be converted to MP4 format
-	- parameter completionHandler: called when the file is written to disk or if an error occurs
-	*/
-	func exportVideo(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+	func exportVideo(fileName:String, utisToConvert:[String] = [], preferOriginal:Bool = false, completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		var outError: Error?
 		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName)
@@ -397,7 +349,7 @@ extension PHAsset {
 		let videoRequestOptions = PHVideoRequestOptions()
 		videoRequestOptions.isNetworkAccessAllowed = true
 		// Take care that in case of edited video, the edited content is used
-		videoRequestOptions.version = .current
+		videoRequestOptions.version = preferOriginal ? .original : .current
 		videoRequestOptions.deliveryMode = .highQualityFormat
 
 		// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
@@ -439,9 +391,10 @@ extension PHAsset {
 	*/
 	func export(fileName:String, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
 		let assetResources = PHAssetResource.assetResources(for: self)
-		if assetResources.count > 0 {
-			// We have actual data on the device and we can export it directly
-			if self.mediaType == .image {
+
+		// We have actual data on the device and we can export it directly
+		if self.mediaType == .image {
+			if assetResources.count > 0 {
 				exportPhoto(resources: assetResources,
 							fileName: fileName,
 							utisToConvert: utisToConvert,
@@ -449,29 +402,23 @@ extension PHAsset {
 							completionHandler: { (url, error) in
 					completion(url, error)
 				})
-			} else if self.mediaType == .video {
-				exportVideo(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
-					completion(url, error)
-				}
 			} else {
-				completion(nil, NSError(ocError: .internal))
-			}
-		} else {
-			// It could be that we don't have any asset resources locally e.g. since we have to deal with an asset from a cloud album
-			if self.mediaType == .image {
 				exportPhoto(fileName: fileName,
 							utisToConvert: utisToConvert,
 							completionHandler: { (url, error) in
 					completion(url, error)
 				})
-			} else if self.mediaType == .video {
-				exportVideo(fileName: fileName,
-							utisToConvert: utisToConvert) { (url, error) in
-					completion(url, error)
-				}
-			} else {
-				completion(nil, NSError(ocError: .internal))
 			}
+
+		} else if self.mediaType == .video {
+			let preferOriginal = preferredResourceTypes.contains(.video)
+			exportVideo(fileName: fileName,
+						utisToConvert: utisToConvert,
+						preferOriginal: preferOriginal) { (url, error) in
+				completion(url, error)
+			}
+		} else {
+			completion(nil, NSError(ocError: .internal))
 		}
 	}
 

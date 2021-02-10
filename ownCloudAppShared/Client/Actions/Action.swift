@@ -415,7 +415,7 @@ open class Action : NSObject {
 
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.perform()
-		}, title: name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: name, style: actionExtension.category == .destructive ? .destructive : .plain, image: nil, imageWidth: nil, alignment: .left, identifier: actionExtension.identifier.rawValue, accessoryView: UIImageView(image: self.icon))
 	}
 
 	open func provideContextualAction() -> UIContextualAction? {
@@ -476,4 +476,42 @@ open class Action : NSObject {
 		return type(of: self).applicablePosition(forContext: context)
 	}
 
+}
+
+extension OCClassSettingsIdentifier {
+	static let action = OCClassSettingsIdentifier("action")
+}
+
+extension Action : OCClassSettingsSupport {
+	public static let classSettingsIdentifier : OCClassSettingsIdentifier = .action
+
+	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return nil
+	}
+
+	static func enabledKey() -> OCClassSettingsKey? {
+		guard let identifier = Self.identifier?.rawValue else { return nil }
+		return OCClassSettingsKey(identifier + ".enabled")
+	}
+
+	static var enabled : Bool {
+		if let key = Self.enabledKey() {
+			if let value = Self.classSetting(forOCClassSettingsKey: key) as? Bool {
+				return value
+			}
+		}
+		return true
+	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		guard let enabledKey = Self.enabledKey() else { return nil }
+		return [
+			enabledKey : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether action can be accessed in the app UI.",
+				.category	: "Actions",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
+		]
+	}
 }
