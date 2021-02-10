@@ -148,7 +148,7 @@ class BookmarkViewController: StaticTableViewController {
 					self?.continueBarButtonItem.isEnabled = false
 				}
 
-				if let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: textField.text, protocolWasPrepended: nil) {
+				if let urlString = textField.text, let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: urlString, protocolWasPrepended: nil) {
 					if let host = normalizedURL.host {
 						placeholderString = host
 					}

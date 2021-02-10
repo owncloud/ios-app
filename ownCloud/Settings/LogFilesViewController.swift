@@ -175,10 +175,10 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 		if DisplaySettings.shared.preventDraggingFiles {
 			return [UIDragItem]()
 		}
-		
+
 		var logURL : URL?
 		var logName : String?
-		
+
 		provideLogURL(at: indexPath, makeNamedCopy: false) { (url, name, completionHandler) in
 			logURL = url
 			logName = name
@@ -186,7 +186,7 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 			// Since we use false for makeNamedCopy, this should be safe
 			completionHandler?()
 		}
-		
+
 		if let logURL = logURL {
 			let itemProvider = NSItemProvider()
 			itemProvider.registerFileRepresentation(forTypeIdentifier: kUTTypeUTF8PlainText as String, fileOptions: [], visibility: .all, loadHandler: { (completionHandler) -> Progress? in
@@ -196,13 +196,12 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 			itemProvider.suggestedName = logName
 
 			let dragItem = UIDragItem(itemProvider: itemProvider)
-			
+
 			return [dragItem]
 		}
-		
+
 		return [UIDragItem]()
 	}
-
 
 	// MARK: - Private Helpers
 
@@ -218,8 +217,8 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 			self.tableView.reloadData()
 		}
 	}
-	
-	private func provideLogURL(at indexPath: IndexPath, makeNamedCopy: Bool, completionHandler: (_ fileURL: URL?, _ name: String?, _ doneBlock: (()->Void)?) -> Void) {
+
+	private func provideLogURL(at indexPath: IndexPath, makeNamedCopy: Bool, completionHandler: (_ fileURL: URL?, _ name: String?, _ doneBlock: (() -> Void)?) -> Void) {
 		let logRecord = self.logRecords[indexPath.row]
 
 		// Create a file name for sharing with format ownCloud_<date>_<time>.log.txt
@@ -231,7 +230,7 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 
 		}
 		let shareableFileName = "ownCloud_" + time + ".log.txt"
-		
+
 		if makeNamedCopy {
 			let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
 
@@ -244,7 +243,7 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 			} catch {
 				Log.error("Error providing copy of log \(logRecord.url.path) at \(shareableLogURL.path): \(error)")
 			}
-		
+
 			completionHandler(shareableLogURL, shareableFileName, {
 				try? FileManager.default.removeItem(at: shareableLogURL)
 			})
@@ -254,7 +253,7 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 	}
 
 	private func shareLogRecord(at indexPath:IndexPath, sender: UITableViewCell) {
-		provideLogURL(at: indexPath, makeNamedCopy: true) { (shareableLogURL, fileName, completionHandler) in
+		provideLogURL(at: indexPath, makeNamedCopy: true) { (shareableLogURL, _, completionHandler) in
 			guard let shareableLogURL = shareableLogURL else {
 				completionHandler?()
 				return

@@ -40,7 +40,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
-	
+
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 
 	// MARK: - Init & Deinit
@@ -496,12 +496,12 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				]
 				var useUTI : String?
 				var useIndex : Int = Int.max
-				
+
 				for typeIdentifier in typeIdentifiers {
 					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn.") {
 						for preferredUTI in preferredUTIs {
 							let conforms = UTTypeConformsTo(typeIdentifier as CFString, preferredUTI)
-							
+
 							// Log.log("\(preferredUTI) vs \(typeIdentifier) -> \(conforms)")
 
 							if conforms {
@@ -513,7 +513,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 						}
 					}
 				}
-			
+
 				guard let loadUTI = useUTI else { return }
 
 				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: loadUTI) { (url, _ error) in
@@ -598,7 +598,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 	public func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
 		let item = draggingValue.item
-		
+
 		guard let core = self.core else {
 			return nil
 		}
@@ -613,7 +613,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 				dragItem.localObject = draggingValue
 
 				return dragItem
-				
+
 			case .file:
 				guard let itemMimeType = item.mimeType else { return nil }
 
@@ -621,17 +621,17 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
 
 				let itemProvider = NSItemProvider()
-				
+
 				itemProvider.suggestedName = item.name
 
 				itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
 					var progress : Progress?
-				
+
 					guard let core = core else {
 						completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
 						return nil
 					}
-					
+
 					if let localFileURL = core.localCopy(of: item) {
 						// Provide local copies directly
 						completionHandler(localFileURL, true, nil)
@@ -645,7 +645,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 								completionHandler(nil, false, error)
 								return
 							}
-							
+
 							completionHandler(fileURL, true, nil)
 
 							if let claim = file?.claim, let item = item, let self = self {
@@ -653,14 +653,14 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 							}
 						})
 					}
-					
+
 					return progress
 				})
 
 				itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
 					guard let data = item.serializedData() else { return nil }
 					completionHandler(data, nil)
-	
+
 					return nil
 				}
 
