@@ -122,6 +122,12 @@ class DisplayHostViewController: UIPageViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 	}
 
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		DisplaySleepPreventer.shared.stopPreventingDisplaySleep()
+	}
+
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
 			return childViewController

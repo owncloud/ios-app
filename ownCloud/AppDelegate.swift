@@ -112,6 +112,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
+		OCExtensionManager.shared.addExtension(PresentationModeAction.actionExtension)
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only
