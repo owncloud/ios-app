@@ -1,3 +1,26 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.0...master
+
+Summary
+-------
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+Details
+-------
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+   Added an action in detail view menu which enables presentation mode. Presentation mode
+   prevents the display from sleep mode as long as the detail view is dismissed. Furthermore the
+   navigation bar will be hidden.
+
+   https://github.com/owncloud/ios-app/issues/704
+
 Changelog for ownCloud iOS Client [11.5.0] (2020-02-10)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.0 relevant to
