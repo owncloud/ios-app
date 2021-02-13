@@ -349,6 +349,9 @@
 "Favorited" = "Favorited";
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Presentation Mode";
+"Enabling presentation mode will prevent the display from sleep mode until the view is dismissed." = "Enabling presentation mode will prevent the display from sleep mode until the view is dismissed.";
+"Enable" = "Enable";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
