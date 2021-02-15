@@ -8,6 +8,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudSDK
 
 extension OCClassSettingsKey {
 	// URLs
@@ -33,91 +34,93 @@ extension OCClassSettingsKey {
 
 extension Branding : BrandingInitialization {
 	public static func initializeBranding() {
-		self.registerOCClassSettingsDefaults([
-			.documentationURL : "https://doc.owncloud.com/ios-app/",
-			.helpURL 	  : "https://www.owncloud.com/help",
-			.privacyURL 	  : "https://owncloud.org/privacy-policy/",
-			.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
+		if #available(iOS 13, *) {
+			self.registerOCClassSettingsDefaults([
+				.documentationURL : "https://doc.owncloud.com/ios-app/",
+				.helpURL 	  : "https://www.owncloud.com/help",
+				.privacyURL 	  : "https://owncloud.org/privacy-policy/",
+				.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
 
-			.sendFeedbackAddress : "ios-app@owncloud.com",
+				.sendFeedbackAddress : "ios-app@owncloud.com",
 
-			.canAddAccount : true,
-			.canEditAccount : true
+				.canAddAccount : true,
+				.canEditAccount : true
 
-//			.profileDefinitions : [],
-//			.themeGenericColors : [:],
-//			.themeDefinitions : [:]
-		], metadata: [
-			.documentationURL : [
-				.type 		: OCClassSettingsMetadataType.urlString,
-				.description 	: "URL to documentation for the app. Opened when selecting \"Documentation\" in the settings.",
-				.status		: OCClassSettingsKeyStatus.advanced,
-				.category	: "Branding"
-			],
+	//			.profileDefinitions : [],
+	//			.themeGenericColors : [:],
+	//			.themeDefinitions : [:]
+			], metadata: [
+				.documentationURL : [
+					.type 		: OCClassSettingsMetadataType.urlString,
+					.description 	: "URL to documentation for the app. Opened when selecting \"Documentation\" in the settings.",
+					.status		: OCClassSettingsKeyStatus.advanced,
+					.category	: "Branding"
+				],
 
-			.helpURL : [
-				.type 		: OCClassSettingsMetadataType.urlString,
-				.description 	: "URL to help for the app. Opened when selecting \"Help\" in the settings.",
-				.status		: OCClassSettingsKeyStatus.advanced,
-				.category	: "Branding"
-			],
+				.helpURL : [
+					.type 		: OCClassSettingsMetadataType.urlString,
+					.description 	: "URL to help for the app. Opened when selecting \"Help\" in the settings.",
+					.status		: OCClassSettingsKeyStatus.advanced,
+					.category	: "Branding"
+				],
 
-			.privacyURL : [
-				.type 		: OCClassSettingsMetadataType.urlString,
-				.description 	: "URL to privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
-				.status		: OCClassSettingsKeyStatus.advanced,
-				.category	: "Branding"
-			],
+				.privacyURL : [
+					.type 		: OCClassSettingsMetadataType.urlString,
+					.description 	: "URL to privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
+					.status		: OCClassSettingsKeyStatus.advanced,
+					.category	: "Branding"
+				],
 
-			.termsOfUseURL : [
-				.type 		: OCClassSettingsMetadataType.urlString,
-				.description 	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
-				.status		: OCClassSettingsKeyStatus.advanced,
-				.category	: "Branding"
-			],
+				.termsOfUseURL : [
+					.type 		: OCClassSettingsMetadataType.urlString,
+					.description 	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
+					.status		: OCClassSettingsKeyStatus.advanced,
+					.category	: "Branding"
+				],
 
-			.sendFeedbackAddress : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
+				.sendFeedbackAddress : [
+					.type 		: OCClassSettingsMetadataType.string,
+					.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
 
-			.canAddAccount : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whether the user can add accounts.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
+				.canAddAccount : [
+					.type 		: OCClassSettingsMetadataType.boolean,
+					.description	: "Controls whether the user can add accounts.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
 
-			.canEditAccount : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whether the user can edit accounts.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
+				.canEditAccount : [
+					.type 		: OCClassSettingsMetadataType.boolean,
+					.description	: "Controls whether the user can edit accounts.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
 
-			.profileDefinitions : [
-				.type 		: OCClassSettingsMetadataType.dictionaryArray,
-				.description	: "Array of dictionaries, each specifying a static profile.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
+				.profileDefinitions : [
+					.type 		: OCClassSettingsMetadataType.dictionaryArray,
+					.description	: "Array of dictionaries, each specifying a static profile.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
 
-			.themeGenericColors : [
-				.type 		: OCClassSettingsMetadataType.dictionary,
-				.description	: "Dictionary defining generic colors that can be used in the definitions.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
+				.themeGenericColors : [
+					.type 		: OCClassSettingsMetadataType.dictionary,
+					.description	: "Dictionary defining generic colors that can be used in the definitions.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
 
-			.themeDefinitions : [
-				.type 		: OCClassSettingsMetadataType.dictionaryArray,
-				.description	: "Array of dictionaries, each specifying a theme.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			]
-		])
+				.themeDefinitions : [
+					.type 		: OCClassSettingsMetadataType.dictionaryArray,
+					.description	: "Array of dictionaries, each specifying a theme.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				]
+			])
+		}
 	}
 
 	public func initializeSharedBranding() {
