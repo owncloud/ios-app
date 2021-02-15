@@ -350,7 +350,7 @@
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
 "Presentation Mode" = "Presentation Mode";
-"Enabling presentation mode will prevent the display from sleep mode until the view is dismissed." = "Enabling presentation mode will prevent the display from sleep mode until the view is dismissed.";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
 "Enable" = "Enable";
 
 /* Directory Picker Messages */

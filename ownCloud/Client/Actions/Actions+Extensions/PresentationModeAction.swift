@@ -44,7 +44,7 @@ class PresentationModeAction: Action {
 			return
 		}
 
-		let alertController = UIAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is dismissed.".localized, preferredStyle: .alert)
+		let alertController = UIAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 		alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { (_) in
 			DisplaySleepPreventer.shared.startPreventingDisplaySleep()
