@@ -30,7 +30,7 @@ class PresentationModeAction: Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
-		if DisplaySleepPreventer.shared.preventCount > 0, let hostViewController = context.viewController, !(hostViewController.navigationController?.isNavigationBarHidden ?? false) {
+		if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
 			return .none
 		}
 
@@ -44,11 +44,22 @@ class PresentationModeAction: Action {
 			return
 		}
 
-		let alertController = UIAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-		alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { (_) in
-			DisplaySleepPreventer.shared.startPreventingDisplaySleep()
+		if DisplaySleepPreventer.shared.preventCount == 0 {
+			let alertController = UIAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
+			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { (_) in
+				DisplaySleepPreventer.shared.startPreventingDisplaySleep()
 
+				guard let navigationController = hostViewController.navigationController else {
+					return
+				}
+
+				if !navigationController.isNavigationBarHidden {
+					navigationController.setNavigationBarHidden(true, animated: true)
+				}
+			}))
+			hostViewController.present(alertController, animated: true)
+		} else {
 			guard let navigationController = hostViewController.navigationController else {
 				return
 			}
@@ -56,8 +67,7 @@ class PresentationModeAction: Action {
 			if !navigationController.isNavigationBarHidden {
 				navigationController.setNavigationBarHidden(true, animated: true)
 			}
-		}))
-		hostViewController.present(alertController, animated: true)
+		}
 
 		self.completed()
 	}
