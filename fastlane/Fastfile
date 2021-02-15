@@ -68,20 +68,20 @@ platform :ios do
   desc "Copies the branding assets from the themes repository to the ios-app repository"
     lane :prepare_branding_assets do |options|
     
-    if Dir.exist?("../../owncloud-themes") == false
+    if Dir.exist?("../../customer-themes-tmp") == false
 		UI.user_error!("Themes repository path does not exists!")
     end
     
-    sh "git -C ../../owncloud-themes pull"
+    sh "git -C ../../customer-themes-tmp pull"
       
     path = ""
     customers = read_json(
-  		json_path: "../owncloud-themes/Customers.json"
+  		json_path: "../customer-themes-tmp/Customers.json"
 	)
 
 	customers.each do |customer|
 		if customer[:customer] == options[:CUSTOMER]
-       		path = "../../owncloud-themes/" + customer[:path] + "ios/"
+       		path = "../../customer-themes-tmp/" + customer[:path] + "ios/"
        		break
     	end
 	end
