@@ -16,7 +16,7 @@ Details
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
    Added an action in detail view menu which enables presentation mode. Presentation mode
-   prevents the display from sleep mode as long as the detail view is dismissed. Furthermore the
+   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
    navigation bar will be hidden.
 
    https://github.com/owncloud/ios-app/issues/704
