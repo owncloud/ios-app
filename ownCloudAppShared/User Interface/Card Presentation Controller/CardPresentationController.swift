@@ -37,6 +37,13 @@ public protocol CardPresentationSizing : UIViewController {
 	var fitsOnScreen : Bool { get set }
 }
 
+class DragView: UIView {
+	// Increase the tap area of this view
+	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+		return bounds.insetBy(dx: -10, dy: -10).contains(point)
+	}
+}
+
 final class CardPresentationController: UIPresentationController, Themeable {
 
 	// MARK: - Instance Variables.
@@ -48,7 +55,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	private var dimmingView = UIView()
 	private var dimmingViewGestureRecognizer : UITapGestureRecognizer?
 	private var overStretchView = UIView()
-	private var dragHandleView = UIView()
+	private var dragHandleView = DragView()
 
 	private var cachedFittingSize : CGSize?
 	private var presentedViewFittingSize : CGSize? {
@@ -169,6 +176,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 					dragHandleView.widthAnchor.constraint(equalToConstant: 50),
 					dragHandleView.heightAnchor.constraint(equalToConstant: 5)
 				])
+
 			}
 		}
 	}
@@ -249,7 +257,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 				fitsOnScreen = fittingSize.height < (windowFrame.size.height * CardPosition.open.heightMultiplier)
 
-			   	cardViewController.fitsOnScreen = fitsOnScreen
+				cardViewController.fitsOnScreen = fitsOnScreen
 			}
 		}
 	}
@@ -368,11 +376,11 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 		   let contentOffsetY = scrollView?.contentOffset.y,
 		   let hasVelocity = velocity,
 		   cardPosition == .open {
-		   	if contentOffsetY > 0, hasVelocity.y > 0 {
+			if contentOffsetY > 0, hasVelocity.y > 0 {
 				return false
 			}
 
-		   	if hasVelocity.y < 0 {
+			if hasVelocity.y < 0 {
 				return false
 			}
 		}
