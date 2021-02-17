@@ -266,6 +266,14 @@ platform :ios do
         sh "mv ../ownCloud/Resources/Theming/branding-splashscreen.png ../ownCloud/Resources/Theming/branding-splashscreen-regular.png"
         sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen.png"
 
+        # Set ownCloud.online Branded Login Logo for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-login-logo.png ../ownCloud/Resources/Theming/branding-login-logo-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-login-logo-owncloud-online.png ../ownCloud/Resources/Theming/branding-login-logo.png"
+
+        # Set ownCloud.online Branded Login Background for App Build
+        sh "mv ../ownCloud/Resources/Theming/branding-login-background.png ../ownCloud/Resources/Theming/branding-login-background-regular.png"
+        sh "mv ../ownCloud/Resources/Theming/branding-login-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-login-background.png"
+
         # Set ownCloud.online App-Icon for App Build
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"

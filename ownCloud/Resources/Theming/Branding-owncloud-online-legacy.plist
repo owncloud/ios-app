@@ -165,7 +165,7 @@
 			<key>ThemeStyle</key>
 			<string>contrast</string>
 			<key>darkBrandColor</key>
-			<string>Corporate.Color</string>
+			<string>#52DDA9</string>
 			<key>lightBrandColor</key>
 			<string>#628a99</string>
 			<key>Colors</key>
@@ -463,7 +463,7 @@
 							<key>background</key>
 							<string></string>
 							<key>foreground</key>
-							<string></string>
+							<string>#000000</string>
 						</dict>
 						<key>highlighted</key>
 						<dict>
