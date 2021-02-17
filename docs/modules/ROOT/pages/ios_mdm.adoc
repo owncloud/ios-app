@@ -82,11 +82,13 @@ Settings allowing to configure OAuth2 based authentication.
 
 include::./ios_mdm_tables.adoc[tag=oauth2]
 
+////
 ==== Shortcuts
 
 Shortcuts are a very powerful way to build automated workflows in iOS. Apps can provide shortcut intents for certain actions. ownCloud app provides certain actions as shortcuts as well (e.g. allowing to get account information, create folder and so on). However in some cases it might make sense to disable shortcuts to minimize security risks. It can be done using following option:
 
 include::./ios_mdm_tables.adoc[tag=shortcuts]
+////
 
 ==== Logging
 Logging settings control the ammount and type of app internal log messages stored as text files and accessible via settings menu.
