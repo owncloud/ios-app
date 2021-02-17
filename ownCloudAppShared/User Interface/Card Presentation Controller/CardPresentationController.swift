@@ -40,7 +40,14 @@ public protocol CardPresentationSizing : UIViewController {
 class DragView: UIView {
 	// Increase the tap area of this view
 	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-		return bounds.insetBy(dx: -10, dy: -10).contains(point)
+		return bounds.insetBy(dx: -20, dy: -10).contains(point)
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+
+		let newRect = UIAccessibility.convertToScreenCoordinates(bounds.insetBy(dx: -20, dy: -10), in: self)
+		self.accessibilityFrame = newRect
 	}
 }
 
@@ -214,7 +221,6 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		dragHandleView.accessibilityTraits = [.button]
 		dragHandleView.accessibilityLabel = "Close actions menu".localized
 		dragHandleView.isAccessibilityElement = true
-		dragHandleView.accessibilityFrame = dragHandleView.frame.insetBy(dx: -20, dy: -10)
 
 		PointerEffect.install(on: dragHandleView, effectStyle: .hoverScaled)
 	}
