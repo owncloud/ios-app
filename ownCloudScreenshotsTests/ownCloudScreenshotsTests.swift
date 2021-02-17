@@ -65,7 +65,7 @@ class ScreenshotsTests: XCTestCase {
 			brandedAppSetup(app: app)
 
 			let tablesQuery = app.tables
-			tablesQuery.staticTexts[accountName].firstMatch.tap()
+			app.navigationBars[accountName].buttons["Manage"].tap()
 
 			snapshot("11_ios_accounts_list_demo")
 
