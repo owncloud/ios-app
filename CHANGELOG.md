@@ -1,4 +1,4 @@
-Changelog for ownCloud iOS Client [11.5.1] (2020-02-16)
+Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
 ownCloud admins and users.
