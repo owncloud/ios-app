@@ -143,6 +143,10 @@ public class AppLockManager: NSObject {
 		}
 	}
 
+	public var isPasscodeEnforced : Bool {
+		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
+	}
+
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
 
@@ -504,5 +508,36 @@ public class AppLockManager: NSObject {
 				}
 			}
 		}
+	}
+}
+
+// MARK: - OCClassSettings support
+
+extension OCClassSettingsIdentifier {
+	static let passcode = OCClassSettingsIdentifier("passcode")
+}
+
+extension OCClassSettingsKey {
+	static let passcodeEnforced = OCClassSettingsKey("enforced")
+}
+
+extension AppLockManager: OCClassSettingsSupport {
+	public static var classSettingsIdentifier: OCClassSettingsIdentifier = .passcode
+
+	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.passcodeEnforced : false
+		]
+	}
+
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			OCClassSettingsKey.passcodeEnforced: [
+				OCClassSettingsMetadataKey.type: OCClassSettingsMetadataType.boolean,
+				OCClassSettingsMetadataKey.description: "Controls wether the user MUST establish a passcode upon app installation",
+				OCClassSettingsMetadataKey.category: "Passcode",
+				OCClassSettingsMetadataKey.status: OCClassSettingsKeyStatus.advanced
+			]
+		]
 	}
 }

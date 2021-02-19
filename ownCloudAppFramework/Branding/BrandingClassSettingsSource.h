@@ -22,9 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BrandingClassSettingsSource : OCClassSettingsFlatSource
 
-@property(strong,class,nonatomic,readonly,nullable) NSURL *brandingURL;
-@property(strong,class,nonatomic,readonly,nullable) NSDictionary<NSString *, id> *brandingProperties;
-
 @end
 
 extern OCClassSettingsSourceIdentifier OCClassSettingsSourceIdentifierBranding;

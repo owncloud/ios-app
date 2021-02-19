@@ -238,7 +238,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		libraryViewController = LibraryTableViewController(style: .grouped)
 		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
 		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
-		libraryNavigationController?.tabBarItem.image = UIImage(named: "branding-bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
+		libraryNavigationController?.tabBarItem.image = Branding.shared.brandedImageNamed(.bookmarkIcon)?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -550,11 +550,23 @@ extension ClientRootViewController : OCCoreDelegate {
 
 				if presentIssue != nil {
 					var presentViewController : UIViewController?
+					var onViewController : UIViewController?
 
-					if presentIssue?.type == .multipleChoice {
-						presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
-					} else {
-						presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
+					if let startViewController = self {
+						var hostViewController : UIViewController = startViewController
+
+						while hostViewController.presentedViewController != nil,
+						      hostViewController.presentedViewController?.isBeingDismissed == false {
+							hostViewController = hostViewController.presentedViewController!
+						}
+
+						onViewController = hostViewController
+					}
+
+					if let presentIssue = presentIssue, presentIssue.type == .multipleChoice {
+						presentViewController = ThemedAlertController(with: presentIssue, completion: queueCompletionHandler)
+					} else if let onViewController = onViewController, let presentIssue = presentIssue {
+						IssuesCardViewController.present(on: onViewController, issue: presentIssue, bookmark: self?.bookmark, completion: { [weak presentIssue] (response) in
 							switch response {
 								case .cancel:
 									presentIssue?.reject()
@@ -566,19 +578,13 @@ extension ClientRootViewController : OCCoreDelegate {
 							}
 							queueCompletionHandler()
 						})
-					}
-
-					if presentViewController != nil, let startViewController = self {
-						var hostViewController : UIViewController = startViewController
-
-						while hostViewController.presentedViewController != nil,
-						      hostViewController.presentedViewController?.isBeingDismissed == false {
-							hostViewController = hostViewController.presentedViewController!
-						}
 
 						queueCompletionHandlerScheduled = true
+					}
 
-						hostViewController.present(presentViewController!, animated: true, completion: nil)
+					if let presentViewController = presentViewController, let onViewController = onViewController {
+						queueCompletionHandlerScheduled = true
+						onViewController.present(presentViewController, animated: true, completion: nil)
 					}
 				}
 

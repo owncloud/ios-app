@@ -37,6 +37,20 @@ public protocol CardPresentationSizing : UIViewController {
 	var fitsOnScreen : Bool { get set }
 }
 
+class DragView: UIView {
+	// Increase the tap area of this view
+	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+		return bounds.insetBy(dx: -20, dy: -10).contains(point)
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+
+		let newRect = UIAccessibility.convertToScreenCoordinates(bounds.insetBy(dx: -20, dy: -10), in: self)
+		self.accessibilityFrame = newRect
+	}
+}
+
 final class CardPresentationController: UIPresentationController, Themeable {
 
 	// MARK: - Instance Variables.
@@ -48,7 +62,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	private var dimmingView = UIView()
 	private var dimmingViewGestureRecognizer : UITapGestureRecognizer?
 	private var overStretchView = UIView()
-	private var dragHandleView = UIView()
+	private var dragHandleView = DragView()
 
 	private var cachedFittingSize : CGSize?
 	private var presentedViewFittingSize : CGSize? {
@@ -169,6 +183,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 					dragHandleView.widthAnchor.constraint(equalToConstant: 50),
 					dragHandleView.heightAnchor.constraint(equalToConstant: 5)
 				])
+
 			}
 		}
 	}
@@ -206,7 +221,6 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		dragHandleView.accessibilityTraits = [.button]
 		dragHandleView.accessibilityLabel = "Close actions menu".localized
 		dragHandleView.isAccessibilityElement = true
-		dragHandleView.accessibilityFrame = dragHandleView.frame.insetBy(dx: -20, dy: -10)
 
 		PointerEffect.install(on: dragHandleView, effectStyle: .hoverScaled)
 	}
@@ -249,7 +263,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 				fitsOnScreen = fittingSize.height < (windowFrame.size.height * CardPosition.open.heightMultiplier)
 
-			   	cardViewController.fitsOnScreen = fitsOnScreen
+				cardViewController.fitsOnScreen = fitsOnScreen
 			}
 		}
 	}
@@ -288,7 +302,9 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 		switch velocity {
 			case _ where velocity >= 2000:
-				dismissView()
+				if dismissable {
+					dismissView()
+				}
 
 			case _ where velocity < 0:
 				if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.3) {
@@ -302,7 +318,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 					nextPosition = .open
 				} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
 					nextPosition = .half
-				} else {
+				} else if dismissable {
 					dismissView()
 				}
 
@@ -366,11 +382,11 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 		   let contentOffsetY = scrollView?.contentOffset.y,
 		   let hasVelocity = velocity,
 		   cardPosition == .open {
-		   	if contentOffsetY > 0, hasVelocity.y > 0 {
+			if contentOffsetY > 0, hasVelocity.y > 0 {
 				return false
 			}
 
-		   	if hasVelocity.y < 0 {
+			if hasVelocity.y < 0 {
 				return false
 			}
 		}
@@ -384,9 +400,12 @@ extension UIViewController {
 	open func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
 		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self, withHandle: withHandle, dismissable: dismissable)
 
-		viewController.transitioningDelegate = animator
+		viewController.transitioningDelegate = animator // .transitioningDelegate is only weak!
 		viewController.modalPresentationStyle = .custom
 
-		present(viewController, animated: animated, completion: completion)
+		present(viewController, animated: animated, completion: {
+			_ = animator // Keep reference to CardTransitionDelegate around (could be dropped prematurely otherwise)
+			completion?()
+		})
 	}
 }
