@@ -110,6 +110,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		if gotoPageNotificationObserver != nil {
 			NotificationCenter.default.removeObserver(gotoPageNotificationObserver!)
 		}
+		NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+
 	}
 
 	private var didSetupView : Bool = false
@@ -195,6 +197,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		super.viewDidLoad()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePageChanged), name: .PDFViewPageChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
 
 		gotoPageNotificationObserver = NotificationCenter.default.addObserver(forName: PDFViewerViewController.PDFGoToPageNotification.name, object: nil, queue: OperationQueue.main) { [weak self] (notification) in
 			if let page = notification.object as? PDFPage {
@@ -327,11 +330,16 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	// MARK: - Private helpers
 
 	private func setThumbnailPosition() {
-		if UIScreen.main.traitCollection.verticalSizeClass == .regular {
+		if UIScreen.main.traitCollection.verticalSizeClass == .regular, UIDevice.current.orientation.isPortrait, !UIDevice.current.isIpad {
 			self.thumbnailViewPosition = .bottom
 		} else {
 			self.thumbnailViewPosition = .right
 		}
+	}
+
+	@objc func rotated() {
+		setThumbnailPosition()
+		setupConstraints()
 	}
 
 	private func calculateThumbnailSize() {
