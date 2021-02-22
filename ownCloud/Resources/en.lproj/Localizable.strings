@@ -622,6 +622,10 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+"Play / Pause" = "Play / Pause";
+"Rewind" = "Rewind";
+"Fast Forward" = "Fast Forward";
+"Replay" = "Replay";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";

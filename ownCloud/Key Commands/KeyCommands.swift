@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
+import CoreMedia
 
 extension ServerListTableViewController {
 	override var keyCommands: [UIKeyCommand]? {
@@ -274,6 +275,9 @@ extension UITableViewController {
 	@objc func selectNext(sender: UIKeyCommand) {
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+		} else if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, (selectedIndexPath.section + 1) < self.tableView?.numberOfSections ?? 0 {
+			// New Section
+			self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIndexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
 		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
 		}
@@ -282,6 +286,11 @@ extension UITableViewController {
 	@objc func selectPrevious(sender: UIKeyCommand) {
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row > 0 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+		} else if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
+			let section = selectedIndexPath.section - 1
+			if let numberOfRows = self.tableView?.numberOfRows(inSection: section), numberOfRows > 0 {
+				self.tableView.selectRow(at: NSIndexPath(row: numberOfRows - 1, section: section) as IndexPath, animated: true, scrollPosition: .middle)
+			}
 		}
 	}
 
@@ -562,11 +571,11 @@ extension ClientQueryViewController {
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
-		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
-			if selectedRow < self.items.count - 1 {
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			if selectedIndexPath.row < self.items.count - 1 {
 				shortcuts.append(nextObjectCommand)
 			}
-			if selectedRow > 0 {
+			if selectedIndexPath.row > 0 || selectedIndexPath.section > 0 {
 				shortcuts.append(previousObjectCommand)
 			}
 			shortcuts.append(selectObjectCommand)
@@ -1007,7 +1016,24 @@ extension DisplayHostViewController {
 		var showCommands = false
 		if (self.viewControllers?.first as? PDFViewerViewController) != nil {
 			showCommands = true
-		} else if items?.count ?? 0 > 1 {
+
+			let searchCommand = UIKeyCommand(input: "L", modifierFlags: [.command], action: #selector(search), discoverabilityTitle: "Search".localized)
+			let gotoCommand = UIKeyCommand(input: "G", modifierFlags: [.command], action: #selector(goToPage), discoverabilityTitle: "Go to Page".localized)
+
+			shortcuts.append(searchCommand)
+			shortcuts.append(gotoCommand)
+		} else if (self.viewControllers?.first as? MediaDisplayViewController) != nil {
+			let playbackCommand = UIKeyCommand(input: "P", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: "Play / Pause".localized)
+			let seekBackwardCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Rewind".localized)
+			let seekForwardCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Fast Forward".localized)
+			let replayCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: "Replay".localized)
+
+			shortcuts.append(playbackCommand)
+			shortcuts.append(seekBackwardCommand)
+			shortcuts.append(seekForwardCommand)
+			shortcuts.append(replayCommand)
+		}
+		if items?.count ?? 0 > 1 {
 			showCommands = true
 		}
 
@@ -1016,11 +1042,88 @@ extension DisplayHostViewController {
 			shortcuts.append(previousObjectCommand)
 		}
 
+		if let core = core, let currentViewController = self.viewControllers?.first as? DisplayViewController, let item = currentViewController.item {
+			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
+			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
+			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
+
+			actionsCollaborate.forEach({
+				if let keyCommand = $0.actionExtension.keyCommand, let keyModifierFlags = $0.actionExtension.keyModifierFlags {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: keyModifierFlags, action: #selector(performMoreItemAction), discoverabilityTitle: $0.actionExtension.name)
+					shortcuts.append(actionCommand)
+				}
+			})
+		}
+
 		return shortcuts
 	}
 
 	override var canBecomeFirstResponder: Bool {
 		return true
+	}
+
+	@objc func performMoreItemAction(_ command : UIKeyCommand) {
+		if let core = core, let currentViewController = self.viewControllers?.first as? DisplayViewController, let item = currentViewController.item {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+			actions.forEach({
+				if command.discoverabilityTitle == $0.actionExtension.name {
+					$0.perform()
+				}
+			})
+		}
+	}
+
+	@objc func tooglePlayback() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let mediaController = currentViewController as? MediaDisplayViewController, let player = mediaController.player {
+			if player.rate == 1.0 {
+				player.pause()
+			} else {
+				player.play()
+			}
+		}
+	}
+
+	@objc func replay() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let mediaController = currentViewController as? MediaDisplayViewController, let player = mediaController.player {
+			player.seek(to: .zero)
+			player.play()
+		}
+	}
+
+	@objc func seek(_ command : UIKeyCommand) {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let mediaController = currentViewController as? MediaDisplayViewController, let player = mediaController.player {
+			var seekSeconds : Double = 1
+			if command.input == UIKeyCommand.inputLeftArrow {
+				seekSeconds = -1
+			}
+
+			let newTime = CMTimeAdd(player.currentTime(), CMTime(seconds: seekSeconds, preferredTimescale: player.currentTime().timescale))
+			player.seek(to: newTime)
+		}
+	}
+
+	@objc func search() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.search()
+		}
+	}
+
+	@objc func goToPage() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.goToPage()
+		}
 	}
 
     @objc func selectNext() {

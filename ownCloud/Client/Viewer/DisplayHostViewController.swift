@@ -30,7 +30,7 @@ class DisplayHostViewController: UIPageViewController {
 	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
-	weak private var core: OCCore?
+	weak var core: OCCore?
 
 	private var initialItem: OCItem
 	private var displayedIndex: Int?

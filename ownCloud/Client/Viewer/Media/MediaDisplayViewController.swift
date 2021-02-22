@@ -32,7 +32,7 @@ class MediaDisplayViewController : DisplayViewController {
 	private var playerStatusObservation: NSKeyValueObservation?
 	private var playerItemStatusObservation: NSKeyValueObservation?
 	private var playerItem: AVPlayerItem?
-	private var player: AVPlayer?
+	var player: AVPlayer?
 	private var playerViewController: AVPlayerViewController?
 
 	// Information for now playing
