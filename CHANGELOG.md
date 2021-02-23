@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.1...master
+
+Summary
+-------
+
+* Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+
+Details
+-------
+
+* Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+
+   Changed position of Collapsible Progress Bar in detail view and hide it in full screen mode.
+
+   https://github.com/owncloud/ios-app/issues/906
+
 Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
