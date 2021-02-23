@@ -145,7 +145,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 
 	// MARK: - Theming
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		contentView.backgroundColor = collection.toolbarColors.backgroundColor
+		self.backgroundColor = collection.toolbarColors.backgroundColor
 		progressLabelView.textColor = collection.toolbarColors.labelColor
 
 		progressView.trackTintColor = collection.toolbarColors.backgroundColor?.lighter(0.1)

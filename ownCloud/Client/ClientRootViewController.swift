@@ -74,6 +74,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	var fpServiceStandby : OCFileProviderServiceStandby?
 
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
+	private var tabBarObservation: NSKeyValueObservation?
+	private var navigationBarObservation: NSKeyValueObservation?
 
 	init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
@@ -137,6 +139,10 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	deinit {
 		connectionStatusObservation = nil
+		tabBarObservation?.invalidate()
+		tabBarObservation = nil
+		navigationBarObservation?.invalidate()
+		navigationBarObservation = nil
 
 		if let statusSummary = connectionStatusSummary {
 			ProgressSummarizer.shared(forBookmark: bookmark).popPrioritySummary(summary: statusSummary)
@@ -269,6 +275,36 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		if let filesNavigationController = filesNavigationController,
 		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
 			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
+		}
+
+		tabBarObservation = observe(
+			\.tabBar.isHidden,
+			options: [.old, .new]
+		) { _, change in
+			guard let newValue = change.newValue else { return }
+			if newValue {
+				self.progressBarHeightConstraint?.constant = 0
+				self.progressBar?.heightConstraint?.constant = (self.progressBar?.contentViewHeight ?? 0) + self.view.safeAreaInsets.bottom
+				self.progressBar?.heightConstraint?.isActive = true
+			} else {
+				self.progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
+				self.progressBar?.heightConstraint?.constant = (self.progressBar?.contentViewHeight ?? 0)
+				self.progressBar?.heightConstraint?.isActive = true
+			}
+
+			self.progressBar?.setNeedsLayout()
+		}
+
+		navigationBarObservation = filesNavigationController?.observe(
+			\.navigationBar.isHidden,
+			options: [.old, .new]
+		) { _, change in
+			guard let newValue = change.newValue else { return }
+			if newValue {
+				self.progressBar?.isHidden = true
+			} else {
+				self.progressBar?.isHidden = false
+			}
 		}
 	}
 
