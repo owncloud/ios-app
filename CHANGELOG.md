@@ -3,7 +3,7 @@ Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
 The following sections list the changes in ownCloud iOS Client unreleased relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/client/compare/v11.5.0...master
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.1...master
 
 Summary
 -------
@@ -20,6 +20,27 @@ Details
    navigation bar will be hidden.
 
    https://github.com/owncloud/ios-app/issues/704
+
+Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
+ownCloud admins and users.
+
+[11.5.1]: https://github.com/owncloud/client/compare/v11.5.0...v11.5.1
+
+Summary
+-------
+
+* Bugfix - Fix Crash on iOS 12 devices: [#896](https://github.com/owncloud/ios-app/pull/896)
+
+Details
+-------
+
+* Bugfix - Fix Crash on iOS 12 devices: [#896](https://github.com/owncloud/ios-app/pull/896)
+
+   Fixed a crash on startup, when iOS 12 is installed on the device.
+
+   https://github.com/owncloud/ios-app/pull/896
 
 Changelog for ownCloud iOS Client [11.5.0] (2020-02-10)
 =======================================
