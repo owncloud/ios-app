@@ -3,7 +3,7 @@ Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
 The following sections list the changes in ownCloud iOS Client unreleased relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/client/compare/v11.5.0...master
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.1...master
 
 Summary
 -------
