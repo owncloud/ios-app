@@ -28,6 +28,8 @@ class PresentationModeAction: Action {
 	override class var keyCommand : String? { return "P" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
+	static let reason : DisplaySleepPreventer.Reason = "presentation-mode"
+
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
 		if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
@@ -44,11 +46,11 @@ class PresentationModeAction: Action {
 			return
 		}
 
-		if DisplaySleepPreventer.shared.preventCount == 0 {
+		if !DisplaySleepPreventer.shared.isPreventing(for: PresentationModeAction.reason) {
 			let alertController = UIAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { (_) in
-				DisplaySleepPreventer.shared.startPreventingDisplaySleep()
+				DisplaySleepPreventer.shared.startPreventingDisplaySleep(for: PresentationModeAction.reason)
 
 				guard let navigationController = hostViewController.navigationController else {
 					return

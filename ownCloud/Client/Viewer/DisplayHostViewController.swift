@@ -125,7 +125,7 @@ class DisplayHostViewController: UIPageViewController {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		DisplaySleepPreventer.shared.stopPreventingDisplaySleep()
+		DisplaySleepPreventer.shared.stopPreventingDisplaySleep(for: PresentationModeAction.reason)
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
