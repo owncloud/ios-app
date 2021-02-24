@@ -848,5 +848,6 @@
 "No Access to the media selected for upload" = "No Access to the media selected for upload";
 
 /* MDM settings push */
-"New settings pushed via MDM" = "New settings pushed via MDM";
-"Tap to re-launch." = "Tap to re-launch.";
+"New settings received from MDM" = "New settings received from MDM";
+"Tap to quit the app." = "Tap to quit the app.";
+"Tap to launch the app." = "Tap to launch the app.";

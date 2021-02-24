@@ -274,15 +274,32 @@ extension AppDelegate {
 	}
 }
 
-extension AppDelegate {
+extension AppDelegate : NotificationResponseHandler {
 	func setupMDMPushRelaunch() {
-		NotificationCenter.default.addObserver(self, selector: #selector(relaunchAfterMDMPush), name: .OCClassSettingsManagedSettingsChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(offerRelaunchAfterMDMPush), name: .OCClassSettingsManagedSettingsChanged, object: nil)
 	}
 
-	@objc func relaunchAfterMDMPush() {
-		UNUserNotificationCenter.postLocalNotification(with: "mdm-relaunch", title: "New settings pushed via MDM".localized, body: "Tap to re-launch.".localized, after: 0.1) { (error) in
-			if error == nil {
-				exit(0)
+	@objc func offerRelaunchAfterMDMPush() {
+		NotificationManager.shared.requestAuthorization(options: [.alert, .sound], completionHandler: { (granted, _) in
+			if granted {
+				let content = UNMutableNotificationContent()
+
+				content.title = "New settings received from MDM".localized
+				content.body = "Tap to quit the app.".localized
+
+				let request = UNNotificationRequest(identifier: NotificationManagerComposeIdentifier(AppDelegate.self, "terminate-app"), content: content, trigger: nil)
+
+				NotificationManager.shared.add(request, withCompletionHandler: { (_) in })
+			}
+		})
+	}
+
+	static func handle(_ center: UNUserNotificationCenter, response: UNNotificationResponse, identifier: String, completionHandler: @escaping () -> Void) {
+		if identifier == "terminate-app", response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+			UNUserNotificationCenter.postLocalNotification(with: "mdm-relaunch", title: "Tap to launch the app.".localized, body: nil, after: 0.1) { (error) in
+				if error == nil {
+					exit(0)
+				}
 			}
 		}
 	}
