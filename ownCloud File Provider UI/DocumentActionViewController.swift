@@ -26,9 +26,6 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	@IBOutlet var label : UILabel!
 	@IBOutlet var button : ThemeButton!
 
-	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
-	}
-
 	override func prepare(forError error: Error) {
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
