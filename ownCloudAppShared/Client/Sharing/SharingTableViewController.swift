@@ -18,16 +18,15 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class SharingTableViewController : StaticTableViewController {
+open class SharingTableViewController : StaticTableViewController {
 
 	// MARK: - Instance Variables
 	weak var core : OCCore?
 	var item : OCItem
 
 	var shareQuery : OCShareQuery?
-	var shares : [OCShare] = []
+	public var shares : [OCShare] = []
 	var showActivityIndicator : Bool = false
 
 	var messageView : MessageView?
@@ -41,7 +40,7 @@ class SharingTableViewController : StaticTableViewController {
 		super.init(style: .grouped)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -52,7 +51,7 @@ class SharingTableViewController : StaticTableViewController {
 	}
 
 	// MARK: - View events
-	override func viewWillAppear(_ animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.isToolbarHidden = true
 	}
@@ -66,7 +65,7 @@ class SharingTableViewController : StaticTableViewController {
 		self.tableView.layoutTableHeaderView()
 	}
 
-	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+	open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		if size.width != self.view.frame.size.width {
 			DispatchQueue.main.async {

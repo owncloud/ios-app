@@ -21,7 +21,7 @@ import UIKit
 extension UITableView {
 
 	//Variable-height UITableView tableHeaderView with autolayout
-	func layoutTableHeaderView() {
+	public func layoutTableHeaderView() {
 
 		guard let headerView = self.tableHeaderView else { return }
 		headerView.translatesAutoresizingMaskIntoConstraints = false

@@ -20,13 +20,98 @@ import UIKit
 import FileProviderUI
 import ownCloudApp
 import ownCloudAppShared
+import ownCloudSDK
 
 class DocumentActionViewController: FPUIActionExtensionViewController {
 
-	@IBOutlet var label : UILabel!
-	@IBOutlet var button : ThemeButton!
+	private var coreConnectionStatusObservation : NSKeyValueObservation?
+	weak var core: OCCore?
+	var themeNavigationController : ThemeNavigationController?
+
+	enum ActionExtensionType {
+		case undefined, sharing, links
+	}
+
+	deinit {
+		coreConnectionStatusObservation?.invalidate()
+		coreConnectionStatusObservation = nil
+	}
 
 	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
+
+		guard let identifier = itemIdentifiers.first else {
+			extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+			return
+		}
+
+		let collection = Theme.shared.activeCollection
+		self.view.backgroundColor = collection.toolbarColors.backgroundColor
+
+		themeNavigationController = ThemeNavigationController()
+		if let themeNavigationController = themeNavigationController {
+			view.addSubview(themeNavigationController.view)
+			addChild(themeNavigationController)
+		}
+
+		showCancelLabel(with: "Connecting…".localized)
+
+		var actionExtensionType : ActionExtensionType = .undefined
+		if actionIdentifier == "com.owncloud.FileProviderUI.Share" {
+			actionExtensionType = .sharing
+		} else if actionIdentifier == "com.owncloud.FileProviderUI.PublicLinks" {
+			actionExtensionType = .links
+		}
+
+		OCCoreManager().requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
+			guard let self = self else { return }
+
+			if let error = error {
+				self.extensionContext.cancelRequest(withError: error)
+			} else {
+				self.core = core
+				guard let item = databaseItem else { return }
+				guard let core = self.core else { return }
+				var triedConnecting = false
+
+				self.coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (_, _) in
+					guard let self = self else { return }
+
+					OnMainThread {
+						if core.connectionStatus == .online {
+							self.coreConnectionStatusObservation?.invalidate()
+							self.coreConnectionStatusObservation = nil
+
+							if actionExtensionType == .sharing {
+								let groupSharingController = GroupSharingTableViewController(core: core, item: item)
+								groupSharingController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissView))
+								self.themeNavigationController?.viewControllers = [groupSharingController]
+							} else if actionExtensionType == .links {
+								let publicLinkController = PublicLinkTableViewController(core: core, item: item)
+								publicLinkController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissView))
+								self.themeNavigationController?.viewControllers = [publicLinkController]
+							}
+						} else if core.connectionStatus == .connecting {
+							triedConnecting = true
+							self.showCancelLabel(with: "Connecting…".localized)
+						} else if core.connectionStatus == .offline || core.connectionStatus == .unavailable {
+							if triedConnecting {
+								var actionTypeLabel = ""
+								switch actionExtensionType {
+								case .sharing:
+									actionTypeLabel = "Sharing".localized
+								case .links:
+									actionTypeLabel = "Public Links".localized
+								default:
+									actionTypeLabel = ""
+								}
+
+								self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	override func prepare(forError error: Error) {
@@ -41,18 +126,25 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 			AppLockManager.shared.showLockscreenIfNeeded()
 		} else {
-			let collection = Theme.shared.activeCollection
-			self.view.backgroundColor = collection.toolbarColors.backgroundColor
-			label.textColor = collection.toolbarColors.labelColor
-			button.setTitleColor(collection.toolbarColors.labelColor, for: .normal)
-			button.backgroundColor = collection.neutralColors.normal.background
-			label.text = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized
-			button.setTitle("Cancel".localized, for: .normal)
+			showCancelLabel(with: "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized)
 		}
 	}
 
-	@IBAction func cancelScreen() {
-		extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+	func showCancelLabel(with message: String) {
+		OnMainThread {
+			if let currentController = self.themeNavigationController?.viewControllers.first as? CancelLabelViewController {
+				currentController.updateCancelLabels(with: message)
+			} else {
+				let cancelLabelViewController = UIStoryboard.init(name: "MainInterface", bundle: nil).instantiateViewController(withIdentifier: "CancelLabelViewController") as! CancelLabelViewController
+				cancelLabelViewController.updateCancelLabels(with: message)
+				self.themeNavigationController?.viewControllers = [cancelLabelViewController]
+			}
+		}
 	}
 
+	@objc func dismissView() {
+		self.dismiss(animated: true) {
+			self.extensionContext.completeRequest()
+		}
+	}
 }

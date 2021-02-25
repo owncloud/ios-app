@@ -18,13 +18,12 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class ClientItemResolvingCell: ClientItemCell {
+open class ClientItemResolvingCell: ClientItemCell {
 	var itemTracker : OCCoreItemTracking?
 
 	// MARK: - Resolve item from path
-	var itemResolutionPath : String? {
+	public var itemResolutionPath : String? {
 		didSet {
 			self.item = nil
 
@@ -48,7 +47,7 @@ class ClientItemResolvingCell: ClientItemCell {
 		}
 	}
 
-	var itemResolutionLocalID : String? {
+	public var itemResolutionLocalID : String? {
 		didSet {
 			if let itemResolutionLocalID = itemResolutionLocalID {
 				self.item = nil

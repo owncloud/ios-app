@@ -17,9 +17,8 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class NotificationHUDViewController: UIViewController {
+open class NotificationHUDViewController: UIViewController {
 
 	typealias NotificationHUDDismissCompletionHandler = (() -> Void)
 	var completionHandler : NotificationHUDDismissCompletionHandler?
@@ -34,7 +33,7 @@ class NotificationHUDViewController: UIViewController {
 	var tapGestureRecognizer : UITapGestureRecognizer!
 	let dismissalTimeInterval = 3.0
 
-	init(on viewController: UIViewController, title: String, subtitle: String, completion: (() -> Void)? = nil) {
+	public init(on viewController: UIViewController, title: String, subtitle: String, completion: (() -> Void)? = nil) {
 		self.onViewController = viewController
 		super.init(nibName: nil, bundle: nil)
 
@@ -48,7 +47,7 @@ class NotificationHUDViewController: UIViewController {
 
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 

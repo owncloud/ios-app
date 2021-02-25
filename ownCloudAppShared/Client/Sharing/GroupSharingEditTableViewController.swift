@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class GroupSharingEditTableViewController: StaticTableViewController {
+open class GroupSharingEditTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var share : OCShare?
@@ -28,7 +27,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	var reshares : [OCShare]?
 	weak var core : OCCore?
 	var showSubtitles : Bool = false
-	var createShare : Bool = false
+	public var createShare : Bool = false
 	var permissionMask : OCSharePermissionsMask?
 	var defaultPermissionMask : OCSharePermissionsMask
 	var canIncreasePermissions = true
@@ -49,11 +48,11 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		}
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if createShare {
@@ -87,7 +86,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 
 	// MARK: Create Share
 
-	@objc func createShareAndDismiss() {
+	@objc public func createShareAndDismiss() {
 		guard let share = share else { return }
 
 		if let recipient = share.recipient, let permissionMask = permissionMask {
@@ -335,7 +334,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 
 	// MARK: Update Subtitles
 
-	@objc func showInfoSubtitles() {
+	@objc public func showInfoSubtitles() {
 		showSubtitles.toggle()
 
 		guard let removeSection = self.sectionForIdentifier("permission-section") else { return }
