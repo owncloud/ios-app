@@ -69,6 +69,7 @@ class WebViewDisplayViewController: DisplayViewController {
 
 						self.fullScreenGesture.delegate = self
 						webView.addGestureRecognizer(self.fullScreenGesture)
+						self.supportsFullScreenMode = true
 					}
 				}
 			} else {

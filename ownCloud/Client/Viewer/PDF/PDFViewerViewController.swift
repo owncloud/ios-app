@@ -206,6 +206,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
 			tapRecognizer.numberOfTapsRequired = 1
 			pdfView.addGestureRecognizer(tapRecognizer)
+			supportsFullScreenMode = true
 		}
 		//pdfView.isUserInteractionEnabled = true
 	}

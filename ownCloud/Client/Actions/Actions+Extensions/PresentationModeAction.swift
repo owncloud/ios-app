@@ -41,7 +41,7 @@ class PresentationModeAction: Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let hostViewController = context.viewController else {
+		guard context.items.count > 0, let hostViewController = context.viewController as? DisplayViewController else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
@@ -56,7 +56,7 @@ class PresentationModeAction: Action {
 					return
 				}
 
-				if !navigationController.isNavigationBarHidden {
+				if hostViewController.supportsFullScreenMode, !navigationController.isNavigationBarHidden {
 					navigationController.setNavigationBarHidden(true, animated: true)
 				}
 			}))
@@ -66,7 +66,7 @@ class PresentationModeAction: Action {
 				return
 			}
 
-			if !navigationController.isNavigationBarHidden {
+			if hostViewController.supportsFullScreenMode, !navigationController.isNavigationBarHidden {
 				navigationController.setNavigationBarHidden(true, animated: true)
 			}
 		}

@@ -73,6 +73,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 				self.qlPreviewController?.dataSource = self
 				self.qlPreviewController?.view.isHidden = false
+				supportsFullScreenMode = true
 			}
 
 			completion(true)

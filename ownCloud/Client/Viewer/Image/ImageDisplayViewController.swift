@@ -84,7 +84,6 @@ class ImageDisplayViewController : DisplayViewController {
 	// MARK: - Specific view
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-
 		if source != nil {
 			activityIndicatorView.startAnimating()
 
@@ -125,6 +124,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 						self.tapToZoomGestureRecognizer.delegate = self
 						self.showHideBarsTapGestureRecognizer.delegate = self
+						self.supportsFullScreenMode = true
 					} else {
 						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
 					}

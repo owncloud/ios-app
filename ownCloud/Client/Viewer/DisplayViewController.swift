@@ -154,6 +154,10 @@ class DisplayViewController: UIViewController {
 
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
+	// MARK: - Fullscreen Mode Support
+
+	var supportsFullScreenMode = false
+
 	// MARK: - Initialization and de-initialization
 
 	required init() {
