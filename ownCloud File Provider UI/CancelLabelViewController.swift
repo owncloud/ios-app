@@ -36,7 +36,6 @@ class CancelLabelViewController: UIViewController {
 		self.label.textColor = collection.toolbarColors.labelColor
 		self.button.setTitleColor(collection.toolbarColors.labelColor, for: .normal)
 		self.button.backgroundColor = collection.neutralColors.normal.background
-		
 		self.label.text = message
 		self.button.setTitle("Cancel".localized, for: .normal)
 	}

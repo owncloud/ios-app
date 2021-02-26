@@ -35,6 +35,10 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
 		coreConnectionStatusObservation = nil
+
+		if let bookmark = core?.bookmark {
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+		}
 	}
 
 	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
