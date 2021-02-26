@@ -48,6 +48,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 			return
 		}
 
+		OCItem.registerIcons()
 		let collection = Theme.shared.activeCollection
 		self.view.backgroundColor = collection.toolbarColors.backgroundColor
 
@@ -59,11 +60,14 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 		showCancelLabel(with: "Connecting…".localized)
 
+		var actionTypeLabel = ""
 		var actionExtensionType : ActionExtensionType = .undefined
 		if actionIdentifier == "com.owncloud.FileProviderUI.Share" {
 			actionExtensionType = .sharing
+			actionTypeLabel = "Sharing".localized
 		} else if actionIdentifier == "com.owncloud.FileProviderUI.PublicLinks" {
 			actionExtensionType = .links
+			actionTypeLabel = "Public Links".localized
 		}
 
 		OCCoreManager().requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
@@ -99,18 +103,12 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 							self.showCancelLabel(with: "Connecting…".localized)
 						} else if core.connectionStatus == .offline || core.connectionStatus == .unavailable {
 							if triedConnecting {
-								var actionTypeLabel = ""
-								switch actionExtensionType {
-								case .sharing:
-									actionTypeLabel = "Sharing".localized
-								case .links:
-									actionTypeLabel = "Public Links".localized
-								default:
-									actionTypeLabel = ""
-								}
-
 								self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
 							}
+						} else if actionExtensionType == .links, core.connection.capabilities?.sharingAPIEnabled == false, core.connection.capabilities?.publicSharingEnabled == false, item.isShareable == false {
+							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
+						} else if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false {
+							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
 						}
 					}
 				}
