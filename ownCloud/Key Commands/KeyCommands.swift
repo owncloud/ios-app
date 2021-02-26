@@ -273,9 +273,11 @@ extension ClientRootViewController {
 extension UITableViewController {
 
 	@objc func selectNext(sender: UIKeyCommand) {
-		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
+		guard let selectedIndexPath = self.tableView?.indexPathForSelectedRow else { return }
+
+		if selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
-		} else if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, (selectedIndexPath.section + 1) < self.tableView?.numberOfSections ?? 0 {
+		} else if (selectedIndexPath.section + 1) < self.tableView?.numberOfSections ?? 0 {
 			// New Section
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIndexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
 		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
@@ -284,9 +286,11 @@ extension UITableViewController {
 	}
 
 	@objc func selectPrevious(sender: UIKeyCommand) {
-		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row > 0 {
+		guard let selectedIndexPath = self.tableView?.indexPathForSelectedRow else { return }
+
+		if selectedIndexPath.row > 0 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
-		} else if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
+		} else if selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
 			let section = selectedIndexPath.section - 1
 			if let numberOfRows = self.tableView?.numberOfRows(inSection: section), numberOfRows > 0 {
 				self.tableView.selectRow(at: NSIndexPath(row: numberOfRows - 1, section: section) as IndexPath, animated: true, scrollPosition: .middle)
@@ -484,6 +488,7 @@ extension StaticTableViewController {
 				// New Section
 				self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIndexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
 			}
+
 		} else {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
 		}
@@ -1042,7 +1047,10 @@ extension DisplayHostViewController {
 			shortcuts.append(previousObjectCommand)
 		}
 
-		if let core = core, let currentViewController = self.viewControllers?.first as? DisplayViewController, let item = currentViewController.item {
+		guard let core = core else { return shortcuts }
+		guard let currentViewController = self.viewControllers?.first as? DisplayViewController else { return shortcuts }
+
+		if let item = currentViewController.item {
 			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
 			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
@@ -1063,7 +1071,10 @@ extension DisplayHostViewController {
 	}
 
 	@objc func performMoreItemAction(_ command : UIKeyCommand) {
-		if let core = core, let currentViewController = self.viewControllers?.first as? DisplayViewController, let item = currentViewController.item {
+		guard let core = core else { return }
+		guard let currentViewController = self.viewControllers?.first as? DisplayViewController else { return }
+
+		if let item = currentViewController.item {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
@@ -1078,11 +1089,11 @@ extension DisplayHostViewController {
 	@objc func tooglePlayback() {
 		guard let currentViewController = self.viewControllers?.first else { return }
 
-		if let mediaController = currentViewController as? MediaDisplayViewController, let player = mediaController.player {
-			if player.rate == 1.0 {
-				player.pause()
+		if let mediaController = currentViewController as? MediaDisplayViewController {
+			if mediaController.isPlaying {
+				mediaController.pause()
 			} else {
-				player.play()
+				mediaController.play()
 			}
 		}
 	}
@@ -1090,23 +1101,23 @@ extension DisplayHostViewController {
 	@objc func replay() {
 		guard let currentViewController = self.viewControllers?.first else { return }
 
-		if let mediaController = currentViewController as? MediaDisplayViewController, let player = mediaController.player {
-			player.seek(to: .zero)
-			player.play()
+		if let mediaController = currentViewController as? MediaDisplayViewController {
+			mediaController.seek(to: .zero)
+			mediaController.play()
 		}
 	}
 
 	@objc func seek(_ command : UIKeyCommand) {
 		guard let currentViewController = self.viewControllers?.first else { return }
 
-		if let mediaController = currentViewController as? MediaDisplayViewController, let player = mediaController.player {
+		if let mediaController = currentViewController as? MediaDisplayViewController {
 			var seekSeconds : Double = 1
 			if command.input == UIKeyCommand.inputLeftArrow {
 				seekSeconds = -1
 			}
 
-			let newTime = CMTimeAdd(player.currentTime(), CMTime(seconds: seekSeconds, preferredTimescale: player.currentTime().timescale))
-			player.seek(to: newTime)
+			let newTime = CMTimeAdd(mediaController.currentTime(), CMTime(seconds: seekSeconds, preferredTimescale: mediaController.currentTime().timescale))
+			mediaController.seek(to: newTime)
 		}
 	}
 

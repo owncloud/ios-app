@@ -32,7 +32,7 @@ class MediaDisplayViewController : DisplayViewController {
 	private var playerStatusObservation: NSKeyValueObservation?
 	private var playerItemStatusObservation: NSKeyValueObservation?
 	private var playerItem: AVPlayerItem?
-	var player: AVPlayer?
+	private var player: AVPlayer?
 	private var playerViewController: AVPlayerViewController?
 
 	// Information for now playing
@@ -41,6 +41,13 @@ class MediaDisplayViewController : DisplayViewController {
 	private var mediaItemArtist: String?
 
 	private var hasFocus: Bool = false
+
+	public var isPlaying: Bool {
+		if player?.rate == 1.0 {
+			return true
+		}
+		return false
+	}
 
 	deinit {
 		playerStatusObservation?.invalidate()
@@ -347,6 +354,24 @@ class MediaDisplayViewController : DisplayViewController {
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 		updateNowPlayingTimeline()
+	}
+
+	public func play() {
+		player?.play()
+	}
+
+	public func pause() {
+		player?.pause()
+	}
+
+	public func seek(to: CMTime) {
+		player?.seek(to: to)
+	}
+
+	public func currentTime() -> CMTime {
+		guard let player = player else { return CMTime() }
+
+		return player.currentTime()
 	}
 }
 
