@@ -196,7 +196,7 @@ public class ProgressSummarizer: NSObject {
 
 	private var updateInProgress : Bool = false
 
-	private func setNeedsUpdate() {
+	public func setNeedsUpdate() {
 		var scheduleUpdate = false
 
 		OCSynchronized(self) {

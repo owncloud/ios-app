@@ -26,10 +26,13 @@ private struct CollapsibleProgressBarUpdate {
 
 class CollapsibleProgressBar: UIView, Themeable {
 	var contentView : UIView = UIView()
+	var fillView : UIView = UIView()
 	var progressView : UIProgressView = UIProgressView()
 	var progressLabelView : UILabel = UILabel(frame: CGRect.zero)
 	var contentViewHeight : CGFloat = 0
 	var heightConstraint : NSLayoutConstraint?
+	var fillViewExpandedTopConstraint : NSLayoutConstraint?
+	var fillViewCollapsedTopConstraint : NSLayoutConstraint?
 	var isCollapsed : Bool = true
 	internal var _autoCollapse : Bool = true
 	var autoCollapse : Bool {
@@ -103,6 +106,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 	func setupSubviews() {
 		self.clipsToBounds = true
 
+		fillView.translatesAutoresizingMaskIntoConstraints = false
 		contentView.translatesAutoresizingMaskIntoConstraints = false
 		progressView.translatesAutoresizingMaskIntoConstraints = false
 		progressLabelView.translatesAutoresizingMaskIntoConstraints = false
@@ -115,37 +119,54 @@ class CollapsibleProgressBar: UIView, Themeable {
 		contentView.addSubview(progressView)
 		contentView.addSubview(progressLabelView)
 
-		progressView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
-		progressView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-		progressView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+		NSLayoutConstraint.activate([
+			progressView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+			progressView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+			progressView.topAnchor.constraint(equalTo: contentView.topAnchor)
+		])
 
 		progressLabelView.text = " "
 		progressLabelView.textAlignment = .center
 		progressLabelView.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 		progressLabelView.lineBreakMode = .byTruncatingTail
 
-		progressLabelView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-		progressLabelView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
-		progressLabelView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-		progressLabelView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+		NSLayoutConstraint.activate([
+			progressLabelView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
+			progressLabelView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20),
+			progressLabelView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+			progressLabelView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+		])
 
 		self.addSubview(contentView)
+		self.addSubview(fillView)
 
 		contentViewHeight = contentView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
 
-		contentView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
-		contentView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-		contentView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+		fillViewExpandedTopConstraint = fillView.topAnchor.constraint(equalTo:self.safeAreaLayoutGuide.bottomAnchor).with(priority: .defaultHigh)
+		fillViewCollapsedTopConstraint = fillView.topAnchor.constraint(equalTo: self.bottomAnchor).with(priority: .defaultHigh)
 
-		heightConstraint = self.heightAnchor.constraint(equalToConstant: 0)
-		heightConstraint?.isActive = true
+		heightConstraint = fillView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0)
+
+		NSLayoutConstraint.activate([
+			fillView.leftAnchor.constraint(equalTo: self.leftAnchor),
+			fillView.rightAnchor.constraint(equalTo: self.rightAnchor),
+			fillView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+			fillViewCollapsedTopConstraint!,
+
+			contentView.leftAnchor.constraint(equalTo: self.leftAnchor),
+			contentView.rightAnchor.constraint(equalTo: self.rightAnchor),
+			contentView.topAnchor.constraint(equalTo: self.topAnchor),
+
+			heightConstraint!
+		])
 
 		Theme.shared.register(client: self)
 	}
 
 	// MARK: - Theming
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.backgroundColor = collection.toolbarColors.backgroundColor
+		fillView.backgroundColor = collection.toolbarColors.backgroundColor
+		contentView.backgroundColor = collection.toolbarColors.backgroundColor
 		progressLabelView.textColor = collection.toolbarColors.labelColor
 
 		progressView.trackTintColor = collection.toolbarColors.backgroundColor?.lighter(0.1)
@@ -164,8 +185,12 @@ class CollapsibleProgressBar: UIView, Themeable {
 
 				if collapse {
 					self.heightConstraint?.constant = 0
+					self.fillViewExpandedTopConstraint?.isActive = false
+					self.fillViewCollapsedTopConstraint?.isActive = true
 				} else {
 					self.heightConstraint?.constant = self.contentViewHeight
+					self.fillViewCollapsedTopConstraint?.isActive = false
+					self.fillViewExpandedTopConstraint?.isActive = true
 				}
 
 				if animate {

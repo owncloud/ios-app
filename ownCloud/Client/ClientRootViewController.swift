@@ -41,7 +41,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	var libraryNavigationController : ThemeNavigationController?
 	var libraryViewController : LibraryTableViewController?
 	var progressBar : CollapsibleProgressBar?
-	var progressBarHeightConstraint: NSLayoutConstraint?
+	var progressBarBottomConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
@@ -74,8 +74,6 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	var fpServiceStandby : OCFileProviderServiceStandby?
 
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
-	private var tabBarObservation: NSKeyValueObservation?
-	private var navigationBarObservation: NSKeyValueObservation?
 
 	init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
@@ -103,11 +101,17 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 				self?.progressBar?.update(with: useSummary.message, progress: Float(useSummary.progress))
 
-				self?.progressBar?.autoCollapse = ((summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)) && (prioritySummary == nil)
+				self?.progressBar?.autoCollapse = (((summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)) && (prioritySummary == nil)) || (self?.allowProgressBarAutoCollapse ?? false)
 			}
 		}
 
 		self.delegate = self
+	}
+
+	public var allowProgressBarAutoCollapse : Bool = false {
+		didSet {
+			progressSummarizer?.setNeedsUpdate()
+		}
 	}
 
 	func updateConnectionStatusSummary() {
@@ -139,10 +143,6 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	deinit {
 		connectionStatusObservation = nil
-		tabBarObservation?.invalidate()
-		tabBarObservation = nil
-		navigationBarObservation?.invalidate()
-		navigationBarObservation = nil
 
 		if let statusSummary = connectionStatusSummary {
 			ProgressSummarizer.shared(forBookmark: bookmark).popPrioritySummary(summary: statusSummary)
@@ -235,6 +235,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
+		filesNavigationController?.delegate = self
 
 		activityViewController = ClientActivityViewController()
 		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
@@ -253,8 +254,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 		progressBar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-		progressBarHeightConstraint = NSLayoutConstraint(item: progressBar!, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -1 * (self.tabBar.bounds.height))
-		progressBarHeightConstraint?.isActive = true
+		progressBarBottomConstraint = progressBar?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -1 * self.tabBar.bounds.height)
+		progressBarBottomConstraint?.isActive = true
 
 		toolbar = UIToolbar(frame: .zero)
 		toolbar?.translatesAutoresizingMaskIntoConstraints = false
@@ -276,36 +277,6 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
 			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
 		}
-
-		tabBarObservation = observe(
-			\.tabBar.isHidden,
-			options: [.old, .new]
-		) { _, change in
-			guard let newValue = change.newValue else { return }
-			if newValue {
-				self.progressBarHeightConstraint?.constant = 0
-				self.progressBar?.heightConstraint?.constant = (self.progressBar?.contentViewHeight ?? 0) + self.view.safeAreaInsets.bottom
-				self.progressBar?.heightConstraint?.isActive = true
-			} else {
-				self.progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
-				self.progressBar?.heightConstraint?.constant = (self.progressBar?.contentViewHeight ?? 0)
-				self.progressBar?.heightConstraint?.isActive = true
-			}
-
-			self.progressBar?.setNeedsLayout()
-		}
-
-		navigationBarObservation = filesNavigationController?.observe(
-			\.navigationBar.isHidden,
-			options: [.old, .new]
-		) { _, change in
-			guard let newValue = change.newValue else { return }
-			if newValue {
-				self.progressBar?.isHidden = true
-			} else {
-				self.progressBar?.isHidden = false
-			}
-		}
 	}
 
 	var closeClientCompletionHandler : (() -> Void)?
@@ -322,15 +293,35 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		})
 	}
 
-	func navigationController(_ navigationController: UINavigationController,
-							  willShow viewController: UIViewController,
-							  animated: Bool) {
+	func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 		if viewController == emptyViewController {
-				closeClient()
-				if #available(iOS 13.0, *) {
-					// Prevent re-opening of items on next launch in case user has returned to the bookmark list
-					view.window?.windowScene?.userActivity = nil
-				}
+			closeClient()
+			if #available(iOS 13.0, *) {
+				// Prevent re-opening of items on next launch in case user has returned to the bookmark list
+				view.window?.windowScene?.userActivity = nil
+			}
+		} else {
+			updateProgressBarFor(viewController: viewController, animate: animated)
+		}
+	}
+
+	func updateProgressBarFor(viewController: UIViewController, animate: Bool) {
+		let hideProgressBar = viewController.isKind(of: DisplayHostViewController.self)
+
+		self.progressBar?.superview?.layoutIfNeeded()
+
+		self.allowProgressBarAutoCollapse = hideProgressBar
+
+		if hideProgressBar {
+			self.progressBarBottomConstraint?.constant = 0
+		} else {
+			self.progressBarBottomConstraint?.constant = -1 * self.tabBar.bounds.height
+		}
+
+		if animate {
+			UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+				self.progressBar?.superview?.layoutIfNeeded()
+			})
 		}
 	}
 
@@ -347,7 +338,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				}
 
 				let emptyViewController = self.emptyViewController
-				emptyViewController.navigationController?.delegate = self
+
 				if VendorServices.shared.isBranded, !VendorServices.shared.canAddAccount {
 					emptyViewController.navigationItem.title = "Manage".localized
 				} else {
@@ -408,9 +399,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
-		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
+		progressBarBottomConstraint?.constant = -1 * (self.tabBar.bounds.height)
 		self.progressBar?.setNeedsLayout()
-//		self.view.setNeedsLayout()
 	}
 
 	func updateMessageSelectionWith(messages: [OCMessage]?, groups : [MessageGroup]?, syncRecordIDs : Set<OCSyncRecordID>?) {
@@ -460,7 +450,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 					}
 				}
-		})
+			})
 		}
 	}
 
