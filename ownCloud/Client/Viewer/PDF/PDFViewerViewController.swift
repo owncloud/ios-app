@@ -145,7 +145,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pdfView.displayDirection = .horizontal
 				pdfView.translatesAutoresizingMaskIntoConstraints = false
 				pdfView.usePageViewController(true, withViewOptions: nil)
-                pdfView.delegate = self
+				pdfView.delegate = self
 				containerView.addArrangedSubview(pdfView)
 
 				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
