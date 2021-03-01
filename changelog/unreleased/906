@@ -1,0 +1,4 @@
+Bugfix: Misplaced Collapsible Progress Bar in detail view
+Changed position of Collapsible Progress Bar in detail view and hide it in full screen mode.
+
+https://github.com/owncloud/ios-app/issues/906
