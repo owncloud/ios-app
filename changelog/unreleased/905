@@ -1,0 +1,5 @@
+Bugfix: PDF thumbnail view position on the iPad
+
+Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to get more visible PDF content and to prevent enabling the iOS app switcher when scrolling throw the thumbnail view.
+
+https://github.com/owncloud/ios-app/pull/905

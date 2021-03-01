@@ -1,3 +1,26 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.1...master
+
+Summary
+-------
+
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+
+Details
+-------
+
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+
+   Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to
+   get more visible PDF content and to prevent enabling the iOS app switcher when scrolling throw
+   the thumbnail view.
+
+   https://github.com/owncloud/ios-app/pull/905
+
 Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to

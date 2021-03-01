@@ -110,6 +110,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		if gotoPageNotificationObserver != nil {
 			NotificationCenter.default.removeObserver(gotoPageNotificationObserver!)
 		}
+
 	}
 
 	private var didSetupView : Bool = false
@@ -327,7 +328,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	// MARK: - Private helpers
 
 	private func setThumbnailPosition() {
-		if UIScreen.main.traitCollection.verticalSizeClass == .regular {
+		if !UIDevice.current.isIpad, UIScreen.main.traitCollection.verticalSizeClass == .regular {
 			self.thumbnailViewPosition = .bottom
 		} else {
 			self.thumbnailViewPosition = .right
