@@ -24,7 +24,7 @@ import ownCloudSDK
 class ScreenshotsTests: XCTestCase {
 
 	var accountName = "ownCloud"
-	let takeBrandedScreenshots = true
+	let takeBrandedScreenshots = false
 
 	let url = "demo.owncloud.com"
 	let user = "admin"
