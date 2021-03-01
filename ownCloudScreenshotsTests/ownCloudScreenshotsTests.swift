@@ -149,7 +149,8 @@ class ScreenshotsTests: XCTestCase {
 		}
 		app.tap()
 
-		tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Access Files"]/*[[".cells.staticTexts[\"Access Files\"]",".staticTexts[\"Access Files\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		let accountTablesQuery = app.tables
+		accountTablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Access Files"]/*[[".cells.staticTexts[\"Access Files\"]",".staticTexts[\"Access Files\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 	}
 
 	func addAccount(app: XCUIApplication, credentials: [String : String]) {
@@ -185,6 +186,9 @@ class ScreenshotsTests: XCTestCase {
 	}
 
 	func preparePDFFile(app: XCUIApplication) {
+		if waitForPDFCell(app: app) != .completed {
+			XCTFail("Error: Could not open PDF")
+		}
 		let tablesQuery = app.tables
 		tablesQuery.staticTexts["ownCloud Manual.pdf"].tap()
 
@@ -285,6 +289,15 @@ class ScreenshotsTests: XCTestCase {
 
 	func waitForDocumentsCell(app: XCUIApplication) -> XCTWaiter.Result {
 		let element = app.tables.cells.staticTexts["Documents"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+
+	func waitForPDFCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.tables.cells.staticTexts["ownCloud Manual.pdf"]
 		let predicate = NSPredicate(format: "exists == 1")
 		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
 
