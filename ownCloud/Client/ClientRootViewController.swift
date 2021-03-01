@@ -308,7 +308,9 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	func updateProgressBarFor(viewController: UIViewController, animate: Bool) {
 		let hideProgressBar = viewController.isKind(of: DisplayHostViewController.self)
 
-		self.progressBar?.superview?.layoutIfNeeded()
+		if animate {
+			self.progressBar?.superview?.layoutIfNeeded()
+		}
 
 		self.allowProgressBarAutoCollapse = hideProgressBar
 
@@ -399,8 +401,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
-		progressBarBottomConstraint?.constant = -1 * (self.tabBar.bounds.height)
-		self.progressBar?.setNeedsLayout()
+
+		updateProgressBarFor(viewController: topMostViewController, animate: false)
 	}
 
 	func updateMessageSelectionWith(messages: [OCMessage]?, groups : [MessageGroup]?, syncRecordIDs : Set<OCSyncRecordID>?) {
