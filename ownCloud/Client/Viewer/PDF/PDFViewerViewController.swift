@@ -330,7 +330,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	// MARK: - Private helpers
 
 	private func setThumbnailPosition() {
-		if UIScreen.main.traitCollection.verticalSizeClass == .regular, UIDevice.current.orientation.isPortrait, !UIDevice.current.isIpad {
+		if !UIDevice.current.isIpad, UIDevice.current.orientation.isPortrait {
 			self.thumbnailViewPosition = .bottom
 		} else {
 			self.thumbnailViewPosition = .right
