@@ -9,6 +9,7 @@ Summary
 -------
 
 * Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 
 Details
 -------
@@ -18,6 +19,14 @@ Details
    Changed position of Collapsible Progress Bar in detail view and hide it in full screen mode.
 
    https://github.com/owncloud/ios-app/issues/906
+
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+
+   Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to
+   get more visible PDF content and to prevent enabling the iOS app switcher when scrolling throw
+   the thumbnail view.
+
+   https://github.com/owncloud/ios-app/pull/905
 
 Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 =======================================
