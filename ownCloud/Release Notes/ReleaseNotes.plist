@@ -1025,7 +1025,7 @@ Users can choose to prefer the original photo instead of an edited version and a
 					<key>Title</key>
 					<string>Fix: Links in PDF documents</string>
 					<key>Subtitle</key>
-					<string>Tap on hyperlinks in PDF documents opens the link.</string>
+					<string>A tap on a hyperlink in PDF documents now opens the link.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1035,7 +1035,7 @@ Users can choose to prefer the original photo instead of an edited version and a
 					<key>Title</key>
 					<string>Fix: PDF thumbnail view on the iPad</string>
 					<key>Subtitle</key>
-					<string>Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to get more visible PDF content.</string>
+					<string>Fixed the position of the PDF thumbnail view on the iPad. Now, more PDF content is visible.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1043,9 +1043,9 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Fix: UI refinement</string>
+					<string>Fix: Message View</string>
 					<key>Subtitle</key>
-					<string>In some cases the message view hides content and was no longer selectable.</string>
+					<string>In some cases, the message view hid content and also was not selectable.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
