@@ -1016,6 +1016,43 @@ Users can choose to prefer the original photo instead of an edited version and a
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.5.2</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Links in PDF documents</string>
+					<key>Subtitle</key>
+					<string>Tap on hyperlinks in PDF documents opens the link.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: PDF thumbnail view on the iPad</string>
+					<key>Subtitle</key>
+					<string>Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to get more visible PDF content.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: UI refinement</string>
+					<key>Subtitle</key>
+					<string>In some cases the message view hides content and was no longer selectable.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
