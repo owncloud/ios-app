@@ -8,11 +8,18 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 * Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
 
 Details
 -------
+
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
+
+   Tap on hyperlinks in PDF documents opens the link.
+
+   https://github.com/owncloud/enterprise/issues/4432
 
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 

@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 import PDFKit
+import SafariServices
 
 extension UILabel {
 	func _setupPdfInfoLabel() {
@@ -144,6 +145,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pdfView.displayDirection = .horizontal
 				pdfView.translatesAutoresizingMaskIntoConstraints = false
 				pdfView.usePageViewController(true, withViewOptions: nil)
+				pdfView.delegate = self
 				containerView.addArrangedSubview(pdfView)
 
 				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -205,7 +207,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 		if #available(iOS 13, *) {
 			let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
-			tapRecognizer.numberOfTapsRequired = 1
+			tapRecognizer.numberOfTapsRequired = 2
 			pdfView.addGestureRecognizer(tapRecognizer)
 		}
 		//pdfView.isUserInteractionEnabled = true
@@ -497,4 +499,11 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let maxPageCountText = "\(pdf.pageCount)"
 		pageCountLabel.text = NSString(format: "%@ of %@".localized as NSString, pageNrText, maxPageCountText) as String
 	}
+}
+
+extension PDFViewerViewController : PDFViewDelegate {
+    func pdfViewWillClick(onLink sender: PDFView, with url: URL) {
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
+    }
 }
