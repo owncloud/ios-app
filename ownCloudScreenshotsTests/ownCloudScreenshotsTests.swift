@@ -23,10 +23,12 @@ import ownCloudSDK
 
 class ScreenshotsTests: XCTestCase {
 
-	let serverDescription = "ownCloud"
+	var accountName = "ownCloud"
+	let takeBrandedScreenshots = false
+
 	let url = "demo.owncloud.com"
- 	let user = "admin"
- 	let password = "admin"
+	let user = "admin"
+	let password = "admin"
 
 	override func setUp() {
 		super.setUp()
@@ -45,6 +47,43 @@ class ScreenshotsTests: XCTestCase {
 		setupSnapshot(app)
 		app.launch()
 
+		if !takeBrandedScreenshots {
+			regularAppSetup(app: app)
+
+			// Workaround: Open the File List to dismiss keyboard
+			prepareFileList(app: app)
+			app.navigationBars[accountName].buttons["Accounts"].tap()
+
+			snapshot("11_ios_accounts_list_demo")
+			prepareFileList(app: app)
+
+			if waitForDocumentsCell(app: app) != .completed {
+				XCTFail("Error: File list not loaded")
+			}
+		} else {
+			accountName = "ownCloud.online"
+			brandedAppSetup(app: app)
+
+			let tablesQuery = app.tables
+			app.navigationBars[accountName].buttons["Manage"].tap()
+
+			snapshot("11_ios_accounts_list_demo")
+
+			tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Access Files"]/*[[".cells.staticTexts[\"Access Files\"]",".staticTexts[\"Access Files\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		}
+
+		preparePDFFile(app: app)
+		preparePhotos(app: app)
+		prepareQuickAccess(app: app)
+
+		if UIDevice.current.userInterfaceIdiom == .pad {
+			prepareMultipleWindows(app: app)
+		}
+
+		XCTAssert(true, "Screenshots taken")
+	}
+
+	func regularAppSetup(app: XCUIApplication) {
 		addUIInterruptionMonitor(withDescription: "System Dialog") {
 			(alert) -> Bool in
 			alert.buttons["Allow"].tap()
@@ -63,7 +102,7 @@ class ScreenshotsTests: XCTestCase {
 			XCTFail("Error: Account Button not available")
 		}
 		//Add account
-		let credentials : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : serverDescription]
+		let credentials : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : accountName]
 		addAccount(app: app, credentials: credentials)
 
 		if waitForAddAccountButton(app: app) != .completed {
@@ -81,25 +120,37 @@ class ScreenshotsTests: XCTestCase {
 		//Add account
 		let credentialsDemo2 : [String : String] = ["url" : url, "user" : user, "password" : password, "serverDescription" : "admin@demo.owncloud.com"]
 		addAccount(app: app, credentials: credentialsDemo2)
+	}
 
-		// Workaround: Open the File List to dismiss keyboard
-		prepareFileList(app: app)
-		app.navigationBars["ownCloud"].buttons["Accounts"].tap()
-		snapshot("11_ios_accounts_list_demo")
-		prepareFileList(app: app)
+	func brandedAppSetup(app: XCUIApplication) {
+		snapshot("10_ios_accounts_welcome_demo")
 
-		if waitForDocumentsCell(app: app) != .completed {
-			XCTFail("Error: File list not loaded")
+		//Settings
+		app.toolbars["Toolbar"].buttons["settingsBarButtonItem"].tap()
+		snapshot("60_ios_settings_demo")
+		app.navigationBars.element(boundBy: 0).buttons.element(boundBy: 0).tap()
+
+		let tablesQuery = app.tables
+		tablesQuery/*@START_MENU_TOKEN@*/.textFields["url"]/*[[".cells",".textFields[\"https:\/\/\"]",".textFields[\"url\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+		tablesQuery/*@START_MENU_TOKEN@*/.textFields["url"]/*[[".cells",".textFields[\"https:\/\/\"]",".textFields[\"url\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.typeText(url)
+		tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Continue"]/*[[".buttons[\"Continue\"].staticTexts[\"Continue\"]",".staticTexts[\"Continue\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		tablesQuery/*@START_MENU_TOKEN@*/.textFields["username"]/*[[".cells",".textFields[\"Username\"]",".textFields[\"username\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+		tablesQuery/*@START_MENU_TOKEN@*/.textFields["username"]/*[[".cells",".textFields[\"Username\"]",".textFields[\"username\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.typeText(user)
+
+		let passwordSecureTextField = tablesQuery/*@START_MENU_TOKEN@*/.secureTextFields["password"]/*[[".cells",".secureTextFields[\"Password\"]",".secureTextFields[\"password\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
+		passwordSecureTextField.tap()
+		passwordSecureTextField.typeText(password)
+		tablesQuery.buttons["Login"].tap()
+
+		addUIInterruptionMonitor(withDescription: "System Dialog") {
+			(alert) -> Bool in
+			alert.buttons["Allow"].tap()
+			return true
 		}
-		preparePDFFile(app: app)
-		preparePhotos(app: app)
-		prepareQuickAccess(app: app)
+		app.tap()
 
-		if UIDevice.current.userInterfaceIdiom == .pad {
-			prepareMultipleWindows(app: app)
-		}
-
-		XCTAssert(true, "Screenshots taken")
+		let accountTablesQuery = app.tables
+		accountTablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Access Files"]/*[[".cells.staticTexts[\"Access Files\"]",".staticTexts[\"Access Files\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 	}
 
 	func addAccount(app: XCUIApplication, credentials: [String : String]) {
@@ -131,10 +182,13 @@ class ScreenshotsTests: XCTestCase {
 			XCTFail("Error: Account list not loaded")
 		}
 		let tablesQuery = app.tables
-		tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["ownCloud"]/*[[".cells[\"server-bookmark-cell\"].staticTexts[\"ownCloud\"]",".staticTexts[\"ownCloud\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
+		tablesQuery.staticTexts[accountName].firstMatch.tap()
 	}
 
 	func preparePDFFile(app: XCUIApplication) {
+		if waitForPDFCell(app: app) != .completed {
+			XCTFail("Error: Could not open PDF")
+		}
 		let tablesQuery = app.tables
 		tablesQuery.staticTexts["ownCloud Manual.pdf"].tap()
 
@@ -158,7 +212,7 @@ class ScreenshotsTests: XCTestCase {
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		snapshot("22_ios_files_preview_pdf_demo")
-		app.navigationBars["ownCloud Manual.pdf"].buttons["ownCloud"].tap()
+		app.navigationBars["ownCloud Manual.pdf"].buttons[accountName].tap()
 	}
 
 	func preparePhotos(app: XCUIApplication) {
@@ -176,7 +230,7 @@ class ScreenshotsTests: XCTestCase {
 		sleep(5)
 
 		snapshot("20_ios_files_list_demo")
-		app.navigationBars["Photos"].buttons["ownCloud"].tap()
+		app.navigationBars["Photos"].buttons[accountName].tap()
 	}
 
 	func prepareQuickAccess(app: XCUIApplication) {
@@ -216,7 +270,7 @@ class ScreenshotsTests: XCTestCase {
 
 	func waitForAccountList(app: XCUIApplication) -> XCTWaiter.Result {
 		let tablesQuery = app.tables
-		let tableCell = tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["ownCloud"]/*[[".cells[\"server-bookmark-cell\"].staticTexts[\"ownCloud\"]",".staticTexts[\"ownCloud\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.firstMatch
+		let tableCell = tablesQuery.staticTexts[accountName].firstMatch
 		let predicate = NSPredicate(format: "exists == 1")
 		let ocExpectation = expectation(for: predicate, evaluatedWith: tableCell, handler: nil)
 
@@ -242,8 +296,17 @@ class ScreenshotsTests: XCTestCase {
 		return result
 	}
 
+	func waitForPDFCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.tables.cells.staticTexts["ownCloud Manual.pdf"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+
 	func waitForPDFViewer(app: XCUIApplication) -> XCTWaiter.Result {
-		let element = app.navigationBars["ownCloud Manual.pdf"].buttons["ownCloud"]
+		let element = app.navigationBars["ownCloud Manual.pdf"].buttons[accountName]
 		let predicate = NSPredicate(format: "exists == 1")
 		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
 

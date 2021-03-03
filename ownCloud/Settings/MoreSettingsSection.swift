@@ -103,8 +103,7 @@ class MoreSettingsSection: SettingsSection {
 						]
 
 						let textAttributes : [NSAttributedString.Key : Any] = [
-							.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
-							.foregroundColor : UIColor.darkGray
+							.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)
 						]
 
 					   	// Preamble

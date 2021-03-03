@@ -1,3 +1,40 @@
+Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
+ownCloud admins and users.
+
+[11.5.2]: https://github.com/owncloud/client/compare/v11.5.1...v11.5.2
+
+Summary
+-------
+
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+* Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+
+Details
+-------
+
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
+
+   Tap on hyperlinks in PDF documents opens the link.
+
+   https://github.com/owncloud/enterprise/issues/4432
+
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+
+   Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to
+   get more visible PDF content and to prevent enabling the iOS app switcher when scrolling throw
+   the thumbnail view.
+
+   https://github.com/owncloud/ios-app/pull/905
+
+* Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+
+   Hide the Collapsible Progress Bar in detail view and fixed position in file list.
+
+   https://github.com/owncloud/ios-app/issues/906
+
 Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to

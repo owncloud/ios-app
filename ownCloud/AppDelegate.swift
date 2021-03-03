@@ -153,16 +153,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return true
 		}
 
-        // If the app was re-installed, make sure to wipe keychain data. Since iOS 10.3 keychain entries are not deleted if the app is deleted, but since everything else is lost,
-        // it might lead to some inconsistency in the app state. Nevertheless we shall be careful here and consider that prior versions of the app didn't have the flag created upon
-        // very first app launch in UserDefaults. Thus we will check few more factors: no bookmarks configured and no passcode is set
-        if OCBookmarkManager.shared.bookmarks.count == 0 && AppLockManager.shared.lockEnabled == false {
-            VendorServices.shared.onFirstLaunch {
-                OCAppIdentity.shared.keychain?.wipe()
-            }
-        }
+		// If the app was re-installed, make sure to wipe keychain data. Since iOS 10.3 keychain entries are not deleted if the app is deleted, but since everything else is lost,
+		// it might lead to some inconsistency in the app state. Nevertheless we shall be careful here and consider that prior versions of the app didn't have the flag created upon
+		// very first app launch in UserDefaults. Thus we will check few more factors: no bookmarks configured and no passcode is set
+		if OCBookmarkManager.shared.bookmarks.count == 0 && AppLockManager.shared.lockEnabled == false {
+			VendorServices.shared.onFirstLaunch {
+				OCAppIdentity.shared.keychain?.wipe()
+			}
+		}
 
 		setupAndHandleCrashReports()
+
+		setupMDMPushRelaunch()
 
 		return true
 	}
@@ -269,5 +271,36 @@ extension AppDelegate {
 		}
 
 		crashReporter.enable()
+	}
+}
+
+extension AppDelegate : NotificationResponseHandler {
+	func setupMDMPushRelaunch() {
+		NotificationCenter.default.addObserver(self, selector: #selector(offerRelaunchAfterMDMPush), name: .OCClassSettingsManagedSettingsChanged, object: nil)
+	}
+
+	@objc func offerRelaunchAfterMDMPush() {
+		NotificationManager.shared.requestAuthorization(options: [.alert, .sound], completionHandler: { (granted, _) in
+			if granted {
+				let content = UNMutableNotificationContent()
+
+				content.title = "New settings received from MDM".localized
+				content.body = "Tap to quit the app.".localized
+
+				let request = UNNotificationRequest(identifier: NotificationManagerComposeIdentifier(AppDelegate.self, "terminate-app"), content: content, trigger: nil)
+
+				NotificationManager.shared.add(request, withCompletionHandler: { (_) in })
+			}
+		})
+	}
+
+	static func handle(_ center: UNUserNotificationCenter, response: UNNotificationResponse, identifier: String, completionHandler: @escaping () -> Void) {
+		if identifier == "terminate-app", response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+			UNUserNotificationCenter.postLocalNotification(with: "mdm-relaunch", title: "Tap to launch the app.".localized, body: nil, after: 0.1) { (error) in
+				if error == nil {
+					exit(0)
+				}
+			}
+		}
 	}
 }
