@@ -1,9 +1,9 @@
-Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
-The following sections list the changes in ownCloud iOS Client unreleased relevant to
+The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/client/compare/v11.5.1...master
+[11.5.2]: https://github.com/owncloud/client/compare/v11.5.1...v11.5.2
 
 Summary
 -------
