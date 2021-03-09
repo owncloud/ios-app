@@ -51,11 +51,13 @@
 			userNamePrefix = [userName stringByAppendingString:@"@"];
 		}
 
-		if (self.originURL.host != nil)
+		/* if (self.originURL.host != nil)
 		{
 			return ([userNamePrefix stringByAppendingString:self.originURL.host]);
 		}
-		else if (self.url.host != nil)
+		else
+		*/
+		if (self.url.host != nil)
 		{
 			return ([userNamePrefix stringByAppendingString:self.url.host]);
 		}
