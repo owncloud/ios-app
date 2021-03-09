@@ -4618,6 +4618,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 11.5.2;
 				APP_VERSION = 188;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -4682,6 +4683,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 11.5.2;
 				APP_VERSION = 188;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;

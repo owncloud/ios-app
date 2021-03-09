@@ -189,7 +189,7 @@
 "After 1 minute" = "Depois de 1 minuto";
 "After 5 minutes" = "Depois de 5 minutos";
 "After 30 minutes" = "Depois de 30 minutos";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Por favor, configure uma conta de e-mail";
 "You need to configure an email account first to be able to send emails." = "Primeiro, precisa de configurar uma conta de e-mail para poder enviar mensagens.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
