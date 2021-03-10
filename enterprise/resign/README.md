@@ -5,7 +5,7 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
 ## App IDs and Provisioning Files
 
-1. You need to generate the following App IDs with `App Groups` enabled on the Apple Developer Portal `Identifiers` section:
+1. You need to generate the following App IDs with `App Groups` and `Associated Domains` enabled on the Apple Developer Portal `Identifiers` section:
 
    - `com.yourcompany.ios-app`
 
