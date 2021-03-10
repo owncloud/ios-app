@@ -1,3 +1,25 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
+
+Summary
+-------
+
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+
+Details
+-------
+
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+
+   Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the
+   iPhone
+
+   https://github.com/owncloud/ios-app/issues/918
+
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
