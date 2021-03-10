@@ -157,6 +157,7 @@ class DisplayViewController: UIViewController {
 	// MARK: - Fullscreen Mode Support
 
 	var supportsFullScreenMode = false
+	var isFullScreenModeEnabled = false
 
 	// MARK: - Initialization and de-initialization
 

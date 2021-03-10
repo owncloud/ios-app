@@ -120,6 +120,7 @@ class WebViewDisplayViewController: DisplayViewController {
 		if let navigationController = self.parent?.navigationController {
 			let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.9) {
 				navigationController.isNavigationBarHidden.toggle()
+				self.isFullScreenModeEnabled = navigationController.isNavigationBarHidden
 			}
 			animator.startAnimation()
 		}

@@ -32,7 +32,11 @@ class PresentationModeAction: Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
-		if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
+		if context.items.first?.cloudStatus == .cloudOnly {
+			return .none
+		} else if let hostViewController = context.viewController, type(of: hostViewController) === DisplayViewController.self {
+			return .none
+		} else if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
 			return .none
 		}
 
@@ -58,6 +62,7 @@ class PresentationModeAction: Action {
 
 				if hostViewController.supportsFullScreenMode, !navigationController.isNavigationBarHidden {
 					navigationController.setNavigationBarHidden(true, animated: true)
+					hostViewController.isFullScreenModeEnabled = true
 				}
 			}))
 			hostViewController.present(alertController, animated: true)
@@ -68,6 +73,7 @@ class PresentationModeAction: Action {
 
 			if hostViewController.supportsFullScreenMode, !navigationController.isNavigationBarHidden {
 				navigationController.setNavigationBarHidden(true, animated: true)
+				hostViewController.isFullScreenModeEnabled = true
 			}
 		}
 

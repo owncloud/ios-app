@@ -92,6 +92,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	private var fullScreen: Bool = false {
 		didSet {
 			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
+			isFullScreenModeEnabled = fullScreen
 			pageCountLabel.isHidden = fullScreen
 			pageCountContainerView.isHidden = fullScreen
 			setupConstraints()

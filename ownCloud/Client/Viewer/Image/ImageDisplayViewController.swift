@@ -170,6 +170,7 @@ class ImageDisplayViewController : DisplayViewController {
 		} else {
 			navigationController.setNavigationBarHidden(false, animated: true)
 		}
+		isFullScreenModeEnabled = navigationController.isNavigationBarHidden
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
