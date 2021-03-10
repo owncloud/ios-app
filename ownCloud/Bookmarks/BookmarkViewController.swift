@@ -861,9 +861,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		// URL
 		if urlRow != nil, fieldSelector(urlRow!) {
-			/* if bookmark.originURL != nil {
-				urlRow?.value = bookmark.originURL?.absoluteString
-			} else */
 			if bookmark.url != nil {
 				urlRow?.value = bookmark.url?.absoluteString
 			} else {

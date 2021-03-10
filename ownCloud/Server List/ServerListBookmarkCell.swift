@@ -105,7 +105,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		didSet {
 			if let bookmark = bookmark {
 				titleLabel.text = bookmark.shortName
-				detailLabel.text = /* (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : */ bookmark.url?.absoluteString
+				detailLabel.text = bookmark.url?.absoluteString
 				accessibilityIdentifier = "server-bookmark-cell"
 
 				if directMessageCountTrackingEnabled {
