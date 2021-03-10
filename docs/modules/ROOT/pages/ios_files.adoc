@@ -44,9 +44,9 @@ The image below on the right, shows the move icon row for _multiple-selected_ fi
 [cols=","]
 |===
 |*Individual File Actions*
-image:file-actions.jpg[File actions dialog for individual files in ownCloud's iOS App.]
+a|image:file-actions.jpg[Individual files.]
 |*Multiple-Selected File Actions*
-image:file-actions-multiple-files-selected.png[File actions dialog for multiple-selected files in ownCloud's iOS App.]
+a|image:file-actions-multiple-files-selected.png[Multiple-selected files.]
 |===
 
 == Navigate Folders
@@ -79,9 +79,9 @@ If you choose that category a second time, the sort order is inverted.
 [cols=","]
 |===
 |*Sorting files and folders in portrait mode*
-image:sort-files-portrait-mode.png[Sorting files and folders in portrait mode]
+a|image:sort-files-portrait-mode.png[Sorting files and folders in portrait mode]
 |*Sorting files and folders in landscape mode*
-image:sort-files-landscape-mode.png[Sorting files and folders in landscape mode]
+a|image:sort-files-landscape-mode.png[Sorting files and folders in landscape mode]
 |===
 
 

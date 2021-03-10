@@ -8,6 +8,6 @@ Next, log in and navigate to menu:Settings[General (Personal)].
 At the bottom of that page, you will see a link to the ownCloud app on iTunes.
 
 .Links to ownCloud's mobile apps.
-image:owncloud-server-mobile-apps.png[Links to ownCloud's mobile apps for Desktop, and in the Google Play and iOS App Stores.]
+image:owncloud-server-mobile-apps.png[Links.]
 
 TIP: You'll also find links and information on the ownCloud installation page.
