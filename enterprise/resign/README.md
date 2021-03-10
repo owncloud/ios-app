@@ -25,7 +25,7 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
 3. Edit the App IDs and assign the App Group created on step 2.
 
-4. Generate the mobile provisioning (App Store or Ad-Hoc) for both App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
+4. Generate the mobile provisioning profiles (App Store or Ad-Hoc) for all 4 App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
 
 ## Certificate
 
