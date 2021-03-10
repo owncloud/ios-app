@@ -15,10 +15,6 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
    - `com.yourcompany.ios-app.ownCloud-Share-Extension`
 
-     
-
-     This IDs must match with `Bundle Identifier` value for the related Xcode target.
-
 2. Generate one App Group:
 
    - `group.com.yourcompany.ios-app`
