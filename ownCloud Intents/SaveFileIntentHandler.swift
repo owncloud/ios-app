@@ -83,24 +83,24 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 									} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
 									}
 								},
-															 resultHandler: nil)
+								resultHandler: nil)
 							} else {
 								completion(SaveFileIntentResponse(code: .overwriteFailure, userActivity: nil))
 							}
 						} else if core != nil {
 							// File does NOT exists => import file
 							core?.importFileNamed(newFilename,
-												  at: targetItem,
-												  from: fileURL,
-												  isSecurityScoped: true,
-												  options: [OCCoreOption.importByCopying : true],
-												  placeholderCompletionHandler: { (error, item) in
-													if error != nil {
-														completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
-													} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
-													}
-							},
-												  resultHandler: nil
+									      at: targetItem,
+									      from: fileURL,
+									      isSecurityScoped: true,
+									      options: [OCCoreOption.importByCopying : true],
+									      placeholderCompletionHandler: { (error, item) in
+										if error != nil {
+											completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+										} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
+										}
+									      },
+									      resultHandler: nil
 							)
 						} else {
 							completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
@@ -117,6 +117,15 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 	func provideAccountOptions(for intent: SaveFileIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
+	}
+
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: SaveFileIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		if let account = intent.account {
+			completion(INObjectCollection(items: [ account ]), nil)
+		} else {
+			completion(nil, nil)
+		}
 	}
 
 	func resolveAccount(for intent: SaveFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
@@ -157,6 +166,14 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 			shouldOverwrite = overwrite
 		}
 		completion(INBooleanResolutionResult.success(with: shouldOverwrite))
+	}
+
+	func resolveWaitForUploadToFinish(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
+		var waitForUploadsToFinish = false
+		if let doWait = intent.waitForUploadToFinish?.boolValue {
+			waitForUploadsToFinish = doWait
+		}
+		completion(INBooleanResolutionResult.success(with: waitForUploadsToFinish))
 	}
 }
 

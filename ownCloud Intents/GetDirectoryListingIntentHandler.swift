@@ -43,6 +43,11 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: GetDirectoryListingIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
+	}
+
 	func resolveAccount(for intent: GetDirectoryListingIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))

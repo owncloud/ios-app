@@ -74,6 +74,11 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: PathExistsIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
+	}
+
 	func resolvePath(for intent: PathExistsIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))

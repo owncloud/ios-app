@@ -84,6 +84,11 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: DeletePathItemIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
+	}
+
 	func resolvePath(for intent: DeletePathItemIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))

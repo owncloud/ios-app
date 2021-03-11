@@ -90,6 +90,11 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: GetFileIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
+	}
+
 	func resolveAccount(for intent: GetFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
 		if let account = intent.account {
 			completion(AccountResolutionResult.success(with: account))
