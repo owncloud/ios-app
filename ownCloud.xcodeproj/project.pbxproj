@@ -958,6 +958,12 @@
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
+		3999BD2D25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3999BD2E25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3999BD2F25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Intents.strings; sourceTree = "<group>"; };
+		3999BD3225FA2C8200DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3999BD3325FA2C8200DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3999BD3425FA2C8200DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Extension.swift"; sourceTree = "<group>"; };
 		399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathExistsIntentHandler.swift; sourceTree = "<group>"; };
 		399DD7C122A691BC00B45EB2 /* UnshareAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnshareAction.swift; sourceTree = "<group>"; };
@@ -3389,6 +3395,7 @@
 				"th-TH",
 				eu,
 				ar,
+				fr,
 			);
 			mainGroup = 233BDE93204FEFE500C06732;
 			packageReferences = (
@@ -4347,6 +4354,7 @@
 				39D83A3125A721AB00FAA0A8 /* ru */,
 				39D83A4325A721AC00FAA0A8 /* es */,
 				39D83A4D25A721AE00FAA0A8 /* th-TH */,
+				3999BD2F25FA2C8100DB7C47 /* fr */,
 			);
 			name = Intents.intentdefinition;
 			sourceTree = "<group>";
@@ -4371,6 +4379,7 @@
 				39534BD724EA904B00AD7907 /* ru */,
 				39534BD824EA904C00AD7907 /* es */,
 				39534BD924EA904D00AD7907 /* th-TH */,
+				3999BD3425FA2C8200DB7C47 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4395,6 +4404,7 @@
 				59AAD98F21F7870B00D15F07 /* th-TH */,
 				39880BAA233B5236006EA539 /* eu */,
 				39954DDF23A39549006B6DC0 /* ar */,
+				3999BD2E25FA2C8100DB7C47 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4419,6 +4429,7 @@
 				59AAD98E21F7870B00D15F07 /* th-TH */,
 				39880BB0233B524B006EA539 /* eu */,
 				39954DE023A39625006B6DC0 /* ar */,
+				3999BD2D25FA2C8100DB7C47 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4427,6 +4438,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				DC576EC122647A070087316D /* en */,
+				3999BD3325FA2C8200DB7C47 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4451,6 +4463,7 @@
 				39DF77B924EA7F1C0066E8F0 /* ru */,
 				39DF77BA24EA7F1D0066E8F0 /* es */,
 				39DF77BB24EA7F1E0066E8F0 /* th-TH */,
+				3999BD3225FA2C8200DB7C47 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
