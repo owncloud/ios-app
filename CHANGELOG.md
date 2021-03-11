@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
+
+Summary
+-------
+
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+
+Details
+-------
+
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+
+   If a passcode was enabled or disabled in the settings, the UI section was not updated.
+
+   https://github.com/owncloud/ios-app/issues/923
+
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
