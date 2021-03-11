@@ -248,11 +248,11 @@ platform :ios do
           prepare_metadata(
           	create_release_notes: options[:create_release_notes],
           	create_screenshots: options[:create_screenshots],
-          	app_name: "ownCloud.online",
+          	app_name: "ownCloud Online",
           	metadata_path: 'fastlane/metadata-owncloud-online/en-US/release_notes.txt'
           )
           
-        puts("Build ownCloud.online iOS App…")
+        puts("Build ownCloud Online iOS App…")
 
         # Moving the ownCloud.online Branding.plist to the correct place
         sh "mv ../ownCloud/Resources/Theming/Branding.plist ../ownCloud/Resources/Theming/Branding-regular.plist"
@@ -359,7 +359,7 @@ lane :owncloud_online_build do
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Debug",
     BETA_APP_ICON: false,
-    APP_NAME: "ownCloud.online"
+    APP_NAME: "ownCloud Online"
   )
 end
 

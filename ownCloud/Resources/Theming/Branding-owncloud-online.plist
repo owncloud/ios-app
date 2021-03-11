@@ -7,7 +7,7 @@
 	<key>branding.can-edit-account</key>
 	<true/>
 	<key>branding.organization-name</key>
-	<string>ownCloud.online</string>
+	<string>ownCloud Online</string>
 	<key>branding.send-feedback-address</key>
 	<string></string>
 	<key>branding.profile-definitions</key>
@@ -145,7 +145,7 @@
 		<key>Tab</key>
 		<dict>
 			<key>Active</key>
-			<string>#000000</string>
+			<string>#00af90</string>
 			<key>Inactive</key>
 			<string>#777777</string>
 		</dict>
@@ -368,11 +368,11 @@
 				<key>Toolbar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>Corporate.Color</string>
+					<string>Background.Standard</string>
 					<key>labelColor</key>
 					<string>Text.Inverse</string>
 					<key>secondaryLabelColor</key>
-					<string></string>
+					<string>Tab.Inactive</string>
 					<key>symbolColor</key>
 					<string></string>
 					<key>tintColor</key>

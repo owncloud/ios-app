@@ -61,7 +61,7 @@ class ScreenshotsTests: XCTestCase {
 				XCTFail("Error: File list not loaded")
 			}
 		} else {
-			accountName = "ownCloud.online"
+			accountName = "ownCloud Online"
 			brandedAppSetup(app: app)
 
 			let tablesQuery = app.tables
