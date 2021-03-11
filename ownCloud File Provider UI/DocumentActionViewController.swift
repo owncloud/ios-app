@@ -27,6 +27,10 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	@IBOutlet var button : ThemeButton!
 
 	override func prepare(forError error: Error) {
+
+		ThemeStyle.registerDefaultStyles()
+		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
 			AppLockManager.shared.cancelAction = { [weak self] in

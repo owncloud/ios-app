@@ -251,6 +251,7 @@ public class AppLockManager: NSObject {
 					if self.shouldDisplayCountdown {
 						passcodeViewController.keypadButtonsHidden = true
 						updateLockCountdown()
+						passcodeViewController.view.setNeedsLayout()
 					}
 				}
 			} else {
@@ -291,6 +292,7 @@ public class AppLockManager: NSObject {
 						if self.shouldDisplayCountdown {
 							passcodeViewController.keypadButtonsHidden = true
 							updateLockCountdown()
+							passcodeViewController.view.setNeedsLayout()
 						}
 					}
 				}
@@ -395,6 +397,7 @@ public class AppLockManager: NSObject {
 		if self.shouldDisplayCountdown {
 			performPasscodeViewControllerUpdates { (passcodeViewController) in
 				passcodeViewController.keypadButtonsHidden = true
+				passcodeViewController.view.setNeedsLayout()
 			}
 			updateLockCountdown()
 
@@ -435,9 +438,14 @@ public class AppLockManager: NSObject {
 	}
 
 	private func performPasscodeViewControllerUpdates(_ updateHandler: (_: PasscodeViewController) -> Void) {
-		for themeWindow in ThemeWindow.themeWindows {
-			if let passcodeViewController = passcodeControllerByWindow.object(forKey: themeWindow) {
-				updateHandler(passcodeViewController)
+		if let passwordViewHostViewController = passwordViewHostViewController, let passcodeViewController = passwordViewHostViewController.topMostViewController as? PasscodeViewController {
+			updateHandler(passcodeViewController)
+		} else {
+
+			for themeWindow in ThemeWindow.themeWindows {
+				if let passcodeViewController = passcodeControllerByWindow.object(forKey: themeWindow) {
+					updateHandler(passcodeViewController)
+				}
 			}
 		}
 	}
