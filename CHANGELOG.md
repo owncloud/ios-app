@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
+
+Summary
+-------
+
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+
+Details
+-------
+
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+
+   Added french localization.
+
+   https://github.com/owncloud/enterprise/issues/4450
+
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
