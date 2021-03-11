@@ -69,6 +69,7 @@ public class PasscodeSetupCoordinator {
 	public init(parentViewController:UIViewController, action:PasscodeAction = .setup, completion:PasscodeSetupCompletion? = nil) {
 		self.parentViewController = parentViewController
 		self.action = action
+		self.completionHandler = completion
 	}
 
 	public func start() {
