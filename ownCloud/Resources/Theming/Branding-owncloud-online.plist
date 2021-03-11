@@ -7,7 +7,7 @@
 	<key>branding.can-edit-account</key>
 	<true/>
 	<key>branding.organization-name</key>
-	<string>ownCloud.online</string>
+	<string>ownCloud Online</string>
 	<key>branding.send-feedback-address</key>
 	<string></string>
 	<key>branding.profile-definitions</key>
