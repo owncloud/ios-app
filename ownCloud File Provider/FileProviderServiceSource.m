@@ -114,6 +114,8 @@
 #pragma mark - Service API
 - (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler
 {
+	OCLogDebug(@"FileProviderServiceSource[%p].importItemNamed:%@ at:%@ fromURL:%@ isSecurityScoped:%d importByCopying:%d automaticConflictResolutionNameStyle:%lu", self.fileProviderExtension, newFileName, parentItem, inputFileURL, isSecurityScoped, importByCopying, (unsigned long)nameStyle);
+
 	return ([_core importItemNamed:newFileName
 				    at:parentItem
 			       fromURL:inputFileURL
@@ -125,6 +127,30 @@
 	  placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
 		completionHandler(error);
 	} resultHandler:nil]);
+}
+
+- (nullable NSProgress *)reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)parentItem withContentsOfFileAtURL:(NSURL *)inputFileURL lastModifiedDate:(nullable NSDate *)lastModifiedDate isSecurityScoped:(BOOL)isSecurityScoped placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler
+{
+	NSDictionary<OCCoreOption,id> *options = nil;
+
+	OCLogDebug(@"FileProviderServiceSource[%p].reportLocalModificationOfItem:%@ parentItem:%@ withContentsOfFileAtURL:%@ isSecurityScoped:%d", self.fileProviderExtension, item, parentItem, inputFileURL, isSecurityScoped);
+
+	if (lastModifiedDate != nil)
+	{
+		options = @{
+			OCCoreOptionLastModifiedDate : lastModifiedDate
+		};
+	}
+
+	return ([_core reportLocalModificationOfItem:item
+					  parentItem:parentItem
+			     withContentsOfFileAtURL:inputFileURL
+				    isSecurityScoped:isSecurityScoped
+					     options:options
+			placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
+							completionHandler(error);
+						     }
+				       resultHandler:nil]);
 }
 
 - (void)processSyncRecordsIfNeeded
