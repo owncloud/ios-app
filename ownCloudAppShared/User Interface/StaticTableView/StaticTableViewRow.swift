@@ -444,10 +444,6 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellTextField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
 		}
 
-		self.updateViewFromValue = { [weak cellTextField] (row) in
-			cellTextField?.text = row.value as? String
-		}
-
 		self.updateViewAppearance = { [weak cellTextField] (row) in
 			cellTextField?.isEnabled = row.enabled
 			cellTextField?.textColor = row.enabled ? Theme.shared.activeCollection.tableRowColors.labelColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
