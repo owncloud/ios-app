@@ -9,6 +9,7 @@ Summary
 -------
 
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
 Details
 -------
@@ -19,6 +20,14 @@ Details
    iPhone
 
    https://github.com/owncloud/ios-app/issues/918
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+   Added an action in detail view menu which enables presentation mode. Presentation mode
+   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
+   navigation bar will be hidden.
+
+   https://github.com/owncloud/ios-app/issues/704
 
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
@@ -33,7 +42,6 @@ Summary
 * Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 * Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
-* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
 Details
 -------
@@ -53,15 +61,10 @@ Details
    https://github.com/owncloud/ios-app/pull/905
 
 * Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
-* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
-   Added an action in detail view menu which enables presentation mode. Presentation mode
    Hide the Collapsible Progress Bar in detail view and fixed position in file list.
-   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
-   navigation bar will be hidden.
 
    https://github.com/owncloud/ios-app/issues/906
-   https://github.com/owncloud/ios-app/issues/704
 
 Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 =======================================
