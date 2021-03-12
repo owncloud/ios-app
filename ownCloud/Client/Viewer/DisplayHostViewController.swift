@@ -38,6 +38,9 @@ class DisplayHostViewController: UIPageViewController {
 	public var items: [OCItem]? {
 		didSet {
 			playableItems = items?.filter({ $0.isPlayable })
+			OnMainThread {
+				self.autoEnablePageScrolling()
+			}
 		}
 	}
 
@@ -120,6 +123,12 @@ class DisplayHostViewController: UIPageViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		self.autoEnablePageScrolling()
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -360,4 +369,14 @@ extension DisplayHostViewController {
             }
         }
     }
+}
+
+extension DisplayHostViewController {
+	private var scrollView: UIScrollView? {
+		return view.subviews.compactMap { $0 as? UIScrollView }.first
+	}
+
+	private func autoEnablePageScrolling() {
+		self.scrollView?.isScrollEnabled = (self.items?.count ?? 0 < 2) ? false : true
+	}
 }
