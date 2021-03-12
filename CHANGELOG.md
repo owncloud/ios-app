@@ -9,6 +9,7 @@ Summary
 -------
 
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
 Details
 -------
@@ -19,6 +20,14 @@ Details
    iPhone
 
    https://github.com/owncloud/ios-app/issues/918
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+   Added an action in detail view menu which enables presentation mode. Presentation mode
+   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
+   navigation bar will be hidden.
+
+   https://github.com/owncloud/ios-app/issues/704
 
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
