@@ -7,26 +7,29 @@
 //
 
 /*
-* Copyright (C) 2020, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2020, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UserNotifications
 import ownCloudApp
 
 extension UNUserNotificationCenter {
-	class func postLocalNotification(with identifier:String, title:String, body:String, after:TimeInterval = 0.5, completion:((Error?) -> Void)? = nil) {
+	class func postLocalNotification(with identifier:String, title:String, body:String?, after:TimeInterval = 0.5, completion:((Error?) -> Void)? = nil) {
 		NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in
 			if settings.authorizationStatus == .authorized {
 				let content = UNMutableNotificationContent()
 
 				content.title = title
-				content.body = body
+
+				if let body = body {
+					content.body = body
+				}
 
 				let trigger = UNTimeIntervalNotificationTrigger(timeInterval: after, repeats: false)
 

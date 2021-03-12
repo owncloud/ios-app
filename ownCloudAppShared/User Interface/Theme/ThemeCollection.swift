@@ -300,7 +300,7 @@ public class ThemeCollection : NSObject {
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
-				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3))
+				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3)))
 
 				// Activity
 				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .white)
@@ -339,7 +339,7 @@ public class ThemeCollection : NSObject {
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
 
 				// Progress
-				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
+				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
 
 				// Activity
 				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .gray)
