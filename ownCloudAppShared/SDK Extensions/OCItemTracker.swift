@@ -46,17 +46,22 @@ public class OCItemTracker: NSObject, OCCoreDelegate {
 				self.requestedCore = core
 
 				if let timeout = waitOnlineTimeout {
-					// Force-start tracking after timeout …
-					OnMainThread(after: timeout) {
+					if core.connectionStatus == .online {
+						// Core online -> begin tracking immediately
 						self.beginTracking(at: path)
-					}
-
-					// … or start tracking when the connection status flips to online
-					self.connectionStatusObservation = core.observe(\OCCore.connectionStatus, changeHandler: { (core, _) in
-						if core.connectionStatus == .online {
+					} else {
+						// Force-start tracking after timeout …
+						OnMainThread(after: timeout) {
 							self.beginTracking(at: path)
 						}
-					})
+
+						// … or start tracking when the connection status flips to online
+						self.connectionStatusObservation = core.observe(\OCCore.connectionStatus, changeHandler: { (core, _) in
+							if core.connectionStatus == .online {
+								self.beginTracking(at: path)
+							}
+						})
+					}
 				} else {
 					self.beginTracking(at: path)
 				}
