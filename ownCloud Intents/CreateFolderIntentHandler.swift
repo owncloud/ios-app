@@ -22,7 +22,36 @@ import ownCloudSDK
 import ownCloudAppShared
 
 @available(iOS 13.0, *)
-public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
+typealias CreateFolderCompletionHandler = (CreateFolderIntentResponse) -> Void
+
+@available(iOS 13.0, *)
+public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling, OCCoreDelegate {
+	weak var core : OCCore?
+	var completionHandler: CreateFolderCompletionHandler?
+
+	func complete(with response: CreateFolderIntentResponse) {
+		if let completionHandler = completionHandler {
+			self.completionHandler = nil
+
+			if let bookmark = core?.bookmark {
+				core = nil
+
+				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+					completionHandler(response)
+				})
+			} else {
+				completionHandler(response)
+			}
+		}
+	}
+
+	public func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
+		if issue?.authenticationError != nil {
+			self.complete(with: CreateFolderIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isAuthenticationError {
+			self.complete(with: CreateFolderIntentResponse(code: .authenticationFailed, userActivity: nil))
+		}
+	}
 
 	func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
 
@@ -51,34 +80,52 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 			return
 		}
 
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+		self.completionHandler = completion
+
+		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let targetItem = item {
 				let folderPath = String(format: "%@%@", path, name)
 				// Check, if the folder already exists in the given path
-				OCItemTracker().item(for: bookmark, at: folderPath) { (error, core, folderPathItem) in
+				OCItemTracker(for: bookmark, at: folderPath, waitOnlineTimeout: 5) { (error, core, folderPathItem) in
 					if error == nil, folderPathItem == nil, let core = core {
+						let waitForCompletion = intent.waitForCompletion as? Bool ?? false
+						let bookmark = core.bookmark
 
-						let progress = core.createFolder(name, inside: targetItem, options: nil, placeholderCompletionHandler: { (error, item) in
-							if error != nil {
-								completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+						OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+							core?.delegate = self
+						}, completionHandler: { (core, error) in
+							if let core = core {
+								self.core = core
+
+								let handleCompletion = { (error: Error?, item: OCItem?) in
+									if error != nil {
+										self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
+									} else {
+										self.complete(with: CreateFolderIntentResponse.success(path: item?.path ?? ""))
+									}
+								}
+
+								if core.createFolder(name, inside: targetItem, options: nil, placeholderCompletionHandler: waitForCompletion ? nil : handleCompletion, resultHandler: waitForCompletion ? { (error, _, item, _) in
+									handleCompletion(error, item)
+								} : nil) == nil {
+									self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
+								}
+							} else if error?.isAuthenticationError == true {
+								self.complete(with: CreateFolderIntentResponse(code: .authenticationFailed, userActivity: nil))
 							} else {
-								completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
+								self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
 							}
 						})
-
-						if progress == nil {
-							completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
-						}
 					} else if core != nil {
-						completion(CreateFolderIntentResponse(code: .folderExistsFailure, userActivity: nil))
+						self.complete(with: CreateFolderIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : .folderExistsFailure, userActivity: nil))
 					} else {
-						completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+						self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
 					}
 				}
 			} else if core != nil {
-				completion(CreateFolderIntentResponse(code: .pathFailure, userActivity: nil))
+				self.complete(with: CreateFolderIntentResponse(code: .pathFailure, userActivity: nil))
 			} else {
-				completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+				self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}
@@ -114,6 +161,14 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		} else {
 			completion(INStringResolutionResult.needsValue())
 		}
+	}
+
+	func resolveWaitForCompletion(for intent: CreateFolderIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
+		var waitForCompletion = false
+		if let doWait = intent.waitForCompletion?.boolValue {
+			waitForCompletion = doWait
+		}
+		completion(INBooleanResolutionResult.success(with: waitForCompletion))
 	}
 }
 

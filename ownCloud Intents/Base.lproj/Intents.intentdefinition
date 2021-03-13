@@ -533,11 +533,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>N181Er</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>ZWoKzx</string>
 						<key>INIntentResponseCodeName</key>
@@ -578,6 +578,18 @@
 						<string>0pF5fq</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>wvNr8g</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>mjas8f</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -762,11 +774,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>No file exists at the given path.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>WDPKZp</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>No file exists at the given path.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>NEiHz6</string>
 						<key>INIntentResponseCodeName</key>
@@ -820,6 +832,30 @@
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>0hPNzX</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>rZf2ER</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>File is not available offline.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>U4qBGg</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>File is not available offline.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>8cu3YB</string>
+						<key>INIntentResponseCodeName</key>
+						<string>fileNotAvailableOffline</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -871,7 +907,7 @@
 			<integer>13</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,file,account,filename,fileextension,shouldOverwrite,waitForUploadToFinish</key>
+				<key>path,file,account,filename,fileextension,shouldOverwrite,waitForCompletion</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -1151,7 +1187,7 @@
 					<key>INIntentParameterConfigurable</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Wait for upload to finish</string>
+					<string>Wait for upload to complete</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>X18VvP</string>
 					<key>INIntentParameterDisplayPriority</key>
@@ -1168,7 +1204,7 @@
 						<string>w1TCyX</string>
 					</dict>
 					<key>INIntentParameterName</key>
-					<string>waitForUploadToFinish</string>
+					<string>waitForCompletion</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
@@ -1181,7 +1217,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Wait for upload to finish before continuing</string>
+							<string>Wait for upload to complete before continuing</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>Wt9Wgt</string>
 							<key>INIntentParameterPromptDialogType</key>
@@ -1224,11 +1260,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>xgwnia</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>leB73e</string>
 						<key>INIntentResponseCodeName</key>
@@ -1282,6 +1318,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>overwriteFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>7IlNsG</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>Vbtkke</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1330,10 +1378,10 @@
 			<key>INIntentKeyParameter</key>
 			<string>name</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>4</integer>
+			<integer>5</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>name,path,account</key>
+				<key>name,path,account,waitForCompletion</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -1424,6 +1472,54 @@
 				<dict>
 					<key>INIntentParameterConfigurable</key>
 					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Wait for folder creation to complete</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>hPuHs9</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INIntentParameterMetadataFalseDisplayNameID</key>
+						<string>7Zv2I0</string>
+						<key>INIntentParameterMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INIntentParameterMetadataTrueDisplayNameID</key>
+						<string>w1TCyX</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>waitForCompletion</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Wait for folder creation to complete before continuing</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>7ei7AX</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>5</integer>
+					<key>INIntentParameterType</key>
+					<string>Boolean</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -1431,7 +1527,7 @@
 					<key>INIntentParameterDisplayNameID</key>
 					<string>mRWXIl</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>3</integer>
+					<integer>4</integer>
 					<key>INIntentParameterName</key>
 					<string>account</string>
 					<key>INIntentParameterObjectType</key>
@@ -1509,11 +1605,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>ctet5s</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>l1ScV6</string>
 						<key>INIntentResponseCodeName</key>
@@ -1566,6 +1662,18 @@
 						<string>bfU2dy</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>iBm5P1</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>ACWews</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1758,11 +1866,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>3dRWka</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>sLw6L8</string>
 						<key>INIntentResponseCodeName</key>
@@ -1803,6 +1911,18 @@
 						<string>lNNcvh</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ficaax</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6veqlK</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -2047,6 +2167,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>V9kFMY</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>wnOHo5</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -2263,11 +2395,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>Y87IjO</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>1KMplM</string>
 						<key>INIntentResponseCodeName</key>
@@ -2308,6 +2440,18 @@
 						<string>1rpPPR</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ovRBKA</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>qEUEIK</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
 					</dict>
 				</array>
 			</dict>

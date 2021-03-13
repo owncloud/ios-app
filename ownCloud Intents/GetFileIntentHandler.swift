@@ -25,7 +25,33 @@ import ownCloudAppShared
 typealias GetFileCompletionHandler = (GetFileIntentResponse) -> Void
 
 @available(iOS 13.0, *)
-public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
+public class GetFileIntentHandler: NSObject, GetFileIntentHandling, OCCoreDelegate {
+	weak var core : OCCore?
+	var completionHandler: GetFileCompletionHandler?
+
+	func complete(with response: GetFileIntentResponse) {
+		if let completionHandler = completionHandler {
+			self.completionHandler = nil
+
+			if let bookmark = core?.bookmark {
+				core = nil
+
+				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+					completionHandler(response)
+				})
+			} else {
+				completionHandler(response)
+			}
+		}
+	}
+
+	public func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
+		if issue?.authenticationError != nil {
+			self.complete(with: GetFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isAuthenticationError {
+			self.complete(with: GetFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+		}
+	}
 
 	func handle(intent: GetFileIntent, completion: @escaping (GetFileIntentResponse) -> Void) {
 
@@ -54,31 +80,52 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 			return
 		}
 
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+		self.completionHandler = completion
+
+		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let item = item {
 				if core?.localCopy(of: item) == nil {
-					core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, file) in
-						if error == nil, let item = item, let file = item.file(with: core), let url = file.url {
-							let file = INFile(fileURL: url, filename: item.name, typeIdentifier: nil)
-							completion(GetFileIntentResponse.success(file: file))
+					OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+						core?.delegate = self
+					}, completionHandler: { (core, error) in
+						if let core = core {
+							self.core = core
+
+							OnBackgroundQueue {
+								core.downloadItem(item, options: nil /* [ .returnImmediatelyIfOfflineOrUnavailable : true ] */, resultHandler: { (error, core, item, file) in
+									if error == nil, let item = item, let file = item.file(with: core), let url = file.url {
+										let file = INFile(fileURL: url, filename: item.name, typeIdentifier: nil)
+										self.complete(with: GetFileIntentResponse.success(file: file))
+									} else if let error = error, error.isAuthenticationError {
+										self.complete(with: GetFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+									} else if let error = error as NSError?, error.isOCError(withCode: .itemNotAvailableOffline) {
+										self.complete(with: GetFileIntentResponse(code: (core.connectionStatus == .online) ? .authenticationFailed : .fileNotAvailableOffline, userActivity: nil))
+									} else {
+										self.complete(with: GetFileIntentResponse(code: .failure, userActivity: nil))
+									}
+								})
+							}
 						} else {
-							completion(GetFileIntentResponse(code: .failure, userActivity: nil))
+							self.complete(with: GetFileIntentResponse(code: .failure, userActivity: nil))
 						}
 					})
 				} else if let core = core, let file = item.file(with: core), let url = file.url {
 					let file = INFile(fileURL: url, filename: item.name, typeIdentifier: nil)
-					completion(GetFileIntentResponse.success(file: file))
+					self.complete(with: GetFileIntentResponse.success(file: file))
 				}
 			} else if core != nil {
-				completion(GetFileIntentResponse(code: .pathFailure, userActivity: nil))
+				if core?.connectionStatus == .online {
+					self.complete(with: GetFileIntentResponse(code: .pathFailure, userActivity: nil))
+				}
+			} else if let error = error, error.isAuthenticationError {
+				self.complete(with: GetFileIntentResponse(code: .authenticationFailed, userActivity: nil))
 			} else {
-				completion(GetFileIntentResponse(code: .failure, userActivity: nil))
+				self.complete(with: GetFileIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}
 
 	func resolvePath(for intent: GetFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {

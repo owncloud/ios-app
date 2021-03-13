@@ -453,7 +453,7 @@ class Migration {
 
 			// Track root folder
 			trackItemGroup.enter()
-			OCItemTracker().item(for: bookmark, at: "/") { (error, core, rootItem) in
+			OCItemTracker(for: bookmark, at: "/") { (error, core, rootItem) in
 				defer {
 					trackItemGroup.leave()
 				}
@@ -461,7 +461,7 @@ class Migration {
 
 				// Track InstantUpload subfolder
 				trackItemGroup.enter()
-				OCItemTracker().item(for: bookmark, at: Migration.legacyInstantUploadFolder) { (error, core, item) in
+				OCItemTracker(for: bookmark, at: Migration.legacyInstantUploadFolder) { (error, core, item) in
 					defer {
 						trackItemGroup.leave()
 					}

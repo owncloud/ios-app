@@ -25,18 +25,32 @@ import ownCloudAppShared
 typealias GetDirectoryListingCompletionHandler = (GetDirectoryListingIntentResponse) -> Void
 
 @available(iOS 13.0, *)
-public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingIntentHandling, OCQueryDelegate {
+public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingIntentHandling, OCQueryDelegate, OCCoreDelegate {
+	weak var core : OCCore?
+	var completionHandler : GetDirectoryListingCompletionHandler?
 
-	var completion : GetDirectoryListingCompletionHandler?
+	func complete(with response: GetDirectoryListingIntentResponse) {
+		if let completionHandler = completionHandler {
+			self.completionHandler = nil
+
+			if let bookmark = core?.bookmark {
+				core = nil
+
+				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+					completionHandler(response)
+				})
+			} else {
+				completionHandler(response)
+			}
+		}
+	}
 
 	func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-
 		if let path = intent.path {
 			completion(INStringResolutionResult.success(with: path))
 		} else {
 			completion(INStringResolutionResult.needsValue())
 		}
-
 	}
 
 	func provideAccountOptions(for intent: GetDirectoryListingIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
@@ -91,9 +105,13 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 			return
 		}
 
-		self.completion = completion
+		completionHandler = completion
 
-		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+			core?.delegate = self
+		}, completionHandler: { (core, error) in
+			self.core = core
+
 			if error == nil {
 				let targetDirectoryQuery = OCQuery(forPath: path)
 				targetDirectoryQuery.delegate = self
@@ -105,41 +123,42 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 				}
 				core?.start(targetDirectoryQuery)
 			} else {
-				self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
+				self.complete(with: GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 			}
 		})
 	}
 
 	public func queryHasChangesAvailable(_ query: OCQuery) {
 		if query.state == .targetRemoved {
-			self.completion?(GetDirectoryListingIntentResponse(code: .pathFailure, userActivity: nil))
-			self.completion = nil
+			self.complete(with: GetDirectoryListingIntentResponse(code: .pathFailure, userActivity: nil))
 		} else if query.state == .idle {
 			var directoryListing : [String] = []
 			if let results = query.queryResults {
 				directoryListing = results.compactMap { return $0.path }
 			}
 
-			self.completion?(GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
-			self.completion = nil
+			self.complete(with: GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
 		}
 	}
 
 	public func query(_ query: OCQuery, failedWithError error: Error) {
-		self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
+		self.complete(with: GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 	}
 
-	func confirm(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
-        completion(GetDirectoryListingIntentResponse(code: .ready, userActivity: nil))
+	public func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
+		if issue?.authenticationError != nil {
+			self.complete(with: GetDirectoryListingIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isAuthenticationError {
+			self.complete(with: GetDirectoryListingIntentResponse(code: .authenticationFailed, userActivity: nil))
+		}
 	}
 }
 
 @available(iOS 13.0, *)
 extension GetDirectoryListingIntentResponse {
-
-    public static func success(directoryListing: [String]) -> GetDirectoryListingIntentResponse {
-        let intentResponse = GetDirectoryListingIntentResponse(code: .success, userActivity: nil)
-        intentResponse.directoryListing = directoryListing
-        return intentResponse
-    }
+	public static func success(directoryListing: [String]) -> GetDirectoryListingIntentResponse {
+		let intentResponse = GetDirectoryListingIntentResponse(code: .success, userActivity: nil)
+		intentResponse.directoryListing = directoryListing
+		return intentResponse
+	}
 }

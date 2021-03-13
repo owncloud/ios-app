@@ -51,7 +51,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 			return
 		}
 
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let targetItem = item {
 				let fileInfo = FileInfo(identifier: targetItem.localID, display: targetItem.name ?? "")
 
@@ -75,6 +75,8 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 				completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
 			} else if core != nil {
 				completion(GetFileInfoIntentResponse(code: .pathFailure, userActivity: nil))
+			} else if error?.isAuthenticationError == true {
+				completion(GetFileInfoIntentResponse(code: .authenticationFailed, userActivity: nil))
 			} else {
 				completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
 			}

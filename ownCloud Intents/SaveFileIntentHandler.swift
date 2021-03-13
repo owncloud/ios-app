@@ -23,34 +23,52 @@ import ownCloudApp
 import ownCloudAppShared
 
 @available(iOS 13.0, *)
-public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
+public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDelegate {
 
 	var fpServiceSession : OCFileProviderServiceSession?
 
+	var completionHandler: ((SaveFileIntentResponse) -> Void)?
+
+	public func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
+		if issue?.authenticationError != nil {
+			self.complete(with: SaveFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isAuthenticationError {
+			self.complete(with: SaveFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+		}
+	}
+
+	func complete(with response: SaveFileIntentResponse) {
+		if let completionHandler = completionHandler {
+			self.completionHandler = nil
+			completionHandler(response)
+		}
+	}
+
 	func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
+		completionHandler = completion
 
 		guard IntentSettings.shared.isEnabled else {
-			completion(SaveFileIntentResponse(code: .disabled, userActivity: nil))
+			complete(with: SaveFileIntentResponse(code: .disabled, userActivity: nil))
 			return
 		}
 
 		guard !AppLockManager.isPassCodeEnabled else {
-			completion(SaveFileIntentResponse(code: .authenticationRequired, userActivity: nil))
+			complete(with: SaveFileIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return
 		}
 
 		guard let path = intent.path?.pathRepresentation, let uuid = intent.account?.uuid, let file = intent.file, let fileURL = file.fileURL else {
-			completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+			complete(with: SaveFileIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
 
 		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
-			completion(SaveFileIntentResponse(code: .accountFailure, userActivity: nil))
+			complete(with: SaveFileIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
 
 		guard IntentSettings.shared.isLicensedFor(bookmark: bookmark) else {
-			completion(SaveFileIntentResponse(code: .unlicensed, userActivity: nil))
+			complete(with: SaveFileIntentResponse(code: .unlicensed, userActivity: nil))
 			return
 		}
 
@@ -70,20 +88,20 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 			}
 		}
 		let filePath = path + newFilename
-		let waitForCompletion = (intent.waitForUploadToFinish as? Bool) ?? false
+		let waitForCompletion = (intent.waitForCompletion as? Bool) ?? false
 		let shouldOverwrite = (intent.shouldOverwrite as? Bool) ?? false
 
 		// Check if given save path exists
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let targetItem = item {
 				// Check if file already exists
-				OCItemTracker().item(for: bookmark, at: filePath) { (error, core, fileItem) in
+				OCItemTracker(for: bookmark, at: filePath, waitOnlineTimeout: 5) { (error, core, fileItem) in
 					if let core = core {
 						let returnResultPath = { (error : Error?, path : String?) in
 							if error != nil {
-								completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+								self.complete(with: SaveFileIntentResponse(code: .failure, userActivity: nil))
 							} else {
-								completion(SaveFileIntentResponse.success(filePath: path ?? ""))
+								self.complete(with: SaveFileIntentResponse.success(filePath: path ?? ""))
 							}
 						}
 
@@ -99,17 +117,19 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 						let returnCoreAndFail = { (code: SaveFileIntentResponseCode) in
 							OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-								completion(SaveFileIntentResponse(code: code, userActivity: nil))
+								self.complete(with: SaveFileIntentResponse(code: code, userActivity: nil))
 							})
 						}
 
 						if error == nil, let fileItem = fileItem {
 							// File already exists
 							if !shouldOverwrite {
-								completion(SaveFileIntentResponse(code: .overwriteFailure, userActivity: nil))
+								self.complete(with: SaveFileIntentResponse(code: .overwriteFailure, userActivity: nil))
 							} else {
 								// => overwrite
-								OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+								OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+									core?.delegate = self
+								}, completionHandler: { (core, error) in
 									if let core = core {
 										OnBackgroundQueue {
 											if let parentItem = fileItem.parentItem(from: core) {
@@ -146,7 +166,9 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 							// File does NOT exist => import file
 							if waitForCompletion {
 								// Wait for completion: import from extension
-								OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+								OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+									core?.delegate = self
+								}, completionHandler: { (core, error) in
 									if let core = core {
 										OnBackgroundQueue {
 											core.importFileNamed(newFilename, at: targetItem, from: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _, item, _) in
@@ -175,13 +197,13 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 							}
 						}
 					} else {
-						completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+						self.complete(with: SaveFileIntentResponse(code: .failure, userActivity: nil))
 					}
 				}
 			} else if core != nil {
-				completion(SaveFileIntentResponse(code: .pathFailure, userActivity: nil))
+				self.complete(with: SaveFileIntentResponse(code: .pathFailure, userActivity: nil))
 			} else {
-				completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+				self.complete(with: SaveFileIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}
@@ -235,18 +257,17 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		completion(INBooleanResolutionResult.success(with: shouldOverwrite))
 	}
 
-	func resolveWaitForUploadToFinish(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
-		var waitForUploadsToFinish = false
-		if let doWait = intent.waitForUploadToFinish?.boolValue {
-			waitForUploadsToFinish = doWait
+	func resolveWaitForCompletion(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
+		var waitForCompletion = false
+		if let doWait = intent.waitForCompletion?.boolValue {
+			waitForCompletion = doWait
 		}
-		completion(INBooleanResolutionResult.success(with: waitForUploadsToFinish))
+		completion(INBooleanResolutionResult.success(with: waitForCompletion))
 	}
 }
 
 @available(iOS 13.0, *)
 extension SaveFileIntentResponse {
-
 	public static func success(filePath: String) -> SaveFileIntentResponse {
 		let intentResponse = SaveFileIntentResponse(code: .success, userActivity: nil)
 		intentResponse.filePath = filePath
