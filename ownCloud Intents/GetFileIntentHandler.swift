@@ -92,7 +92,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling, OCCoreDelega
 							self.core = core
 
 							OnBackgroundQueue {
-								core.downloadItem(item, options: nil /* [ .returnImmediatelyIfOfflineOrUnavailable : true ] */, resultHandler: { (error, core, item, file) in
+								core.downloadItem(item, options: core.connectionStatus == .online ? nil : [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, file) in
 									if error == nil, let item = item, let file = item.file(with: core), let url = file.url {
 										let file = INFile(fileURL: url, filename: item.name, typeIdentifier: nil)
 										self.complete(with: GetFileIntentResponse.success(file: file))
