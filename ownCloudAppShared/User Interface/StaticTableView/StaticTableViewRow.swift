@@ -67,10 +67,11 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	public var groupIdentifier : String?
 	public var type : StaticTableViewRowType
 
+	private var doUpdateViewFromValue : Bool = true
 	public var value : Any? {
 		didSet {
-			if updateViewFromValue != nil {
-				updateViewFromValue!(self)
+			if doUpdateViewFromValue {
+				updateViewFromValue?(self)
 			}
 		}
 	}
@@ -444,6 +445,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellTextField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
 		}
 
+		self.updateViewFromValue = { [weak cellTextField] (row) in
+			cellTextField?.text = row.value as? String
+		}
+
 		self.updateViewAppearance = { [weak cellTextField] (row) in
 			cellTextField?.isEnabled = row.enabled
 			cellTextField?.textColor = row.enabled ? Theme.shared.activeCollection.tableRowColors.labelColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
@@ -476,7 +481,9 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
+		doUpdateViewFromValue = false
 		self.value = sender.text
+		doUpdateViewFromValue = true
 
 		self.textFieldAction?(self, sender, .changed)
 	}
