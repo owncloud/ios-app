@@ -9,6 +9,8 @@ Summary
 -------
 
 * Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
 Details
 -------
@@ -18,6 +20,21 @@ Details
    If a passcode was enabled or disabled in the settings, the UI section was not updated.
 
    https://github.com/owncloud/ios-app/issues/923
+
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+
+   Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the
+   iPhone
+
+   https://github.com/owncloud/ios-app/issues/918
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+   Added an action in detail view menu which enables presentation mode. Presentation mode
+   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
+   navigation bar will be hidden.
+
+   https://github.com/owncloud/ios-app/issues/704
 
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================

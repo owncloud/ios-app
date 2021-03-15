@@ -20,10 +20,36 @@ import UIKit
 import ownCloudSDK
 import QuickLook
 
+class GestureView : UIView {
+
+	override init(frame: CGRect) {
+		super.init(frame: .zero)
+
+		self.translatesAutoresizingMaskIntoConstraints = false
+		self.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.01)
+		self.isHidden = true
+	}
+
+	required init(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+}
+
 class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
 	private var qlPreviewController: QLPreviewController?
 	var showHideBarsTapGestureRecognizer: UITapGestureRecognizer!
+	var overlayView = GestureView()
+
+	override var isFullScreenModeEnabled: Bool {
+		didSet {
+			if isFullScreenModeEnabled {
+				overlayView.isHidden = false
+			} else {
+				overlayView.isHidden = true
+			}
+		}
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -33,8 +59,8 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		qlPreviewController!.view.frame = self.view.bounds
 		self.view.addSubview(qlPreviewController!.view)
 		qlPreviewController!.didMove(toParent: self)
-
 		qlPreviewController?.view.isHidden = true
+		qlPreviewController!.view.addSubview(overlayView)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -51,7 +77,12 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 				qlPreviewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
 				qlPreviewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
 				qlPreviewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-				qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+				qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+
+				overlayView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+				overlayView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+				overlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+				overlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
 				])
 		}
 
@@ -67,12 +98,12 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 				// First display
 				self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
 				self.showHideBarsTapGestureRecognizer.delegate = self
-				self.showHideBarsTapGestureRecognizer.delaysTouchesBegan = true
-				self.qlPreviewController?.view.gestureRecognizers?.forEach({ $0.delegate = self })
-				self.qlPreviewController?.view?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
+				self.showHideBarsTapGestureRecognizer.numberOfTapsRequired = 1
+				overlayView.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
 
 				self.qlPreviewController?.dataSource = self
 				self.qlPreviewController?.view.isHidden = false
+				supportsFullScreenMode = true
 			}
 
 			completion(true)
@@ -91,6 +122,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		} else {
 			navigationController.setNavigationBarHidden(false, animated: true)
 		}
+		overlayView.isHidden = !navigationController.isNavigationBarHidden
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
@@ -111,18 +143,8 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 	}
 }
 
-// MARK: - Gesture recognizer delegete.
+// MARK: - GestureRecognizer delegate
 extension PreviewViewController: UIGestureRecognizerDelegate {
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-						   shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-		// Don't recognize a single tap until a double-tap fails.
-		if let otherTapGestureRecognizer = otherGestureRecognizer as? UITapGestureRecognizer {
-			if gestureRecognizer == self.showHideBarsTapGestureRecognizer && otherTapGestureRecognizer.numberOfTapsRequired == 2 {
-				return true
-			}
-		}
-		return false
-	}
 }
 
 // MARK: - Display Extension.
