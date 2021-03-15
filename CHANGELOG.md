@@ -8,10 +8,19 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 
 Details
 -------
+
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+
+   Fixed a problem in scan view when renaming the file name and using a Japanese keyboard layout
+   (2-Byte character). After entering a character inside the file name the text cursor jumped to
+   the end.
+
+   https://github.com/owncloud/ios-app/issues/916
 
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 
