@@ -131,6 +131,12 @@ class DisplayHostViewController: UIPageViewController {
 		self.autoEnablePageScrolling()
 	}
 
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		DisplaySleepPreventer.shared.stopPreventingDisplaySleep(for: PresentationModeAction.reason)
+	}
+
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
 			return childViewController
