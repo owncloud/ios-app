@@ -8,24 +8,25 @@ ownCloud admins and users.
 Summary
 -------
 
-* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
 Details
 -------
 
-* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
-
-   Added french localization.
-
-   https://github.com/owncloud/enterprise/issues/4450
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 
    Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the
    iPhone
 
    https://github.com/owncloud/ios-app/issues/918
+
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+
+   Added french localization.
+
+   https://github.com/owncloud/enterprise/issues/4450
 
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
