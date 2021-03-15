@@ -482,8 +482,14 @@ public class AppLockManager: NSObject {
 								passcodeViewController.passcode = self.passcode
 							}
 						}
+
 						// Remove the passcode after small delay to give user feedback after use the biometrical unlock
-						OnMainThread(after: 0.3) {
+						var delay = 0.3
+						// If the AppLockManager was called from an extension, like File Provider, the delay causes that the UI cannot be unlocked. Delay is not possible in extension.
+						if self.passwordViewHostViewController != nil {
+							delay = 0.0
+						}
+						OnMainThread(after: delay) {
 							self.attemptUnlock(with: self.passcode)
 						}
 					} else {
