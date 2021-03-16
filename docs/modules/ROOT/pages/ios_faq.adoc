@@ -4,6 +4,7 @@
 :ios-legacy-appstore-url: https://apps.apple.com/app/id543672169
 :ios-app-tx-url: https://www.transifex.com/owncloud-org/owncloud/mobile-ios-app/
 :ios-app-beta-url: https://owncloud.com/beta-testing/#ios
+:defining-your-file-provider-url: https://developer.apple.com/documentation/fileprovider/content_and_change_tracking/defining_your_file_provider_s_content#2897861
 :toc: right
 
 Here you can find some of the most frequently asked questions about the ownCloud iOS app.
@@ -20,8 +21,7 @@ Previous ownCloud iOS app with support for iOS < 12.0 is still available in {ios
 
 === Login with TOTP and other 2FA
 
-ownCloud server must have {oauth2-app-url}[the OAuth2 app] installed, configured, and enabled to use Two-Factor Authentication.
-Please contact your ownCloud administrator for more details.
+ownCloud server must have {oauth2-app-url}[the OAuth2 app] installed, configured, and enabled to use Two-Factor Authentication. Please contact your ownCloud administrator for more details.
 
 == Feature Requests
 
@@ -32,7 +32,7 @@ https://github.com/owncloud/ios-app/issues/604
 
 === FileProvider: Support "Recent items" and "Favorites"
 
-To support "Recent items" and "Favorites" in the iOS Files app, implementation of the https://developer.apple.com/documentation/fileprovider/content_and_change_tracking/defining_your_file_provider_s_content#2897861[Working Set] is needed. This is one of the next roadmap items, bu there's no ETA yet.
+To support "Recent items" and "Favorites" in the iOS Files app, implementation of the {defining-your-file-provider-url}[Working Set] is needed. This is one of the next roadmap items, but there's no ETA yet.
 
 === Text editing inside the iOS app
 

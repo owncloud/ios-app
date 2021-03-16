@@ -1,24 +1,24 @@
-= Available Offline
+= Offline Files and Folders
+
+== Introduction
 
 From version 1.1.0, the ownCloud iOS app supports offline storage of files and folders, allowing them to be accessed even when an internet connection is temporarily unavailable.
 
 == Making a File or Folder Available Offline
 
-To make a file or folder available offline, click on the _More_ icon and press "_Make available offline_" from the list of available actions.
-In the screenshots below, you can see an example of the available actions for files and folders.
+To make a file or folder available offline, click on the _More_ icon and press "_Make available offline_" from the list of available actions. In the screenshots below, you can see an example of the available actions for files and folders.
 
 [cols=",",options="header"]
 |===
-|Make file available offline
-|Make folder available offline
-a|
-image::offline-storage/make-available-offline.png[Make files and folders available offline in the ownCloud iOS app]
-a|
-image::offline-storage/folder-action.png[Make files and folders available offline in the ownCloud iOS app]
+^| Make file available offline
+^| Make folder available offline
+
+^| image:offline-storage/make-available-offline.png[Make files and folders available offline in the ownCloud iOS app, width=75%]
+^| image:offline-storage/folder-action.png[Make files and folders available offline in the ownCloud iOS app, width=75%]
 |===
 
-Files that have been made available offline are identifiable by the available offline icon image:offline-storage/available-offline-logo.png[].
-You can see an example in the screenshot below.
+Files that have been made available offline are identifiable by the available offline icon. You can see an example in the screenshot below. +
+image:offline-storage/available-offline-logo.png[, width=20%].
 
 == Removing a File or Folder from Offline Storage
 
@@ -26,15 +26,14 @@ Any file or folder that has been made available offline can also be removed from
 
 * By pressing the _More_ icon next to a file or folder and pressing "_Available offline_" from the list of available actions.
 +
-image::offline-storage/file-available-offline.png[Make an item unavailable offline in the ownCloud iOS app]
+image:offline-storage/file-available-offline.png[Make an item unavailable offline in the ownCloud iOS app, width=40%]
 * By swiping left on an item in the Available Offline Locations list and pressing "_Make unavailable offline_".
 +
-image::offline-storage/make-unavailable-offline.png[Make an item unavailable offline by swiping left from the Available Offline Locations list in the ownCloud iOS app]
+image:offline-storage/make-unavailable-offline.png[Make an item unavailable offline by swiping left from the Available Offline Locations list in the ownCloud iOS app, width=40%]
 
 == Viewing Offline Files
 
-To view all offline files, from the _Quick Access_ menu, tap _Available Offline_.
-If no files have been marked as available offline, then no files will be available.
+To view all offline files, from the _Quick Access_ menu, tap _Available Offline_. If no files have been marked as available offline, then no files will be available.
 
 If one or more files have been marked as available offline, then you have two ways of viewing them.
 
@@ -43,25 +42,22 @@ If one or more files have been marked as available offline, then you have two wa
 
 === View Offline Files by Location
 
-In the screenshot below, you can see that there are one or more files in the _Photos_ directory that have been marked as available offline.
-If you tap one of the available directories, you will then see all files in that directory that are available offline, similar to how you would view files normally. 
+In the screenshot below, you can see that there are one or more files in the _Photos_ directory that have been marked as available offline. If you tap one of the available directories, you will then see all files in that directory that are available offline, similar to how you would view files normally. 
 
 .View offline files by location
-image::offline-storage/one-folder-available-offline.png[]
+image:offline-storage/one-folder-available-offline.png[, width=40%]
 
 === View a List of All Offline Files
 
 In the screenshot below, you can see all the items that have been marked as available offline.
 
 .View all offline files
-image::offline-storage/all-available-offline-items.png[]
+image:offline-storage/all-available-offline-items.png[, width=40%]
 
 == Storage
 
-Locally available file copies can be set to be automatically deleted after a specified period, ranging from 1 minute to 30 days, to clean up device space.
-The default is seven days.
-This is available under menu:Settings[Storage > Delete unused local copies].
+Locally available file copies can be set to be automatically deleted after a specified period, ranging from 1 minute to 30 days, to clean up device space. The default is seven days. This is available under menu:Settings[Storage > Delete unused local copies].
 
 NOTE: This setting applies to all local files, not just available offline files.
 
-image::offline-storage/offline-storage-settings.png[Offline Storage options in the ownCloud iOS app]
+image:offline-storage/offline-storage-settings.png[Offline Storage options in the ownCloud iOS app, width=40%]
