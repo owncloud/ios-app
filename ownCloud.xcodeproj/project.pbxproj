@@ -99,6 +99,11 @@
 		39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B36228D5B890020253B /* ShareClientItemCell.swift */; };
 		39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755323D8392D00193950 /* EditDocumentViewController.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
+		39DC7CD025C2E1570001E08C /* DocumentActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DC7CCF25C2E1570001E08C /* DocumentActionViewController.swift */; };
+		39DC7CD325C2E1570001E08C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DC7CD125C2E1570001E08C /* MainInterface.storyboard */; };
+		39DC7CD725C2E1570001E08C /* ownCloud File Provider UI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39DC7CCD25C2E1570001E08C /* ownCloud File Provider UI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		39DC7CE725C305E40001E08C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
+		39DC7CF425C305E80001E08C /* ownCloudAppShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; };
 		39DF77AB24EA7BBC0066E8F0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE0FC4923E42ACB0037B4AD /* Localizable.strings */; };
 		39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DF77BF24EA842C0066E8F0 /* LaunchScreen.storyboard */; };
 		39E104CA24C585C30085FDDD /* (null) in Resources */ = {isa = PBXBuildFile; };
@@ -575,6 +580,27 @@
 			remoteGlobalIDString = 39A7137F22E79C6700089423;
 			remoteInfo = SiriKit;
 		};
+		39DC7CD525C2E1570001E08C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 39DC7CCC25C2E1570001E08C;
+			remoteInfo = "ownCloud File Provider UI";
+		};
+		39DC7CE925C305E40001E08C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
+			remoteInfo = ownCloudApp;
+		};
+		39DC7CF625C305E80001E08C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 394A0AF822EEFC2C00603813;
+			remoteInfo = ownCloudAppShared;
+		};
 		59056CAF22414F3C00A18A22 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
@@ -835,6 +861,7 @@
 				39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */,
 				DCE4E47224C1F5610051722F /* ownCloud Share Extension.appex in Embed App Extensions */,
 				DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */,
+				39DC7CD725C2E1570001E08C /* ownCloud File Provider UI.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -959,6 +986,12 @@
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
+		3999BD2D25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3999BD2E25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3999BD2F25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Intents.strings; sourceTree = "<group>"; };
+		3999BD3225FA2C8200DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3999BD3325FA2C8200DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3999BD3425FA2C8200DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Extension.swift"; sourceTree = "<group>"; };
 		399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathExistsIntentHandler.swift; sourceTree = "<group>"; };
 		399DD7C122A691BC00B45EB2 /* UnshareAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnshareAction.swift; sourceTree = "<group>"; };
@@ -997,6 +1030,11 @@
 		39D83A3125A721AB00FAA0A8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Intents.strings; sourceTree = "<group>"; };
 		39D83A4325A721AC00FAA0A8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Intents.strings; sourceTree = "<group>"; };
 		39D83A4D25A721AE00FAA0A8 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Intents.strings"; sourceTree = "<group>"; };
+		39DC7CCD25C2E1570001E08C /* ownCloud File Provider UI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider UI.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		39DC7CCF25C2E1570001E08C /* DocumentActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentActionViewController.swift; sourceTree = "<group>"; };
+		39DC7CD225C2E1570001E08C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		39DC7CD425C2E1570001E08C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		39DC7D0825C30AAB0001E08C /* ownCloud_File_Provider_UI.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = ownCloud_File_Provider_UI.entitlements; sourceTree = "<group>"; };
 		39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethodTableViewController.swift; sourceTree = "<group>"; };
 		39DF779224EA73B40066E8F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39DF77AD24EA7F0A0066E8F0 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1085,7 +1123,7 @@
 		59AAD95921F76B6800D15F07 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59AAD95A21F76B6800D15F07 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59AAD97621F784CA00D15F07 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		59AAD97721F784CB00D15F07 /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; lineEnding = 0; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		59AAD97721F784CB00D15F07 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59AAD97A21F7854C00D15F07 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		59AAD97B21F7854C00D15F07 /* en-GB */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		59AAD97C21F7858300D15F07 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1459,6 +1497,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		39DC7CCA25C2E1570001E08C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39DC7CF425C305E80001E08C /* ownCloudAppShared.framework in Frameworks */,
+				39DC7CE725C305E40001E08C /* ownCloudApp.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		59056CA722414F3C00A18A22 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1560,6 +1607,7 @@
 				394A0AFA22EEFC2C00603813 /* ownCloudAppShared */,
 				DCE4E46924C1F5610051722F /* ownCloud Share Extension */,
 				59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */,
+				39DC7CCE25C2E1570001E08C /* ownCloud File Provider UI */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
@@ -1579,6 +1627,7 @@
 				39A7138022E79C6700089423 /* ownCloud Intents.appex */,
 				394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */,
 				DCE4E46824C1F5610051722F /* ownCloud Share Extension.appex */,
+				39DC7CCD25C2E1570001E08C /* ownCloud File Provider UI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1865,6 +1914,17 @@
 			name = Theming;
 			path = ownCloud/Resources/Theming;
 			sourceTree = SOURCE_ROOT;
+		};
+		39DC7CCE25C2E1570001E08C /* ownCloud File Provider UI */ = {
+			isa = PBXGroup;
+			children = (
+				39DC7D0825C30AAB0001E08C /* ownCloud_File_Provider_UI.entitlements */,
+				39DC7CCF25C2E1570001E08C /* DocumentActionViewController.swift */,
+				39DC7CD125C2E1570001E08C /* MainInterface.storyboard */,
+				39DC7CD425C2E1570001E08C /* Info.plist */,
+			);
+			path = "ownCloud File Provider UI";
+			sourceTree = "<group>";
 		};
 		39E42D152315286300B82AC3 /* Key Commands */ = {
 			isa = PBXGroup;
@@ -3094,6 +3154,7 @@
 				394A0AFF22EEFC2C00603813 /* PBXTargetDependency */,
 				DCE4E47124C1F5610051722F /* PBXTargetDependency */,
 				DC0491AA258CAF9800DEDC27 /* PBXTargetDependency */,
+				39DC7CD625C2E1570001E08C /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			packageProductDependencies = (
@@ -3171,6 +3232,25 @@
 			name = "ownCloud Intents";
 			productName = SiriKit;
 			productReference = 39A7138022E79C6700089423 /* ownCloud Intents.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		39DC7CCC25C2E1570001E08C /* ownCloud File Provider UI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39DC7CDD25C2E1570001E08C /* Build configuration list for PBXNativeTarget "ownCloud File Provider UI" */;
+			buildPhases = (
+				39DC7CC925C2E1570001E08C /* Sources */,
+				39DC7CCA25C2E1570001E08C /* Frameworks */,
+				39DC7CCB25C2E1570001E08C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				39DC7CEA25C305E40001E08C /* PBXTargetDependency */,
+				39DC7CF725C305E80001E08C /* PBXTargetDependency */,
+			);
+			name = "ownCloud File Provider UI";
+			productName = "ownCloud File Provider UI";
+			productReference = 39DC7CCD25C2E1570001E08C /* ownCloud File Provider UI.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		59056CA922414F3C00A18A22 /* ownCloudScreenshotsTests */ = {
@@ -3298,7 +3378,7 @@
 		233BDE94204FEFE500C06732 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1150;
+				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
@@ -3334,6 +3414,9 @@
 					39A7137F22E79C6700089423 = {
 						CreatedOnToolsVersion = 11.0;
 						ProvisioningStyle = Automatic;
+					};
+					39DC7CCC25C2E1570001E08C = {
+						CreatedOnToolsVersion = 12.2;
 					};
 					59056CA922414F3C00A18A22 = {
 						CreatedOnToolsVersion = 10.1;
@@ -3392,6 +3475,7 @@
 				"th-TH",
 				eu,
 				ar,
+				fr,
 			);
 			mainGroup = 233BDE93204FEFE500C06732;
 			packageReferences = (
@@ -3420,6 +3504,7 @@
 				233BDEAF204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
 				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
+				39DC7CCC25C2E1570001E08C /* ownCloud File Provider UI */,
 				39A7137F22E79C6700089423 /* ownCloud Intents */,
 				DCE4E46724C1F5610051722F /* ownCloud Share Extension */,
 				DCC0855B2293F1FD008CC05C /* ownCloudApp */,
@@ -3566,6 +3651,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39DC7CCB25C2E1570001E08C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39DC7CD325C2E1570001E08C /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4073,6 +4166,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		39DC7CC925C2E1570001E08C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39DC7CD025C2E1570001E08C /* DocumentActionViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		59056CA622414F3C00A18A22 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4197,6 +4298,21 @@
 			isa = PBXTargetDependency;
 			target = 39A7137F22E79C6700089423 /* ownCloud Intents */;
 			targetProxy = 39A7138522E79C6700089423 /* PBXContainerItemProxy */;
+		};
+		39DC7CD625C2E1570001E08C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 39DC7CCC25C2E1570001E08C /* ownCloud File Provider UI */;
+			targetProxy = 39DC7CD525C2E1570001E08C /* PBXContainerItemProxy */;
+		};
+		39DC7CEA25C305E40001E08C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
+			targetProxy = 39DC7CE925C305E40001E08C /* PBXContainerItemProxy */;
+		};
+		39DC7CF725C305E80001E08C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 394A0AF822EEFC2C00603813 /* ownCloudAppShared */;
+			targetProxy = 39DC7CF625C305E80001E08C /* PBXContainerItemProxy */;
 		};
 		59056CB022414F3C00A18A22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4351,6 +4467,7 @@
 				39D83A3125A721AB00FAA0A8 /* ru */,
 				39D83A4325A721AC00FAA0A8 /* es */,
 				39D83A4D25A721AE00FAA0A8 /* th-TH */,
+				3999BD2F25FA2C8100DB7C47 /* fr */,
 			);
 			name = Intents.intentdefinition;
 			sourceTree = "<group>";
@@ -4375,8 +4492,17 @@
 				39534BD724EA904B00AD7907 /* ru */,
 				39534BD824EA904C00AD7907 /* es */,
 				39534BD924EA904D00AD7907 /* th-TH */,
+				3999BD3425FA2C8200DB7C47 /* fr */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		39DC7CD125C2E1570001E08C /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39DC7CD225C2E1570001E08C /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 		593A821320C7D4C5000E2A90 /* Localizable.strings */ = {
@@ -4399,6 +4525,7 @@
 				59AAD98F21F7870B00D15F07 /* th-TH */,
 				39880BAA233B5236006EA539 /* eu */,
 				39954DDF23A39549006B6DC0 /* ar */,
+				3999BD2E25FA2C8100DB7C47 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4423,6 +4550,7 @@
 				59AAD98E21F7870B00D15F07 /* th-TH */,
 				39880BB0233B524B006EA539 /* eu */,
 				39954DE023A39625006B6DC0 /* ar */,
+				3999BD2D25FA2C8100DB7C47 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4431,6 +4559,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				DC576EC122647A070087316D /* en */,
+				3999BD3325FA2C8200DB7C47 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4455,6 +4584,7 @@
 				39DF77B924EA7F1C0066E8F0 /* ru */,
 				39DF77BA24EA7F1D0066E8F0 /* es */,
 				39DF77BB24EA7F1E0066E8F0 /* th-TH */,
+				3999BD3225FA2C8200DB7C47 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4466,6 +4596,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 11.6.0;
 				APP_VERSION = 189;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -4530,6 +4661,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 11.6.0;
 				APP_VERSION = 189;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -4820,6 +4952,63 @@
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-Intents";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		39DC7CD825C2E1570001E08C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider UI/ownCloud_File_Provider_UI.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "ownCloud File Provider UI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		39DC7CD925C2E1570001E08C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider UI/ownCloud_File_Provider_UI.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File Provider UI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -5200,6 +5389,15 @@
 			buildConfigurations = (
 				39A7138922E79C6700089423 /* Debug */,
 				39A7138A22E79C6700089423 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		39DC7CDD25C2E1570001E08C /* Build configuration list for PBXNativeTarget "ownCloud File Provider UI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39DC7CD825C2E1570001E08C /* Debug */,
+				39DC7CD925C2E1570001E08C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
