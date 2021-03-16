@@ -221,6 +221,35 @@ extension NamingViewController {
 	}
 }
 
+extension PDFSearchViewController {
+
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+
+		if self.tableView.numberOfRows(inSection: 0) > 0 {
+			shortcuts.append(nextObjectCommand)
+		}
+		if self.tableView.indexPathForSelectedRow?.row ?? 0 > 0 {
+			shortcuts.append(previousObjectCommand)
+		}
+		if (self.tableView?.indexPathForSelectedRow) != nil {
+			shortcuts.append(selectObjectCommand)
+		}
+		shortcuts.append(cancelCommand)
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return false
+	}
+}
+
 extension ClientRootViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
@@ -230,6 +259,9 @@ extension ClientRootViewController {
 		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController {
 			if excludeViewControllers.contains(where: {$0 == type(of: visibleController)}) {
 				return shortcuts
+			} else if let controller = visibleController as? PDFSearchViewController {
+
+				return controller.keyCommands
 			}
 		}
 
@@ -267,6 +299,33 @@ extension ClientRootViewController {
 
 	override var canBecomeFirstResponder: Bool {
 		return true
+	}
+
+	@objc func selectNext(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController {
+
+			if let controller = visibleController as? PDFSearchViewController {
+				controller.selectNext(sender: sender)
+			}
+		}
+	}
+
+	@objc func selectPrevious(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController {
+
+			if let controller = visibleController as? PDFSearchViewController {
+				controller.selectPrevious(sender: sender)
+			}
+		}
+	}
+
+	@objc func selectCurrent(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController {
+
+			if let controller = visibleController as? PDFSearchViewController {
+				controller.selectCurrent(sender: sender)
+			}
+		}
 	}
 }
 
