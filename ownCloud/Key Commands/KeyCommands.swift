@@ -1028,16 +1028,22 @@ extension DisplayHostViewController {
 
 			shortcuts.append(searchCommand)
 			shortcuts.append(gotoCommand)
-		} else if (self.viewControllers?.first as? MediaDisplayViewController) != nil {
-			let playbackCommand = UIKeyCommand(input: "P", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: "Play / Pause".localized)
-			let seekBackwardCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Rewind".localized)
-			let seekForwardCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Fast Forward".localized)
-			let replayCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: "Replay".localized)
+		} else if let viewController = (self.viewControllers?.first as? MediaDisplayViewController) {
+			let fullscreenCommand = UIKeyCommand(input: "F", modifierFlags: [], action: #selector(enterFullScreen), discoverabilityTitle: "Full Screen".localized)
+			let playbackCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: "Play/Pause".localized)
+			let seekBackwardCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Back".localized)
+			let seekForwardCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Ahead".localized)
+			let replayCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: "Go to Beginning".localized)
+			let muteCommand = UIKeyCommand(input: "M", modifierFlags: [], action: #selector(toggleMute), discoverabilityTitle: "Mute/Unmute".localized)
 
+			if viewController.canEnterFullScreen() {
+				shortcuts.append(fullscreenCommand)
+			}
 			shortcuts.append(playbackCommand)
 			shortcuts.append(seekBackwardCommand)
 			shortcuts.append(seekForwardCommand)
 			shortcuts.append(replayCommand)
+			shortcuts.append(muteCommand)
 		}
 		if items?.count ?? 0 > 1 {
 			showCommands = true
@@ -1120,6 +1126,20 @@ extension DisplayHostViewController {
 
 			let newTime = CMTimeAdd(mediaController.currentTime(), CMTime(seconds: seekSeconds, preferredTimescale: mediaController.currentTime().timescale))
 			mediaController.seek(to: newTime)
+		}
+	}
+
+	@objc func toggleMute(_ command : UIKeyCommand) {
+		guard let currentViewController = self.viewControllers?.first else { return }
+		if let mediaController = currentViewController as? MediaDisplayViewController {
+			mediaController.toggleMute()
+		}
+	}
+
+	@objc func enterFullScreen(_ command : UIKeyCommand) {
+		guard let currentViewController = self.viewControllers?.first else { return }
+		if let mediaController = currentViewController as? MediaDisplayViewController {
+			mediaController.enterFullScreen()
 		}
 	}
 

@@ -622,10 +622,12 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
-"Play / Pause" = "Play / Pause";
-"Rewind" = "Rewind";
-"Fast Forward" = "Fast Forward";
-"Replay" = "Replay";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";

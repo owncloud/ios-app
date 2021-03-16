@@ -373,6 +373,40 @@ class MediaDisplayViewController : DisplayViewController {
 
 		return player.currentTime()
 	}
+
+	public func toggleMute() {
+		if player?.isMuted == false {
+			player?.isMuted = true
+		} else {
+			player?.isMuted = false
+		}
+	}
+
+	public func enterFullScreen() {
+		playerViewController?.enterFullScreen(animated: true)
+	}
+
+	public func canEnterFullScreen() -> Bool {
+		return playerViewController?.canEnterFullScreen() ?? false
+	}
+}
+
+extension AVPlayerViewController {
+	func enterFullScreen(animated: Bool) {
+		let selectorToForceFullScreenMode = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
+		if self.responds(to: selectorToForceFullScreenMode) {
+			perform(selectorToForceFullScreenMode, with: animated, with: nil)
+		}
+	}
+
+	func canEnterFullScreen() -> Bool {
+		let selectorToForceFullScreenMode = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
+		if self.responds(to: selectorToForceFullScreenMode) {
+			return true
+		}
+
+		return false
+	}
 }
 
 // MARK: - Display Extension.
