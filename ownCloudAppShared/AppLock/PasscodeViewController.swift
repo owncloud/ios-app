@@ -148,6 +148,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.title = VendorServices.shared.appName
 		self.cancelButton?.setTitle("Cancel".localized, for: .normal)
 
 		self.message = { self.message }()

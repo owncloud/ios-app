@@ -104,7 +104,7 @@ class SecuritySettingsSection: SettingsSection {
 
 				let newVC = StaticTableViewController(style: .grouped)
 				newVC.title = "Lock application".localized
-				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.".localized)
+				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.".localized)
 
 				var radioButtons: [[String : Any]] = []
 

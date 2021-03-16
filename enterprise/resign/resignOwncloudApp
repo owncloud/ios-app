@@ -63,12 +63,13 @@ PROVISIONING_DIR="Provisioning Files"
 
 DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/App.mobileprovision"
 FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/FileProvider.mobileprovision"
+FILEPROVIDERUI_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/FileProviderUI.mobileprovision"
 INTENT_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/Intent.mobileprovision"
 SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/ShareExtension.mobileprovision"
 
-declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
-declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
-declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex" );
+declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
+declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
+declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud File Provider UI.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex" );
 declare -a BUNDLEIDS=();
 
 # Delete previous temporal app folder if exist
