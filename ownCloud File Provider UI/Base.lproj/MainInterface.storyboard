@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="J6p-g8-CHO">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Document Action View Controller-->
+        <scene sceneID="Q8I-MS-tKG">
+            <objects>
+                <viewController id="J6p-g8-CHO" customClass="DocumentActionViewController" customModule="ownCloud_File_Provider_UI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Vdh-Gp-eV6">
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="afp-AB-4XR" customClass="ThemeButton" customModule="ownCloudAppShared">
+                                <rect key="frame" x="16" y="337" width="318" height="43"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="cancelScreen" destination="J6p-g8-CHO" eventType="touchUpInside" id="TD8-3o-MZV"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j9n-GJ-1zE">
+                                <rect key="frame" x="16" y="150" width="318" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="u2K-ZK-ldA"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="zTo-CZ-ppy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="zTo-CZ-ppy" firstAttribute="trailing" secondItem="j9n-GJ-1zE" secondAttribute="trailing" constant="16" id="I6Y-cM-dPs"/>
+                            <constraint firstItem="zTo-CZ-ppy" firstAttribute="trailing" secondItem="afp-AB-4XR" secondAttribute="trailing" constant="16" id="Q5S-XR-XhX"/>
+                            <constraint firstItem="afp-AB-4XR" firstAttribute="leading" secondItem="zTo-CZ-ppy" secondAttribute="leading" constant="16" id="UWg-na-jFj"/>
+                            <constraint firstItem="j9n-GJ-1zE" firstAttribute="centerY" secondItem="Vdh-Gp-eV6" secondAttribute="centerY" id="cWI-gp-rSv"/>
+                            <constraint firstItem="zTo-CZ-ppy" firstAttribute="bottom" secondItem="afp-AB-4XR" secondAttribute="bottom" constant="20" id="keq-Xl-Ivn"/>
+                            <constraint firstItem="j9n-GJ-1zE" firstAttribute="leading" secondItem="zTo-CZ-ppy" secondAttribute="leading" constant="16" id="mct-aR-jhB"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="350" height="400"/>
+                    <connections>
+                        <outlet property="button" destination="afp-AB-4XR" id="fsu-ne-Gg8"/>
+                        <outlet property="label" destination="j9n-GJ-1zE" id="vkG-Sm-EKe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UoZ-ya-W3e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-80" y="63.868065967016499"/>
+        </scene>
+    </scenes>
+    <designables>
+        <designable name="afp-AB-4XR">
+            <size key="intrinsicContentSize" width="84" height="43"/>
+        </designable>
+    </designables>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

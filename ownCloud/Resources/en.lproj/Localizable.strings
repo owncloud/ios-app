@@ -208,7 +208,7 @@
 "After 1 minute" = "After 1 minute";
 "After 5 minutes" = "After 5 minutes";
 "After 30 minutes" = "After 30 minutes";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
@@ -349,6 +349,9 @@
 "Favorited" = "Favorited";
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Presentation Mode";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
+"Enable" = "Enable";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -846,6 +849,9 @@
 "Limited Photo Access" = "Limited Photo Access";
 "Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
 "No Access to the media selected for upload" = "No Access to the media selected for upload";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
 
 /* MDM settings push */
 "New settings received from MDM" = "New settings received from MDM";

@@ -151,7 +151,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
 		if #available(iOS 13.0, *) {
 			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
-			let attributedString = NSAttributedString(string: "Add email or name", attributes: attributedStringColor)
+			let attributedString = NSAttributedString(string: "Add email or name".localized, attributes: attributedStringColor)
 			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
 		} else {
 			// Fallback on earlier versions

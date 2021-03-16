@@ -93,6 +93,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	private var fullScreen: Bool = false {
 		didSet {
 			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
+			isFullScreenModeEnabled = fullScreen
 			pageCountLabel.isHidden = fullScreen
 			pageCountContainerView.isHidden = fullScreen
 			setupConstraints()
@@ -209,6 +210,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
 			tapRecognizer.numberOfTapsRequired = 2
 			pdfView.addGestureRecognizer(tapRecognizer)
+			supportsFullScreenMode = true
 		}
 		//pdfView.isUserInteractionEnabled = true
 	}

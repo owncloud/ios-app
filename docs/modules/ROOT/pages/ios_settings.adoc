@@ -15,6 +15,7 @@ image:user-accounts-list-annotated-with-callout.png[Accessing settings in ownClo
 
 To protect access to the iOS app with a Passcode, enable btn:[Passcode Lock] in the Setting's Security section.
 You will then be prompted to enter, and repeat, a 4-digit Passcode.
+If a Passcode was set, the file provider extension in Files.app or in other third party apps will be locked too. The file provider presents a UI to unlock the Passcode.
 
 image:settings-security-passcode-enabled.png[Enable a Passcode lock in ownCloud's iOS App for iPhone and iPad.]
 
