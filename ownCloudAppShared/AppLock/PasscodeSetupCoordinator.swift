@@ -155,6 +155,7 @@ public class PasscodeSetupCoordinator {
 		AppLockManager.shared.passcode = nil
 		AppLockManager.shared.unlocked = false
 		PasscodeSetupCoordinator.isPasscodeSecurityEnabled = false
+		PasscodeSetupCoordinator.isBiometricalSecurityEnabled = false
 	}
 
 	private func lock(with passcode:String) {
