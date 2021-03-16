@@ -26,7 +26,7 @@ class LinksAction: Action {
 	override class var name : String { return "Links".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem] }
 	override class var keyCommand : String? { return "L" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .control] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

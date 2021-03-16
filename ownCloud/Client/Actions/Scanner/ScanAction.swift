@@ -27,7 +27,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var name : String? { return "Scan document".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction, .keyboardShortcut ] }
 	override class var keyCommand : String? { return "S" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentScanner) }
 
 	// MARK: - Extension matching

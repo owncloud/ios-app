@@ -273,13 +273,13 @@ extension ClientRootViewController {
 extension UITableViewController {
 
 	@objc func selectNext(sender: UIKeyCommand) {
-		guard let selectedIndexPath = self.tableView?.indexPathForSelectedRow else { return }
-
-		if selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
-		} else if (selectedIndexPath.section + 1) < self.tableView?.numberOfSections ?? 0 {
-			// New Section
-			self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIndexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			if selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
+				self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+			} else if (selectedIndexPath.section + 1) < self.tableView?.numberOfSections ?? 0 {
+				// New Section
+				self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIndexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
+			}
 		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
 		}
@@ -755,6 +755,7 @@ extension QueryFileListTableViewController {
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			actionContext.sender = command
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
 				if command.discoverabilityTitle == $0.actionExtension.name {
@@ -1077,6 +1078,7 @@ extension DisplayHostViewController {
 		if let item = currentViewController.item {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			actionContext.sender = command
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
 				if command.discoverabilityTitle == $0.actionExtension.name {
