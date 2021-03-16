@@ -64,10 +64,10 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		var actionExtensionType : ActionExtensionType = .undefined
 		if actionIdentifier == "com.owncloud.FileProviderUI.Share" {
 			actionExtensionType = .sharing
-			actionTypeLabel = "Sharing".localized
+			actionTypeLabel = "Share with user/group".localized
 		} else if actionIdentifier == "com.owncloud.FileProviderUI.PublicLinks" {
 			actionExtensionType = .links
-			actionTypeLabel = "Public Links".localized
+			actionTypeLabel = "Share link".localized
 		}
 
 		OCCoreManager().requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
@@ -102,6 +102,14 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 							triedConnecting = true
 							self.showCancelLabel(with: "Connecting…".localized)
 						} else if core.connectionStatus == .offline || core.connectionStatus == .unavailable {
+							// Display error if `.connecting` isn't reached within 2 seconds
+							OnMainThread(after: 2) {
+								if !triedConnecting {
+									self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
+								}
+							}
+
+							// Display error if `.connecting` has already been reached
 							if triedConnecting {
 								self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
 							}

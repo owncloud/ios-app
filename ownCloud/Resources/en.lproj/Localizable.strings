@@ -500,6 +500,8 @@
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
 "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
 "%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Share with user/group";
+"Share link" = "Share link";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";

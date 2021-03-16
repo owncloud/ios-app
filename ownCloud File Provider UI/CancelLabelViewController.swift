@@ -26,10 +26,6 @@ class CancelLabelViewController: UIViewController {
 	@IBOutlet var label : UILabel!
 	@IBOutlet var button : ThemeButton!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
 	func updateCancelLabels(with message: String) {
 		let collection = Theme.shared.activeCollection
 		self.view.backgroundColor = collection.toolbarColors.backgroundColor
