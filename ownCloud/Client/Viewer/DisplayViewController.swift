@@ -41,7 +41,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController {
+class DisplayViewController: UIViewController, Themeable {
 
 	var item: OCItem?
 	var itemIndex: Int?
@@ -565,6 +565,15 @@ class DisplayViewController: UIViewController {
 			}
 		}
 	}
+
+	// MARK: - Themeable implementation
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		progressView.applyThemeCollection(collection)
+		cancelButton.applyThemeCollection(collection)
+		metadataInfoLabel.applyThemeCollection(collection)
+		showPreviewButton.applyThemeCollection(collection)
+		infoLabel.applyThemeCollection(collection)
+	}
 }
 
 extension DisplayViewController : OCQueryDelegate {
@@ -640,17 +649,5 @@ extension DisplayViewController {
 	func configure(_ configuration: DisplayViewConfiguration) {
 		self.item = configuration.item
 		self.core = configuration.core
-	}
-}
-
-// MARK: - Themeable implementation
-
-extension DisplayViewController : Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		progressView.applyThemeCollection(collection)
-		cancelButton.applyThemeCollection(collection)
-		metadataInfoLabel.applyThemeCollection(collection)
-		showPreviewButton.applyThemeCollection(collection)
-		infoLabel.applyThemeCollection(collection)
 	}
 }

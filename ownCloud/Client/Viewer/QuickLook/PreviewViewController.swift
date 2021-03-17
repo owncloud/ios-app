@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import QuickLook
+import ownCloudAppShared
 
 class GestureView : UIView {
 
@@ -61,6 +62,9 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		qlPreviewController!.didMove(toParent: self)
 		qlPreviewController?.view.isHidden = true
 		qlPreviewController!.view.addSubview(overlayView)
+		if #available(iOS 13.0, *) {
+			qlPreviewController?.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+		}
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -140,6 +144,15 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 	override func canPreviewCurrentItem() -> Bool {
 		guard let url = self.source else { return false }
 		return QLPreviewController.canPreview(url as QLPreviewItem)
+	}
+	
+	// MARK: - Themeable implementation
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		if #available(iOS 13, *) {
+			qlPreviewController?.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+		}
 	}
 }
 
