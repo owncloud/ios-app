@@ -247,49 +247,6 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		queryRefreshRateLimiter.runRateLimitedBlock {
 			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
 				OnMainThread {
-//					if query.state.isFinal {
-//						OnMainThread {
-//							if self.pullToRefreshControl?.isRefreshing == true {
-//								self.pullToRefreshControl?.endRefreshing()
-//							}
-//						}
-//					}
-//
-//					let previousItemCount = self.items.count
-//
-//					self.items = changeSet?.queryResult ?? []
-//
-//					// Setup new action context
-//					if let core = self.core {
-//						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-//						self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
-//					}
-//
-//					switch query.state {
-//					case .contentsFromCache, .idle, .waitingForServerReply:
-//						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
-//							break
-//						}
-//
-//						if self.items.count == 0 {
-//							if self.searchController?.searchBar.text != "" {
-//								self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-//							} else {
-//								self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
-//							}
-//						} else {
-//							self.messageView?.message(show: false)
-//						}
-//
-//						self.tableView.reloadData()
-//					case .targetRemoved:
-//						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-//						self.tableView.reloadData()
-//
-//					default:
-//						self.messageView?.message(show: false)
-//					}
-
 					self.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
 				}
 			}
@@ -309,6 +266,12 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
  		self.items = changeSet?.queryResult ?? []
 
+		// Setup new action context
+		if let core = self.core {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
+		}
+
  		switch query.state {
  			case .contentsFromCache, .idle, .waitingForServerReply:
  				if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
@@ -326,6 +289,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
  				}
 
  				self.tableView.reloadData()
+
  			case .targetRemoved:
  				self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
  				self.tableView.reloadData()

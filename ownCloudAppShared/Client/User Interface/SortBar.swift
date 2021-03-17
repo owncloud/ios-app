@@ -49,6 +49,19 @@ public enum SearchScope : Int, CaseIterable {
 
 		return name
 	}
+
+	var image : UIImage? {
+		var image : UIImage?
+
+		if #available(iOS 13, *) {
+			switch self {
+				case .global: image = UIImage(systemName: "globe")
+				case .local: image = UIImage(systemName: "folder")
+			}
+		}
+
+		return image
+	}
 }
 
 public protocol SortBarDelegate: class {
@@ -172,7 +185,11 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			searchScopeSegmentedControl.accessibilityIdentifier = "sort-bar.searchScopeSegmentedControl"
 
 			for scope in SearchScope.allCases {
-				searchScopeSegmentedControl.insertSegment(withTitle: scope.label, at: scope.rawValue, animated:false)
+				if let image = scope.image {
+					searchScopeSegmentedControl.insertSegment(with: image, at: scope.rawValue, animated: false)
+				} else {
+					searchScopeSegmentedControl.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
+				}
 			}
 			searchScopeSegmentedControl.selectedSegmentIndex = searchScope.rawValue
 			searchScopeSegmentedControl.isHidden = !self.showSearchScope
