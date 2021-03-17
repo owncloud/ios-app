@@ -30,7 +30,7 @@ Details
    mode theme was not able set the dark mode style before.
 
    https://github.com/owncloud/ios-app/issues/919
-   
+
 * Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
 
    If a passcode was enabled or disabled in the settings, the UI section was not updated.
