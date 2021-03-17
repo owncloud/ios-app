@@ -10,6 +10,7 @@ Summary
 
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Added Dark Mode Support for QLPreviewController: [#919](https://github.com/owncloud/ios-app/issues/919)
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
@@ -29,6 +30,12 @@ Details
    mode theme was not able set the dark mode style before.
 
    https://github.com/owncloud/ios-app/issues/919
+   
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+
+   If a passcode was enabled or disabled in the settings, the UI section was not updated.
+
+   https://github.com/owncloud/ios-app/issues/923
 
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 
