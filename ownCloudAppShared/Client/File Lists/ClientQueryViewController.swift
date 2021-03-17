@@ -29,7 +29,7 @@ public struct OCItemDraggingValue {
 	var bookmarkUUID : String
 }
 
-open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
+open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate, UISearchControllerDelegate {
 	public var folderActionBarButton: UIBarButtonItem?
 	public var plusBarButton: UIBarButtonItem?
 
@@ -43,6 +43,47 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 
+	private var _query : OCQuery
+	public override var query : OCQuery {
+ 		set {
+ 			_query = newValue
+ 		}
+
+ 		get {
+ 			if let customSearchQuery = customSearchQuery {
+ 				return customSearchQuery
+ 			} else {
+ 				return _query
+ 			}
+ 		}
+ 	}
+ 	var customSearchQuery : OCQuery? {
+ 		willSet {
+ 			if customSearchQuery != newValue, let query = customSearchQuery {
+ 				core?.stop(query)
+ 				query.delegate = nil
+ 			}
+ 		}
+
+ 		didSet {
+ 			if customSearchQuery != nil, let query = customSearchQuery {
+ 				query.delegate = self
+ 				query.sortComparator = sortMethod.comparator(direction: sortDirection)
+ 				core?.start(query)
+ 			}
+ 		}
+ 	}
+	open override var searchScope: SearchScope {
+ 		set {
+ 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
+ 		}
+
+ 		get {
+ 			let scope = SearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SearchScope.local
+ 			return scope
+ 		}
+ 	}
+
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
 		self.init(core: inCore, query: inQuery, rootViewController: nil)
@@ -50,6 +91,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
+		_query = inQuery
 
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
@@ -106,6 +148,49 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 	}
 
+	// MARK: - Search events
+	open func willPresentSearchController(_ searchController: UISearchController) {
+ 		self.sortBar?.showSearchScope = true
+ 	}
+
+ 	open func willDismissSearchController(_ searchController: UISearchController) {
+ 		self.sortBar?.showSearchScope = false
+ 	}
+
+	// MARK: - Search scope support
+ 	private var searchText: String?
+
+	open override func applySearchFilter(for searchText: String?, to query: OCQuery) {
+ 		self.searchText = searchText
+
+ 		updateCustomSearchQuery()
+ 	}
+
+	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+ 		updateCustomSearchQuery()
+ 	}
+
+	open override func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+ 		sortMethod = didUpdateSortMethod
+
+ 		let comparator = sortMethod.comparator(direction: sortDirection)
+
+ 		_query.sortComparator = comparator
+ 		customSearchQuery?.sortComparator = comparator
+ 	}
+
+ 	func updateCustomSearchQuery() {
+ 		if let searchText = searchText, let searchScope = sortBar?.searchScope, searchScope == .global {
+ 			self.customSearchQuery = OCQuery(condition: .where(.name, contains: searchText), inputFilter: nil)
+ 		} else {
+ 			self.customSearchQuery = nil
+ 		}
+
+ 		super.applySearchFilter(for: searchText, to: _query)
+
+ 		self.queryHasChangesAvailable(query)
+ 	}
+
 	// MARK: - View controller events
 	open override func viewDidLoad() {
 		super.viewDidLoad()
@@ -135,6 +220,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	private var viewControllerVisible : Bool = false
+
+	open override func viewDidAppear(_ animated: Bool) {
+ 		super.viewDidAppear(animated)
+
+ 		searchController?.delegate = self
+ 	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -364,23 +455,29 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Updates
 	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		if let rootItem = self.query.rootItem {
-			if query.queryPath != "/" {
-				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-				if self.items.count == 1 {
-					totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
-				} else if self.items.count > 1 {
-					totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
-				}
-				self.updateFooter(text: totalSize)
-			}
+		if query == self.query {
+ 			super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
 
-			if #available(iOS 13.0, *) {
-				if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
-					// Use parent folder for UI state restoration
-					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
-					view.window?.windowScene?.userActivity = activity.openItemUserActivity
+ 			if let rootItem = self.query.rootItem, searchText == nil {
+ 				if query.queryPath != "/" {
+					var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+					if self.items.count == 1 {
+						totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
+					} else if self.items.count > 1 {
+						totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
+					}
+					self.updateFooter(text: totalSize)
+ 				}
+
+				if #available(iOS 13.0, *) {
+					if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+						// Use parent folder for UI state restoration
+						let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
+						view.window?.windowScene?.userActivity = activity.openItemUserActivity
+					}
 				}
+ 			} else {
+ 				self.updateFooter(text: nil)
 			}
 		}
 	}

@@ -72,6 +72,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
+		searchScope = .global
 
 		super.init(core: inCore)
 
@@ -113,14 +114,15 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			return sort
 		}
 	}
+	open var searchScope: SearchScope = .local
 	open var sortDirection: SortDirection {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
 		}
 
 		get {
-			let sort = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
-			return sort
+			let direction = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
+			return direction
 		}
 	}
 
@@ -131,27 +133,31 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open func updateSearchResults(for searchController: UISearchController) {
 		let searchText = searchController.searchBar.text!
 
-		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-			if let itemName = item?.name {
-				return itemName.localizedCaseInsensitiveContains(searchText)
-			}
-			return false
-		}
-
-		if searchText == "" {
-			if let filter = query.filter(withIdentifier: "text-search") {
-				query.removeFilter(filter)
-			}
-		} else {
-			if let filter = query.filter(withIdentifier: "text-search") {
-				query.updateFilter(filter, applyChanges: { filterToChange in
-					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
-				})
-			} else {
-				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
-			}
-		}
+		applySearchFilter(for: (searchText == "") ? nil : searchText, to: query)
 	}
+
+	open func applySearchFilter(for searchText: String?, to query: OCQuery) {
+ 		if let searchText = searchText {
+ 			let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+ 				if let itemName = item?.name {
+ 					return itemName.localizedCaseInsensitiveContains(searchText)
+ 				}
+ 				return false
+ 			}
+
+ 			if let filter = query.filter(withIdentifier: "text-search") {
+ 				query.updateFilter(filter, applyChanges: { filterToChange in
+ 					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
+ 				})
+ 			} else {
+ 				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+ 			}
+ 		} else {
+ 			if let filter = query.filter(withIdentifier: "text-search") {
+ 				query.removeFilter(filter)
+ 			}
+ 		}
+ 	}
 
 	// MARK: - Query progress reporting
 	open var showQueryProgress : Bool = true
@@ -241,48 +247,48 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		queryRefreshRateLimiter.runRateLimitedBlock {
 			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
 				OnMainThread {
-					if query.state.isFinal {
-						OnMainThread {
-							if self.pullToRefreshControl?.isRefreshing == true {
-								self.pullToRefreshControl?.endRefreshing()
-							}
-						}
-					}
-
-					let previousItemCount = self.items.count
-
-					self.items = changeSet?.queryResult ?? []
-
-					// Setup new action context
-					if let core = self.core {
-						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-						self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
-					}
-
-					switch query.state {
-					case .contentsFromCache, .idle, .waitingForServerReply:
-						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
-							break
-						}
-
-						if self.items.count == 0 {
-							if self.searchController?.searchBar.text != "" {
-								self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-							} else {
-								self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
-							}
-						} else {
-							self.messageView?.message(show: false)
-						}
-
-						self.tableView.reloadData()
-					case .targetRemoved:
-						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-						self.tableView.reloadData()
-
-					default:
-						self.messageView?.message(show: false)
-					}
+//					if query.state.isFinal {
+//						OnMainThread {
+//							if self.pullToRefreshControl?.isRefreshing == true {
+//								self.pullToRefreshControl?.endRefreshing()
+//							}
+//						}
+//					}
+//
+//					let previousItemCount = self.items.count
+//
+//					self.items = changeSet?.queryResult ?? []
+//
+//					// Setup new action context
+//					if let core = self.core {
+//						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+//						self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
+//					}
+//
+//					switch query.state {
+//					case .contentsFromCache, .idle, .waitingForServerReply:
+//						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+//							break
+//						}
+//
+//						if self.items.count == 0 {
+//							if self.searchController?.searchBar.text != "" {
+//								self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+//							} else {
+//								self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+//							}
+//						} else {
+//							self.messageView?.message(show: false)
+//						}
+//
+//						self.tableView.reloadData()
+//					case .targetRemoved:
+//						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+//						self.tableView.reloadData()
+//
+//					default:
+//						self.messageView?.message(show: false)
+//					}
 
 					self.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
 				}
@@ -291,6 +297,42 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	}
 
 	open func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
+		if query.state.isFinal {
+ 			OnMainThread {
+ 				if self.pullToRefreshControl?.isRefreshing == true {
+ 					self.pullToRefreshControl?.endRefreshing()
+ 				}
+ 			}
+ 		}
+
+ 		let previousItemCount = self.items.count
+
+ 		self.items = changeSet?.queryResult ?? []
+
+ 		switch query.state {
+ 			case .contentsFromCache, .idle, .waitingForServerReply:
+ 				if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+ 					break
+ 				}
+
+ 				if self.items.count == 0 {
+ 					if self.searchController?.searchBar.text != "" {
+ 						self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+ 					} else {
+ 						self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+ 					}
+ 				} else {
+ 					self.messageView?.message(show: false)
+ 				}
+
+ 				self.tableView.reloadData()
+ 			case .targetRemoved:
+ 				self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+ 				self.tableView.reloadData()
+
+ 			default:
+ 				self.messageView?.message(show: false)
+ 		}
 	}
 
 	// MARK: - Themeable
@@ -322,6 +364,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
+			sortBar?.searchScope = self.searchScope
 			sortBar?.updateForCurrentTraitCollection()
 			sortBar?.showSelectButton = showSelectButton
 
@@ -448,6 +491,9 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 		return 0
 	}
+
+	open func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+ 	}
 
 	open func toggleSelectMode() {
 		if let multiSelectionSupport = self as? MultiSelectSupport {
