@@ -1,0 +1,5 @@
+Bugfix: Swiping PDF thumbnail view on the iPhone
+
+Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the iPhone
+
+https://github.com/owncloud/ios-app/issues/918

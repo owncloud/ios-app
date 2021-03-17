@@ -154,6 +154,11 @@ class DisplayViewController: UIViewController {
 
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
+	// MARK: - Fullscreen Mode Support
+
+	var supportsFullScreenMode = false
+	var isFullScreenModeEnabled = false
+
 	// MARK: - Initialization and de-initialization
 
 	required init() {
@@ -351,7 +356,7 @@ class DisplayViewController: UIViewController {
 			return
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreDetailItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {

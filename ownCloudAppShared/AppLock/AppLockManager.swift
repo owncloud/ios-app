@@ -251,6 +251,7 @@ public class AppLockManager: NSObject {
 					if self.shouldDisplayCountdown {
 						passcodeViewController.keypadButtonsHidden = true
 						updateLockCountdown()
+						passcodeViewController.view.setNeedsLayout()
 					}
 				}
 			} else {
@@ -291,6 +292,7 @@ public class AppLockManager: NSObject {
 						if self.shouldDisplayCountdown {
 							passcodeViewController.keypadButtonsHidden = true
 							updateLockCountdown()
+							passcodeViewController.view.setNeedsLayout()
 						}
 					}
 				}
@@ -395,6 +397,7 @@ public class AppLockManager: NSObject {
 		if self.shouldDisplayCountdown {
 			performPasscodeViewControllerUpdates { (passcodeViewController) in
 				passcodeViewController.keypadButtonsHidden = true
+				passcodeViewController.view.setNeedsLayout()
 			}
 			updateLockCountdown()
 
@@ -435,9 +438,14 @@ public class AppLockManager: NSObject {
 	}
 
 	private func performPasscodeViewControllerUpdates(_ updateHandler: (_: PasscodeViewController) -> Void) {
-		for themeWindow in ThemeWindow.themeWindows {
-			if let passcodeViewController = passcodeControllerByWindow.object(forKey: themeWindow) {
-				updateHandler(passcodeViewController)
+		if let passwordViewHostViewController = passwordViewHostViewController, let passcodeViewController = passwordViewHostViewController.topMostViewController as? PasscodeViewController {
+			updateHandler(passcodeViewController)
+		} else {
+
+			for themeWindow in ThemeWindow.themeWindows {
+				if let passcodeViewController = passcodeControllerByWindow.object(forKey: themeWindow) {
+					updateHandler(passcodeViewController)
+				}
 			}
 		}
 	}
@@ -474,8 +482,14 @@ public class AppLockManager: NSObject {
 								passcodeViewController.passcode = self.passcode
 							}
 						}
+
 						// Remove the passcode after small delay to give user feedback after use the biometrical unlock
-						OnMainThread(after: 0.3) {
+						var delay = 0.3
+						// If the AppLockManager was called from an extension, like File Provider, the delay causes that the UI cannot be unlocked. Delay is not possible in extension.
+						if self.passwordViewHostViewController != nil {
+							delay = 0.0
+						}
+						OnMainThread(after: delay) {
 							self.attemptUnlock(with: self.passcode)
 						}
 					} else {
