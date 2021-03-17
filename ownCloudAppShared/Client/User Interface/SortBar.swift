@@ -139,15 +139,15 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			}
 			updateSortButtonTitle()
 
-			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
 			sortButton?.sizeToFit()
 
 			if let oldSementIndex = SortMethod.all.index(of: oldValue) {
-				sortSegmentedControl?.setTitle(oldValue.localizedName(), forSegmentAt: oldSementIndex)
+				sortSegmentedControl?.setTitle(oldValue.localizedName, forSegmentAt: oldSementIndex)
 			}
 			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
 				sortSegmentedControl?.selectedSegmentIndex = segmentIndex
-				sortSegmentedControl?.setTitle(sortDirectionTitle(sortMethod.localizedName()), forSegmentAt: segmentIndex)
+				sortSegmentedControl?.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
 			}
 
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
@@ -213,8 +213,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			var longestTitleWidth : CGFloat = 0.0
 			for method in SortMethod.all {
-				sortSegmentedControl.insertSegment(withTitle: method.localizedName(), at: SortMethod.all.index(of: method)!, animated: false)
-				let titleWidth = method.localizedName().appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
+				sortSegmentedControl.insertSegment(withTitle: method.localizedName, at: SortMethod.all.index(of: method)!, animated: false)
+				let titleWidth = method.localizedName.appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
 				if titleWidth > longestTitleWidth {
 					longestTitleWidth = titleWidth
 				}
@@ -326,7 +326,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	// MARK: - Sort Direction Title
 
 	func updateSortButtonTitle() {
-		let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+		let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
 		sortButton?.setTitle(sortDirectionTitle(title), for: .normal)
 	}
 

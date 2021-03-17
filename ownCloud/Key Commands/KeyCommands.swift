@@ -694,7 +694,7 @@ extension QueryFileListTableViewController {
 		shortcuts.append(toggleSortCommand)
 
 		for (index, method) in SortMethod.all.enumerated() {
-			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
+			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
 			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
 			shortcuts.append(sortCommand)
 		}
@@ -761,7 +761,7 @@ extension QueryFileListTableViewController {
 
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
 		for method in SortMethod.all {
-			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
+			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
 			if command.discoverabilityTitle == sortTitle {
 				self.sortBar?.sortMethod = method
 				break

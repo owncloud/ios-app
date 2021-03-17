@@ -159,6 +159,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Search scope support
  	private var searchText: String?
+ 	private let maxResultCount = 3
 
 	open override func applySearchFilter(for searchText: String?, to query: OCQuery) {
  		self.searchText = searchText
@@ -177,11 +178,24 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
  		_query.sortComparator = comparator
  		customSearchQuery?.sortComparator = comparator
+
+		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
+	 		updateCustomSearchQuery()
+		}
  	}
 
  	func updateCustomSearchQuery() {
  		if let searchText = searchText, let searchScope = sortBar?.searchScope, searchScope == .global {
- 			self.customSearchQuery = OCQuery(condition: .where(.name, contains: searchText), inputFilter: nil)
+ 			let condition : OCQueryCondition = .where(.name, contains: searchText)
+
+ 			if let sortPropertyName = sortBar?.sortMethod.sortPropertyName {
+ 				condition.sortBy = sortPropertyName
+ 				condition.sortAscending = (sortDirection != .ascendant)
+			}
+
+			condition.maxResultCount = NSNumber(value: maxResultCount)
+
+ 			self.customSearchQuery = OCQuery(condition:condition, inputFilter: nil)
  		} else {
  			self.customSearchQuery = nil
  		}
