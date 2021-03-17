@@ -8,6 +8,7 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
@@ -15,6 +16,14 @@ Summary
 
 Details
 -------
+
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+
+   Fixed a problem in scan view when renaming the file name and using a Japanese keyboard layout
+   (2-Byte character). After entering a character inside the file name the text cursor jumped to
+   the end.
+
+   https://github.com/owncloud/ios-app/issues/916
 
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 
