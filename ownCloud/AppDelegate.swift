@@ -113,6 +113,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PresentationModeAction.actionExtension)
+		OCExtensionManager.shared.addExtension(PDFGoToPageAction.actionExtension)
+
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only

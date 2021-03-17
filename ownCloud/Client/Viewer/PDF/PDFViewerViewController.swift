@@ -22,16 +22,41 @@ import ownCloudAppShared
 import PDFKit
 import SafariServices
 
-extension UILabel {
-	func _setupPdfInfoLabel() {
+class PulsatingButton: UIButton {
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		self.layer.cornerRadius = bounds.size.height / 2
+	}
+
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		setupShapes()
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		setupShapes()
+	}
+
+	fileprivate func setupShapes() {
+		setNeedsLayout()
+		layoutIfNeeded()
+
+		self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5.0, bottom: 5, right: 5.0)
 		self.layer.masksToBounds = true
-		self.layer.cornerRadius = 8.0
-		self.backgroundColor = UIColor.darkGray
-		self.textColor = UIColor.white
-		self.font = UIFont.systemFont(ofSize: 14.0, weight: UIFont.Weight.medium)
-		self.translatesAutoresizingMaskIntoConstraints = false
-		self.textAlignment = .center
-		self.adjustsFontSizeToFitWidth = true
+		self.backgroundColor = .darkGray
+		self.titleLabel?.textColor = .white
+		self.titleLabel?.font = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+
+		let pulseAnimation = CABasicAnimation(keyPath: "transform.scale")
+		pulseAnimation.duration = 0.7
+		pulseAnimation.fromValue = 1.0
+		pulseAnimation.toValue = 0.85
+		pulseAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+		pulseAnimation.autoreverses = true
+		pulseAnimation.repeatCount = 2
+		layer.add(pulseAnimation, forKey: "transformScale")
 	}
 }
 
@@ -57,8 +82,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	private let thumbnailView = PDFThumbnailView()
 
 	private let containerView = UIStackView()
-	private let pageCountLabel = UILabel()
 	private let pageCountContainerView = UIView()
+	private let pageCountButton = PulsatingButton()
 
 	private var searchButtonItem: UIBarButtonItem?
 	private var gotoButtonItem: UIBarButtonItem?
@@ -75,7 +100,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 					break
 			}
 
-			pageCountLabel.isHidden = thumbnailViewPosition == .none ? true : false
+			pageCountButton.isHidden = thumbnailViewPosition == .none ? true : false
 
 			setupConstraints()
 		}
@@ -94,7 +119,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		didSet {
 			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
 			isFullScreenModeEnabled = fullScreen
-			pageCountLabel.isHidden = fullScreen
+			pageCountButton.isHidden = fullScreen
 			pageCountContainerView.isHidden = fullScreen
 			setupConstraints()
 		}
@@ -149,15 +174,17 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pdfView.delegate = self
 				containerView.addArrangedSubview(pdfView)
 
+				pageCountButton.translatesAutoresizingMaskIntoConstraints = false
+				pageCountButton.accessibilityLabel = "Go to page".localized
+				pageCountButton.addTarget(self, action: #selector(goToPage), for: .touchDown)
 				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
-				pageCountContainerView.addSubview(pageCountLabel)
+				pageCountContainerView.addSubview(pageCountButton)
 
-				pageCountLabel._setupPdfInfoLabel()
+				pageCountButton.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
+				pageCountButton.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
+				pageCountButton.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
+				pageCountButton.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
 
-				pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
-				pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
-				pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
-				pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
 				containerView.addArrangedSubview(pageCountContainerView)
 
 				self.view.addSubview(containerView)
@@ -408,15 +435,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	private func setupToolbar() {
 		searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
-		gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
 		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
 		searchButtonItem?.accessibilityLabel = "Search PDF".localized
-		gotoButtonItem?.accessibilityLabel = "Go to page".localized
 		outlineItem?.accessibilityLabel = "Outline".localized
 
 		self.parent?.navigationItem.rightBarButtonItems = [
-			gotoButtonItem!,
 			searchButtonItem!,
 			outlineItem!]
 	}
@@ -499,7 +523,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 		let pageNrText = "\(pdf.index(for: page) + 1)"
 		let maxPageCountText = "\(pdf.pageCount)"
-		pageCountLabel.text = NSString(format: "%@ of %@".localized as NSString, pageNrText, maxPageCountText) as String
+		let title = NSString(format: "%@ of %@".localized as NSString, pageNrText, maxPageCountText) as String
+		pageCountButton.setTitle(title, for: .normal)
 	}
 }
 
