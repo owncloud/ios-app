@@ -43,7 +43,6 @@ class PulsatingButton: UIButton {
 		setNeedsLayout()
 		layoutIfNeeded()
 
-		self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5.0, bottom: 5, right: 5.0)
 		self.layer.masksToBounds = true
 		self.backgroundColor = .darkGray
 		self.titleLabel?.textColor = .white
@@ -183,7 +182,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 				pageCountButton.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
 				pageCountButton.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
 				pageCountButton.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
-				pageCountButton.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
+				pageCountButton.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.5).isActive = true
+				pageCountButton.heightAnchor.constraint(lessThanOrEqualToConstant: 22.0).isActive = true
 
 				containerView.addArrangedSubview(pageCountContainerView)
 
