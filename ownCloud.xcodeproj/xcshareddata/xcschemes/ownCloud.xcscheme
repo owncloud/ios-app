@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1030"
+   LastUpgradeVersion = "1230"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -26,8 +26,46 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      codeCoverageEnabled = "YES"
-      shouldUseLaunchSchemeArgsEnv = "NO">
+      shouldUseLaunchSchemeArgsEnv = "NO"
+      codeCoverageEnabled = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
+            BuildableName = "ownCloud.app"
+            BlueprintName = "ownCloud"
+            ReferencedContainer = "container:ownCloud.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "oc:app.show-beta-warning"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.level"
+            value = "0"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "OC_SETTINGS_DOC_JSON"
+            value = "${PROJECT_DIR}/doc/CONFIGURATION.json"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+      <AdditionalOptions>
+         <AdditionalOption
+            key = "MallocStackLogging"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "PrefersMallocStackLoggingLite"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+      </AdditionalOptions>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -38,20 +76,6 @@
                BlueprintName = "ownCloudTests"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "CreateFolderTests">
-               </Test>
-               <Test
-                  Identifier = "DeleteBookmarkTests">
-               </Test>
-               <Test
-                  Identifier = "FileListTests">
-               </Test>
-               <Test
-                  Identifier = "SettingsTests">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">
@@ -83,40 +107,17 @@
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DCC085632293F1FD008CC05C"
+               BuildableName = "ownCloudAppTests.xctest"
+               BlueprintName = "ownCloudAppTests"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "ownCloud.app"
-            BlueprintName = "ownCloud"
-            ReferencedContainer = "container:ownCloud.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "oc:app.show-beta-warning"
-            value = "false"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:log.log-level"
-            value = "0"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
-      <AdditionalOptions>
-         <AdditionalOption
-            key = "MallocStackLogging"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "PrefersMallocStackLoggingLite"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -140,9 +141,34 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "MTC_MAX_HIT_COUNT"
+            value = "9999"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:licensing.disable-appstore-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:licensing.disable-enterprise-licensing"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
+            value = "10"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-browser-session-class"
+            value = "string:UIWebView"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:core.override-reachability-signal"
@@ -165,43 +191,118 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-level"
+            key = "oc:log.level"
+            value = "-1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.level"
             value = "0"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-colored"
+            key = "oc:log.enabled-components"
+            value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.colored"
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-synchronous"
+            key = "oc:log.synchronous"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-only-tags"
+            key = "oc:log.only-tags"
             value = "[CORE]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-only-tags"
-            value = "[Request,Response]"
+            key = "oc:log.only-tags"
+            value = "[Request,Response,Cookies]"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-omit-tags"
-            value = "[Request,Response]"
-            isEnabled = "NO">
+            key = "oc:log.omit-tags"
+            value = "[BGMAN]"
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-blank-filtered-messages"
+            key = "oc:log.blank-filtered-messages"
             value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.single-lined"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.maximum-message-size"
+            value = "100000"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.format"
+            value = "string:json"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.format"
+            value = "string:json-composed"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:connection.allow-background-url-sessions"
             value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.allowed-authentication-methods"
+            value = "[com.owncloud.openid-connect,com.owncloud.oauth2]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.allowed-authentication-methods"
+            value = "[com.owncloud.basicauth]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:core.cookie-support-enabled"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[reject-downloads-500]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[only-404]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[five-seconds-of-404]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[simple-apm]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[recovering-apm]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.allowed-authentication-methods"
+            value = "[openid-connect,oauth2]"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

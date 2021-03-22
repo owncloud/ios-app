@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudUI
+import ownCloudAppShared
 
 class BookmarkInfoViewController: StaticTableViewController {
 	var offlineStorageInfoRow: StaticTableViewRow?
@@ -47,7 +48,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 		// Compacting
 		let includeAvailableOfflineCopiesRow = StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
 			if (row.value as? Bool) == true {
-				let alertController = UIAlertController(title: "Really include available offline files?".localized,
+				let alertController = ThemedAlertController(title: "Really include available offline files?".localized,
 									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).".localized,
 									preferredStyle: .alert)
 
@@ -62,7 +63,6 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 		let deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {
-
 				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
@@ -88,7 +88,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 							row.cell?.accessoryView = nil
 							if error != nil {
 								// Inform user if vault couldn't be comp acted
-								let alertController = UIAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+								let alertController = ThemedAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
 																		message: error?.localizedDescription,
 																		preferredStyle: .alert)
 
@@ -107,6 +107,40 @@ class BookmarkInfoViewController: StaticTableViewController {
 		}, title: "Delete Local Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
 
 		addSection(StaticTableViewSection(headerTitle: "Compacting".localized, footerTitle: nil, identifier: "section-compact", rows: [ includeAvailableOfflineCopiesRow, deleteLocalFilesRow ]))
+
+		if DiagnosticManager.shared.enabled {
+			let showDiagnostics = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				if let bookmark = self?.bookmark {
+					let vault = OCVault(bookmark: bookmark)
+
+					vault.open(completionHandler: { (_, error) in
+						let done : () -> Void = {
+							vault.close { (_, _) in
+							}
+						}
+
+						if let database = vault.database, error == nil {
+							OnBackgroundQueue {
+								var diagnosticNodes : [OCDiagnosticNode] = []
+
+								diagnosticNodes.append(contentsOf: database.diagnosticNodes(with: nil))
+								diagnosticNodes.append(OCDiagnosticNode.withLabel("Bookmark Metadata".localized, children: bookmark.diagnosticNodes(with: nil)))
+
+								OnMainThread {
+									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
+								}
+
+								done()
+							}
+						} else {
+							done()
+						}
+					})
+				}
+			}, title: "Diagnostic Overview".localized, accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
+
+			addSection(StaticTableViewSection(headerTitle: "Diagnostics".localized, footerTitle: nil, identifier: "section-diagnostics", rows: [ showDiagnostics ]))
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -133,8 +167,8 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 	// MARK: - Helper methods
 	private func updateStorageInfo() {
-		if bookmark != nil {
-			if let vaultURL = OCVault(bookmark: bookmark!).filesRootURL {
+		if let bookmark = bookmark {
+			if let vaultURL = OCVault(bookmark: bookmark).filesRootURL {
 				FileManager.default.calculateDirectorySize(at: vaultURL) { (size) in
 					if size != nil {
 						let occupiedSpace = self.byteCounterFormatter.string(fromByteCount: size!)

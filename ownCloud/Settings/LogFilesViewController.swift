@@ -17,7 +17,11 @@
 */
 
 import UIKit
+import CoreServices
+
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 
 class LogFileTableViewCell : ThemeTableViewCell {
 
@@ -56,7 +60,7 @@ extension OCLogFileRecord {
 	}
 }
 
-class LogFilesViewController : UITableViewController, Themeable {
+class LogFilesViewController : UITableViewController, UITableViewDragDelegate, Themeable {
 
 	var logRecords = [OCLogFileRecord]()
 
@@ -86,6 +90,8 @@ class LogFilesViewController : UITableViewController, Themeable {
 		super.viewDidLoad()
 		Theme.shared.register(client: self, applyImmediately: true)
 		self.tableView.register(LogFileTableViewCell.self, forCellReuseIdentifier: LogFileTableViewCell.identifier)
+		self.tableView.dragDelegate = self
+		self.tableView.dragInteractionEnabled = true
 		self.title = "Log Files".localized
 	}
 
@@ -140,7 +146,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 		cell?.shareAction = { [weak self] (cell) in
 			if let indexPath = self?.tableView.indexPath(for: cell) {
-				self?.shareLogRecord(at: indexPath)
+				self?.shareLogRecord(at: indexPath, sender: cell)
 			}
 		}
 
@@ -149,7 +155,10 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		self.shareLogRecord(at: indexPath)
+		let cell = tableView.cellForRow(at: indexPath)
+		if let cell = cell {
+			self.shareLogRecord(at: indexPath, sender: cell)
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -159,6 +168,39 @@ class LogFilesViewController : UITableViewController, Themeable {
 				self?.removeLogRecord(at: indexPath)
 			})
 		]
+	}
+
+	// MARK: - Table view drag & drop support
+    	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if DisplaySettings.shared.preventDraggingFiles {
+			return [UIDragItem]()
+		}
+
+		var logURL : URL?
+		var logName : String?
+
+		provideLogURL(at: indexPath, makeNamedCopy: false) { (url, name, completionHandler) in
+			logURL = url
+			logName = name
+
+			// Since we use false for makeNamedCopy, this should be safe
+			completionHandler?()
+		}
+
+		if let logURL = logURL {
+			let itemProvider = NSItemProvider()
+			itemProvider.registerFileRepresentation(forTypeIdentifier: kUTTypeUTF8PlainText as String, fileOptions: [], visibility: .all, loadHandler: { (completionHandler) -> Progress? in
+				completionHandler(logURL, true, nil)
+				return nil
+			})
+			itemProvider.suggestedName = logName
+
+			let dragItem = UIDragItem(itemProvider: itemProvider)
+
+			return [dragItem]
+		}
+
+		return [UIDragItem]()
 	}
 
 	// MARK: - Private Helpers
@@ -176,8 +218,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 		}
 	}
 
-	private func shareLogRecord(at indexPath:IndexPath) {
-
+	private func provideLogURL(at indexPath: IndexPath, makeNamedCopy: Bool, completionHandler: (_ fileURL: URL?, _ name: String?, _ doneBlock: (() -> Void)?) -> Void) {
 		let logRecord = self.logRecords[indexPath.row]
 
 		// Create a file name for sharing with format ownCloud_<date>_<time>.log.txt
@@ -190,29 +231,47 @@ class LogFilesViewController : UITableViewController, Themeable {
 		}
 		let shareableFileName = "ownCloud_" + time + ".log.txt"
 
-		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
+		if makeNamedCopy {
+			let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
 
-		do {
-			if FileManager.default.fileExists(atPath: shareableLogURL.path) {
-				try FileManager.default.removeItem(at: shareableLogURL)
-			}
-
-			try FileManager.default.copyItem(atPath: logRecord.url.path, toPath: shareableLogURL.path)
-		} catch {
-		}
-
-		let shareViewController = UIActivityViewController(activityItems: [shareableLogURL], applicationActivities:nil)
-		shareViewController.completionWithItemsHandler = { (_, _, _, _) in
 			do {
-				try FileManager.default.removeItem(at: shareableLogURL)
-			} catch {
-			}
-		}
+				if FileManager.default.fileExists(atPath: shareableLogURL.path) {
+					try FileManager.default.removeItem(at: shareableLogURL)
+				}
 
-		if UIDevice.current.isIpad() {
-			shareViewController.popoverPresentationController?.sourceView = self.view
+				try FileManager.default.copyItem(atPath: logRecord.url.path, toPath: shareableLogURL.path)
+			} catch {
+				Log.error("Error providing copy of log \(logRecord.url.path) at \(shareableLogURL.path): \(error)")
+			}
+
+			completionHandler(shareableLogURL, shareableFileName, {
+				try? FileManager.default.removeItem(at: shareableLogURL)
+			})
+		} else {
+			completionHandler(logRecord.url, shareableFileName, nil)
 		}
-		self.present(shareViewController, animated: true, completion: nil)
+	}
+
+	private func shareLogRecord(at indexPath:IndexPath, sender: UITableViewCell) {
+		provideLogURL(at: indexPath, makeNamedCopy: true) { (shareableLogURL, _, completionHandler) in
+			guard let shareableLogURL = shareableLogURL else {
+				completionHandler?()
+				return
+			}
+
+			let shareViewController = UIActivityViewController(activityItems: [shareableLogURL], applicationActivities:nil)
+
+			shareViewController.completionWithItemsHandler = { (_, _, _, _) in
+				completionHandler?()
+			}
+
+			if UIDevice.current.isIpad {
+				shareViewController.popoverPresentationController?.sourceView = sender
+				shareViewController.popoverPresentationController?.sourceRect = sender.frame
+			}
+
+			self.present(shareViewController, animated: true, completion: nil)
+		}
 	}
 
 	private func removeLogRecord(at indexPath:IndexPath) {
@@ -232,7 +291,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	@objc private func removeAllLogs() {
-		let alert = UIAlertController(with: "Delete all log files?".localized,
+		let alert = ThemedAlertController(with: "Delete all log files?".localized,
 									  message: "This action can't be undone.".localized,
 									  destructiveLabel: "Delete all".localized,
 									  preferredStyle: .alert,

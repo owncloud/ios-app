@@ -22,11 +22,11 @@
 
 @class FileProviderExtension;
 
-@interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator, OCQueryDelegate>
+@interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator, OCQueryDelegate, OCLogTagging>
 {
 	__weak FileProviderExtension *_fileProviderExtension;
 
-	OCCore *_core;
+	__weak OCCore *_core;
 	OCBookmark *_bookmark;
 	NSFileProviderItemIdentifier _enumeratedItemIdentifier;
 

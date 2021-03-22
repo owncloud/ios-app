@@ -19,6 +19,7 @@
 import UIKit
 import LocalAuthentication
 import ownCloudSDK
+import ownCloudAppShared
 
 // MARK: - SecurityAskfrequency
 @objc enum SecurityAskFrequency: Int, CaseIterable {
@@ -56,19 +57,6 @@ class SecuritySettingsSection: SettingsSection {
 		}
 	}
 
-	var isPasscodeSecurityEnabled: Bool {
-		get {
-			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
-				return true
-			} else {
-				return AppLockManager.shared.lockEnabled
-			}
-		}
-		set(newValue) {
-			AppLockManager.shared.lockEnabled = newValue
-			updateUI()
-		}
-	}
 	var isBiometricalSecurityEnabled: Bool {
 		get {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
@@ -116,7 +104,7 @@ class SecuritySettingsSection: SettingsSection {
 
 				let newVC = StaticTableViewController(style: .grouped)
 				newVC.title = "Lock application".localized
-				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.".localized)
+				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.".localized)
 
 				var radioButtons: [[String : Any]] = []
 
@@ -139,106 +127,37 @@ class SecuritySettingsSection: SettingsSection {
 
 		// Creation of the passcode row.
 		passcodeRow = StaticTableViewRow(switchWithAction: { [weak self] (row, sender) in
-			if let passcodeSwitch = sender as? UISwitch {
-				if let viewController = row.viewController {
 
-					var passcodeViewController: PasscodeViewController?
-					var defaultMessage : String?
+			guard let passcodeSwitch = sender as? UISwitch, let viewController = row.viewController  else { return }
 
-					// Handlers
-					let cancelHandler:PasscodeViewControllerCancelHandler = { (passcodeViewController: PasscodeViewController) in
-						passcodeViewController.dismiss(animated: true, completion: {
-							self?.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
-						})
-						self?.passcodeFromFirstStep = nil
-					}
-
-					if passcodeSwitch.isOn {
-						defaultMessage = "Enter code".localized
+			let action: PasscodeAction = passcodeSwitch.isOn ? .setup : .delete
+			PasscodeSetupCoordinator(parentViewController: viewController, action: action, completion: { (cancelled) in
+				OnMainThread {
+					if cancelled {
+						passcodeSwitch.isOn = !passcodeSwitch.isOn
 					} else {
-						defaultMessage = "Delete code".localized
+						self?.updateUI()
 					}
-
-					passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
-						if !passcodeSwitch.isOn {
-							// Delete
-							if passcode == AppLockManager.shared.passcode {
-								// Success
-								AppLockManager.shared.passcode = nil
-								AppLockManager.shared.unlocked = false
-								passcodeViewController.dismiss(animated: true, completion: {
-									self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-									self?.updateUI()
-								})
-							} else {
-								// Error
-								passcodeViewController.message = defaultMessage
-								passcodeViewController.errorMessage = "Incorrect code".localized
-								passcodeViewController.passcode = nil
-							}
-						} else {
-							// Add
-							if self?.passcodeFromFirstStep == nil {
-								// First step
-								self?.passcodeFromFirstStep = passcode
-								passcodeViewController.message = "Repeat code".localized
-								passcodeViewController.passcode = nil
-							} else {
-								// Second step
-								if self?.passcodeFromFirstStep == passcode {
-									// Passcode right
-									// Save to keychain
-									AppLockManager.shared.passcode = passcode
-									AppLockManager.shared.unlocked = true
-									passcodeViewController.dismiss(animated: true, completion: {
-										self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-										self?.updateUI()
-									})
-								} else {
-									//Passcode is not the same
-									passcodeViewController.message = defaultMessage
-									passcodeViewController.errorMessage = "The entered codes are different".localized
-									passcodeViewController.passcode = nil
-								}
-								self?.passcodeFromFirstStep = nil
-							}
-						}
-					})
-
-					passcodeViewController?.message = defaultMessage
-					viewController.present(passcodeViewController!, animated: true, completion: nil)
 				}
-			}
-		}, title: "Passcode Lock".localized, value: isPasscodeSecurityEnabled, identifier: "passcodeSwitchIdentifier")
+			}).start()
+
+			}, title: "Passcode Lock".localized, value: PasscodeSetupCoordinator.isPasscodeSecurityEnabled, identifier: "passcodeSwitchIdentifier")
 
 		// Creation of the biometrical row.
 		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			biometricalRow = StaticTableViewRow(switchWithAction: { [weak self] (row, sender) in
-				if let biometricalSwitch = sender as? UISwitch {
-					if let viewController = row.viewController {
-						var passcodeViewController: PasscodeViewController?
+			biometricalRow = StaticTableViewRow(switchWithAction: { (row, sender) in
+				guard let biometricalSwitch = sender as? UISwitch, let viewController = row.viewController else { return }
 
-						passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController: PasscodeViewController) in
-							passcodeViewController.dismiss(animated: true, completion: {
-								biometricalSwitch.setOn(self!.isBiometricalSecurityEnabled, animated: true)
-							})
-						}, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
-							if passcode == AppLockManager.shared.passcode {
-								// Success
-								passcodeViewController.dismiss(animated: true, completion: {
-									self?.isBiometricalSecurityEnabled = biometricalSwitch.isOn
-								})
-							} else {
-								// Error
-								passcodeViewController.errorMessage = "Incorrect code".localized
-								passcodeViewController.passcode = nil
-							}
-						})
-
-						passcodeViewController?.message = "Enter code".localized
-						viewController.present(passcodeViewController!, animated: true, completion: nil)
+				PasscodeSetupCoordinator(parentViewController: viewController, completion: { (cancelled) in
+					OnMainThread {
+						if cancelled {
+							biometricalSwitch.isOn = !biometricalSwitch.isOn
+						} else {
+							biometricalSwitch.isOn = PasscodeSetupCoordinator.isBiometricalSecurityEnabled
+						}
 					}
-				}
+				}).startBiometricalFlow(biometricalSwitch.isOn)
+
 			}, title: biometricalSecurityName, value: isBiometricalSecurityEnabled, identifier: "BiometricalSwitch")
 		}
 
@@ -261,11 +180,13 @@ class SecuritySettingsSection: SettingsSection {
 		var rowsToAdd: [StaticTableViewRow] = []
 		var rowsToRemove: [StaticTableViewRow] = []
 
-		if !rows.contains(passcodeRow!) {
-			rowsToAdd.append(passcodeRow!)
+		if !AppLockManager.shared.isPasscodeEnforced {
+			if !rows.contains(passcodeRow!) {
+				rowsToAdd.append(passcodeRow!)
+			}
 		}
 
-		if isPasscodeSecurityEnabled {
+		if PasscodeSetupCoordinator.isPasscodeSecurityEnabled {
 			if !rows.contains(frequencyRow!) {
 				rowsToAdd.append(frequencyRow!)
 			}
@@ -311,6 +232,6 @@ class SecuritySettingsSection: SettingsSection {
 			}
 		}
 
-		passcodeRow?.value = isPasscodeSecurityEnabled
+		passcodeRow?.value = PasscodeSetupCoordinator.isPasscodeSecurityEnabled
 	}
 }

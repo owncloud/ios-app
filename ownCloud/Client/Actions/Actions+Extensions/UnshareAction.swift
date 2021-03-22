@@ -17,35 +17,24 @@
 */
 
 import ownCloudSDK
-
-extension Array where Element: OCItem {
-	var sharedWithUser : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
-	}
-	var isShared : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isShared })
-	}
-}
+import ownCloudAppShared
 
 class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Unshare".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow, .moreFolder, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .toolbar] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedWithUser = forContext.items.sharedWithUser
 
-		if forContext.items.count != sharedWithUser.count {
+		if !forContext.allItemsShared {
 			return .none
 		}
 
-		if let core = forContext.core {
-			for sharedItem in sharedWithUser {
-				if !sharedItem.isShareRootItem(from: core) {
-					return .none
-				}
+		for sharedItem in forContext.itemsSharedWithUser {
+			if !forContext.isShareRoot(item: sharedItem) {
+				return .none
 			}
 		}
 
@@ -118,11 +107,11 @@ class UnshareAction : Action {
 			self.completed()
 		}
 
-		let alertController = UIAlertController(
+		let alertController = ThemedAlertController(
 			with: name,
 			message: message,
 			destructiveLabel: "Unshare".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
+			preferredStyle: UIDevice.current.isIpad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				unshareItemAndPublishProgress(items)
 		})
@@ -132,7 +121,7 @@ class UnshareAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder {
 			return UIImage(named: "trash")
 		}
 

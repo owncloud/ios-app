@@ -18,14 +18,22 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
-class ClientActivityViewController: UITableViewController, Themeable {
+class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate, ClientActivityCellDelegate {
+
+	enum ActivitySection : Int, CaseIterable {
+		case messageGroups
+		case activities
+	}
 
 	weak var core : OCCore? {
 		willSet {
 			if let core = core {
 				NotificationCenter.default.removeObserver(self, name: core.activityManager.activityUpdateNotificationName, object: nil)
 			}
+
+			messageSelector = nil
 		}
 
 		didSet {
@@ -35,11 +43,41 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		}
 	}
 
+	weak var messageSelector : MessageSelector?
+	var messageGroups : [MessageGroup]?
+
 	var activities : [OCActivity]?
-	var isOnScreen : Bool = false
+	var isOnScreen : Bool = false {
+		didSet {
+			updateDisplaySleep()
+		}
+	}
+
+	private var shouldPauseDisplaySleep : Bool = false {
+		didSet {
+			updateDisplaySleep()
+		}
+	}
+
+	private func updateDisplaySleep() {
+		pauseDisplaySleep = isOnScreen && shouldPauseDisplaySleep
+	}
+
+	private var pauseDisplaySleep : Bool = false {
+		didSet {
+			if pauseDisplaySleep != oldValue {
+				if pauseDisplaySleep {
+					DisplaySleepPreventer.shared.startPreventingDisplaySleep()
+				} else {
+					DisplaySleepPreventer.shared.stopPreventingDisplaySleep()
+				}
+			}
+		}
+	}
 
 	deinit {
 		Theme.shared.unregister(client: self)
+		self.shouldPauseDisplaySleep = false
 		self.core = nil
 	}
 
@@ -51,12 +89,18 @@ class ClientActivityViewController: UITableViewController, Themeable {
 						case .publish, .unpublish:
 							setNeedsDataReload()
 
+							if core?.activityManager.activities.count == 0 {
+								shouldPauseDisplaySleep = false
+							} else {
+								shouldPauseDisplaySleep = true
+							}
+
 						case .property:
 							if isOnScreen,
 							   let activity = activityUpdate[OCActivityManagerUpdateActivityKey] as? OCActivity,
 							   let firstIndex = activities?.firstIndex(of: activity) {
 							   	// Update just the updated activity
-								self.tableView.reloadRows(at: [IndexPath(row: firstIndex, section: 0)], with: .none)
+								self.tableView.reloadRows(at: [IndexPath(row: firstIndex, section: ActivitySection.activities.rawValue)], with: .none)
 							} else {
 								// Schedule table reload if not on-screen
 								setNeedsDataReload()
@@ -65,6 +109,18 @@ class ClientActivityViewController: UITableViewController, Themeable {
 				}
 			}
 		}
+	}
+
+	func handleMessagesUpdates(messages: [OCMessage]?, groups : [MessageGroup]?) {
+		if let tabBarItem = self.navigationController?.tabBarItem {
+			if let messageCount = messages?.count, messageCount > 0 {
+				tabBarItem.badgeValue = "\(messageCount)"
+			} else {
+				tabBarItem.badgeValue = nil
+			}
+		}
+
+		self.setNeedsDataReload()
 	}
 
 	var needsDataReload : Bool = true
@@ -79,19 +135,32 @@ class ClientActivityViewController: UITableViewController, Themeable {
 			needsDataReload = false
 
 			activities = core?.activityManager.activities
+			messageGroups = messageSelector?.groupedSelection
+
 			self.tableView.reloadData()
+
+			if (activities?.count ?? 0) == 0, (messageGroups?.count ?? 0) == 0 {
+				self.messageView?.message(show: true, imageName: "status-flash", title: "All done".localized, message: "No pending messages or ongoing actions.".localized)
+			} else {
+				self.messageView?.message(show: false)
+			}
 		}
 	}
+
+	var messageView : MessageView?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.tableView.register(ClientActivityCell.self, forCellReuseIdentifier: "activity-cell")
+		self.tableView.register(MessageGroupCell.self, forCellReuseIdentifier: "message-group-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
-		self.tableView.allowsSelection = false
+		self.tableView.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		messageView = MessageView(add: self.view)
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
@@ -116,72 +185,117 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		super.viewWillDisappear(animated)
 	}
 
+	// MARK: - MessageGroupCell delegate
+	func cell(_ cell: MessageGroupCell, showMessagesLike likeMessage: OCMessage) {
+		if let core = core, let likeMessageCategoryID = likeMessage.categoryIdentifier {
+			let bookmarkUUID = core.bookmark.uuid
+
+			let messageTableViewController = MessageTableViewController(with: core, messageFilter: { (message) -> Bool in
+				return (message.categoryIdentifier == likeMessageCategoryID) && (message.bookmarkUUID == bookmarkUUID) && !message.resolved
+			})
+
+			self.navigationController?.pushViewController(messageTableViewController, animated: true)
+		}
+	}
+
+	// MARK: - ClientActivityCell delegate
+	func showMessage(for activity: OCActivity) {
+		if let syncRecordActivity = activity as? OCSyncRecordActivity,
+		   let firstMatchingMessage = messageSelector?.selection?.first(where: { (message) -> Bool in
+			return message.syncIssue?.syncRecordID == syncRecordActivity.recordID
+		}) {
+			firstMatchingMessage.showInApp()
+		}
+ 	}
+
+	func hasMessage(for activity: OCActivity) -> Bool {
+		guard let syncRecordActivity = activity as? OCSyncRecordActivity else {
+			return false
+		}
+
+		return messageSelector?.syncRecordIDsInSelection?.contains(syncRecordActivity.recordID) ?? false
+	}
+
 	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		return ActivitySection.allCases.count
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
-		return activities?.count ?? 0
+		switch ActivitySection(rawValue: section) {
+			case .messageGroups:
+				return messageGroups?.count ?? 0
+
+			case .activities:
+				return activities?.count ?? 0
+
+			default:
+				return 0
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? ClientActivityCell else {
-			return UITableViewCell()
+		switch ActivitySection(rawValue: indexPath.section) {
+			case .messageGroups:
+				guard let cell = tableView.dequeueReusableCell(withIdentifier: "message-group-cell", for: indexPath) as? MessageGroupCell else {
+					return UITableViewCell()
+				}
+
+				if let messageGroups = messageGroups, indexPath.row < messageGroups.count {
+					cell.messageGroup = messageGroups[indexPath.row]
+				}
+
+				cell.delegate = self
+
+				return cell
+
+			case .activities:
+				guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? ClientActivityCell else {
+					return UITableViewCell()
+				}
+
+				cell.delegate = self
+
+				if let activities = activities, indexPath.row < activities.count {
+					cell.activity = activities[indexPath.row]
+				}
+
+				return cell
+
+			default:
+				return UITableViewCell()
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		if ActivitySection(rawValue: indexPath.section) == .activities,
+		   let activities = activities,
+		   let nodeGenerator = activities[indexPath.row] as? DiagnosticNodeGenerator, nodeGenerator.isDiagnosticNodeGenerationAvailable {
+			return UISwipeActionsConfiguration(actions: [
+				UIContextualAction(style: .normal, title: "Info".localized, handler: { [weak self] (_, _, completionHandler) in
+					let context = OCDiagnosticContext(core: self?.core)
+
+					nodeGenerator.provideDiagnosticNode(for: context, completion: { [weak self] (groupNode, style) in
+						guard let groupNode = groupNode else { return }
+
+						OnMainThread {
+							self?.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context, style: style), animated: true)
+						}
+					})
+					completionHandler(true)
+				})
+			])
 		}
 
-		if let activities = activities, indexPath.row < activities.count {
-			cell.activity = activities[indexPath.row]
-		}
-
-		return cell
+		return nil
 	}
 
-	/*
-	// Override to support conditional editing of the table view.
-	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-	// Return false if you do not want the specified item to be editable.
-	return true
+	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		return false
 	}
-	*/
 
-	/*
-	// Override to support editing the table view.
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-	if editingStyle == .delete {
-	// Delete the row from the data source
-	tableView.deleteRows(at: [indexPath], with: .fade)
-	} else if editingStyle == .insert {
-	// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+		return nil
 	}
-	}
-	*/
-
-	/*
-	// Override to support rearranging the table view.
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-	}
-	*/
-
-	/*
-	// Override to support conditional rearranging of the table view.
-	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-	// Return false if you do not want the item to be re-orderable.
-	return true
-	}
-	*/
-
-	/*
-	// MARK: - Navigation
-
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	// Get the new view controller using segue.destination.
-	// Pass the selected object to the new view controller.
-	}
-	*/
-
 }

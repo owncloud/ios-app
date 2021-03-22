@@ -26,7 +26,7 @@ By default, all detected methods are considered and OAuth2 ranks higher than Bas
 Filtering and ranking can be customized by MDM Configuration. This, for example, allows making OAuth2 the only possible Authentication Method, so no credentials need to be stored on the device.
 
 ### OAuth2 implementation
-The OAuth2 implementation uses [`SFAuthenticationSession`](https://developer.apple.com/documentation/safariservices/sfauthenticationsession) - which is described as best practice by [RFC 8252](https://tools.ietf.org/html/rfc8252#appendix-B.1) - when running under iOS 11 and earlier. Under iOS 12, the OAuth2 implementation uses [`ASWebAuthenticationSession`](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession), which is the successor of `SFAuthenticationSession`. Benefits of using these APIs include:
+The OAuth2 implementation used [`SFAuthenticationSession`](https://developer.apple.com/documentation/safariservices/sfauthenticationsession) - which is described as best practice by [RFC 8252](https://tools.ietf.org/html/rfc8252#appendix-B.1) - when running under iOS 11 and earlier. Under iOS 12, the OAuth2 implementation uses [`ASWebAuthenticationSession`](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession), which is the successor of `SFAuthenticationSession`. Benefits of using these APIs include:
 - privilege separation: web content is run in a separate process
 - trustworthiness: apps can't inject code into or access the contents of the web view
 - convenience for the user: cookies from Safari are available to the web content inside the session

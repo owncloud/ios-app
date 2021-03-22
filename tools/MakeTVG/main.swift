@@ -154,7 +154,7 @@ if CommandLine.argc < 3 {
 				let tvgFileName = (((sourceURL.lastPathComponent as NSString).deletingPathExtension) as NSString).appendingPathExtension("tvg")
 				let targetURL = targetDirectoryURL.appendingPathComponent(tvgFileName!, isDirectory: false)
 
-				print ("Writing TVG with " + String(defaultValuesForVariables.count) + " changes, based on " + sourceURL.lastPathComponent + ", to " + targetURL.lastPathComponent)
+				print("Writing TVG with " + String(defaultValuesForVariables.count) + " changes, based on " + sourceURL.lastPathComponent + ", to " + targetURL.lastPathComponent)
 
 				try tvgData.write(to: targetURL)
 

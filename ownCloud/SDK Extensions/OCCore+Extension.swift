@@ -36,7 +36,7 @@ extension OCCore {
 			start(shareQuery)
 		}
 
-		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: nil) {
 			dispatchGroup.enter()
 
 			shareQuery.initialPopulationHandler = { [weak self] query in
@@ -67,11 +67,12 @@ extension OCCore {
 		})
 	}
 
-	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool = false) -> OCShareQuery? {
-		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+	@discardableResult private func retrieveShares(for item: OCItem, scope: OCShareScope, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
+		if let shareQuery = OCShareQuery(scope: scope, item: nil) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
-					return share.itemPath == item.path
+					return (share.itemPath == item.path) ||
+					       (allowPartialMatch && (item.path?.hasPrefix(share.itemPath) == true))
 				})
 				initialPopulationHandler(shares)
 
@@ -87,24 +88,12 @@ extension OCCore {
 		return nil
 	}
 
-	@discardableResult func acceptedCloudShares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool = false) -> OCShareQuery? {
-		if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
-			shareQuery.initialPopulationHandler = { [weak self] query in
-				let shares = query.queryResults.filter({ (share) -> Bool in
-					return share.itemPath == item.path
-				})
-				initialPopulationHandler(shares)
+	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
+		return retrieveShares(for: item, scope: .sharedWithUser, initialPopulationHandler: initialPopulationHandler, allowPartialMatch: allowPartialMatch, keepRunning: keepRunning)
+	}
 
-				if !keepRunning {
-					self?.stop(query)
-				}
-			}
-			start(shareQuery)
-
-			return keepRunning ? shareQuery : nil
-		}
-
-		return nil
+	@discardableResult func acceptedCloudShares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
+		return retrieveShares(for: item, scope: .acceptedCloudShares, initialPopulationHandler: initialPopulationHandler, allowPartialMatch: allowPartialMatch, keepRunning: keepRunning)
 	}
 
 	@discardableResult func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool) -> OCShareQuery? {
@@ -125,5 +114,21 @@ extension OCCore {
 		}
 
 		return nil
+	}
+
+	func retrieveParentItems(for item: OCItem) -> [OCItem] {
+		var parentItems : [OCItem] = []
+
+		if item.parentLocalID != nil {
+			if let parentItem = item.parentItem(from: self) {
+				if item.parentLocalID != nil {
+					parentItems.append(parentItem)
+					let items = self.retrieveParentItems(for: parentItem)
+					parentItems.append(contentsOf: items.reversed())
+				}
+			}
+		}
+
+		return parentItems.reversed()
 	}
 }

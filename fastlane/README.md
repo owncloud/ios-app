@@ -12,7 +12,7 @@ Install _fastlane_ using
 ```
 [sudo] gem install fastlane -NV
 ```
-or alternatively using `brew cask install fastlane`
+or alternatively using `brew install fastlane`
 
 # Available Actions
 ## iOS
@@ -36,9 +36,54 @@ Ad-Hoc Distribution IPA generation
 fastlane ios screenshots
 ```
 Generate the screenshots for the AppStore
-### ios build_ipa_enterprise_in_house
+### ios prepare_branding_assets
 ```
-fastlane ios build_ipa_enterprise_in_house
+fastlane ios prepare_branding_assets
+```
+Copies the branding assets from the themes repository to the ios-app repository
+### ios prepare_metadata
+```
+fastlane ios prepare_metadata
+```
+Create Metadata Release Notes, Screenshots and push to git
+### ios release_on_appstore
+```
+fastlane ios release_on_appstore
+```
+Create Release Notes, Screenshots, Build, Upload of regular iOS App and EMM App
+### ios owncloud_regular_build
+```
+fastlane ios owncloud_regular_build
+```
+
+### ios owncloud_emm_build
+```
+fastlane ios owncloud_emm_build
+```
+
+### ios owncloud_online_build
+```
+fastlane ios owncloud_online_build
+```
+
+### ios owncloud_branding_build
+```
+fastlane ios owncloud_branding_build
+```
+
+### ios owncloud_branding_appstore_build
+```
+fastlane ios owncloud_branding_appstore_build
+```
+
+### ios owncloud_enterprise_build
+```
+fastlane ios owncloud_enterprise_build
+```
+
+### ios build_ipa_in_house
+```
+fastlane ios build_ipa_in_house
 ```
 In-House Enterprise IPA generation
 

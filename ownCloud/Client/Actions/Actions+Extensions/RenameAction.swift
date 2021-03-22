@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }
@@ -24,14 +25,14 @@ class RenameAction : Action {
 	override class var name : String? { return "Rename".localized }
 	override class var keyCommand : String? { return "\r" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count > 1 {
 			return .none
 		}
-		if forContext.items.filter({return $0.isRoot}).count > 0 {
+		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.rename)}).count > 0 {
 			return .none
 
 		}
@@ -56,9 +57,16 @@ class RenameAction : Action {
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\".localized)
+				return (false, nil, "File name cannot contain / or \\".localized)
 			} else {
-				return (true, nil)
+				if let rootItem = rootItem {
+					if ((try? self.core?.cachedItem(inParent: rootItem, withName: name, isDirectory: true)) != nil) ||
+					   ((try? self.core?.cachedItem(inParent: rootItem, withName: name, isDirectory: false)) != nil) {
+						return (false, "Item with same name already exists".localized, "An item with the same name already exists in this location.".localized)
+					}
+				}
+
+				return (true, nil, nil)
 			}
 		}, completion: { newName, _ in
 			guard newName != nil else {
@@ -79,14 +87,19 @@ class RenameAction : Action {
 		renameViewController.navigationItem.title = "Rename".localized
 
 		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
-		navigationController.modalPresentationStyle = .overFullScreen
+		navigationController.modalPresentationStyle = .formSheet
 
 		viewController.present(navigationController, animated: true)
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
-			return UIImage(named: "folder")
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
+
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
+			} else {
+				return UIImage(named: "folder")
+			}
 		}
 
 		return nil

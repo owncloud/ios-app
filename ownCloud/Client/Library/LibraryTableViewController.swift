@@ -18,9 +18,16 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 protocol LibraryShareList: UIViewController {
 	func updateWith(shares: [OCShare])
+}
+
+struct QuickAccessQuery {
+	var name : String
+	var mimeType : [String]
+	var imageName : String
 }
 
 class LibraryShareView {
@@ -59,6 +66,10 @@ class LibraryTableViewController: StaticTableViewController {
 	weak var core : OCCore?
 
 	deinit {
+		for applierToken in applierTokens {
+			Theme.shared.remove(applierForToken: applierToken)
+		}
+
 		self.stopQueries()
 	}
 
@@ -67,6 +78,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.tableView.contentInset.bottom = self.tabBarController?.tabBar.frame.height ?? 0
 
 		Theme.shared.add(tvgResourceFor: "icon-available-offline")
 
@@ -91,6 +103,7 @@ class LibraryTableViewController: StaticTableViewController {
 	var shareQueryByUser : OCShareQuery?
 	var shareQueryAcceptedCloudShares : OCShareQuery?
 	var shareQueryPendingCloudShares : OCShareQuery?
+	private var applierTokens : [ThemeApplierToken] = []
 
 	private func start(query: OCCoreQuery) {
 		core?.start(query)
@@ -201,9 +214,9 @@ class LibraryTableViewController: StaticTableViewController {
 				if view.row == nil, let core = core {
 					var badgeLabel : RoundedLabel?
 
-					if view.showBadge, let badge = badge, badge > 0 {
-						badgeLabel = RoundedLabel()
-						badgeLabel?.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
+					if view.showBadge, let badge = badge {
+						badgeLabel = RoundedLabel(text: "\(badge)", style: .token)
+						badgeLabel?.isHidden = (badge == 0)
 					}
 
 					view.row = StaticTableViewRow(rowWithAction: { [weak self, weak view] (_, _) in
@@ -241,9 +254,11 @@ class LibraryTableViewController: StaticTableViewController {
 					if let row = view.row {
 						shareSection?.add(row: row, animated: true)
 					}
-				} else if view.showBadge, let badge = badge, badge > 0 {
+				} else if view.showBadge, let badge = badge {
 					guard let accessoryView = view.row?.additionalAccessoryView as? RoundedLabel else { return }
-					accessoryView.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
+
+					accessoryView.labelText = "\(badge)"
+					accessoryView.isHidden = (badge == 0)
 				}
 			} else {
 				if let row = view.row {
@@ -388,15 +403,27 @@ class LibraryTableViewController: StaticTableViewController {
 				completion()
 			})
 
-			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
-			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
+			let queries = [
+				QuickAccessQuery(name: "PDF Documents".localized, mimeType: ["pdf"], imageName: "application-pdf"),
+				QuickAccessQuery(name: "Documents".localized, mimeType: ["doc", "application/vnd", "application/msword", "application/ms-doc", "text/rtf", "application/rtf", "application/mspowerpoint", "application/powerpoint", "application/x-mspowerpoint", "application/excel", "application/x-excel", "application/x-msexcel"], imageName: "x-office-document"),
+				QuickAccessQuery(name: "Text".localized, mimeType: ["text/plain"], imageName: "text"),
+				QuickAccessQuery(name: "Images".localized, mimeType: ["image"], imageName: "image"),
+				QuickAccessQuery(name: "Videos".localized, mimeType: ["video"], imageName: "video"),
+				QuickAccessQuery(name: "Audio".localized, mimeType: ["audio"], imageName: "audio")
+			]
 
-			let pdfQuery = OCQuery(condition: .where(.mimeType, contains: "pdf"), inputFilter:nil)
-			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery, actionHandler: nil)
+			for query in queries {
+				let conditions = query.mimeType.map { (mimeType) -> OCQueryCondition in
+					return .where(.mimeType, contains: mimeType)
+				}
+
+				let customQuery = OCQuery(condition: .any(of: conditions), inputFilter:nil)
+				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, query: customQuery, actionHandler: nil)
+			}
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage? = nil, themeImageName: String? = nil, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -409,7 +436,18 @@ class LibraryTableViewController: StaticTableViewController {
 				}
 
 				actionHandler?({})
-			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)
+			}, title: title, image: image, imageTintColorKey: "secondaryLabelColor", accessoryType: .disclosureIndicator, identifier: identifier)
+
+			if themeImageName != nil {
+				let themeApplierToken = Theme.shared.add(applier: { [weak row] (theme, _, _) in
+					if let themeImageName = themeImageName {
+						row?.cell?.imageView?.image = theme.image(for: themeImageName, size: CGSize(width: 25, height: 25))
+					}
+				}, applyImmediately: true)
+
+				applierTokens.append(themeApplierToken)
+			}
+
 			section.add(row: row)
 		}
 	}

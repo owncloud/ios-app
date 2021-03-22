@@ -1,0 +1,206 @@
+<managedAppConfiguration>
+	<version>1</version>
+	<bundleId>com.owncloud.ios-app</bundleId>
+	<dict>
+		<string keyName="authentication-oauth2.oa2-authorization-endpoint">
+			<defaultValue>
+				<value>index.php/apps/oauth2/authorize</value> 
+			</defaultValue>
+		</string>
+		<string keyName="authentication-oauth2.oa2-token-endpoint">
+			<defaultValue>
+				<value>index.php/apps/oauth2/api/v1/token</value> 
+			</defaultValue>
+		</string>
+		<string keyName="authentication-oauth2.oa2-redirect-uri">
+			<defaultValue>
+				<value>oc://ios.owncloud.com</value> 
+			</defaultValue>
+		</string>
+		<stringArray keyName="connection.connection-preferred-authentication-methods">
+			<defaultValue>
+				<value>com.owncloud.oauth2</value>
+				<value>com.owncloud.basicauth</value>
+			</defaultValue>
+		</stringArray>
+		<string keyName="authentication-oauth2.oa2-client-secret">
+			<defaultValue>
+				<value>KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx</value> 
+			</defaultValue>
+		</string>
+		<string keyName="authentication-oauth2.oa2-client-id">
+			<defaultValue>
+				<value>mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1</value> 
+			</defaultValue>
+		</string>
+		<stringArray keyName="connection.connection-allowed-authentication-methods">
+		</stringArray>
+		<string keyName="connection.endpoint-capabilities">
+			<defaultValue>
+				<value>ocs/v1.php/cloud/capabilities</value> 
+			</defaultValue>
+		</string>
+		<string keyName="connection.endpoint-status">
+			<defaultValue>
+				<value>status.php</value> 
+			</defaultValue>
+		</string>
+		<string keyName="connection.endpoint-user">
+			<defaultValue>
+				<value>ocs/v1.php/cloud/user</value> 
+			</defaultValue>
+		</string>
+		<string keyName="connection.endpoint-webdav">
+			<defaultValue>
+				<value>remote.php/dav/files</value> 
+			</defaultValue>
+		</string>
+        <integer keyName="log.log-level">
+            <defaultValue>
+                <value>4</value>
+            </defaultValue>
+            <constraints  min="0" max="4" >
+            </constraints>
+        </integer>
+        <boolean keyName="log.log-privacy-mask">
+        </boolean>
+         <string keyName="log.log-format">
+            <defaultValue>
+                <value>text</value> 
+            </defaultValue>
+        </string>
+        <boolean keyName="passcode.enforced">
+        </boolean>
+	</dict>
+<presentation defaultLocale="en-US">
+    <fieldGroup>
+        <name>
+            <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
+            <language value="en-US">OAuth2 Settings</language>
+        </name>
+        <field keyName="authentication-oauth2.oa2-authorization-endpoint" type="input">
+            <label>
+                <language value="en-US">Authorization Endpoint</language>
+            </label>
+        </field>
+        <field keyName="authentication-oauth2.oa2-token-endpoint" type="input">
+            <label>
+                <language value="en-US">Token Endpoint</language>
+            </label>
+        </field>
+        <field keyName="authentication-oauth2.oa2-redirect-uri" type="input">
+            <label>
+                <language value="en-US">Redirect URI</language>
+            </label>
+        </field>
+        <field keyName="authentication-oauth2.oa2-client-secret" type="input">
+            <label>
+                <language value="en-US">Client Secret</language>
+            </label>
+        </field>
+        <field keyName="authentication-oauth2.oa2-client-id" type="input">
+            <label>
+                <language value="en-US">Client ID</language>
+            </label>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
+            <language value="en-US">Authentication Methods</language>
+        </name>
+        <field keyName="connection.connection-preferred-authentication-methods" type="list">
+            <label>
+                <language value="en-US">Preferred Authentication Method Identifiers</language>
+            </label>
+            <description>
+                <language value="en-US">Identifiers of preferred authentication methods in order of preference</language>
+            </description>
+        </field>
+        <field keyName="connection.connection-allowed-authentication-methods" type="multiselect">
+            <label>
+                <language value="en-US">Allowed Authentication Method Identifiers</language>
+            </label>
+            <description>
+                <language value="en-US">Select none to allow all methods.</language>
+            </description>
+            <options>
+                <option value="com.owncloud.oauth2">
+                    <language value="en-US">com.owncloud.oauth2</language>
+                </option>
+                <option value="com.owncloud.basicauth">
+                    <language value="en-US">com.owncloud.basicauth</language>
+                </option>
+            </options>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
+            <language value="en-US">Endpoints</language>
+        </name>
+        <field keyName="connection.endpoint-capabilities" type="input">
+            <label>
+                <language value="en-US">Capabilities Endpoint</language>
+            </label>
+        </field>
+        <field keyName="connection.endpoint-status" type="input">
+            <label>
+                <language value="en-US">Status Endpoint</language>
+            </label>
+        </field>
+        <field keyName="connection.endpoint-user" type="input">
+            <label>
+                <language value="en-US">User Endpoint</language>
+            </label>
+        </field>
+        <field keyName="connection.endpoint-webdav" type="input">
+            <label>
+                <language value="en-US">WebDAV Endpoint</language>
+            </label>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <language value="en-US">Logging</language>
+        </name>
+        <field keyName="log.log-level" type="input">
+            <label>
+                <language value="en-US">Log Level</language>
+            </label>
+            <description>
+                <language value="en-US">0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off</language>
+            </description>
+        </field>
+        <field keyName="log.log-privacy-mask" type="checkbox">
+            <label>
+                <language value="en-US">Log Privacy Mask</language>
+            </label>
+            <description>
+                <language value="en-US">Hide private user's data</language>
+            </description>
+        </field>
+        <field keyName="log.log-format" type="input">
+            <label>
+                <language value="en-US">Log format</language>
+            </label>
+            <description>
+                <language value="en-US">Options: text, json, json-composed</language>
+            </description>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <language value="en-US">Passcode</language>
+        </name>
+        <field keyName="passcode.enforced" type="checkbox">
+            <label>
+                <language value="en-US">Enforce passcode</language>
+            </label>
+            <description>
+                <language value="en-US">User is forced to set up passcode</language>
+            </description>
+        </field>
+    </fieldGroup>
+	</presentation>
+</managedAppConfiguration>

@@ -1,0 +1,66 @@
+<managedAppConfiguration>
+	<version>1</version>
+	<bundleId>com.owncloud.ios-app</bundleId>
+	<dict>
+        <integer keyName="log.log-level">
+            <defaultValue>
+                <value>4</value>
+            </defaultValue>
+            <constraints  min="0" max="4" >
+            </constraints>
+        </integer>
+        <boolean keyName="log.log-privacy-mask">
+        </boolean>
+         <string keyName="log.log-format">
+            <defaultValue>
+                <value>text</value> 
+            </defaultValue>
+        </string>
+        <boolean keyName="passcode.enforced">
+        </boolean>
+	</dict>
+<presentation defaultLocale="en-US">
+    <fieldGroup>
+        <name>
+            <language value="en-US">Logging</language>
+        </name>
+        <field keyName="log.log-level" type="input">
+            <label>
+                <language value="en-US">Log Level</language>
+            </label>
+            <description>
+                <language value="en-US">0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off</language>
+            </description>
+        </field>
+        <field keyName="log.log-privacy-mask" type="checkbox">
+            <label>
+                <language value="en-US">Log Privacy Mask</language>
+            </label>
+            <description>
+                <language value="en-US">Hide private user's data</language>
+            </description>
+        </field>
+        <field keyName="log.log-format" type="input">
+            <label>
+                <language value="en-US">Log format</language>
+            </label>
+            <description>
+                <language value="en-US">Options: text, json, json-composed</language>
+            </description>
+        </field>
+    </fieldGroup>
+    <fieldGroup>
+        <name>
+            <language value="en-US">Passcode</language>
+        </name>
+        <field keyName="passcode.enforced" type="checkbox">
+            <label>
+                <language value="en-US">Enforce passcode</language>
+            </label>
+            <description>
+                <language value="en-US">User is forced to set up passcode</language>
+            </description>
+        </field>
+    </fieldGroup>
+	</presentation>
+</managedAppConfiguration>

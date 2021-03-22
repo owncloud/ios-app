@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZIPArchive : NSObject
 
-+ (NSError *)compressContentsOf:(NSURL *)sourceDirectory asZipFile:(NSURL *)zipFileURL;
++ (nullable NSError *)compressContentsOf:(NSURL *)sourceDirectory asZipFile:(NSURL *)zipFileURL;
 
 @end
 

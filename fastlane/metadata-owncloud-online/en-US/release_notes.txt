@@ -1,0 +1,3 @@
+• Fix: iOS 14 UI Adaptions
+Fixed some problems on iOS 14, with unresponsive UI elements.
+

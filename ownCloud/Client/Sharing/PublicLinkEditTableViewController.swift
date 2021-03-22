@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class PublicLinkEditTableViewController: StaticTableViewController {
 
@@ -77,7 +78,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			self.navigationItem.title = linkName
 		}
 
-		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
+		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL(sender:)))
 		if item.type == .collection {
 			let infoButton = UIButton(type: .infoLight)
 			infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
@@ -137,11 +138,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					if error == nil {
 						guard let changedShare = share else { return }
 						self.share.name = changedShare.name
-						self.title = changedShare.name
+						OnMainThread {
+							self.title = changedShare.name
+						}
 					} else {
 						if let shareError = error {
 							OnMainThread {
-								let alertController = UIAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								let alertController = ThemedAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 								self.present(alertController, animated: true)
 							}
 						}
@@ -152,7 +155,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					self?.activeTextField = textField
 				}
 			}
-			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd)
+			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd, clearButtonMode: .always)
 
 		section.add(row: nameRow)
 		self.addSection(section)
@@ -218,7 +221,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								} else {
 									if let shareError = error {
 										OnMainThread {
-											let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											let alertController = ThemedAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 											self.present(alertController, animated: true)
 										}
 									}
@@ -229,7 +232,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							row.section?.setSelected(self.currentPermissionIndex, groupIdentifier: "permission-group")
 							let permissionName = Array(values[selectedValueFromSection])[0].key
 
-							let alertController = UIAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}
@@ -314,7 +317,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -351,7 +354,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						} else {
 							if let shareError = error {
 								OnMainThread {
-									let alertController = UIAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -428,7 +431,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -496,7 +499,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -564,7 +567,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								self.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -586,7 +589,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		addPermissionsSection()
 	}
 
-	@objc func shareLinkURL() {
+	@objc func shareLinkURL(sender: UIBarButtonItem) {
 		guard let shareURL = share.url, let capabilities = self.core.connection.capabilities else { return }
 
 		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
@@ -601,7 +604,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				UIActivity.ActivityType("com.facebook.Facebook")
 			]
 		}
-		activityViewController.popoverPresentationController?.sourceView = self.view
+
+		activityViewController.popoverPresentationController?.barButtonItem = sender
+		activityViewController.popoverPresentationController?.permittedArrowDirections = .down
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 
@@ -646,15 +651,22 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if let permissionMask = permissionMask {
 			let share = OCShare(publicLinkToPath: self.share.itemPath, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
-			self.core.createShare(share, options: nil, completionHandler: { (error, _) in
+			self.core.createShare(share, options: nil, completionHandler: { (error, createdShare) in
 				if error == nil {
-					OnMainThread {
-						self.dismissAnimated()
+					if let shareURL = createdShare?.url {
+						UIPasteboard.general.url = shareURL
+						OnMainThread {
+							_ = NotificationHUDViewController(on: self, title: "Created Public Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: {
+								OnMainThread {
+									self.dismissAnimated()
+								}
+							})
+						}
 					}
 				} else {
 					if let shareError = error {
 						OnMainThread {
-							let alertController = UIAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}

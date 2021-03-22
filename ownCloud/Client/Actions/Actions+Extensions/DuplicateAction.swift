@@ -19,20 +19,24 @@
 import Foundation
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "D" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if let rootItem = forContext.query?.rootItem, !rootItem.permissions.contains(.createFile) || !rootItem.permissions.contains(.createFolder) {
+			return .none
+		}
+
 		if forContext.items.filter({return $0.isRoot}).count > 0 {
 			return .none
-
 		}
 
 		return .middle
@@ -73,7 +77,7 @@ class DuplicateAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(named: "duplicate-file")
 		}
 

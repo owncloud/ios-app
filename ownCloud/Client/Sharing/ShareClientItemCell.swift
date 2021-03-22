@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class ShareClientItemCell: ClientItemResolvingCell {
 	var iconSize : CGSize = CGSize(width: 40, height: 40)

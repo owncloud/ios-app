@@ -50,6 +50,10 @@
         "font_scale_factor" : 0.06
     },
     {
+      "filter": "23_ios_files_list_multiple_window",
+        "font_scale_factor" : 0.06
+    },
+    {
       "filter": "40_ios_quick_access_demo",
         "font_scale_factor" : 0.06
     },

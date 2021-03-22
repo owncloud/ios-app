@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class FileProviderInterfaceManager: NSObject {
 	static let shared : FileProviderInterfaceManager = {

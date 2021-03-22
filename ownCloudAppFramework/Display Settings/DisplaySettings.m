@@ -31,11 +31,39 @@
 	if ([identifier isEqual:OCClassSettingsIdentifierDisplay])
 	{
 		return (@{
-			OCClassSettingsKeyDisplayShowHiddenFiles : @(NO)
+			OCClassSettingsKeyDisplayShowHiddenFiles : @(NO),
+			OCClassSettingsKeyDisplayPreventDraggingFiles : @(NO),
+			OCClassSettingsKeyDisplaySortFoldersFirst : @(NO)
 		});
 	}
 
 	return (nil);
+}
+
++ (OCClassSettingsMetadataCollection)classSettingsMetadata
+{
+	return (@{
+		OCClassSettingsKeyDisplayShowHiddenFiles : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls whether hidden files (i.e. files starting with `.` ) should also be shown.",
+			OCClassSettingsMetadataKeyCategory	: @"Display Settings",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+		},
+
+		OCClassSettingsKeyDisplayPreventDraggingFiles : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls whether drag and drop should be prevented for items inside the app.",
+			OCClassSettingsMetadataKeyCategory	: @"Display Settings",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+		},
+
+		OCClassSettingsKeyDisplaySortFoldersFirst : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls whether folders are shown at the top.",
+			OCClassSettingsMetadataKeyCategory	: @"Display Settings",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+		}
+	});
 }
 
 #pragma mark - Singleton
@@ -59,6 +87,8 @@
 		}];
 
 		_showHiddenFiles = [self _showHiddenFilesValue];
+		_sortFoldersFirst = [self _sortFoldersFirst];
+		_preventDraggingFiles = [self _preventDraggingFilesValue];
 	}
 
 	return (self);
@@ -76,6 +106,20 @@
 	_showHiddenFiles = [self _showHiddenFilesValue];
 	[self didChangeValueForKey:@"showHiddenFiles"];
 
+	[self willChangeValueForKey:@"sortFoldersFirst"];
+	_sortFoldersFirst = [self _sortFoldersFirst];
+	[self didChangeValueForKey:@"sortFoldersFirst"];
+
+	[self willChangeValueForKey:@"preventDraggingFiles"];
+	_preventDraggingFiles = [self _preventDraggingFilesValue];
+	[self didChangeValueForKey:@"preventDraggingFiles"];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:DisplaySettingsChanged object:self];
+}
+
+- (void)postChangeNotifications
+{
+	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
 	[[NSNotificationCenter defaultCenter] postNotificationName:DisplaySettingsChanged object:self];
 }
 
@@ -98,7 +142,51 @@
 
 	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:showHiddenFiles forKey:DisplaySettingsShowHiddenFilesPrefsKey];
 
-	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
+	[self postChangeNotifications];
+}
+
+#pragma mark - Folders first
+- (BOOL)_sortFoldersFirst
+{
+	NSNumber *sortFoldersFirstNumber;
+
+	if ((sortFoldersFirstNumber = [OCAppIdentity.sharedAppIdentity.userDefaults objectForKey:DisplaySettingsSortFoldersFirstPrefsKey]) != nil)
+	{
+		return (sortFoldersFirstNumber.boolValue);
+	}
+
+	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyDisplaySortFoldersFirst] boolValue]);
+}
+
+- (void)setSortFoldersFirst:(BOOL)sortFoldersFirst
+{
+	_sortFoldersFirst = sortFoldersFirst;
+
+	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:sortFoldersFirst forKey:DisplaySettingsSortFoldersFirstPrefsKey];
+
+	[self postChangeNotifications];
+}
+
+#pragma mark - Drag files
+- (BOOL)_preventDraggingFilesValue
+{
+	NSNumber *preventDraggingFilesNumber;
+
+	if ((preventDraggingFilesNumber = [OCAppIdentity.sharedAppIdentity.userDefaults objectForKey:DisplaySettingsPreventDraggingFilesPrefsKey]) != nil)
+	{
+		return (preventDraggingFilesNumber.boolValue);
+	}
+
+	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyDisplayPreventDraggingFiles] boolValue]);
+}
+
+- (void)setPreventDraggingFiles:(BOOL)preventDraggingFiles
+{
+	_preventDraggingFiles = preventDraggingFiles;
+
+	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:preventDraggingFiles forKey:DisplaySettingsPreventDraggingFilesPrefsKey];
+
+	[self postChangeNotifications];
 }
 
 #pragma mark - Query updating
@@ -135,6 +223,8 @@
 @end
 
 NSString *DisplaySettingsShowHiddenFilesPrefsKey = @"display-show-hidden-files";
+NSString *DisplaySettingsSortFoldersFirstPrefsKey = @"display-sort-folders-first";
+NSString *DisplaySettingsPreventDraggingFilesPrefsKey = @"display-prevent-dragging-files";
 
 OCIPCNotificationName OCIPCNotificationNameDisplaySettingsChanged = @"org.owncloud.display-settings-changed";
 
@@ -142,3 +232,5 @@ NSNotificationName DisplaySettingsChanged = @"org.owncloud.display-settings-chan
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierDisplay = @"display";
 OCClassSettingsKey OCClassSettingsKeyDisplayShowHiddenFiles = @"show-hidden-files";
+OCClassSettingsKey OCClassSettingsKeyDisplaySortFoldersFirst = @"sort-folders-first";
+OCClassSettingsKey OCClassSettingsKeyDisplayPreventDraggingFiles = @"prevent-dragging-files";

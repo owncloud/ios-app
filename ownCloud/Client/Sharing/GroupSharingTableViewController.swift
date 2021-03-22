@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
@@ -82,8 +83,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			searchController = UISearchController(searchResultsController: nil)
 			searchController?.searchResultsUpdater = self
 			searchController?.hidesNavigationBarDuringPresentation = true
-			searchController?.dimsBackgroundDuringPresentation = false
-			searchController?.searchBar.placeholder = "Add email or name".localized
+			searchController?.obscuresBackgroundDuringPresentation = false
 			searchController?.searchBar.delegate = self
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
@@ -92,6 +92,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			recipientSearchController = core?.recipientSearchController(for: item)
 			recipientSearchController?.delegate = self
 			recipientSearchController?.minimumSearchTermLength = core?.connection.capabilities?.sharingSearchMinLength?.uintValue ?? OCCapabilities.defaultSharingSearchMinLength.magnitude
+			showActivityIndicator = true
 		}
 
 		messageView = MessageView(add: self.view)
@@ -144,6 +145,20 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		shareQuery?.refreshInterval = 2
 	}
 
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
+		if #available(iOS 13.0, *) {
+			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
+			let attributedString = NSAttributedString(string: "Add email or name".localized, attributes: attributedStringColor)
+			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
+		} else {
+			// Fallback on earlier versions
+			searchController?.searchBar.placeholder = "Add email or name".localized
+		}
+	}
+
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if shouldStartSearch {
@@ -182,7 +197,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 									self.dismissAnimated()
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Unshare failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Unshare failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -362,11 +377,18 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
-		self.searchController?.searchBar.isLoading = false
+		self.messageView?.message(show: false)
+
+		if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+			headerView.activityIndicator.stopAnimating()
+		}
 	}
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
 		OnMainThread {
+			if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+				headerView.activityIndicator.stopAnimating()
+			}
 			guard let recipients = searchController.recipients, let core = self.core else {
 				self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There are no results for this search term".localized)
 				return
@@ -428,10 +450,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
-		if isSearching {
-			self.searchController?.searchBar.isLoading = true
-		} else {
-			self.searchController?.searchBar.isLoading = false
+		OnMainThread {
+			if isSearching {
+
+				if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+					headerView.activityIndicator.startAnimating()
+				}
+			}
 		}
 	}
 
@@ -446,11 +471,11 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
-					if UIDevice.current.isIpad() {
+					if UIDevice.current.isIpad {
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Remove Recipient".localized, message: nil, preferredStyle: presentationStyle)
+					let alertController = ThemedAlertController(title: "Remove Recipient".localized, message: nil, preferredStyle: presentationStyle)
 
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
@@ -460,7 +485,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 									self.navigationController?.popViewController(animated: true)
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Remove Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Remove Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -474,5 +499,14 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 
 		return []
+	}
+
+	// MARK: Themeing
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		if #available(iOS 13, *) {
+			self.searchController?.searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+		}
 	}
 }

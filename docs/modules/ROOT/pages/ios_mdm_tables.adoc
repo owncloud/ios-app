@@ -1,0 +1,1044 @@
+
+tag::actions[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|action.com.owncloud.action.collaborate.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.copy.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.createFolder.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.delete.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.discardscene.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.duplicate.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.favorite.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.links.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.makeAvailableOffline.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.makeUnavailableOffline.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.markup.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.mediaediting.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.move.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.openin.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.openscene.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.rename.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.scan.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.show-exif.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.unfavorite.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.unshare.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.upload.camera_media.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.uploadfile.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.uploadphotos.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|===
+end::actions[]
+
+
+tag::app[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|app.app-store-link
+|string
+|`https://itunes.apple.com/app/id1359583808?mt=8`
+|URL for the app in the App Store.
+|advanced `candidate`
+
+|app.enable-review-prompt
+|bool
+|`true`
+|Enable/disable review prompt.
+|advanced `candidate`
+
+|app.recommend-to-friend-enabled
+|bool
+|`true`
+|Enables/disables the recommend to a friend entry in the settings.
+|advanced `candidate`
+
+|app.enable-ui-animations
+|bool
+|`true`
+|Enable/disable UI animations.
+|debugOnly
+
+|app.is-beta-build
+|bool
+|`true`
+|Controls if the app is built for beta or release purposes.
+|debugOnly
+
+|app.show-beta-warning
+|bool
+|`true`
+|Controls whether a warning should be shown on the first run of a beta version.
+|debugOnly
+
+|===
+end::app[]
+
+
+tag::authentication[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|authentication.browser-session-class
+|string
+|`operating-system`
+|Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `UIWebView`
+! Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.
+
+! `operating-system`
+! Use ASWebAuthenticationSession for browser sessions.
+
+!===
+
+|supported `candidate`
+
+|authentication.browser-session-prefers-ephermal
+|bool
+|`false`
+|Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
+|supported `candidate`
+
+|===
+end::authentication[]
+
+
+tag::bookmarks[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|bookmark.default-url
+|string
+|
+|The default URL for the creation of new bookmarks.
+|supported `candidate`
+
+|bookmark.url-editable
+|bool
+|`true`
+|Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
+|supported `candidate`
+
+|===
+end::bookmarks[]
+
+
+tag::branding[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|branding.app-name
+|string
+|
+|App name to use throughout the app.
+|supported `candidate`
+
+|branding.organization-name
+|string
+|
+|Organization name to use throughout the app.
+|supported `candidate`
+
+|branding.can-add-account
+|bool
+|`true`
+|Controls whether the user can add accounts.
+|advanced `candidate`
+
+|branding.can-edit-account
+|bool
+|`true`
+|Controls whether the user can edit accounts.
+|advanced `candidate`
+
+|branding.profile-definitions
+|dictionaryArray
+|
+|Array of dictionaries, each specifying a static profile.
+|advanced `candidate`
+
+|branding.send-feedback-address
+|string
+|`ios-app@owncloud.com`
+|Email address to send feedback to. Set to `null` to disable this feature.
+|advanced `candidate`
+
+|branding.theme-definitions
+|dictionaryArray
+|
+|Array of dictionaries, each specifying a theme.
+|advanced `candidate`
+
+|branding.theme-generic-colors
+|dictionary
+|
+|Dictionary defining generic colors that can be used in the definitions.
+|advanced `candidate`
+
+|branding.url-documentation
+|urlString
+|`https://doc.owncloud.com/ios-app/`
+|URL to documentation for the app. Opened when selecting "Documentation" in the settings.
+|advanced `candidate`
+
+|branding.url-help
+|urlString
+|`https://www.owncloud.com/help`
+|URL to help for the app. Opened when selecting "Help" in the settings.
+|advanced `candidate`
+
+|branding.url-privacy
+|urlString
+|`https://owncloud.org/privacy-policy/`
+|URL to privacy information for the app. Opened when selecting "Privacy" in the settings.
+|advanced `candidate`
+
+|branding.url-terms-of-use
+|urlString
+|`https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE`
+|URL to terms of use for the app. Opened when selecting "Terms Of Use" in the settings.
+|advanced `candidate`
+
+|===
+end::branding[]
+
+
+tag::connection[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|connection.allow-cellular
+|bool
+|`true`
+|Allow the use of cellular connections.
+|recommended `candidate`
+
+|core.cookie-support-enabled
+|bool
+|`true`
+|Enable or disable per-process, in-memory cookie storage.
+|supported `candidate`
+
+|http.user-agent
+|string
+|`ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})`
+|A custom `User-Agent` to send with every HTTP request.
+
+The following placeholders can be used to make it dynamic:
+- `{{app.build}}`: the build number of the app (f.ex. `123`)
+- `{{app.version}}`: the version of the app (f.ex. `1.2`)
+- `{{app.part}}`: the part of the app (more exactly: the name of the main bundle) from which the request was sent (f.ex. `App`, `ownCloud File Provider`)
+- `{{device.model}}`: the model of the device running the app (f.ex. `iPhone`, `iPad`)
+- `{{device.model-id}}`: the model identifier of the device running the app (f.ex. `iPhone8,1`)
+- `{{os.name}}` : the name of the operating system running on the device (f.ex. `iOS`, `iPadOS`)
+- `{{os.version}}`: the version of operating system running on the device (f.ex. `13.2.2`)
+
+|supported `candidate`
+
+|connection.always-request-private-link
+|bool
+|`false`
+|Controls whether private links are requested with regular PROPFINDs.
+|advanced `candidate`
+
+|connection.plain-http-policy
+|string
+|`warn`
+|Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
+|advanced `candidate`
+
+|core.action-concurrency-budgets
+|dictionary
+|`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
+|Concurrency budgets available for sync actions by action category.
+|advanced `candidate`
+
+|connection.allow-background-url-sessions
+|bool
+|`true`
+|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
+|debugOnly
+
+|connection.connection-minimum-server-version
+|string
+|`10.0`
+|The minimum server version required.
+|debugOnly
+
+|connection.force-background-url-sessions
+|bool
+|`false`
+|Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
+|debugOnly
+
+|core.override-availability-signal
+|bool
+|
+|Override the availability signal, so the host is considered to always be in maintenance mode (`true`) or never in maintenance mode (`false`).
+|debugOnly
+
+|core.override-reachability-signal
+|bool
+|
+|Override the reachability signal, so the host is always considered reachable (`true`) or unreachable (`false`).
+|debugOnly
+
+|core.thumbnail-available-for-mime-type-prefixes
+|stringArray
+|`[*]`
+|Provide hints that thumbnails are available for items whose MIME-Type starts with any of the strings provided in this array. Providing an empty array turns off thumbnail loading. Providing `["*"]` turns on thumbnail loading for all items.
+|debugOnly
+
+|host-simulator.active-simulations
+|stringArray
+|`[]`
+|Active Host simulation extensions.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `five-seconds-of-404`
+! Return status code 404 for every request for the first five seconds.
+
+! `only-404`
+! Return status code 404 for every request.
+
+! `recovering-apm`
+! Redirect any request without cookies to a bogus endpoint for 30 seconds, then to a cookie-setting endpoint, where cookies are set - and then redirect back.
+
+! `reject-downloads-500`
+! Reject Downloads with status 500 responses.
+
+! `simple-apm`
+! Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.
+
+!===
+
+|debugOnly
+
+|===
+end::connection[]
+
+
+tag::diagnostics[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|diagnostics.enabled
+|bool
+|`false`
+|Controls whether additional diagnostic options and information is available throughout the user interface.
+|advanced `candidate`
+
+|===
+end::diagnostics[]
+
+
+tag::displaysettings[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|display.prevent-dragging-files
+|bool
+|`false`
+|Controls whether drag and drop should be prevented for items inside the app.
+|advanced `candidate`
+
+|display.show-hidden-files
+|bool
+|`false`
+|Controls whether hidden files (i.e. files starting with `.` ) should also be shown.
+|advanced `candidate`
+
+|display.sort-folders-first
+|bool
+|`false`
+|Controls whether folders are shown at the top.
+|advanced `candidate`
+
+|===
+end::displaysettings[]
+
+
+tag::endpoints[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|connection.endpoint-capabilities
+|string
+|`ocs/v2.php/cloud/capabilities`
+|Endpoint to use for retrieving server capabilities.
+|advanced `candidate`
+
+|connection.endpoint-recipients
+|string
+|`ocs/v2.php/apps/files_sharing/api/v1/sharees`
+|Path of the sharing recipient API endpoint.
+|advanced `candidate`
+
+|connection.endpoint-remote-shares
+|string
+|`ocs/v2.php/apps/files_sharing/api/v1/remote_shares`
+|Path of the remote shares API endpoint.
+|advanced `candidate`
+
+|connection.endpoint-shares
+|string
+|`ocs/v2.php/apps/files_sharing/api/v1/shares`
+|Path of the shares API endpoint.
+|advanced `candidate`
+
+|connection.endpoint-status
+|string
+|`status.php`
+|Endpoint to retrieve basic status information and detect an ownCloud installation.
+|advanced `candidate`
+
+|connection.endpoint-thumbnail
+|string
+|`index.php/apps/files/api/v1/thumbnail`
+|Path of the thumbnail endpoint.
+|advanced `candidate`
+
+|connection.endpoint-user
+|string
+|`ocs/v2.php/cloud/user`
+|Endpoint to use for retrieving information on logged in user.
+|advanced `candidate`
+
+|connection.endpoint-webdav
+|string
+|`remote.php/dav/files`
+|Endpoint to use for WebDAV.
+|advanced `candidate`
+
+|connection.endpoint-webdav-meta
+|string
+|`remote.php/dav/meta`
+|Endpoint to use for WebDAV metadata.
+|advanced `candidate`
+
+|connection.well-known
+|string
+|`.well-known`
+|Path of the .well-known endpoint.
+|advanced `candidate`
+
+|===
+end::endpoints[]
+
+
+tag::licensing[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|licensing.disable-appstore-licensing
+|bool
+|`false`
+|Enables/disables App Store licensing support.
+|debugOnly
+
+|licensing.disable-enterprise-licensing
+|bool
+|`false`
+|Enables/disables Enterprise licensing support.
+|debugOnly
+
+|===
+end::licensing[]
+
+
+tag::logging[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|log.log-level
+|int
+|`4`
+|Log level
+[cols="1,2"]
+!===
+! Value
+! Description
+! `-1`
+! verbose
+
+! `0`
+! debug
+
+! `1`
+! info
+
+! `2`
+! warning
+
+! `3`
+! error
+
+! `4`
+! off
+
+!===
+
+|supported `candidate`
+
+|log.log-privacy-mask
+|bool
+|`false`
+|Controls whether certain objects in log statements should be masked for privacy.
+|supported `candidate`
+
+|log.log-blank-filtered-messages
+|bool
+|`false`
+|Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
+|advanced `candidate`
+
+|log.log-colored
+|bool
+|`false`
+|Controls whether log levels should be replaced with colored emojis.
+|advanced `candidate`
+
+|log.log-enabled-components
+|stringArray
+|`[writer.stderr writer.file option.log-requests-and-responses]`
+|List of enabled logging system components.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `option.log-requests-and-responses`
+! Log HTTP requests and responses
+
+! `writer.file`
+! Log file
+
+! `writer.stderr`
+! Standard error output
+
+!===
+
+|advanced `candidate`
+
+|log.log-format
+|string
+|`text`
+|Determines the format that log messages are saved in
+[cols="1,2"]
+!===
+! Value
+! Description
+! `json`
+! Detailed JSON (one line per message).
+
+! `json-composed`
+! A simpler JSON version where details are already merged into the message.
+
+! `text`
+! Standard logging as text.
+
+!===
+
+|advanced `candidate`
+
+|log.log-maximum-message-size
+|int
+|`0`
+|Maximum length of a log message before the message is truncated. A value of 0 means no limit.
+|advanced `candidate`
+
+|log.log-omit-matching
+|stringArray
+|
+|If set, omits logs messages containing any of the exact terms in this array.
+|advanced `candidate`
+
+|log.log-omit-tags
+|stringArray
+|
+|If set, omits all log messages tagged with tags in this array.
+|advanced `candidate`
+
+|log.log-only-matching
+|stringArray
+|
+|If set, only logs messages containing at least one of the exact terms in this array.
+|advanced `candidate`
+
+|log.log-only-tags
+|stringArray
+|
+|If set, omits all log messages not tagged with tags in this array.
+|advanced `candidate`
+
+|log.log-single-lined
+|bool
+|`true`
+|Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
+|advanced `candidate`
+
+|log.log-synchronous
+|bool
+|`false`
+|Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
+|advanced `candidate`
+
+|===
+end::logging[]
+
+
+tag::oauth2[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|authentication-oauth2.oa2-authorization-endpoint
+|string
+|`index.php/apps/oauth2/authorize`
+|OAuth2 authorization endpoint.
+|advanced `candidate`
+
+|authentication-oauth2.oa2-client-id
+|string
+|`mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1`
+|OAuth2 Client ID.
+|advanced `candidate`
+
+|authentication-oauth2.oa2-client-secret
+|string
+|`KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx`
+|OAuth2 Client Secret.
+|advanced `candidate`
+
+|authentication-oauth2.oa2-redirect-uri
+|string
+|`oc://ios.owncloud.com`
+|OAuth2 Redirect URI.
+|advanced `candidate`
+
+|authentication-oauth2.oa2-token-endpoint
+|string
+|`index.php/apps/oauth2/api/v1/token`
+|OAuth2 token endpoint.
+|advanced `candidate`
+
+|authentication-oauth2.oa2-expiration-override-seconds
+|int
+|
+|OAuth2 Expiration Override - lets OAuth2 tokens expire after the provided number of seconds (useful to prompt quick `refresh_token` requests for testing)
+|debugOnly
+
+|===
+end::oauth2[]
+
+
+tag::oidc[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|authentication-oauth2.oidc-redirect-uri
+|string
+|`oc://ios.owncloud.com`
+|OpenID Connect Redirect URI
+|supported `candidate`
+
+|authentication-oauth2.oidc-scope
+|string
+|`openid offline_access email profile`
+|OpenID Connect Scope
+|supported `candidate`
+
+|===
+end::oidc[]
+
+
+tag::passcode[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|passcode.enforced
+|bool
+|`false`
+|Controls wether the user MUST establish a passcode upon app installation
+|advanced `candidate`
+
+|===
+end::passcode[]
+
+
+tag::policies[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|item-policy.local-copy-expiration
+|int
+|`604800`
+|The number of seconds that a file hasn't been downloaded, modified or opened after which the local copy is removed.
+|advanced `candidate`
+
+|item-policy.local-copy-expiration-enabled
+|bool
+|`true`
+|Controls whether local copies should automatically be removed after they haven't been downloaded, modified or opened for a period of time.
+|advanced `candidate`
+
+|item-policy.vacuum-sync-anchor-ttl
+|bool
+|`60`
+|Number of seconds since the removal of an item after which the metadata entry may be finally removed.
+|debugOnly
+
+|===
+end::policies[]
+
+
+tag::privacy[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|core.add-accept-language-header
+|bool
+|`true`
+|Add an `Accept-Language` HTTP header using the preferred languages set on the device.
+|advanced `candidate`
+
+|===
+end::privacy[]
+
+
+tag::releasenotes[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|releasenotes.lastSeenAppVersion
+|string
+|
+|The last-seen app version.
+|debugOnly
+
+|releasenotes.lastSeenReleaseNotesVersion
+|string
+|
+|The app version for which the release notes were last shown.
+|debugOnly
+
+|===
+end::releasenotes[]
+
+
+tag::security[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|connection.connection-allowed-authentication-methods
+|stringArray
+|
+|Array of allowed authentication methods. Nil/Missing for no restrictions.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
+|recommended `candidate`
+
+|connection.connection-preferred-authentication-methods
+|stringArray
+|`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
+|Array of authentication methods in order of preference (most preferred first).
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
+|recommended `candidate`
+
+|connection.connection-certificate-extended-validation-rule
+|string
+|`bookmarkCertificate == serverCertificate`
+|Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.
+
+Examples of expressions:
+- `bookmarkCertificate == serverCertificate`: the whole certificate needs to be identical to the one stored in the bookmark during setup.
+- `bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData`:  the public key of the received certificate needs to be identical to the public key stored in the bookmark during setup.
+- `serverCertificate.passedValidationOrIsUserAccepted == true`: any certificate is accepted as long as it has passed validation by the OS or was accepted by the user.
+- `serverCertificate.commonName == "demo.owncloud.org"`: the common name of the certificate must be "demo.owncloud.org".
+- `serverCertificate.rootCertificate.commonName == "DST Root CA X3"`: the common name of the root certificate must be "DST Root CA X3".
+- `serverCertificate.parentCertificate.commonName == "Let's Encrypt Authority X3"`: the common name of the parent certificate must be "Let's Encrypt Authority X3".
+- `serverCertificate.publicKeyData.sha256Hash.asFingerPrintString == "2A 00 98 90 BD … F7"`: the SHA-256 fingerprint of the public key of the server certificate needs to match the provided value.
+
+|advanced `candidate`
+
+|connection.connection-renewed-certificate-acceptance-rule
+|string
+|`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
+|Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
+|advanced `candidate`
+
+|user-settings.allow
+|stringArray
+|
+|List of settings (as flat identifiers) users are allowed to change. If this list is specified, only these settings can be changed by the user.
+|advanced `candidate`
+
+|user-settings.disallow
+|stringArray
+|
+|List of settings (as flat identifiers) users are not allowed to change. If this list is specified, all settings not on the list can be changed by the user.
+|advanced `candidate`
+
+|connection.transparent-temporary-redirect
+|bool
+|`false`
+|Controls whether 307 redirects are handled transparently at the HTTP pipeline level (by resending the headers and body).
+|debugOnly
+
+|===
+end::security[]
+
+

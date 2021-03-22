@@ -10,4 +10,8 @@ However, the ownCloud iOS app offers several key advantages over the web interfa
 * Upload files easily from your device to ownCloud
 * An Optional PIN for stronger security
 * Share files with other ownCloud users
-//* Automatic synchronization of your files (soon)
+* Automatic synchronization of your files
+
+== Table of Contents
+
+include::../nav.adoc[]

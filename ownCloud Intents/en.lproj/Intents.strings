@@ -1,0 +1,92 @@
+"0jWfGg" = "Check if path ${path} exists in ${account}";
+
+"1KMplM" = "The given path does not exists";
+
+"1UkR2J" = "Save File";
+
+"2IChwb" = "Get a directory listing for the given account and path";
+
+"30uTS2" = "Delete Path Item";
+
+"61YuKy" = "The account with the given UUID does not exists";
+
+"6JcpPy" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"8ZZD23" = "Get Account";
+
+"8Ziepl" = "Get File";
+
+"ABZOUR" = "The account with the given UUID does not exists";
+
+"AQ4lsZ" = "Create Folder";
+
+"AtUMKl" = "The account with the given UUID does not exists";
+
+"C4qdxp" = "The account with the given UUID does not exists";
+
+"Iq98sA" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"JPFL0e" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"LdHBeL" = "Retrieve file infos for the given path";
+
+"MGAYW2" = "Get File Info";
+
+"NEiHz6" = "The given path does not exists";
+
+"OBFBYf" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"PHyaws" = "Get Directory Listing";
+
+"PthGCb" = "Check if the given path exists";
+
+"QIKvUr" = "The account with the given UUID does not exists";
+
+"U3l2bk" = "Get the account for the given account UUID";
+
+"UdyMQ5" = "The account with the given UUID does not exists";
+
+"Vg8Ky0" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"XKCjDe" = "Get Accounts";
+
+"XmX9YS" = "Create a folder with the given name into the path.";
+
+"ZWoKzx" = "The given path does not exists";
+
+"dCe7NY" = "Get Account with ${accountUUID}";
+
+"dWm6eD" = "The account with the given UUID does not exists";
+
+"ds6RJ5" = "Path Exists";
+
+"dtUvRf" = "Save a file into the path in account";
+
+"gYCA4r" = "Delete Item at path ${path} in ${account}";
+
+"gxBJkl" = "Here is your account list";
+
+"hLfV0h" = "The account with the given UUID does not exists";
+
+"iDEwxe" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"jkLupt" = "Delete the given path in account";
+
+"l1ScV6" = "The given path does not exists";
+
+"leB73e" = "The given path does not exists";
+
+"lrF7G0" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"nvFl2W" = "Get file for the given path in account";
+
+"sLw6L8" = "The given path does not exists";
+
+"tMYYpx" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"wK4bqS" = "Get a list of all configured accounts";
+
+"yeD8D7" = "App is currently locked by pass code. Please disable pass code to proceed.";
+
+"yrLv2M" = "Here is your account list";
+

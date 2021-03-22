@@ -8,6 +8,8 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
+
 @testable import ownCloud
 
 class MockClientRootViewController: ClientRootViewController {
@@ -26,7 +28,7 @@ class MockClientRootViewController: ClientRootViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func coreReady() {
+	override func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.mockedCore, query: self.query)
 			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)

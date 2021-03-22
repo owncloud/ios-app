@@ -14,6 +14,7 @@ class MockOCQuery: OCQuery {
 	convenience init(path: String) {
 		self.init(forPath: path)
 		let rootItem = OCItem()
+		rootItem.permissions = [.createFile, .createFolder, .delete, .move, .rename, .writable]
 		rootItem.path = "/"
 		rootItem.type = OCItemType.collection
 		self.rootItem = rootItem

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class PendingSharesTableViewController: StaticTableViewController {
 
@@ -116,11 +117,11 @@ class PendingSharesTableViewController: StaticTableViewController {
 					let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 						guard let self = self else { return }
 						var presentationStyle: UIAlertController.Style = .actionSheet
-						if UIDevice.current.isIpad() {
+						if UIDevice.current.isIpad {
 							presentationStyle = .alert
 						}
 
-						let alertController = UIAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
+						let alertController = ThemedAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
 											message: nil,
 											preferredStyle: presentationStyle)
 						alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -143,14 +144,34 @@ class PendingSharesTableViewController: StaticTableViewController {
 					section.add(row: row)
 
 					if share.itemPath.count > 0 {
-						if let itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
-							if error == nil, isInitial {
+						if (share.state == .accepted) || (share.accepted == true) {
+							// Item should exist -> track it
+							if let itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
+								if error == nil, isInitial {
+									OnMainThread {
+										row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
+									}
+								}
+							}) {
+								row.representedObject = itemTracker // End tracking when the row is deallocated
+							}
+						} else {
+							// Item doesn't exist in our scope -> use placeholder icons
+							var iconName : String?
+
+							switch share.itemType {
+								case .collection:
+									iconName = "folder"
+
+								case .file:
+									iconName = "file"
+							}
+
+							if let iconName = iconName {
 								OnMainThread {
-									row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
+									row.cell?.imageView?.image = Theme.shared.image(for: iconName, size: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
 								}
 							}
-						}) {
-							row.representedObject = itemTracker // End tracking when the row is deallocated
 						}
 					}
 				}
@@ -194,7 +215,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 				OnMainThread {
 					if error != nil {
 						if let shareError = error {
-							let alertController = UIAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							strongSelf.present(alertController, animated: true)
 						}
 					} else if let libraryViewController = strongSelf.libraryViewController {
@@ -215,7 +236,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 					itemName = (share.itemPath as NSString).lastPathComponent
 				}
 
-				let alertController = UIAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 				alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
 					self?.makeDecision(on: share, accept: accept)

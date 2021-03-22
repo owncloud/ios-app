@@ -18,23 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-
-extension OCLogLevel {
-	var label : String {
-		switch self {
-			case .debug:
-				return "Debug".localized
-			case .info:
-				return "Info".localized
-			case .warning:
-				return "Warning".localized
-			case .error:
-				return "Error".localized
-			case .off:
-				return "Off".localized
-		}
-	}
-}
+import ownCloudAppShared
 
 class LogSettingsViewController: StaticTableViewController {
 
@@ -80,7 +64,7 @@ class LogSettingsViewController: StaticTableViewController {
 		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
 
 		let footerTitle = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.".localized
-		loggingSection.footerTitle = footerTitle.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+		loggingSection.footerTitle = footerTitle.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 
 		// Update section visibility
 		self.addSection(loggingSection)
@@ -163,6 +147,7 @@ class LogSettingsViewController: StaticTableViewController {
 				logLevelSection = StaticTableViewSection(headerTitle: "Log Level".localized)
 
 				let logLevels : [[String:Any]] = [
+					[ OCLogLevel.verbose.label : OCLogLevel.verbose.rawValue ],
 					[ OCLogLevel.debug.label   : OCLogLevel.debug.rawValue   ],
 					[ OCLogLevel.info.label    : OCLogLevel.info.rawValue    ],
 					[ OCLogLevel.warning.label : OCLogLevel.warning.rawValue ],

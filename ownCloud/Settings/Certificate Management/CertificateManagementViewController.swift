@@ -18,8 +18,9 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
-class CertificateManagementRow : StaticTableViewRow {
+open class CertificateManagementRow : StaticTableViewRow {
 	var certificate : OCCertificate?
 }
 
@@ -48,9 +49,8 @@ class CertificateManagementViewController: StaticTableViewController {
 
 				let approvalDate = shortReason + " " + ((certificate.userAcceptedDate==nil) ? " \("undated".localized)" : DateFormatter.localizedString(from: certificate.userAcceptedDate!, dateStyle: .medium, timeStyle: .short))
 				let certificateRow = CertificateManagementRow(subtitleRowWithAction: { (row, _) in
-					if let certificateDetailsViewController = ThemeCertificateViewController(certificate: certificate) {
-						row.viewController?.navigationController?.pushViewController(certificateDetailsViewController, animated: true)
-					}
+					let certificateDetailsViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
+					row.viewController?.navigationController?.pushViewController(certificateDetailsViewController, animated: true)
 				}, title: certificate.hostName ?? "", subtitle: approvalDate, accessoryType: .disclosureIndicator)
 
 				certificateRow.certificate = certificate

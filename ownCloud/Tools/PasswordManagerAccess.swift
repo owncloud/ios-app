@@ -17,7 +17,7 @@
  */
 
 import UIKit
-import MobileCoreServices
+import CoreServices
 
 let PasswordManagerAccessErrorDomain : NSErrorDomain = "PasswordManagerAccessErrorDomain"
 
@@ -67,7 +67,7 @@ class PasswordManagerAccess {
 			}
 		}
 
-		if UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad {
 			activityViewController.popoverPresentationController?.sourceView = sourceView ?? viewController.view
 		}
 

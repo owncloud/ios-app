@@ -1,0 +1,9 @@
+• Fix: Links in PDF documents
+A tap on a hyperlink in PDF documents now opens the link.
+
+• Fix: PDF thumbnail view on the iPad
+Fixed the position of the PDF thumbnail view on the iPad. Now, more PDF content is visible.
+
+• Fix: Message View
+In some cases, the message view hid content and also was not selectable.
+

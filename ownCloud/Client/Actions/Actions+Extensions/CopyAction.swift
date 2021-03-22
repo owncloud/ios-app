@@ -18,20 +18,20 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 
 class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "C" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.filter({return $0.isRoot}).count > 0 {
+		if forContext.containsRoot {
 			return .none
-
 		}
 
 		return .middle
@@ -46,7 +46,7 @@ class CopyAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
 			if let targetDirectory = selectedDirectory {
 				items.forEach({ (item) in
 
@@ -70,7 +70,7 @@ class CopyAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(named: "copy-file")
 		}
 

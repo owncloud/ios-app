@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class GroupSharingEditTableViewController: StaticTableViewController {
 
@@ -99,7 +100,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 				} else {
 					if let shareError = error {
 						OnMainThread {
-							let alertController = UIAlertController(with: "Adding User to Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Adding User to Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}
@@ -264,7 +265,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 					} else {
 						if let shareError = error {
 							OnMainThread {
-								let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								let alertController = ThemedAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 								self.present(alertController, animated: true)
 								completionHandler(shareError)
 							}
@@ -320,7 +321,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 								self?.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self?.present(alertController, animated: true)
 								}
 							}

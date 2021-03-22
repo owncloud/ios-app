@@ -34,6 +34,7 @@
 "Cancel" = "Abbrechen";
 "Approve" = "Genehmigen";
 "Error" = "Fehler";
+"Issues" = "Probleme";
 "Review Connection" = "Verbindung überprüfen";
 "Authenticated via" = "Angemeldet mit";
 "Authenticated as %@ via %@" = "Als %@ mit %@ angemeldet";
@@ -49,6 +50,8 @@
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Das Zertifikat hat möglicherweise Probleme, wurde aber vom Benutzer akzeptiert.\nÖffnen Sie 'Zertifikat-Details' für weitere Informationen.";
 "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Wenn Sie auf 'Fortsetzen' klicken, werden Sie aufgefordert, der App '%@' zu erlauben, die Anmeldung bei OAuth2 zu öffnen, wo Sie Ihre Zugangsdaten eingeben können.";
 
+"Error opening %@" = "Fehler beim Öffnen von %@";
+
 "Contacting server…" = "Kontaktiere Server...";
 "Authenticating…" = "Authentifiziere";
 
@@ -61,6 +64,12 @@
 "Server name" = "Server Name";
 "Server Password" = "Server Passwort";
 "Server Username" = "Server Benutzername";
+"Show accounts" = "Zeige Konten";
+"Setup complete" = "Einrichtung abgeschlossen";
+"Edit Login" = "Login bearbeiten";
+"Manage Storage" = "Speicher verwalten";
+"Access Files" = "Dateien öffnen";
+"Logout" = "Abmelden";
 
 /* Client */
 "Browse" = "Durchsuchen";
@@ -68,7 +77,7 @@
 "Connecting…" = "Verbinde...";
 "Connected." = "Verbunden.";
 "Select" = "Auswählen";
-"Done" = "Erledigt";
+"Done" = "Fertig";
 
 "Folder" = "Ordner";
 
@@ -83,7 +92,7 @@
 "Sort by" = "Sortieren nach";
 
 "name" = "Name";
-"type" = "Typ";
+"kind" = "Typ";
 "size" = "Größe";
 "date" = "Datum";
 "Search this folder" = "Diesen Ordner durchsuchen";
@@ -92,6 +101,22 @@
 
 "%@ of %@ used" = "%@ von %@ verwendet";
 "Total: %@" = "Gesamt: %@";
+"%@ item | " = "%@ Objekt | ";
+"%@ items | " = "%@ Objekte | ";
+
+/* Static Login Setup */
+"Server error" = "Serverfehler";
+"The server doesn't support any allowed authentication method." = "Der Server unterstützt keine erlaubte Authentifizierungsmethode.";
+"The server doesn't support any known and allowed authentication method found." = "Der Server unterstützt keine bekannte und erlaubte Authentifizierungsmethode, die gefunden wurde.";
+"Retry detection" = "Erkennung wiederholen";
+
+/* Single Account */
+"You are connected as\n%@" = "Sie sind verbunden als\n%@";
+"Login" = "Anmelden";
+"Wrong URL" = "Falsche URL";
+"Please enter a valid URL" = "Bitte geben Sie eine gültige URL ein";
+"Missing Profile URL" = "Fehlende Profil-URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "Für das Profil '%@' ist keine URL konfiguriert.\nBitte stellen Sie eine URL über die Konfiguration oder MDM zur Verfügung.";
 
 /* Client Messages */
 "Empty folder" = "Leerer Ordner";
@@ -121,9 +146,18 @@
 "Access denied" = "Zugriff verweigert";
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Das Zugriffstoken der Verbindung ist abgelaufen oder ungültig geworden. Melden Sie sich erneut an, um wieder Zugang zu erhalten.";
 "No authentication data has been found for this connection." = "Für diese Verbindung wurden keine Authentifizierungsdaten gefunden.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Die Authentifizierung mit %@ ist nicht mehr zulässig. Neuauthentifizierung erforderlich.";
 "Sign in" = "Einloggen";
-"Ignore" = "Ignorieren";
 "Continue offline" = "Offline fortfahren";
+"Media upload in the previous session was incomplete since the application was terminated" = "Der Medien-Upload in der vorherigen Sitzung war unvollständig, da die Anwendung beendet wurde.";
+
+"All done" = "Alles fertig";
+"No pending messages or ongoing actions." = "Keine ausstehenden Mitteilungen oder laufenden Aktionen.";
+
+"Show all" = "Alle anzeigen";
+"+ %ld more" = "+ %ld weitere";
+"Apply choice to all similar issues" = "Auswahl auf alle ähnliche Probleme anwenden";
+"Apply to all" = "Auf alle anwenden";
 
 /* Server List*/
 "Cancel" = "Abbrechen";
@@ -131,10 +165,14 @@
 
 "'%@' is currently locked" = "\"%@\" wird derzeit verwendet";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Ein Vorgang wird derzeit ausgeführt, der die Verbindung zu \"%@\" verhindert. Bitte versuchen Sie es später nochmal.";
+"Do you really want to disconnect from your '%@' account?" = "Wollen Sie wirklich von Ihrem '%@' Konto abgemeldet werden?";
+"This will remove all locally stored file copies from your device." = "Dadurch werden alle lokal gespeicherten Dateikopien von Ihrem Gerät entfernt.";
 "Really delete '%@'?" = "\"%@\" wirklich löschen?";
+"Really logout from '%@'?" = "Wirklich von '%@' abmelden?";
 "This will also delete all locally stored file copies." = "Das wird auch alle lokale Kopien vom Gerät entfernen.";
 "Delete" = "Löschen";
-"Deletion of '%@' failed" = "\"%@\" konnte nicht gelöscht werden";
+"Remove" = "Entfernen";
+"Removing of '%@' failed" = "Entfernen von '%@' fehlgeschlagen";
 "Accounts" = "Konten";
 
 "Help" = "Hilfe";
@@ -148,7 +186,6 @@
 "Passcode Lock" = "PIN-Sperre";
 "Face ID" = "Face ID";
 "Touch ID" = "Fingerabdruck-ID";
-"Instant Uploads" = "Sofortiges Hochladen";
 "Videos" = "Videos";
 "Photos" = "Fotos";
 "Background uploads" = "Hochladen im Hintergrund";
@@ -158,24 +195,29 @@
 "Upload videos via WiFi only" = "Videos nur über WiFi hochladen";
 "Upload pictures via WiFi only" = "Fotos nur über WiFi hochladen";
 "More" = "Mehr";
+"Documentation" = "Dokumentation";
 "Send feedback" = "Feedback senden";
-"Recommend to a friend" = "Empfehle dies einem Freund";
-"Privacy Policy" = "Datenschutzerkärung";
+"Recommend to a friend" = "Weiterempfehlen";
+"Privacy Policy" = "Datenschutzerklärung";
+"Terms Of Use" = "Nutzungsbedingungen";
 "Acknowledgements" = "Danksagungen";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Teile dieser App können das folgende urheberrechtlich geschützte Material verwenden, dessen Verwendung hiermit anerkannt wird.";
 "Video upload path" = "Pfad für Video-Upload";
 "Photo upload path" = "Foto-Upload-Pfad";
 "Immediately" = "Sofort";
 "After 1 minute" = "Nach 1 Minute";
 "After 5 minutes" = "Nach 5 Minuten";
 "After 30 minutes" = "Nach 30 Minuten";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Wenn du \"Sofort\" wählst, wird die App gesperrt, wenn sie nicht mehr im Vordergrund ist.\n\nDer Zugriff in Files.app ist nicht möglich, wenn du das Sperrintervall \"Sofort\" wählst.\nBitte wähle eine andere Verzögerung, wenn du auf deine Dateien in der Files.app oder über eine Dokumentauswahl, zugreifen möchtest.";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "Wenn Sie \"Sofort\" wählen, wird die App gesperrt, wenn sie nicht mehr im Vordergrund ist.";
 "Please configure an email account" = "Bitte richten Sie ein E-Mail-Konto ein";
 "You need to configure an email account first to be able to send emails." = "Sie müssen zuerst ein E-Mail-Konto einrichten, um E-Mails senden zu können.";
 "Do you want to open the following URL?" = "Möchten Sie die folgende URL öffnen?";
 
-"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ Version %@ Build %@ (App: %@, SDK: %@)";
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@ %@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "Beta";
 "release" = "Release";
+"App Version" = "App Version";
+"Version information were copied to the clipboard" = "Versionsinformationen wurden in die Zwischenablage kopiert";
 
 
 /* User Interface Settings */
@@ -184,6 +226,8 @@
 "Dark" = "Dunkel";
 "Light" = "Hell";
 "Classic" = "Klassik";
+"System" = "System";
+"System Appeareance" = "System Erscheinungsbild";
 
 /* Log settings */
 "Log Files" = "Protokolldateien";
@@ -223,15 +267,33 @@
 "Really reset log file?" = "Protokolldatei wirklich zurücksetzen?";
 "This action can't be undone." = "Diese Handlung kann nicht rückgängig gemacht werden.";
 
-/* Storage settings */
+/* Data usage settings */
+"Data usage" = "Daten-Nutzung";
 "Delete unused local copies" = "Lösche ungenutzte lokale Kopien";
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Gemessene Zeit seit dem Hochladen, Bearbeiten, Herunterladen oder Anzeigen der jeweiligen Datei über dieses Gerät. Gilt nicht für Dateien, die über die Funktion Offline verfügbar heruntergeladen wurden. Lokale Kopien können vor Ablauf des angegebenen Zeitraums gelöscht werden, z.B. weil es eine neuere Version einer Datei auf dem Server gibt - oder durch das manuelle Löschen von Offline-Kopien. Außerdem dürfen lokale Kopien nach Ablauf der angegebenen Zeit nicht gelöscht werden, z.B. wenn eine Aktion an ihr durchgeführt wird, die Datei noch in Gebrauch ist - oder das Konto, das die Datei enthält, nicht in der App verwendet wurde.";
 "never" = "Niemals";
 "after %@" = "nach %@";
+"Decrease Slider Value" = "Schiebereglerwert verringern";
+"Increase Slider Value" = "Schiebereglerwert erhöhen";
+
+"Cellular transfers" = "Mobilfunkübertragung";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Einige Mobilfunkdaten können weiterhin verwendet werden. Um die Verwendung von Mobilfunkdaten vollständig zu vermeiden, deaktivieren Sie bitte den Zugriff auf Mobilfunk für die gesamte App in der App Einstellungen.";
+"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Mobilfunkübertragung wurde über die MDM-Konfiguration deaktiviert. Bitte wenden Sie sich an Ihren Administrator, um weitere Informationen zu erhalten.";
+"General" = "Allgemein";
+"By feature" = "Nach Funktion ";
+
+"off" = "aus";
+"enabled" = "aktiviert";
 
 /* Display settings */
-"Display settings" = "Anzeigeeinstellungen";
+"Advanced settings" = "Erweiterte Einstellungen";
 "Show hidden files and folders" = "Zeige versteckte Dateien und Ordner";
+"Show folders on top" = "Ordner oben anzeigen";
+"Prevent gestures" = "Gesten deaktivieren";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Verhindert das verschieben von Dateien und Ordnern und die Mehrfachauswahl durch Gesten";
+
+/* Advanced settings */
+"Enable diagnostics" = "Diagnose aktivieren";
 
 /* Passcode Messages */
 
@@ -243,6 +305,7 @@
 "Please try again in %@" = "Bitte erneut in %@ versuchen";
 "Unlock %@" = "%@ entsperren";
 "Biometric authentication failed" = "Biometrische Authentifizierung fehlgeschlagen";
+"You are required to set the passcode" = "Sie müssen eine PIN-Code einrichten";
 
 /* Certificate management */
 
@@ -257,6 +320,8 @@
 
 "Forbidden Characters" = "Nicht erlaubte Zeichen";
 "File name cannot contain / or \\" = "Dateiname darf nicht / oder \\ enthalten";
+"Item with same name already exists" = "Objekt mit demselben Namen existiert bereits";
+"An item with the same name already exists in this location." = "An dieser Stelle ist bereits ein gleichnamiges Objekt vorhanden.";
 "New Folder" = "Neuer Ordner";
 "Folder name" = "Ordnername";
 "Rename" ="Umbenennen";
@@ -270,8 +335,20 @@
 " couldn't download file(s)" = "Datei(en) konnte nicht geladen werden";
 "Actions" = "Aktionen";
 "copy" = "Kopie";
+"Close Window" = "Fenster schließen";
+"Open in a new Window" = "In neuen Fenster öffnen";
+"Open in Window" = "In Fenster öffnen";
+"Take photo or video" = "Foto oder Video aufnehmen";
 
 "Preparing…" = "Vorbereiten...";
+
+"No actions available" = "Keine Aktionen verfügbar";
+"No actions are available for this folder, possibly because of missing permissions." = "Für diesen Ordner sind keine Aktionen verfügbar, möglicherweise aufgrund fehlender Berechtigungen.";
+
+"Close actions menu" = "Menü Aktionen schließen";
+"Favorited" = "Favorisiert";
+"Favorite item" = "Element favorisieren";
+"Unfavorite item" = "Favorit entfernen";
 
 /* Directory Picker Messages */
 "Move here" = "Hierhin verschieben";
@@ -283,6 +360,7 @@
 "Could not get the picture" = "Bild konnte nicht geladen werden";
 "Downloading" = "Lade herunter";
 "File couldn't be opened" = "Datei kann nicht geöffnet werden";
+"Connecting..." = "Verbinde...";
 
 /* PDF Viewer */
 "Resume" = "Fortsetzen";
@@ -302,6 +380,36 @@
 "All Photos" = "Alle Fotos";
 "Albums" = "Alben";
 "Importing from photo library" = "Importieren aus der Fotobibliothek";
+"Media import" = "Medien-Import";
+"%@ of %@" = "%@ von %@";
+"Selected folder lacks file creation permission" = "Der ausgewählte Ordner hat keine Berechtigung um Dateien zu erstellen";
+"%d Item" = "%d Objekt";
+"%d Items" = "%d Objekte";
+"Select Items" = "Elemente auswählen";
+
+/* Scan */
+"Scan" = "Scannen";
+"Scans" = "Scans";
+"Scan document" = "Dokument scannen";
+"Saving" = "Speichern";
+"File format" = "Dateiformat";
+"Name" = "Name";
+"Save as" = "Speichern unter";
+"Options" = "Optionen";
+"Scan additional" = "Weitere scannen";
+"Create one file per page" = "Eine Datei pro Seite erstellen";
+
+/* Scan */
+"Scan" = "Scannen";
+"Scans" = "Scans";
+"Scan document" = "Dokument scannen";
+"Saving" = "Speichern";
+"File format" = "Dateiformat";
+"Name" = "Name";
+"Save as" = "Speichern unter";
+"Options" = "Optionen";
+"Scan additional" = "Weitere scannen";
+"Create one file per page" = "Eine Datei pro Seite erstellen";
 
 /* Sharing */
 "Searching Shares…" = "Suche nach Freigaben…";
@@ -388,6 +496,8 @@
 "shared" = "Geteilt";
 "Owner" = "Besitzer";
 "Private Link" = "Privater Link";
+"Created Public Link" = "Öffentlichen Link erstellen";
+"URL was copied to the clipboard" = "Die Adresse wurde in die Zwischenablage kopiert";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
@@ -396,15 +506,46 @@
 "Favorites"= "Favoriten";
 "Images" = "Bilder";
 "PDF Documents" = "PDF-Dokumente";
+"Text" = "Text";
+"Documents" = "Dokumente";
+"Audio" = "Audio";
 
 /* Media files settings */
 "Media Files" = "Medien Dateien";
-"Streaming Enabled" = "Streaming aktiviert";
+"Download instead of streaming" = "Herunterladen statt streamen";
 
 /* Photo upload settings */
 "Media Upload" = "Medienupload";
+"Media Export" = "Medien Export";
+"Auto Upload" = "Auto Upload";
 "Convert HEIC to JPEG" = "HEIC in JPEG konvertieren";
 "Convert videos to MP4" = "Videos konvertieren zu MP4";
+"Preserve original media file names" = "Mediendateinamen beibehalten";
+"Auto Upload Photos" = "Fotos automatisch hochladen";
+"Auto Upload Videos" = "Videos automatisch hochladen";
+"Account" = "Konto";
+"Accounts" = "Konten";
+"Select account" = "Account auswählen";
+"Photo upload path" = "Foto-Upload-Pfad";
+"Video upload path" = "Pfad für Video-Upload";
+"Select Upload Path" = "Upload-Pfad auswählen";
+"Auto upload of media was disabled since configured account / folder was not found" = "Das automatische Hochladen von Medien wurde deaktiviert, da des konfigurierte Konto/Ordner nicht gefunden wurde.";
+"Importing %@ media files for upload" = "Importieren von %@-Mediendateien zum Hochladen";
+"Photo upload" = "Foto Upload";
+"Video upload" = "Video Upload";
+
+/* Background media uploads */
+"Background uploads" = "Hochladen im Hintergrund";
+"Use background refresh" = "Hintergrundaktualisierung verwenden";
+"Enable background uploads" = "Aktiviere Hintergrund-Uploads";
+"Use background location updates" = "Verwende Hintergrund Standortaktualisierung";
+"Background upload notifications" = "Hintergrund Upload-Benachrichtigungen";
+"if you would like background media uploads to be more reliable, you should enable background location updates." = "Wenn Sie möchten, dass das Hochladen von Hintergrundmedien zuverlässiger ist, sollten Sie Aktualisierungen des Hintergrundstandorts aktivieren.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Das Hochladen von Hintergrundmedien hängt von Standortaktualisierungen ab und funktioniert nicht mehr, wenn die Berechtigungen zur Standorterfassung widerrufen werden.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Andernfalls hängt das Hochladen von Hintergrundmedien mithilfe der Hintergrundaktualisierungstechnologie davon ab, wie häufig Sie die App verwenden.";
+"Location permission denied" = "Standortberechtigung verweigert";
+"Please re-enable location acquisition in system settings" = "Bitte aktivieren Sie die Standorterfassung in den Systemeinstellungen erneut";
+"Scheduled upload of %ld media assets" = "Geplanter Upload von %ld Mediendaten";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Erstelle %ld Ordner…";
@@ -424,11 +565,20 @@
 "Delete Local Copies" = "Lösche lokale Kopien";
 "Manage" = "Verwalten";
 "Storage" = "Speicher";
-"Proceed" = "Fortfahren";
 "Compacting" = "Freigeben";
 
 "Really include available offline files?" = "Offline-Dateien wirklich einbeziehen?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Dateien und Ordner, die als Offline Verfügbar markiert sind, werden nicht mehr verfübar sein. Sie werden beim nächsten Login in Ihr Konto erneut heruntergeladen (Konnektivität erforderlich).";
+
+/* Diagnostic */
+"Diagnostic Overview" = "Diagnose Übersicht";
+"Diagnostics" = "Diagnose";
+"Share Diagnostics" = "Diagnose teilen";
+"Action executed" = "Aktion ausgeführt";
+
+"Update Status" = "Aktualisierungsstatus";
+"Completed update scans" = "Aktualisierungsscans abgeschlossen";
+"Total update scans" = "Gesamt-Aktualisierungsscans ";
 
 /* Available offline */
 "Root folder" = "Hauptverzeichnis";
@@ -443,8 +593,256 @@
 
 "Overview" = "Übersicht";
 "All Files" = "Alle Dateien";
-"Locations" = "Speicherorte";
 
-/* Import File */
+/* Single Account */
+"You are connected as\n%@" = "Sie sind verbunden als\n%@";
+
+/* Release Notes */
+"Proceed" = "Fortfahren";
+"New in %@" = "Neu in %@";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Vielen Dank für die Nutzung von %@.\nWenn Ihnen unsere App gefällt, hinterlassen Sie bitte eine AppStore-Rezension.\n❤️";
+"Thank you for using %@.\n" = "Vielen Dank für die Verwendung von %@.\n";
+
+/* Key Commands */
+"Select Next" = "Nächstes auswählen";
+"Select Previous" = "Vorheriges auswählen";
+"Open Selected" = "Ausgewähltes öffnen";
+"Change Sort Order" = "Sortierreihenfolge ändern";
+"Search" = "Suche";
+"Back" = "Zurück";
+"Save" = "Speichern";
+"Sort by %@" = "Sortieren nach %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Letztes Element in der Liste auswählen";
+"Scroll to Top" = "Nach oben scrollen";
+"Scroll to Bottom" = "Nach unten scrollen";
+"Copy to Pasteboard" = "In Zwischenablage kopieren";
+"Import from Pasteboard" = "Aus Zwischenablage importieren";
+"Next" = "Weiter";
+"Previous" = "Zurück";
+"Favorite" = "Favorit";
+"Cut" = "Ausschneiden";
+
+/* Markup */
+"How should this file be saved?" = "Wie soll diese Datei gespeichert werden?";
+"Overwrite original" = "Original überschreiben";
+"Save as copy" = "Als Kopie speichern";
+"Discard changes" = "Änderungen verwerfen";
+"Markup" = "Annotieren";
+"Crop or Rotate" = "Beschneiden oder Rotieren";
+"Saving edited file failed" = "Speichern der bearbeiteten Datei fehlgeschlagen";
+"File no longer exists" = "Die Datei existiert nicht mehr";
+
+/* Licensing */
+"Unlocked" = "Entsperrt";
+"Unlock" = "Entsperren";
+
+"Subscribe Now" = "Jetzt abonnieren";
+"Free" = "Kostenlos";
+
+"%@ / %@" = "%@/%@";
+"after free %@ trial" = "nach kostenloser %@ Testversion";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Testen Sie %@ kostenlos.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Dann %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ - ab sofort";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Pro Funktionen";
+
+/* Licensing: App Store */
+"Restore purchases" = "Käufe wiederherstellen";
+"Restoring purchases…" = "Käufe wiederherstellen…";
+"Error restoring purchases" = "Fehler bei der Wiederherstellung von Einkäufen";
+"Error loading product info from App Store"= "Fehler beim Laden von Produktinformationen aus dem App Store";
+"Purchase failed" = "Kauf fehlgeschlagen";
+"More information" = "Mehr Informationen";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Enterprise";
+
+/* Licensing: Settings */
+"In-App Purchases" = "In-App-Käufe";
+"Purchases" = "Käufe";
+"Error fetching transactions" = "Fehler beim Abrufen von Transaktionen";
+"Document Scanner" = "Dokumentenscanner";
+"Scan documents and photos with your camera." = "Scannen Sie Dokumente und Fotos mit Ihrer Kamera.";
+"Shortcuts Actions" = "Kurzbefehle Aktionen";
+"Use ownCloud actions in Shortcuts." = "Verwenden Sie ownCloud Aktionen in Kurzbefehle.";
+"Markup Documents" = "Dokument annotieren";
+"Markup photos and PDF files." = "Text, Formen und Unterschriften in Fotos und PDF-Dateien.";
+"Unlock all Pro Features." = "Alle Pro Funktionen freischalten.";
+
+"Purchased App Version" = "Gekaufte App-Version";
+"Receipt Date" = "Rechnungsdatum";
+"Manage subscription" = "Abonnement verwalten";
+"Purchases are not allowed on this device." = "Käufe sind auf diesem Gerät nicht erlaubt.";
+"Type" = "Typ";
+"Quantity" = "Menge";
+"Product" = "Produkt";
+"Date" = "Datum";
+"Cancelled" = "abgebrochen";
+"Ends" = "Endet";
+"none" = "Keine";
+"trial" = "Testzeit";
+"purchase" = "Kauf";
+"subscription" = "Abonnement";
+"Photo Pro Features" = "Foto Pro Funktionen";
+"Image metadata, extended upload options" = "Bild-Metadaten, erweiterte Upload-Optionen";
+"Purchase" = "Käufe";
+"Subscribe" = "Abonnieren";
+
+"No accounts found" = "Keine Konten gefunden";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "Um Ihren aktuellen Lizenzierungsstatus genau zu ermitteln, fügen Sie bitte zunächst ein oder mehrere Konten hinzu.";
+
+/* Share Sheet */
 "Save File" = "Datei speichern";
-"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Wählen Sie ein Konto und einen Ordner, in den die Datei importiert werden soll.\n\nEs kann nur eine Datei auf einmal importiert werden.";
+"Choose an account and folder to import into." = "Wählen Sie ein Konto und einen Ordner zum Importieren aus.";
+"No account configured.\nSetup an new account in the app to save to." = "Kein Konto konfiguriert\nRichten Sie ein neues Konto in der App ein, in dem gespeichert werden soll.";
+"Importing item %ld of %ld" = "Importiere Objekt %ld von %ld";
+"Error importing %@" = "Fehler beim importieren von %@";
+"Error loading item" = "Fehler beim Laden des Objekt";
+"Preparing…" = "Vorbereiten...";
+"Save here" = "Hier speichern";
+
+/* Data migration from legacy app */
+"Account Migration" = "Konto-Migration";
+"App Passcode" = "App PIN-Sperre";
+"Instant Upload Settings" = "Auto Upload Einstellungen";
+"Migrating" = "Migrieren";
+"Migrated" = "Migriert";
+"Failed to migrate" = "Migration fehlgeschlagen";
+"Failed to access legacy user data" = "Zugriff auf ältere Benutzerdaten fehlgeschlagen";
+"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "Die App wurde auf eine neue Version aktualisiert. Unten finden Sie eine Übersicht über alle migrierten Konten.";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Mehrfachauswahl beginnen";
+
+/* Universal Links */
+"Resolving link…" = "Link auflösen...";
+"Link resolution failed" = "Link-Auflösung fehlgeschlagen";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Ein privater Link konnte im Offline-Modus nicht aufgelöst werden - das entsprechende Element wurde noch nicht lokal zwischengespeichert.";
+"Couldn't resolve a private link since the item is not known to the server." = "Ein privater Link konnte nicht aufgelöst werden - das Element ist auf dem Server nicht mehr vorhanden.";
+"Link points to an account bookmark which is not configured in the app." = "Der Link zeigt auf ein Benutzerkonto, das in der App nicht vorhanden ist.";
+
+/* Photo meta-data */
+"Image metadata" = "Bild-Metadaten";
+"Image details" = "Bild-Details";
+"Profile" = "Profile";
+"Size" = "Größe";
+"Density" = "Dichte";
+"Color model" = "Farbmodell";
+"%@ (%d bits/channel)" = "%@ (%d Bits/Kanal)";
+"Histogram" = "Histogram";
+
+"Camera details" = "Kamera Details";
+"Capture settings" = "Aufnahme-Einstellungen";
+"Time" = "Zeit";
+"EXIF aux info" = "EXIF aux Info";
+"Authoring" =  "Autor";
+"TIFF" = "TIFF";
+
+"Lens make" = "Objektiv-Fabrikat";
+"Lens model" = "Objektiv-Modell";
+"Lens info" = "Objektiv-Info";
+"Focal length" = "Brennweite";
+"Focal length @ 35 mm" = "Brennweite @ 35 mm";
+
+"Shutter speed" = "Verschlusszeit";
+"Aperture" = "Blende";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Programm";
+"Not defined" = "Nicht definiert";
+"Manual" = "Manuell";
+"Normal" = "Normal";
+"Aperture priority" = "Zeitautomatik";
+"Shutter priority" = "Blendenautomatik";
+"Creative" = "Kreativ";
+"Action" = "Aktion";
+"Portrait" = "Hochformat";
+"Landscape" = "Querformat";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Messverfahren";
+"unknown" = "unbekannt";
+"Average" = "Mittelwert";
+"CenterWeightedAverage" = "Durchschnittliche Belichtung";
+"Spot" = "Spot";
+"MultiSpot" = "Multisegment";
+"Pattern" = "Muster";
+"Partial" = "Teilweise";
+
+/* EXIF: flash mode */
+"Flash" = "Blitz";
+"Fired" = "Ein";
+"Didn't fire" = "Aus";
+"No strobe return detection" = "No strobe return detection";
+"Strobe return light not detected" = "Strobe return light not detected";
+"Strobe return light detected" = "Strobe return light detected";
+"Compulsory flash firing" = "Compulsory flash firing";
+"Compulsory flash supression" = "Compulsory flash supression";
+"Auto mode" = "Auto-Modus";
+"Red eye detection supported" = "Rote-Augen-Erkennung unterstützt";
+"not present" = "nicht vorhanden";
+
+/* EXIF: white balance */
+"White balance" = "Weißabgleich";
+"Auto" = "Auto";
+"Manual" = "Manuell";
+
+"Exposure bias" = "Belichtungsverzerrung";
+"Uncalibrated" = "Unkalibriert";
+"Original date" = "Originaldatum";
+"Digitized date" = "Digitalisiertes Datum";
+
+"Color space" = "Farbraum";
+
+/* EXIF: aux info */
+"Lens ID" = "Objektiv-ID";
+"Lens serial" = "Objektiv-Seriennummer";
+"Serial number" = "Seriennummer";
+"Flash compensation" = "Blitzkompensation";
+"Owner" = "Besitzer";
+"Firmware" = "Firmware";
+"Keywords" = "Schlüsselwörter";
+"Copyright" = "Urheberrecht";
+
+/* IPTC meta data */
+"Contact info" = "Kontaktinformationen";
+"Usage terms" = "Verwendungsbedingungen";
+"Scene" = "Szene";
+"Description" = "Beschreibung";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Photometrische Auswertung";
+"none" = "Keine";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS-Standort";
+"Coordinates" = "Koordinaten";
+"Altitude" = "Höhe";
+"Place" = "Ort";
+"E" = "O";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Erweiterte Upload-Einstellungen";
+"Prefer unedited photos" = "Unbearbeitete Fotos bevorzugen";
+"Prefer RAW photos" = "RAW-Fotos bevorzugen";
+"Prefer original videos" = "Original-Videos bevorzugen";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Eingeschränkter Fotozugriff";
+"Access for the media selected for upload is limited" = "Der Zugriff für die zum Hochladen ausgewählten Medien ist eingeschränkt";
+"No Access to the media selected for upload" = "Kein Zugriff auf die zum Hochladen ausgewählten Medien";

@@ -11,6 +11,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import ownCloudMocking
+import ownCloudAppShared
 
 @testable import ownCloud
 
@@ -38,32 +39,27 @@ class FileTests: XCTestCase {
 	// MARK: - UI Helpers
 
 	func showFileList(bookmark: OCBookmark, issue: OCIssue? = nil) {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
+		let query = MockOCQuery(path: "/")
+		let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
 
-			let query = MockOCQuery(path: "/")
-			let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
+		self.mockOCoreForBookmark(mockBookmark: bookmark, mockCore: core)
 
-			self.mockOCoreForBookmark(mockBookmark: bookmark, mockCore: core)
+		let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
-			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
+		rootViewController.afterCoreStart(nil, completionHandler: { (_) in
+			let navigationController = UserInterfaceContext.shared.currentWindow?.rootViewController
+			let transitionDelegate = PushTransitionDelegate()
 
-			rootViewController.afterCoreStart {
-				let navigationController = (appDelegate.serverListTableViewController?.navigationController)!
-				let transitionDelegate = PushTransitionDelegate()
+			rootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+			rootViewController.transitioningDelegate = transitionDelegate
+			rootViewController.modalPresentationStyle = .custom
 
-				rootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
-				rootViewController.transitioningDelegate = transitionDelegate
-				rootViewController.modalPresentationStyle = .custom
-
-				navigationController.present(rootViewController, animated: true)
-			}
-		}
+			navigationController?.present(rootViewController, animated: true)
+		})
 	}
 
 	func dismissFileList() {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.navigationController?.dismiss(animated: false, completion: nil)
-		}
+		UserInterfaceContext.shared.currentWindow?.rootViewController?.dismiss(animated: false, completion: nil)
 	}
 
 	// MARK: - Mocks

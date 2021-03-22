@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudAppShared
 
 class PhotoSelectionViewCell: UICollectionViewCell {
 
@@ -100,6 +101,8 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 		checkmarkBadgeImageView.rightAnchor.constraint(equalTo: self.imageView.rightAnchor, constant: -badgeMargin).isActive = true
 		checkmarkBadgeImageView.bottomAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: -badgeMargin).isActive = true
 
+		if #available(iOS 13.4, *) {
+			PointerEffect.install(on: self, effectStyle: .hoverScaled)
+		}
 	}
-
 }

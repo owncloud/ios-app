@@ -78,26 +78,24 @@ class ScheduledTaskAction : NSObject {
 	}
 
 	func completed() {
-		OnMainThread {
-			self.completion?(self)
+		self.completion?(self)
 
-			if self.backgroundFetchCompletion != nil {
-				if let result = self.result {
-					switch result {
-					case .success(_):
-						self.backgroundFetchCompletion!(.newData)
-					case .failure(_):
-						self.backgroundFetchCompletion!(.failed)
-					}
-				} else {
-					self.backgroundFetchCompletion!(.noData)
+		if self.backgroundFetchCompletion != nil {
+			if let result = self.result {
+				switch result {
+				case .success(_):
+					self.backgroundFetchCompletion!(.newData)
+				case .failure(_):
+					self.backgroundFetchCompletion!(.failed)
 				}
-				self.backgroundFetchCompletion = nil
+			} else {
+				self.backgroundFetchCompletion!(.noData)
 			}
+			self.backgroundFetchCompletion = nil
+		}
 
-			if self.backgroundTaskIdentifier != .invalid {
-				UIApplication.shared.endBackgroundTask(self.backgroundTaskIdentifier)
-			}
+		if self.backgroundTaskIdentifier != .invalid {
+			UIApplication.shared.endBackgroundTask(self.backgroundTaskIdentifier)
 		}
 	}
 

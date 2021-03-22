@@ -18,6 +18,8 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
+import CoreServices
 
 class PublicLinkTableViewController: SharingTableViewController {
 
@@ -31,6 +33,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		super.viewDidLoad()
 
 		messageView = MessageView(add: self.view)
+		tableView.dragDelegate = self
 
 		self.navigationItem.title = "Links".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
@@ -171,16 +174,18 @@ class PublicLinkTableViewController: SharingTableViewController {
 					OnMainThread {
 						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
+
 							row.cell?.textLabel?.text = url.absoluteString
 							row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
 							row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
 							row.cell?.textLabel?.numberOfLines = 0
-							DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+
+							_ = NotificationHUDViewController(on: self, title: "Private Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: {
 								row.cell?.textLabel?.text = "Copy Private Link".localized
 								row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
 								row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tintColor
 								row.cell?.textLabel?.numberOfLines = 1
-							}
+							})
 						}, title: "Copy Private Link".localized, style: .plain)
 						rows.append(privateLinkRow)
 
@@ -192,22 +197,6 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 	}
 
-	func retrievePrivateLink(for item: OCItem, in row: StaticTableViewRow) {
-		let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
-		progressView.startAnimating()
-		row.cell?.accessoryView = progressView
-
-		self.core?.retrievePrivateLink(for: item, completionHandler: { (error, url) in
-			OnMainThread {
-				row.cell?.accessoryView = nil
-			}
-			if error == nil {
-				guard let url = url else { return }
-				UIPasteboard.general.url = url
-			}
-		})
-	}
-
 	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -215,11 +204,11 @@ class PublicLinkTableViewController: SharingTableViewController {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
-					if UIDevice.current.isIpad() {
+					if UIDevice.current.isIpad {
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Delete Public Link".localized,
+					let alertController = ThemedAlertController(title: "Delete Public Link".localized,
 										message: nil,
 										preferredStyle: presentationStyle)
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -231,7 +220,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 									self.navigationController?.popViewController(animated: true)
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -245,6 +234,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 				UITableViewRowAction(style: .normal, title: "Copy".localized, handler: { (_, _) in
 					if let shareURL = share.url {
 						UIPasteboard.general.url = shareURL
+
+						_ = NotificationHUDViewController(on: self, title: share.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 					}
 				})
 			]
@@ -269,12 +260,55 @@ class PublicLinkTableViewController: SharingTableViewController {
 			var permissions : OCSharePermissionsMask?
 
 			if item.isSharedWithUser {
-				core.sharesSharedWithMe(for: item, initialPopulationHandler: { shares in
-					OnMainThread {
-						if let share = shares.filter({ $0.itemPath == path}).first {
-							permissions = share.permissions
-							createLink(for: path, with: permissions!)
+				let dispatchGroup = DispatchGroup()
+				var acceptedCloudShares : [OCShare]?
+				var sharedWithMeShares : [OCShare]?
+
+				dispatchGroup.enter()
+
+				core.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
+					acceptedCloudShares = shares
+					dispatchGroup.leave()
+				}, allowPartialMatch: true)
+
+				dispatchGroup.enter()
+
+				core.sharesSharedWithMe(for: item, initialPopulationHandler: { (shares) in
+					sharedWithMeShares = shares
+					dispatchGroup.leave()
+				}, allowPartialMatch: true)
+
+				dispatchGroup.notify(queue: .main, execute: {
+					var shares : [OCShare] = []
+
+					if let acceptedCloudShares = acceptedCloudShares {
+						shares.append(contentsOf: acceptedCloudShares)
+					}
+
+					if let sharedWithMeShares = sharedWithMeShares {
+						shares.append(contentsOf: sharedWithMeShares)
+					}
+
+					var deepestShare : OCShare?
+
+					for share in shares {
+						if share.itemPath == path {
+							deepestShare = share
+							break
+						} else {
+							if path.hasPrefix(share.itemPath) {
+								if deepestShare == nil {
+									deepestShare = share
+								} else if let deepestShareItemPath = deepestShare?.itemPath, share.itemPath.count > deepestShareItemPath.count {
+									deepestShare = share
+								}
+							}
 						}
+					}
+
+					if let share = deepestShare {
+						permissions = share.permissions
+						createLink(for: path, with: permissions!)
 					}
 				})
 			} else {
@@ -295,5 +329,20 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 
 		return linkName
+	}
+}
+
+// MARK: - Drag delegate
+extension PublicLinkTableViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if let share = share(at: indexPath), let url = share.url {
+			let itemProvider = NSItemProvider(item: url as URL as NSSecureCoding, typeIdentifier: kUTTypeURL as String)
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+
+			return [dragItem]
+		}
+
+		return []
 	}
 }

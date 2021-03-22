@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 class ServerListTableHeaderView: UIView, Themeable {
 
@@ -57,7 +58,7 @@ class ServerListTableHeaderView: UIView, Themeable {
 
 			textLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: textLabelTopMargin),
 			textLabel.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: textLabelHorizontalMargin),
-			textLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: textLabelHorizontalMargin),
+			textLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -textLabelHorizontalMargin),
 			textLabel.heightAnchor.constraint(equalToConstant: textLabelHeight)
 
 			])

@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class UploadBaseAction: Action {
 
@@ -31,6 +32,10 @@ class UploadBaseAction: Action {
 
 		// .. that's also a directory
 		if forContext.items.first?.type != .collection {
+			return .none
+		}
+
+		if forContext.items.first?.permissions.contains(.createFile) == false {
 			return .none
 		}
 
