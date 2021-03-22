@@ -1093,7 +1093,7 @@ extension DisplayHostViewController {
 		if let pdfViewController = self.viewControllers?.first as? PDFViewerViewController {
 			showCommands = true
 
-			let searchCommand = UIKeyCommand(input: "L", modifierFlags: [.command], action: #selector(search), discoverabilityTitle: "Search".localized)
+			let searchCommand = UIKeyCommand(input: "S", modifierFlags: [.command], action: #selector(search), discoverabilityTitle: "Search".localized)
 			let gotoCommand = UIKeyCommand(input: "G", modifierFlags: [.control], action: #selector(goToPage), discoverabilityTitle: "Go to Page".localized)
 
 			if !pdfViewController.searchResultsView.isHidden, pdfViewController.searchResultsView.matches?.count ?? 0 > 0 {
