@@ -372,6 +372,9 @@
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
 "Search PDF" = "Search PDF";
 "Outline" = "Outline";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
 "Upload" = "Upload";

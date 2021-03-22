@@ -29,8 +29,8 @@ class PDFSearchResultsView : UIView {
 	let overlayAlpha: CGFloat = 0.8
 
 	private let closeButtton = UIButton()
-	private let backButton = UIButton()
-	private let forwardButton = UIButton()
+	public let backButton = UIButton()
+	public let forwardButton = UIButton()
 	private let searchTermButton = UIButton()
 
 	private let stackView = UIStackView()
@@ -113,11 +113,11 @@ class PDFSearchResultsView : UIView {
 
 	// MARK: - Button actions
 
-	@objc private func close() {
+	@objc public func close() {
 		closeHandler?()
 	}
 
-	@objc private func back() {
+	@objc public func back() {
 		guard currentIndex >= 0 else { return }
 		if currentIndex > 0, let matches = self.matches {
 			self.currentMatch = matches[currentIndex - 1]
@@ -125,7 +125,7 @@ class PDFSearchResultsView : UIView {
 		}
 	}
 
-	@objc private func forward() {
+	@objc public func forward() {
 		guard currentIndex >= 0 else { return }
 		if let matches = self.matches, currentIndex < (matches.count - 1) {
 			self.currentMatch = matches[currentIndex + 1]

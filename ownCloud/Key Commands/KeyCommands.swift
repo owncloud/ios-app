@@ -872,9 +872,20 @@ extension ClientDirectoryPickerViewController {
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-		shortcuts.append(nextObjectCommand)
-		shortcuts.append(previousObjectCommand)
-		shortcuts.append(selectObjectCommand)
+
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			if selectedIndexPath.row < self.items.count - 1 {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedIndexPath.row > 0 || selectedIndexPath.section > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			if let item : OCItem = self.itemAt(indexPath: selectedIndexPath), item.type == OCItemType.collection {
+				shortcuts.append(selectObjectCommand)
+			}
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
 
 		if let selectButtonTitle = selectButton?.title, let selector = selectButton?.action {
 			let doCommand = UIKeyCommand(input: "\r", modifierFlags: [.command], action: selector, discoverabilityTitle: selectButtonTitle)
@@ -1079,11 +1090,27 @@ extension DisplayHostViewController {
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Previous".localized)
 
 		var showCommands = false
-		if (self.viewControllers?.first as? PDFViewerViewController) != nil {
+		if let pdfViewController = self.viewControllers?.first as? PDFViewerViewController {
 			showCommands = true
 
 			let searchCommand = UIKeyCommand(input: "L", modifierFlags: [.command], action: #selector(search), discoverabilityTitle: "Search".localized)
-			let gotoCommand = UIKeyCommand(input: "G", modifierFlags: [.command], action: #selector(goToPage), discoverabilityTitle: "Go to Page".localized)
+			let gotoCommand = UIKeyCommand(input: "G", modifierFlags: [.control], action: #selector(goToPage), discoverabilityTitle: "Go to Page".localized)
+
+			if !pdfViewController.searchResultsView.isHidden, pdfViewController.searchResultsView.matches?.count ?? 0 > 0 {
+
+				if pdfViewController.searchResultsView.forwardButton.isEnabled {
+					let findNextCommand = UIKeyCommand(input: "G", modifierFlags: [.command], action: #selector(findNext), discoverabilityTitle: "Find Next".localized)
+				shortcuts.append(findNextCommand)
+				}
+
+				if pdfViewController.searchResultsView.backButton.isEnabled {
+					let findPreviousCommand = UIKeyCommand(input: "G", modifierFlags: [.command, .shift], action: #selector(findPrevious), discoverabilityTitle: "Find Previous".localized)
+				shortcuts.append(findPreviousCommand)
+				}
+
+				let closeFindCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closeFind), discoverabilityTitle: "Close Search".localized)
+				shortcuts.append(closeFindCommand)
+			}
 
 			shortcuts.append(searchCommand)
 			shortcuts.append(gotoCommand)
@@ -1215,6 +1242,30 @@ extension DisplayHostViewController {
 
 		if let pdfController = currentViewController as? PDFViewerViewController {
 			pdfController.goToPage()
+		}
+	}
+
+	@objc func findNext() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.searchResultsView.forward()
+		}
+	}
+
+	@objc func findPrevious() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.searchResultsView.back()
+		}
+	}
+
+	@objc func closeFind() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.searchResultsView.close()
 		}
 	}
 
