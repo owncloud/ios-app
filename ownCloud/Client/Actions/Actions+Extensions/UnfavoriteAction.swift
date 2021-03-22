@@ -55,7 +55,7 @@ class UnfavoriteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .contextMenuItem {
+		if location == .moreItem || location == .moreDetailItem || location == .contextMenuItem {
 			return UIImage(named: "star")
 		}
 

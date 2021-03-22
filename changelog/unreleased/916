@@ -1,0 +1,6 @@
+Bugfix: Japanese Input Support 
+
+Fixed a problem in scan view when renaming the file name and using a Japanese keyboard layout (2-Byte character).
+After entering a character inside the file name the text cursor jumped to the end.
+
+https://github.com/owncloud/ios-app/issues/916

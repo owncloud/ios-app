@@ -1,6 +1,9 @@
-• Fix: Crash in Detail View
-Fixed a crash when selecting an item, which is still uploading
+• Fix: Links in PDF documents
+A tap on a hyperlink in PDF documents now opens the link.
 
-• Fix: Upload Improvements
-Fixed some problems when uploading items in the background or from the share sheet
+• Fix: PDF thumbnail view on the iPad
+Fixed the position of the PDF thumbnail view on the iPad. Now, more PDF content is visible.
+
+• Fix: Message View
+In some cases, the message view hid content and also was not selectable.
 
