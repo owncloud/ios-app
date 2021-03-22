@@ -1,56 +1,57 @@
-= Settings
+= Configure Settings
 :toc: right
 :toclevels: 1
 :keywords: settings, passcode lock, biometric lock, theme, logging, ownCloud, iOS, iPhone, iPad
 :description: This guide steps you through how to configure ownCloud's iOS App for iPhone and iPad. It covers security, theme, logging, and media upload settings.
 :heic-image-url: https://en.wikipedia.org/wiki/High_Efficiency_Image_File_Format
 
+== Introduction
+
+This document describes which settings are available and how to set them
+
+== Settings Screen
+
 To manage the settings in ownCloud's iOS App for iPhone and iPad, click btn:[Settings] in the bottom right-hand corner of the Accounts List view.
 
-image:user-accounts-list-annotated-with-callout.png[Accessing settings in ownCloud's iOS App for iPhone and iPad.]
+image:user-accounts-list-annotated-with-callout.png[Accessing settings in ownCloud's iOS App for iPhone and iPad., width=40%]
 
 == Security
 
 === Passcode 
 
-To protect access to the iOS app with a Passcode, enable btn:[Passcode Lock] in the Setting's Security section.
-You will then be prompted to enter, and repeat, a 4-digit Passcode.
+To protect access to the iOS app with a Passcode, enable btn:[Passcode Lock] in the Setting's Security section. You will then be prompted to enter, and repeat, a 4-digit Passcode.
 
-image:settings-security-passcode-enabled.png[Enable a Passcode lock in ownCloud's iOS App for iPhone and iPad.]
+image:settings-security-passcode-enabled.png[Enable a Passcode lock in ownCloud's iOS App for iPhone and iPad., width=40%]
 
 === Lock Delay
 
-When a Passcode is enabled, the app will be locked every time you change to another application.
-However, under menu:Settings[Security > Lock application], you can choose to only lock the application after 1, 5, or 30 minutes, instead of "_immediately_", which is the default.
+When a Passcode is enabled, the app will be locked every time you change to another application. However, under menu:Settings[Security > Lock application], you can choose to only lock the application after 1, 5, or 30 minutes, instead of "_immediately_", which is the default.
 
-image:settings-lock-application-duration.png[Set the application lock duration in ownCloud's iOS App for iPhone and iPad.]
+image:settings-lock-application-duration.png[Set the application lock duration in ownCloud's iOS App for iPhone and iPad., width=40%]
 
 === Biometrical Lock
 
-After a Passcode has been created, a Biometrical Lock, or Touch ID, can also be used to gain access to the app.
-To enable it enable btn:[Touch ID] in the Setting's _Security_ section, and then enter your 4-digit Passcode.
-The next time you need to authorise access to the app, you will be able to enter either your Passcode, or use your stored biometrical data.
+After a Passcode has been created, a Biometrical Lock, or Touch ID, can also be used to gain access to the app. To enable it enable btn:[Touch ID] in the Setting's _Security_ section, and then enter your 4-digit Passcode. The next time you need to authorise access to the app, you will be able to enter either your Passcode, or use your stored biometrical data.
 
-image:authorise-access-with-passcode-or-biometric-data.png[Authorise access with passcode or biometric data in ownCloud's iOS App for iPhone and iPad.]
+image:authorise-access-with-passcode-or-biometric-data.png[Authorise access with passcode or biometric data in ownCloud's iOS App for iPhone and iPad., width=40%]
 
 === Trusted Certificates
 
 ==== View Previously Approved Certificates
 
-To view previously approved certificates, navigate to menu:Settings[Certificates] (for any one of your registered accounts), and you will see them listed in the "_User-Approved Certificates_" section.
+To view previously approved certificates, navigate to
+menu:Settings[Certificates] (for any one of your registered accounts), and you will see them listed in the "_User-Approved Certificates_" section.
 
 ==== Inspect Previously Approved Certificates Details
 
-To view previously approved certificates, swipe left on any of the accounts in the accounts list and click btn:[Edit].
-Then, under "_SERVER URL_", click btn:[Certificate Details].
-You will then be able to see all of the certificate's details.
+To view previously approved certificates, swipe left on any of the accounts in the accounts list and click btn:[Edit]. Then, under "_SERVER URL_", click btn:[Certificate Details]. You will then be able to see all of the certificate's details.
 
 ==== Revoke Previously Approved Certificates
 
-image:83_Settings_certs.png[83_Settings_certs.png]
+image:83_Settings_certs.png[83_Settings_certs.png, width=40%]
 
-To revoke one or more previously approved certificates, first navigate to menu:Settings[Certificates] (for any one of your registered accounts).
-Then, in the "_User-Approved Certificates_" section, swipe left on the certificate(s) that you wish to revoke and press btn:[Revoke approval].
+To revoke one or more previously approved certificates, first navigate to
+menu:Settings[Certificates] (for any one of your registered accounts). Then, in the "_User-Approved Certificates_" section, swipe left on the certificate(s) that you wish to revoke and press btn:[Revoke approval].
 
 == Themes
 
@@ -62,36 +63,34 @@ The iOS app comes with three themes:
 
 To change the theme, navigate to menu:Settings[Theme], and pick the one that you want. 
 
-image:84_Settings_themes.png[84_Settings_themes.png]
+image:84_Settings_themes.png[84_Settings_themes.png, width=40%]
 
 .The three themes in ownCloud's iOS App for iPhone and iPad.
 [cols=",,",options="header"]
 |===
-|Classic theme
-|Dark theme
-|Light theme
+^| Classic theme
+^| Dark theme
+^| Light theme
 
-a|image:themes/classic.png[ownCloud iOS App - Classic theme]
-a|image:themes/dark.png[ownCloud iOS App - Dark theme]
-a|image:themes/light.png[ownCloud iOS App - Light theme]
+a| image:themes/classic.png[ownCloud iOS App - Classic theme]
+a| image:themes/dark.png[ownCloud iOS App - Dark theme]
+a| image:themes/light.png[ownCloud iOS App - Light theme]
 |===
 
 === System Appearance (up from iOS 13)
 
-When System Appearance is selected, ownCloud will automatically use the selected iOS system theme (light or dark) to reflect the system UI. 
-Setting System Appearance is only available up from iOS 13.
+When System Appearance is selected, ownCloud will automatically use the selected iOS system theme (light or dark) to reflect the system UI.  Setting System Appearance is only available up from iOS 13.
 
 == Logging
 
-The ownCloud iOS app has built-in logging functionality, available under menu:Settings[Logging].
-To find out more, please refer to the xref:ios_troubleshooting.adoc#capturing-app-debug-logs[logging section of the Troubleshooting guide].
+The ownCloud iOS app has built-in logging functionality, available under menu:Settings[Logging]. To find out more, please refer to the
+xref:ios_troubleshooting.adoc#capturing-app-debug-logs[logging section of the Troubleshooting guide].
 
 == Media Upload (Conversion)
 
-When image and video files are uploaded, they can be converted to the industry-standard JPEG and MP4 respectively.
-This is not done by default. 
+When image and video files are uploaded, they can be converted to the industry-standard JPEG and MP4 respectively. This is not done by default. 
 
-image:settings-media-upload.png[The media upload (conversion) settings in ownCloud's iOS App for iPhone and iPad.]
+image:settings-media-upload.png[The media upload (conversion) settings in ownCloud's iOS App for iPhone and iPad., width=40%]
 
 === Image
 
