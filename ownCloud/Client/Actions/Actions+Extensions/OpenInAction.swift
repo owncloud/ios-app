@@ -109,7 +109,15 @@ class OpenInAction: Action {
 						self.interactionController = UIDocumentInteractionController(url: fileURL)
 						self.interactionController?.delegate = self
 
-						if let sender = self.context.sender as? UITabBarController {
+						if let _ = self.context.sender as? UIKeyCommand, let hostViewController = hostViewController {
+							var sourceRect = hostViewController.view.frame
+							sourceRect.origin.x = viewController.view.center.x
+							sourceRect.origin.y = viewController.navigationController?.navigationBar.frame.size.height ?? 0.0
+							sourceRect.size.width = 0.0
+							sourceRect.size.height = 0.0
+
+							self.interactionController?.presentOptionsMenu(from: sourceRect, in: hostViewController.view, animated: true)
+						} else if let sender = self.context.sender as? UITabBarController {
 							var sourceRect = sender.view.frame
 							sourceRect.origin.y = viewController.view.frame.size.height
 							sourceRect.size.width = 0.0

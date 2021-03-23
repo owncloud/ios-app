@@ -375,6 +375,9 @@
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
 "Search PDF" = "Search PDF";
 "Outline" = "Outline";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
 "Upload" = "Upload";
@@ -629,6 +632,12 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";
