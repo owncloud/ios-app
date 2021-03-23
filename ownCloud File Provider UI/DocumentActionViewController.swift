@@ -32,6 +32,14 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		case undefined, sharing, links
 	}
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		OCItem.registerIcons()
+		ThemeStyle.registerDefaultStyles()
+		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+	}
+
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
 		coreConnectionStatusObservation = nil
@@ -48,7 +56,6 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 			return
 		}
 
-		OCItem.registerIcons()
 		let collection = Theme.shared.activeCollection
 		self.view.backgroundColor = collection.toolbarColors.backgroundColor
 
@@ -125,9 +132,6 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	}
 
 	override func prepare(forError error: Error) {
-		ThemeStyle.registerDefaultStyles()
-		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
-
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
 			AppLockManager.shared.cancelAction = { [weak self] in
