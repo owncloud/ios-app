@@ -148,6 +148,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 	}
 
+	open override func registerCellClasses() {
+		super.registerCellClasses()
+
+		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "moreCell")
+	}
+
 	// MARK: - Search events
 	open func willPresentSearchController(_ searchController: UISearchController) {
  		self.sortBar?.showSearchScope = true
@@ -159,7 +165,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Search scope support
  	private var searchText: String?
- 	private let maxResultCount = 100 // Maximum number of results to return from database
+ 	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
+ 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
 
 	open override func applySearchFilter(for searchText: String?, to query: OCQuery) {
  		self.searchText = searchText
@@ -184,7 +191,15 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
  	}
 
+	private var lastSearchText : String?
+
  	func updateCustomSearchQuery() {
+		if lastSearchText != searchText {
+			// Reset max result count when search text changes
+			maxResultCount = maxResultCountDefault
+			lastSearchText = searchText
+		}
+
  		if let searchText = searchText,
 		   let searchScope = sortBar?.searchScope,
 		   searchScope == .global,
@@ -268,6 +283,45 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
+	}
+
+	// MARK: - Table view datasource
+	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		var numberOfRows = super.tableView(tableView, numberOfRowsInSection: section)
+
+		if customSearchQuery != nil, numberOfRows >= maxResultCount {
+			numberOfRows += 1
+		}
+
+		return numberOfRows
+	}
+
+	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let numberOfRows = super.tableView(tableView, numberOfRowsInSection: 0)
+		var cell : UITableViewCell?
+
+		if indexPath.row < numberOfRows {
+			cell = super.tableView(tableView, cellForRowAt: indexPath)
+		} else {
+			let moreCell = tableView.dequeueReusableCell(withIdentifier: "moreCell", for: indexPath) as? ThemeTableViewCell
+
+			moreCell?.accessibilityIdentifier = "more-results"
+			moreCell?.primaryTextLabel?.text = "Show more results".localized
+			moreCell?.primaryTextLabel?.textAlignment = .center
+
+			cell = moreCell
+		}
+
+		return cell!
+	}
+
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let cell = tableView.cellForRow(at: indexPath), cell.accessibilityIdentifier == "more-results" {
+			maxResultCount += maxResultCountDefault
+			updateCustomSearchQuery()
+		} else {
+			super.tableView(tableView, didSelectRowAt: indexPath)
+		}
 	}
 
 	// MARK: - Table view delegate

@@ -104,6 +104,8 @@
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"Show more results" = "Show more results";
+
 /* Static Login Setup */
 "Server error" = "Server error";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
