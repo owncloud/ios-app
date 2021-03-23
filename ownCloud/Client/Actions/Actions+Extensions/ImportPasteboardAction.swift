@@ -19,11 +19,12 @@
 import Foundation
 import ownCloudSDK
 import MobileCoreServices
+import ownCloudAppShared
 
 class ImportPasteboardAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.importpasteboard") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Import from Pasteboard".localized }
+	override class var name : String? { return "Import from Clipboard".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
@@ -112,7 +113,11 @@ class ImportPasteboardAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "copy-file")
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "doc.on.clipboard")
+			} else {
+				return UIImage(named: "clipboard")
+			}
 		}
 
 		return nil

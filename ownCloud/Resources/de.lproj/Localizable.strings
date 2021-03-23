@@ -616,8 +616,8 @@
 "Select Last Item on Page" = "Letztes Element in der Liste auswählen";
 "Scroll to Top" = "Nach oben scrollen";
 "Scroll to Bottom" = "Nach unten scrollen";
-"Copy to Pasteboard" = "In Zwischenablage kopieren";
-"Import from Pasteboard" = "Aus Zwischenablage importieren";
+"Copy to Clipboard" = "In Zwischenablage kopieren";
+"Import from Clipboard" = "Aus Zwischenablage importieren";
 "Next" = "Weiter";
 "Previous" = "Zurück";
 "Favorite" = "Favorit";

@@ -91,21 +91,6 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
         }
     }
 
-    public var focussedIndexPath: IndexPath? {
-        didSet {
-            guard let focussedIndexPath = focussedIndexPath, let focussedCell = collectionView.cellForItem(at: focussedIndexPath) else { return }
-
-            UIView.animate(withDuration: 0.3, animations: {
-                focussedCell.alpha = 0.5
-            }, completion: { _ in
-                UIView.animate(withDuration: 0.3, animations: {
-                    focussedCell.alpha = 1.0
-                })
-            })
-
-        }
-    }
-
 	// MARK: - Init / deinit
 	init() {
 		layout.scrollDirection = .vertical

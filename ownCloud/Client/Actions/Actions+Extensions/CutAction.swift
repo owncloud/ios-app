@@ -19,12 +19,13 @@
 import Foundation
 import ownCloudSDK
 import MobileCoreServices
+import ownCloudAppShared
 
 class CutAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.cutpasteboard") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Cut".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .moreDetailItem, .keyboardShortcut] }
 	override class var keyCommand : String? { return "X" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -54,7 +55,11 @@ class CutAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "copy-file")
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "scissors")
+			} else {
+				return UIImage(named: "clipboard")
+			}
 		}
 
 		return nil
