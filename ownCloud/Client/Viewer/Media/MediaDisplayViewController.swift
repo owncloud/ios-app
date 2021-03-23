@@ -42,6 +42,13 @@ class MediaDisplayViewController : DisplayViewController {
 
 	private var hasFocus: Bool = false
 
+	public var isPlaying: Bool {
+		if player?.rate == 1.0 {
+			return true
+		}
+		return false
+	}
+
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
@@ -347,6 +354,58 @@ class MediaDisplayViewController : DisplayViewController {
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 		updateNowPlayingTimeline()
+	}
+
+	public func play() {
+		player?.play()
+	}
+
+	public func pause() {
+		player?.pause()
+	}
+
+	public func seek(to: CMTime) {
+		player?.seek(to: to)
+	}
+
+	public func currentTime() -> CMTime {
+		guard let player = player else { return CMTime() }
+
+		return player.currentTime()
+	}
+
+	public func toggleMute() {
+		if player?.isMuted == false {
+			player?.isMuted = true
+		} else {
+			player?.isMuted = false
+		}
+	}
+
+	public func enterFullScreen() {
+		playerViewController?.enterFullScreen(animated: true)
+	}
+
+	public func canEnterFullScreen() -> Bool {
+		return playerViewController?.canEnterFullScreen() ?? false
+	}
+}
+
+extension AVPlayerViewController {
+	func enterFullScreen(animated: Bool) {
+		let selectorToForceFullScreenMode = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
+		if self.responds(to: selectorToForceFullScreenMode) {
+			perform(selectorToForceFullScreenMode, with: animated, with: nil)
+		}
+	}
+
+	func canEnterFullScreen() -> Bool {
+		let selectorToForceFullScreenMode = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
+		if self.responds(to: selectorToForceFullScreenMode) {
+			return true
+		}
+
+		return false
 	}
 }
 
