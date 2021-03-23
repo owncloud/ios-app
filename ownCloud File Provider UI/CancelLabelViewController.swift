@@ -26,6 +26,8 @@ class CancelLabelViewController: UIViewController {
 	@IBOutlet var label : UILabel!
 	@IBOutlet var button : ThemeButton!
 
+	var cancelAction: (() -> Void)?
+
 	func updateCancelLabels(with message: String) {
 		let collection = Theme.shared.activeCollection
 		self.view.backgroundColor = collection.toolbarColors.backgroundColor
@@ -38,7 +40,7 @@ class CancelLabelViewController: UIViewController {
 
 	@IBAction func cancelScreen() {
 		self.dismiss(animated: true) {
-			self.extensionContext?.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+			self.cancelAction?()
 		}
 	}
 

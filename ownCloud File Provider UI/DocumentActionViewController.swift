@@ -40,19 +40,31 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 	}
 
-	deinit {
+	func complete(cancelWith error: Error? = nil) {
+		let complete = {
+			if let error = error {
+				self.extensionContext.cancelRequest(withError: error)
+			} else {
+				self.extensionContext.completeRequest()
+			}
+		}
+
 		coreConnectionStatusObservation?.invalidate()
 		coreConnectionStatusObservation = nil
 
 		if let bookmark = core?.bookmark {
-			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+				complete()
+			})
+		} else {
+			complete()
 		}
 	}
 
 	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
 
 		guard let identifier = itemIdentifiers.first else {
-			extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+			complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 			return
 		}
 
@@ -77,11 +89,18 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 			actionTypeLabel = "Share link".localized
 		}
 
-		OCCoreManager().requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
-			guard let self = self else { return }
+		OCCoreManager.shared.requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
+			guard let self = self else {
+				// DocumentActionViewController vanished - and .complete() with it - return core immediately
+
+				if let bookmark = core?.bookmark {
+					OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+				}
+				return
+			}
 
 			if let error = error {
-				self.extensionContext.cancelRequest(withError: error)
+				self.complete(cancelWith: error)
 			} else {
 				self.core = core
 				guard let item = databaseItem else { return }
@@ -135,10 +154,10 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
 			AppLockManager.shared.cancelAction = { [weak self] in
-				self?.extensionContext.cancelRequest(withError: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+				self?.complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 			}
 			AppLockManager.shared.successAction = { [weak self] in
-				self?.extensionContext.completeRequest()
+				self?.complete()
 			}
 
 			AppLockManager.shared.showLockscreenIfNeeded()
@@ -151,17 +170,19 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		OnMainThread {
 			if let currentController = self.themeNavigationController?.viewControllers.first as? CancelLabelViewController {
 				currentController.updateCancelLabels(with: message)
-			} else {
-				let cancelLabelViewController = UIStoryboard.init(name: "MainInterface", bundle: nil).instantiateViewController(withIdentifier: "CancelLabelViewController") as! CancelLabelViewController
+			} else if let cancelLabelViewController = UIStoryboard.init(name: "MainInterface", bundle: nil).instantiateViewController(withIdentifier: "CancelLabelViewController") as? CancelLabelViewController {
 				cancelLabelViewController.updateCancelLabels(with: message)
-				self.themeNavigationController?.viewControllers = [cancelLabelViewController]
+				cancelLabelViewController.cancelAction = { [weak self] in
+					self?.complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+				}
+				self.themeNavigationController?.viewControllers = [ cancelLabelViewController ]
 			}
 		}
 	}
 
 	@objc func dismissView() {
 		self.dismiss(animated: true) {
-			self.extensionContext.completeRequest()
+			self.complete()
 		}
 	}
 }
