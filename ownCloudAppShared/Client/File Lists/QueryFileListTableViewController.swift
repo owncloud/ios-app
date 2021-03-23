@@ -280,7 +280,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
  				if self.items.count == 0 {
  					if self.searchController?.searchBar.text != "" {
- 						self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+ 						self.messageView?.message(show: true, with: UIEdgeInsets(top: sortBar?.frame.size.height ?? 0, left: 0, bottom: 0, right: 0), imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
  					} else {
  						self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
  					}
