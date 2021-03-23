@@ -1,7 +1,8 @@
 = Task Scheduling
 
-Background tasks are scheduled based on the app's current context, and that context is based on a combination of factors. 
-These factors include:
+== Introduction
+
+Background tasks are scheduled based on the app's current context, and that context is based on a combination of factors. These factors include:
 
 * Is the app backgrounded or in the foreground?
 * Is WiFi available?
@@ -26,8 +27,9 @@ There are some things to be aware of, regarding Instant Photo Upload.
 * Before instant media upload can begin, the account and upload path have to be selected
 * Changes in the photo library are detected when the app goes into the foreground.
 * If a user removes the folder specified for instant upload, the upload task silently exits.
-* When a user first activates instant upload, the timestamp of the activation is stored and compared against the creation date of the assets to be uploaded. 
-  As soon as one asset is successfully uploaded, its creation timestamp is used to update the instant upload activation timestamp. This:
+* When a user first activates instant upload, the timestamp of the activation is stored and compared
+  against the creation date of the assets to be uploaded. As soon as one asset is successfully uploaded,
+  its creation timestamp is used to update the instant upload activation timestamp. This:
 ** Prevents assets being uploaded twice
 ** Removes the need to keep track of uploaded items in a database
 ** Please note, that already uploaded and edited asset is not going to be uploaded again
