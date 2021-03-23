@@ -42,6 +42,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
+	private let moreCellIdentifier = "moreCell"
+	private let moreCellAccessibilityIdentifier = "more-results"
 
 	private var _query : OCQuery
 	public override var query : OCQuery {
@@ -151,7 +153,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open override func registerCellClasses() {
 		super.registerCellClasses()
 
-		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "moreCell")
+		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: moreCellIdentifier)
 	}
 
 	// MARK: - Search events
@@ -303,11 +305,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		if indexPath.row < numberOfRows {
 			cell = super.tableView(tableView, cellForRowAt: indexPath)
 		} else {
-			let moreCell = tableView.dequeueReusableCell(withIdentifier: "moreCell", for: indexPath) as? ThemeTableViewCell
+			let moreCell = tableView.dequeueReusableCell(withIdentifier: moreCellIdentifier, for: indexPath) as? ThemeTableViewCell
 
-			moreCell?.accessibilityIdentifier = "more-results"
-			moreCell?.primaryTextLabel?.text = "Show more results".localized
-			moreCell?.primaryTextLabel?.textAlignment = .center
+			moreCell?.accessibilityIdentifier = moreCellAccessibilityIdentifier
+			moreCell?.textLabel?.text = "Show more results".localized
 
 			cell = moreCell
 		}
@@ -316,7 +317,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let cell = tableView.cellForRow(at: indexPath), cell.accessibilityIdentifier == "more-results" {
+		if let cell = tableView.cellForRow(at: indexPath), cell.accessibilityIdentifier == moreCellAccessibilityIdentifier {
 			maxResultCount += maxResultCountDefault
 			updateCustomSearchQuery()
 		} else {
