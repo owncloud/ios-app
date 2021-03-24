@@ -37,9 +37,13 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	public var quotaObservation : NSKeyValueObservation?
 	public var titleButtonThemeApplierToken : ThemeApplierToken?
 
+	public var breadCrumbsPush : Bool = false
+
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+	private var revealItemLocalID : String?
+	private var revealItemFound : Bool = false
 
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 	private let moreCellIdentifier = "moreCell"
@@ -91,8 +95,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.init(core: inCore, query: inQuery, rootViewController: nil)
 	}
 
-	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: UIViewController?) {
+	public init(core inCore: OCCore, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
+		revealItemLocalID = inItem?.localID
+		breadCrumbsPush = revealItemLocalID != nil
 		_query = inQuery
 
 		super.init(core: inCore, query: inQuery)
@@ -306,6 +312,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 		if indexPath.row < numberOfRows {
 			cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+			if revealItemLocalID != nil, let itemCell = cell as? ClientItemCell, let itemLocalID = itemCell.item?.localID {
+				itemCell.revealHighlight = (itemLocalID == revealItemLocalID)
+			}
 		} else {
 			let moreCell = tableView.dequeueReusableCell(withIdentifier: moreCellIdentifier, for: indexPath) as? ThemeTableViewCell
 
@@ -325,6 +335,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		} else {
 			super.tableView(tableView, didSelectRowAt: indexPath)
 		}
+	}
+
+	public override func showReveal(at path: IndexPath) -> Bool {
+		return (customSearchQuery != nil)
 	}
 
 	// MARK: - Table view delegate
@@ -497,6 +511,16 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		if let shortName = core?.bookmark.shortName {
 			tableViewController.bookmarkShortName = shortName
 		}
+		if breadCrumbsPush {
+			tableViewController.navigationHandler = { [weak self] (path) in
+				if let self = self, let core = self.core {
+					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+					queryViewController.breadCrumbsPush = true
+
+					self.navigationController?.pushViewController(queryViewController, animated: true)
+				}
+			}
+		}
 
 		if #available(iOS 13, *) {
  			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
@@ -529,6 +553,21 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
 		if query == self.query {
  			super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+
+			if let revealItemLocalID = revealItemLocalID, !revealItemFound {
+ 				var rowIdx : Int = 0
+
+ 				for item in items {
+ 					if item.localID == revealItemLocalID {
+						OnMainThread {
+							self.tableView.scrollToRow(at: IndexPath(row: rowIdx, section: 0), at: .middle, animated: true)
+						}
+						revealItemFound = true
+						break
+					}
+					rowIdx += 1
+				}
+			}
 
  			if let rootItem = self.query.rootItem, searchText == nil {
  				if query.queryPath != "/" {

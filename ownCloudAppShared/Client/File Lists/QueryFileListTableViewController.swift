@@ -39,7 +39,7 @@ public protocol MultiSelectSupport {
 	func populateToolbar()
 }
 
-open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
+open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, RevealItemHandling, OCQueryDelegate, UISearchResultsUpdating {
 
 	public var query : OCQuery
 
@@ -405,6 +405,8 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 				cell?.delegate = self
 			}
 
+			cell?.showRevealButton = self.showReveal(at: indexPath)
+
 			// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 			// Make sure we don't request the thumbnail multiple times in that case.
 			if newItem.displaysDifferent(than: cell?.item, in: core) {
@@ -421,6 +423,29 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		}
 
 		return cell!
+	}
+
+	public func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool {
+		if let parentPath = item.path?.parentPath {
+		   	let revealQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: parentPath), reveal: item, rootViewController: nil)
+
+			self.navigationController?.pushViewController(revealQueryViewController, animated: true)
+
+			return true
+		}
+		return false
+	}
+
+	public func showReveal(at path: IndexPath) -> Bool {
+		return showRevealButtons
+	}
+
+	public var showRevealButtons : Bool = false {
+		didSet {
+			if oldValue != showRevealButtons {
+				self.reloadTableData(ifNeeded: true)
+			}
+		}
 	}
 
 	// MARK: - Table view delegate

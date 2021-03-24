@@ -27,6 +27,11 @@ public protocol MoreItemHandling {
 	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
 }
 
+public protocol RevealItemHandling {
+	@discardableResult func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool
+	func showReveal(at path: IndexPath) -> Bool
+}
+
 public protocol InlineMessageSupport {
 	func hasInlineMessage(for item: OCItem) -> Bool
 	func showInlineMessageFor(item: OCItem)
@@ -86,6 +91,16 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 		if let moreItemHandling = self as? MoreItemHandling {
 			moreItemHandling.moreOptions(for: item, at: .moreItem, core: core, query: query, sender: cell)
+		}
+	}
+
+	open func revealButtonTapped(cell: ClientItemCell) {
+		guard let item = self.item(for: cell), let core = core else {
+			return
+		}
+
+		if let revealItemHandling = self as? RevealItemHandling {
+			revealItemHandling.reveal(item: item, core: core, sender: cell)
 		}
 	}
 

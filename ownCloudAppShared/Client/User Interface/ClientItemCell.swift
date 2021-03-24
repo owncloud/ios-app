@@ -23,6 +23,7 @@ public protocol ClientItemCellDelegate: class {
 
 	func moreButtonTapped(cell: ClientItemCell)
 	func messageButtonTapped(cell: ClientItemCell)
+	func revealButtonTapped(cell: ClientItemCell)
 
 	func hasMessage(for item: OCItem) -> Bool
 }
@@ -36,7 +37,8 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	private let smallSpacing : CGFloat = 2
 	private let iconViewWidth : CGFloat = 40
 	private let detailIconViewHeight : CGFloat = 15
-	private let moreButtonWidth : CGFloat = 60
+	private let moreButtonWidth : CGFloat = 45
+	private let revealButtonWidth : CGFloat = 35
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
@@ -56,9 +58,11 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	open var publicLinkStatusIconView : UIImageView = UIImageView()
 	open var moreButton : UIButton = UIButton()
 	open var messageButton : UIButton = UIButton()
+	open var revealButton : UIButton = UIButton()
 	open var progressView : ProgressView?
 
 	open var moreButtonWidthConstraint : NSLayoutConstraint?
+	open var revealButtonWidthConstraint : NSLayoutConstraint?
 
 	open var sharedStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
 	open var publicLinkStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
@@ -136,6 +140,8 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 		moreButton.translatesAutoresizingMaskIntoConstraints = false
 
+		revealButton.translatesAutoresizingMaskIntoConstraints = false
+
 		messageButton.translatesAutoresizingMaskIntoConstraints = false
 
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
@@ -164,6 +170,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		self.contentView.addSubview(publicLinkStatusIconView)
 		self.contentView.addSubview(cloudStatusIconView)
 		self.contentView.addSubview(moreButton)
+		self.contentView.addSubview(revealButton)
 		self.contentView.addSubview(messageButton)
 
 		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
@@ -171,6 +178,15 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if #available(iOS 13.4, *) {
 			moreButton.isPointerInteractionEnabled = true
 		}
+
+		if #available(iOS 13.4, *) {
+			revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
+			revealButton.isPointerInteractionEnabled = true
+		} else {
+			revealButton.setTitle("→", for: .normal)
+		}
+		revealButton.contentMode = .center
+		revealButton.isHidden = !showRevealButton
 
 		messageButton.setTitle("⚠️", for: .normal)
 		messageButton.contentMode = .center
@@ -180,6 +196,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		messageButton.isHidden = true
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .touchUpInside)
 		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
 
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
@@ -203,6 +220,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
+		revealButtonWidthConstraint = revealButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : 0)
 
 		cloudStatusIconViewZeroWidthConstraint = cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
 		sharedStatusIconViewZeroWidthConstraint = sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
@@ -244,11 +262,15 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
 			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
 
-			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			moreButtonWidthConstraint!,
-			moreButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+			moreButton.trailingAnchor.constraint(equalTo: revealButton.leadingAnchor),
+
+			revealButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+			revealButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+			revealButtonWidthConstraint!,
+			revealButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
 
 			messageButton.leadingAnchor.constraint(equalTo: moreButton.leadingAnchor),
 			messageButton.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor),
@@ -489,6 +511,16 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	}
 
 	// MARK: - Themeing
+	open var revealHighlight : Bool = false {
+		didSet {
+			if revealHighlight {
+				Log.debug("Highlighted!")
+			}
+
+			applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection)
+		}
+	}
+
 	override open func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let itemState = ThemeItemState(selected: self.isSelected)
 
@@ -504,6 +536,12 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 		if showingIcon, let item = item {
 			iconView.image = item.icon(fitInSize: iconSize)
+		}
+
+		if revealHighlight {
+			backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
+		} else {
+			backgroundColor = .clear
 		}
 	}
 
@@ -524,10 +562,35 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		}
 	}
 
+	var showRevealButton : Bool = false {
+		didSet {
+			if showRevealButton != oldValue {
+				self.setRevealButton(hidden: !showRevealButton, animated: false)
+			}
+		}
+	}
+
+	open func setRevealButton(hidden:Bool, animated: Bool = false) {
+		if hidden {
+			revealButtonWidthConstraint?.constant = 0
+		} else {
+			revealButtonWidthConstraint?.constant = revealButtonWidth
+		}
+		revealButton.isHidden = hidden
+		if animated {
+			UIView.animate(withDuration: 0.25) {
+				self.contentView.layoutIfNeeded()
+			}
+		} else {
+			self.contentView.layoutIfNeeded()
+		}
+	}
+
 	override open func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
 		setMoreButton(hidden: editing, animated: animated)
+		setRevealButton(hidden: editing ? true : !showRevealButton, animated: animated)
 	}
 
 	// MARK: - Actions
@@ -536,6 +599,9 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	}
 	@objc open func messageButtonTapped() {
 		self.delegate?.messageButtonTapped(cell: self)
+	}
+	@objc open func revealButtonTapped() {
+		self.delegate?.revealButtonTapped(cell: self)
 	}
 }
 
