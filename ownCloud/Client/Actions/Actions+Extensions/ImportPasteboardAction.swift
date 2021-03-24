@@ -24,7 +24,7 @@ import ownCloudAppShared
 class ImportPasteboardAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.importpasteboard") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Import from Clipboard".localized }
+	override class var name : String? { return "Paste".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
@@ -52,7 +52,7 @@ class ImportPasteboardAction : Action {
 		if pasteboard.changeCount == tabBarController.pasteboardChangedCounter {
 			// Internal Pasteboard
 			if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: false) {
-				if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem.copy"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+				if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.ocitem.copy"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
 					if let item = object as? OCItem, let name = item.name {
 						core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
 							if error != nil {
@@ -60,7 +60,7 @@ class ImportPasteboardAction : Action {
 							}
 						})
 					}
-				} else if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem.cut"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+				} else if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.ocitem.cut"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
 					if let item = object as? OCItem, let name = item.name {
 						core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
 							if error != nil {

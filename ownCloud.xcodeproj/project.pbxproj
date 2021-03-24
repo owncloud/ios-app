@@ -81,7 +81,6 @@
 		398393BF246D63B0001A212B /* branding-login-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BD246D63B0001A212B /* branding-login-logo.png */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220922344C30F0026C290 /* ImportPasteboardAction.swift */; };
-		399698FA260A3CF300E5AEBA /* CopyToPasteboardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220942344C30F0026C290 /* CopyToPasteboardAction.swift */; };
 		39969904260A3CF500E5AEBA /* CutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220932344C30F0026C290 /* CutAction.swift */; };
 		399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399725E0233DF39300FC3B94 /* Calendar+Extension.swift */; };
 		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
@@ -927,7 +926,6 @@
 		3912208123436EB80026C290 /* SortMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		391220922344C30F0026C290 /* ImportPasteboardAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportPasteboardAction.swift; sourceTree = "<group>"; };
 		391220932344C30F0026C290 /* CutAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutAction.swift; sourceTree = "<group>"; };
-		391220942344C30F0026C290 /* CopyToPasteboardAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyToPasteboardAction.swift; sourceTree = "<group>"; };
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		39265BB123D9987500B0C4CA /* MediaEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaEditingAction.swift; sourceTree = "<group>"; };
@@ -2059,7 +2057,6 @@
 		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				391220942344C30F0026C290 /* CopyToPasteboardAction.swift */,
 				391220932344C30F0026C290 /* CutAction.swift */,
 				391220922344C30F0026C290 /* ImportPasteboardAction.swift */,
 				39265BB123D9987500B0C4CA /* MediaEditingAction.swift */,
@@ -3951,7 +3948,6 @@
 				DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */,
 				4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
-				399698FA260A3CF300E5AEBA /* CopyToPasteboardAction.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				4C51727E22DE04BD001BC97F /* BackgroundFetchUpdateTaskAction.swift in Sources */,
 				4C05D8A5238708D40073EF50 /* MediaUploadStorage.swift in Sources */,

@@ -31,26 +31,28 @@ class CutAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.filter({return $0.isRoot}).count == 0 {
-			return .afterMiddle
-
+		if forContext.containsRoot {
+			return .none
 		}
 
-		return .none
+		return .middle
 	}
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let item = context.items.first, let viewController = context.viewController, let tabBarController = viewController.tabBarController as? ClientRootViewController else {
+		guard context.items.count > 0, let viewController = context.viewController, let tabBarController = viewController.tabBarController as? ClientRootViewController else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
-		if let fileData = item.serializedData() {
-			let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
-			pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.OCItem.cut")
-			tabBarController.pasteboardChangedCounter = UIPasteboard.general.changeCount
-		}
+		let items = context.items
+		items.forEach({ (item) in
+			if let fileData = item.serializedData() {
+				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
+				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.ocitem.cut")
+				tabBarController.pasteboardChangedCounter = UIPasteboard.general.changeCount
+			}
+		})
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
