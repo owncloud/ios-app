@@ -111,7 +111,11 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 					guard let self = self else { return }
 
 					OnMainThread {
-						if core.connectionStatus == .online {
+						if actionExtensionType == .links, core.connection.capabilities?.sharingAPIEnabled == false, core.connection.capabilities?.publicSharingEnabled == false, item.isShareable == false {
+							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
+						} else if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false {
+							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
+						} else if core.connectionStatus == .online {
 							self.coreConnectionStatusObservation?.invalidate()
 							self.coreConnectionStatusObservation = nil
 
@@ -139,10 +143,6 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 							if triedConnecting {
 								self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
 							}
-						} else if actionExtensionType == .links, core.connection.capabilities?.sharingAPIEnabled == false, core.connection.capabilities?.publicSharingEnabled == false, item.isShareable == false {
-							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
-						} else if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false {
-							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
 						}
 					}
 				}
