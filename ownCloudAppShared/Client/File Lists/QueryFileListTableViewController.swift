@@ -138,10 +138,11 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	open func applySearchFilter(for searchText: String?, to query: OCQuery) {
  		if let searchText = searchText {
+			let queryCondition = OCQueryCondition.fromSearchTerm(searchText)
  			let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
- 				if let itemName = item?.name {
- 					return itemName.localizedCaseInsensitiveContains(searchText)
- 				}
+ 				if let item = item, let queryCondition = queryCondition {
+	 				return queryCondition.fulfilled(by: item)
+				}
  				return false
  			}
 
@@ -356,10 +357,18 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		}
 	}
 
+	open func startQuery(_ theQuery: OCQuery) {
+		core?.start(theQuery)
+	}
+
+	open func stopQuery(_ theQuery: OCQuery) {
+		core?.stop(theQuery)
+	}
+
 	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		core?.start(query)
+		startQuery(query)
 
 		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
 			self?.updateQueryProgressSummary()
@@ -374,7 +383,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		queryStateObservation?.invalidate()
 		queryStateObservation = nil
 
-		core?.stop(query)
+		stopQuery(query)
 
 		queryProgressSummary = nil
 	}
