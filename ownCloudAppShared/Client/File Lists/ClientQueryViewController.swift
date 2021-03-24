@@ -141,6 +141,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	deinit {
+		customSearchQuery = nil
+
 		queryStateObservation = nil
 		quotaObservation = nil
 

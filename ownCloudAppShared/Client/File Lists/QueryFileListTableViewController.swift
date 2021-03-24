@@ -131,7 +131,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	// MARK: - Search: UISearchResultsUpdating Delegate
 	open func updateSearchResults(for searchController: UISearchController) {
-		let searchText = searchController.searchBar.text!
+		let searchText = searchController.searchBar.text ?? ""
 
 		applySearchFilter(for: (searchText == "") ? nil : searchText, to: query)
 	}
@@ -377,9 +377,6 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		core?.stop(query)
 
 		queryProgressSummary = nil
-
-		searchController?.searchBar.text = ""
-		searchController?.dismiss(animated: true, completion: nil)
 	}
 
 	// MARK: - Item retrieval
