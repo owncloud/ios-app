@@ -42,6 +42,9 @@ public protocol MultiSelectSupport {
 open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, RevealItemHandling, OCQueryDelegate, UISearchResultsUpdating {
 
 	public var query : OCQuery
+	open var activeQuery : OCQuery {
+		return query
+	}
 
 	public var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
 
@@ -186,7 +189,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	override open func performPullToRefreshAction() {
 		super.performPullToRefreshAction()
-		core?.reload(query)
+		core?.reload(activeQuery)
 	}
 
 	open func updateQueryProgressSummary() {
@@ -215,6 +218,8 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			default:
 				summary.message = "Please wait…".localized
 		}
+
+		Log.debug("Query(p=\(unsafeBitCast(query, to: Int.self)), custom=\(query.isCustom)) status=\(summary.message ?? "?")")
 
 		if pullToRefreshControl != nil {
 			if query.state == .idle {
@@ -245,16 +250,22 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	}
 
 	open func queryHasChangesAvailable(_ query: OCQuery) {
-		queryRefreshRateLimiter.runRateLimitedBlock {
-			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
-				OnMainThread {
-					self.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+		if query == activeQuery {
+			queryRefreshRateLimiter.runRateLimitedBlock {
+				query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
+					OnMainThread {
+						self.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+					}
 				}
 			}
 		}
 	}
 
 	open func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
+		guard query == activeQuery else {
+			return
+		}
+
 		if query.state.isFinal {
  			OnMainThread {
  				if self.pullToRefreshControl?.isRefreshing == true {
@@ -357,18 +368,12 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		}
 	}
 
-	open func startQuery(_ theQuery: OCQuery) {
-		core?.start(theQuery)
-	}
-
-	open func stopQuery(_ theQuery: OCQuery) {
-		core?.stop(theQuery)
-	}
-
 	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		startQuery(query)
+		Log.debug("Query(p=\(unsafeBitCast(query, to: Int.self)), start/viewWillAppear")
+
+		core?.start(query)
 
 		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
 			self?.updateQueryProgressSummary()
@@ -380,10 +385,12 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
+		Log.debug("Query(p=\(unsafeBitCast(query, to: Int.self)), stop/viewWillDisappear")
+
 		queryStateObservation?.invalidate()
 		queryStateObservation = nil
 
-		stopQuery(query)
+		core?.stop(query)
 
 		queryProgressSummary = nil
 	}

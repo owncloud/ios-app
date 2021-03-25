@@ -49,33 +49,27 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	private let moreCellIdentifier = "moreCell"
 	private let moreCellAccessibilityIdentifier = "more-results"
 
-	private var _query : OCQuery
-	public override var query : OCQuery {
- 		set {
- 			_query = newValue
- 		}
+	open override var activeQuery : OCQuery {
+		if let customSearchQuery = customSearchQuery {
+			return customSearchQuery
+		} else {
+			return query
+		}
+	}
 
- 		get {
- 			if let customSearchQuery = customSearchQuery {
- 				return customSearchQuery
- 			} else {
- 				return _query
- 			}
- 		}
- 	}
  	var customSearchQuery : OCQuery? {
  		willSet {
- 			if customSearchQuery != newValue, let query = customSearchQuery {
- 				core?.stop(query)
- 				query.delegate = nil
+ 			if customSearchQuery != newValue, let customQuery = customSearchQuery {
+ 				core?.stop(customQuery)
+ 				customQuery.delegate = nil
  			}
  		}
 
  		didSet {
- 			if customSearchQuery != nil, let query = customSearchQuery {
- 				query.delegate = self
- 				query.sortComparator = sortMethod.comparator(direction: sortDirection)
- 				core?.start(query)
+ 			if customSearchQuery != nil, let customQuery = customSearchQuery {
+ 				customQuery.delegate = self
+ 				customQuery.sortComparator = sortMethod.comparator(direction: sortDirection)
+ 				core?.start(customQuery)
  			}
  		}
  	}
@@ -99,7 +93,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		clientRootViewController = rootViewController
 		revealItemLocalID = inItem?.localID
 		breadCrumbsPush = revealItemLocalID != nil
-		_query = inQuery
 
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
@@ -193,7 +186,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
  		let comparator = sortMethod.comparator(direction: sortDirection)
 
- 		_query.sortComparator = comparator
+ 		query.sortComparator = comparator
  		customSearchQuery?.sortComparator = comparator
 
 		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
@@ -226,9 +219,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
  			self.customSearchQuery = nil
  		}
 
- 		super.applySearchFilter(for: searchText, to: _query)
+ 		super.applySearchFilter(for: searchText, to: query)
 
- 		self.queryHasChangesAvailable(query)
+ 		self.queryHasChangesAvailable(activeQuery)
  	}
 
 	// MARK: - View controller events
@@ -266,14 +259,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
  		searchController?.delegate = self
  	}
-
-	open override func startQuery(_ theQuery: OCQuery) {
-		if theQuery == customSearchQuery {
-			self.updateCustomSearchQuery()
-		} else {
-			super.startQuery(theQuery)
-		}
-	}
+//
+//	open override func startQuery(_ theQuery: OCQuery) {
+//		if theQuery == customSearchQuery {
+//			self.updateCustomSearchQuery()
+//		} else {
+//			super.startQuery(theQuery)
+//		}
+//	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -411,8 +404,11 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
-
 	open func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+		if customSearchQuery != nil {
+			// No dropping on a smart search toolbar
+			return false
+		}
 		return true
 	}
 
@@ -559,45 +555,47 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Updates
 	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		if query == self.query {
- 			super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+		guard query == activeQuery else {
+			return
+		}
 
-			if let revealItemLocalID = revealItemLocalID, !revealItemFound {
- 				var rowIdx : Int = 0
+		super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
 
- 				for item in items {
- 					if item.localID == revealItemLocalID {
-						OnMainThread {
-							self.tableView.scrollToRow(at: IndexPath(row: rowIdx, section: 0), at: .middle, animated: true)
-						}
-						revealItemFound = true
-						break
+		if let revealItemLocalID = revealItemLocalID, !revealItemFound {
+			var rowIdx : Int = 0
+
+			for item in items {
+				if item.localID == revealItemLocalID {
+					OnMainThread {
+						self.tableView.scrollToRow(at: IndexPath(row: rowIdx, section: 0), at: .middle, animated: true)
 					}
-					rowIdx += 1
+					revealItemFound = true
+					break
 				}
+				rowIdx += 1
+			}
+		}
+
+		if let rootItem = self.query.rootItem, searchText == nil {
+			if query.queryPath != "/" {
+				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+				if self.items.count == 1 {
+					totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
+				} else if self.items.count > 1 {
+					totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
+				}
+				self.updateFooter(text: totalSize)
 			}
 
- 			if let rootItem = self.query.rootItem, searchText == nil {
- 				if query.queryPath != "/" {
-					var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-					if self.items.count == 1 {
-						totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
-					} else if self.items.count > 1 {
-						totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
-					}
-					self.updateFooter(text: totalSize)
- 				}
-
-				if #available(iOS 13.0, *) {
-					if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
-						// Use parent folder for UI state restoration
-						let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
-						view.window?.windowScene?.userActivity = activity.openItemUserActivity
-					}
+			if #available(iOS 13.0, *) {
+				if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+					// Use parent folder for UI state restoration
+					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
+					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
- 			} else {
- 				self.updateFooter(text: nil)
 			}
+		} else {
+			self.updateFooter(text: nil)
 		}
 	}
 
