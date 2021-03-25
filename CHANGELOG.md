@@ -13,6 +13,7 @@ Summary
 * Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+* Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
 Details
 -------
@@ -51,6 +52,14 @@ Details
    navigation bar will be hidden.
 
    https://github.com/owncloud/ios-app/issues/704
+
+* Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+
+   Added two custom actions to the File Provider: Sharing and Public Links, which will open the UI
+   for adding and editing sharing and public links to the selected item directly from the file
+   provider.
+
+   https://github.com/owncloud/ios-app/pull/910
 
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================

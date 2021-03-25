@@ -117,7 +117,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	private var didSetupView : Bool = false
 
-	private let searchResultsView = PDFSearchResultsView()
+	public let searchResultsView = PDFSearchResultsView()
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if let source = source, let document = PDFDocument(url: source) {
