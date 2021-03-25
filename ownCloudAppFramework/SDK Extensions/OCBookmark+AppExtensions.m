@@ -41,12 +41,12 @@
 		NSString *userNamePrefix = @"";
 		NSString *displayName = nil, *userName = nil;
 
-		if ((displayName = self.displayName) != nil)
+		if (((displayName = self.displayName) != nil) && (displayName.length > 0))
 		{
 			userNamePrefix = [displayName stringByAppendingString:@"@"];
 		}
 
-		if ((userNamePrefix.length == 0) && ((userName = self.userName) != nil))
+		if ((userNamePrefix.length == 0) && ((userName = self.userName) != nil) && (userName.length > 0))
 		{
 			userNamePrefix = [userName stringByAppendingString:@"@"];
 		}
