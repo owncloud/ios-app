@@ -43,3 +43,14 @@
 "%lu years" = "%lu years";
 
 "%@ already unlocked for %@." = "%@ already unlocked for %@.";
+
+/* Search keywords */
+"type" = "type";
+"before" = "before";
+"after" = "after";
+"on" = "on";
+"d" = "d"; /* short-form for "day" */
+"w" = "w"; /* short-form for "week" */
+"m" = "m"; /* short-form for "month" */
+"y" = "y"; /* short-form for "year" */
+

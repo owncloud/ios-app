@@ -1,8 +1,8 @@
 //
-//  NSDate+ComputedTimes.h
-//  ownCloud
+//  NSString+ByteCountParser.h
+//  ownCloudApp
 //
-//  Created by Felix Schwarz on 19.03.21.
+//  Created by Felix Schwarz on 30.03.21.
 //  Copyright © 2021 ownCloud GmbH. All rights reserved.
 //
 
@@ -20,14 +20,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSDate (ComputedTimes)
+@interface NSString (ByteCountParser)
 
-+ (instancetype)startOfRelativeDay:(NSInteger)dayOffset;
-+ (instancetype)startOfRelativeWeek:(NSInteger)weekOffset;
-+ (instancetype)startOfRelativeMonth:(NSInteger)monthOffset;
-+ (instancetype)startOfRelativeYear:(NSInteger)yearOffset;
-
-+ (nullable instancetype)dateFromKeywordString:(NSString *)dateString;
+- (nullable NSNumber *)byteCountNumber;
 
 @end
 

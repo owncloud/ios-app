@@ -33,19 +33,19 @@
 	return ([calendar dateFromComponents:components]);
 }
 
-+ (instancetype)startOfDay:(NSInteger)dayOffset
++ (instancetype)startOfRelativeDay:(NSInteger)dayOffset
 {
 	return ([[NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval)(dayOffset * 24 * 60 * 60)] recomputeWithUnits:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear modifier:nil]);
 }
 
-+ (instancetype)startOfWeek:(NSInteger)weekOffset
++ (instancetype)startOfRelativeWeek:(NSInteger)weekOffset
 {
 	return ([[NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval)(weekOffset * 7 * 24 * 60 * 60)] recomputeWithUnits:NSCalendarUnitWeekday|NSCalendarUnitWeekOfMonth|NSCalendarUnitMonth|NSCalendarUnitYear modifier:^(NSDateComponents *components) {
 		components.weekday = 2; // Monday, 1 = Sunday
 	}]);
 }
 
-+ (instancetype)startOfMonth:(NSInteger)monthOffset
++ (instancetype)startOfRelativeMonth:(NSInteger)monthOffset
 {
 	return ([NSDate.date recomputeWithUnits:NSCalendarUnitMonth|NSCalendarUnitYear modifier:^(NSDateComponents *components) {
 		if (monthOffset < 0)
@@ -89,7 +89,7 @@
 	}]);
 }
 
-+ (instancetype)startOfYear:(NSInteger)yearOffset
++ (instancetype)startOfRelativeYear:(NSInteger)yearOffset
 {
 	return ([NSDate.date recomputeWithUnits:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear modifier:^(NSDateComponents *components) {
 		components.day = 1;
@@ -97,5 +97,44 @@
 		components.year += yearOffset;
 	}]);
 }
+
++ (nullable instancetype)dateFromKeywordString:(NSString *)dateString
+{
+	NSArray<NSString *> *components = [dateString componentsSeparatedByString:@"-"];
+	NSString *yearString  = ((components.firstObject != nil) && (components.firstObject.length == 4)) ? components.firstObject : nil;
+	NSString *monthString = ((components.count >= 2) && (components[1].length > 0)) ? components[1] : nil;
+	NSString *dayString   = ((components.count == 3) && (components[2].length > 0)) ? components[2] : nil;
+
+	if (yearString != nil)
+	{
+		if (components.count == 1)
+		{
+			return ([NSDate.date recomputeWithUnits:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear modifier:^(NSDateComponents *components) {
+				components.year = yearString.integerValue;
+				components.month = 1;
+				components.day = 1;
+			}]);
+		}
+		else if ((components.count == 2) && (monthString != nil))
+		{
+			return ([NSDate.date recomputeWithUnits:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear modifier:^(NSDateComponents *components) {
+				components.year = yearString.integerValue;
+				components.month = monthString.integerValue;
+				components.day = 1;
+			}]);
+		}
+		else if ((components.count == 3) && (monthString != nil) && (dayString != nil))
+		{
+			return ([NSDate.date recomputeWithUnits:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear modifier:^(NSDateComponents *components) {
+				components.year = yearString.integerValue;
+				components.month = monthString.integerValue;
+				components.day = dayString.integerValue;
+			}]);
+		}
+	}
+
+	return (nil);
+}
+
 
 @end

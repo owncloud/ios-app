@@ -18,6 +18,7 @@
 
 #import "OCQueryCondition+SearchSegmenter.h"
 #import "NSDate+ComputedTimes.h"
+#import "NSString+ByteCountParser.h"
 
 @implementation NSString (SearchSegmenter)
 
@@ -119,19 +120,19 @@
 	}
 	else if ([segmentStringLowercase isEqual:@":today"])
 	{
-		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfDay:0]]);
+		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeDay:0]]);
 	}
 	else if ([segmentStringLowercase isEqual:@":week"])
 	{
-		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfWeek:0]]);
+		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeWeek:0]]);
 	}
 	else if ([segmentStringLowercase isEqual:@":month"])
 	{
-		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfMonth:0]]);
+		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeMonth:0]]);
 	}
 	else if ([segmentStringLowercase isEqual:@":year"])
 	{
-		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfYear:0]]);
+		return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:0]]);
 	}
 	else if ([segmentStringLowercase containsString:@":"])
 	{
@@ -149,25 +150,62 @@
 				{
 					OCQueryCondition *condition = nil;
 
-					if ([modifier isEqual:@"type"])
+					#define OCLocalizedKeyword(x) OCLocalized(x).lowercaseString
+
+					if ([modifier isEqual:@"type"] || [modifier isEqual:OCLocalizedKeyword(@"type")])
 					{
-						condition = [OCQueryCondition where:OCItemPropertyNameName endsWith:parameter];
+						condition = [OCQueryCondition where:OCItemPropertyNameName endsWith:[@"." stringByAppendingString:parameter]];
 					}
-					else if ([modifier isEqual:@"days"] || [modifier isEqual:@"day"])
+					else if ([modifier isEqual:@"after"] || [modifier isEqual:OCLocalizedKeyword(@"after")])
 					{
-						condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfDay:-parameter.integerValue]];
+						NSDate *afterDate;
+
+						if ((afterDate = [NSDate dateFromKeywordString:parameter]) != nil)
+						{
+							condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:afterDate];
+						}
 					}
-					else if ([modifier isEqual:@"weeks"] || [modifier isEqual:@"week"])
+					else if ([modifier isEqual:@"before"] || [modifier isEqual:OCLocalizedKeyword(@"before")])
 					{
-						condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfWeek:-parameter.integerValue]];
+						NSDate *beforeDate;
+
+						if ((beforeDate = [NSDate dateFromKeywordString:parameter]) != nil)
+						{
+							condition = [OCQueryCondition where:OCItemPropertyNameLastModified isLessThan:beforeDate];
+						}
 					}
-					else if ([modifier isEqual:@"months"] || [modifier isEqual:@"month"])
+					else if ([modifier isEqual:@"on"] || [modifier isEqual:OCLocalizedKeyword(@"on")])
 					{
-						condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfMonth:-parameter.integerValue]];
+						NSDate *onStartDate = nil, *onEndDate = nil;
+
+						if ((onStartDate = [NSDate dateFromKeywordString:parameter]) != nil)
+						{
+							onStartDate = [onStartDate dateByAddingTimeInterval:-1];
+							onEndDate = [onStartDate dateByAddingTimeInterval:60*60*24+2];
+
+							condition = [OCQueryCondition require:@[
+								[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:onStartDate],
+								[OCQueryCondition where:OCItemPropertyNameLastModified isLessThan:onEndDate]
+							]];
+						}
 					}
-					else if ([modifier isEqual:@"years"] || [modifier isEqual:@"year"])
+					else if ([modifier isEqual:@"smaller"] || [modifier isEqual:OCLocalizedKeyword(@"smaller")])
 					{
-						condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfYear:-parameter.integerValue]];
+						NSNumber *byteCount = [parameter byteCountNumber];
+
+						if (byteCount != nil)
+						{
+							condition = [OCQueryCondition where:OCItemPropertyNameSize isLessThan:byteCount];
+						}
+					}
+					else if ([modifier isEqual:@"greater"] || [modifier isEqual:OCLocalizedKeyword(@"greater")])
+					{
+						NSNumber *byteCount = [parameter byteCountNumber];
+
+						if (byteCount != nil)
+						{
+							condition = [OCQueryCondition where:OCItemPropertyNameSize isGreaterThan:byteCount];
+						}
 					}
 					else if ([modifier isEqual:@""])
 					{
@@ -184,21 +222,21 @@
 							NSInteger numParam = numString.integerValue;
 							NSString *timeLabel = [parameter substringFromIndex:parameter.length-1].lowercaseString;
 
-							if ([timeLabel isEqual:@"d"])
+							if ([timeLabel isEqual:@"d"] || [timeLabel isEqual:OCLocalizedKeyword(@"d")])
 							{
-								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfDay:-numParam]];
+								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeDay:-numParam]];
 							}
-							else if ([timeLabel isEqual:@"w"])
+							else if ([timeLabel isEqual:@"w"] || [timeLabel isEqual:OCLocalizedKeyword(@"w")])
 							{
-								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfWeek:-numParam]];
+								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeWeek:-numParam]];
 							}
-							else if ([timeLabel isEqual:@"m"])
+							else if ([timeLabel isEqual:@"m"] || [timeLabel isEqual:OCLocalizedKeyword(@"m")])
 							{
-								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfMonth:-numParam]];
+								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeMonth:-numParam]];
 							}
-							else if ([timeLabel isEqual:@"y"])
+							else if ([timeLabel isEqual:@"y"] || [timeLabel isEqual:OCLocalizedKeyword(@"y")])
 							{
-								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfYear:-numParam]];
+								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:-numParam]];
 							}
 						}
 					}
@@ -218,11 +256,12 @@
 			{
 				return ([OCQueryCondition anyOf:orConditions]);
 			}
-			else if ([modifier isEqual:@"type"]   ||
-				 [modifier isEqual:@"days"]   || [modifier isEqual:@"day"]   ||
-				 [modifier isEqual:@"weeks"]  || [modifier isEqual:@"week"]  ||
-				 [modifier isEqual:@"months"] || [modifier isEqual:@"month"] ||
-				 [modifier isEqual:@"years"]  || [modifier isEqual:@"year"]
+			else if ([modifier isEqual:@"type"]    || [modifier isEqual:OCLocalized(@"type")]    ||
+				 [modifier isEqual:@"after"]   || [modifier isEqual:OCLocalized(@"after")]   ||
+				 [modifier isEqual:@"before"]  || [modifier isEqual:OCLocalized(@"before")]  ||
+				 [modifier isEqual:@"on"]      || [modifier isEqual:OCLocalized(@"on")]      ||
+				 [modifier isEqual:@"greater"] || [modifier isEqual:OCLocalized(@"greater")] ||
+				 [modifier isEqual:@"smaller"] || [modifier isEqual:OCLocalized(@"smaller")]
 				)
 			{
 				// Modifiers without parameters

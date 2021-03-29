@@ -62,18 +62,18 @@
 
 - (void)testDateComputations
 {
-	NSLog(@"Start of day(-2):   %@", [NSDate startOfDay:-2]);
-	NSLog(@"Start of day( 0):   %@", [NSDate startOfDay:0]);
-	NSLog(@"Start of day(+2):   %@", [NSDate startOfDay:2]);
-	NSLog(@"Start of week(-1):  %@", [NSDate startOfWeek:-1]);
-	NSLog(@"Start of week( 0):  %@", [NSDate startOfWeek:0]);
-	NSLog(@"Start of week(+1):  %@", [NSDate startOfWeek:1]);
-	NSLog(@"Start of month(-1): %@", [NSDate startOfMonth:-1]);
-	NSLog(@"Start of month( 0): %@", [NSDate startOfMonth:0]);
-	NSLog(@"Start of month(+1): %@", [NSDate startOfMonth:1]);
-	NSLog(@"Start of year(-1):  %@", [NSDate startOfYear:-1]);
-	NSLog(@"Start of year( 0):  %@", [NSDate startOfYear: 0]);
-	NSLog(@"Start of year(+1):  %@", [NSDate startOfYear:+2]);
+	NSLog(@"Start of day(-2):   %@", [NSDate startOfRelativeDay:-2]);
+	NSLog(@"Start of day( 0):   %@", [NSDate startOfRelativeDay:0]);
+	NSLog(@"Start of day(+2):   %@", [NSDate startOfRelativeDay:2]);
+	NSLog(@"Start of week(-1):  %@", [NSDate startOfRelativeWeek:-1]);
+	NSLog(@"Start of week( 0):  %@", [NSDate startOfRelativeWeek:0]);
+	NSLog(@"Start of week(+1):  %@", [NSDate startOfRelativeWeek:1]);
+	NSLog(@"Start of month(-1): %@", [NSDate startOfRelativeMonth:-1]);
+	NSLog(@"Start of month( 0): %@", [NSDate startOfRelativeMonth:0]);
+	NSLog(@"Start of month(+1): %@", [NSDate startOfRelativeMonth:1]);
+	NSLog(@"Start of year(-1):  %@", [NSDate startOfRelativeYear:-1]);
+	NSLog(@"Start of year( 0):  %@", [NSDate startOfRelativeYear: 0]);
+	NSLog(@"Start of year(+1):  %@", [NSDate startOfRelativeYear:+2]);
 }
 
 @end

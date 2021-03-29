@@ -339,6 +339,8 @@
 		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
 		DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */; };
 		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
+		DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */ = {isa = PBXBuildFile; fileRef = DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */; };
+		DC70398626128B89009F2DC1 /* NSString+ByteCountParser.m in Sources */ = {isa = PBXBuildFile; fileRef = DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */; };
 		DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */; };
 		DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */ = {isa = PBXBuildFile; fileRef = DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1289,6 +1291,8 @@
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
 		DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = PLCrashReporter.LICENSE; sourceTree = "<group>"; };
 		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
+		DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+ByteCountParser.h"; sourceTree = "<group>"; };
+		DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+ByteCountParser.m"; sourceTree = "<group>"; };
 		DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZIPArchive.h; sourceTree = "<group>"; };
 		DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIPArchive.m; sourceTree = "<group>"; };
 		DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCCore+BundleImport.h"; sourceTree = "<group>"; };
@@ -2669,6 +2673,8 @@
 				DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */,
 				DCCD776B2604C81B00098573 /* NSDate+ComputedTimes.m */,
 				DCCD776A2604C81B00098573 /* NSDate+ComputedTimes.h */,
+				DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */,
+				DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */,
 			);
 			path = "Foundation Extensions";
 			sourceTree = "<group>";
@@ -3141,6 +3147,7 @@
 				DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
+				DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */,
 				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
 				DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */,
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
@@ -4270,6 +4277,7 @@
 				DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */,
 				DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */,
 				DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */,
+				DC70398626128B89009F2DC1 /* NSString+ByteCountParser.m in Sources */,
 				DCFEFE3A236877A7009A142F /* OCLicenseFeature.m in Sources */,
 				DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */,
 				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
