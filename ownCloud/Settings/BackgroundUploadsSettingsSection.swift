@@ -143,7 +143,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		// Add section footer with detailed explanations
 		var footerText = ""
 		if #available(iOS 13, *) {
-			footerText += "if you would like background media uploads to be more reliable, you should enable background location updates.".localized
+			footerText += "If you would like background media uploads to be more reliable, you should enable background location updates.".localized
 		} else {
 			footerText += "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.".localized
 		}

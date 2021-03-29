@@ -540,7 +540,7 @@
 "Enable background uploads" = "Aktiviere Hintergrund-Uploads";
 "Use background location updates" = "Verwende Hintergrund Standortaktualisierung";
 "Background upload notifications" = "Hintergrund Upload-Benachrichtigungen";
-"if you would like background media uploads to be more reliable, you should enable background location updates." = "Wenn Sie möchten, dass das Hochladen von Hintergrundmedien zuverlässiger ist, sollten Sie Aktualisierungen des Hintergrundstandorts aktivieren.";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "Wenn Sie möchten, dass das Hochladen von Hintergrundmedien zuverlässiger ist, sollten Sie Aktualisierungen des Hintergrundstandorts aktivieren.";
 "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Das Hochladen von Hintergrundmedien hängt von Standortaktualisierungen ab und funktioniert nicht mehr, wenn die Berechtigungen zur Standorterfassung widerrufen werden.";
 "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Andernfalls hängt das Hochladen von Hintergrundmedien mithilfe der Hintergrundaktualisierungstechnologie davon ab, wie häufig Sie die App verwenden.";
 "Location permission denied" = "Standortberechtigung verweigert";
