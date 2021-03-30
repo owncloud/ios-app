@@ -54,6 +54,10 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 			if OCBookmarkManager.shared.bookmarks.count > 0, let userDefaults = OCAppIdentity.shared.userDefaults {
 				if self.autoUploadSection == nil {
 					self.autoUploadSection = AutoUploadSettingsSection(userDefaults: userDefaults)
+
+					self.autoUploadSection?.changeHandler = { [weak self] in
+						self?.backgroundUploadsSection?.updateUI()
+					}
 				}
 				if self.backgroundUploadsSection == nil {
 					self.backgroundUploadsSection = BackgroundUploadsSettingsSection(userDefaults: userDefaults)

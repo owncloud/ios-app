@@ -171,7 +171,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		self.viewController?.present(alertController, animated: true, completion: nil)
 	}
 
-	private func updateUI() {
+	public func updateUI() {
 		let enableRows = self.userDefaults.instantUploadPhotos || self.userDefaults.instantUploadVideos
 		backgroundUploadsRow?.enabled = enableRows
 		backgroundLocationRow?.enabled = enableRows

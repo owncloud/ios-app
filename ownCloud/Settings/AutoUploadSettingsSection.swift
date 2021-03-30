@@ -146,6 +146,7 @@ extension UserDefaults {
 class AutoUploadSettingsSection: SettingsSection {
 
 	enum MediaType { case photo, video }
+	var changeHandler : (() -> Void)?
 
 	private static let photoUploadBookmarkAndPathSelectionRowIdentifier = "photo-upload-bookmark-path"
 	private static let videoUploadBookmarkAndPathSelectionRowIdentifier = "video-upload-bookmark-path"
@@ -264,11 +265,14 @@ class AutoUploadSettingsSection: SettingsSection {
 						self.showAutoUploadDisabledAlert()
 					}
 					self.instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
+
+					self.changeHandler?()
 				}
 			}
 		} else {
 			self.userDefaults.resetInstantPhotoUploadConfiguration()
 			self.instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
+			changeHandler?()
 		}
 
 		if let bookmark = getSelectedBookmark(for: .video), let path = userDefaults.instantVideoUploadPath, userDefaults.instantUploadVideos == true {
@@ -285,11 +289,14 @@ class AutoUploadSettingsSection: SettingsSection {
 						self.showAutoUploadDisabledAlert()
 					}
 					self.instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
+
+					self.changeHandler?()
 				}
 			}
 		} else {
 			self.userDefaults.resetInstantVideoUploadConfiguration()
 			self.instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
+			changeHandler?()
 		}
 	}
 
