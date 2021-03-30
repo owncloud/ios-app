@@ -109,6 +109,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		self.add(row: backgroundLocationRow!)
 
 		// Add option to enable local notifications reporting that some number of media files got enqueued for upload
+
 		notificationsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				if enableSwitch.isOn {
@@ -129,7 +130,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				}
 
 			}
-			}, title: "Background upload notifications".localized, value: false, identifier: "background-upload-notifications")
+			}, title: "Background upload notifications".localized, value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
 
 		self.add(row: notificationsRow!)
 
