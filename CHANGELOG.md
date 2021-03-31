@@ -11,6 +11,7 @@ Summary
 * Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
@@ -37,6 +38,13 @@ Details
    If a passcode was enabled or disabled in the settings, the UI section was not updated.
 
    https://github.com/owncloud/ios-app/issues/923
+
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+
+   The "Go to Page" option for PDF files has been reallocated to the Actions menu, and is also
+   available by tapping on the page label.
+
+   https://github.com/owncloud/enterprise/issues/4448
 
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 
