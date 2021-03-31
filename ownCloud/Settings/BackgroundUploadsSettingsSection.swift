@@ -121,14 +121,16 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 									enableSwitch.isOn = granted
 									userDefaults.backgroundMediaUploadsNotificationsEnabled = granted
 								}
-
 							}
+						} else if settings.authorizationStatus == .authorized {
+							userDefaults.backgroundMediaUploadsNotificationsEnabled = true
+						} else {
+							userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 						}
 					})
 				} else {
 					userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 				}
-
 			}
 			}, title: "Background upload notifications".localized, value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
 
