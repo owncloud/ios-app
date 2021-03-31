@@ -1,0 +1,5 @@
+Change: "Go to Page" reallocated in PDF previews
+
+The "Go to Page" option for PDF files has been reallocated to the Actions menu, and is also available by tapping on the page label.
+
+https://github.com/owncloud/enterprise/issues/4448
