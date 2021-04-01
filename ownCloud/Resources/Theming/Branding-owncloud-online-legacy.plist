@@ -6,6 +6,8 @@
 	<false/>
 	<key>canEditAccount</key>
 	<true/>
+	<key>enableReviewPrompt</key>
+	<true/>
 	<key>organizationName</key>
 	<string>ownCloud.online</string>
 	<key>feedbackMail</key>
