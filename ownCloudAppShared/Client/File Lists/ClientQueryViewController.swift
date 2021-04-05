@@ -456,7 +456,6 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 
 					destinationItem =  rootItem
-
 				}
 
 				// Move Items in the same Account
@@ -475,9 +474,6 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 							srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
 								if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
 									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (error, _, _, _) in
-										if error == nil {
-
-										}
 									}
 								}
 							})
