@@ -222,7 +222,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				}
 			}
 		}
-
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
@@ -492,7 +491,9 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					kUTTypeImage,
 					kUTTypeMovie,
 					kUTTypePDF,
-					kUTTypeData
+					kUTTypeRTF,
+					kUTTypeHTML,
+					kUTTypePlainText
 				]
 				var useUTI : String?
 				var useIndex : Int = Int.max
@@ -514,11 +515,26 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 				}
 
-				guard let loadUTI = useUTI else { return }
+				if useUTI == nil {
+					useUTI = kUTTypeData as String
+				}
 
-				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: loadUTI) { (url, _ error) in
+				var fileName: String?
+
+				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
 					guard let url = url else { return }
-					self.upload(itemURL: url, name: url.lastPathComponent)
+
+					if useUTI == kUTTypeUTF8PlainText as String {
+						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(16) + ".txt")
+					}
+
+					if fileName == nil {
+						fileName = url.lastPathComponent
+					}
+
+					guard let name = fileName else { return }
+
+					self.upload(itemURL: url, name: name)
 				}
 			}
 		}
