@@ -1,0 +1,4 @@
+Bugfix: Accessing hyperlinks in PDF documents
+Tap on hyperlinks in PDF documents opens the link.
+
+https://github.com/owncloud/enterprise/issues/4432

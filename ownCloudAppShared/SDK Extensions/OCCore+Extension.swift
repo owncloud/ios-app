@@ -21,7 +21,7 @@ import ownCloudSDK
 
 extension OCCore {
 
-	func unifiedShares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
+	public func unifiedShares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
 		let combinedShares : NSMutableArray = NSMutableArray()
 		let dispatchGroup = DispatchGroup()
 
@@ -88,15 +88,15 @@ extension OCCore {
 		return nil
 	}
 
-	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
+	@discardableResult public func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
 		return retrieveShares(for: item, scope: .sharedWithUser, initialPopulationHandler: initialPopulationHandler, allowPartialMatch: allowPartialMatch, keepRunning: keepRunning)
 	}
 
-	@discardableResult func acceptedCloudShares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
+	@discardableResult public func acceptedCloudShares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
 		return retrieveShares(for: item, scope: .acceptedCloudShares, initialPopulationHandler: initialPopulationHandler, allowPartialMatch: allowPartialMatch, keepRunning: keepRunning)
 	}
 
-	@discardableResult func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool) -> OCShareQuery? {
+	@discardableResult public func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool) -> OCShareQuery? {
 		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				initialPopulationHandler(query.queryResults)
@@ -116,7 +116,7 @@ extension OCCore {
 		return nil
 	}
 
-	func retrieveParentItems(for item: OCItem) -> [OCItem] {
+	public func retrieveParentItems(for item: OCItem) -> [OCItem] {
 		var parentItems : [OCItem] = []
 
 		if item.parentLocalID != nil {

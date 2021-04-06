@@ -189,7 +189,7 @@
 "After 1 minute" = "Za 1 minutu";
 "After 5 minutes" = "Za 5 minut";
 "After 30 minutes" = "Za 30 minut";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Prosím, nastavte svůj e-mailový účet";
 "You need to configure an email account first to be able to send emails." = "Abyste mohli odesílat e-maily, nejprve musíte nastavit e-mailový účet.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";

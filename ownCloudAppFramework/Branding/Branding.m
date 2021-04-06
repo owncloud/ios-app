@@ -32,7 +32,96 @@
 	// Provide hook to allow Swift extensions in the app to register defaults and metadata
 	if ([self conformsToProtocol:@protocol(BrandingInitialization)])
 	{
-		[((Class<BrandingInitialization>)self) initializeBranding];
+		if (@available(iOS 13, *))
+		{
+			[((Class<BrandingInitialization>)self) initializeBranding];
+		}
+		else
+		{
+			// BEGIN: Workaround for iOS 12 Swift crash bug - this code is usually in +initializeBranding in ownCloudAppShared.framework - remove when dropping iOS 12 support
+			[self registerOCClassSettingsDefaults:@{
+				@"url-documentation" 	: @"https://doc.owncloud.com/ios-app/",
+				@"url-help" 	  	: @"https://www.owncloud.com/help",
+				@"url-privacy" 	  	: @"https://owncloud.org/privacy-policy/",
+				@"url-terms-of-use" 	: @"https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
+
+				@"send-feedback-address" : @"ios-app@owncloud.com",
+
+				@"can-add-account" : @(YES),
+				@"can-edit-account" : @(YES)
+			} metadata:@{
+				@"url-documentation" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
+					OCClassSettingsMetadataKeyDescription 	: @"URL to documentation for the app. Opened when selecting \"Documentation\" in the settings.",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+					OCClassSettingsMetadataKeyCategory	: @"Branding"
+				},
+
+				@"url-help" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
+					OCClassSettingsMetadataKeyDescription 	: @"URL to help for the app. Opened when selecting \"Help\" in the settings.",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+					OCClassSettingsMetadataKeyCategory	: @"Branding"
+				},
+
+				@"url-privacy" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
+					OCClassSettingsMetadataKeyDescription 	: @"URL to privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+					OCClassSettingsMetadataKeyCategory	: @"Branding"
+				},
+
+				@"url-terms-of-use" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
+					OCClassSettingsMetadataKeyDescription 	: @"URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+					OCClassSettingsMetadataKeyCategory	: @"Branding"
+				},
+
+				@"send-feedback-address" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
+					OCClassSettingsMetadataKeyDescription	: @"Email address to send feedback to. Set to `null` to disable this feature.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
+				@"can-add-account" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+					OCClassSettingsMetadataKeyDescription	: @"Controls whether the user can add accounts.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
+				@"can-edit-account" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+					OCClassSettingsMetadataKeyDescription	: @"Controls whether the user can edit accounts.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
+				@"profile-definitions" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeDictionaryArray,
+					OCClassSettingsMetadataKeyDescription	: @"Array of dictionaries, each specifying a static profile.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
+				@"theme-generic-colors" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeDictionary,
+					OCClassSettingsMetadataKeyDescription	: @"Dictionary defining generic colors that can be used in the definitions.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
+				@"theme-definitions" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeDictionaryArray,
+					OCClassSettingsMetadataKeyDescription	: @"Array of dictionaries, each specifying a theme.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				}
+			}];
+			// END: Workaround for iOS 12 Swift crash bug - this code is usually in +initializeBranding in ownCloudAppShared.framework - remove when dropping iOS 12 support
+		}
 	}
 }
 

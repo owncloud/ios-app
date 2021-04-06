@@ -7,18 +7,19 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
+import ownCloudAppShared
 
-class TextViewController: UIViewController {
+class TextViewController: UIViewController, Themeable {
 	var textView : UITextView?
 
 	var attributedText : NSAttributedString? {
@@ -30,6 +31,10 @@ class TextViewController: UIViewController {
 		didSet {
 			textView?.text = plainText
 		}
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
 	}
 
 	override func loadView() {
@@ -45,5 +50,12 @@ class TextViewController: UIViewController {
 		} else {
 			textView?.text = plainText
 		}
+
+		Theme.shared.register(client: self, applyImmediately: true)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		textView?.textColor = collection.tableRowColors.labelColor
+		textView?.backgroundColor = collection.tableBackgroundColor
 	}
 }

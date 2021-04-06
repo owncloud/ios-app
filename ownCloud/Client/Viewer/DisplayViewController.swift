@@ -41,7 +41,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController {
+class DisplayViewController: UIViewController, Themeable {
 
 	var item: OCItem?
 	var itemIndex: Int?
@@ -153,6 +153,11 @@ class DisplayViewController: UIViewController {
 	// MARK: - Editing delegate
 
 	weak var editingDelegate: DisplayViewEditingDelegate?
+
+	// MARK: - Fullscreen Mode Support
+
+	var supportsFullScreenMode = false
+	var isFullScreenModeEnabled = false
 
 	// MARK: - Initialization and de-initialization
 
@@ -351,7 +356,7 @@ class DisplayViewController: UIViewController {
 			return
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreDetailItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
@@ -560,6 +565,15 @@ class DisplayViewController: UIViewController {
 			}
 		}
 	}
+
+	// MARK: - Themeable implementation
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		progressView.applyThemeCollection(collection)
+		cancelButton.applyThemeCollection(collection)
+		metadataInfoLabel.applyThemeCollection(collection)
+		showPreviewButton.applyThemeCollection(collection)
+		infoLabel.applyThemeCollection(collection)
+	}
 }
 
 extension DisplayViewController : OCQueryDelegate {
@@ -635,17 +649,5 @@ extension DisplayViewController {
 	func configure(_ configuration: DisplayViewConfiguration) {
 		self.item = configuration.item
 		self.core = configuration.core
-	}
-}
-
-// MARK: - Themeable implementation
-
-extension DisplayViewController : Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		progressView.applyThemeCollection(collection)
-		cancelButton.applyThemeCollection(collection)
-		metadataInfoLabel.applyThemeCollection(collection)
-		showPreviewButton.applyThemeCollection(collection)
-		infoLabel.applyThemeCollection(collection)
 	}
 }

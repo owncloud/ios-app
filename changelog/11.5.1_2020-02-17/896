@@ -1,0 +1,5 @@
+Bugfix: Fix Crash on iOS 12 devices
+
+Fixed a crash on startup, when iOS 12 is installed on the device.
+
+https://github.com/owncloud/ios-app/pull/896

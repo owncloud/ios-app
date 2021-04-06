@@ -135,3 +135,8 @@
 }
 
 @end
+
+NSString *NotificationManagerComposeIdentifier(Class aClass, NSString *identifier)
+{
+	return ([NSStringFromClass(aClass) stringByAppendingFormat:@":%@", identifier]);
+}

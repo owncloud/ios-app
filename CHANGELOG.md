@@ -3,7 +3,144 @@ Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
 The following sections list the changes in ownCloud iOS Client unreleased relevant to
 ownCloud admins and users.
 
+[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
 
+Summary
+-------
+
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Bugfix - Added Dark Mode Support for QLPreviewController: [#919](https://github.com/owncloud/ios-app/issues/919)
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+* Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+
+Details
+-------
+
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+
+   Fixed a problem in scan view when renaming the file name and using a Japanese keyboard layout
+   (2-Byte character). After entering a character inside the file name the text cursor jumped to
+   the end.
+
+   https://github.com/owncloud/ios-app/issues/916
+
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+
+   Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the
+   iPhone
+
+   https://github.com/owncloud/ios-app/issues/918
+
+* Bugfix - Added Dark Mode Support for QLPreviewController: [#919](https://github.com/owncloud/ios-app/issues/919)
+
+   Dark mode for QLPreviewController only worked, when system dark mode was used. Custom dark
+   mode theme was not able set the dark mode style before.
+
+   https://github.com/owncloud/ios-app/issues/919
+
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+
+   If a passcode was enabled or disabled in the settings, the UI section was not updated.
+
+   https://github.com/owncloud/ios-app/issues/923
+
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+
+   The "Go to Page" option for PDF files has been reallocated to the Actions menu, and is also
+   available by tapping on the page label.
+
+   https://github.com/owncloud/enterprise/issues/4448
+
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+
+   Added french localization.
+
+   https://github.com/owncloud/enterprise/issues/4450
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+   Added an action in detail view menu which enables presentation mode. Presentation mode
+   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
+   navigation bar will be hidden.
+
+   https://github.com/owncloud/ios-app/issues/704
+
+* Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+
+   Added two custom actions to the File Provider: Sharing and Public Links, which will open the UI
+   for adding and editing sharing and public links to the selected item directly from the file
+   provider.
+
+   https://github.com/owncloud/ios-app/pull/910
+
+Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
+ownCloud admins and users.
+
+[11.5.2]: https://github.com/owncloud/ios-app/compare/milestone/11.5.1...milestone/11.5.2
+
+Summary
+-------
+
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+* Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+
+Details
+-------
+
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
+
+   Tap on hyperlinks in PDF documents opens the link.
+
+   https://github.com/owncloud/enterprise/issues/4432
+
+* Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
+
+   Fixed the position of the PDF thumbnail view on the iPad from the bottom to the right position to
+   get more visible PDF content and to prevent enabling the iOS app switcher when scrolling throw
+   the thumbnail view.
+
+   https://github.com/owncloud/ios-app/pull/905
+
+* Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+
+   Hide the Collapsible Progress Bar in detail view and fixed position in file list.
+
+   https://github.com/owncloud/ios-app/issues/906
+
+Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
+ownCloud admins and users.
+
+[11.5.1]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.1
+
+Summary
+-------
+
+* Bugfix - Fix Crash on iOS 12 devices: [#896](https://github.com/owncloud/ios-app/pull/896)
+
+Details
+-------
+
+* Bugfix - Fix Crash on iOS 12 devices: [#896](https://github.com/owncloud/ios-app/pull/896)
+
+   Fixed a crash on startup, when iOS 12 is installed on the device.
+
+   https://github.com/owncloud/ios-app/pull/896
+
+Changelog for ownCloud iOS Client [11.5.0] (2020-02-10)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.5.0 relevant to
+ownCloud admins and users.
+
+[11.5.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.0
 
 Summary
 -------
