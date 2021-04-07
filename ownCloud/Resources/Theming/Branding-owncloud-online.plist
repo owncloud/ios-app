@@ -6,6 +6,8 @@
 	<false/>
 	<key>branding.can-edit-account</key>
 	<true/>
+	<key>branding.enable-review-prompt</key>
+	<true/>
 	<key>branding.organization-name</key>
 	<string>ownCloud Online</string>
 	<key>branding.send-feedback-address</key>
