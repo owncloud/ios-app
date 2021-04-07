@@ -521,9 +521,22 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
 					guard let url = url else { return }
 
+					let fileNameMaxLength = 16
+
 					if useUTI == kUTTypeUTF8PlainText as String {
-						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(16) + ".txt")
+						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
+
+					if useUTI == kUTTypeRTF as String {
+						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
+						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
+					}
+
+					fileName = fileName?
+						.trimmingCharacters(in: .illegalCharacters)
+						.trimmingCharacters(in: .whitespaces)
+						.trimmingCharacters(in: .newlines)
+						.filter({ $0.isASCII })
 
 					if fileName == nil {
 						fileName = url.lastPathComponent
