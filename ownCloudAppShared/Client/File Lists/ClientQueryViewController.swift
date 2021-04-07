@@ -487,6 +487,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					kUTTypeImage,
 					kUTTypeMovie,
 					kUTTypePDF,
+					kUTTypeText,
 					kUTTypeRTF,
 					kUTTypeHTML,
 					kUTTypePlainText
