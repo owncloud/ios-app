@@ -113,7 +113,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		timer!.schedule(deadline: .now(), repeating: .seconds(1))
 		timer!.setEventHandler { [weak self] in
 			OnMainThread {
-				if (UIDevice.current.isIpad && self?.navigationItem.rightBarButtonItems?.count ?? 0 > 1) || (!(self?.navigationController?.isToolbarHidden ?? false)) {
+				if self?.navigationItem.rightBarButtonItems?.count ?? 0 > 1 || !(self?.navigationController?.isToolbarHidden ?? false) {
 					self?.timer = nil
 					self?.enableEditingMode()
 				}
@@ -125,13 +125,13 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	@objc func enableEditingMode() {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
 		if #available(iOS 14.0, *) {
-			if UIDevice.current.isIpad {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?.last else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			} else {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			}
+				if self.navigationItem.rightBarButtonItems?.count ?? 0 > 1 {
+					guard let markupButton = self.navigationItem.rightBarButtonItems?.last else { return }
+					_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+				} else {
+					guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
+					_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+				}
 		} else { // action and target is nil on iOS 13
 			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
 			markupButton.sendActions(for: .touchUpInside)
