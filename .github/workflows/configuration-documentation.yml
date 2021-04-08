@@ -26,7 +26,7 @@ jobs:
       - name: Install gomplate
         run: brew install gomplate
       - name: Change Directory
-        run: cd tools/GenerateDocs/generate_docs.sh
+        run: cd tools/GenerateDocs/
       - name: Run Generate Docs
         run: ./generate_docs.sh
       - name: Commit files
