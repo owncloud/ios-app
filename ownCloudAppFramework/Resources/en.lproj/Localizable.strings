@@ -45,12 +45,21 @@
 "%@ already unlocked for %@." = "%@ already unlocked for %@.";
 
 /* Search keywords */
-"type" = "type";
-"before" = "before";
-"after" = "after";
-"on" = "on";
-"d" = "d"; /* short-form for "day" */
-"w" = "w"; /* short-form for "week" */
-"m" = "m"; /* short-form for "month" */
-"y" = "y"; /* short-form for "year" */
-
+"keyword_type" = "type";
+"keyword_before" = "before";
+"keyword_after" = "after";
+"keyword_on" = "on";
+"keyword_smaller" = "smaller";
+"keyword_greater" = "greater";
+"keyword_file" = "file";
+"keyword_folder" = "folder";
+"keyword_image" = "image";
+"keyword_video" = "video";
+"keyword_today" = "today";
+"keyword_week" = "week";
+"keyword_month" = "month";
+"keyword_year" = "year";
+"keyword_d" = "d"; /* short-form for "day" */
+"keyword_w" = "w"; /* short-form for "week" */
+"keyword_m" = "m"; /* short-form for "month" */
+"keyword_y" = "y"; /* short-form for "year" */

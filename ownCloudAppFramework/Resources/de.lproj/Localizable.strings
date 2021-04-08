@@ -41,3 +41,23 @@
 "%lu years" = "%lu Jahre";
 
 "%@ already unlocked for %@." = "%@ bereits freigeschaltet für %@.";
+
+/* Search keywords */
+"keyword_type" = "typ";
+"keyword_before" = "vor";
+"keyword_after" = "nach";
+"keyword_on" = "am";
+"keyword_smaller" = "kleiner";
+"keyword_greater" = "größer";
+"keyword_file" = "datei";
+"keyword_folder" = "ordner";
+"keyword_image" = "bild";
+"keyword_video" = "video";
+"keyword_today" = "heute";
+"keyword_week" = "woche";
+"keyword_month" = "monat";
+"keyword_year" = "jahr";
+"keyword_d" = "t"; /* short-form for "day" */
+"keyword_w" = "w"; /* short-form for "week" */
+"keyword_m" = "m"; /* short-form for "month" */
+"keyword_y" = "j"; /* short-form for "year" */
