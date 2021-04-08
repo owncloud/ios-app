@@ -1,0 +1,5 @@
+Bugfix: Enabling Markup Mode
+
+In some cases enabling markup mode failed.
+
+https://github.com/owncloud/enterprise/issues/4468
