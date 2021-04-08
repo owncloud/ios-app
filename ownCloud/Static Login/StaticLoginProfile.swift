@@ -20,6 +20,47 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+extension OCClassSettingsKey {
+	public static let loginProfileIdentifier : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].identifier")
+	public static let loginProfileName : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].name")
+	public static let loginProfileAllowedAuthenticationMethods : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].allowedAuthenticationMethods")
+}
+
+extension StaticLoginProfile : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .branding
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.loginProfileAllowedAuthenticationMethods : ["com.owncloud.basicauth", "com.owncloud.oauth2"]
+		]
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.loginProfileIdentifier : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "Identifier uniquely identifying the static login profile.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileName : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description	: "Name of the login profile during setup.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileAllowedAuthenticationMethods : [
+				.type 		: OCClassSettingsMetadataType.stringArray,
+				.description	: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
+		]
+	}
+}
+
 typealias StaticLoginProfileIdentifier = String
 
 class StaticLoginProfile: NSObject {
