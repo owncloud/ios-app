@@ -3,11 +3,12 @@ Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
 The following sections list the changes in ownCloud iOS Client unreleased relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.5.2...master
 
 Summary
 -------
 
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
 * Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Added Dark Mode Support for QLPreviewController: [#919](https://github.com/owncloud/ios-app/issues/919)
@@ -19,6 +20,12 @@ Summary
 
 Details
 -------
+
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
+
+   In some cases enabling markup mode failed.
+
+   https://github.com/owncloud/enterprise/issues/4468
 
 * Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 
