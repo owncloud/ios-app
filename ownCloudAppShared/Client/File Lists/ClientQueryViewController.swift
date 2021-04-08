@@ -411,12 +411,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 }
 
-extension OCBookmarkManager {
-	public func bookmark(for uuidString: String) -> OCBookmark? {
-		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
-	}
-}
-
 // MARK: - Drag & Drop delegates
 extension ClientQueryViewController: UITableViewDropDelegate {
 	public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
@@ -427,7 +421,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 				var destinationItem: OCItem
 
-				guard let itemValues = item.dragItem.localObject as? OCItemDraggingValue, let itemName = itemValues.item.name, let sourceBookmark = OCBookmarkManager.shared.bookmark(for: itemValues.bookmarkUUID) else {
+				guard let itemValues = item.dragItem.localObject as? OCItemDraggingValue, let itemName = itemValues.item.name, let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: itemValues.bookmarkUUID) else {
 					return
 				}
 				let item = itemValues.item

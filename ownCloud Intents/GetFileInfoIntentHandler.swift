@@ -41,7 +41,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(GetFileInfoIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}

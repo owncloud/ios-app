@@ -74,7 +74,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			complete(with: SaveFileIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}

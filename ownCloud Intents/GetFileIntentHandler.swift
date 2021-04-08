@@ -70,7 +70,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling, OCCoreDelega
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(GetFileIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}

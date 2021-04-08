@@ -41,7 +41,7 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(PathExistsIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}

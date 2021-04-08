@@ -70,7 +70,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling, OC
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(CreateFolderIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}

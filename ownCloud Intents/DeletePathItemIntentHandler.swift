@@ -70,7 +70,7 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(DeletePathItemIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}

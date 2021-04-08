@@ -95,7 +95,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(GetDirectoryListingIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
