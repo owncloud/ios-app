@@ -100,6 +100,13 @@ extension Branding : BrandingInitialization {
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
 
+				.enableReviewPrompt : [
+					.type 		: OCClassSettingsMetadataType.boolean,
+					.description	: "Controls whether the user will be prompt for a app review.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
+
 				.profileDefinitions : [
 					.type 		: OCClassSettingsMetadataType.dictionaryArray,
 					.description	: "Array of dictionaries, each specifying a static profile.",
@@ -135,7 +142,7 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("canAddAccount",		forClassSettingsKey: .canAddAccount)
 		registerLegacyKeyPath("canEditAccount",		forClassSettingsKey: .canEditAccount)
-		registerLegacyKeyPath("enableReviewPrompt",		forClassSettingsKey: .enableReviewPrompt)
+		registerLegacyKeyPath("enableReviewPrompt",	forClassSettingsKey: .enableReviewPrompt)
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
