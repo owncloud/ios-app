@@ -123,7 +123,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling, OC
 					}
 				}
 			} else if core != nil {
-				self.complete(with: CreateFolderIntentResponse(code: .pathFailure, userActivity: nil))
+				self.complete(with: CreateFolderIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : .pathFailure, userActivity: nil))
 			} else {
 				self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
 			}
