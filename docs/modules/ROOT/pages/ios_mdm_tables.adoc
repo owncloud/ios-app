@@ -313,7 +313,7 @@ tag::branding[]
 
 |branding.enable-review-prompt
 |bool
-|
+|`false`
 |Controls whether the user will be prompt for a app review.
 |advanced `candidate`
 
@@ -321,6 +321,24 @@ tag::branding[]
 |dictionaryArray
 |
 |Array of dictionaries, each specifying a static profile.
+|advanced `candidate`
+
+|branding.profile-definitions[].allowedAuthenticationMethods
+|stringArray
+|`[com.owncloud.basicauth com.owncloud.oauth2]`
+|The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
+|advanced `candidate`
+
+|branding.profile-definitions[].identifier
+|string
+|
+|Identifier uniquely identifying the static login profile.
+|advanced `candidate`
+
+|branding.profile-definitions[].name
+|string
+|
+|Name of the login profile during setup.
 |advanced `candidate`
 
 |branding.send-feedback-address
