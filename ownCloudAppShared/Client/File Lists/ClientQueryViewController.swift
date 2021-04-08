@@ -259,14 +259,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
  		searchController?.delegate = self
  	}
-//
-//	open override func startQuery(_ theQuery: OCQuery) {
-//		if theQuery == customSearchQuery {
-//			self.updateCustomSearchQuery()
-//		} else {
-//			super.startQuery(theQuery)
-//		}
-//	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
