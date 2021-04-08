@@ -1,4 +1,4 @@
-name: Calens Changelog
+name: Update Configuration Documentation
 # This workflow is triggered on pushes to the repository.
 on:
   push:
@@ -25,10 +25,9 @@ jobs:
         run: pod install
       - name: Install gomplate
         run: brew install gomplate
-      - name: Change Directory
-        run: cd tools/GenerateDocs/
       - name: Run Generate Docs
         run: ./generate_docs.sh
+        working-directory: ./tools/GenerateDocs/
       - name: Commit files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
