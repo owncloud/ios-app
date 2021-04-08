@@ -75,7 +75,6 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
-		searchScope = .global
 
 		super.init(core: inCore)
 

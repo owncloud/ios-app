@@ -106,6 +106,10 @@
 
 "Show more results" = "Show more results";
 
+/* Search scope */
+"all" = "all";
+"folder" = "folder";
+
 /* Static Login Setup */
 "Server error" = "Server error";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
