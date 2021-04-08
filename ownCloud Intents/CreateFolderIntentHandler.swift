@@ -50,6 +50,8 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling, OC
 			self.complete(with: CreateFolderIntentResponse(code: .authenticationFailed, userActivity: nil))
 		} else if let error = error, error.isAuthenticationError {
 			self.complete(with: CreateFolderIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isNetworkConnectionError {
+			self.complete(with: CreateFolderIntentResponse(code: .networkUnavailable, userActivity: nil))
 		}
 	}
 
@@ -117,13 +119,13 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling, OC
 							}
 						})
 					} else if core != nil {
-						self.complete(with: CreateFolderIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : .folderExistsFailure, userActivity: nil))
+						self.complete(with: CreateFolderIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : ((error?.isNetworkConnectionError == true) ? .networkUnavailable : .folderExistsFailure), userActivity: nil))
 					} else {
 						self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
 					}
 				}
 			} else if core != nil {
-				self.complete(with: CreateFolderIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : .pathFailure, userActivity: nil))
+				self.complete(with: CreateFolderIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : ((error?.isNetworkConnectionError == true) ? .networkUnavailable : .pathFailure), userActivity: nil))
 			} else {
 				self.complete(with: CreateFolderIntentResponse(code: .failure, userActivity: nil))
 			}

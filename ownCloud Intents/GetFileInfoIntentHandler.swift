@@ -77,6 +77,8 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 				completion(GetFileInfoIntentResponse(code: .pathFailure, userActivity: nil))
 			} else if error?.isAuthenticationError == true {
 				completion(GetFileInfoIntentResponse(code: .authenticationFailed, userActivity: nil))
+			} else if error?.isNetworkConnectionError == true {
+				completion(GetFileInfoIntentResponse(code: .networkUnavailable, userActivity: nil))
 			} else {
 				completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
 			}

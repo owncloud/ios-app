@@ -50,6 +50,8 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling, OCCoreDelega
 			self.complete(with: GetFileIntentResponse(code: .authenticationFailed, userActivity: nil))
 		} else if let error = error, error.isAuthenticationError {
 			self.complete(with: GetFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isNetworkConnectionError {
+			self.complete(with: GetFileIntentResponse(code: .networkUnavailable, userActivity: nil))
 		}
 	}
 

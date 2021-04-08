@@ -150,6 +150,8 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 			self.complete(with: GetDirectoryListingIntentResponse(code: .authenticationFailed, userActivity: nil))
 		} else if let error = error, error.isAuthenticationError {
 			self.complete(with: GetDirectoryListingIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isNetworkConnectionError {
+			self.complete(with: GetDirectoryListingIntentResponse(code: .networkUnavailable, userActivity: nil))
 		}
 	}
 }

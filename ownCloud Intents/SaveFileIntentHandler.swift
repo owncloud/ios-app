@@ -51,6 +51,8 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 			self.complete(with: SaveFileIntentResponse(code: .authenticationFailed, userActivity: nil))
 		} else if let error = error, error.isAuthenticationError {
 			self.complete(with: SaveFileIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isNetworkConnectionError {
+			self.complete(with: SaveFileIntentResponse(code: .networkUnavailable, userActivity: nil))
 		}
 	}
 
@@ -110,6 +112,8 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 		let failWithError = { (error: Error?) in
 			if error?.isAuthenticationError == true {
 				completeWithCode(.authenticationFailed)
+			} else if error?.isNetworkConnectionError == true {
+				completeWithCode(.networkUnavailable)
 			} else {
 				completeWithCode(.failure)
 			}

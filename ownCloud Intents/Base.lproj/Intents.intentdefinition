@@ -224,6 +224,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ARGEYl</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>mmHd6b</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>6</integer>
@@ -591,6 +603,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationFailed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>8zt6Cl</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>vyzXPW</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -855,6 +879,18 @@
 						<string>8cu3YB</string>
 						<key>INIntentResponseCodeName</key>
 						<string>fileNotAvailableOffline</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Rc9iDZ</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>KLmGnh</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1330,6 +1366,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationFailed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ak80K0</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>8ruaDW</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1675,6 +1723,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationFailed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Xu46tf</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>79YEXU</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1923,6 +1983,18 @@
 						<string>6veqlK</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Us1jG9</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>J4AXzF</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -2178,6 +2250,18 @@
 						<string>wnOHo5</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>tIdL1f</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>KuSDoY</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -2452,6 +2536,18 @@
 						<string>qEUEIK</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>VuUXmL</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>MVtUAV</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 			</dict>

@@ -50,6 +50,8 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 			self.complete(with: DeletePathItemIntentResponse(code: .authenticationFailed, userActivity: nil))
 		} else if let error = error, error.isAuthenticationError {
 			self.complete(with: DeletePathItemIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isNetworkConnectionError {
+			self.complete(with: DeletePathItemIntentResponse(code: .networkUnavailable, userActivity: nil))
 		}
 	}
 
@@ -102,11 +104,11 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 							self.complete(with: DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 						}
 					} else {
-						self.complete(with: DeletePathItemIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : .failure, userActivity: nil))
+						self.complete(with: DeletePathItemIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : ((error?.isNetworkConnectionError == true) ? .networkUnavailable : .failure), userActivity: nil))
 					}
 				})
 			} else if core != nil {
-				self.complete(with: DeletePathItemIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : .pathFailure, userActivity: nil))
+				self.complete(with: DeletePathItemIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : ((error?.isNetworkConnectionError == true) ? .networkUnavailable : .pathFailure), userActivity: nil))
 			} else {
 				self.complete(with: DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 			}

@@ -32,6 +32,14 @@ extension Error {
 
 		return false
 	}
+
+	public var isNetworkConnectionError : Bool {
+		if let error = self as NSError? {
+			return error.isNetworkFailureError
+		}
+
+		return false
+	}
 }
 
 extension OCIssue {

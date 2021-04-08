@@ -56,6 +56,8 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 				completion(PathExistsIntentResponse.success(pathExists: true))
 			} else if error?.isAuthenticationError == true {
 				completion(PathExistsIntentResponse(code: .authenticationFailed, userActivity: nil))
+			} else if error?.isNetworkConnectionError == true {
+				completion(PathExistsIntentResponse(code: .networkUnavailable, userActivity: nil))
 			} else if core != nil {
 				completion(PathExistsIntentResponse.success(pathExists: false))
 			} else {
