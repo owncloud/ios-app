@@ -265,15 +265,17 @@ extension ClientRootViewController {
 			}
 		}
 
-		let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
-			let tabIndex = String(index + 1)
-			return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: "Tab %@".localized, tabIndex))
-		}
-		if let keyCommands = keyCommands {
-			shortcuts.append(contentsOf: keyCommands)
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, !((navigationController.visibleViewController as? UIAlertController) != nil) {
+			let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
+				let tabIndex = String(index + 1)
+				return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: "Tab %@".localized, tabIndex))
+			}
+			if let keyCommands = keyCommands, self.presentedViewController == nil {
+				shortcuts.append(contentsOf: keyCommands)
+			}
 		}
 
-		if let navigationController = self.selectedViewController as? ThemeNavigationController, (navigationController.visibleViewController is ClientQueryViewController || navigationController.visibleViewController is GroupSharingTableViewController) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
 			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
 			shortcuts.append(cancelCommand)
 		}
@@ -283,10 +285,8 @@ extension ClientRootViewController {
 
 	@objc func dismissSearch(sender: UIKeyCommand) {
 		if let navigationController = self.selectedViewController as? ThemeNavigationController {
-			if let clientQueryViewController = navigationController.visibleViewController as? ClientQueryViewController {
-				clientQueryViewController.searchController?.isActive = false
-			} else if let groupSharingViewController = navigationController.visibleViewController as? GroupSharingTableViewController {
-				groupSharingViewController.searchController?.isActive = false
+			if let searchController = navigationController.visibleViewController?.navigationItem.searchController {
+				searchController.isActive = false
 			}
 		}
 	}
@@ -768,7 +768,7 @@ extension QueryFileListTableViewController {
 
 		for (index, method) in SortMethod.all.enumerated() {
 			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
-			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
+			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
 			shortcuts.append(sortCommand)
 		}
 
@@ -1131,6 +1131,11 @@ extension DisplayHostViewController {
 			shortcuts.append(replayCommand)
 			shortcuts.append(muteCommand)
 		}
+		if let viewController = (self.viewControllers?.first as? DisplayViewController), (viewController.navigationController?.isNavigationBarHidden ?? false) {
+			let closeCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closePresentationMode), discoverabilityTitle: "Exit Full Screen".localized)
+			shortcuts.append(closeCommand)
+		}
+
 		if items?.count ?? 0 > 1 {
 			showCommands = true
 		}
@@ -1145,7 +1150,7 @@ extension DisplayHostViewController {
 
 		if let item = currentViewController.item {
 			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
-			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
+			let actionContextCollaborate = ActionContext(viewController: currentViewController, core: core, items: [item], location: actionsLocationCollaborate)
 			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
 
 			actionsCollaborate.forEach({
@@ -1169,7 +1174,7 @@ extension DisplayHostViewController {
 
 		if let item = currentViewController.item {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actionContext = ActionContext(viewController: currentViewController, core: core, items: [item], location: actionsLocation)
 			actionContext.sender = command
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
@@ -1266,6 +1271,14 @@ extension DisplayHostViewController {
 
 		if let pdfController = currentViewController as? PDFViewerViewController {
 			pdfController.searchResultsView.close()
+		}
+	}
+
+	@objc func closePresentationMode() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let controller = currentViewController as? DisplayViewController {
+			controller.navigationController?.setNavigationBarHidden(false, animated: true)
 		}
 	}
 

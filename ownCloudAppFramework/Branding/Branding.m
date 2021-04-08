@@ -48,7 +48,8 @@
 				@"send-feedback-address" : @"ios-app@owncloud.com",
 
 				@"can-add-account" : @(YES),
-				@"can-edit-account" : @(YES)
+				@"can-edit-account" : @(YES),
+				@"enable-review-prompt" : @(NO)
 			} metadata:@{
 				@"url-documentation" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
@@ -95,6 +96,13 @@
 				@"can-edit-account" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
 					OCClassSettingsMetadataKeyDescription	: @"Controls whether the user can edit accounts.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
+				@"enable-review-prompt" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+					OCClassSettingsMetadataKeyDescription	: @"Controls whether the app should prompt for an App Store review",
 					OCClassSettingsMetadataKeyCategory	: @"Branding",
 					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
 				},

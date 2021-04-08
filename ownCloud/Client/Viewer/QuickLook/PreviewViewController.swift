@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import QuickLook
+import ownCloudAppShared
 
 class GestureView : UIView {
 
@@ -61,32 +62,9 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		qlPreviewController!.didMove(toParent: self)
 		qlPreviewController?.view.isHidden = true
 		qlPreviewController!.view.addSubview(overlayView)
-	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-	}
-
-	override func viewSafeAreaInsetsDidChange() {
-		super.viewSafeAreaInsetsDidChange()
-
-		if let qlPreviewController = self.qlPreviewController {
-			qlPreviewController.view.translatesAutoresizingMaskIntoConstraints = false
-
-			NSLayoutConstraint.activate([
-				qlPreviewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-				qlPreviewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-				qlPreviewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-				qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-
-				overlayView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-				overlayView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-				overlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-				overlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-				])
+		if #available(iOS 13.0, *) {
+			qlPreviewController?.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 		}
-
-		self.view.layoutIfNeeded()
 	}
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
@@ -96,6 +74,21 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 				self.qlPreviewController?.reloadData()
 			} else {
 				// First display
+				if let qlPreviewController = self.qlPreviewController {
+					qlPreviewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+					NSLayoutConstraint.activate([
+						qlPreviewController.view.topAnchor.constraint(equalTo: self.view.topAnchor),
+						qlPreviewController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+						qlPreviewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+						qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+
+						overlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
+						overlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+						overlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+						overlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+						])
+				}
 				self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
 				self.showHideBarsTapGestureRecognizer.delegate = self
 				self.showHideBarsTapGestureRecognizer.numberOfTapsRequired = 1
@@ -140,6 +133,15 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 	override func canPreviewCurrentItem() -> Bool {
 		guard let url = self.source else { return false }
 		return QLPreviewController.canPreview(url as QLPreviewItem)
+	}
+
+	// MARK: - Themeable implementation
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		if #available(iOS 13, *) {
+			qlPreviewController?.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+		}
 	}
 }
 
