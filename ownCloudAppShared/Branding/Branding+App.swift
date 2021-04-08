@@ -23,6 +23,7 @@ extension OCClassSettingsKey {
 	// Permissions
 	public static let canAddAccount : OCClassSettingsKey = OCClassSettingsKey("can-add-account")
 	public static let canEditAccount : OCClassSettingsKey = OCClassSettingsKey("can-edit-account")
+	public static let enableReviewPrompt : OCClassSettingsKey = OCClassSettingsKey("enable-review-prompt")
 
 	// Profiles
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
@@ -134,6 +135,7 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("canAddAccount",		forClassSettingsKey: .canAddAccount)
 		registerLegacyKeyPath("canEditAccount",		forClassSettingsKey: .canEditAccount)
+		registerLegacyKeyPath("enableReviewPrompt",		forClassSettingsKey: .enableReviewPrompt)
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
@@ -191,6 +193,10 @@ extension Branding {
 
 	public var canEditAccount : Bool {
 		return computedValue(forClassSettingsKey: .canEditAccount) as? Bool ?? true
+	}
+
+	public var enableReviewPrompt : Bool {
+		return computedValue(forClassSettingsKey: .enableReviewPrompt) as? Bool ?? false
 	}
 
 	public var profileDefinitions : [[String : Any]]? {

@@ -18,25 +18,26 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 import CoreServices
 
-class PublicLinkTableViewController: SharingTableViewController {
+open class PublicLinkTableViewController: SharingTableViewController {
 
+	// MARK: - Instance Variables
 	var publicLinkSharingEnabled : Bool {
 		if let core = core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == true, core.connection.capabilities?.publicSharingEnabled == true, item.isShareable { return true }
 		return false
 	}
 
-	// MARK: - Instance Variables
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		messageView = MessageView(add: self.view)
 		tableView.dragDelegate = self
 
 		self.navigationItem.title = "Links".localized
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+		if extensionContext == nil {
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+		}
 
 		addHeaderView()
 		addPrivateLinkSection()
@@ -68,7 +69,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		handleEmptyShares()
 	}
@@ -199,7 +200,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	// MARK: TableView Delegate
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	open override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if let share = share(at: indexPath), self.canEdit(share: share) {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
@@ -335,7 +336,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 // MARK: - Drag delegate
 extension PublicLinkTableViewController: UITableViewDragDelegate {
 
-	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+	public func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		if let share = share(at: indexPath), let url = share.url {
 			let itemProvider = NSItemProvider(item: url as URL as NSSecureCoding, typeIdentifier: kUTTypeURL as String)
 				let dragItem = UIDragItem(itemProvider: itemProvider)

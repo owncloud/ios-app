@@ -352,6 +352,7 @@
 "Presentation Mode" = "Presentation Mode";
 "Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
 "Enable" = "Enable";
+"Exit Full Screen" = "Exit Full Screen";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -375,6 +376,9 @@
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
 "Search PDF" = "Search PDF";
 "Outline" = "Outline";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
 "Upload" = "Upload";
@@ -501,6 +505,10 @@
 "Private Link" = "Private Link";
 "Created Public Link" = "Created Public Link";
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
+"%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Share with user/group";
+"Share link" = "Share link";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -625,6 +633,12 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";

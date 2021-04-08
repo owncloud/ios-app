@@ -18,13 +18,12 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class ShareClientItemCell: ClientItemResolvingCell {
+open class ShareClientItemCell: ClientItemResolvingCell {
 	var iconSize : CGSize = CGSize(width: 40, height: 40)
 
 	// MARK: - Share Item
-	override func titleLabelString(for item: OCItem?) -> String {
+	open override func titleLabelString(for item: OCItem?) -> String {
 		if let shareItemPath = share?.itemPath {
 			return shareItemPath
 		}
@@ -32,7 +31,7 @@ class ShareClientItemCell: ClientItemResolvingCell {
 		return super.titleLabelString(for: item)
 	}
 
-	var share : OCShare? {
+	public var share : OCShare? {
 		didSet {
 			if let share = share {
 				if share.itemType == .collection {

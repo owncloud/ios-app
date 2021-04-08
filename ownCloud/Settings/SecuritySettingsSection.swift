@@ -132,12 +132,13 @@ class SecuritySettingsSection: SettingsSection {
 
 			let action: PasscodeAction = passcodeSwitch.isOn ? .setup : .delete
 			PasscodeSetupCoordinator(parentViewController: viewController, action: action, completion: { (cancelled) in
-				if cancelled {
-					passcodeSwitch.isOn = !passcodeSwitch.isOn
-				} else {
-					self?.updateUI()
+				OnMainThread {
+					if cancelled {
+						passcodeSwitch.isOn = !passcodeSwitch.isOn
+					} else {
+						self?.updateUI()
+					}
 				}
-
 			}).start()
 
 			}, title: "Passcode Lock".localized, value: PasscodeSetupCoordinator.isPasscodeSecurityEnabled, identifier: "passcodeSwitchIdentifier")
@@ -148,10 +149,12 @@ class SecuritySettingsSection: SettingsSection {
 				guard let biometricalSwitch = sender as? UISwitch, let viewController = row.viewController else { return }
 
 				PasscodeSetupCoordinator(parentViewController: viewController, completion: { (cancelled) in
-					if cancelled {
-						biometricalSwitch.isOn = !biometricalSwitch.isOn
-					} else {
-						biometricalSwitch.isOn = PasscodeSetupCoordinator.isBiometricalSecurityEnabled
+					OnMainThread {
+						if cancelled {
+							biometricalSwitch.isOn = !biometricalSwitch.isOn
+						} else {
+							biometricalSwitch.isOn = PasscodeSetupCoordinator.isBiometricalSecurityEnabled
+						}
 					}
 				}).startBiometricalFlow(biometricalSwitch.isOn)
 

@@ -18,12 +18,11 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
+open class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
 	// MARK: - Instance Variables
-	override var shares : [OCShare] {
+	override public var shares : [OCShare] {
 		didSet {
 			let recipientShares = shares.filter { (share) -> Bool in
 				return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare)
@@ -42,7 +41,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		return false
 	}
-	var searchController : UISearchController?
+	public var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
 	var recipientCanShare : Bool = false
 	var shouldStartSearch : Bool = false
@@ -72,11 +71,11 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if ownerCanShare || recipientCanShare {
@@ -98,7 +97,9 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		messageView = MessageView(add: self.view)
 
 		self.navigationItem.title = "Sharing".localized
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+		if extensionContext == nil {
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+		}
 
 		addHeaderView()
 		addOwnerSection()
@@ -145,7 +146,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		shareQuery?.refreshInterval = 2
 	}
 
-	override func viewDidLayoutSubviews() {
+	open override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
@@ -159,7 +160,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if shouldStartSearch {
 			shouldStartSearch = false
@@ -361,7 +362,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	// MARK: - UISearchResultsUpdating Delegate
 
-	func updateSearchResults(for searchController: UISearchController) {
+	public func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
 		recipientSearchController?.searchTerm = text
 		if text.count > 0 {
@@ -384,7 +385,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
-	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
+	public func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
 		OnMainThread {
 			if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
 				headerView.activityIndicator.stopAnimating()
@@ -466,7 +467,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	// MARK: TableView Delegate
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	open override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if let shareAtPath = share(at: indexPath), self.canEdit(share: shareAtPath) {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
@@ -502,7 +503,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	// MARK: Themeing
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		if #available(iOS 13, *) {

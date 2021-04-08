@@ -7,8 +7,11 @@
 :icons: font
 :multitasking-on-ipad-url: https://support.apple.com/en-us/HT207582
 
-The app provides a number of features designed to make managing files as simple as possible.
-These are:
+== Introduction
+
+The IOS app provides a number of features designed to make managing files as simple as possible.
+
+== Features
 
 * File list filter
 * File sort options
@@ -18,10 +21,9 @@ These are:
 * Folder actions
 * Select all/none
 
-image:21_File_list_annotated.png[Overview of the ownCloud iOS App's files view.]
+image:21_File_list_annotated.png[Overview of the ownCloud iOS App's files view., width=80%]
 
-Click on a file to view it and click on a folder to view its contents.
-To view further actions available for a file or folder, click the _More_ icon on the far right-hand side.
+Click on a file to view it and click on a folder to view its contents. To view further actions available for a file or folder, click the _More_ icon on the far right-hand side.
 
 == File Actions
 
@@ -35,64 +37,57 @@ The actions available for files are:
 * Delete
 * Make Available Offline
 
-However, file actions are handled slightly differently, depending on whether one or multiple files have been selected.
-You can see the differences in the two images below.
+However, file actions are handled slightly differently, depending on whether one or multiple files have been selected. You can see the differences in the two images below.
 
-The image below on the left, shows the file popup for actions for _individual_ files. 
-The image below on the right, shows the move icon row for _multiple-selected_ files. 
-
-[cols=","]
+[cols=",",options="header"]
 |===
-|*Individual File Actions*
-image:file-actions.jpg[File actions dialog for individual files in ownCloud's iOS App.]
-|*Multiple-Selected File Actions*
-image:file-actions-multiple-files-selected.png[File actions dialog for multiple-selected files in ownCloud's iOS App.]
+^| *Individual File Actions*
+^| *Multiple-Selected File Actions*
+
+^| File popup for actions for _individual_ files
+^| Move icon row for _multiple-selected_ files
+
+^| image:file-actions.jpg[File actions dialog for individual files in ownCloud's iOS App., width=75%]
+^| image:file-actions-multiple-files-selected.png[File actions dialog for multiple-selected files in ownCloud's iOS App., width=110%]
 |===
 
 == Navigate Folders
 
-There are two ways to navigate folders (outside of the root folder).
-To go back to the parent folder, tap btn:[Back] in the top left-hand corner.
-To navigate directly to *any* parent folder tap on the current folder's name.
-When you do, you will see the names of all the parent folders, right up to the root folder, as in the image below.
+There are two ways to navigate folders (outside of the root folder). To go back to the parent folder, tap btn:[Back] in the top left-hand corner. To navigate directly to *any* parent folder, tap on the current folder's name. When you do, you will see the names of all the parent folders, right up to the root folder, as in the image below.
 
-image:21_File_list_parent.png[Navigating folders in ownCloud's iOS app]
+image:21_File_list_parent.png[Navigating folders in ownCloud's iOS app, width=40%]
 
 == Navigate Files
 
-When navigating files, as you would expect, you can scroll up and down the files and folders list.
-In addition, you can also use the index bar, highlighted in the screenshot below, to speed up traversing through files and folders.
-As you slide your finger over each letter, you’ll jump to the first file (or folder) that begins with that letter.
+When navigating files, as you would expect, you can scroll up and down the files and folders list. In addition, you can also use the index bar, highlighted in the screenshot below, to speed up traversing through files and folders. As you slide your finger over each letter, you’ll jump to the first file (or folder) that begins with that letter.
 
 NOTE: The index bar is only visible, if the sort order is `Name`.
 
-image:index-bar-with-callout.png[Navigating files in ownCloud's iOS app]
+image:index-bar-with-callout.png[Navigating files in ownCloud's iOS app, width=40%]
 
 == Sort Files and Folders
 
-By default, files and folders are sorted by name in ascending order, with folders sorted before files.
-However, files can be sorted in ascending and descending order by name, type, size, date, and shared.
-If you press the Sort by menu, you can change sort method and order.
-The first time you change the sort category, files and folders are sorted using that category in ascending order.
-If you choose that category a second time, the sort order is inverted.
+By default, files and folders are sorted by name in ascending order, with folders sorted before files. However, files can be sorted in ascending and descending order by name, type, size, date, and shared. If you press the Sort by menu, you can change sort method and order. The first time you change the sort category, files and folders are sorted using that category in ascending order. If you choose that category a second time, the sort order is inverted.
 
-[cols=","]
+[cols=",",options="header"]
 |===
-|*Sorting files and folders in portrait mode*
-image:sort-files-portrait-mode.png[Sorting files and folders in portrait mode]
-|*Sorting files and folders in landscape mode*
-image:sort-files-landscape-mode.png[Sorting files and folders in landscape mode]
-|===
+^| *Sorting files and folders in portrait mode*
+^| *Sorting files and folders in landscape mode*
 
+^| image:sort-files-portrait-mode.png[Sorting files and folders in portrait mode, width=80%]
+^| image:sort-files-landscape-mode.png[Sorting files and folders in landscape mode, width=85%]
+|===
 
 == View Files
 
-To view a file, tap on its name in the file list.
-Any file type {ios-safari-supported-filetypes-url}[supported by iOS Safari] can be displayed in the app.
-Depending on the file type, the image will be able to viewed, or an icon for it, along with some file details, will be displayed.
+To view a file, tap on its name in the file list. Any file type
+{ios-safari-supported-filetypes-url}[supported by iOS Safari] can be displayed in the app. Depending on the file type, the image will be able to viewed, or an icon for it, along with some file details, will be displayed.
 
-NOTE: If the file is not available locally on the device, you will see image:icon-not-available-locally.png[alt=A file is not downloaded locally on the ownCloud iOS app,width=25] next to the file.
-When you click on it, you will see image:icon-download.png[alt=A file is downloading on the ownCloud iOS app,width=20] next to it while it downloads.
+NOTE: If the file is not available locally on the device, you will see
+image:icon-not-available-locally.png[alt=A file is not downloaded locally on the ownCloud iOS app, width=25]
+next to the file. When you click on it, you will see
+image:icon-download.png[alt=A file is downloading on the ownCloud iOS app, width=20]
+next to it while it downloads.
 
 [cols=",,"]
 .Viewing different file types
@@ -157,55 +152,48 @@ When working with folders, click the plus icon near the top right-hand corner, a
 * xref:upload-file-from-your-photo-library[Upload file from your photo library]
 * xref:make-available-offline[Make available offline]
 
-image:directory-actions.png[Folder actions in ownCloud's iOS App.]
+image:directory-actions.png[Folder actions in ownCloud's iOS App., width=40%]
 
 === Create Folder
 
 To create a new folder, click btn:[Create folder], enter the name of the new folder, as in the image below, and click btn:[return].
 
-image:create-new-folder.png[How to create a new folder in ownCloud's iOS App.]
+image:create-new-folder.png[How to create a new folder in ownCloud's iOS App., width=40%]
 
 === Upload Files
 
-To upload files or any time from your device to your ownCloud server, click btn:[Upload file].
-You will then be able to select or browse through files from any app that exposes data to the iOS files app.
+To upload files or any time from your device to your ownCloud server, click btn:[Upload file]. You will then be able to select or browse through files from any app that exposes data to the iOS files app.
 
 === Make Available Offline
 
-Please see xref:ios_available_offline.adoc[the Offline Storage section].
+Please see the xref:ios_available_offline.adoc[Offline Storage section].
 
 ==== Upload File From Your Photo Library
 
-To upload photos from your photo library, you first need to allow the iOS app access to your photos. 
-After that, you can browse through your photos, as you normally would 
-You can then select one or more photos by pressing them, or click btn:[Select All] in the bottom left-hand corner to select all photos in the current folder.
-When you're happy with your photo selection, click btn:[Upload] and the photo(s) will be uploaded.
+To upload photos from your photo library, you first need to allow the iOS app access to your photos. After that, you can browse through your photos, as you normally would. You can then select one or more photos by pressing them, or click btn:[Select All] in the bottom left-hand corner to select all photos in the current folder. When you're happy with your photo selection, click btn:[Upload] and the photo(s) will be uploaded.
 
-image:24_Upload_Photo_multi.png[Upload one or more photos from your Photo Library with the ownCloud iOS App.]
+image:24_Upload_Photo_multi.png[Upload one or more photos from your Photo Library with the ownCloud iOS App., width=40%]
 
 === Move Files and Folders
 
-Whether you are using the iPhone or iPad version of the ownCloud app, you can select and drag and drop one or more files and folders from one folder to another.
-To do so, you first press btn:[Select] in the top right-hand corner and select one or more files and/or folders.
-Then, you press and hold on any of the selected files and folders and:
+Whether you are using the iPhone or iPad version of the ownCloud app, you can select and drag and drop one or more files and folders from one folder to another. To do so, you first press btn:[Select] in the top right-hand corner and select one or more files and/or folders. Then, you press and hold on any of the selected files and folders and:
 
 * Drag and drop them over a folder in the current directory
 * Drag and drop them over the "*Move to*" icon (or tap the icon), near the bottom left-hand side of the screen. You then navigate to the folder that you want to move them to and click btn:[Move here] at the bottom of the screen.
 
-image:26_Files_multidragdrop.png[Move multiple files (and folders) to another location in the ownCloud iOS App.]
+image:26_Files_multidragdrop.png[Move multiple files (and folders) to another location in the ownCloud iOS App., width=40%]
 
 [NOTE] 
 ====
 If a file or folder with the same name as one or more of those being moved, already exists in the destination directory, you will see a warning that the file or folder could not be moved.
 
-image:file-with-same-name-already-exists.png[ownCloud iOS App, file or folder with the same name already exists in the destination directory.]
+image:file-with-same-name-already-exists.png[ownCloud iOS App, file or folder with the same name already exists in the destination directory., width=50%]
 ====
 
 == Drag & Drop Files Between Apps (iPad-only)
 
-The iOS app supports the multitasking features on iPad.
-If you open it as a second app with Slide Over, you can use two apps at the same time with Split View and drag and drop one or more files between the two apps.
-Refer to Apple's {multitasking-on-ipad-url}[Multitasking On Your iPad guide] for more information.
+The iOS app supports the multitasking features on iPad. If you open it as a second app with Slide Over, you can use two apps at the same time with Split View and drag and drop one or more files between the two apps. Refer to Apple's
+{multitasking-on-ipad-url}[Multitasking On Your iPad guide] for more information.
 
 .Drag and drop multiple files from ownCloud iOS App to macOS Notes
-image:26_Files_multidragdrop_iPad.png[Drag and Drop Files Between Apps (iPad-only) in ownCloud's iOS App.]
+image:26_Files_multidragdrop_iPad.png[Drag and Drop Files Between Apps (iPad-only) in ownCloud's iOS App., width=100%]

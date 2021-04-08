@@ -1,0 +1,5 @@
+Bugfix: Passcode Settings section not refreshed
+
+If a passcode was enabled or disabled in the settings, the UI section was not updated.
+
+https://github.com/owncloud/ios-app/issues/923

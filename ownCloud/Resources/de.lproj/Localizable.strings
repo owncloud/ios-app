@@ -846,3 +846,6 @@
 "Limited Photo Access" = "Eingeschränkter Fotozugriff";
 "Access for the media selected for upload is limited" = "Der Zugriff für die zum Hochladen ausgewählten Medien ist eingeschränkt";
 "No Access to the media selected for upload" = "Kein Zugriff auf die zum Hochladen ausgewählten Medien";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
