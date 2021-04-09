@@ -107,8 +107,7 @@
 "Show more results" = "Show more results";
 
 /* Search scope */
-"all" = "all";
-"folder" = "folder";
+"Search scope" = "Search scope";
 
 /* Static Login Setup */
 "Server error" = "Server error";

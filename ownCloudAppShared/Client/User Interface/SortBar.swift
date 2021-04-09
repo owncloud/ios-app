@@ -43,24 +43,11 @@ public enum SearchScope : Int, CaseIterable {
 		var name : String!
 
 		switch self {
-			case .global: name = "all".localized
-			case .local: name = "folder".localized
+			case .global: name = "Account".localized
+			case .local: name = "Folder".localized
 		}
 
 		return name
-	}
-
-	var image : UIImage? {
-		var image : UIImage?
-
-		if #available(iOS 13, *) {
-			switch self {
-				case .global: image = UIImage(systemName: "globe")
-				case .local: image = UIImage(systemName: "folder")
-			}
-		}
-
-		return image
 	}
 }
 
@@ -88,10 +75,11 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - Constants
-	let sideButtonsSize: CGSize = CGSize(width: 22.0, height: 22.0)
+	let sideButtonsSize: CGSize = CGSize(width: 44.0, height: 44.0)
 	let leftPadding: CGFloat = 20.0
 	let rightPadding: CGFloat = 20.0
 	let rightSelectButtonPadding: CGFloat = 8.0
+	let rightSearchScopePadding: CGFloat = 15.0
 	let topPadding: CGFloat = 10.0
 	let bottomPadding: CGFloat = 10.0
 
@@ -113,6 +101,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 	var showSearchScope: Bool = false {
 		didSet {
+			showSelectButton = !self.showSearchScope
 			self.searchScopeSegmentedControl?.isHidden = false
 			self.searchScopeSegmentedControl?.alpha = oldValue ? 1.0 : 0.0
 
@@ -183,13 +172,10 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
 			searchScopeSegmentedControl.accessibilityIdentifier = "sort-bar.searchScopeSegmentedControl"
+			searchScopeSegmentedControl.accessibilityLabel = "Search scope".localized
 
 			for scope in SearchScope.allCases {
-				if let image = scope.image {
-					searchScopeSegmentedControl.insertSegment(with: image, at: scope.rawValue, animated: false)
-				} else {
-					searchScopeSegmentedControl.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
-				}
+				searchScopeSegmentedControl.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
 			}
 			searchScopeSegmentedControl.selectedSegmentIndex = searchScope.rawValue
 			searchScopeSegmentedControl.isHidden = !self.showSearchScope
@@ -206,7 +192,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
 				sortSegmentedControl.leftAnchor.constraint(equalTo: self.leftAnchor, constant: leftPadding),
 
-				searchScopeSegmentedControl.trailingAnchor.constraint(equalTo: selectButton.leadingAnchor, constant: -10),
+				searchScopeSegmentedControl.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightSearchScopePadding),
 				searchScopeSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				searchScopeSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding)
 			])
