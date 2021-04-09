@@ -512,6 +512,10 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 				}
 
+				if useUTI == nil, typeIdentifiers.count == 1 {
+					useUTI = typeIdentifiers.first
+				}
+
 				if useUTI == nil {
 					useUTI = kUTTypeData as String
 				}
