@@ -41,7 +41,7 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(PathExistsIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
@@ -51,9 +51,13 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 			return
 		}
 
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, item != nil {
 				completion(PathExistsIntentResponse.success(pathExists: true))
+			} else if error?.isAuthenticationError == true {
+				completion(PathExistsIntentResponse(code: .authenticationFailed, userActivity: nil))
+			} else if error?.isNetworkConnectionError == true {
+				completion(PathExistsIntentResponse(code: .networkUnavailable, userActivity: nil))
 			} else if core != nil {
 				completion(PathExistsIntentResponse.success(pathExists: false))
 			} else {
@@ -72,6 +76,11 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 
 	func provideAccountOptions(for intent: PathExistsIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
+	}
+
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: PathExistsIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
 	}
 
 	func resolvePath(for intent: PathExistsIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
