@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1230"
+   LastUpgradeVersion = "1240"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -58,9 +58,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.springboard"
-         RemotePath = "/Today">
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "com.apple.shortcuts"
+         RemotePath = "/var/containers/Bundle/Application/1469ABC1-340A-4259-AC4D-5889DD52C657/Shortcuts.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference

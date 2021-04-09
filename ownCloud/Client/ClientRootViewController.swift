@@ -489,17 +489,10 @@ extension ClientRootViewController : OCCoreDelegate {
 
 		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")
 
-		if nsError == nil, let issueNSError = issue?.error as NSError? {
+		if let authError = issue?.authenticationError {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
-			if issueNSError.isOCError(withCode: .authorizationFailed) ||
-			   issueNSError.isOCError(withCode: .authorizationMethodNotAllowed) ||
-			   issueNSError.isOCError(withCode: .authorizationMethodUnknown) ||
-			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
-			   issueNSError.isOCError(withCode: .authorizationNotMatchingRequiredUserID) ||
-			   issueNSError.isOCError(withCode: .authorizationMissingData) {
-				nsError = issueNSError
-				issue = nil
-			}
+			nsError = authError
+			issue = nil
 		}
 
 		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")

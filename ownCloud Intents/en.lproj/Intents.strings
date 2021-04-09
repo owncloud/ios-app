@@ -1,6 +1,6 @@
 "0jWfGg" = "Check if path ${path} exists in ${account}";
 
-"1KMplM" = "The given path does not exists";
+"1KMplM" = "The given path does not exist.";
 
 "1UkR2J" = "Save File";
 
@@ -32,7 +32,7 @@
 
 "MGAYW2" = "Get File Info";
 
-"NEiHz6" = "The given path does not exists";
+"NEiHz6" = "The given path does not exist.";
 
 "OBFBYf" = "App is currently locked by pass code. Please disable pass code to proceed.";
 
@@ -52,7 +52,7 @@
 
 "XmX9YS" = "Create a folder with the given name into the path.";
 
-"ZWoKzx" = "The given path does not exists";
+"ZWoKzx" = "The given path does not exist.";
 
 "dCe7NY" = "Get Account with ${accountUUID}";
 
@@ -72,15 +72,15 @@
 
 "jkLupt" = "Delete the given path in account";
 
-"l1ScV6" = "The given path does not exists";
+"l1ScV6" = "The given path does not exist.";
 
-"leB73e" = "The given path does not exists";
+"leB73e" = "The given path does not exist.";
 
 "lrF7G0" = "App is currently locked by pass code. Please disable pass code to proceed.";
 
 "nvFl2W" = "Get file for the given path in account";
 
-"sLw6L8" = "The given path does not exists";
+"sLw6L8" = "The given path does not exist.";
 
 "tMYYpx" = "App is currently locked by pass code. Please disable pass code to proceed.";
 
