@@ -16,6 +16,7 @@ Summary
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+* Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
 Details
@@ -75,6 +76,13 @@ Details
    navigation bar will be hidden.
 
    https://github.com/owncloud/ios-app/issues/704
+
+* Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
+
+   Improved error handling for Shortcut actions and now also reporting authentication errors.
+   Added an optional "Wait for completion" option to the "Save File" and "Create Folder" action.
+
+   https://github.com/owncloud/ios-app/issues/858
 
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
