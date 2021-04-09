@@ -50,14 +50,15 @@ class StaticLoginProfile: NSObject {
 		if let name = profileDict["name"] as? String {
 			self.name = name
 		}
-		if let prompt = profileDict["promptForTokenAuth"] as? String {
-			self.promptForTokenAuth = prompt
-		}
-		if let promptForPasswordAuth = profileDict["promptForPasswordAuth"] as? String {
+		if let promptForPasswordAuth = profileDict["promptForPasswordAuth"] as? String, promptForPasswordAuth.count > 0 {
 			self.promptForPasswordAuth = promptForPasswordAuth
+		} else {
+			self.promptForPasswordAuth = "Enter your username and password".localized
 		}
-		if let promptForTokenAuth = profileDict["promptForTokenAuth"] as? String {
+		if let promptForTokenAuth = profileDict["promptForTokenAuth"] as? String, promptForTokenAuth.count > 0 {
 			self.promptForTokenAuth = promptForTokenAuth
+		} else {
+			self.promptForTokenAuth = "Please log in to authorize the app.".localized
 		}
 		if let promptForURL = profileDict["promptForURL"] as? String {
 			self.promptForURL = promptForURL
@@ -68,8 +69,12 @@ class StaticLoginProfile: NSObject {
 		if let helpURLButtonString = profileDict["helpURLButtonString"] as? String {
 			self.helpURLButtonString = helpURLButtonString
 		}
-		if let welcome = profileDict["welcome"] as? String {
+		if let welcome = profileDict["welcome"] as? String, welcome.count > 0 {
 			self.welcome = welcome
+		} else if let name = self.name {
+			self.welcome = String(format: "Welcome to %@".localized, name)
+		} else {
+			self.welcome = "Welcome".localized
 		}
 		if let bookmarkName = profileDict["bookmarkName"] as? String {
 			self.bookmarkName = bookmarkName
