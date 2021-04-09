@@ -116,7 +116,11 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			return sort
 		}
 	}
-	open var searchScope: SearchScope = .local
+	open var searchScope: SearchScope = .local {
+		didSet {
+			updateSearchPlaceholder()
+		}
+	}
 	open var sortDirection: SortDirection {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
@@ -356,14 +360,20 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	open override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
+		updateSearchPlaceholder()
+	}
+
+	func updateSearchPlaceholder() {
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
+		let placeholderString = (searchScope == .global) ? "Search account".localized : "Search folder".localized
+
 		if #available(iOS 13.0, *) {
 			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
-			let attributedString = NSAttributedString(string: "Search this folder".localized, attributes: attributedStringColor)
+			let attributedString = NSAttributedString(string: placeholderString, attributes: attributedStringColor)
 			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
 		} else {
 			// Fallback on earlier versions
-			searchController?.searchBar.placeholder = "Search this folder".localized
+			searchController?.searchBar.placeholder = placeholderString
 		}
 	}
 
