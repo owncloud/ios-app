@@ -37,7 +37,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	private let smallSpacing : CGFloat = 2
 	private let iconViewWidth : CGFloat = 40
 	private let detailIconViewHeight : CGFloat = 15
-	private let moreButtonWidth : CGFloat = 45
+	private let moreButtonWidth : CGFloat = 60
 	private let revealButtonWidth : CGFloat = 35
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
@@ -81,7 +81,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			if isMoreButtonPermanentlyHidden {
 				moreButtonWidthConstraint?.constant = 0
 			} else {
-				moreButtonWidthConstraint?.constant = moreButtonWidth
+				moreButtonWidthConstraint?.constant = showRevealButton ? revealButtonWidth : moreButtonWidth
 			}
 		}
 	}
@@ -219,7 +219,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
-		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
+		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : moreButtonWidth)
 		revealButtonWidthConstraint = revealButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : 0)
 
 		cloudStatusIconViewZeroWidthConstraint = cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
@@ -550,7 +550,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if hidden || isMoreButtonPermanentlyHidden {
 			moreButtonWidthConstraint?.constant = 0
 		} else {
-			moreButtonWidthConstraint?.constant = moreButtonWidth
+			moreButtonWidthConstraint?.constant = showRevealButton ? revealButtonWidth : moreButtonWidth
 		}
 		moreButton.isHidden = ((item?.isPlaceholder == true) || (progressView != nil)) ? true : hidden
 		if animated {
