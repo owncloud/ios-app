@@ -10,15 +10,15 @@ ownCloud admins and users.
 {{ if ne (len $allVersions) $next -}}
 {{ $previousVersion := (index $allVersions $next).Version -}}
 {{ if eq .Version "unreleased" -}}
-[{{ .Version }}]: https://github.com/owncloud/client/compare/v{{ $previousVersion }}...master
+[{{ .Version }}]: https://github.com/owncloud/ios-app/compare/milestone/{{ $previousVersion }}...master
 {{- else -}}
-[{{ .Version }}]: https://github.com/owncloud/client/compare/v{{ $previousVersion }}...v{{ .Version }}
+[{{ .Version }}]: https://github.com/owncloud/ios-app/compare/milestone/{{ $previousVersion }}...milestone/{{ .Version }}
 {{- end -}}
 {{ end -}}
 
 {{- /* last version managed by calens, end of the loop */ -}}
-{{ if eq .Version "2.6.2" -}}
-[{{ .Version }}]: https://github.com/owncloud/client/compare/v2.6.1...v{{ .Version }}
+{{ if eq .Version "11.5.0" -}}
+[{{ .Version }}]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/{{ .Version }}
 {{- end }}
 
 Summary

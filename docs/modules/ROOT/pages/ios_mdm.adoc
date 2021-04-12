@@ -4,34 +4,35 @@
 :description: This guide steps you through how to manage the application configuration of ownCloud’s Mobile App for iOS using Mobile Device Management (MDM).
 :appconfig-xml-format-url: https://www.appconfig.org/ios/
 :mdm-protocol-ref-url: https://developer.apple.com/business/documentation/MDM-Protocol-Reference.pdf
+:appconfig-url: https://www.appconfig.org
+:appconfig-jam-url: https://appconfig.jamfresearch.com
 
-== Managed App Config
+== Introduction
 
-Starting with iOS 7, Apple added support for {mdm-protocol-ref-url}[managed application configuration]. 
-An MDM server can push a configuration to the iOS App. 
-The app can access this configuration (read-only) using the `NSUserDefaults` class by reading a configuration dictionary under the key _com.apple.configuration.managed_. An app can also observe a system notification (_NSUserDefaultsDidChangeNotification_) to get notified about configuration changes. In addition feedback can be queried back by MDM server. To enable that, app has to write a dictionary with feedback information into user defaults under _com.apple.feedback.managed_ key.
-The configuration is basically a key-value dictionary provided as a `.plist` file.
+Starting with iOS 7, Apple added support for {mdm-protocol-ref-url}[managed application configuration]. An MDM server can push a configuration to the iOS App. The app can access this configuration (read-only) using the `NSUserDefaults` class by reading a configuration dictionary under the key _com.apple.configuration.managed_. An app can also observe a system notification (_NSUserDefaultsDidChangeNotification_) to get notified about configuration changes. In addition feedback can be queried back by MDM server. To enable that, app has to write a dictionary with feedback information into user defaults under _com.apple.feedback.managed_ key. The configuration is basically a key-value dictionary provided as a `.plist` file.
 
 === Configurable Settings
 
 ownCloud App implements a mechanism internally called Class Settings which can be derived from different sources:
 
-- Environment variables which e.g. can be set in Xcode for testing. In this case setting keys have to be prepended with _oc:_ prefix.
+- Environment variables which e.g. can be set in Xcode for testing. In this case setting keys have to   be prepended with _oc:_ prefix.
 - User preferences accessed by the very same API but stored under _org.owncloud.user-settings_ key.
-- Settings dictionary pushed by an MDM Server and accessible using `NSUserDefaults` API under the key _com.apple.configuration.managed_.
+- Settings dictionary pushed by an MDM Server and accessible using `NSUserDefaults` API under the key   _com.apple.configuration.managed_.
 - Default settings defined directly in the app sourcecode.
-- Branding.plist which is the part of the Xcode project under ownCloud/Resources/Theming. It allows to override class settings by specifying them in the `Configuration` section
+- Branding.plist which is the part of the Xcode project under ownCloud/Resources/Theming. It allows to   override class settings by specifying them in the `Configuration` section
 
 This is also an order in which these settings take precedence (environment variables have highest priority). So, when settings are accessed, they are merged and higher priority value for the same key overwrites lower priority ones.
 
 Some settings are accessed only once at runtime and the read value is cached, so that new setting to take effect may a require an app to be terminated and restarted.
 
 ==== App Basic Configurations
+
 There are few settings allowing to mark an app installation as BETA and e.g. to supress UIKit animation and review prompt.
 
 include::./ios_mdm_tables.adoc[tag=app]
 
 ==== Extensions / Actions
+
 ownCloud app uses internally a plug-in like mechanism called extensions. Extensions are used to implement menu actions mostly found under "+" menu allowing to add new items (Upload media, take photo etc.) or in more menu (Copy, Move, Open in etc.). Using below settings actions / extensions can be disabled. Extensions are enabled by default, however this might depend on licensing requirements of a particular extension.
 
 include::./ios_mdm_tables.adoc[tag=actions]
@@ -39,11 +40,13 @@ include::./ios_mdm_tables.adoc[tag=actions]
 (*) These extensions might require additional license (in-app purchase, enterprise version).
 
 ==== Display Settings
+
 To customize file list UI behevior, following settings are available: 
 
 // include::./ios_mdm_tables.adoc[tag=displaysettings]
 
 ==== Passcode Enforcement
+
 If your organization policies require users to use a passcode as an additional security barrier for managed apps, the below setting will allow to enforce this requirement.
 
 include::./ios_mdm_tables.adoc[tag=passcode]
@@ -85,12 +88,16 @@ include::./ios_mdm_tables.adoc[tag=oauth2]
 ////
 ==== Shortcuts
 
-Shortcuts are a very powerful way to build automated workflows in iOS. Apps can provide shortcut intents for certain actions. ownCloud app provides certain actions as shortcuts as well (e.g. allowing to get account information, create folder and so on). However in some cases it might make sense to disable shortcuts to minimize security risks. It can be done using following option:
+Shortcuts are a very powerful way to build automated workflows in iOS. Apps can provide shortcut intents
+for certain actions. ownCloud app provides certain actions as shortcuts as well (e.g. allowing to get
+account information, create folder and so on). However in some cases it might make sense to disable
+shortcuts to minimize security risks. It can be done using following option:
 
 include::./ios_mdm_tables.adoc[tag=shortcuts]
 ////
 
 ==== Logging
+
 Logging settings control the ammount and type of app internal log messages stored as text files and accessible via settings menu.
 
 include::./ios_mdm_tables.adoc[tag=logging]
@@ -142,15 +149,13 @@ Here is an example of an XML spec-file based on AppConfig standard with minimal 
 
 == AppConfig XML Schema
 
-{appconfig-xml-format-url}[The XML format], developed by AppConfig community, makes it easy for developers to define and deploy an app configuration. 
-It not only supports configuration variables having default values, but also provides a configuration UI description, which can be interpreted by the tool and which generates a plist file. 
-Moreover, specfile XML is consistently supported by major EMM vendors.
+{appconfig-xml-format-url}[The XML format], developed by AppConfig community, makes it easy for developers to define and deploy an app configuration. It not only supports configuration variables having default values, but also provides a configuration UI description, which can be interpreted by the tool and which generates a plist file. Moreover, specfile XML is consistently supported by major EMM vendors.
 
-AppConfig conformant spec file tailored to administrator needs and containing one or more of the above settings can be easily created using https://www.appconfig.org/www/appconfigspeccreator/[Config Spec Creator] tool hosted at https://www.appconfig.org[AppConfig website].
+AppConfig conformant spec file tailored to administrator needs and containing one or more of the above settings can be easily created using {appconfig-url}/www/appconfigspeccreator/[Config Spec Creator] tool hosted at {appconfig-url}[AppConfig website].
 
 == Example: Deployment with MobileIron
 
-1. Open https://appconfig.jamfresearch.com[AppConfig Generator].
+1. Open {appconfig-jam-url}[AppConfig Generator]
 2. Upload a specfile.xml.
 3. Change the configuration options.
 4. Download the generated plist file (ManagedAppConfig).
@@ -160,7 +165,7 @@ AppConfig conformant spec file tailored to administrator needs and containing on
 
 == Example: Deployment with Jamf Pro
 
-1. Open https://appconfig.jamfresearch.com[AppConfig Generator].
+1. Open {appconfig-jam-url}[AppConfig Generator]
 2. Upload a specfile.xml.
 3. Change the configuration options.
 4. Copy Dictionary (button).
@@ -170,5 +175,5 @@ AppConfig conformant spec file tailored to administrator needs and containing on
 
 == References
 
-* <https://www.appconfig.org>
-* <https://developer.apple.com/business/documentation/MDM-Protocol-Reference.pdf>
+* {appconfig-url}[Introducing The AppConfig Community]
+* https://developer.apple.com/business/documentation/MDM-Protocol-Reference.pdf[Mobile Device Management Protocol Reference]

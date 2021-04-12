@@ -3,11 +3,12 @@ Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
 The following sections list the changes in ownCloud iOS Client unreleased relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.5.2...master
 
 Summary
 -------
 
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
 * Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Added Dark Mode Support for QLPreviewController: [#919](https://github.com/owncloud/ios-app/issues/919)
@@ -15,10 +16,17 @@ Summary
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+* Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
 Details
 -------
+
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
+
+   In some cases enabling markup mode failed.
+
+   https://github.com/owncloud/enterprise/issues/4468
 
 * Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 
@@ -69,6 +77,13 @@ Details
 
    https://github.com/owncloud/ios-app/issues/704
 
+* Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
+
+   Improved error handling for Shortcut actions and now also reporting authentication errors.
+   Added an optional "Wait for completion" option to the "Save File" and "Create Folder" action.
+
+   https://github.com/owncloud/ios-app/issues/858
+
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
    Added two custom actions to the File Provider: Sharing and Public Links, which will open the UI
@@ -82,7 +97,7 @@ Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
 ownCloud admins and users.
 
-[11.5.2]: https://github.com/owncloud/client/compare/v11.5.1...v11.5.2
+[11.5.2]: https://github.com/owncloud/ios-app/compare/milestone/11.5.1...milestone/11.5.2
 
 Summary
 -------
@@ -119,7 +134,7 @@ Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
 ownCloud admins and users.
 
-[11.5.1]: https://github.com/owncloud/client/compare/v11.5.0...v11.5.1
+[11.5.1]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.1
 
 Summary
 -------
@@ -140,7 +155,7 @@ Changelog for ownCloud iOS Client [11.5.0] (2020-02-10)
 The following sections list the changes in ownCloud iOS Client 11.5.0 relevant to
 ownCloud admins and users.
 
-
+[11.5.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.0
 
 Summary
 -------
