@@ -303,11 +303,11 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
  					self.messageView?.message(show: false)
  				}
 
- 				self.tableView.reloadData()
+ 				self.reloadTableData()
 
  			case .targetRemoved:
  				self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
- 				self.tableView.reloadData()
+ 				self.reloadTableData()
 
  			default:
  				self.messageView?.message(show: false)

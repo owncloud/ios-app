@@ -196,12 +196,16 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
  	}
 
 	private var lastSearchText : String?
+	private var scrollToTopWithNextRefresh : Bool = false
 
  	public func updateCustomSearchQuery() {
 		if lastSearchText != searchText {
 			// Reset max result count when search text changes
 			maxResultCount = maxResultCountDefault
 			lastSearchText = searchText
+
+			// Scroll to top when search text changes
+			scrollToTopWithNextRefresh = true
 		}
 
  		if let searchText = searchText,
@@ -589,6 +593,18 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			}
 		} else {
 			self.updateFooter(text: nil)
+		}
+	}
+
+	open override func delegatedTableViewDataReload() {
+		super.delegatedTableViewDataReload()
+
+		if scrollToTopWithNextRefresh {
+			scrollToTopWithNextRefresh = false
+
+			OnMainThread {
+				self.tableView.setContentOffset(.zero, animated: false)
+			}
 		}
 	}
 

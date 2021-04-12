@@ -228,7 +228,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		if !ifNeeded || (ifNeeded && tableReloadNeeded) {
-			self.tableView.reloadData()
+			self.delegatedTableViewDataReload()
 
 			if viewControllerVisible {
 				tableReloadNeeded = false
@@ -236,6 +236,10 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 			self.restoreSelectionAfterTableReload()
 		}
+	}
+
+	open func delegatedTableViewDataReload() {
+		self.tableView.reloadData()
 	}
 
 	open func restoreSelectionAfterTableReload() {

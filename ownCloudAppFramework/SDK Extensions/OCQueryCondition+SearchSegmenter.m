@@ -164,7 +164,21 @@
 
 + (instancetype)forSearchSegment:(NSString *)segmentString
 {
-	NSString *segmentStringLowercase = segmentString.lowercaseString;
+	NSString *segmentStringLowercase = nil;
+	BOOL negateCondition = NO;
+
+	if ([segmentString hasPrefix:@"-"])
+	{
+		negateCondition = YES;
+		segmentString = [segmentString substringFromIndex:1];
+	}
+
+	if (segmentString.length == 0)
+	{
+		return (nil);
+	}
+
+	segmentStringLowercase = segmentString.lowercaseString;
 
 	if ([segmentStringLowercase hasPrefix:@":"])
 	{
@@ -174,35 +188,35 @@
 		{
 			if ([keyword isEqual:@"folder"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeCollection)]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeCollection)]]);
 			}
 			else if ([keyword isEqual:@"file"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeFile)]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeFile)]]);
 			}
 			else if ([keyword isEqual:@"image"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"image/"]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"image/"]]);
 			}
 			else if ([keyword isEqual:@"video"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"video/"]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"video/"]]);
 			}
 			else if ([keyword isEqual:@"today"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeDay:0]]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeDay:0]]]);
 			}
 			else if ([keyword isEqual:@"week"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeWeek:0]]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeWeek:0]]]);
 			}
 			else if ([keyword isEqual:@"month"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeMonth:0]]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeMonth:0]]]);
 			}
 			else if ([keyword isEqual:@"year"])
 			{
-				return ([OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:0]]);
+				return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:0]]]);
 			}
 		}
 	}
@@ -326,11 +340,11 @@
 
 				if (orConditions.count == 1)
 				{
-					return (orConditions.firstObject);
+					return ([OCQueryCondition negating:negateCondition condition:orConditions.firstObject]);
 				}
 				else if (orConditions.count > 0)
 				{
-					return ([OCQueryCondition anyOf:orConditions]);
+					return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition anyOf:orConditions]]);
 				}
 				else
 				{
@@ -350,7 +364,7 @@
 		}
 	}
 
-	return ([OCQueryCondition where:OCItemPropertyNameName contains:segmentString]);
+	return ([OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameName contains:segmentString]]);
 }
 
 + (instancetype)fromSearchTerm:(NSString *)searchTerm
