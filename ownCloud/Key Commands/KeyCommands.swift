@@ -260,8 +260,24 @@ extension ClientRootViewController {
 			if excludeViewControllers.contains(where: {$0 == type(of: visibleController)}) {
 				return shortcuts
 			} else if let controller = visibleController as? PDFSearchViewController {
-
 				return controller.keyCommands
+			}
+		}
+
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
+			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
+			shortcuts.append(cancelCommand)
+
+			if let visibleViewController = navigationController.visibleViewController, let keyCommands = visibleViewController.keyCommands {
+				let newKeyCommands = keyCommands.map { (keyCommand) -> UIKeyCommand in
+					if let input = keyCommand.input, let discoverabilityTitle = keyCommand.discoverabilityTitle {
+					return UIKeyCommand(input: input, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController), discoverabilityTitle: discoverabilityTitle)
+					}
+
+					return UIKeyCommand(input: keyCommand.input!, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController))
+				}
+
+				shortcuts.append(contentsOf: newKeyCommands)
 			}
 		}
 
@@ -275,12 +291,22 @@ extension ClientRootViewController {
 			}
 		}
 
-		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
-			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
-			shortcuts.append(cancelCommand)
-		}
-
 		return shortcuts
+	}
+
+	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController, let keyCommands = visibleController.keyCommands {
+			let commands = keyCommands.filter { (keyCommand) -> Bool in
+				if keyCommand.discoverabilityTitle == sender.discoverabilityTitle {
+					return true
+				}
+				return false
+			}
+
+			if let command = commands.first {
+				visibleController.perform(command.action, with: sender)
+			}
+		}
 	}
 
 	@objc func dismissSearch(sender: UIKeyCommand) {
@@ -627,6 +653,12 @@ extension ClientQueryViewController {
 
 	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
+
+		let scopeCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(changeSearchScope(_:)), discoverabilityTitle: "Toggle Search Scope".localized)
+		if let searchController = searchController, searchController.isActive {
+			shortcuts.append(scopeCommand)
+		}
+
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
@@ -665,6 +697,15 @@ extension ClientQueryViewController {
 		}
 
 		return shortcuts
+	}
+
+	@objc func changeSearchScope(_ command : UIKeyCommand) {
+		if self.sortBar?.searchScope == .global {
+			self.sortBar?.searchScope = .local
+		} else {
+			self.sortBar?.searchScope = .global
+		}
+		updateCustomSearchQuery()
 	}
 
 	@objc func performFolderAction(_ command : UIKeyCommand) {
@@ -763,7 +804,9 @@ extension QueryFileListTableViewController {
 			})
 		}
 
-		shortcuts.append(searchCommand)
+		if let searchController = searchController, !searchController.isActive {
+			shortcuts.append(searchCommand)
+		}
 		shortcuts.append(toggleSortCommand)
 
 		for (index, method) in SortMethod.all.enumerated() {

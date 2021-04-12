@@ -109,6 +109,7 @@
 
 /* Search scope */
 "Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
 
 /* Static Login Setup */
 "Server error" = "Server error";

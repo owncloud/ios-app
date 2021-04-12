@@ -160,6 +160,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	// MARK: - Search events
 	open func willPresentSearchController(_ searchController: UISearchController) {
  		self.sortBar?.showSearchScope = true
+		self.tableView.setContentOffset(.zero, animated: false)
  	}
 
  	open func willDismissSearchController(_ searchController: UISearchController) {
@@ -196,7 +197,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	private var lastSearchText : String?
 
- 	func updateCustomSearchQuery() {
+ 	public func updateCustomSearchQuery() {
 		if lastSearchText != searchText {
 			// Reset max result count when search text changes
 			maxResultCount = maxResultCountDefault
