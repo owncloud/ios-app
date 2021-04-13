@@ -264,22 +264,22 @@ extension ClientRootViewController {
 			}
 		}
 
-//		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
-//			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
-//			shortcuts.append(cancelCommand)
-//
-//			if let visibleViewController = navigationController.visibleViewController, let keyCommands = visibleViewController.keyCommands {
-//				let newKeyCommands = keyCommands.map { (keyCommand) -> UIKeyCommand in
-//					if let input = keyCommand.input, let discoverabilityTitle = keyCommand.discoverabilityTitle {
-//					return UIKeyCommand(input: input, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController), discoverabilityTitle: discoverabilityTitle)
-//					}
-//
-//					return UIKeyCommand(input: keyCommand.input!, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController))
-//				}
-//
-//				shortcuts.append(contentsOf: newKeyCommands)
-//			}
-//		}
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
+			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
+			shortcuts.append(cancelCommand)
+
+			if let visibleViewController = navigationController.visibleViewController, let keyCommands = visibleViewController.keyCommands {
+				let newKeyCommands = keyCommands.map { (keyCommand) -> UIKeyCommand in
+					if let input = keyCommand.input, let discoverabilityTitle = keyCommand.discoverabilityTitle {
+					return UIKeyCommand(input: input, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController), discoverabilityTitle: discoverabilityTitle)
+					}
+
+					return UIKeyCommand(input: keyCommand.input!, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController))
+				}
+
+				shortcuts.append(contentsOf: newKeyCommands)
+			}
+		}
 
 		if let navigationController = self.selectedViewController as? ThemeNavigationController, !((navigationController.visibleViewController as? UIAlertController) != nil) {
 			let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
@@ -294,20 +294,20 @@ extension ClientRootViewController {
 		return shortcuts
 	}
 
-//	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
-//		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController, let keyCommands = visibleController.keyCommands {
-//			let commands = keyCommands.filter { (keyCommand) -> Bool in
-//				if keyCommand.discoverabilityTitle == sender.discoverabilityTitle {
-//					return true
-//				}
-//				return false
-//			}
-//
-//			if let command = commands.first {
-//				visibleController.perform(command.action, with: sender)
-//			}
-//		}
-//	}
+	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController, let keyCommands = visibleController.keyCommands {
+			let commands = keyCommands.filter { (keyCommand) -> Bool in
+				if keyCommand.discoverabilityTitle == sender.discoverabilityTitle {
+					return true
+				}
+				return false
+			}
+
+			if let command = commands.first {
+				visibleController.perform(command.action, with: sender)
+			}
+		}
+	}
 
 	@objc func dismissSearch(sender: UIKeyCommand) {
 		if let navigationController = self.selectedViewController as? ThemeNavigationController {
@@ -706,6 +706,8 @@ extension ClientQueryViewController {
 			self.sortBar?.searchScope = .global
 		}
 		updateCustomSearchQuery()
+		self.searchController?.isActive = true
+		self.searchController?.searchBar.becomeFirstResponder()
 	}
 
 	@objc func performFolderAction(_ command : UIKeyCommand) {
@@ -779,7 +781,7 @@ extension QueryFileListTableViewController {
 		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .shift], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
 		let searchCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
 		// Add key commands for file name letters
-		if sortMethod == .alphabetically {
+		if sortMethod == .alphabetically, let searchController = searchController, !searchController.isActive {
 			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 			for title in indexTitles {
 				let letterCommand = UIKeyCommand(input: title, modifierFlags: [], action: #selector(selectLetter))
