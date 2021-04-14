@@ -143,8 +143,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	public let searchResultsView = PDFSearchResultsView()
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if let source = source, let document = PDFDocument(url: source) {
+	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if let source = itemDirectURL, let document = PDFDocument(url: source) {
 			if !didSetupView {
 				didSetupView  = true
 
@@ -279,7 +279,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	func save(item: OCItem) {
-		if let source = source {
+		if let source = itemDirectURL {
 			editingDelegate?.save(item: item, fileURL: source)
 		}
 	}
@@ -440,9 +440,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		searchButtonItem?.accessibilityLabel = "Search PDF".localized
 		outlineItem?.accessibilityLabel = "Outline".localized
 
-		self.parent?.navigationItem.rightBarButtonItems = [
+		displayBarButtonItems = [
 			searchButtonItem!,
-			outlineItem!]
+			outlineItem!
+		]
 	}
 
 	// MARK: - Search results navigation
@@ -497,7 +498,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - Current page selection
-
 	private func selectPage(with label:String) {
 		guard let pdf = pdfView.document else { return }
 

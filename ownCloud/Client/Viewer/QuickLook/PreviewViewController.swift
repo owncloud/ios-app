@@ -67,8 +67,8 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		}
 	}
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if source != nil {
+	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if itemDirectURL != nil {
 			if self.qlPreviewController?.dataSource === self {
 				// Reload
 				self.qlPreviewController?.reloadData()
@@ -122,16 +122,16 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 	// MARK: - QLPreviewControllerDataSource
 	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-		return source != nil ? 1 : 0
+		return itemDirectURL != nil ? 1 : 0
 	}
 
 	// MARK: - QLPreviewControllerDataSource
 	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-		return source! as QLPreviewItem
+		return itemDirectURL! as QLPreviewItem
 	}
 
 	override func canPreviewCurrentItem() -> Bool {
-		guard let url = self.source else { return false }
+		guard let url = self.itemDirectURL else { return false }
 		return QLPreviewController.canPreview(url as QLPreviewItem)
 	}
 

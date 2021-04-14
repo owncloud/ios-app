@@ -20,11 +20,6 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-struct DisplayViewConfiguration {
-	var item: OCItem?
-	weak var core: OCCore?
-}
-
 enum DisplayViewState {
 	case initial
 	case connecting
@@ -42,9 +37,6 @@ protocol DisplayViewEditingDelegate: class {
 }
 
 class DisplayViewController: UIViewController, Themeable {
-
-	var item: OCItem?
-	var itemIndex: Int?
 
 	private let moreButtonTag = 777
 
@@ -65,7 +57,7 @@ class DisplayViewController: UIViewController, Themeable {
 					stopQuery()
 				case .online:
 					self.state = .online
-					self.updateSource()
+					self.updateDirectURL()
 					self.startQuery()
 
 				default:
@@ -84,32 +76,37 @@ class DisplayViewController: UIViewController, Themeable {
 		}
 		didSet {
 			if let core = core {
-				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (_, _) in
+				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: .initial) { [weak self, weak core] (_, _) in
 					OnMainThread {
-						self?.connectionStatus = core.connectionStatus
+						if let connectionStatus = core?.connectionStatus {
+							self?.connectionStatus = connectionStatus
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private var lastSourceItemVersion : OCItemVersionIdentifier?
-	private var lastSourceItemModificationDate : Date?
-
 	var progressSummarizer : ProgressSummarizer?
 
 	private var query : OCQuery?
 
-	var source: URL? {
+	private var lastSourceItemVersion : OCItemVersionIdentifier?
+	private var lastSourceItemModificationDate : Date?
+
+	var item: OCItem?
+	var itemIndex: Int?
+
+	var itemDirectURL: URL? {
 		didSet {
-			guard self.source != nil else { return }
+			guard self.itemDirectURL != nil else { return }
 
 			guard self.canPreviewCurrentItem() else { return }
 
 			lastSourceItemVersion = item?.localCopyVersionIdentifier ?? item?.itemVersionIdentifier
 
 			OnMainThread(inline: true) {
-				self.renderSpecificView(completion: { (success) in
+				self.renderItem(completion: { (success) in
 					if !success {
 						self.state = .previewFailed
 					}
@@ -119,8 +116,6 @@ class DisplayViewController: UIViewController, Themeable {
 	}
 
 	var httpAuthHeaders: [String : String]?
-
-	var shallDisplayMoreButtonInToolbar = true
 
 	private var state: DisplayViewState = .initial {
 		didSet {
@@ -263,12 +258,12 @@ class DisplayViewController: UIViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		updateSource()
+		updateDirectURL()
 		startQuery()
 
-		updateNavigationBarItems()
+		updateDisplayTitleAndButtons()
 
-		self.updateUI()
+		updateUI()
 	}
 
 	// MARK: - Public API
@@ -291,9 +286,9 @@ class DisplayViewController: UIViewController, Themeable {
 			}
 		}
 
-		if self.source != nil, item.locallyModified == true {
+		if self.itemDirectURL != nil, item.locallyModified == true {
 			OnMainThread {
-				self.renderSpecificView(completion: { (success) in
+				self.renderItem(completion: { (success) in
 					if !success {
 						self.state = .previewFailed
 					}
@@ -338,7 +333,7 @@ class DisplayViewController: UIViewController, Themeable {
 			self?.state = .downloadFinished
 
 			self?.item = latestItem
-			self?.source = file?.url
+			self?.itemDirectURL = file?.url
 
 			if let claim = file?.claim, let item = latestItem, let self = self {
 				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
@@ -366,8 +361,8 @@ class DisplayViewController: UIViewController, Themeable {
 
 	// MARK: - Methods to be overriden in subclasses
 
-	func renderSpecificView(completion: @escaping  (_ success:Bool) -> Void) {
-		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
+	func renderItem(completion: @escaping  (_ success:Bool) -> Void) {
+		// This function is intended to be overwritten by the subclases to implement a custom view based on the itemDirectURL property.s
 		completion(true)
 	}
 
@@ -382,7 +377,7 @@ class DisplayViewController: UIViewController, Themeable {
 	}
 
 	// Can be overriden in subclasses e.g. if item can be previewed without downloadint it (e.g. streamable video
-	func requiresLocalCopyForPreview() -> Bool {
+	var requiresLocalCopyForPreview : Bool {
 		if type(of: self) === DisplayViewController.self {
 			return false
 		}
@@ -390,21 +385,21 @@ class DisplayViewController: UIViewController, Themeable {
 	}
 
 	// MARK: - UI management
+	@objc var displayTitle : String?
+	@objc var displayBarButtonItems : [UIBarButtonItem]?
 
-	func updateNavigationBarItems() {
-
-		if let parent = parent, let itemName = item?.name {
-
+	private func updateDisplayTitleAndButtons() {
+		if let itemName = item?.name {
 			func checkActionsButtonPresence() -> Bool {
-				if let items = parent.navigationItem.rightBarButtonItems {
+				if let items = displayBarButtonItems {
 					return items.filter({$0.tag == moreButtonTag}).count > 0
 				}
 				return false
 			}
 
-			parent.navigationItem.title = itemName
+			displayTitle = itemName
 
-			if shallDisplayMoreButtonInToolbar, let queryState = query?.state {
+			if let queryState = query?.state {
 				if queryState != .targetRemoved {
 
 					if checkActionsButtonPresence() == false {
@@ -413,15 +408,15 @@ class DisplayViewController: UIViewController, Themeable {
 						actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
 
 						var items = [UIBarButtonItem]()
-						if let previousItems = parent.navigationItem.rightBarButtonItems {
+						if let previousItems = displayBarButtonItems {
 							items.append(contentsOf: previousItems)
 						}
 						items.insert(actionsBarButtonItem, at: 0)
-						parent.navigationItem.rightBarButtonItems = items
+						displayBarButtonItems = items
 					}
 
 				} else {
-					parent.navigationItem.rightBarButtonItems?.removeAll(where: { (buttonItem) -> Bool in
+					displayBarButtonItems?.removeAll(where: { (buttonItem) -> Bool in
 						return buttonItem.tag == moreButtonTag
 					})
 				}
@@ -521,22 +516,22 @@ class DisplayViewController: UIViewController, Themeable {
 		}
 	}
 
-	private func updateSource() {
+	private func updateDirectURL() {
 		guard let item = self.item else { return }
 
 		// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
-		if source == nil && requiresLocalCopyForPreview() == false {
+		if itemDirectURL == nil && !requiresLocalCopyForPreview {
 			core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
 				if error == nil {
 					self.httpAuthHeaders = authHeaders
-					self.source = url
+					self.itemDirectURL = url
 				}
 			})
 			return
 		}
 
 		// Don't download automatically if the file can't be previewed
-		guard requiresLocalCopyForPreview() == true else { return }
+		guard requiresLocalCopyForPreview else { return }
 
 		// Bail out if the download is already in progress
 		guard item.syncActivity.contains(.downloading) == false else { return }
@@ -548,8 +543,8 @@ class DisplayViewController: UIViewController, Themeable {
 			shallUpdateItem = true
 		}
 
-		// Item locally modified or source URL is missing?
-		if item.locallyModified || source == nil {
+		// Item locally modified or itemDirectURL missing?
+		if item.locallyModified || itemDirectURL == nil {
 			shallUpdateItem = true
 		}
 
@@ -560,7 +555,7 @@ class DisplayViewController: UIViewController, Themeable {
 				// We already have a local copy, just modify item's last used timestamp
 				core?.registerUsage(of: item, completionHandler: nil)
 				if let core = core, let file = item.file(with: core) {
-					self.source = file.url
+					self.itemDirectURL = file.url
 				}
 			}
 		}
@@ -631,23 +626,14 @@ extension DisplayViewController : OCQueryDelegate {
 							self?.item = nil
 						}
 
-						self?.updateNavigationBarItems()
+						self?.updateDisplayTitleAndButtons()
 
 					case .targetRemoved:
-						self?.updateNavigationBarItems()
+						self?.updateDisplayTitleAndButtons()
 
 					default: break
 				}
 			}
 		}
-	}
-}
-
-// MARK: - Configuration
-
-extension DisplayViewController {
-	func configure(_ configuration: DisplayViewConfiguration) {
-		self.item = configuration.item
-		self.core = configuration.core
 	}
 }

@@ -467,7 +467,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 						if error == nil {
 							srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
 								if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
-									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (error, _, _, _) in
+									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
 									}
 								}
 							})

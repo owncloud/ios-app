@@ -163,10 +163,10 @@ open class StaticTableViewController: UITableViewController, Themeable {
 
 	public var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
 	public var didDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
-	
+
 	@objc open func dismissAnimated() {
 		self.willDismissAction?(self)
-		
+
 		if self.extensionContext != nil {
 			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		} else {
