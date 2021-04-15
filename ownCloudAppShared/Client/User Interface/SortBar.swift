@@ -190,7 +190,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			NSLayoutConstraint.activate([
 				sortSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
-				sortSegmentedControl.leftAnchor.constraint(equalTo: self.leftAnchor, constant: leftPadding),
+				sortSegmentedControl.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: leftPadding),
 
 				searchScopeSegmentedControl.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightSearchScopePadding),
 				searchScopeSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
