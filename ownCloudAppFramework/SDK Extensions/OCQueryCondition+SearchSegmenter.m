@@ -85,7 +85,7 @@
 				isNegated = NO;
 			}
 
-			if ([term hasPrefix:@"-"]):
+			if ([term hasPrefix:@"-"])
 			{
 				// Negate segment
 				isNegated = YES;
