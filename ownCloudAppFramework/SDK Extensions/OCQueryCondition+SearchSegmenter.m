@@ -23,6 +23,31 @@
 
 @implementation NSString (SearchSegmenter)
 
+- (BOOL)isQuotationMark
+{
+	return ([@"“”‘‛‟„‚'^\"′″´˝❛❜❝❞" containsString:self]);
+}
+
+- (BOOL)hasQuotationMarkSuffix
+{
+	if (self.length > 0)
+	{
+		return ([[self substringWithRange:NSMakeRange(self.length-1, 1)] isQuotationMark]);
+	}
+
+	return (NO);
+}
+
+- (BOOL)hasQuotationMarkPrefix
+{
+	if (self.length > 0)
+	{
+		return ([[self substringWithRange:NSMakeRange(0, 1)] isQuotationMark]);
+	}
+
+	return (NO);
+}
+
 - (NSArray<NSString *> *)segmentedForSearch
 {
 	NSMutableArray<NSString *> *segments = [NSMutableArray new];
@@ -47,7 +72,7 @@
 			NSString *term = inTerm;
 			BOOL closingSegment = NO;
 
-			if ([term hasPrefix:@"\""])
+			if ([term hasQuotationMarkPrefix])
 			{
 				// Submit any open segment
 				SubmitSegment();
@@ -57,7 +82,7 @@
 				segmentOpen = YES;
 			}
 
-			if ([term hasSuffix:@"\""])
+			if ([term hasQuotationMarkSuffix])
 			{
 				// End segment
 				term = [term substringToIndex:term.length-1];
