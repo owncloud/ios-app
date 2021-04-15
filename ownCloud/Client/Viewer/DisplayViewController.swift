@@ -50,18 +50,19 @@ class DisplayViewController: UIViewController, Themeable {
 		didSet {
 			if let status = connectionStatus {
 				switch status {
-				case .connecting:
-					self.state = .connecting
-				case .offline:
-					self.state = .offline
-					stopQuery()
-				case .online:
-					self.state = .online
-					self.updateDirectURL()
-					self.startQuery()
+					case .connecting:
+						self.state = .connecting
 
-				default:
-					break
+					case .offline:
+						self.state = .offline
+						stopQuery()
+
+					case .online:
+						self.state = .online
+						self.startQuery()
+
+					default:
+						break
 				}
 			}
 		}
@@ -91,29 +92,14 @@ class DisplayViewController: UIViewController, Themeable {
 
 	private var query : OCQuery?
 
-	private var lastSourceItemVersion : OCItemVersionIdentifier?
-	private var lastSourceItemModificationDate : Date?
-
-	var item: OCItem?
-	var itemIndex: Int?
-
-	var itemDirectURL: URL? {
+	var item: OCItem? {
 		didSet {
-			guard self.itemDirectURL != nil else { return }
-
-			guard self.canPreviewCurrentItem() else { return }
-
-			lastSourceItemVersion = item?.localCopyVersionIdentifier ?? item?.itemVersionIdentifier
-
-			OnMainThread(inline: true) {
-				self.renderItem(completion: { (success) in
-					if !success {
-						self.state = .previewFailed
-					}
-				})
-			}
+			considerUpdate()
 		}
 	}
+	var itemIndex: Int?
+
+	var itemDirectURL: URL?
 
 	var httpAuthHeaders: [String : String]?
 
@@ -165,6 +151,8 @@ class DisplayViewController: UIViewController, Themeable {
 	}
 
 	deinit {
+		Log.debug("Deinit DisplayViewController: \(self.item?.name ?? "-")")
+
 		coreConnectionStatusObservation?.invalidate()
 		coreConnectionStatusObservation = nil
 
@@ -258,55 +246,22 @@ class DisplayViewController: UIViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		updateDirectURL()
 		startQuery()
 
 		updateDisplayTitleAndButtons()
-
 		updateUI()
-	}
-
-	// MARK: - Public API
-
-	func present(item: OCItem) {
-		guard item.removed == false else {
-			return
-		}
-
-		self.item = item
-		metadataInfoLabel.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
-
-		if let core = self.core {
-			if core.localCopy(of: item) == nil {
-				iconImageView.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidSystemThumbnails: true)
-			}
-
-			if iconImageView.image == nil {
-				iconImageView.image = item.icon(fitInSize:iconImageSize)
-			}
-		}
-
-		if self.itemDirectURL != nil, item.locallyModified == true {
-			OnMainThread {
-				self.renderItem(completion: { (success) in
-					if !success {
-						self.state = .previewFailed
-					}
-				})
-			}
-		}
 	}
 
 	// MARK: - Actions which can be triggered by the user
 
-	@objc func cancelDownload(sender: Any?) {
+	@objc func cancelDownload(sender: Any? = nil) {
 		if downloadProgress != nil {
 			downloadProgress?.cancel()
 		}
 		self.state = .downloadCanceled
 	}
 
-	@objc func downloadItem(sender: Any?) {
+	@objc func downloadItem(sender: Any? = nil) {
 		guard let core = core, let item = item, self.state == .online else {
 			return
 		}
@@ -331,6 +286,8 @@ class DisplayViewController: UIViewController, Themeable {
 			}
 
 			self?.state = .downloadFinished
+
+			self?.considerUpdate()
 
 			self?.item = latestItem
 			self?.itemDirectURL = file?.url
@@ -367,7 +324,7 @@ class DisplayViewController: UIViewController, Themeable {
 	}
 
 	// Override in subclasses and implement specific checks if required
-	func canPreviewCurrentItem() -> Bool {
+	var canPreviewCurrentItem : Bool {
 		// Only subclasses can render a preview, superclass can't
 		if type(of: self) === DisplayViewController.self {
 			return false
@@ -444,7 +401,7 @@ class DisplayViewController: UIViewController, Themeable {
 			hideProgressIndicators()
 			showPreviewButton.isHidden = true
 
-			if let item = self.item, self.canPreviewCurrentItem() == false {
+			if let item = self.item, !canPreviewCurrentItem {
 				if self.core?.localCopy(of:item) == nil {
 					showPreviewButton.isHidden = false
 					showPreviewButton.setTitle("Download".localized, for: .normal)
@@ -480,7 +437,7 @@ class DisplayViewController: UIViewController, Themeable {
 			progressView.isHidden = true
 			showPreviewButton.isHidden = true
 
-			if self.canPreviewCurrentItem() {
+			if canPreviewCurrentItem {
 				iconImageView.isHidden = true
 				progressView.isHidden = true
 				metadataInfoLabel.isHidden = true
@@ -516,46 +473,99 @@ class DisplayViewController: UIViewController, Themeable {
 		}
 	}
 
-	private func updateDirectURL() {
-		guard let item = self.item else { return }
+	private var lastUsedItem : OCItem?
+	private var lastUsedItemVersion : OCItemVersionIdentifier?
+	private var lastUsedItemModificationDate : Date?
 
-		// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
-		if itemDirectURL == nil && !requiresLocalCopyForPreview {
-			core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
-				if error == nil {
-					self.httpAuthHeaders = authHeaders
-					self.itemDirectURL = url
+	private func considerUpdate() {
+		var localURLLastModified : Date?
+		let oldItem = lastUsedItem
+
+		if let newItem = item {
+			if let localURL = core?.localCopy(of: newItem) {
+				do {
+					localURLLastModified  = (try localURL.resourceValues(forKeys: [ .contentModificationDateKey ])).contentModificationDate
+				} catch {
+					Log.error("Error fetching last modification date of \(localURL): \(error)")
 				}
-			})
-			return
-		}
+			}
 
-		// Don't download automatically if the file can't be previewed
-		guard requiresLocalCopyForPreview else { return }
+			if (newItem.syncActivity != .updating) &&
+			    (// Item version changed
+			     (newItem.itemVersionIdentifier != oldItem?.itemVersionIdentifier) ||
 
-		// Bail out if the download is already in progress
-		guard item.syncActivity.contains(.downloading) == false else { return }
+			     // Item name changed
+			     (newItem.name != oldItem?.name) ||
 
-		var shallUpdateItem = false
+			     // Item already shown, this version is different from what was shown last
+			     ((lastUsedItemVersion != nil) && (newItem.itemVersionIdentifier != lastUsedItemVersion)) ||
 
-		// Item version mismatch?
-		if (lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) {
-			shallUpdateItem = true
-		}
+			     // Item changed locally, exists locally, local file modification date changed
+			     (newItem.locallyModified && (localURLLastModified != nil) && (localURLLastModified != lastUsedItemModificationDate))
+			) {
+				if let lastModified = localURLLastModified {
+					lastUsedItemModificationDate = lastModified
+				}
 
-		// Item locally modified or itemDirectURL missing?
-		if item.locallyModified || itemDirectURL == nil {
-			shallUpdateItem = true
-		}
+				guard newItem.removed == false else {
+					return
+				}
 
-		if shallUpdateItem == true {
-			if core?.localCopy(of: item) == nil {
-				self.downloadItem(sender: nil)
-			} else {
-				// We already have a local copy, just modify item's last used timestamp
-				core?.registerUsage(of: item, completionHandler: nil)
-				if let core = core, let file = item.file(with: core) {
-					self.itemDirectURL = file.url
+				metadataInfoLabel.text = newItem.sizeLocalized + " - " + newItem.lastModifiedLocalized
+				updateDisplayTitleAndButtons()
+
+				if let core = self.core {
+					let localCopy = core.localCopy(of: newItem)
+
+					if localCopy == nil {
+						iconImageView.setThumbnailImage(using: core, from: newItem, with: iconImageSize, avoidSystemThumbnails: true)
+					}
+
+					if iconImageView.image == nil {
+						iconImageView.image = newItem.icon(fitInSize:iconImageSize)
+					}
+
+					// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
+					if itemDirectURL == nil && !requiresLocalCopyForPreview {
+						core.provideDirectURL(for: newItem, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+							if error == nil {
+								self.httpAuthHeaders = authHeaders
+								self.itemDirectURL = url
+							}
+						})
+					} else {
+						if requiresLocalCopyForPreview, 		  // Don't download automatically if the file can't be previewed +
+						   !newItem.syncActivity.contains(.downloading),  // Avoid download if the file is already being downloaded	 +
+						   ( // + either of:
+							// - item version mismatch
+							((lastUsedItemVersion != nil) && (newItem.itemVersionIdentifier != lastUsedItemVersion)) ||
+							// - item locally modified or no itemDirectURL yet
+							(newItem.locallyModified || itemDirectURL == nil)
+						   ) {
+							if localCopy == nil {
+								downloadItem()
+							} else {
+								// We already have a local copy, just modify item's last used timestamp
+								core.registerUsage(of: newItem, completionHandler: nil)
+								if let file = newItem.file(with: core) {
+									itemDirectURL = file.url
+								}
+							}
+						}
+					}
+				}
+
+				lastUsedItem = newItem
+				lastUsedItemVersion = newItem.localCopyVersionIdentifier ?? newItem.itemVersionIdentifier
+
+				if itemDirectURL != nil, canPreviewCurrentItem {
+					OnMainThread {
+						self.renderItem(completion: { (success) in
+							if !success {
+								self.state = .previewFailed
+							}
+						})
+					}
 				}
 			}
 		}
@@ -587,52 +597,19 @@ extension DisplayViewController : OCQueryDelegate {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult.first {
-							var localURLLastModified : Date?
-
-							if let localURL = self?.core?.localCopy(of: firstItem) {
-								do {
-									localURLLastModified  = (try localURL.resourceValues(forKeys: [ .contentModificationDateKey ])).contentModificationDate
-								} catch {
-									Log.error("Error fetching last modification date of \(localURL): \(error)")
-								}
-							}
-
-							let currentItem = self?.item
-
-							if (firstItem.syncActivity != .updating) &&
-							    (// Item version changed
-							     (firstItem.itemVersionIdentifier != currentItem?.itemVersionIdentifier) ||
-
-							     // Item name changed
-							     (firstItem.name != currentItem?.name) ||
-
-							     // Item already shown, this version is different from what was shown last
-							     ((self?.lastSourceItemVersion != nil) && (firstItem.itemVersionIdentifier != self?.lastSourceItemVersion)) ||
-
-							     // Item changed locally, exists locally, local file modification date changed
-							     (firstItem.locallyModified && (localURLLastModified != nil) && (localURLLastModified != self?.lastSourceItemModificationDate))
-							) {
-								if let lastModified = localURLLastModified {
-									self?.lastSourceItemModificationDate = lastModified
-								}
-
-								self?.present(item: firstItem)
-							} else {
-								self?.item = firstItem
-							}
+							self?.item = firstItem
 						} else {
 							// No item available
 							Log.debug("Item \(String(describing: self?.item)) no longer available")
 							self?.item = nil
 						}
 
-						self?.updateDisplayTitleAndButtons()
-
-					case .targetRemoved:
-						self?.updateDisplayTitleAndButtons()
+					case .targetRemoved: break
 
 					default: break
 				}
+
+				self?.updateDisplayTitleAndButtons()
 			}
 		}
 	}

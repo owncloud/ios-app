@@ -130,7 +130,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		return itemDirectURL! as QLPreviewItem
 	}
 
-	override func canPreviewCurrentItem() -> Bool {
+	override var canPreviewCurrentItem: Bool {
 		guard let url = self.itemDirectURL else { return false }
 		return QLPreviewController.canPreview(url as QLPreviewItem)
 	}
