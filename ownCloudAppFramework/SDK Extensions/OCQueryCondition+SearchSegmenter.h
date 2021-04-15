@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (SearchSegmenter)
 
-- (NSArray<NSString *> *)segmentedForSearch;
+- (NSArray<NSString *> *)segmentedForSearchWithQuotationMarks:(BOOL)withQuotationMarks;
 
 @end
 

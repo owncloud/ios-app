@@ -54,7 +54,7 @@
 	};
 
 	[expectedSegmentsByStrings enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull term, NSArray<NSString *> * _Nonnull expectedSegments, BOOL * _Nonnull stop) {
-		NSArray<NSString *> *segments = [term segmentedForSearch];
+		NSArray<NSString *> *segments = [term segmentedForSearchWithQuotationMarks:NO];
 
 		XCTAssert([segments isEqual:expectedSegments], @"segments %@ doesn't match expectation %@", segments, expectedSegments);
 	}];

@@ -25,7 +25,7 @@
 
 - (BOOL)isQuotationMark
 {
-	return ([@"“”‘‛‟„‚'^\"′″´˝❛❜❝❞" containsString:self]);
+	return ([@"“”‘‛‟„‚'\"′″´˝❛❜❝❞" containsString:self]);
 }
 
 - (BOOL)hasQuotationMarkSuffix
@@ -48,7 +48,7 @@
 	return (NO);
 }
 
-- (NSArray<NSString *> *)segmentedForSearch
+- (NSArray<NSString *> *)segmentedForSearchWithQuotationMarks:(BOOL)withQuotationMarks
 {
 	NSMutableArray<NSString *> *segments = [NSMutableArray new];
 	NSArray<NSString *> *terms;
@@ -57,11 +57,19 @@
 	{
 		__block NSString *segmentString = nil;
 		__block BOOL segmentOpen = NO;
+		__block BOOL isNegated = NO;
 
 		void (^SubmitSegment)(void) = ^{
 			if (segmentString.length > 0)
 			{
-				[segments addObject:segmentString];
+				if (segmentOpen && withQuotationMarks)
+				{
+					[segments addObject:[NSString stringWithFormat:@"%@\"%@\"", (isNegated ? @"-" : @""), segmentString]];
+				}
+				else
+				{
+					[segments addObject:(isNegated ? [@"-" stringByAppendingString:segmentString] : segmentString)];
+				}
 			}
 
 			segmentString = nil;
@@ -71,6 +79,18 @@
 		{
 			NSString *term = inTerm;
 			BOOL closingSegment = NO;
+
+			if (!segmentOpen)
+			{
+				isNegated = NO;
+			}
+
+			if ([term hasPrefix:@"-"]):
+			{
+				// Negate segment
+				isNegated = YES;
+				term = [term substringFromIndex:1];
+			}
 
 			if ([term hasQuotationMarkPrefix])
 			{
@@ -109,8 +129,8 @@
 			// Submit closed segments
 			if (closingSegment)
 			{
-				segmentOpen = NO;
 				SubmitSegment();
+				segmentOpen = NO;
 			}
 		}
 
@@ -191,11 +211,18 @@
 {
 	NSString *segmentStringLowercase = nil;
 	BOOL negateCondition = NO;
+	BOOL literalSearch = NO;
 
 	if ([segmentString hasPrefix:@"-"])
 	{
 		negateCondition = YES;
 		segmentString = [segmentString substringFromIndex:1];
+	}
+
+	if ([segmentString hasPrefix:@"\""] && [segmentString hasSuffix:@"\""] && (segmentString.length >= 2))
+	{
+		literalSearch = YES;
+		segmentString = [segmentString substringWithRange:NSMakeRange(1, segmentString.length-2)];
 	}
 
 	if (segmentString.length == 0)
@@ -205,7 +232,7 @@
 
 	segmentStringLowercase = segmentString.lowercaseString;
 
-	if ([segmentStringLowercase hasPrefix:@":"])
+	if ([segmentStringLowercase hasPrefix:@":"] && !literalSearch)
 	{
 		NSString *keyword = [segmentStringLowercase substringFromIndex:1];
 
@@ -246,7 +273,7 @@
 		}
 	}
 
-	if ([segmentStringLowercase containsString:@":"])
+	if ([segmentStringLowercase containsString:@":"] && !literalSearch)
 	{
 		NSArray<NSString *> *parts = [segmentString componentsSeparatedByString:@":"];
 		NSString *modifier = nil;
@@ -394,7 +421,7 @@
 
 + (instancetype)fromSearchTerm:(NSString *)searchTerm
 {
-	NSArray<NSString *> *segments = [searchTerm segmentedForSearch];
+	NSArray<NSString *> *segments = [searchTerm segmentedForSearchWithQuotationMarks:YES];
 	NSMutableArray<OCQueryCondition *> *conditions = [NSMutableArray new];
 	OCQueryCondition *queryCondition = nil;
 
