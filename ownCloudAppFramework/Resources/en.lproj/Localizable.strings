@@ -51,6 +51,7 @@
 "keyword_on" = "on";
 "keyword_smaller" = "smaller";
 "keyword_greater" = "greater";
+"keyword_owner" = "owner";
 "keyword_file" = "file";
 "keyword_folder" = "folder";
 "keyword_image" = "image";

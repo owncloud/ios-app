@@ -173,6 +173,7 @@
 			TranslateKeyword(@"on"),
 			TranslateKeyword(@"smaller"),
 			TranslateKeyword(@"greater"),
+			TranslateKeyword(@"owner"),
 
 			// Suffix keywords
 			TranslateKeyword(@"d"),
@@ -347,6 +348,10 @@
 								condition = [OCQueryCondition where:OCItemPropertyNameSize isGreaterThan:byteCount];
 							}
 						}
+						else if ([modifierKeyword isEqual:@"owner"])
+						{
+							condition = [OCQueryCondition where:OCItemPropertyNameOwnerUserName startsWith:parameter];
+						}
 						else if ([modifier isEqual:@""])
 						{
 							// Parse time formats, f.ex.: 7d, 2w, 1m, 2y
@@ -405,7 +410,8 @@
 					    [modifierKeyword isEqual:@"before"]  ||
 					    [modifierKeyword isEqual:@"on"]      ||
 					    [modifierKeyword isEqual:@"greater"] ||
-					    [modifierKeyword isEqual:@"smaller"]
+					    [modifierKeyword isEqual:@"smaller"] ||
+					    [modifierKeyword isEqual:@"owner"]
 					   )
 					{
 						// Modifiers without parameters

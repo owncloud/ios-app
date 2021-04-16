@@ -49,6 +49,7 @@
 "keyword_on" = "am";
 "keyword_smaller" = "kleiner";
 "keyword_greater" = "größer";
+"keyword_owner" = "besitzer";
 "keyword_file" = "datei";
 "keyword_folder" = "ordner";
 "keyword_image" = "bild";
