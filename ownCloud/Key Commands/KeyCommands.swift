@@ -679,7 +679,7 @@ extension ClientQueryViewController {
 			shortcuts.append(nextObjectCommand)
 		}
 
-		if let core = core, let rootItem = query.rootItem {
+		if let core = core, let rootItem = query.rootItem, !isMoreButtonPermanentlyHidden {
 			var item = rootItem
 			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
@@ -789,7 +789,7 @@ extension QueryFileListTableViewController {
 			}
 		}
 
-		if let core = core, let rootItem = query.rootItem {
+		if let core = core, let rootItem = query.rootItem, !isMoreButtonPermanentlyHidden {
 			var item = rootItem
 			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
@@ -914,22 +914,8 @@ extension ClientDirectoryPickerViewController {
 	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
-		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-
-		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
-			if selectedIndexPath.row < self.items.count - 1 {
-				shortcuts.append(nextObjectCommand)
-			}
-			if selectedIndexPath.row > 0 || selectedIndexPath.section > 0 {
-				shortcuts.append(previousObjectCommand)
-			}
-			if let item : OCItem = self.itemAt(indexPath: selectedIndexPath), item.type == OCItemType.collection {
-				shortcuts.append(selectObjectCommand)
-			}
-		} else {
-			shortcuts.append(nextObjectCommand)
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
 		if let selectButtonTitle = selectButton?.title, let selector = selectButton?.action {

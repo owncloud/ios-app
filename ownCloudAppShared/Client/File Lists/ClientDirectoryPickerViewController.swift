@@ -36,7 +36,6 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var selectButton: UIBarButtonItem?
 	private var selectButtonTitle: String?
 	private var cancelBarButton: UIBarButtonItem?
-
 	open var directoryPath : String?
 
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
@@ -115,6 +114,8 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Disable pull to refresh
 		allowPullToRefresh = false
+
+		isMoreButtonPermanentlyHidden = true
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
