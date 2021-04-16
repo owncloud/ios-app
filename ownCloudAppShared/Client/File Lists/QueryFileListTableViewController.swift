@@ -450,9 +450,13 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		return cell!
 	}
 
+	public func revealViewController(core: OCCore, path: String, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
+		return ClientQueryViewController(core: core, query: OCQuery(forPath: path), reveal: item, rootViewController: nil)
+	}
+
 	public func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool {
-		if let parentPath = item.path?.parentPath {
-		   	let revealQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: parentPath), reveal: item, rootViewController: nil)
+		if let parentPath = item.path?.parentPath,
+		   let revealQueryViewController = revealViewController(core: core, path: parentPath, item: item, rootViewController: nil) {
 
 			self.navigationController?.pushViewController(revealQueryViewController, animated: true)
 

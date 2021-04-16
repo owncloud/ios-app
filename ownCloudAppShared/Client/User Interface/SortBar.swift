@@ -89,14 +89,25 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public var sortButton: UIButton?
 	public var searchScopeSegmentedControl : SegmentedControl?
 	public var selectButton: UIButton?
+	public var allowMultiSelect: Bool = true {
+		didSet {
+			updateSelectButtonVisibility()
+		}
+	}
 	public var showSelectButton: Bool = false {
 		didSet {
-			selectButton?.isHidden = !showSelectButton
-			selectButton?.accessibilityElementsHidden = !showSelectButton
-			selectButton?.isEnabled = showSelectButton
-
-			UIAccessibility.post(notification: .layoutChanged, argument: nil)
+			updateSelectButtonVisibility()
 		}
+	}
+
+	private func updateSelectButtonVisibility() {
+		let showButton = showSelectButton && allowMultiSelect
+
+		selectButton?.isHidden = !showButton
+		selectButton?.accessibilityElementsHidden = !showButton
+		selectButton?.isEnabled = showButton
+
+		UIAccessibility.post(notification: .layoutChanged, argument: nil)
 	}
 
 	var showSearchScope: Bool = false {

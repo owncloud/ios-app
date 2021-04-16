@@ -42,7 +42,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
-	private var revealItemLocalID : String?
+	public var revealItemLocalID : String?
 	private var revealItemFound : Bool = false
 
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
