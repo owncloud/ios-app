@@ -475,7 +475,7 @@ extension PublicLinkEditTableViewController {
 			let showInfoObjectCommand = UIKeyCommand(input: "H", modifierFlags: [.command, .alternate], action: #selector(showInfoSubtitles), discoverabilityTitle: "Help".localized)
 			shortcuts.append(showInfoObjectCommand)
 		} else {
-			let shareObjectCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .alternate], action: #selector(shareLinkURL), discoverabilityTitle: "Share".localized)
+			let shareObjectCommand = UIKeyCommand(input: "S", modifierFlags: [.command], action: #selector(shareLinkURL), discoverabilityTitle: "Share".localized)
 			shortcuts.append(shareObjectCommand)
 		}
 
@@ -778,7 +778,7 @@ extension QueryFileListTableViewController {
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 		let scrollTopCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command, .shift], action: #selector(scrollToFirstRow), discoverabilityTitle: "Scroll to Top".localized)
 		let scrollBottomCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command, .shift], action: #selector(scrollToLastRow), discoverabilityTitle: "Scroll to Bottom".localized)
-		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .shift], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
+		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.alternate], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
 		let searchCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
 		// Add key commands for file name letters
 		if sortMethod == .alphabetically, let searchController = searchController, !searchController.isActive {
