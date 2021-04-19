@@ -377,38 +377,35 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	private func updateDisplayTitleAndButtons() {
 		if let itemName = item?.name {
-			func checkActionsButtonPresence() -> Bool {
-				if let items = displayBarButtonItems {
-					return items.filter({$0.tag == moreButtonTag}).count > 0
-				}
-				return false
-			}
-
 			displayTitle = itemName
 
 			if let queryState = query?.state {
-				if queryState != .targetRemoved {
-
-					if checkActionsButtonPresence() == false {
-						let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-						actionsBarButtonItem.tag = moreButtonTag
-						actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-
-						var items = [UIBarButtonItem]()
-						if let previousItems = displayBarButtonItems {
-							items.append(contentsOf: previousItems)
-						}
-						items.insert(actionsBarButtonItem, at: 0)
-						displayBarButtonItems = items
-					}
-
-				} else {
-					displayBarButtonItems?.removeAll(where: { (buttonItem) -> Bool in
-						return buttonItem.tag == moreButtonTag
-					})
-				}
+				displayBarButtonItems = composedDisplayBarButtonItems(previous: displayBarButtonItems, itemName: itemName, itemRemoved: queryState == .targetRemoved)
 			}
 		}
+	}
+
+	var actionBarButtonItem : UIBarButtonItem {
+		let itemName = item?.name ?? ""
+		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+		actionsBarButtonItem.tag = self.moreButtonTag
+		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+
+		return actionsBarButtonItem
+	}
+
+	func composedDisplayBarButtonItems(previous: [UIBarButtonItem]? = nil, itemName: String, itemRemoved: Bool = false) -> [UIBarButtonItem]? {
+		if !itemRemoved {
+			if previous?.filter({ (buttonItemTag) -> Bool in
+				return buttonItemTag.tag == moreButtonTag
+			}).count == 0 || previous == nil {
+				return [ actionBarButtonItem ]
+			} else {
+				return previous
+			}
+		}
+
+		return [ ]
 	}
 
 	private func updateUI() {

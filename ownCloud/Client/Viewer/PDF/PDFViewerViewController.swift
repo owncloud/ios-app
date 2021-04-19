@@ -148,8 +148,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			if !didSetupView {
 				didSetupView  = true
 
-				setupToolbar()
-
 				self.thumbnailViewPosition = .none
 
 				// Configure thumbnail view
@@ -433,14 +431,15 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	}
 
-	private func setupToolbar() {
+	override func composedDisplayBarButtonItems(previous: [UIBarButtonItem]? = nil, itemName: String, itemRemoved: Bool = false) -> [UIBarButtonItem]? {
 		searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
 		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
 		searchButtonItem?.accessibilityLabel = "Search PDF".localized
 		outlineItem?.accessibilityLabel = "Outline".localized
 
-		displayBarButtonItems = [
+		return [
+			actionBarButtonItem,
 			searchButtonItem!,
 			outlineItem!
 		]
