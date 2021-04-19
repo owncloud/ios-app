@@ -112,6 +112,7 @@
 "Enter your username and password" = "Enter your username and password";
 "Please log in to authorize the app." = "Please log in to authorize the app.";
 "Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";

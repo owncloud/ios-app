@@ -60,8 +60,10 @@ class StaticLoginProfile: NSObject {
 		} else {
 			self.promptForTokenAuth = "Please log in to authorize the app.".localized
 		}
-		if let promptForURL = profileDict["promptForURL"] as? String {
+		if let promptForURL = profileDict["promptForURL"] as? String, promptForURL.count > 0 {
 			self.promptForURL = promptForURL
+		} else {
+			self.promptForURL = "Please enter a server URL".localized
 		}
 		if let promptForHelpURL = profileDict["promptForHelpURL"] as? String {
 			self.promptForHelpURL = promptForHelpURL
