@@ -23,39 +23,126 @@ import ownCloudAppShared
 extension OCClassSettingsKey {
 	public static let loginProfileIdentifier : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].identifier")
 	public static let loginProfileName : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].name")
+	public static let loginProfileBookmarkName : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].bookmarkName")
+	public static let loginProfileURL : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].url")
+	public static let loginProfileAllowedHosts : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].allowedHosts")
 	public static let loginProfileAllowedAuthenticationMethods : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].allowedAuthenticationMethods")
+	public static let loginProfilePromptForPasswordAuth : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].promptForPasswordAuth")
+	public static let loginProfilePromptForTokenAuth : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].promptForTokenAuth")
+	public static let loginProfilePromptForURL : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].promptForURL")
+	public static let loginProfilePromptForHelpURL : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].promptForHelpURL")
+	public static let loginProfileHelpURLButtonString : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].helpURLButtonString")
+	public static let loginProfileWelcome : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].welcome")
+	public static let loginProfileHelpURL : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].helpURL")
+	public static let loginProfileCanConfigureURL : OCClassSettingsKey = OCClassSettingsKey("profile-definitions[].canConfigureURL")
 }
 
 extension StaticLoginProfile : OCClassSettingsSupport {
 	static let classSettingsIdentifier : OCClassSettingsIdentifier = .branding
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		return [
-			.loginProfileAllowedAuthenticationMethods : ["com.owncloud.basicauth", "com.owncloud.oauth2"]
-		]
+		return [:]
 	}
 
 	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
 			.loginProfileIdentifier : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "Identifier uniquely identifying the static login profile.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "Identifier uniquely identifying the static login profile.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
 			],
 
 			.loginProfileName : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "Name of the login profile during setup.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "Name of the login profile during setup.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileBookmarkName : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "The name that should be used for the bookmark that's generated from this profile.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileURL : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "The URL of the server targeted by this profile.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileAllowedHosts : [
+				.type 				: OCClassSettingsMetadataType.stringArray,
+				.description		: "Domain names (can also include subdomain name), which are allowed as server url when adding a new account.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
 			],
 
 			.loginProfileAllowedAuthenticationMethods : [
-				.type 		: OCClassSettingsMetadataType.stringArray,
-				.description	: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
+				.type 				: OCClassSettingsMetadataType.stringArray,
+				.description		: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced,
+				.possibleValues		: ["com.owncloud.basicauth", "com.owncloud.oauth2"]
+			],
+
+			.loginProfilePromptForPasswordAuth : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "String which is shown in the profile password view as title.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfilePromptForTokenAuth : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "String which is shown in the profile view as title, before showing the token authentication view.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfilePromptForURL : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "String which is shown in the profile view before the Help URL will be opened",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfilePromptForHelpURL : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "Title which will be shown in an alert view, before the help url will be opened.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileHelpURLButtonString : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "The title for the help button, which will be shown, if a help url was provided.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileWelcome : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "String which is shown in the profile view as welcome title.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileHelpURL : [
+				.type 				: OCClassSettingsMetadataType.string,
+				.description		: "The URL for an optional help link.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
+			],
+
+			.loginProfileCanConfigureURL : [
+				.type 				: OCClassSettingsMetadataType.boolean,
+				.description		: "This value indicates, if the user can configure an own URL in the profile setup.",
+				.category			: "Branding",
+				.status				: OCClassSettingsKeyStatus.advanced
 			]
 		]
 	}
