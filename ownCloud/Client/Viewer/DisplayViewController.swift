@@ -36,7 +36,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, Themeable {
+class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	private let moreButtonTag = 777
 
@@ -91,15 +91,47 @@ class DisplayViewController: UIViewController, Themeable {
 	var progressSummarizer : ProgressSummarizer?
 
 	private var query : OCQuery?
+	private var itemClaimIdentifier : UUID?
+
+	func generateClaim(for item: OCItem) -> OCClaim? {
+		if let core = core {
+			return core.generateTemporaryClaim(for: .view)
+		}
+
+		return nil
+	}
 
 	var item: OCItem? {
 		didSet {
-			considerUpdate()
+			if itemClaimIdentifier == nil, // No claim registered by the DisplayViewController for the item yet
+			let item = item, let core = core,
+			core.localCopy(of: item) != nil, // The item has a local copy
+			let viewClaim = generateClaim(for: item) { // Generate a claim for the item
+
+			   	itemClaimIdentifier = viewClaim.identifier
+				core.add(viewClaim, on: item, completionHandler: nil)
+
+				Log.debug(tagged: ["VersionUpdates"], "Adding viewing claim \(viewClaim.identifier.uuidString)")
+			}
+
+			OnMainThread { [weak self] in
+				self?.considerUpdate()
+			}
 		}
 	}
 	var itemIndex: Int?
 
-	var itemDirectURL: URL?
+	var itemDirectURL: URL? {
+		didSet {
+			// Keep record of last item used for direct URL
+			Log.debug(tagged: ["VersionUpdates"], "Updated directURL with \(itemDirectURL?.path ?? ""), lastUsedItemVersion=\(String(describing: lastUsedItemVersion))")
+
+			if let item = item {
+				lastUsedItem = item
+				lastUsedItemVersion = item.localCopyVersionIdentifier ?? item.itemVersionIdentifier
+			}
+		}
+	}
 
 	var httpAuthHeaders: [String : String]?
 
@@ -273,6 +305,8 @@ class DisplayViewController: UIViewController, Themeable {
 
 		self.state = .downloadInProgress
 
+		Log.debug(tagged: ["VersionUpdates"], "Downloading file at \(item.path ?? "")..")
+
 		self.downloadProgress = core.downloadItem(item, options: downloadOptions, resultHandler: { [weak self] (error, _, latestItem, file) in
 			guard error == nil else {
 				OnMainThread {
@@ -286,11 +320,7 @@ class DisplayViewController: UIViewController, Themeable {
 			}
 
 			self?.state = .downloadFinished
-
-			self?.considerUpdate()
-
 			self?.item = latestItem
-			self?.itemDirectURL = file?.url
 
 			if let claim = file?.claim, let item = latestItem, let self = self {
 				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
@@ -516,6 +546,7 @@ class DisplayViewController: UIViewController, Themeable {
 
 				if let core = self.core {
 					let localCopy = core.localCopy(of: newItem)
+					var didUpdate : Bool = false
 
 					if localCopy == nil {
 						iconImageView.setThumbnailImage(using: core, from: newItem, with: iconImageSize, avoidSystemThumbnails: true)
@@ -531,6 +562,7 @@ class DisplayViewController: UIViewController, Themeable {
 							if error == nil {
 								self.httpAuthHeaders = authHeaders
 								self.itemDirectURL = url
+								didUpdate = true
 							}
 						})
 					} else {
@@ -542,24 +574,23 @@ class DisplayViewController: UIViewController, Themeable {
 							// - item locally modified or no itemDirectURL yet
 							(newItem.locallyModified || itemDirectURL == nil)
 						   ) {
-							if localCopy == nil {
-								downloadItem()
-							} else {
-								// We already have a local copy, just modify item's last used timestamp
+							if let file = newItem.file(with: core) {
+								// Use existing local copy
+								itemDirectURL = file.url
+								didUpdate = true
+
+								// Modify item's last used timestamp
 								core.registerUsage(of: newItem, completionHandler: nil)
-								if let file = newItem.file(with: core) {
-									itemDirectURL = file.url
-								}
+							} else {
+								// Download item
+								self.downloadItem()
+								return
 							}
 						}
 					}
-				}
 
-				lastUsedItem = newItem
-				lastUsedItemVersion = newItem.localCopyVersionIdentifier ?? newItem.itemVersionIdentifier
-
-				if itemDirectURL != nil, canPreviewCurrentItem {
-					OnMainThread {
+					// Render item if possible
+					if itemDirectURL != nil, canPreviewCurrentItem, didUpdate {
 						self.renderItem(completion: { (success) in
 							if !success {
 								self.state = .previewFailed
@@ -579,10 +610,8 @@ class DisplayViewController: UIViewController, Themeable {
 		showPreviewButton.applyThemeCollection(collection)
 		infoLabel.applyThemeCollection(collection)
 	}
-}
 
-extension DisplayViewController : OCQueryDelegate {
-
+	// MARK: - Query delegate
 	func query(_ query: OCQuery, failedWithError error: Error) {
 		// At the moment running query can inform the preview that item has changed or has been removed
 		// Or we can get query error callback e.g. in case connection is lost etc. but if we still have an item,
