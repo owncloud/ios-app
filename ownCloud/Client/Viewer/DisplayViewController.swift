@@ -346,7 +346,52 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 	}
 
+	// MARK: - Update control
+	enum UpdateStrategy {
+		case ask
+		case alwaysUpdate
+		case neverUpdate
+	}
+	var updateStrategy : UpdateStrategy = .alwaysUpdate
+
+	func shouldRenderItem(item: OCItem, isUpdate: Bool, shouldRender: @escaping (Bool) -> Void) {
+		if isUpdate {
+			switch updateStrategy {
+				case .ask:
+					OnMainThread {
+						let alert = UIAlertController(title: NSString(format: "%@ was updated".localized as NSString, item.name ?? "File".localized) as String, message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
+
+						alert.addAction(UIAlertAction(title: "Show new version".localized, style: .default, handler: { [weak self] (_) in
+							self?.updateStrategy = .ask
+							shouldRender(true)
+						}))
+						alert.addAction(UIAlertAction(title: "Update without asking".localized, style: .default, handler: { [weak self] (_) in
+							self?.updateStrategy = .alwaysUpdate
+							shouldRender(true)
+						}))
+						alert.addAction(UIAlertAction(title: "Ignore updates".localized, style: .cancel, handler: { [weak self] (_) in
+							self?.updateStrategy = .neverUpdate
+							shouldRender(false)
+						}))
+
+						self.present(alert, animated: true)
+					}
+
+				case .alwaysUpdate:
+					shouldRender(true)
+
+				case .neverUpdate:
+					shouldRender(false)
+			}
+		} else {
+			shouldRender(true)
+		}
+	}
+
 	// MARK: - Methods to be overriden in subclasses
+	func setup() {
+		// Called right after initialization of the instance (called in subclasses only)
+	}
 
 	func renderItem(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the itemDirectURL property.s
@@ -504,6 +549,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	private var lastUsedItemVersion : OCItemVersionIdentifier?
 	private var lastUsedItemModificationDate : Date?
 
+	private var lastRenderSuccessful : Bool?
+
 	private func considerUpdate() {
 		var localURLLastModified : Date?
 		let oldItem = lastUsedItem
@@ -586,13 +633,21 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 						}
 					}
 
-					// Render item if possible
-					if itemDirectURL != nil, canPreviewCurrentItem, didUpdate {
-						self.renderItem(completion: { (success) in
-							if !success {
-								self.state = .previewFailed
+					// Item rendering
+					if itemDirectURL != nil, canPreviewCurrentItem, didUpdate, let item = item {
+						// Determine if the item should be rendered
+						shouldRenderItem(item: item, isUpdate: (lastRenderSuccessful == true)) { [weak self] (shouldRender) in
+							if shouldRender {
+								// Render item
+								self?.renderItem(completion: { (success) in
+									self?.lastRenderSuccessful = success
+
+									if !success {
+										self?.state = .previewFailed
+									}
+								})
 							}
-						})
+						}
 					}
 				}
 			}

@@ -366,6 +366,12 @@
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
 
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Update without asking" = "Update without asking";
+"Ignore updates" = "Ignore updates";
+
 /* PDF Viewer */
 "Resume" = "Resume";
 "Go to page" = "Go to page";

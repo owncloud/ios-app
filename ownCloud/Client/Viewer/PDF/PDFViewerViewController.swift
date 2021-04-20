@@ -219,6 +219,11 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - View lifecycle management
+	override func setup() {
+		super.setup()
+
+		updateStrategy = .ask
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()

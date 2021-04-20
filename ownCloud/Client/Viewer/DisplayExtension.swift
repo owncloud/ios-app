@@ -44,7 +44,11 @@ extension DisplayExtension where Self: DisplayViewController {
 		}
 
 		let displayExtension = OCExtension(identifier: rawIdentifier, type: .viewer, locations: locationIdentifiers, features: features, objectProvider: { (_ rawExtension, _ context, _ error) -> Any? in
-			return Self()
+			let newInstance = Self()
+
+			newInstance.setup()
+
+			return newInstance
 		}, customMatcher:customMatcher)
 
 		return displayExtension
