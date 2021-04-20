@@ -61,8 +61,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 						self.state = .online
 						self.startQuery()
 
-					default:
-						break
+					default: break
 				}
 			}
 		}
@@ -78,7 +77,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		didSet {
 			if let core = core {
 				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: .initial) { [weak self, weak core] (_, _) in
-					OnMainThread {
+					OnMainThread { [weak self, weak core] in
 						if let connectionStatus = core?.connectionStatus {
 							self?.connectionStatus = connectionStatus
 						}
@@ -109,7 +108,12 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			let viewClaim = generateClaim(for: item) { // Generate a claim for the item
 
 			   	itemClaimIdentifier = viewClaim.identifier
-				core.add(viewClaim, on: item, completionHandler: nil)
+
+				// Add claim to keep file around for viewing
+				core.add(viewClaim, on: item, refreshItem: true, completionHandler: nil)
+
+				// Remove claim after deallocation of viewer
+				core.remove(viewClaim, on: item, afterDeallocationOf: [ self ])
 
 				Log.debug(tagged: ["VersionUpdates"], "Adding viewing claim \(viewClaim.identifier.uuidString)")
 			}
@@ -299,15 +303,14 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 
 		let downloadOptions : [OCCoreOption : Any] = [
-			.returnImmediatelyIfOfflineOrUnavailable : true,
-			.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
+			.returnImmediatelyIfOfflineOrUnavailable : true
 		]
 
 		self.state = .downloadInProgress
 
 		Log.debug(tagged: ["VersionUpdates"], "Downloading file at \(item.path ?? "")..")
 
-		self.downloadProgress = core.downloadItem(item, options: downloadOptions, resultHandler: { [weak self] (error, _, latestItem, file) in
+		self.downloadProgress = core.downloadItem(item, options: downloadOptions, resultHandler: { [weak self] (error, _, latestItem, _) in
 			guard error == nil else {
 				OnMainThread {
 					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
@@ -321,10 +324,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 			self?.state = .downloadFinished
 			self?.item = latestItem
-
-			if let claim = file?.claim, let item = latestItem, let self = self {
-				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
-			}
 		})
 
 		if let progress = self.downloadProgress {
@@ -365,7 +364,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 							self?.updateStrategy = .ask
 							shouldRender(true)
 						}))
-						alert.addAction(UIAlertAction(title: "Update without asking".localized, style: .default, handler: { [weak self] (_) in
+						alert.addAction(UIAlertAction(title: "Refresh without asking".localized, style: .default, handler: { [weak self] (_) in
 							self?.updateStrategy = .alwaysUpdate
 							shouldRender(true)
 						}))
@@ -389,9 +388,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	}
 
 	// MARK: - Methods to be overriden in subclasses
-	func setup() {
-		// Called right after initialization of the instance (called in subclasses only)
-	}
 
 	func renderItem(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the itemDirectURL property.s
@@ -433,7 +429,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	var actionBarButtonItem : UIBarButtonItem {
 		let itemName = item?.name ?? ""
 		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-		actionsBarButtonItem.tag = self.moreButtonTag
+		actionsBarButtonItem.tag = moreButtonTag
 		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
 
 		return actionsBarButtonItem
@@ -673,7 +669,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
-				Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
+				Log.log("DisplayViewController.queryHasChangesAvailable: \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
 
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:

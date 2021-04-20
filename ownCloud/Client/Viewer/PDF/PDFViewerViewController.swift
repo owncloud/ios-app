@@ -131,6 +131,15 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	static var supportedMimeTypes: [String]? = ["application/pdf", "application/illustrator"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
+	required init() {
+		super.init()
+		updateStrategy = .ask
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 		if gotoPageNotificationObserver != nil {
@@ -219,12 +228,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - View lifecycle management
-	override func setup() {
-		super.setup()
-
-		updateStrategy = .ask
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -324,7 +327,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let searchNavigationController = ThemeNavigationController(rootViewController: pdfSearchController)
 		pdfSearchController.pdfDocument = pdfDocument
 		// Interpret the search text and all the matches returned by search view controller
-		pdfSearchController.userSelectedMatchCallback = { (_, matches, selection) in
+		pdfSearchController.userSelectedMatchCallback = { [weak self] (_, matches, selection) in
 			DispatchQueue.main.async { [weak self] in
 				if matches.count > 1 {
 					self?.searchResultsView.matches = matches
@@ -466,8 +469,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		constraints += horizontal
 		NSLayoutConstraint.activate(constraints)
 
-		self.searchResultsView.updateHandler = { selection in
-			self.jumpTo(selection)
+		self.searchResultsView.updateHandler = { [weak self] selection in
+			self?.jumpTo(selection)
 		}
 
 		self.searchResultsView.closeHandler = { [weak self] in

@@ -369,7 +369,7 @@
 "%@ was updated" = "%@ was updated";
 "Would you like to view the updated version?" = "Would you like to view the updated version?";
 "Show new version" = "Show new version";
-"Update without asking" = "Update without asking";
+"Refresh without asking" = "Refresh without asking";
 "Ignore updates" = "Ignore updates";
 
 /* PDF Viewer */
