@@ -131,6 +131,12 @@
 			// END: Workaround for iOS 12 Swift crash bug - this code is usually in +initializeBranding in ownCloudAppShared.framework - remove when dropping iOS 12 support
 		}
 	}
+
+	// Provide hook to allow Swift extensions in the app to register defaults and metadata
+	if ([self conformsToProtocol:@protocol(StaticProfileBridge)])
+	{
+		[((Class<StaticProfileBridge>)self) initializeStaticProfileBridge];
+	}
 }
 
 + (Branding *)sharedBranding

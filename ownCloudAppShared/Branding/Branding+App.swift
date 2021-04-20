@@ -135,7 +135,7 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("canAddAccount",		forClassSettingsKey: .canAddAccount)
 		registerLegacyKeyPath("canEditAccount",		forClassSettingsKey: .canEditAccount)
-		registerLegacyKeyPath("enableReviewPrompt",		forClassSettingsKey: .enableReviewPrompt)
+		registerLegacyKeyPath("enableReviewPrompt",	forClassSettingsKey: .enableReviewPrompt)
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
@@ -200,7 +200,15 @@ extension Branding {
 	}
 
 	public var profileDefinitions : [[String : Any]]? {
-		return computedValue(forClassSettingsKey: .profileDefinitions) as? [[String : Any]]
+		var definitions = computedValue(forClassSettingsKey: .profileDefinitions) as? [[String : Any]]
+
+		if definitions == nil {
+			if let bridge = self as? StaticProfileBridge, let definitionDict = type(of: bridge).composeBrandingDict() {
+				definitions = [ definitionDict ]
+			}
+		}
+
+		return definitions
 	}
 }
 
