@@ -329,6 +329,36 @@ tag::branding[]
 |The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
 |advanced `candidate`
 
+|branding.profile-definitions[].allowedHosts
+|stringArray
+|
+|Domain names (can also include subdomain name), which are allowed as server url when adding a new account.
+|advanced `candidate`
+
+|branding.profile-definitions[].bookmarkName
+|string
+|
+|The name that should be used for the bookmark that's generated from this profile.
+|advanced `candidate`
+
+|branding.profile-definitions[].canConfigureURL
+|bool
+|
+|This value indicates, if the user can configure an own URL in the profile setup.
+|advanced `candidate`
+
+|branding.profile-definitions[].helpURL
+|string
+|
+|The URL for an optional help link.
+|advanced `candidate`
+
+|branding.profile-definitions[].helpURLButtonString
+|string
+|
+|The title for the help button, which will be shown, if a help url was provided.
+|advanced `candidate`
+
 |branding.profile-definitions[].identifier
 |string
 |
@@ -339,6 +369,42 @@ tag::branding[]
 |string
 |
 |Name of the login profile during setup.
+|advanced `candidate`
+
+|branding.profile-definitions[].promptForHelpURL
+|string
+|
+|Title which will be shown in an alert view, before the help url will be opened.
+|advanced `candidate`
+
+|branding.profile-definitions[].promptForPasswordAuth
+|string
+|
+|String which is shown in the profile password view as title.
+|advanced `candidate`
+
+|branding.profile-definitions[].promptForTokenAuth
+|string
+|
+|String which is shown in the profile view as title, before showing the token authentication view.
+|advanced `candidate`
+
+|branding.profile-definitions[].promptForURL
+|string
+|
+|String which is shown in the profile view before the Help URL will be opened
+|advanced `candidate`
+
+|branding.profile-definitions[].url
+|string
+|
+|The URL of the server targeted by this profile.
+|advanced `candidate`
+
+|branding.profile-definitions[].welcome
+|string
+|
+|String which is shown in the profile view as welcome title.
 |advanced `candidate`
 
 |branding.send-feedback-address
