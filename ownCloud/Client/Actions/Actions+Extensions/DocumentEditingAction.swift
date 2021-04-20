@@ -29,7 +29,7 @@ class DocumentEditingAction : Action {
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
-	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic"] }
+	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic", "image/gif"] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
 
 	// MARK: - Extension matching
