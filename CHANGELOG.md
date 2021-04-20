@@ -20,6 +20,7 @@ Summary
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 * Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
 * Change - File Provider Passcode Protection: [#880](https://github.com/owncloud/ios-app/issues/880)
+* Change - Updated Keyboard Shortcuts: [#902](https://github.com/owncloud/ios-app/issues/902)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
 Details
@@ -106,6 +107,13 @@ Details
    interface for direct unlocking.
 
    https://github.com/owncloud/ios-app/issues/880
+
+* Change - Updated Keyboard Shortcuts: [#902](https://github.com/owncloud/ios-app/issues/902)
+
+   Added keyboard shortcuts in PDF view, media playback can now completely controlled by the
+   keyboard and fixed broken keyboard commands.
+
+   https://github.com/owncloud/ios-app/issues/902
 
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
 
