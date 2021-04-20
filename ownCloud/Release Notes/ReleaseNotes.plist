@@ -1117,6 +1117,16 @@ Search terms and filter keywords can be combined inside the search field to get 
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Updated Keyboard Shortcuts</string>
+					<key>Subtitle</key>
+					<string>Added keyboard shortcuts in PDF view, media playback can now completely controlled by the keyboard and fixed broken keyboard commands.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>keyboard</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>French Localization</string>
 					<key>Subtitle</key>
 					<string>The app is now localized in french</string>
