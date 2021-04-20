@@ -41,7 +41,9 @@ extension StaticLoginProfile : OCClassSettingsSupport {
 	static let classSettingsIdentifier : OCClassSettingsIdentifier = .branding
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		return [:]
+		return [
+			.loginProfileAllowedAuthenticationMethods : ["com.owncloud.basicauth", "com.owncloud.oauth2"]
+		]
 	}
 
 	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
@@ -85,8 +87,7 @@ extension StaticLoginProfile : OCClassSettingsSupport {
 				.type 				: OCClassSettingsMetadataType.stringArray,
 				.description		: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
 				.category			: "Branding",
-				.status				: OCClassSettingsKeyStatus.advanced,
-				.possibleValues		: ["com.owncloud.basicauth", "com.owncloud.oauth2"]
+				.status				: OCClassSettingsKeyStatus.advanced
 			],
 
 			.loginProfilePromptForPasswordAuth : [
