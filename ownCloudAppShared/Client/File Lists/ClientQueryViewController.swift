@@ -29,7 +29,7 @@ public struct OCItemDraggingValue {
 	var bookmarkUUID : String
 }
 
-open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
+open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate, UISearchControllerDelegate {
 	public var folderActionBarButton: UIBarButtonItem?
 	public var plusBarButton: UIBarButtonItem?
 
@@ -37,19 +37,62 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	public var quotaObservation : NSKeyValueObservation?
 	public var titleButtonThemeApplierToken : ThemeApplierToken?
 
+	public var breadCrumbsPush : Bool = false
+
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+	public var revealItemLocalID : String?
+	private var revealItemFound : Bool = false
 
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
+	private let moreCellIdentifier = "moreCell"
+	private let moreCellAccessibilityIdentifier = "more-results"
+
+	open override var activeQuery : OCQuery {
+		if let customSearchQuery = customSearchQuery {
+			return customSearchQuery
+		} else {
+			return query
+		}
+	}
+
+ 	var customSearchQuery : OCQuery? {
+ 		willSet {
+ 			if customSearchQuery != newValue, let customQuery = customSearchQuery {
+ 				core?.stop(customQuery)
+ 				customQuery.delegate = nil
+ 			}
+ 		}
+
+ 		didSet {
+ 			if customSearchQuery != nil, let customQuery = customSearchQuery {
+ 				customQuery.delegate = self
+ 				customQuery.sortComparator = sortMethod.comparator(direction: sortDirection)
+ 				core?.start(customQuery)
+ 			}
+ 		}
+ 	}
+	open override var searchScope: SearchScope {
+ 		set {
+ 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
+ 		}
+
+ 		get {
+ 			let scope = SearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SearchScope.local
+ 			return scope
+ 		}
+ 	}
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
 		self.init(core: inCore, query: inQuery, rootViewController: nil)
 	}
 
-	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: UIViewController?) {
+	public init(core inCore: OCCore, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
+		revealItemLocalID = inItem?.localID
+		breadCrumbsPush = revealItemLocalID != nil
 
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
@@ -97,6 +140,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	deinit {
+		customSearchQuery = nil
+
 		queryStateObservation = nil
 		quotaObservation = nil
 
@@ -105,6 +150,84 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			titleButtonThemeApplierToken = nil
 		}
 	}
+
+	open override func registerCellClasses() {
+		super.registerCellClasses()
+
+		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: moreCellIdentifier)
+	}
+
+	// MARK: - Search events
+	open func willPresentSearchController(_ searchController: UISearchController) {
+ 		self.sortBar?.showSearchScope = true
+		self.tableView.setContentOffset(.zero, animated: false)
+ 	}
+
+ 	open func willDismissSearchController(_ searchController: UISearchController) {
+ 		self.sortBar?.showSearchScope = false
+ 	}
+
+	// MARK: - Search scope support
+ 	private var searchText: String?
+ 	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
+ 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
+
+	open override func applySearchFilter(for searchText: String?, to query: OCQuery) {
+ 		self.searchText = searchText
+
+ 		updateCustomSearchQuery()
+ 	}
+
+	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+ 		updateCustomSearchQuery()
+ 	}
+
+	open override func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+ 		sortMethod = didUpdateSortMethod
+
+ 		let comparator = sortMethod.comparator(direction: sortDirection)
+
+ 		query.sortComparator = comparator
+ 		customSearchQuery?.sortComparator = comparator
+
+		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
+	 		updateCustomSearchQuery()
+		}
+ 	}
+
+	private var lastSearchText : String?
+	private var scrollToTopWithNextRefresh : Bool = false
+
+ 	public func updateCustomSearchQuery() {
+		if lastSearchText != searchText {
+			// Reset max result count when search text changes
+			maxResultCount = maxResultCountDefault
+			lastSearchText = searchText
+
+			// Scroll to top when search text changes
+			scrollToTopWithNextRefresh = true
+		}
+
+ 		if let searchText = searchText,
+		   let searchScope = sortBar?.searchScope,
+		   searchScope == .global,
+ 		   let condition = OCQueryCondition.fromSearchTerm(searchText) {
+			if let sortPropertyName = sortBar?.sortMethod.sortPropertyName {
+				condition.sortBy = sortPropertyName
+				condition.sortAscending = (sortDirection != .ascendant)
+			}
+
+			condition.maxResultCount = NSNumber(value: maxResultCount)
+
+			self.customSearchQuery = OCQuery(condition:condition, inputFilter: nil)
+ 		} else {
+ 			self.customSearchQuery = nil
+ 		}
+
+ 		super.applySearchFilter(for: searchText, to: query)
+
+ 		self.queryHasChangesAvailable(activeQuery)
+ 	}
 
 	// MARK: - View controller events
 	open override func viewDidLoad() {
@@ -136,6 +259,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	private var viewControllerVisible : Bool = false
 
+	open override func viewDidAppear(_ animated: Bool) {
+ 		super.viewDidAppear(animated)
+
+ 		searchController?.delegate = self
+ 	}
+
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
@@ -162,6 +291,52 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
+	}
+
+	// MARK: - Table view datasource
+	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		var numberOfRows = super.tableView(tableView, numberOfRowsInSection: section)
+
+		if customSearchQuery != nil, numberOfRows >= maxResultCount {
+			numberOfRows += 1
+		}
+
+		return numberOfRows
+	}
+
+	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let numberOfRows = super.tableView(tableView, numberOfRowsInSection: 0)
+		var cell : UITableViewCell?
+
+		if indexPath.row < numberOfRows {
+			cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+			if revealItemLocalID != nil, let itemCell = cell as? ClientItemCell, let itemLocalID = itemCell.item?.localID {
+				itemCell.revealHighlight = (itemLocalID == revealItemLocalID)
+			}
+		} else {
+			let moreCell = tableView.dequeueReusableCell(withIdentifier: moreCellIdentifier, for: indexPath) as? ThemeTableViewCell
+
+			moreCell?.accessibilityIdentifier = moreCellAccessibilityIdentifier
+			moreCell?.textLabel?.text = "Show more results".localized
+
+			cell = moreCell
+		}
+
+		return cell!
+	}
+
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let cell = tableView.cellForRow(at: indexPath), cell.accessibilityIdentifier == moreCellAccessibilityIdentifier {
+			maxResultCount += maxResultCountDefault
+			updateCustomSearchQuery()
+		} else {
+			super.tableView(tableView, didSelectRowAt: indexPath)
+		}
+	}
+
+	public override func showReveal(at path: IndexPath) -> Bool {
+		return (customSearchQuery != nil)
 	}
 
 	// MARK: - Table view delegate
@@ -225,8 +400,11 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
-
 	open func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+		if customSearchQuery != nil {
+			// No dropping on a smart search toolbar
+			return false
+		}
 		return true
 	}
 
@@ -333,6 +511,16 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		if let shortName = core?.bookmark.shortName {
 			tableViewController.bookmarkShortName = shortName
 		}
+		if breadCrumbsPush {
+			tableViewController.navigationHandler = { [weak self] (path) in
+				if let self = self, let core = self.core {
+					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+					queryViewController.breadCrumbsPush = true
+
+					self.navigationController?.pushViewController(queryViewController, animated: true)
+				}
+			}
+		}
 
 		if #available(iOS 13, *) {
 			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
@@ -363,7 +551,28 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Updates
 	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		if let rootItem = self.query.rootItem {
+		guard query == activeQuery else {
+			return
+		}
+
+		super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+
+		if let revealItemLocalID = revealItemLocalID, !revealItemFound {
+			var rowIdx : Int = 0
+
+			for item in items {
+				if item.localID == revealItemLocalID {
+					OnMainThread {
+						self.tableView.scrollToRow(at: IndexPath(row: rowIdx, section: 0), at: .middle, animated: true)
+					}
+					revealItemFound = true
+					break
+				}
+				rowIdx += 1
+			}
+		}
+
+		if let rootItem = self.query.rootItem, searchText == nil {
 			if query.queryPath != "/" {
 				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				if self.items.count == 1 {
@@ -380,6 +589,20 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
 					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
+			}
+		} else {
+			self.updateFooter(text: nil)
+		}
+	}
+
+	open override func delegatedTableViewDataReload() {
+		super.delegatedTableViewDataReload()
+
+		if scrollToTopWithNextRefresh {
+			scrollToTopWithNextRefresh = false
+
+			OnMainThread {
+				self.tableView.setContentOffset(.zero, animated: false)
 			}
 		}
 	}

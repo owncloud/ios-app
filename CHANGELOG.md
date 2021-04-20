@@ -16,6 +16,7 @@ Summary
 * Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+* Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 * Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
@@ -75,6 +76,13 @@ Details
    Added french localization.
 
    https://github.com/owncloud/enterprise/issues/4450
+
+* Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
+
+   User can switch between local folder or local account-wide search. Search terms and filter
+   keywords can be combined inside the search field to get granular search results.
+
+   https://github.com/owncloud/ios-app/issues/53
 
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 

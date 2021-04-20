@@ -95,7 +95,8 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
-"Search this folder" = "Search this folder";
+"Search folder" = "Search folder";
+"Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 
@@ -103,6 +104,12 @@
 "Total: %@" = "Total: %@";
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
+
+"Show more results" = "Show more results";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
 
 /* Static Login Setup */
 "Server error" = "Server error";

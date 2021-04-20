@@ -30,6 +30,22 @@ public extension UIView {
 		self.layer.add(animation, forKey: "shakeHorizontally")
 	}
 
+	func beginPulsing(duration: TimeInterval = 1) {
+		let pulseAnimation = CABasicAnimation(keyPath: "opacity")
+
+		pulseAnimation.fromValue = 1
+		pulseAnimation.toValue = 0.3
+		pulseAnimation.repeatCount = .infinity
+		pulseAnimation.autoreverses = true
+		pulseAnimation.duration = duration
+
+		layer.add(pulseAnimation, forKey: "opacity")
+	}
+
+	func endPulsing() {
+		layer.removeAnimation(forKey: "opacity")
+	}
+
 	// MARK: - View hierarchy
 	func findSubviewInTree(where filter: (UIView) -> Bool) -> UIView? {
 		for subview in subviews {

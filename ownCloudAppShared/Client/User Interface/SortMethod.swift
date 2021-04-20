@@ -37,23 +37,41 @@ public enum SortMethod: Int {
 
 	public static var all: [SortMethod] = [alphabetically, kind, size, date, shared]
 
-	public func localizedName() -> String {
+	public var localizedName : String {
 		var name = ""
 
 		switch self {
-		case .alphabetically:
-			name = "name".localized
-		case .kind:
-			name = "kind".localized
-		case .size:
-			name = "size".localized
-		case .date:
-			name = "date".localized
-		case .shared:
-			name = "shared".localized
+			case .alphabetically:
+				name = "name".localized
+			case .kind:
+				name = "kind".localized
+			case .size:
+				name = "size".localized
+			case .date:
+				name = "date".localized
+			case .shared:
+				name = "shared".localized
 		}
 
 		return name
+	}
+
+	public var sortPropertyName : OCItemPropertyName? {
+		var propertyName : OCItemPropertyName?
+
+		switch self {
+			case .alphabetically:
+				propertyName = .name
+			case .kind:
+				propertyName = .mimeType
+			case .size:
+				propertyName = .size
+			case .date:
+				propertyName = .lastModified
+			case .shared: break
+		}
+
+		return propertyName
 	}
 
 	public func comparator(direction: SortDirection) -> OCSort {

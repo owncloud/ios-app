@@ -62,9 +62,17 @@
 
 					if ((error = [ZIPArchive compressContentsOf:sourceURL asZipFile:zipURL]) == nil)
 					{
-						if ([[NSFileManager defaultManager] removeItemAtURL:sourceURL error:&error])
+						BOOL success = [[NSFileManager defaultManager] removeItemAtURL:sourceURL error:&error];
+
+						OCFileOpLog(@"rm", error, @"Removed ZIP source at %@", sourceURL.path);
+
+						if (success)
 						{
-							if (![[NSFileManager defaultManager] moveItemAtURL:zipURL toURL:sourceURL error:&error])
+							success = [[NSFileManager defaultManager] moveItemAtURL:zipURL toURL:sourceURL error:&error];
+
+							OCFileOpLog(@"mv", error, @"Renamed from ZIPped %@ to %@", zipURL.path, sourceURL.path);
+
+							if (!success)
 							{
 								OCLogDebug(@"Moving %@ to %@ failed with error=%@", OCLogPrivate(zipURL), OCLogPrivate(sourceURL), OCLogPrivate(error));
 							}

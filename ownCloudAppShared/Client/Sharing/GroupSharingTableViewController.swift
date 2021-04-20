@@ -376,7 +376,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		}
 	}
 
-	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+	public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
 		self.messageView?.message(show: false)
 
