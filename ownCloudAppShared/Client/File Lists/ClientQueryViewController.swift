@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -359,15 +359,15 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
-				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
-					return UITableViewDropProposal(operation: .forbidden)
-				}
+			if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
+				return UITableViewDropProposal(operation: .forbidden)
+			}
 
-				if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
-					return UITableViewDropProposal(operation: .move)
-				} else {
-					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
-				}
+			if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
+				return UITableViewDropProposal(operation: .move)
+			} else {
+				return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+			}
 		} else {
 			return UITableViewDropProposal(operation: .copy)
 		}
@@ -397,7 +397,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				}
 			}
 		}
-
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
@@ -429,8 +428,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	open func dragInteraction(_ interaction: UIDragInteraction,
-						 session: UIDragSession,
-						 didEndWith operation: UIDropOperation) {
+							  session: UIDragSession,
+							  didEndWith operation: UIDropOperation) {
 		removeToolbar()
 	}
 
@@ -445,7 +444,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(true)
 			}
-		}) {
+		   }) {
 			self.progressSummarizer?.startTracking(progress: progress)
 		}
 	}
@@ -524,14 +523,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 
 		if #available(iOS 13, *) {
- 			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
- 			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
- 			let popoverArrowHeight : CGFloat = 13
+			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
+			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
+			let popoverArrowHeight : CGFloat = 13
 
-  			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
- 			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
- 			tableViewController.tableView.separatorInset = UIEdgeInsets()
- 		}
+			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
+			tableViewController.tableView.separatorInset = UIEdgeInsets()
+		}
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
@@ -674,7 +673,6 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 
 					destinationItem =  rootItem
-
 				}
 
 				// Move Items in the same Account
@@ -686,16 +684,13 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}) {
 						self.progressSummarizer?.startTracking(progress: progress)
 					}
-				// Copy Items between Accounts
+					// Copy Items between Accounts
 				} else {
 					OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
 						if error == nil {
 							srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
 								if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
 									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (error, _, _, _) in
-										if error == nil {
-
-										}
 									}
 								}
 							})
@@ -709,7 +704,10 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					kUTTypeImage,
 					kUTTypeMovie,
 					kUTTypePDF,
-					kUTTypeData
+					kUTTypeText,
+					kUTTypeRTF,
+					kUTTypeHTML,
+					kUTTypePlainText
 				]
 				var useUTI : String?
 				var useIndex : Int = Int.max
@@ -731,11 +729,43 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 				}
 
-				guard let loadUTI = useUTI else { return }
+				if useUTI == nil, typeIdentifiers.count == 1 {
+					useUTI = typeIdentifiers.first
+				}
 
-				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: loadUTI) { (url, _ error) in
+				if useUTI == nil {
+					useUTI = kUTTypeData as String
+				}
+
+				var fileName: String?
+
+				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
 					guard let url = url else { return }
-					self.upload(itemURL: url, name: url.lastPathComponent)
+
+					let fileNameMaxLength = 16
+
+					if useUTI == kUTTypeUTF8PlainText as String {
+						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
+					}
+
+					if useUTI == kUTTypeRTF as String {
+						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
+						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
+					}
+
+					fileName = fileName?
+						.trimmingCharacters(in: .illegalCharacters)
+						.trimmingCharacters(in: .whitespaces)
+						.trimmingCharacters(in: .newlines)
+						.filter({ $0.isASCII })
+
+					if fileName == nil {
+						fileName = url.lastPathComponent
+					}
+
+					guard let name = fileName else { return }
+
+					self.upload(itemURL: url, name: name)
 				}
 			}
 		}
@@ -821,70 +851,70 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		switch item.type {
-			case .collection:
-				guard let data = item.serializedData() else { return nil }
+		case .collection:
+			guard let data = item.serializedData() else { return nil }
 
-				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: ItemDataUTI)
-				let dragItem = UIDragItem(itemProvider: itemProvider)
+			let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: ItemDataUTI)
+			let dragItem = UIDragItem(itemProvider: itemProvider)
 
-				dragItem.localObject = draggingValue
+			dragItem.localObject = draggingValue
 
-				return dragItem
+			return dragItem
 
-			case .file:
-				guard let itemMimeType = item.mimeType else { return nil }
+		case .file:
+			guard let itemMimeType = item.mimeType else { return nil }
 
-				let mimeTypeCF = itemMimeType as CFString
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
+			let mimeTypeCF = itemMimeType as CFString
+			guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
 
-				let itemProvider = NSItemProvider()
+			let itemProvider = NSItemProvider()
 
-				itemProvider.suggestedName = item.name
+			itemProvider.suggestedName = item.name
 
-				itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
-					var progress : Progress?
+			itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
+				var progress : Progress?
 
-					guard let core = core else {
-						completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
-						return nil
-					}
-
-					if let localFileURL = core.localCopy(of: item) {
-						// Provide local copies directly
-						completionHandler(localFileURL, true, nil)
-					} else {
-						// Otherwise download the file and provide it when done
-						progress = core.downloadItem(item, options: [
-							.returnImmediatelyIfOfflineOrUnavailable : true,
-							.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
-						], resultHandler: { [weak self] (error, core, item, file) in
-							guard error == nil, let fileURL = file?.url else {
-								completionHandler(nil, false, error)
-								return
-							}
-
-							completionHandler(fileURL, true, nil)
-
-							if let claim = file?.claim, let item = item, let self = self {
-								self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
-							}
-						})
-					}
-
-					return progress
-				})
-
-				itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
-					guard let data = item.serializedData() else { return nil }
-					completionHandler(data, nil)
-
+				guard let core = core else {
+					completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
 					return nil
 				}
 
-				let dragItem = UIDragItem(itemProvider: itemProvider)
-				dragItem.localObject = draggingValue
+				if let localFileURL = core.localCopy(of: item) {
+					// Provide local copies directly
+					completionHandler(localFileURL, true, nil)
+				} else {
+					// Otherwise download the file and provide it when done
+					progress = core.downloadItem(item, options: [
+						.returnImmediatelyIfOfflineOrUnavailable : true,
+						.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
+					], resultHandler: { [weak self] (error, core, item, file) in
+						guard error == nil, let fileURL = file?.url else {
+							completionHandler(nil, false, error)
+							return
+						}
 
-				return dragItem
+						completionHandler(fileURL, true, nil)
+
+						if let claim = file?.claim, let item = item, let self = self {
+							self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
+						}
+					})
+				}
+
+				return progress
+			})
+
+			itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
+				guard let data = item.serializedData() else { return nil }
+				completionHandler(data, nil)
+
+				return nil
+			}
+
+			let dragItem = UIDragItem(itemProvider: itemProvider)
+			dragItem.localObject = draggingValue
+
+			return dragItem
 		}
 	}
 }
