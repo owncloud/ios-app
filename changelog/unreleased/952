@@ -1,0 +1,5 @@
+Bugfix: Disable Markup Action for Mime-Type Gif
+
+Images with mime type image/gif can not edited with markup action and needs to be disabled.
+
+https://github.com/owncloud/ios-app/issues/952
