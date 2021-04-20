@@ -14,6 +14,7 @@ Summary
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+* Change - Background Media Upload: [#940](https://github.com/owncloud/ios-app/pull/940)
 
 Details
 -------
@@ -60,6 +61,14 @@ Details
    provider.
 
    https://github.com/owncloud/ios-app/pull/910
+
+* Change - Background Media Upload: [#940](https://github.com/owncloud/ios-app/pull/940)
+
+   Uploading media in the background can now be enabled in the app settings. This will
+   automatically upload new media files in the iOS Camera Roll when significant location changes
+   occur in the background, without opening the app.
+
+   https://github.com/owncloud/ios-app/pull/940
 
 Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
 =======================================
