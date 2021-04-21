@@ -614,7 +614,10 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 							// - item locally modified or no itemDirectURL yet
 							(newItem.locallyModified || itemDirectURL == nil)
 						   ) {
-							if let file = newItem.file(with: core) {
+							if let file = newItem.file(with: core),
+							   let filePath = file.url?.path,
+							   FileManager.default.fileExists(atPath: filePath) { // If file does not exist, force download, which will take care of this
+
 								// Use existing local copy
 								itemDirectURL = file.url
 								didUpdate = true
