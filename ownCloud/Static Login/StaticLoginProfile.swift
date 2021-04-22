@@ -275,8 +275,9 @@ extension Branding : StaticProfileBridge {
 				StaticLoginProfile.Key.allowedAuthenticationMethods.settingsKey : [
 					.type 		: OCClassSettingsMetadataType.stringArray,
 					.label		: "Allowed authentication methods",
-					.description 	: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available. See connection.allowed-authentication-methods for possible values.",
+					.description 	: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
 					.status		: OCClassSettingsKeyStatus.advanced,
+					.possibleValues : OCConnection.authenticationMethodIdentifierMetadata(),
 					.category	: "Branding",
 					.subCategory	: "Profile"
 				],

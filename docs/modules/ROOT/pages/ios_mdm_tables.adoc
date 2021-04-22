@@ -382,7 +382,22 @@ branding.profile-allow-url-configuration
 branding.profile-allowed-authentication-methods
 |stringArray
 |
-|The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available. See connection.allowed-authentication-methods for possible values.
+|The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
 |advanced `candidate`
 
 |`Profile` +

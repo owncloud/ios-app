@@ -686,7 +686,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Array of dictionaries, each specifying a profile. All `Profile` keys (with the `branding.` prefix removed) can be used in the profile dictionaries.",
+    "description" : "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
     "flatIdentifier" : "branding.profile-definitions",
     "key" : "profile-definitions",
     "label" : "Profile definitions",
@@ -1746,10 +1746,24 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available. See connection.allowed-authentication-methods for possible values.",
+    "description" : "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
     "flatIdentifier" : "branding.profile-allowed-authentication-methods",
     "key" : "profile-allowed-authentication-methods",
     "label" : "Allowed authentication methods",
+    "possibleValues" : [
+      {
+        "description" : "Basic Auth",
+        "value" : "com.owncloud.basicauth"
+      },
+      {
+        "description" : "OAuth2",
+        "value" : "com.owncloud.oauth2"
+      },
+      {
+        "description" : "OpenID Connect",
+        "value" : "com.owncloud.openid-connect"
+      }
+    ],
     "status" : "advanced",
     "subCategory" : "Profile",
     "subCategoryTag" : "profile",
