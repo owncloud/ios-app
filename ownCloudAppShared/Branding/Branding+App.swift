@@ -45,7 +45,8 @@ extension Branding : BrandingInitialization {
 				.sendFeedbackAddress : "ios-app@owncloud.com",
 
 				.canAddAccount : true,
-				.canEditAccount : true
+				.canEditAccount : true,
+				.enableReviewPrompt : true
 
 	//			.profileDefinitions : [],
 	//			.themeGenericColors : [:],
@@ -100,9 +101,17 @@ extension Branding : BrandingInitialization {
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
 
+				.enableReviewPrompt : [
+ 					.type 		: OCClassSettingsMetadataType.boolean,
+ 					.description	: "Controls whether the app should prompt for an App Store review.",
+ 					.category	: "Branding",
+ 					.status		: OCClassSettingsKeyStatus.advanced
+ 				],
+
 				.profileDefinitions : [
 					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.description	: "Array of dictionaries, each specifying a static profile.",
+					.label		: "Profile definitions",
+					.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
 				],

@@ -49,7 +49,7 @@
 
 				@"can-add-account" : @(YES),
 				@"can-edit-account" : @(YES),
-				@"enable-review-prompt" : @(NO)
+				@"enable-review-prompt" : @(YES)
 			} metadata:@{
 				@"url-documentation" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
@@ -102,7 +102,7 @@
 
 				@"enable-review-prompt" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
-					OCClassSettingsMetadataKeyDescription	: @"Controls whether the app should prompt for an App Store review",
+					OCClassSettingsMetadataKeyDescription	: @"Controls whether the app should prompt for an App Store review.",
 					OCClassSettingsMetadataKeyCategory	: @"Branding",
 					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
 				},
