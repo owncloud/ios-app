@@ -88,7 +88,7 @@ You can easily fire up an ownCloud server on your Mac using Docker.
 docker run --rm -d \
   --name owncloud \
   -p 18080:8080 \
-  -e OWNCLOUD_APPS_INSTALL=oauth2 \
+  -e OWNCLOUD_APPS_ENABLE=oauth2 \
   -e ADMIN_USERNAME=admin \
   -e ADMIN_PASSWORD=admin \
   owncloud/server:latest
