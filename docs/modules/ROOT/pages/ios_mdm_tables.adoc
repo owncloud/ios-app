@@ -313,8 +313,8 @@ tag::branding[]
 
 |branding.enable-review-prompt
 |bool
-|`true`
-|Controls whether the app should prompt for an App Store review.
+|`false`
+|Controls whether the app should prompt for an App Store review. Only applies if the app is branded.
 |advanced `candidate`
 
 |**Profile definitions** +
