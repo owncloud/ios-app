@@ -95,7 +95,8 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
-"Search this folder" = "Search this folder";
+"Search folder" = "Search folder";
+"Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 
@@ -104,11 +105,21 @@
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"Show more results" = "Show more results";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
+
 /* Static Login Setup */
 "Server error" = "Server error";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
+"Enter your username and password" = "Enter your username and password";
+"Please log in to authorize the app." = "Please log in to authorize the app.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
