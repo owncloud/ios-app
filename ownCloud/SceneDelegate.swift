@@ -86,22 +86,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
-		guard let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
-			return false
-		}
+		if let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String,
+		   let bookmarkUUID = UUID(uuidString: bookmarkUUIDString),
+		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
+		   let navigationController = window?.rootViewController as? ThemeNavigationController,
+		   let serverListController = navigationController.topViewController as? ServerListTableViewController {
+			if activity.title == OCBookmark.ownCloudOpenAccountPath {
+				serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
+				window?.windowScene?.userActivity = bookmark.openAccountUserActivity
 
-		if activity.title == OCBookmark.ownCloudOpenAccountPath {
-			serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
-			window?.windowScene?.userActivity = bookmark.openAccountUserActivity
+				return true
+			} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
+				guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
+					return false
+				}
 
-			return true
-		} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
-			guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
-				return false
+				// At first connect to the bookmark for the item
+				serverListController.connect(to: bookmark, lastVisibleItemId: itemLocalID, animated: false)
+				window?.windowScene?.userActivity = activity
+
+				return true
 			}
-
-			// At first connect to the bookmark for the item
-			serverListController.connect(to: bookmark, lastVisibleItemId: itemLocalID, animated: false)
+		} else if activity.activityType == ServerListTableViewController.showServerListActivityType {
+			// Show server list
 			window?.windowScene?.userActivity = activity
 
 			return true

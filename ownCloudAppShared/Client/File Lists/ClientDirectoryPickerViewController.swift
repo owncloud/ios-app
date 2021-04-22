@@ -36,7 +36,6 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var selectButton: UIBarButtonItem?
 	private var selectButtonTitle: String?
 	private var cancelBarButton: UIBarButtonItem?
-
 	open var directoryPath : String?
 
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
@@ -115,6 +114,8 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Disable pull to refresh
 		allowPullToRefresh = false
+
+		isMoreButtonPermanentlyHidden = true
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
@@ -142,7 +143,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 
-		sortBar?.showSelectButton = false
+		sortBar?.allowMultiSelect = false
 		tableView.dragInteractionEnabled = false
 	}
 
@@ -167,12 +168,6 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 				self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 			}
 		}
-	}
-
-	override open func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-
-		sortBar?.showSelectButton = false
 	}
 
 	private func allowNavigationFor(item: OCItem?) -> Bool {
@@ -263,6 +258,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
 			pickerController.cancelAction = cancelAction
+			pickerController.breadCrumbsPush = self.breadCrumbsPush
 
 			self.navigationController?.pushViewController(pickerController, animated: true)
 		}
@@ -368,5 +364,19 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		} else {
 			super.queryHasChangesAvailable(query)
 		}
+	}
+
+	public override func revealViewController(core: OCCore, path: String, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
+		guard let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
+			return nil
+		}
+
+		let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+
+		pickerController.revealItemLocalID = item.localID
+		pickerController.cancelAction = cancelAction
+		pickerController.breadCrumbsPush = true
+
+		return pickerController
 	}
 }

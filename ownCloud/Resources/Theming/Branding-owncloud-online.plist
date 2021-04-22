@@ -19,12 +19,6 @@
 			<string>ownCloud-online</string>
 			<key>name</key>
 			<string>ownCloud Online</string>
-			<key>welcome</key>
-			<string>Welcome to ownCloud Online</string>
-			<key>promptForPasswordAuth</key>
-			<string>Enter your username and password</string>
-			<key>promptForTokenAuth</key>
-			<string>Please log in to authorize the app.</string>
 			<key>promptForURL</key>
 			<string>Please enter your ownCloud Online URL</string>
 			<key>promptForHelpURL</key>

@@ -172,11 +172,18 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	}
 
 	// MARK: - Startup
-	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping ((_ error: Error?) -> Void)) {
+	func afterCoreStart(_ lastVisibleItemId: String?, busyHandler: OCCoreBusyStatusHandler? = nil, completionHandler: @escaping ((_ error: Error?) -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.coreRequested = true
 			self.core = core
 			core?.delegate = self
+
+			if let busyHandler = busyHandler {
+				// Wrap busyHandler to ensure that a ObjC block is generated and not a Swift block is passed
+				core?.busyStatusHandler = { (progress) in
+					busyHandler(progress)
+				}
+			}
 
 			// Add message presenters
 			if let notificationPresenter = self.notificationPresenter {
@@ -189,14 +196,14 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
-
-			// Set up FP standby
-			if let core = core {
-				self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
-				self.fpServiceStandby?.start()
-			}
 		}, completionHandler: { (core, error) in
 			if error == nil {
+				// Set up FP standby
+				if let core = core {
+					self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
+					self.fpServiceStandby?.start()
+				}
+
 				// Core is ready
 				self.coreReady(lastVisibleItemId)
 
@@ -207,6 +214,9 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 					})
 				}
 			} else {
+				self.core = nil
+				self.coreRequested = false
+
 				Log.error("Error requesting/starting core: \(String(describing: error))")
 			}
 
@@ -489,17 +499,10 @@ extension ClientRootViewController : OCCoreDelegate {
 
 		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")
 
-		if nsError == nil, let issueNSError = issue?.error as NSError? {
+		if let authError = issue?.authenticationError {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
-			if issueNSError.isOCError(withCode: .authorizationFailed) ||
-			   issueNSError.isOCError(withCode: .authorizationMethodNotAllowed) ||
-			   issueNSError.isOCError(withCode: .authorizationMethodUnknown) ||
-			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
-			   issueNSError.isOCError(withCode: .authorizationNotMatchingRequiredUserID) ||
-			   issueNSError.isOCError(withCode: .authorizationMissingData) {
-				nsError = issueNSError
-				issue = nil
-			}
+			nsError = authError
+			issue = nil
 		}
 
 		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")

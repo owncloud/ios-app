@@ -109,7 +109,7 @@ class OpenInAction: Action {
 						self.interactionController = UIDocumentInteractionController(url: fileURL)
 						self.interactionController?.delegate = self
 
-						if let _ = self.context.sender as? UIKeyCommand, let hostViewController = hostViewController {
+						if self.context.sender as? UIKeyCommand != nil, let hostViewController = hostViewController {
 							var sourceRect = hostViewController.view.frame
 							sourceRect.origin.x = viewController.view.center.x
 							sourceRect.origin.y = viewController.navigationController?.navigationBar.frame.size.height ?? 0.0

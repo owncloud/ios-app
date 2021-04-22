@@ -8,7 +8,7 @@
 
 "0xydIy" = "App is currently locked by pass code. Please disable pass code to proceed.";
 
-"1KMplM" = "The given path does not exists";
+"1KMplM" = "The given path does not exist.";
 
 "1UkR2J" = "Save File";
 
@@ -36,7 +36,7 @@
 
 "3allZk" = "Path";
 
-"3dRWka" = "The given path does not exists";
+"3dRWka" = "The given path does not exist.";
 
 "3uG0po" = "For which path you want the file info?";
 
@@ -180,9 +180,9 @@
 
 "MRTQ9c" = "Creation Date Timestamp";
 
-"N181Er" = "The given path does not exists";
+"N181Er" = "The given path does not exist.";
 
-"NEiHz6" = "The given path does not exists";
+"NEiHz6" = "The given path does not exist.";
 
 "OBFBYf" = "App is currently locked by pass code. Please disable pass code to proceed.";
 
@@ -226,7 +226,7 @@
 
 "W2jbjk" = "Name of the folder";
 
-"WDPKZp" = "The given path does not exists";
+"WDPKZp" = "The given path does not exist.";
 
 "WfA15u" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
 
@@ -244,7 +244,7 @@
 
 "Y16qbv" = "Just to confirm, you wanted ‘${account}’?";
 
-"Y87IjO" = "The given path does not exists";
+"Y87IjO" = "The given path does not exist.";
 
 "YDTXfI" = "Select the account";
 
@@ -258,7 +258,7 @@
 
 "ZRW2EV" = "Name";
 
-"ZWoKzx" = "The given path does not exists";
+"ZWoKzx" = "The given path does not exist.";
 
 "ZXvi1J-ZB0VB7" = "There are ${count} options matching ‘Descending’.";
 
@@ -294,7 +294,7 @@
 
 "cfhOuF" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
 
-"ctet5s" = "The given path does not exists";
+"ctet5s" = "The given path does not exist.";
 
 "d8ddSN" = "Which one?";
 
@@ -362,7 +362,7 @@
 
 "kfmZUU" = "Get File ${path} from ${account}";
 
-"l1ScV6" = "The given path does not exists";
+"l1ScV6" = "The given path does not exist.";
 
 "lIGrzU" = "Is Favorite";
 
@@ -370,7 +370,7 @@
 
 "lUzgvo" = "The account with the given UUID does not exists";
 
-"leB73e" = "The given path does not exists";
+"leB73e" = "The given path does not exist.";
 
 "lrF7G0" = "App is currently locked by pass code. Please disable pass code to proceed.";
 
@@ -410,7 +410,7 @@
 
 "sKUo1c" = "This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features > Shortcuts.";
 
-"sLw6L8" = "The given path does not exists";
+"sLw6L8" = "The given path does not exist.";
 
 "sdm6CF" = "Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.";
 
@@ -454,7 +454,7 @@
 
 "xaKzfr" = "Select the account";
 
-"xgwnia" = "The given path does not exists";
+"xgwnia" = "The given path does not exist.";
 
 "xseRVY" = "File ID";
 

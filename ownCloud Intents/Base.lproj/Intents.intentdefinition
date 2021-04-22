@@ -122,15 +122,15 @@
 		</dict>
 	</array>
 	<key>INIntentDefinitionModelVersion</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>INIntentDefinitionNamespace</key>
 	<string>K5U8aR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19F96</string>
+	<string>20D91</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11E708</string>
+	<string>12D4e</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.6</string>
+	<string>12.4</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -224,6 +224,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ARGEYl</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>mmHd6b</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>6</integer>
@@ -298,6 +310,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -329,30 +343,6 @@
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>There are ${count} options matching ‘${path}’.</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>Czb1hO</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>9eAgmm</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Just to confirm, you wanted ‘${path}’?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>wwyxxS</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Confirmation</string>
-						</dict>
 					</array>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
@@ -362,6 +352,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -399,14 +391,6 @@
 							<string>DisambiguationIntroduction</string>
 						</dict>
 						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>iyefxU</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
-						</dict>
-						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
@@ -427,6 +411,8 @@
 					<string>Object</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -460,14 +446,6 @@
 							<string>DisambiguationIntroduction</string>
 						</dict>
 						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>YkRxhp</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
-						</dict>
-						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
@@ -486,6 +464,8 @@
 					<string>Integer</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -517,14 +497,6 @@
 							<string>ZXvi1J</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>d8ddSN</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
 						</dict>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
@@ -573,11 +545,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>N181Er</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>ZWoKzx</string>
 						<key>INIntentResponseCodeName</key>
@@ -618,6 +590,30 @@
 						<string>0pF5fq</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>wvNr8g</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>mjas8f</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>8zt6Cl</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>vyzXPW</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -689,6 +685,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -725,6 +723,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -760,14 +760,6 @@
 							<string>9uzczk</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>8xEyec</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
 						</dict>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
@@ -806,11 +798,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>No file exists at the given path.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>WDPKZp</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>No file exists at the given path.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>NEiHz6</string>
 						<key>INIntentResponseCodeName</key>
@@ -864,6 +856,42 @@
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>0hPNzX</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>rZf2ER</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>File is not available offline.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>U4qBGg</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>File is not available offline.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>8cu3YB</string>
+						<key>INIntentResponseCodeName</key>
+						<string>fileNotAvailableOffline</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Rc9iDZ</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>KLmGnh</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -912,10 +940,10 @@
 			<key>INIntentKeyParameter</key>
 			<string>file</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>11</integer>
+			<integer>13</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,file,account,filename,fileextension,shouldOverwrite</key>
+				<key>path,file,account,filename,fileextension,shouldOverwrite,waitForCompletion</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -932,6 +960,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>File</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -981,6 +1011,8 @@
 					<string>File</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1015,6 +1047,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -1052,14 +1086,6 @@
 							<string>DisambiguationIntroduction</string>
 						</dict>
 						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>Q5StNV</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
-						</dict>
-						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
@@ -1080,6 +1106,8 @@
 					<string>Object</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>File Name (optional)</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1114,6 +1142,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>File Extension (optional)</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1148,6 +1178,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Overwrite existing File</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1187,6 +1219,54 @@
 					<key>INIntentParameterType</key>
 					<string>Boolean</string>
 				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Wait for upload to complete</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>X18VvP</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>7</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INIntentParameterMetadataFalseDisplayNameID</key>
+						<string>7Zv2I0</string>
+						<key>INIntentParameterMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INIntentParameterMetadataTrueDisplayNameID</key>
+						<string>w1TCyX</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>waitForCompletion</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Wait for upload to complete before continuing</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Wt9Wgt</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>13</integer>
+					<key>INIntentParameterType</key>
+					<string>Boolean</string>
+				</dict>
 			</array>
 			<key>INIntentResponse</key>
 			<dict>
@@ -1216,11 +1296,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>xgwnia</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>leB73e</string>
 						<key>INIntentResponseCodeName</key>
@@ -1274,6 +1354,30 @@
 						<key>INIntentResponseCodeName</key>
 						<string>overwriteFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>7IlNsG</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>Vbtkke</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ak80K0</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>8ruaDW</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1322,10 +1426,10 @@
 			<key>INIntentKeyParameter</key>
 			<string>name</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>4</integer>
+			<integer>5</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>name,path,account</key>
+				<key>name,path,account,waitForCompletion</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -1342,6 +1446,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Name</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1376,6 +1482,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1410,6 +1518,56 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Wait for folder creation to complete</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>hPuHs9</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INIntentParameterMetadataFalseDisplayNameID</key>
+						<string>7Zv2I0</string>
+						<key>INIntentParameterMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INIntentParameterMetadataTrueDisplayNameID</key>
+						<string>w1TCyX</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>waitForCompletion</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Wait for folder creation to complete before continuing</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>7ei7AX</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>5</integer>
+					<key>INIntentParameterType</key>
+					<string>Boolean</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -1417,7 +1575,7 @@
 					<key>INIntentParameterDisplayNameID</key>
 					<string>mRWXIl</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>3</integer>
+					<integer>4</integer>
 					<key>INIntentParameterName</key>
 					<string>account</string>
 					<key>INIntentParameterObjectType</key>
@@ -1445,14 +1603,6 @@
 							<string>Fe4YSc</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>LiNwxr</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
 						</dict>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
@@ -1503,11 +1653,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>ctet5s</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>l1ScV6</string>
 						<key>INIntentResponseCodeName</key>
@@ -1560,6 +1710,30 @@
 						<string>bfU2dy</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>iBm5P1</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>ACWews</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Xu46tf</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>79YEXU</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1629,6 +1803,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1663,6 +1839,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -1698,14 +1876,6 @@
 							<string>q5bi2K</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>upG52E</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
 						</dict>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
@@ -1756,11 +1926,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>3dRWka</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>sLw6L8</string>
 						<key>INIntentResponseCodeName</key>
@@ -1801,6 +1971,30 @@
 						<string>lNNcvh</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ficaax</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6veqlK</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Us1jG9</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>J4AXzF</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1888,6 +2082,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -1922,6 +2118,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -1957,14 +2155,6 @@
 							<string>eJ8Zop</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>c8L2xN</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
 						</dict>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
@@ -2048,6 +2238,30 @@
 						<string>9tIXKj</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>V9kFMY</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>wnOHo5</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>tIdL1f</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>KuSDoY</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -2142,6 +2356,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -2176,6 +2392,8 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
@@ -2211,14 +2429,6 @@
 							<string>b4pgUO</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Which one?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>HTGZys</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationSelection</string>
 						</dict>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
@@ -2269,11 +2479,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>Y87IjO</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>The given path does not exists</string>
+						<string>The given path does not exist.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>1KMplM</string>
 						<key>INIntentResponseCodeName</key>
@@ -2314,6 +2524,30 @@
 						<string>1rpPPR</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ovRBKA</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Authentication failed. Please open the account in the app to address the issue.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>qEUEIK</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>VuUXmL</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The network is currently not available.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>MVtUAV</string>
+						<key>INIntentResponseCodeName</key>
+						<string>networkUnavailable</string>
 					</dict>
 				</array>
 			</dict>
@@ -2374,6 +2608,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Account UUID</string>
 					<key>INIntentParameterDisplayNameID</key>
