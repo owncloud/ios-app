@@ -366,6 +366,7 @@
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
 
+"File" = "File";
 "%@ was updated" = "%@ was updated";
 "Would you like to view the updated version?" = "Would you like to view the updated version?";
 "Show new version" = "Show new version";
