@@ -686,7 +686,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
+    "description" : "Array of dictionaries, each specifying a profile. All `Profile` keys (with the `branding.` prefix removed) can be used in the profile dictionaries.",
     "flatIdentifier" : "branding.profile-definitions",
     "key" : "profile-definitions",
     "label" : "Profile definitions",
