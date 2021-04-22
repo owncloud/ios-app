@@ -5,7 +5,7 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
 ## App IDs and Provisioning Files
 
-1. You need to generate the following App IDs with `App Groups` enabled on the Apple Developer Portal `Identifiers` section:
+1. You need to generate the following App IDs with `App Groups` and `Associated Domains` enabled on the Apple Developer Portal `Identifiers` section:
 
    - `com.yourcompany.ios-app`
 
@@ -14,10 +14,6 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
    - `com.yourcompany.ios-app.ownCloud-Intent`
 
    - `com.yourcompany.ios-app.ownCloud-Share-Extension`
-
-     
-
-     This IDs must match with `Bundle Identifier` value for the related Xcode target.
 
 2. Generate one App Group:
 
@@ -29,7 +25,7 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
 3. Edit the App IDs and assign the App Group created on step 2.
 
-4. Generate the mobile provisioning (App Store or Ad-Hoc) for both App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
+4. Generate the mobile provisioning profiles (App Store or Ad-Hoc) for all 4 App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
 
 ## Certificate
 
