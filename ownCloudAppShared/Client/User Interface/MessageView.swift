@@ -56,7 +56,7 @@ open class MessageView: UIView {
 		}
 	}
 
-	open func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
+	open func message(show: Bool, with insets: UIEdgeInsets? = nil, imageName : String? = nil, title : String? = nil, message : String? = nil) {
 		if !show {
 			if messageView?.superview != nil {
 				messageView?.removeFromSuperview()
@@ -174,9 +174,9 @@ open class MessageView: UIView {
 				}
 
 				NSLayoutConstraint.activate([
-					rootView.leftAnchor.constraint(equalTo: self.mainView.leftAnchor),
-					rootView.widthAnchor.constraint(equalTo: self.mainView.widthAnchor),
-					rootView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor),
+					rootView.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: insets?.left ?? 0),
+					rootView.widthAnchor.constraint(equalTo: self.mainView.widthAnchor, constant: -(insets?.right ?? 0)),
+					rootView.topAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.topAnchor, constant: insets?.top ?? 0),
 					self.composeViewBottomConstraint
 				])
 

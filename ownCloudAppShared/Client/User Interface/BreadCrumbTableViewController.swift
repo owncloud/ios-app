@@ -30,6 +30,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 	open var parentNavigationController : UINavigationController?
 	open var queryPath : NSString = ""
 	open var bookmarkShortName : String?
+	open var navigationHandler : ((_ path: String) -> Void)?
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
@@ -52,7 +53,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
-		for (_, currentPath) in pathComp.enumerated().reversed() {
+		for (idx, currentPath) in pathComp.enumerated().reversed() {
 			var stackIndex = stackViewControllers.count - currentViewContollerIndex
 			if stackIndex < 0 {
 				stackIndex = 0
@@ -61,10 +62,18 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 			if currentPath.isRootPath, let shortName = self.bookmarkShortName {
 				pathTitle = shortName
 			}
+			var fullPath = ((pathComp as NSArray).subarray(with: NSRange(location: 1, length: idx)) as NSArray).componentsJoined(by: "/") + "/"
+			if !fullPath.hasPrefix("/") {
+				fullPath = "/" + fullPath
+			}
 			let aRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 				guard let self = self else { return }
-				if stackViewControllers.indices.contains(stackIndex) {
-					self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
+				if let navigationHandler = self.navigationHandler {
+					navigationHandler(fullPath)
+				} else {
+					if stackViewControllers.indices.contains(stackIndex) {
+						self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
+					}
 				}
 				self.dismiss(animated: false, completion: nil)
 			}, title: pathTitle, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))

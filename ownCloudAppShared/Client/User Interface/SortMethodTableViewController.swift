@@ -40,7 +40,7 @@ class SortMethodTableViewController: StaticTableViewController {
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
 		for method in SortMethod.all {
-			let title = method.localizedName()
+			let title = method.localizedName
 			var sortDirectionTitle = ""
 
 			if sortBarDelegate?.sortMethod == method {
