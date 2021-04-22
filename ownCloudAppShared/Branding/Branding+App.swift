@@ -46,7 +46,7 @@ extension Branding : BrandingInitialization {
 
 				.canAddAccount : true,
 				.canEditAccount : true,
-				.enableReviewPrompt : true
+				.enableReviewPrompt : false
 
 	//			.profileDefinitions : [],
 	//			.themeGenericColors : [:],
@@ -103,7 +103,7 @@ extension Branding : BrandingInitialization {
 
 				.enableReviewPrompt : [
  					.type 		: OCClassSettingsMetadataType.boolean,
- 					.description	: "Controls whether the app should prompt for an App Store review.",
+ 					.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
  					.category	: "Branding",
  					.status		: OCClassSettingsKeyStatus.advanced
  				],

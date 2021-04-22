@@ -49,7 +49,7 @@
 
 				@"can-add-account" : @(YES),
 				@"can-edit-account" : @(YES),
-				@"enable-review-prompt" : @(YES)
+				@"enable-review-prompt" : @(NO)
 			} metadata:@{
 				@"url-documentation" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
