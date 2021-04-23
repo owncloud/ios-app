@@ -73,6 +73,7 @@
 
 /* Client */
 "Browse" = "Browse";
+"Files" = "Files";
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";

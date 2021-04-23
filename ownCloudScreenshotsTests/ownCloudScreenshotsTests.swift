@@ -241,7 +241,7 @@ class ScreenshotsTests: XCTestCase {
 	func prepareMultipleWindows(app: XCUIApplication) {
 		XCUIDevice.shared.orientation = .landscapeLeft
 		sleep(2)
-		app.tabBars.buttons[localizedString(key: "Browse")].tap()
+		app.tabBars.buttons[localizedString(key: "Files")].tap()
 
 		let tablesQuery = XCUIApplication().tables
 		tablesQuery/*@START_MENU_TOKEN@*/.buttons["Photos Actions"]/*[[".cells[\"Photos\"].buttons[\"Photos Actions\"]",".buttons[\"Photos Actions\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
