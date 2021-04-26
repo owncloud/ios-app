@@ -291,7 +291,27 @@ extension ClientRootViewController {
 			}
 		}
 
+		if let availableStyles = ThemeStyle.availableStyles, availableStyles.count > 1 {
+			let switchThemeCommand = UIKeyCommand(input: "T", modifierFlags: [.alternate], action: #selector(switchTheme), discoverabilityTitle: "Switch Theme Style".localized)
+			shortcuts.append(switchThemeCommand)
+		}
+
 		return shortcuts
+	}
+
+	@objc func switchTheme(sender: UIKeyCommand) {
+		if let availableStyles = ThemeStyle.availableStyles {
+		let currentIndex = availableStyles.index(of: ThemeStyle.preferredStyle) ?? 0
+			var newStyle = ThemeStyle.preferredStyle
+			if currentIndex + 1 < availableStyles.count {
+				newStyle = availableStyles[currentIndex + 1]
+			} else if let style = availableStyles.first {
+				newStyle = style
+			}
+
+			ThemeStyle.followSystemAppearance = false
+			ThemeStyle.preferredStyle = newStyle
+		}
 	}
 
 	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
