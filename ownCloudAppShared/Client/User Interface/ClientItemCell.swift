@@ -541,7 +541,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if revealHighlight {
 			backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
 		} else {
-			backgroundColor = collection.tableRowHighlightColors.backgroundColor
+			backgroundColor = collection.tableBackgroundColor
 		}
 	}
 
