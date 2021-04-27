@@ -150,7 +150,7 @@ public extension NSObject {
 			searchBar.barStyle = collection.barStyle
 
 			if #available(iOS 13, *) {
-				searchBar.searchTextField.textColor = collection.searchBarColors.secondaryLabelColor
+				searchBar.searchTextField.textColor = collection.searchBarColors.labelColor
 				// Ensure search bar icon color is correct
 				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 				searchBar.searchTextField.backgroundColor = collection.searchBarColors.backgroundColor
@@ -161,7 +161,7 @@ public extension NSObject {
 				}
 				if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
 					clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-					clearButton.tintColor = collection.navigationBarColors.labelColor
+					clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
 				}
 			}
 		}
