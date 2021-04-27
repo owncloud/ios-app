@@ -73,6 +73,7 @@
 
 /* Client */
 "Browse" = "Browse";
+"Files" = "Files";
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
@@ -99,6 +100,7 @@
 "Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
+"Reveal in folder" = "Reveal in folder";
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
@@ -657,6 +659,7 @@
 "Go to Beginning" = "Go to Beginning";
 "Mute/Unmute" = "Mute/Unmute";
 "Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";

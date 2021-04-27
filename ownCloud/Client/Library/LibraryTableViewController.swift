@@ -381,10 +381,15 @@ class LibraryTableViewController: StaticTableViewController {
 			self.addSection(section)
 
 			let lastWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())!
-			let recentsQuery = OCQuery(condition: .require([
+			var recentsQuery = OCQuery(condition: .require([
 				.where(.lastUsed, isGreaterThan: lastWeekDate),
 				.where(.name, isNotEqualTo: "/")
 			]), inputFilter:nil)
+
+			if let condition = OCQueryCondition.fromSearchTerm(":1w :file") {
+				recentsQuery = OCQuery(condition:condition, inputFilter: nil)
+			}
+
 			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: recentsQuery, actionHandler: nil)
 
 			let favoriteQuery = OCQuery(condition: .where(.isFavorite, isEqualTo: true), inputFilter:nil)

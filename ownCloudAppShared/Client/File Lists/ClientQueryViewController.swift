@@ -73,6 +73,11 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
  			}
  		}
  	}
+
+	public var hasSearchResults : Bool {
+		return customSearchQuery?.queryResults?.count ?? 0 > 0
+	}
+
 	open override var searchScope: SearchScope {
  		set {
  			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")

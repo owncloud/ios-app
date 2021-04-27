@@ -73,6 +73,7 @@
 
 /* Client */
 "Browse" = "Durchsuchen";
+"Files" = "Dateien";
 "Disconnect" = "Trennen";
 "Connecting…" = "Verbinde...";
 "Connected." = "Verbunden.";
