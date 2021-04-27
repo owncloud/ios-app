@@ -95,12 +95,6 @@ open class FrameViewController: UIViewController, CardPresentationSizing {
 			viewController.view.topAnchor.constraint(equalTo: headerView.bottomAnchor)
 		])
 
-		headerView.layer.shadowColor = UIColor.black.cgColor
-		headerView.layer.shadowOpacity = 0.1
-		headerView.layer.shadowRadius = 10
-		headerView.layer.cornerRadius = 10
-		headerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-
 		self.view.layoutIfNeeded()
 	}
 
