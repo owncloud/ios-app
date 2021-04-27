@@ -187,6 +187,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		}
 		revealButton.contentMode = .center
 		revealButton.isHidden = !showRevealButton
+		revealButton.accessibilityLabel = "Reveal in folder".localized
 
 		messageButton.setTitle("⚠️", for: .normal)
 		messageButton.contentMode = .center
