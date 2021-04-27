@@ -215,6 +215,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				if titleWidth > longestTitleWidth {
 					longestTitleWidth = titleWidth
 				}
+				longestTitleWidth += 4 // add a padding to the longest title
 			}
 
 			var currentIndex = 0

@@ -944,7 +944,7 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 			.bookmarkURLEditable : [
 				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.",
+				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
 				.category	: "Bookmarks",
 				.status		: OCClassSettingsKeyStatus.supported
 			]

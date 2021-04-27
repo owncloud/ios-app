@@ -95,7 +95,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 	}
 
 	open func revealButtonTapped(cell: ClientItemCell) {
-		guard let item = self.item(for: cell), let core = core else {
+		guard let item = cell.item, let core = core else {
 			return
 		}
 

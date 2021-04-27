@@ -291,7 +291,27 @@ extension ClientRootViewController {
 			}
 		}
 
+		if let availableStyles = ThemeStyle.availableStyles, availableStyles.count > 1 {
+			let switchThemeCommand = UIKeyCommand(input: "T", modifierFlags: [.alternate], action: #selector(switchTheme), discoverabilityTitle: "Switch Theme Style".localized)
+			shortcuts.append(switchThemeCommand)
+		}
+
 		return shortcuts
+	}
+
+	@objc func switchTheme(sender: UIKeyCommand) {
+		if let availableStyles = ThemeStyle.availableStyles {
+		let currentIndex = availableStyles.index(of: ThemeStyle.preferredStyle) ?? 0
+			var newStyle = ThemeStyle.preferredStyle
+			if currentIndex + 1 < availableStyles.count {
+				newStyle = availableStyles[currentIndex + 1]
+			} else if let style = availableStyles.first {
+				newStyle = style
+			}
+
+			ThemeStyle.followSystemAppearance = false
+			ThemeStyle.preferredStyle = newStyle
+		}
 	}
 
 	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
@@ -663,6 +683,11 @@ extension ClientQueryViewController {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
+		if searchController?.isActive ?? false, searchScope == .global, hasSearchResults, self.tableView?.indexPathForSelectedRow != nil {
+			let revealObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], action: #selector(revealItem), discoverabilityTitle: "Reveal in folder".localized)
+			shortcuts.append(revealObjectCommand)
+		}
+
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
@@ -697,6 +722,12 @@ extension ClientQueryViewController {
 		}
 
 		return shortcuts
+	}
+
+	@objc func revealItem(_ command : UIKeyCommand) {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let cell = tableView(self.tableView, cellForRowAt: indexPath) as? ClientItemCell {
+			revealButtonTapped(cell: cell)
+		}
 	}
 
 	@objc func changeSearchScope(_ command : UIKeyCommand) {
