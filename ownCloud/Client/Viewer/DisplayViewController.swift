@@ -638,13 +638,15 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 						shouldRenderItem(item: item, isUpdate: (lastRenderSuccessful == true)) { [weak self] (shouldRender) in
 							if shouldRender {
 								// Render item
-								self?.renderItem(completion: { (success) in
-									self?.lastRenderSuccessful = success
+								OnMainThread {
+									self?.renderItem(completion: { (success) in
+										self?.lastRenderSuccessful = success
 
-									if !success {
-										self?.state = .previewFailed
-									}
-								})
+										if !success {
+											self?.state = .previewFailed
+										}
+									})
+								}
 							}
 						}
 					}
