@@ -127,9 +127,6 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
-		presentedViewController.view.layer.shadowColor = UIColor.black.cgColor
-		presentedViewController.view.layer.shadowOpacity = 0.1
-		presentedViewController.view.layer.shadowRadius = 10
 		presentedViewController.view.layer.cornerRadius = 10
 		presentedViewController.view.layer.masksToBounds = true
 		presentedViewController.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
