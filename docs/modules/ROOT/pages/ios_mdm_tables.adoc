@@ -833,12 +833,6 @@ tag::logging[]
 |Controls whether certain objects in log statements should be masked for privacy.
 |supported `candidate`
 
-|measurements.enabled
-|bool
-|`true`
-|Turn measurements on or off
-|supported `candidate`
-
 |log.blank-filtered-messages
 |bool
 |`false`
@@ -937,6 +931,12 @@ tag::logging[]
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
 |advanced `candidate`
+
+|measurements.enabled
+|bool
+|`true`
+|Turn measurements on or off
+|debugOnly
 
 |===
 end::logging[]
