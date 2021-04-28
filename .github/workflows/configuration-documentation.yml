@@ -1,0 +1,35 @@
+name: Update Configuration Documentation
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches:
+    - fix/*
+    - feature/*
+    - milestone/*
+
+jobs:
+  build:
+    runs-on: macos-latest
+    name: Update Configuration Documentation
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
+      - name: Xcode version
+        run: /usr/bin/xcodebuild -version
+      - name: Install Cocoapods
+        run: gem install cocoapods
+      - name: Run Pod Install
+        run: pod install
+      - name: Install gomplate
+        run: brew install gomplate
+      - name: Run Generate Docs
+        run: ./generate_docs.sh
+        working-directory: ./tools/GenerateDocs/
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Configuration documentation updated
+          file_pattern: doc/CONFIGURATION.json docs/modules/ROOT/pages/ios_mdm_tables.adoc

@@ -39,65 +39,65 @@ class GestureView : UIView {
 class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
 	private var qlPreviewController: QLPreviewController?
-	var showHideBarsTapGestureRecognizer: UITapGestureRecognizer!
-	var overlayView = GestureView()
+	var overlayView : GestureView?
 
 	override var isFullScreenModeEnabled: Bool {
 		didSet {
-			if isFullScreenModeEnabled {
-				overlayView.isHidden = false
-			} else {
-				overlayView.isHidden = true
-			}
+			overlayView?.isHidden = !isFullScreenModeEnabled
 		}
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		qlPreviewController = QLPreviewController()
-		addChild(qlPreviewController!)
-		qlPreviewController!.view.frame = self.view.bounds
-		self.view.addSubview(qlPreviewController!.view)
-		qlPreviewController!.didMove(toParent: self)
-		qlPreviewController?.view.isHidden = true
-		qlPreviewController!.view.addSubview(overlayView)
-		if #available(iOS 13.0, *) {
-			qlPreviewController?.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-		}
+		supportsFullScreenMode = true
 	}
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if source != nil {
-			if self.qlPreviewController?.dataSource === self {
-				// Reload
-				self.qlPreviewController?.reloadData()
-			} else {
-				// First display
-				if let qlPreviewController = self.qlPreviewController {
-					qlPreviewController.view.translatesAutoresizingMaskIntoConstraints = false
+	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if itemDirectURL != nil {
+			let previousPreviewController = qlPreviewController
 
-					NSLayoutConstraint.activate([
-						qlPreviewController.view.topAnchor.constraint(equalTo: self.view.topAnchor),
-						qlPreviewController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-						qlPreviewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-						qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+			if let previousPreviewController = previousPreviewController {
+				qlPreviewController = nil
 
-						overlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
-						overlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-						overlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-						overlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-						])
-				}
-				self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
-				self.showHideBarsTapGestureRecognizer.delegate = self
-				self.showHideBarsTapGestureRecognizer.numberOfTapsRequired = 1
-				overlayView.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
-
-				self.qlPreviewController?.dataSource = self
-				self.qlPreviewController?.view.isHidden = false
-				supportsFullScreenMode = true
+				previousPreviewController.view.removeFromSuperview()
+				previousPreviewController.dataSource = nil
+				previousPreviewController.removeFromParent()
 			}
+
+			overlayView = GestureView()
+			overlayView?.isHidden = !isFullScreenModeEnabled
+
+			qlPreviewController = QLPreviewController()
+			qlPreviewController?.dataSource = self
+			view.addSubview(qlPreviewController!.view)
+			addChild(qlPreviewController!)
+
+			qlPreviewController!.view.frame = view.bounds
+			qlPreviewController!.view.addSubview(overlayView!)
+			qlPreviewController!.didMove(toParent: self)
+
+			if #available(iOS 13.0, *) {
+				qlPreviewController?.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+			}
+
+			qlPreviewController!.view.translatesAutoresizingMaskIntoConstraints = false
+
+			NSLayoutConstraint.activate([
+				qlPreviewController!.view.topAnchor.constraint(equalTo: view.topAnchor),
+				qlPreviewController!.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+				qlPreviewController!.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+				qlPreviewController!.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+				overlayView!.topAnchor.constraint(equalTo: view.topAnchor),
+				overlayView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+				overlayView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+				overlayView!.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+			])
+
+			let showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
+			showHideBarsTapGestureRecognizer.delegate = self
+			showHideBarsTapGestureRecognizer.numberOfTapsRequired = 1
+			overlayView!.addGestureRecognizer(showHideBarsTapGestureRecognizer)
 
 			completion(true)
 		} else {
@@ -115,23 +115,23 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		} else {
 			navigationController.setNavigationBarHidden(false, animated: true)
 		}
-		overlayView.isHidden = !navigationController.isNavigationBarHidden
+		overlayView?.isHidden = !navigationController.isNavigationBarHidden
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
 	// MARK: - QLPreviewControllerDataSource
 	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-		return source != nil ? 1 : 0
+		return itemDirectURL != nil ? 1 : 0
 	}
 
 	// MARK: - QLPreviewControllerDataSource
 	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-		return source! as QLPreviewItem
+		return itemDirectURL! as QLPreviewItem
 	}
 
-	override func canPreviewCurrentItem() -> Bool {
-		guard let url = self.source else { return false }
+	override var canPreviewCurrentItem: Bool {
+		guard let url = self.itemDirectURL else { return false }
 		return QLPreviewController.canPreview(url as QLPreviewItem)
 	}
 

@@ -187,6 +187,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		}
 		revealButton.contentMode = .center
 		revealButton.isHidden = !showRevealButton
+		revealButton.accessibilityLabel = "Reveal in folder".localized
 
 		messageButton.setTitle("⚠️", for: .normal)
 		messageButton.contentMode = .center
@@ -541,7 +542,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if revealHighlight {
 			backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
 		} else {
-			backgroundColor = .clear
+			backgroundColor = collection.tableBackgroundColor
 		}
 	}
 

@@ -54,7 +54,7 @@ class ImageDisplayViewController : DisplayViewController {
 	}
 
 	func downSampleImage(completion:@escaping (_ downsampledImage:CGImage?) -> Void) {
-		if let source = source {
+		if let source = itemDirectURL {
 			let size: CGSize = self.view.bounds.size
 			let scale: CGFloat = UIScreen.main.scale
 			let imageSourceOptions = [kCGImageSourceShouldCache: true] as CFDictionary
@@ -83,8 +83,8 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - Specific view
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if source != nil {
+	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if itemDirectURL != nil {
 			activityIndicatorView.startAnimating()
 
 			downSampleImage {(downsampledImage) in

@@ -73,6 +73,7 @@
 
 /* Client */
 "Browse" = "Browse";
+"Files" = "Files";
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
@@ -99,6 +100,7 @@
 "Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
+"Reveal in folder" = "Reveal in folder";
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
@@ -377,6 +379,13 @@
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
 
+"File" = "File";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
+
 /* PDF Viewer */
 "Resume" = "Resume";
 "Go to page" = "Go to page";
@@ -650,6 +659,7 @@
 "Go to Beginning" = "Go to Beginning";
 "Mute/Unmute" = "Mute/Unmute";
 "Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";

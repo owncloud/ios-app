@@ -243,7 +243,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.tabBarItem.title = "Browse".localized
+		filesNavigationController?.tabBarItem.title = "Files".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
 		filesNavigationController?.delegate = self
 

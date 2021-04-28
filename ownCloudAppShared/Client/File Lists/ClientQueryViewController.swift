@@ -29,7 +29,7 @@ public struct OCItemDraggingValue {
 	var bookmarkUUID : String
 }
 
-open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate, UISearchControllerDelegate {
+open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	public var folderActionBarButton: UIBarButtonItem?
 	public var plusBarButton: UIBarButtonItem?
 
@@ -73,6 +73,11 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
  			}
  		}
  	}
+
+	public var hasSearchResults : Bool {
+		return customSearchQuery?.queryResults?.count ?? 0 > 0
+	}
+
 	open override var searchScope: SearchScope {
  		set {
  			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
@@ -158,12 +163,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	// MARK: - Search events
-	open func willPresentSearchController(_ searchController: UISearchController) {
+	open override func willPresentSearchController(_ searchController: UISearchController) {
  		self.sortBar?.showSearchScope = true
 		self.tableView.setContentOffset(.zero, animated: false)
  	}
 
- 	open func willDismissSearchController(_ searchController: UISearchController) {
+	open override func willDismissSearchController(_ searchController: UISearchController) {
  		self.sortBar?.showSearchScope = false
  	}
 
@@ -690,7 +695,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 						if error == nil {
 							srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
 								if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
-									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (error, _, _, _) in
+									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
 									}
 								}
 							})

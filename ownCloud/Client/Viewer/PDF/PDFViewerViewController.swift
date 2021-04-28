@@ -131,6 +131,15 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	static var supportedMimeTypes: [String]? = ["application/pdf", "application/illustrator"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
+	required init() {
+		super.init()
+		updateStrategy = .ask
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 		if gotoPageNotificationObserver != nil {
@@ -143,12 +152,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	public let searchResultsView = PDFSearchResultsView()
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if let source = source, let document = PDFDocument(url: source) {
+	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if let source = itemDirectURL, let document = PDFDocument(url: source) {
 			if !didSetupView {
 				didSetupView  = true
-
-				setupToolbar()
 
 				self.thumbnailViewPosition = .none
 
@@ -221,7 +228,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - View lifecycle management
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -279,7 +285,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	func save(item: OCItem) {
-		if let source = source {
+		if let source = itemDirectURL {
 			editingDelegate?.save(item: item, fileURL: source)
 		}
 	}
@@ -321,7 +327,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		let searchNavigationController = ThemeNavigationController(rootViewController: pdfSearchController)
 		pdfSearchController.pdfDocument = pdfDocument
 		// Interpret the search text and all the matches returned by search view controller
-		pdfSearchController.userSelectedMatchCallback = { (_, matches, selection) in
+		pdfSearchController.userSelectedMatchCallback = { [weak self] (_, matches, selection) in
 			DispatchQueue.main.async { [weak self] in
 				if matches.count > 1 {
 					self?.searchResultsView.matches = matches
@@ -433,16 +439,18 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	}
 
-	private func setupToolbar() {
+	override func composedDisplayBarButtonItems(previous: [UIBarButtonItem]? = nil, itemName: String, itemRemoved: Bool = false) -> [UIBarButtonItem]? {
 		searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
 		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
 		searchButtonItem?.accessibilityLabel = "Search PDF".localized
 		outlineItem?.accessibilityLabel = "Outline".localized
 
-		self.parent?.navigationItem.rightBarButtonItems = [
+		return [
+			actionBarButtonItem,
 			searchButtonItem!,
-			outlineItem!]
+			outlineItem!
+		]
 	}
 
 	// MARK: - Search results navigation
@@ -461,8 +469,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		constraints += horizontal
 		NSLayoutConstraint.activate(constraints)
 
-		self.searchResultsView.updateHandler = { selection in
-			self.jumpTo(selection)
+		self.searchResultsView.updateHandler = { [weak self] selection in
+			self?.jumpTo(selection)
 		}
 
 		self.searchResultsView.closeHandler = { [weak self] in
@@ -497,7 +505,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	// MARK: - Current page selection
-
 	private func selectPage(with label:String) {
 		guard let pdf = pdfView.document else { return }
 
