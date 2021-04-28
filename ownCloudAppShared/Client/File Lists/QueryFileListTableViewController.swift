@@ -39,7 +39,7 @@ public protocol MultiSelectSupport {
 	func populateToolbar()
 }
 
-open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, RevealItemHandling, OCQueryDelegate, UISearchResultsUpdating {
+open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, RevealItemHandling, OCQueryDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
 
 	public var query : OCQuery
 	open var activeQuery : OCQuery {
@@ -140,6 +140,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		let searchText = searchController.searchBar.text ?? ""
 
 		applySearchFilter(for: (searchText == "") ? nil : searchText, to: query)
+	}
+
+	open func willPresentSearchController(_ searchController: UISearchController) {
+		self.sortBar?.showSelectButton = false
+	}
+
+	open func willDismissSearchController(_ searchController: UISearchController) {
+		self.sortBar?.showSelectButton = true
 	}
 
 	open func applySearchFilter(for searchText: String?, to query: OCQuery) {
@@ -333,6 +341,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		searchController?.obscuresBackgroundDuringPresentation = false
 		searchController?.hidesNavigationBarDuringPresentation = true
 		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
+		searchController?.delegate = self
 
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
