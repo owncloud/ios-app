@@ -13,6 +13,7 @@ Summary
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Added Dark Mode Support to Preview: [#919](https://github.com/owncloud/ios-app/issues/919)
 * Bugfix - Passcode Settings Section: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Bugfix - Viewer fixes, refactoring and minor improvements: [#942](https://github.com/owncloud/ios-app/issues/942)
 * Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
 * Bugfix - UI refinements in action card: [#956](https://github.com/owncloud/ios-app/issues/956)
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
@@ -60,6 +61,13 @@ Details
    If a passcode was enabled or disabled in the settings, the UI section was not updated.
 
    https://github.com/owncloud/ios-app/issues/923
+
+* Bugfix - Viewer fixes, refactoring and minor improvements: [#942](https://github.com/owncloud/ios-app/issues/942)
+
+   - fix for items, which could not be opened - new refresh policy: asks the user before updating PDF
+   files
+
+   https://github.com/owncloud/ios-app/issues/942
 
 * Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
 
