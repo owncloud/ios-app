@@ -245,7 +245,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 			return 216.0
 		}
 
-		return UITableView.automaticDimension
+		return tableView.rowHeight
 	}
 
 	override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

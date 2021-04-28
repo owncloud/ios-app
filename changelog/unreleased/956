@@ -1,0 +1,6 @@
+Bugfix: UI refinements in action card
+
+Fixed the corner radius.
+For larger UI width set a maximum width for the cardview and center the view.
+
+https://github.com/owncloud/ios-app/issues/956

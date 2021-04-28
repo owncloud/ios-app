@@ -29,7 +29,7 @@ public struct OCItemDraggingValue {
 	var bookmarkUUID : String
 }
 
-open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate, UISearchControllerDelegate {
+open class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	public var folderActionBarButton: UIBarButtonItem?
 	public var plusBarButton: UIBarButtonItem?
 
@@ -163,12 +163,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	// MARK: - Search events
-	open func willPresentSearchController(_ searchController: UISearchController) {
+	open override func willPresentSearchController(_ searchController: UISearchController) {
  		self.sortBar?.showSearchScope = true
 		self.tableView.setContentOffset(.zero, animated: false)
  	}
 
- 	open func willDismissSearchController(_ searchController: UISearchController) {
+	open override func willDismissSearchController(_ searchController: UISearchController) {
  		self.sortBar?.showSearchScope = false
  	}
 
