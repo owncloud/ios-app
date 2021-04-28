@@ -1,0 +1,6 @@
+Bugfix: Viewer fixes, refactoring and minor improvements
+
+- fix for items, which could not be opened
+- new refresh policy: asks the user before updating PDF files
+
+https://github.com/owncloud/ios-app/issues/942
