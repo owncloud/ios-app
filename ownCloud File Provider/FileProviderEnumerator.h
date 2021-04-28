@@ -22,7 +22,7 @@
 
 @class FileProviderExtension;
 
-@interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator, OCQueryDelegate, OCLogTagging>
+@interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator, OCQueryDelegate, OCLogTagging, OCMeasurementHost>
 {
 	__weak FileProviderExtension *_fileProviderExtension;
 
@@ -36,6 +36,8 @@
 	NSMutableArray <FileProviderEnumeratorObserver *> *_changeObservers;
 
 	BOOL _invalidated;
+
+	OCMeasurement *_measurement;
 }
 
 @property(weak) FileProviderExtension *fileProviderExtension;

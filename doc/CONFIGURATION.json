@@ -1671,7 +1671,7 @@
     "flatIdentifier" : "measurements.enabled",
     "key" : "enabled",
     "label" : "measurements.enabled",
-    "status" : "supported",
+    "status" : "debugOnly",
     "type" : "bool"
   },
   {
