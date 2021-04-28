@@ -93,6 +93,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 	override var frameOfPresentedViewInContainerView: CGRect {
 		var originX: CGFloat = 0
+		let maxWidth: CGFloat = 540
 		var presentedWidth: CGFloat = windowFrame.width
 		var presentedHeight: CGFloat = windowFrame.height * CardPosition.open.heightMultiplier
 		let fittingSize = self.presentedViewFittingSize
@@ -104,6 +105,11 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 		if let fittingHeight = fittingSize?.height, presentedHeight > fittingHeight {
 			presentedHeight = fittingHeight
+		}
+
+		if windowFrame.width > 600 {
+			originX = ( presentedWidth / 2 ) - (maxWidth / 2)
+			presentedWidth = maxWidth
 		}
 
 		let presentedFrame = CGRect(origin: CGPoint(x: originX, y: self.offset(for: cardPosition)), size: CGSize(width: presentedWidth, height: presentedHeight))
@@ -120,6 +126,10 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		presentedViewController.view.layer.cornerRadius = 10
+		presentedViewController.view.layer.masksToBounds = true
+		presentedViewController.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
 	}
 
 	deinit {

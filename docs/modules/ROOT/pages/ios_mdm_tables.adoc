@@ -833,6 +833,12 @@ tag::logging[]
 |Controls whether certain objects in log statements should be masked for privacy.
 |supported `candidate`
 
+|measurements.enabled
+|bool
+|`true`
+|Turn measurements on or off
+|supported `candidate`
+
 |log.blank-filtered-messages
 |bool
 |`false`
