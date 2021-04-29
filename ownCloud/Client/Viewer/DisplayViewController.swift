@@ -46,20 +46,38 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	private let horizontalSpacing: CGFloat = 10
 	private let progressViewVerticalSpacing: CGFloat = 20.0
 
+	private var stateByConnectionStatus : DisplayViewState? {
+		if let status = connectionStatus {
+			switch status {
+				case .connecting:
+					return .connecting
+
+				case .offline:
+					return .offline
+
+				case .online:
+					return .online
+
+				default: break
+			}
+		}
+
+		return nil
+	}
+
 	private var connectionStatus: OCCoreConnectionStatus? {
 		didSet {
 			if let status = connectionStatus {
-				switch status {
-					case .connecting:
-						self.state = .connecting
+				if let newState = stateByConnectionStatus {
+					state = newState
+				}
 
+				switch status {
 					case .offline:
-						self.state = .offline
 						stopQuery()
 
 					case .online:
-						self.state = .online
-						self.startQuery()
+						startQuery()
 
 					default: break
 				}
@@ -75,7 +93,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			coreConnectionStatusObservation = nil
 		}
 		didSet {
-			if let core = core {
+			if let core = core, core != oldValue {
 				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: .initial) { [weak self, weak core] (_, _) in
 					OnMainThread { [weak self, weak core] in
 						if let connectionStatus = core?.connectionStatus {
@@ -560,12 +578,17 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				}
 			}
 
-			if (newItem.syncActivity != .updating) &&
+			let localCopyVanished = (newItem.localRelativePath == nil) && (oldItem?.localRelativePath != nil) && !newItem.syncActivity.contains(.downloading)
+
+			if !newItem.syncActivity.contains(.updating) &&
 			    (// Item version changed
 			     (newItem.itemVersionIdentifier != oldItem?.itemVersionIdentifier) ||
 
 			     // Item name changed
 			     (newItem.name != oldItem?.name) ||
+
+			     // Local copy vanished
+			     localCopyVanished ||
 
 			     // Item already shown, this version is different from what was shown last
 			     ((lastUsedItemVersion != nil) && (newItem.itemVersionIdentifier != lastUsedItemVersion)) ||
@@ -575,6 +598,11 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			) {
 				if let lastModified = localURLLastModified {
 					lastUsedItemModificationDate = lastModified
+				}
+
+				if localCopyVanished, state == .downloadFinished, let currentStateByConnectionStatus = stateByConnectionStatus {
+					state = currentStateByConnectionStatus
+					itemDirectURL = nil
 				}
 
 				guard newItem.removed == false else {
