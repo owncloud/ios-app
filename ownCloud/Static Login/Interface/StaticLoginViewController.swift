@@ -297,7 +297,11 @@ class StaticLoginViewController: UIViewController, Themeable {
 			serverList = StaticLoginServerListViewController(style: .grouped)
 			(serverList as? StaticLoginServerListViewController)?.staticLoginViewController = self
 		} else {
-			serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+			if #available(iOS 13.0, *) {
+				serverList = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+			} else {
+				serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+			}
 			(serverList as? StaticLoginSingleAccountServerListViewController)?.staticLoginViewController = self
 		}
 
