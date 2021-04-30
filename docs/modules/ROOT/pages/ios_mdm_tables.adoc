@@ -932,6 +932,12 @@ tag::logging[]
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
 |advanced `candidate`
 
+|measurements.enabled
+|bool
+|`true`
+|Turn measurements on or off
+|debugOnly
+
 |===
 end::logging[]
 

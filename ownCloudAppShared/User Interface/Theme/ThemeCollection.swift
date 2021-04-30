@@ -585,6 +585,7 @@ extension ThemeCollection {
 		appearance.backgroundColor = navigationBarColors.backgroundColor
 		appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
 		appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+		appearance.shadowColor = .clear
 
 		return appearance
 	}

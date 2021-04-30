@@ -1661,6 +1661,21 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Logging",
+    "categoryTag" : "logging",
+    "classIdentifier" : "measurements",
+    "className" : "OCMeasurement",
+    "defaultValue" : true,
+    "description" : "Turn measurements on or off",
+    "flags" : 2,
+    "flatIdentifier" : "measurements.enabled",
+    "key" : "enabled",
+    "label" : "measurements.enabled",
+    "status" : "debugOnly",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Passcode",
     "categoryTag" : "passcode",
     "classIdentifier" : "passcode",

@@ -122,6 +122,7 @@
 "Please log in to authorize the app." = "Please log in to authorize the app.";
 "Welcome to %@" = "Welcome to %@";
 "Please enter a server URL" = "Please enter a server URL";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -378,6 +379,13 @@
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
+
+"File" = "File";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
 
 /* PDF Viewer */
 "Resume" = "Resume";
