@@ -78,6 +78,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let self = self, let value = row.value as? String {
 				self.urlString = value
 			}
+			if type == .didEnd, let value = row.value as? String, value.count > 0 {
+				self?.proceedWithURL()
+			}
 		}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
@@ -125,6 +128,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			}
 			if let value = row.value as? String {
 				self?.password = value
+			}
+			if type == .didEnd, let value = row.value as? String, value.count > 0 {
+				self?.startAuthentication(nil)
 			}
 			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
 		if let passwordRow = passwordRow {

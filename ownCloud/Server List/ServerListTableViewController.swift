@@ -716,7 +716,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let edit = UIAction(title: "Edit".localized, image: UIImage(systemName: "gear")) { _ in
 			self.showBookmarkUI(edit: bookmark)
 		}
-		menuItems.append(edit)
+		if VendorServices.shared.canEditAccount {
+			menuItems.append(edit)
+		}
 		let manage = UIAction(title: "Manage".localized, image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
 			self.showBookmarkInfoUI(bookmark)
 		}
@@ -820,10 +822,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			})
 			openAccountAction.backgroundColor = .orange
 
-			return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+			if VendorServices.shared.canEditAccount {
+				return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+			}
+			return [deleteRowAction, manageRowAction, openAccountAction]
 		}
 
-		return [deleteRowAction, editRowAction, manageRowAction]
+		if VendorServices.shared.canEditAccount {
+			return [deleteRowAction, editRowAction, manageRowAction]
+		}
+		return [deleteRowAction, manageRowAction]
 	}
 
 	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
