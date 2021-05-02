@@ -305,6 +305,11 @@
             value = "[openid-connect,oauth2]"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.validator-flags"
+            value = "[clear-cookies]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
