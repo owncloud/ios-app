@@ -1122,6 +1122,26 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "description" : "Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.validator-flags",
+    "key" : "validator-flags",
+    "label" : "connection.validator-flags",
+    "possibleValues" : [
+      {
+        "description" : "Clear all cookies for the connection when entering connection validation.",
+        "value" : "clear-cookies"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Endpoints",
     "categoryTag" : "endpoints",
     "classIdentifier" : "connection",

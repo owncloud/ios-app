@@ -562,6 +562,21 @@ The following placeholders can be used to make it dynamic:
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
 |advanced `candidate`
 
+|connection.validator-flags
+|stringArray
+|
+|Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `clear-cookies`
+! Clear all cookies for the connection when entering connection validation.
+
+!===
+
+|advanced `candidate`
+
 |core.action-concurrency-budgets
 |dictionary
 |`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
