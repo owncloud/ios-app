@@ -22,7 +22,7 @@ import ownCloudAppShared
 class PDFGoToPageAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.pdfpage") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Go to Page".localized }
+	override class var name : String? { return "Go to page".localized }
 	override class var keyCommand : String? { return "G" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreDetailItem, .keyboardShortcut] }

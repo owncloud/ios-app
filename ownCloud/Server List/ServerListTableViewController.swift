@@ -22,7 +22,11 @@ import ownCloudApp
 import ownCloudAppShared
 import PocketSVG
 
-class ServerListTableViewController: UITableViewController, Themeable {
+public protocol StateRestorationConnectProtocol : class {
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage?)
+}
+
+class ServerListTableViewController: UITableViewController, Themeable, StateRestorationConnectProtocol {
 	// MARK: - Views
 	@IBOutlet var welcomeOverlayView: UIView!
 	@IBOutlet var welcomeTitleLabel : UILabel!
