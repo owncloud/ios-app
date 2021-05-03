@@ -20,7 +20,10 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class StaticLoginViewController: UIViewController, Themeable {
+class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
+	private var bookmark: OCBookmark?
+	private var lastVisibleItemId: String?
+
 	private let maximumContentWidth : CGFloat = 400
 	let loginBundle : StaticLoginBundle
 
@@ -200,6 +203,11 @@ class StaticLoginViewController: UIViewController, Themeable {
 		self.toolbarShown = true
 	}
 
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
+		self.bookmark = bookmark
+		self.lastVisibleItemId = lastVisibleItemId
+	}
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
@@ -319,6 +327,10 @@ class StaticLoginViewController: UIViewController, Themeable {
 		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
 		// PushTransition correctly restores the view
 		serverList?.pushFromViewController = self
+
+		if let bookmark = bookmark {
+			serverList?.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false)
+		}
 
 		return serverList!
 	}

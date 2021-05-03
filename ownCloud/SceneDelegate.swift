@@ -90,9 +90,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		   let bookmarkUUID = UUID(uuidString: bookmarkUUIDString),
 		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
 		   let navigationController = window?.rootViewController as? ThemeNavigationController,
-		   let serverListController = navigationController.topViewController as? ServerListTableViewController {
+		   let serverListController = navigationController.topViewController as? StateRestorationConnectProtocol {
 			if activity.title == OCBookmark.ownCloudOpenAccountPath {
-				serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
+				serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false, present: nil)
 				window?.windowScene?.userActivity = bookmark.openAccountUserActivity
 
 				return true
@@ -102,7 +102,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				}
 
 				// At first connect to the bookmark for the item
-				serverListController.connect(to: bookmark, lastVisibleItemId: itemLocalID, animated: false)
+				serverListController.connect(to: bookmark, lastVisibleItemId: itemLocalID, animated: false, present: nil)
 				window?.windowScene?.userActivity = activity
 
 				return true
