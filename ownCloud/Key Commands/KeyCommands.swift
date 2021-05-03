@@ -104,6 +104,32 @@ extension ServerListTableViewController {
 	}
 }
 
+extension StaticLoginSingleAccountServerListViewController {
+
+	override var keyCommands: [UIKeyCommand]? {
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+
+		var shortcuts = [UIKeyCommand]()
+		if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
+			shortcuts.append(nextObjectCommand)
+			if selectedIndexPath.section != 0 || (selectedIndexPath.section == 0 && selectedIndexPath.row != 0) {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
+			shortcuts.append(nextObjectCommand)
+		}
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
 extension BookmarkViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
@@ -394,7 +420,11 @@ extension UITableViewController {
 		guard let selectedIndexPath = self.tableView?.indexPathForSelectedRow else { return }
 
 		if selectedIndexPath.row > 0 {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+			if selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
+				self.tableView.selectRow(at: NSIndexPath(row: tableView.numberOfRows(inSection: selectedIndexPath.section - 1) - 1, section: selectedIndexPath.section - 1) as IndexPath, animated: true, scrollPosition: .middle)
+			} else {
+				self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+			}
 		} else if selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
 			let section = selectedIndexPath.section - 1
 			if let numberOfRows = self.tableView?.numberOfRows(inSection: section), numberOfRows > 0 {
