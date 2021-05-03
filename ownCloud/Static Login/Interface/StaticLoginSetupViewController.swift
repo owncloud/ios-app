@@ -301,9 +301,12 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			self.removeSection(urlHelpSection)
 		}
 
-		busySection = self.busySection(message: "Contacting server…".localized)
-
-		self.addSection(busySection!)
+		if busySection == nil {
+			busySection = self.busySection(message: "Contacting server…".localized)
+		}
+		if let busySection = busySection, !busySection.attached {
+			self.addSection(busySection)
+		}
 		self.determineSupportedAuthMethod()
 	}
 
@@ -481,7 +484,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					authMethodKnown = true
 
 					OnMainThread {
-						self.removeSection(self.busySection!, animated: true)
+						if let busySection = self.busySection, busySection.attached {
+							self.removeSection(busySection)
+						}
 
 						let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
 						switch authMethodType {
