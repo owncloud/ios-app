@@ -181,6 +181,11 @@
 			{
 				OCLogError(@"Error parsing %@: %@", _brandingPlistURL, error);
 			}
+			else
+			{
+				// Expand "flat" syntax
+				_brandingProperties = [_brandingProperties expandedDictionary];
+			}
 
 			_brandingPropertiesFromLocalFile = _brandingPlistURL.isFileURL;
 		}
