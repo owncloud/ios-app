@@ -16,6 +16,7 @@ Summary
 * Bugfix - Viewer fixes, refactoring and minor improvements: [#942](https://github.com/owncloud/ios-app/issues/942)
 * Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
 * Bugfix - UI refinements in action card: [#956](https://github.com/owncloud/ios-app/issues/956)
+* Bugfix - State Restoration for Branded Login: [#957](https://github.com/owncloud/ios-app/issues/957)
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 * Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
@@ -81,6 +82,13 @@ Details
    view.
 
    https://github.com/owncloud/ios-app/issues/956
+
+* Bugfix - State Restoration for Branded Login: [#957](https://github.com/owncloud/ios-app/issues/957)
+
+   State restoration was not working for branded clients. This fix will restore the last shown
+   item after an app restart for branded clients.
+
+   https://github.com/owncloud/ios-app/issues/957
 
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 

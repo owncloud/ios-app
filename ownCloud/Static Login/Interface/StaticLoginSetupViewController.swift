@@ -29,6 +29,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	private var username : String?
 	private var password : String?
 	private var passwordRow : StaticTableViewRow?
+	private var isAuthenticating = false
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
@@ -78,6 +79,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let self = self, let value = row.value as? String {
 				self.urlString = value
 			}
+			if type == .didReturn, let value = row.value as? String, value.count > 0 {
+				self?.proceedWithURL()
+			}
 		}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
@@ -125,6 +129,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			}
 			if let value = row.value as? String {
 				self?.password = value
+			}
+			if type == .didReturn, let value = row.value as? String, value.count > 0 {
+				self?.startAuthentication(nil)
 			}
 			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
 		if let passwordRow = passwordRow {
@@ -295,14 +302,19 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			self.removeSection(urlHelpSection)
 		}
 
-		busySection = self.busySection(message: "Contacting server…".localized)
-
-		self.addSection(busySection!)
+		if busySection == nil {
+			busySection = self.busySection(message: "Contacting server…".localized)
+		}
+		if let busySection = busySection, !busySection.attached {
+			self.addSection(busySection)
+		}
 		self.determineSupportedAuthMethod()
 	}
 
 	@objc func startAuthentication(_ sender: Any?) {
 		guard let bookmark = self.bookmark else { return }
+		if isAuthenticating { return }
+		isAuthenticating = true
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let connection = instantiateConnection(for: bookmark)
@@ -330,8 +342,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				hud?.present(on: self, label: "Authenticating…".localized)
 			}
 
-			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { (error, authMethodIdentifier, authMethodData) in
+			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { [weak self] (error, authMethodIdentifier, authMethodData) in
+				guard let self = self else { return }
 				OnMainThread {
+					self.isAuthenticating = false
 					if let button = sender as? ThemeButton {
 						spinner.removeFromSuperview()
 						button.setTitle("Login".localized, for: .normal)
@@ -475,7 +489,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					authMethodKnown = true
 
 					OnMainThread {
-						self.removeSection(self.busySection!, animated: true)
+						if let busySection = self.busySection, busySection.attached {
+							self.removeSection(busySection)
+						}
 
 						let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
 						switch authMethodType {

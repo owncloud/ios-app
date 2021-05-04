@@ -20,7 +20,10 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class StaticLoginViewController: UIViewController, Themeable {
+class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
+	private var bookmark: OCBookmark?
+	private var lastVisibleItemId: String?
+
 	private let maximumContentWidth : CGFloat = 400
 	let loginBundle : StaticLoginBundle
 
@@ -200,6 +203,11 @@ class StaticLoginViewController: UIViewController, Themeable {
 		self.toolbarShown = true
 	}
 
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
+		self.bookmark = bookmark
+		self.lastVisibleItemId = lastVisibleItemId
+	}
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
@@ -217,6 +225,10 @@ class StaticLoginViewController: UIViewController, Themeable {
 				showFirstScreen()
 			}
 		}
+
+		if AppLockManager.shared.passcode == nil && AppLockManager.shared.isPasscodeEnforced {
+			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
+		}
 	}
 
 	@objc func showFirstScreen() {
@@ -225,14 +237,14 @@ class StaticLoginViewController: UIViewController, Themeable {
 		if OCBookmarkManager.shared.bookmarks.count > 0 {
 			// Login selection view
 			firstViewController = self.buildBookmarkSelector()
-		} else {
+		} else if let firstProfile = loginBundle.profiles.first {
 			// Setup flow
 			if loginBundle.profiles.count > 1 {
 				// Profile setup selector
-				firstViewController = buildProfileSetupSelector(title: "Welcome".localized)
+				firstViewController = buildProfileSetupSelector(title: firstProfile.welcome!)
 			} else {
 				// Single Profile setup
-				firstViewController = buildSetupViewController(for: loginBundle.profiles.first!)
+				firstViewController = buildSetupViewController(for: firstProfile)
 			}
 		}
 
@@ -263,7 +275,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 		let selectorViewController : StaticLoginStepViewController = StaticLoginStepViewController(loginViewController: self)
 		let profileSection = StaticTableViewSection(headerTitle: "")
 
-		profileSection.addStaticHeader(title: title, message: "Please pick a profile to begin setup:")
+		profileSection.addStaticHeader(title: title, message: "Please pick a profile to begin setup".localized)
 
 		for profile in loginBundle.profiles {
 			profileSection.add(row: StaticTableViewRow(rowWithAction: { (row, _) in
@@ -276,7 +288,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 		}
 
 		if includeCancelOption {
-			let (_, cancelButton) = profileSection.addButtonFooter(cancelLabel: "Cancel")
+			let (_, cancelButton) = profileSection.addButtonFooter(cancelLabel: "Cancel".localized)
 
 			cancelButton?.addTarget(selectorViewController, action: #selector(selectorViewController.popViewController), for: .touchUpInside)
 		}
@@ -294,10 +306,18 @@ class StaticLoginViewController: UIViewController, Themeable {
 		var serverList : ServerListTableViewController?
 
 		if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
-			serverList = StaticLoginServerListViewController(style: .grouped)
+			if #available(iOS 13.0, *) {
+				serverList = StaticLoginServerListViewController(style: .insetGrouped)
+			} else {
+				serverList = StaticLoginServerListViewController(style: .grouped)
+			}
 			(serverList as? StaticLoginServerListViewController)?.staticLoginViewController = self
 		} else {
-			serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+			if #available(iOS 13.0, *) {
+				serverList = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+			} else {
+				serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+			}
 			(serverList as? StaticLoginSingleAccountServerListViewController)?.staticLoginViewController = self
 		}
 
@@ -307,6 +327,10 @@ class StaticLoginViewController: UIViewController, Themeable {
 		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
 		// PushTransition correctly restores the view
 		serverList?.pushFromViewController = self
+
+		if let bookmark = bookmark {
+			serverList?.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false)
+		}
 
 		return serverList!
 	}
