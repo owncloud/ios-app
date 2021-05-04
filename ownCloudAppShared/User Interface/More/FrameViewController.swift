@@ -127,7 +127,9 @@ open class FrameViewController: UIViewController, CardPresentationSizing {
 
 	open override func viewDidLayoutSubviews() {
 		if self.view.superview != nil {
-			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: UIView.layoutFittingExpandedSize.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+			let maxWidth = (self.presentationController as? CardPresentationController)?.maxWidth ?? UIView.layoutFittingExpandedSize.width
+
+			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: maxWidth, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 		}
 
 		super.viewDidLayoutSubviews()

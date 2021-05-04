@@ -67,10 +67,12 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	private var cachedFittingSize : CGSize?
 	private var presentedViewFittingSize : CGSize? {
 		if cachedFittingSize == nil {
+			maxWidthConstraint?.constant = self.maxWidth
+
 			if let cardViewController = presentedViewController as? CardPresentationSizing {
-				cachedFittingSize = cardViewController.cardPresentationSizeFitting(CGSize(width: self.windowFrame.size.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+				cachedFittingSize = cardViewController.cardPresentationSizeFitting(CGSize(width: maxWidth, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: UILayoutPriority(999), verticalFittingPriority: .defaultHigh)
 			} else {
-				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: UILayoutPriority(999), verticalFittingPriority: .defaultHigh)
 			}
 
 			let safeBottom : CGFloat = presentingViewController.view?.window?.safeAreaInsets.bottom ?? 0
@@ -83,6 +85,18 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		return cachedFittingSize
 	}
 
+	var maxWidth : CGFloat {
+		var windowWidth = windowFrame.size.width
+
+		if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact {
+			windowWidth -= 100
+		} else if windowWidth > 600 {
+			windowWidth = 540
+		}
+
+		return windowWidth
+	}
+
 	private var windowFrame: CGRect {
 		if let window = UserInterfaceContext.shared.currentWindow {
 			return window.bounds
@@ -93,23 +107,14 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 	override var frameOfPresentedViewInContainerView: CGRect {
 		var originX: CGFloat = 0
-		let maxWidth: CGFloat = 540
-		var presentedWidth: CGFloat = windowFrame.width
+		let presentedWidth: CGFloat = maxWidth
 		var presentedHeight: CGFloat = windowFrame.height * CardPosition.open.heightMultiplier
-		let fittingSize = self.presentedViewFittingSize
+		let fittingSize = presentedViewFittingSize
 
-		if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact {
-			originX = 50
-			presentedWidth = windowFrame.width - 100
-		}
+		originX = (windowFrame.width - presentedWidth) / 2
 
 		if let fittingHeight = fittingSize?.height, presentedHeight > fittingHeight {
 			presentedHeight = fittingHeight
-		}
-
-		if windowFrame.width > 600 {
-			originX = ( presentedWidth / 2 ) - (maxWidth / 2)
-			presentedWidth = maxWidth
 		}
 
 		let presentedFrame = CGRect(origin: CGPoint(x: originX, y: self.offset(for: cardPosition)), size: CGSize(width: presentedWidth, height: presentedHeight))
@@ -119,6 +124,8 @@ final class CardPresentationController: UIPresentationController, Themeable {
 
 	var withHandle : Bool
 	var dismissable : Bool
+
+	private var maxWidthConstraint : NSLayoutConstraint?
 
 	init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, withHandle : Bool, dismissable: Bool) {
 		self.withHandle = withHandle
@@ -130,6 +137,9 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		presentedViewController.view.layer.cornerRadius = 10
 		presentedViewController.view.layer.masksToBounds = true
 		presentedViewController.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+
+		maxWidthConstraint = presentedViewController.view.widthAnchor.constraint(lessThanOrEqualToConstant: self.maxWidth)
+		maxWidthConstraint?.isActive = true
 	}
 
 	deinit {
