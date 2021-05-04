@@ -29,6 +29,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	private var username : String?
 	private var password : String?
 	private var passwordRow : StaticTableViewRow?
+	private var isAuthenticating = false
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
@@ -78,7 +79,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let self = self, let value = row.value as? String {
 				self.urlString = value
 			}
-			if type == .didEnd, let value = row.value as? String, value.count > 0 {
+			if type == .didReturn, let value = row.value as? String, value.count > 0 {
 				self?.proceedWithURL()
 			}
 		}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
@@ -129,7 +130,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let value = row.value as? String {
 				self?.password = value
 			}
-			if type == .didEnd, let value = row.value as? String, value.count > 0 {
+			if type == .didReturn, let value = row.value as? String, value.count > 0 {
 				self?.startAuthentication(nil)
 			}
 			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
@@ -312,6 +313,8 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	@objc func startAuthentication(_ sender: Any?) {
 		guard let bookmark = self.bookmark else { return }
+		if isAuthenticating { return }
+		isAuthenticating = true
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let connection = instantiateConnection(for: bookmark)
@@ -339,8 +342,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				hud?.present(on: self, label: "Authenticating…".localized)
 			}
 
-			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { (error, authMethodIdentifier, authMethodData) in
+			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { [weak self] (error, authMethodIdentifier, authMethodData) in
+				guard let self = self else { return }
 				OnMainThread {
+					self.isAuthenticating = false
 					if let button = sender as? ThemeButton {
 						spinner.removeFromSuperview()
 						button.setTitle("Login".localized, for: .normal)

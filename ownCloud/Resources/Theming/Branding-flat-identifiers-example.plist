@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>branding.can-add-account</key>
+	<false/>
+	<key>branding.can-edit-account</key>
+	<false/>
+	<key>branding.organization-name</key>
+	<string>demo.owncloud.com</string>
+	<key>branding.profile-definitions$[0].profile-identifier</key>
+	<string>demo.owncloud.com</string>
+	<key>branding.profile-definitions$[0].profile-welcome-message</key>
+	<string>Welcome to demo.owncloud.com</string>
+	<key>branding.profile-definitions$[0].profile-password-auth-prompt</key>
+	<string>Enter your username and password</string>
+	<key>branding.profile-definitions$[0].profile-token-auth-prompt</key>
+	<string>Please log in to authorize the app.</string>
+	<key>branding.profile-definitions$[0].profile-url-prompt</key>
+	<string>Please enter your demo.owncloud.com URL</string>
+	<key>branding.profile-definitions$[0].profile-bookmark-name</key>
+	<string>demo.owncloud.com</string>
+	<key>branding.profile-definitions$[0].profile-url</key>
+	<string>https://demo.owncloud.com</string>
+	<key>branding.profile-definitions$[0].profile-allow-url-configuration</key>
+	<false/>
+</dict>
+</plist>

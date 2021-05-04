@@ -1066,10 +1066,9 @@ Users can choose to prefer the original photo instead of an edited version and a
 			<array>
 				<dict>
 					<key>Title</key>
-					<string>Local Account-Wide Search</string>
+					<string>Improved Local Search</string>
 					<key>Subtitle</key>
-					<string>User can switch between local folder or local account-wide search using custom queries.
-Search terms and filter keywords can be combined inside the search field to get granular search results.</string>
+					<string>User can now switch from searching the local folder to a local account-wide search. Search now also supports using custom queries. Search terms and filter keywords can be combined in the search field to get more granular search results.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1077,9 +1076,9 @@ Search terms and filter keywords can be combined inside the search field to get 
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>File Provider Actions Sharing &amp; Public Links</string>
+					<string>Added File Provider Actions for Sharing and Public Links</string>
 					<key>Subtitle</key>
-					<string>Added file provider actions for Sharing and Public Links, which will open the UI for adding and editing sharing and public links to the selected item directly from the file provider.</string>
+					<string>New file provider actions for Sharing and Public Links now will open the UI, allowing users to add or edit Sharing Links and Public Links to the selected item, directly from the file provider.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1087,9 +1086,9 @@ Search terms and filter keywords can be combined inside the search field to get 
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>File Provider Passcode Protection</string>
+					<string>Improved File Provider Passcode Unlock</string>
 					<key>Subtitle</key>
-					<string>If the app is protected with a passcode the file provider extension will present an user interface for direct unlocking.</string>
+					<string>If the app is protected with a passcode, the file provider extension now presents a user interface for direct unlocking.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1097,9 +1096,9 @@ Search terms and filter keywords can be combined inside the search field to get 
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Presentation Mode</string>
+					<string>Added Presentation Mode</string>
 					<key>Subtitle</key>
-					<string>Presentation mode prevents the display from sleep mode as long as the detail view is closed, furthermore the preview will be opened in full screen.</string>
+					<string>Presentation mode opens a file in a full screen detail view, preventing the display from entering sleep mode until the detail view is closed.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1107,9 +1106,9 @@ Search terms and filter keywords can be combined inside the search field to get 
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>&quot;Go to Page&quot; reallocated in PDF previews</string>
+					<string>Moved &quot;Go to Page&quot; in PDF previews</string>
 					<key>Subtitle</key>
-					<string>The &quot;Go to Page&quot; option for PDF files has been reallocated to the Actions menu, and is also available by tapping on the page label.</string>
+					<string>The &quot;Go to Page&quot; option for PDF files has moved to the Actions menu. It is also available by tapping on the page label.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1119,7 +1118,7 @@ Search terms and filter keywords can be combined inside the search field to get 
 					<key>Title</key>
 					<string>Updated Keyboard Shortcuts</string>
 					<key>Subtitle</key>
-					<string>Added keyboard shortcuts in PDF view, media playback can now completely controlled by the keyboard and fixed broken keyboard commands.</string>
+					<string>The PDF view now has additional keyboard shortcuts. Media playback can now be operated entirely with just keyboard commands. Fixed some broken keyboard commands.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1127,9 +1126,19 @@ Search terms and filter keywords can be combined inside the search field to get 
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>French Localization</string>
+					<string>Improved UI</string>
 					<key>Subtitle</key>
-					<string>The app is now localized in french</string>
+					<string>Polished some UI elements.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintbrush</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Added French Localization</string>
+					<key>Subtitle</key>
+					<string>The app is now localized in French.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1139,7 +1148,8 @@ Search terms and filter keywords can be combined inside the search field to get 
 					<key>Title</key>
 					<string>Fix: Shortcut uploads and error handling improvements</string>
 					<key>Subtitle</key>
-					<string>Improved error handling for Shortcut actions and now also reporting authentication errors.
+					<string>Improved error handling for Shortcut actions. Now also reporting authentication errors.
+
 Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&quot; and &quot;Create Folder&quot; action.</string>
 					<key>Type</key>
 					<string>Fix</string>
@@ -1150,7 +1160,17 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Fix: Swiping PDF thumbnail view on the iPhone</string>
 					<key>Subtitle</key>
-					<string>Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the iPhone</string>
+					<string>The App prevented the page container from scrolling when users tried to scroll inside the pdf thumbnail view on the iPhone</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Preview update</string>
+					<key>Subtitle</key>
+					<string>User can now decide do automatically update to a newer file version or to keep the current version in preview mode and we fixed some problems when displaying files. </string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1160,7 +1180,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Fix: Enabling Markup Mode</string>
 					<key>Subtitle</key>
-					<string>In some cases enabling markup mode failed.</string>
+					<string>Previously, in some cases enabling markup mode failed.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1170,7 +1190,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Fix: Disable Markup Action for Mime-Type Gif</string>
 					<key>Subtitle</key>
-					<string>Images with mime type image/gif can not edited with markup action and needs to be disabled.</string>
+					<string>Disabled markup actions for images with mime type image/gif that can not be edited.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1180,7 +1200,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Fix: Passcode Settings Section</string>
 					<key>Subtitle</key>
-					<string>If a passcode was enabled or disabled in the settings, the UI section was not updated.</string>
+					<string>If a passcode is enabled or disabled in the settings, the UI section now gets properly updated.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1190,7 +1210,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Fix: Japanese Input Support </string>
 					<key>Subtitle</key>
-					<string>Fixed a problem in scan view when renaming the file name and using a Japanese keyboard layout.</string>
+					<string>Fixed a problem in scan view when renaming a file and using a Japanese keyboard layout.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
