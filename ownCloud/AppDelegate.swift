@@ -165,6 +165,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 
+		ExternalBrowserBusyHandler.setup()
+
 		setupAndHandleCrashReports()
 
 		setupMDMPushRelaunch()
