@@ -1,0 +1,6 @@
+Change: Unified Branding with MDM support
+
+Refactored Branding, introducing a new Branding class, unifying branding support with class settings while offering support for the legacy format and laying the ground for retrieving branding assets from a remote server.
+
+https://github.com/owncloud/ios-app/issues/697
+https://github.com/owncloud/ios-app/issues/792

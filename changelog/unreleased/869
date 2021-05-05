@@ -1,0 +1,5 @@
+Change: Enforce User ID when updating token-based bookmarks
+
+This PR requires the user ID to remain the same when updating token-based bookmarks. If the user logs in as a user other than the one with which the bookmark was originally created, an error will be presented.
+
+https://github.com/owncloud/ios-app/pull/869
