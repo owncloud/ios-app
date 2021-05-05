@@ -358,6 +358,7 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
+				self.toolbarColors.secondaryLabelColor = .lightGray
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 

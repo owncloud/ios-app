@@ -130,7 +130,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 					summary?.message = "Connecting…".localized
 
 				case .offline, .unavailable:
-					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
 			}
 		}
 

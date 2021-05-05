@@ -56,7 +56,7 @@ class DiagnosticViewController: StaticTableViewController {
 			shareImage = UIImage(systemName: "square.and.arrow.up")
 		}
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: shareImage, style: .plain, target: self, action: #selector(self.shareAsMarkdown(_:)))
-		self.navigationItem.rightBarButtonItem?.accessibilityLabel = "Share Diagnostics"
+		self.navigationItem.rightBarButtonItem?.accessibilityLabel = "Share Diagnostics".localized
 		self.nodes = node.children
 
 		rebuildTable()

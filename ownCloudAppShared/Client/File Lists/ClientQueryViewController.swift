@@ -581,9 +581,9 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			if query.queryPath != "/" {
 				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				if self.items.count == 1 {
-					totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
+					totalSize = String(format: "%@ item | ".localized, "\(self.items.count)") + totalSize
 				} else if self.items.count > 1 {
-					totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
+					totalSize = String(format: "%@ items | ".localized, "\(self.items.count)") + totalSize
 				}
 				self.updateFooter(text: totalSize)
 			}

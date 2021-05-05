@@ -55,6 +55,10 @@
 		{
 			return ([userNamePrefix stringByAppendingString:self.url.host]);
 		}
+		else if (self.url.host != nil)
+		{
+			return (userNamePrefix);
+		}
 		else
 		{
 			return (userNamePrefix);

@@ -71,6 +71,9 @@
 "Access Files" = "Access Files";
 "Logout" = "Logout";
 
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
+
 /* Client */
 "Browse" = "Browse";
 "Files" = "Files";
