@@ -320,7 +320,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 		self.present(alertController, animated: true)
 	}
 
-	@objc func search() {
+	@objc func search(sender: UIBarButtonItem?) {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let pdfSearchController = PDFSearchViewController()
@@ -339,9 +339,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 			}
 		}
 
-		if UIDevice.current.userInterfaceIdiom == .pad {
+		if UIDevice.current.userInterfaceIdiom == .pad, let sender = sender {
 			searchNavigationController.modalPresentationStyle = .popover
-			searchNavigationController.popoverPresentationController?.barButtonItem = self.searchButtonItem
+			searchNavigationController.popoverPresentationController?.barButtonItem = sender
 		}
 
 		self.present(searchNavigationController, animated: true)

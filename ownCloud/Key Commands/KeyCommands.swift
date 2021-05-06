@@ -1330,7 +1330,7 @@ extension DisplayHostViewController {
 		guard let currentViewController = self.viewControllers?.first else { return }
 
 		if let pdfController = currentViewController as? PDFViewerViewController {
-			pdfController.search()
+			pdfController.search(sender: nil)
 		}
 	}
 
