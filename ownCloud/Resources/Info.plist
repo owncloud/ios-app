@@ -165,5 +165,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-</dict>
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+ 	<true/></dict>
 </plist>
