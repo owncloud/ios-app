@@ -59,7 +59,7 @@ class PulsatingButton: UIButton {
 	}
 }
 
-class PDFViewerViewController: DisplayViewController, DisplayExtension {
+class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopoverPresentationControllerDelegate {
 
 	enum ThumbnailViewPosition {
 		case left, right, bottom, none
@@ -341,7 +341,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 		if UIDevice.current.userInterfaceIdiom == .pad {
 			searchNavigationController.modalPresentationStyle = .popover
-			searchNavigationController.popoverPresentationController?.barButtonItem = searchButtonItem
+			searchNavigationController.popoverPresentationController?.barButtonItem = self.searchButtonItem
 		}
 
 		self.present(searchNavigationController, animated: true)
