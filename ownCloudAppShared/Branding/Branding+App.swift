@@ -38,7 +38,7 @@ extension Branding : BrandingInitialization {
 		if #available(iOS 13, *) {
 			self.registerOCClassSettingsDefaults([
 				.documentationURL : "https://doc.owncloud.com/ios-app/",
-				.helpURL 	  : "https://www.owncloud.com/help",
+				.helpURL 	  : "https://owncloud.com/docs-guides/",
 				.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 				.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
 
