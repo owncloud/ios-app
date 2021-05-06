@@ -56,6 +56,10 @@ class FavoriteAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreDetailItem || location == .contextMenuItem {
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "star")
+			}
+
 			return UIImage(named: "star")
 		}
 
