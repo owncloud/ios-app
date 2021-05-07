@@ -338,16 +338,16 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 		self.present(searchNavigationController, animated: true)
 	}
 
-	@objc func showOutline() {
+	@objc func showOutline(sender: UIBarButtonItem?) {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let outlineViewController = PDFOutlineViewController()
 		let searchNavigationController = ThemeNavigationController(rootViewController: outlineViewController)
 		outlineViewController.pdfDocument = pdfDocument
 
-		if UIDevice.current.userInterfaceIdiom == .pad {
+		if UIDevice.current.userInterfaceIdiom == .pad, let sender = sender {
 			searchNavigationController.modalPresentationStyle = .popover
-			searchNavigationController.popoverPresentationController?.barButtonItem = outlineItem
+			searchNavigationController.popoverPresentationController?.barButtonItem = sender
 		}
 
 		self.present(searchNavigationController, animated: true)
