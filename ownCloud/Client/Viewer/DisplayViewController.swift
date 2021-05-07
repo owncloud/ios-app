@@ -369,7 +369,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		case alwaysUpdate
 		case neverUpdate
 	}
-	var updateStrategy : UpdateStrategy = .alwaysUpdate
+	var updateStrategy : UpdateStrategy = .ask
 
 	func shouldRenderItem(item: OCItem, isUpdate: Bool, shouldRender: @escaping (Bool) -> Void) {
 		if isUpdate {
