@@ -99,7 +99,15 @@ extension ServerListTableViewController {
 
 	@objc func deleteBookmarkCommand() {
 		if let indexPath = self.tableView?.indexPathForSelectedRow, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			delete(bookmark: bookmark, at: indexPath)
+			delete(bookmark: bookmark, at: indexPath) {
+				OnMainThread {
+					self.tableView.performBatchUpdates({
+						self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+					}, completion: { (_) in
+						self.ignoreServerListChanges = false
+					})
+				}
+			}
 		}
 	}
 }
