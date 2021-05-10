@@ -278,6 +278,8 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
 			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
 		])
+
+		self.accessibilityElements = [titleLabel, detailLabel, moreButton, revealButton]
 	}
 
 	// MARK: - Present item
@@ -367,7 +369,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
 
-		self.moreButton.accessibilityLabel = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
+		self.moreButton.accessibilityLabel = "Actions".localized
 
 		self.updateStatus()
 	}
