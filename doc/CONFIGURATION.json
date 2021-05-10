@@ -372,7 +372,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Controls if the app is built for beta or release purposes.",
     "flatIdentifier" : "app.is-beta-build",
     "key" : "is-beta-build",
@@ -400,7 +400,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Controls whether a warning should be shown on the first run of a beta version.",
     "flatIdentifier" : "app.show-beta-warning",
     "key" : "show-beta-warning",
@@ -559,6 +559,14 @@
     "key" : "browser-session-class",
     "label" : "authentication.browser-session-class",
     "possibleValues" : [
+      {
+        "description" : "Replace http and https with custom schemes to delegate browser sessions to a different app.",
+        "value" : "CustomScheme"
+      },
+      {
+        "description" : "Replace `http` with `mibrowser` and `https` with `mibrowsers` to delegate browser sessions to the MobileIron browser.",
+        "value" : "MIBrowser"
+      },
       {
         "description" : "Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.",
         "value" : "UIWebView"
@@ -753,7 +761,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "defaultValue" : "https://www.owncloud.com/help",
+    "defaultValue" : "https://owncloud.com/docs-guides/",
     "description" : "URL to help for the app. Opened when selecting \"Help\" in the settings.",
     "flatIdentifier" : "branding.url-help",
     "key" : "url-help",
@@ -788,6 +796,32 @@
     "label" : "branding.url-terms-of-use",
     "status" : "advanced",
     "type" : "urlString"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Browser Session",
+    "categoryTag" : "browsersession",
+    "classIdentifier" : "browser-session",
+    "className" : "OCAuthenticationBrowserSession",
+    "description" : "Scheme to use instead of plain `http` when using browser session class CustomScheme, i.e. `mibrowser`.",
+    "flatIdentifier" : "browser-session.custom-scheme-plain",
+    "key" : "custom-scheme-plain",
+    "label" : "browser-session.custom-scheme-plain",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Browser Session",
+    "categoryTag" : "browsersession",
+    "classIdentifier" : "browser-session",
+    "className" : "OCAuthenticationBrowserSession",
+    "description" : "Scheme to use instead of `https` when using browser session class CustomScheme, i.e. `mibrowsers`.",
+    "flatIdentifier" : "browser-session.custom-scheme-secure",
+    "key" : "custom-scheme-secure",
+    "label" : "browser-session.custom-scheme-secure",
+    "status" : "advanced",
+    "type" : "string"
   },
   {
     "autoExpansion" : "none",
@@ -1119,6 +1153,26 @@
     "label" : "connection.transparent-temporary-redirect",
     "status" : "debugOnly",
     "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "description" : "Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.validator-flags",
+    "key" : "validator-flags",
+    "label" : "connection.validator-flags",
+    "possibleValues" : [
+      {
+        "description" : "Clear all cookies for the connection when entering connection validation.",
+        "value" : "clear-cookies"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
