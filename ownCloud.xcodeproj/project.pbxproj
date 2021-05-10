@@ -339,6 +339,7 @@
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
 		DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */; };
+		DC6CC3152642C3560040ECAC /* ExternalBrowserBusyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */; };
 		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
 		DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */ = {isa = PBXBuildFile; fileRef = DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */; };
 		DC70398626128B89009F2DC1 /* NSString+ByteCountParser.m in Sources */ = {isa = PBXBuildFile; fileRef = DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */; };
@@ -1293,6 +1294,7 @@
 		DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManagementViewController.swift; sourceTree = "<group>"; };
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
 		DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = PLCrashReporter.LICENSE; sourceTree = "<group>"; };
+		DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalBrowserBusyHandler.swift; sourceTree = "<group>"; };
 		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
 		DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+ByteCountParser.h"; sourceTree = "<group>"; };
 		DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+ByteCountParser.m"; sourceTree = "<group>"; };
@@ -2343,6 +2345,7 @@
 				4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */,
 				4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */,
 				4C1561EE22232357009C4EF3 /* PhotoSelectionViewCell.swift */,
+				DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -3995,6 +3998,7 @@
 				02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */,
 				DC44343E21ABFA5200376B16 /* StaticLoginProfile.swift in Sources */,
 				4C82D07022C9387300835F0B /* MediaDisplayViewController.swift in Sources */,
+				DC6CC3152642C3560040ECAC /* ExternalBrowserBusyHandler.swift in Sources */,
 				DCFB74C421AD7E18005796AF /* StaticLoginServerListViewController.swift in Sources */,
 				232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */,
 				DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */,
