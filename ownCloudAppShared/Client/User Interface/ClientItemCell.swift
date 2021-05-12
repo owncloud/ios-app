@@ -370,6 +370,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
 
 		self.moreButton.accessibilityLabel = "Actions".localized
+		self.moreButton.accessibilityIdentifier = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
 
 		self.updateStatus()
 	}
