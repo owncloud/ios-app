@@ -21,6 +21,18 @@ import EarlGrey
 import LocalAuthentication
 import ownCloudSDK
 
+extension XCUIElement {
+	func forceTapElement() {
+		if self.isHittable {
+			self.tap()
+		}
+		else {
+			let coordinate: XCUICoordinate = self.coordinate(withNormalizedOffset: CGVector(dx:0.0, dy:0.0))
+			coordinate.tap()
+		}
+	}
+}
+
 class ScreenshotsTests: XCTestCase {
 
 	var accountName = "ownCloud"
@@ -40,6 +52,8 @@ class ScreenshotsTests: XCTestCase {
 	}
 
 	func testTakeScreenshotStep() {
+
+
 		let app = XCUIApplication()
 		app.launchEnvironment = ["oc:app.show-beta-warning": "false", "oc:app.enable-ui-animations": "false"]
 		app.launchArguments.append(contentsOf: ["-preferred-theme-style", "com.owncloud.classic"])
@@ -133,7 +147,7 @@ class ScreenshotsTests: XCTestCase {
 		let tablesQuery = app.tables
 		tablesQuery/*@START_MENU_TOKEN@*/.textFields["url"]/*[[".cells",".textFields[\"https:\/\/\"]",".textFields[\"url\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
 		tablesQuery/*@START_MENU_TOKEN@*/.textFields["url"]/*[[".cells",".textFields[\"https:\/\/\"]",".textFields[\"url\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.typeText(url)
-		tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Continue"]/*[[".buttons[\"Continue\"].staticTexts[\"Continue\"]",".staticTexts[\"Continue\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		tablesQuery.buttons["Continue"].tap()
 		tablesQuery/*@START_MENU_TOKEN@*/.textFields["username"]/*[[".cells",".textFields[\"Username\"]",".textFields[\"username\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
 		tablesQuery/*@START_MENU_TOKEN@*/.textFields["username"]/*[[".cells",".textFields[\"Username\"]",".textFields[\"username\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.typeText(user)
 
@@ -149,8 +163,13 @@ class ScreenshotsTests: XCTestCase {
 		}
 		app.tap()
 
+
+		if waitForAccessFilesCell(app: app) != .completed {
+			   XCTFail("Error: Can not check auth method of the server")
+		}
+
 		let accountTablesQuery = app.tables
-		accountTablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Access Files"]/*[[".cells.staticTexts[\"Access Files\"]",".staticTexts[\"Access Files\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		accountTablesQuery.staticTexts["Access Files"].tap()
 	}
 
 	func addAccount(app: XCUIApplication, credentials: [String : String]) {
@@ -212,7 +231,6 @@ class ScreenshotsTests: XCTestCase {
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		snapshot("22_ios_files_preview_pdf_demo")
-		app.navigationBars["ownCloud Manual.pdf"].buttons[accountName].tap()
 	}
 
 	func preparePhotos(app: XCUIApplication) {
@@ -221,16 +239,14 @@ class ScreenshotsTests: XCTestCase {
 		tablesQuery.buttons[String(format: "ownCloud Manual.pdf %@", localizedString(key: "Actions"))].tap()
 		snapshot("21_ios_files_actions_demo")
 
-		let normalized = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
-		let coordinate = normalized.withOffset(CGVector(dx: 44, dy: 44))
-		coordinate.tap()
+		XCUIApplication().buttons[localizedString(key: "Close actions menu")].forceTapElement()
 
 		tablesQuery.staticTexts["Photos"].tap()
 
 		sleep(5)
 
 		snapshot("20_ios_files_list_demo")
-		app.navigationBars["Photos"].buttons[accountName].tap()
+		app.navigationBars.firstMatch.buttons[accountName].tap()
 	}
 
 	func prepareQuickAccess(app: XCUIApplication) {
@@ -241,7 +257,7 @@ class ScreenshotsTests: XCTestCase {
 	func prepareMultipleWindows(app: XCUIApplication) {
 		XCUIDevice.shared.orientation = .landscapeLeft
 		sleep(2)
-		app.tabBars.buttons[localizedString(key: "Browse")].tap()
+		app.tabBars.buttons[localizedString(key: "Files")].tap()
 
 		let tablesQuery = XCUIApplication().tables
 		tablesQuery/*@START_MENU_TOKEN@*/.buttons["Photos Actions"]/*[[".cells[\"Photos\"].buttons[\"Photos Actions\"]",".buttons[\"Photos Actions\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
@@ -298,6 +314,15 @@ class ScreenshotsTests: XCTestCase {
 
 	func waitForPDFCell(app: XCUIApplication) -> XCTWaiter.Result {
 		let element = app.tables.cells.staticTexts["ownCloud Manual.pdf"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+
+	func waitForAccessFilesCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.tables.cells.staticTexts["Access Files"]
 		let predicate = NSPredicate(format: "exists == 1")
 		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
 

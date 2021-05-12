@@ -300,7 +300,7 @@ public class ThemeCollection : NSObject {
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
-				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3))
+				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3)))
 
 				// Activity
 				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .white)
@@ -339,7 +339,7 @@ public class ThemeCollection : NSObject {
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
 
 				// Progress
-				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
+				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
 
 				// Activity
 				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .gray)
@@ -358,6 +358,7 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
+				self.toolbarColors.secondaryLabelColor = .lightGray
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
@@ -585,6 +586,7 @@ extension ThemeCollection {
 		appearance.backgroundColor = navigationBarColors.backgroundColor
 		appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
 		appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+		appearance.shadowColor = .clear
 
 		return appearance
 	}

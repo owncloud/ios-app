@@ -99,6 +99,18 @@ tag::actions[]
 |Controls whether action can be accessed in the app UI.
 |advanced `candidate`
 
+|action.com.owncloud.action.pdfpage.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
+|action.com.owncloud.action.presentationmode.enabled
+|bool
+|
+|Controls whether action can be accessed in the app UI.
+|advanced `candidate`
+
 |action.com.owncloud.action.rename.enabled
 |bool
 |
@@ -187,13 +199,13 @@ tag::app[]
 
 |app.is-beta-build
 |bool
-|`true`
+|`false`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
 |app.show-beta-warning
 |bool
-|`true`
+|`false`
 |Controls whether a warning should be shown on the first run of a beta version.
 |debugOnly
 
@@ -219,6 +231,12 @@ tag::authentication[]
 !===
 ! Value
 ! Description
+! `CustomScheme`
+! Replace http and https with custom schemes to delegate browser sessions to a different app.
+
+! `MIBrowser`
+! Replace `http` with `mibrowser` and `https` with `mibrowsers` to delegate browser sessions to the MobileIron browser.
+
 ! `UIWebView`
 ! Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.
 
@@ -258,7 +276,7 @@ tag::bookmarks[]
 |bookmark.url-editable
 |bool
 |`true`
-|Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
+|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
 |supported `candidate`
 
 |===
@@ -299,10 +317,18 @@ tag::branding[]
 |Controls whether the user can edit accounts.
 |advanced `candidate`
 
-|branding.profile-definitions
+|branding.enable-review-prompt
+|bool
+|`false`
+|Controls whether the app should prompt for an App Store review. Only applies if the app is branded.
+|advanced `candidate`
+
+|**Profile definitions** +
+ +
+branding.profile-definitions
 |dictionaryArray
 |
-|Array of dictionaries, each specifying a static profile.
+|Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.
 |advanced `candidate`
 
 |branding.send-feedback-address
@@ -331,7 +357,7 @@ tag::branding[]
 
 |branding.url-help
 |urlString
-|`https://www.owncloud.com/help`
+|`https://owncloud.com/docs-guides/`
 |URL to help for the app. Opened when selecting "Help" in the settings.
 |advanced `candidate`
 
@@ -347,8 +373,175 @@ tag::branding[]
 |URL to terms of use for the app. Opened when selecting "Terms Of Use" in the settings.
 |advanced `candidate`
 
+|`Profile` +
+**Allow URL configuration** +
+ +
+branding.profile-allow-url-configuration
+|bool
+|
+|Indicates if the user can change the server URL for the account.
+|advanced `candidate`
+
+|`Profile` +
+**Allowed authentication methods** +
+ +
+branding.profile-allowed-authentication-methods
+|stringArray
+|
+|The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
+|advanced `candidate`
+
+|`Profile` +
+**Allowed Hosts** +
+ +
+branding.profile-allowed-hosts
+|stringArray
+|
+|Domain names (can also include subdomain name), which are allowed as server url when adding a new account.
+|advanced `candidate`
+
+|`Profile` +
+**Bookmark Name** +
+ +
+branding.profile-bookmark-name
+|string
+|
+|The name that should be used for the bookmark that's generated from this profile and appears in the account list.
+|advanced `candidate`
+
+|`Profile` +
+**Help button label** +
+ +
+branding.profile-help-button-label
+|string
+|
+|Text used for the Help button label
+|advanced `candidate`
+
+|`Profile` +
+**Help URL** +
+ +
+branding.profile-help-url
+|urlString
+|
+|Optional URL to help/support resources.
+|advanced `candidate`
+
+|`Profile` +
+**Identifier** +
+ +
+branding.profile-identifier
+|string
+|
+|Identifier uniquely identifying the profile.
+|advanced `candidate`
+
+|`Profile` +
+**Name** +
+ +
+branding.profile-name
+|string
+|
+|Name of the profile during setup.
+|advanced `candidate`
+
+|`Profile` +
+**Open Help message** +
+ +
+branding.profile-open-help-message
+|string
+|
+|Message shown in an alert before opening the help URL.
+|advanced `candidate`
+
+|`Profile` +
+**Password prompt** +
+ +
+branding.profile-password-auth-prompt
+|string
+|
+|Text that is shown when asking the user to enter their password.
+|advanced `candidate`
+
+|`Profile` +
+**Token authentication prompt** +
+ +
+branding.profile-token-auth-prompt
+|string
+|
+|Text that is shown to the user before opening the authentication web view (f.ex. for OAuth2, OIDC).
+|advanced `candidate`
+
+|`Profile` +
+**URL** +
+ +
+branding.profile-url
+|urlString
+|
+|The URL of the server targeted by this profile.
+|advanced `candidate`
+
+|`Profile` +
+**URL prompt** +
+ +
+branding.profile-url-prompt
+|string
+|
+|Text shown above the URL field when setting up an account.
+|advanced `candidate`
+
+|`Profile` +
+**Welcome Message** +
+ +
+branding.profile-welcome-message
+|string
+|
+|Welcome message shown during account setup.
+|advanced `candidate`
+
 |===
 end::branding[]
+
+
+tag::browsersession[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|browser-session.custom-scheme-plain
+|string
+|
+|Scheme to use instead of plain `http` when using browser session class CustomScheme, i.e. `mibrowser`.
+|advanced `candidate`
+
+|browser-session.custom-scheme-secure
+|string
+|
+|Scheme to use instead of `https` when using browser session class CustomScheme, i.e. `mibrowsers`.
+|advanced `candidate`
+
+|===
+end::browsersession[]
 
 
 tag::connection[]
@@ -401,6 +594,21 @@ The following placeholders can be used to make it dynamic:
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
 |advanced `candidate`
 
+|connection.validator-flags
+|stringArray
+|
+|Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `clear-cookies`
+! Clear all cookies for the connection when entering connection validation.
+
+!===
+
+|advanced `candidate`
+
 |core.action-concurrency-budgets
 |dictionary
 |`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
@@ -413,16 +621,16 @@ The following placeholders can be used to make it dynamic:
 |Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
 |debugOnly
 
-|connection.connection-minimum-server-version
-|string
-|`10.0`
-|The minimum server version required.
-|debugOnly
-
 |connection.force-background-url-sessions
 |bool
 |`false`
 |Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
+|debugOnly
+
+|connection.minimum-server-version
+|string
+|`10.0`
+|The minimum server version required.
 |debugOnly
 
 |core.override-availability-signal
@@ -636,7 +844,7 @@ tag::logging[]
 |Status
 
 
-|log.log-level
+|log.level
 |int
 |`4`
 |Log level
@@ -666,32 +874,35 @@ tag::logging[]
 
 |supported `candidate`
 
-|log.log-privacy-mask
+|log.privacy-mask
 |bool
 |`false`
 |Controls whether certain objects in log statements should be masked for privacy.
 |supported `candidate`
 
-|log.log-blank-filtered-messages
+|log.blank-filtered-messages
 |bool
 |`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
 |advanced `candidate`
 
-|log.log-colored
+|log.colored
 |bool
 |`false`
 |Controls whether log levels should be replaced with colored emojis.
 |advanced `candidate`
 
-|log.log-enabled-components
+|log.enabled-components
 |stringArray
-|`[writer.stderr writer.file option.log-requests-and-responses]`
+|`[writer.stderr writer.file]`
 |List of enabled logging system components.
 [cols="1,2"]
 !===
 ! Value
 ! Description
+! `option.log-file-operations`
+! Log internal file operations
+
 ! `option.log-requests-and-responses`
 ! Log HTTP requests and responses
 
@@ -705,7 +916,7 @@ tag::logging[]
 
 |advanced `candidate`
 
-|log.log-format
+|log.format
 |string
 |`text`
 |Determines the format that log messages are saved in
@@ -726,47 +937,53 @@ tag::logging[]
 
 |advanced `candidate`
 
-|log.log-maximum-message-size
+|log.maximum-message-size
 |int
 |`0`
 |Maximum length of a log message before the message is truncated. A value of 0 means no limit.
 |advanced `candidate`
 
-|log.log-omit-matching
+|log.omit-matching
 |stringArray
 |
 |If set, omits logs messages containing any of the exact terms in this array.
 |advanced `candidate`
 
-|log.log-omit-tags
+|log.omit-tags
 |stringArray
 |
 |If set, omits all log messages tagged with tags in this array.
 |advanced `candidate`
 
-|log.log-only-matching
+|log.only-matching
 |stringArray
 |
 |If set, only logs messages containing at least one of the exact terms in this array.
 |advanced `candidate`
 
-|log.log-only-tags
+|log.only-tags
 |stringArray
 |
 |If set, omits all log messages not tagged with tags in this array.
 |advanced `candidate`
 
-|log.log-single-lined
+|log.single-lined
 |bool
 |`true`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
 |advanced `candidate`
 
-|log.log-synchronous
+|log.synchronous
 |bool
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
 |advanced `candidate`
+
+|measurements.enabled
+|bool
+|`true`
+|Turn measurements on or off
+|debugOnly
 
 |===
 end::logging[]
@@ -836,6 +1053,18 @@ tag::oidc[]
 |string
 |`oc://ios.owncloud.com`
 |OpenID Connect Redirect URI
+|supported `candidate`
+
+|authentication-oauth2.oidc-register-client
+|bool
+|`true`
+|Use OpenID Connect Dynamic Client Registration if the `.well-known/openid-configuration` provides a `registration_endpoint`. If this option is enabled and a registration endpoint is available, `oa2-client-id` and `oa2-client-secret` will be ignored.
+|supported `candidate`
+
+|authentication-oauth2.oidc-register-client-name-template
+|string
+|`ownCloud/{{os.name}} {{app.version}}`
+|Client Name Template to use during OpenID Connect Dynamic Client Registration. In addition to the placeholders available for `http.user-agent`, `{{url.hostname}}` can also be used.
 |supported `candidate`
 
 |authentication-oauth2.oidc-scope
@@ -956,7 +1185,7 @@ tag::security[]
 |Status
 
 
-|connection.connection-allowed-authentication-methods
+|connection.allowed-authentication-methods
 |stringArray
 |
 |Array of allowed authentication methods. Nil/Missing for no restrictions.
@@ -977,7 +1206,7 @@ tag::security[]
 
 |recommended `candidate`
 
-|connection.connection-preferred-authentication-methods
+|connection.preferred-authentication-methods
 |stringArray
 |`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
 |Array of authentication methods in order of preference (most preferred first).
@@ -998,7 +1227,7 @@ tag::security[]
 
 |recommended `candidate`
 
-|connection.connection-certificate-extended-validation-rule
+|connection.certificate-extended-validation-rule
 |string
 |`bookmarkCertificate == serverCertificate`
 |Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.
@@ -1014,7 +1243,7 @@ Examples of expressions:
 
 |advanced `candidate`
 
-|connection.connection-renewed-certificate-acceptance-rule
+|connection.renewed-certificate-acceptance-rule
 |string
 |`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.

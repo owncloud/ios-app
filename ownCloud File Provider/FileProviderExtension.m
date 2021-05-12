@@ -175,25 +175,44 @@
 
 	OCSyncExec(itemRetrieval, {
 		// Resolve the given identifier to a record in the model
-		if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
-		{
-			// Root item
-			[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
-				item = items.firstObject;
-				returnError = error;
+		NSError *coreError = nil;
+		OCCore *core = [self coreWithError:&coreError];
 
-				OCSyncExecDone(itemRetrieval);
-			}];
+		if (core != nil)
+		{
+			if (coreError != nil)
+			{
+				returnError = coreError;
+			}
+			else
+			{
+				if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
+				{
+					// Root item
+					[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+						item = items.firstObject;
+						returnError = error;
+
+						OCSyncExecDone(itemRetrieval);
+					}];
+				}
+				else
+				{
+					// Other item
+					[self.core retrieveItemFromDatabaseForLocalID:(OCLocalID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+						item = itemFromDatabase;
+						returnError = error;
+
+						OCSyncExecDone(itemRetrieval);
+					}];
+				}
+			}
 		}
 		else
 		{
-			// Other item
-			[self.core retrieveItemFromDatabaseForLocalID:(OCLocalID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-				item = itemFromDatabase;
-				returnError = error;
+			returnError = coreError;
 
-				OCSyncExecDone(itemRetrieval);
-			}];
+			OCSyncExecDone(itemRetrieval);
 		}
 	});
 
@@ -1002,10 +1021,16 @@
 
 - (OCCore *)core
 {
+	return ([self coreWithError:nil]);
+}
+
+- (OCCore *)coreWithError:(NSError **)outError
+{
 	OCLogDebug(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
 
 	OCBookmark *bookmark = self.bookmark;
 	__block OCCore *retCore = nil;
+	__block NSError *retError = nil;
 
 	@synchronized(self)
 	{
@@ -1037,6 +1062,11 @@
 							retCore = self->_core;
 						}
 					}
+
+					if (error != nil)
+					{
+						retError = error;
+					}
 				} completionHandler:^(OCCore *core, NSError *error) {
 					if (!hasCore)
 					{
@@ -1050,6 +1080,12 @@
 					else
 					{
 						retCore = self->_core;
+					}
+
+					if (error != nil)
+					{
+						retError = error;
+						retCore = nil;
 					}
 
 					OCSyncExecDone(waitForCore);
@@ -1066,7 +1102,12 @@
 
 	if (retCore == nil)
 	{
-		OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+		OCLogError(@"Error getting core for domain %@ (UUID %@): %@", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier), OCLogPrivate(retError));
+	}
+
+	if (outError != NULL)
+	{
+		*outError = retError;
 	}
 
 	OCLogDebug(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);

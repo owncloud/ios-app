@@ -1,0 +1,5 @@
+Change: File Provider Passcode Protection
+
+If the app is protected with a passcode the file provider extension will present an user interface for direct unlocking.
+
+https://github.com/owncloud/ios-app/issues/880

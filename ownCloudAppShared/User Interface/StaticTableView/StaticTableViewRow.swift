@@ -49,6 +49,7 @@ public enum StaticTableViewRowActionType {
 	case changed
 	case didBegin
 	case didEnd
+	case didReturn
 }
 
 public enum StaticTableViewRowMessageStyle {
@@ -67,10 +68,11 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	public var groupIdentifier : String?
 	public var type : StaticTableViewRowType
 
+	private var doUpdateViewFromValue : Bool = true
 	public var value : Any? {
 		didSet {
-			if updateViewFromValue != nil {
-				updateViewFromValue!(self)
+			if doUpdateViewFromValue {
+				updateViewFromValue?(self)
 			}
 		}
 	}
@@ -480,7 +482,9 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
+		doUpdateViewFromValue = false
 		self.value = sender.text
+		doUpdateViewFromValue = true
 
 		self.textFieldAction?(self, sender, .changed)
 	}
@@ -495,6 +499,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()
+		self.textFieldAction?(self, textField, .didReturn)
 
 		return true
 	}

@@ -1,0 +1,5 @@
+Change: TLS certificate comparison
+
+When logging into an account and experiencing a different certificate that does not fulfill the rules for automatic acceptance as replacement, the issue it brings up now shows the differences between the two certificates to allow an informed decision by the user.
+
+https://github.com/owncloud/ios-app/pull/872

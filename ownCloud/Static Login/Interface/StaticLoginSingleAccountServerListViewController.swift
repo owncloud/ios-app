@@ -93,8 +93,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 				bookmarkCell.textLabel?.text = "Access Files".localized
 				bookmarkCell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-				bookmarkCell.layer.cornerRadius = 8
-				bookmarkCell.layer.masksToBounds = true
 				if #available(iOS 13.0, *) {
 					bookmarkCell.imageView?.image = UIImage(systemName: "folder")
 				} else {
@@ -111,10 +109,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 				switch actionRows[indexPath.row] {
 					case .editLogin:
 						bookmarkCell.textLabel?.text = "Edit Login".localized
-
-						bookmarkCell.clipsToBounds = true
-						bookmarkCell.layer.cornerRadius = 8
-						bookmarkCell.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
 
 						if #available(iOS 13.0, *) {
 							bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
@@ -134,10 +128,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 					case .logout:
 						bookmarkCell.textLabel?.text = "Logout".localized
 
-						bookmarkCell.clipsToBounds = true
-						bookmarkCell.layer.cornerRadius = 8
-						bookmarkCell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-
 						if #available(iOS 13.0, *) {
 							bookmarkCell.imageView?.image = UIImage(systemName: "power")
 						} else {
@@ -153,8 +143,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 				}
 
 				bookmarkCell.textLabel?.text = "Settings".localized
-				bookmarkCell.layer.cornerRadius = 8
-				bookmarkCell.layer.masksToBounds = true
 				if #available(iOS 13.0, *) {
 					bookmarkCell.imageView?.image = UIImage(systemName: "gear")
 				} else {

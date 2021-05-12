@@ -30,6 +30,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var itemTracker: OCCoreItemTracking?
 	var modifiedContentsURL: URL?
 	var dismissedViewWithoutSaving: Bool = false
+	var timer: DispatchSourceTimer?
 
 	var source: URL {
 		didSet {
@@ -95,26 +96,45 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		enableEditingMode()
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+		timer = nil
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		let queue = DispatchQueue(label: "com.owncloud.edit-document-queue")
+		timer = DispatchSource.makeTimerSource(queue: queue)
+		timer!.schedule(deadline: .now(), repeating: .seconds(1))
+		timer!.setEventHandler { [weak self] in
+			OnMainThread {
+				if self?.navigationItem.rightBarButtonItems?.count ?? 0 > 1 || !(self?.navigationController?.isToolbarHidden ?? false) {
+					self?.timer = nil
+					self?.enableEditingMode()
+				}
+			}
+		}
+		timer!.resume()
 	}
 
 	@objc func enableEditingMode() {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
-		OnMainThread(after:1.0) {
-			if #available(iOS 14.0, *) {
-				if UIDevice.current.isIpad {
+		if #available(iOS 14.0, *) {
+				if self.navigationItem.rightBarButtonItems?.count ?? 0 > 1 {
 					guard let markupButton = self.navigationItem.rightBarButtonItems?.last else { return }
-				 _ = markupButton.target?.perform(markupButton.action, with: markupButton)
+					_ = markupButton.target?.perform(markupButton.action, with: markupButton)
 				} else {
 					guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
 					_ = markupButton.target?.perform(markupButton.action, with: markupButton)
 				}
-			} else { // action and target is nil on iOS 13
-				guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
-				markupButton.sendActions(for: .touchUpInside)
-			}
+		} else { // action and target is nil on iOS 13
+			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
+			markupButton.sendActions(for: .touchUpInside)
 		}
 	}
 
@@ -211,18 +231,6 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		alertController.addAction(UIAlertAction(title: "OK".localized, style: .cancel, handler: nil))
 
 		self.present(alertController, animated: true, completion: nil)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

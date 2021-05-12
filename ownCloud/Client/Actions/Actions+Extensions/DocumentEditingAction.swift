@@ -18,6 +18,7 @@
 
 import ownCloudSDK
 import ownCloudAppShared
+import QuickLook
 
 @available(iOS 13.0, *)
 class DocumentEditingAction : Action {
@@ -26,9 +27,9 @@ class DocumentEditingAction : Action {
 	override class var name : String? { return "Markup".localized }
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
-	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic"] }
+	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic", "image/gif"] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
 
 	// MARK: - Extension matching
@@ -79,10 +80,18 @@ class DocumentEditingAction : Action {
 			} else {
 				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
 				if let fileURL = files.first?.url, let item = self.context.items.first {
-					let editDocumentViewController = EditDocumentViewController(with: fileURL, item: item, core: self.core)
-					let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
-					navigationController.modalPresentationStyle = .overFullScreen
-					viewController.present(navigationController, animated: true)
+
+					if QLPreviewController.canPreview(fileURL as QLPreviewItem) {
+
+						let editDocumentViewController = EditDocumentViewController(with: fileURL, item: item, core: self.core)
+						let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
+						navigationController.modalPresentationStyle = .overFullScreen
+						viewController.present(navigationController, animated: true)
+					} else {
+						let alertController = ThemedAlertController(with: "Markup".localized, message: "File couldn't be opened".localized, okLabel: "OK".localized, action: nil)
+
+						hostViewController?.present(alertController, animated: true)
+					}
 				}
 			}
 		}
@@ -93,7 +102,7 @@ class DocumentEditingAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(systemName: "pencil.tip.crop.circle")?.withRenderingMode(.alwaysTemplate)
 		}
 

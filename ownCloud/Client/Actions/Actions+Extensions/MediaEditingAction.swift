@@ -26,7 +26,7 @@ class MediaEditingAction : DocumentEditingAction {
 	override class var supportedMimeTypes : [String] { return ["video"] }
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder {
 			return UIImage(systemName: "crop.rotate")?.withRenderingMode(.alwaysTemplate)
 		}
 

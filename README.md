@@ -37,6 +37,12 @@ To build our App, please read our [SETUP.md](https://github.com/owncloud/ios-app
 $ read SETUP.md
 ```
 
+## 📖 Documentation & Help
+
+The documentation for the app can be viewed here: [iOS Documentation](https://doc.owncloud.com/ios-app/)
+
+Support and help can be found here: [Docs & Guides](https://owncloud.com/docs-guides/)
+
 ## 🇪🇺 Translate
 
 The App is translated in many languages. If your language is missing or if you want to improve a string, you are welcome!
@@ -48,7 +54,7 @@ This can be done in [Transifex](https://www.transifex.com/signup/?join_project=o
 - 💬 Open a new issue on [Github](https://github.com/owncloud/ios-app/issues/new) or [chat](https://talk.owncloud.com/) with us
 - 🐥 Don't forget to follow us on [Twitter](https://twitter.com/owncloud) 
 
-## 📋 Start contributing
+## 📋 Start Contributing
 
 Make sure you read [SETUP.md](https://github.com/owncloud/ios-app/blob/master/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
 Easy starting points are also reviewing [pull requests](https://github.com/owncloud/ios-app/pulls) and working on [good first issue](https://github.com/owncloud/ios-app/labels/good%20first%20issue).

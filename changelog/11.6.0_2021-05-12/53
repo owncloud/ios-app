@@ -1,0 +1,6 @@
+Change: Local account-wide search using custom queries
+
+User can switch between local folder or local account-wide search.
+Search terms and filter keywords can be combined inside the search field to get granular search results.
+
+https://github.com/owncloud/ios-app/issues/53

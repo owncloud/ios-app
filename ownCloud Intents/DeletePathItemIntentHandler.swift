@@ -22,9 +22,40 @@ import ownCloudSDK
 import ownCloudAppShared
 
 @available(iOS 13.0, *)
-public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling {
+typealias DeletePathItemCompletionHandler = (DeletePathItemIntentResponse) -> Void
 
-	func handle(intent: DeletePathItemIntent, completion: @escaping (DeletePathItemIntentResponse) -> Void) {
+@available(iOS 13.0, *)
+public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling, OCCoreDelegate {
+	weak var core : OCCore?
+	var completionHandler: DeletePathItemCompletionHandler?
+
+	func complete(with response: DeletePathItemIntentResponse) {
+		if let completionHandler = completionHandler {
+			self.completionHandler = nil
+
+			if let bookmark = core?.bookmark {
+				core = nil
+
+				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+					completionHandler(response)
+				})
+			} else {
+				completionHandler(response)
+			}
+		}
+	}
+
+	public func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
+		if issue?.authenticationError != nil {
+			self.complete(with: DeletePathItemIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isAuthenticationError {
+			self.complete(with: DeletePathItemIntentResponse(code: .authenticationFailed, userActivity: nil))
+		} else if let error = error, error.isNetworkConnectionError {
+			self.complete(with: DeletePathItemIntentResponse(code: .networkUnavailable, userActivity: nil))
+		}
+	}
+
+	func handle(intent: DeletePathItemIntent, completion: @escaping DeletePathItemCompletionHandler) {
 
 		guard IntentSettings.shared.isEnabled else {
 			completion(DeletePathItemIntentResponse(code: .disabled, userActivity: nil))
@@ -41,7 +72,7 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(DeletePathItemIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
@@ -51,23 +82,35 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 			return
 		}
 
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
-			if error == nil, let targetItem = item, let core = core {
-				let progress = core.delete(targetItem, requireMatch: true, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
+		self.completionHandler = completion
+
+		OCItemTracker(for: bookmark, at: path) { (error, core, item) in
+			if error == nil, let targetItem = item, core != nil {
+				OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+					core?.delegate = self
+				}, completionHandler: { (core, error) in
+					if let core = core, error == nil {
+						self.core = core
+
+						let progress = core.delete(targetItem, requireMatch: true, resultHandler: { (error, _, _, _) in
+							if error != nil {
+								self.complete(with: DeletePathItemIntentResponse(code: (error as NSError?)?.isOCError(withCode: .itemNotFound) == true ? .pathFailure : .failure, userActivity: nil))
+							} else {
+								self.complete(with: DeletePathItemIntentResponse(code: .success, userActivity: nil))
+							}
+						})
+
+						if progress == nil {
+							self.complete(with: DeletePathItemIntentResponse(code: .failure, userActivity: nil))
+						}
 					} else {
-						completion(DeletePathItemIntentResponse(code: .success, userActivity: nil))
+						self.complete(with: DeletePathItemIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : ((error?.isNetworkConnectionError == true) ? .networkUnavailable : .failure), userActivity: nil))
 					}
 				})
-
-				if progress == nil {
-					completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
-				}
 			} else if core != nil {
-				completion(DeletePathItemIntentResponse(code: .pathFailure, userActivity: nil))
+				self.complete(with: DeletePathItemIntentResponse(code: (error?.isAuthenticationError == true) ? .authenticationFailed : ((error?.isNetworkConnectionError == true) ? .networkUnavailable : .pathFailure), userActivity: nil))
 			} else {
-				completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
+				self.complete(with: DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}
@@ -82,6 +125,11 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 
 	func provideAccountOptions(for intent: DeletePathItemIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
+	}
+
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: DeletePathItemIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
 	}
 
 	func resolvePath(for intent: DeletePathItemIntent, with completion: @escaping (INStringResolutionResult) -> Void) {

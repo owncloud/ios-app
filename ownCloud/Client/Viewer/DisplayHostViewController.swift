@@ -30,14 +30,16 @@ class DisplayHostViewController: UIPageViewController {
 	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
-	weak private var core: OCCore?
+	weak var core: OCCore?
 
 	private var initialItem: OCItem
-	private var displayedIndex: Int?
 
 	public var items: [OCItem]? {
 		didSet {
 			playableItems = items?.filter({ $0.isPlayable })
+			OnMainThread {
+				self.autoEnablePageScrolling()
+			}
 		}
 	}
 
@@ -45,7 +47,6 @@ class DisplayHostViewController: UIPageViewController {
 
 	private var query: OCQuery
 	private var queryStarted : Bool = false
-	private weak var viewControllerToTansition: DisplayViewController?
 	private var queryObservation : NSKeyValueObservation?
 
 	var progressSummarizer : ProgressSummarizer?
@@ -72,6 +73,7 @@ class DisplayHostViewController: UIPageViewController {
 					let shallUpdateDatasource = self?.items?.count != newItems.count ? true : false
 
 					self?.items = newItems
+
 					if shallUpdateDatasource {
 						self?.updateDatasource()
 					}
@@ -87,6 +89,10 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+
 		queryObservation?.invalidate()
 		queryObservation = nil
 
@@ -105,21 +111,35 @@ class DisplayHostViewController: UIPageViewController {
 		self.dataSource = self
 		self.delegate = self
 
-		if let initialViewController = viewController(for: self.initialItem) {
+		var initialIndex : Int?
+
+		if let items = self.items,
+		   let initialItemLocalID = self.initialItem.localID,
+		   let itemIndex = items.firstIndex(where: {$0.localID == initialItemLocalID}) {
+			initialIndex = itemIndex
+		}
+
+		if let initialViewController = viewController(for: self.initialItem, at: initialIndex) {
 			self.setViewControllers([initialViewController], direction: .forward, animated: false, completion: nil)
 
-			if let displayController = initialViewController as? DisplayViewController, let items = self.items, let initialID = self.initialItem.localID,
-				let currentIndex = items.firstIndex(where: {$0.localID == initialID}) {
-				self.displayedIndex = currentIndex
-				displayController.itemIndex = currentIndex
-			}
+			activeDisplayViewController = initialViewController as? DisplayViewController
 		}
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handleMediaPlaybackFinished(notification:)), name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+	}
 
-        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+		self.autoEnablePageScrolling()
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		DisplaySleepPreventer.shared.stopPreventingDisplaySleep(for: PresentationModeAction.reason)
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -129,42 +149,33 @@ class DisplayHostViewController: UIPageViewController {
 		return nil
 	}
 
-	// MARK: - Extension selection
-	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
+	// MARK: - Active Viewer
+	private var _navigationTitleObservation : NSKeyValueObservation?
+	private var _navigationBarButtonItemsObservation : NSKeyValueObservation?
 
-		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
-		let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
-		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
+	weak var activeDisplayViewController : DisplayViewController? {
+		willSet {
+			_navigationTitleObservation?.invalidate()
+			_navigationTitleObservation = nil
 
-		var extensions: [OCExtensionMatch]?
-
-		do {
-			try extensions = OCExtensionManager.shared.provideExtensions(for: context)
-		} catch {
-			return DisplayViewController()
+			_navigationBarButtonItemsObservation?.invalidate()
+			_navigationBarButtonItemsObservation = nil
 		}
 
-		guard let matchedExtensions = extensions else {
-			return DisplayViewController()
+		didSet {
+			Log.debug("New activeDisplayViewController: \(activeDisplayViewController?.item?.name ?? "-")")
+
+			_navigationTitleObservation = activeDisplayViewController?.observe(\DisplayViewController.displayTitle, options: .initial, changeHandler: { [weak self] (displayViewController, _) in
+				self?.navigationItem.title = displayViewController.displayTitle
+			})
+
+			_navigationBarButtonItemsObservation = activeDisplayViewController?.observe(\DisplayViewController.displayBarButtonItems, options: .initial, changeHandler: { [weak self] (displayViewController, _) in
+				self?.navigationItem.rightBarButtonItems = displayViewController.displayBarButtonItems
+			})
 		}
-
-		guard matchedExtensions.count > 0 else {
-			return DisplayViewController()
-		}
-
-		let preferredExtension: OCExtension = matchedExtensions[0].extension
-
-		guard let displayViewController = preferredExtension.provideObject(for: context) as? (DisplayViewController & DisplayExtension) else {
-			return DisplayViewController()
-		}
-
-		displayViewController.progressSummarizer = progressSummarizer
-
-		return displayViewController
 	}
 
 	// MARK: - Helper methods
-
 	private func updateDatasource() {
 		OnMainThread { [weak self] in
 			self?.dataSource = nil
@@ -229,47 +240,59 @@ class DisplayHostViewController: UIPageViewController {
 
 		let item = processedItems[index]
 
-		let viewController = self.viewController(for: item)
-		(viewController as? DisplayViewController)?.itemIndex = index
+		let viewController = self.viewController(for: item, at: index)
 
 		return viewController
 	}
 
-	private func viewController(for item:OCItem) -> UIViewController? {
+	private func createDisplayViewController(for mimeType: String) -> (DisplayViewController) {
+		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
+		let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
+		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
+
+		var extensions: [OCExtensionMatch]?
+
+		do {
+			try extensions = OCExtensionManager.shared.provideExtensions(for: context)
+		} catch {
+			return DisplayViewController()
+		}
+
+		guard let matchedExtensions = extensions else {
+			return DisplayViewController()
+		}
+
+		guard matchedExtensions.count > 0 else {
+			return DisplayViewController()
+		}
+
+		let preferredExtension: OCExtension = matchedExtensions[0].extension
+
+		guard let displayViewController = preferredExtension.provideObject(for: context) as? (DisplayViewController & DisplayExtension) else {
+			return DisplayViewController()
+		}
+
+		return displayViewController
+	}
+
+	private func viewController(for item: OCItem, at index: Int? = nil) -> UIViewController? {
 
 		guard let mimeType = item.mimeType else { return nil }
 
-		let newViewController = selectDisplayViewControllerBasedOn(mimeType: mimeType)
-		let configuration = configurationFor(item, viewController: newViewController)
+		let newViewController = createDisplayViewController(for: mimeType)
 
-		self.addChild(newViewController)
-		newViewController.didMove(toParent: self)
+		newViewController.progressSummarizer = progressSummarizer
+		newViewController.core = core
+		newViewController.itemIndex = index
 
-		newViewController.configure(configuration)
-		newViewController.present(item: item)
+		newViewController.item = item
+
+		Log.debug("Created DisplayViewController: \(newViewController.item?.name ?? "-")")
 
 		return newViewController
 	}
 
-	private func configurationFor(_ item: OCItem, viewController: UIViewController) -> DisplayViewConfiguration {
-		return DisplayViewConfiguration(item: item, core: core)
-	}
-
-	// MARK: - Filters
-	private func applyMediaFilesFilter(items: [OCItem]) -> [OCItem] {
-		if initialItem.mimeType?.matches(regExp: mediaFilterRegexp) ?? false {
-			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.mediaFilterRegexp) ?? false})
-			return filteredItems
-		} else {
-			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.initialItem.fileID})
-			return filteredItems
-		}
-	}
-}
-
-extension DisplayHostViewController: UIPageViewControllerDataSource {
-
-	private func vendNewViewController(from viewController:UIViewController, _ position:PagePosition, includeOnlyMediaItems: Bool = false) -> UIViewController? {
+	private func adjacentViewController(relativeTo viewController:UIViewController, _ position:PagePosition, includeOnlyMediaItems: Bool = false) -> UIViewController? {
 		guard let displayViewController = viewControllers?.first as? DisplayViewController else { return nil }
 		guard let item = displayViewController.item else { return nil }
 
@@ -296,35 +319,32 @@ extension DisplayHostViewController: UIPageViewControllerDataSource {
 		return nil
 	}
 
+	// MARK: - Filters
+	private func applyMediaFilesFilter(items: [OCItem]) -> [OCItem] {
+		if initialItem.mimeType?.matches(regExp: mediaFilterRegexp) ?? false {
+			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.mediaFilterRegexp) ?? false})
+			return filteredItems
+		} else {
+			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.initialItem.fileID})
+			return filteredItems
+		}
+	}
+}
+
+extension DisplayHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-		return vendNewViewController(from: viewController, .after)
+		return adjacentViewController(relativeTo: viewController, .after)
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-		return vendNewViewController(from: viewController, .before)
+		return adjacentViewController(relativeTo: viewController, .before)
 	}
 }
 
 extension DisplayHostViewController: UIPageViewControllerDelegate {
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-
-		let previousViewController = previousViewControllers[0]
-		previousViewController.didMove(toParent: nil)
-
-		if completed, let viewControllerToTransition = self.viewControllerToTansition {
-			if self.children.contains(viewControllerToTransition) == false {
-				self.addChild(viewControllerToTransition)
-			}
-			viewControllerToTransition.didMove(toParent: self)
-			viewControllerToTransition.updateNavigationBarItems()
-		}
-	}
-
-	func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-		guard pendingViewControllers.isEmpty == false else { return }
-
-		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
-			self.viewControllerToTansition = viewControllerToTransition
+		if completed, let newActiveDisplayViewController = self.viewControllers?.first as? DisplayViewController {
+			activeDisplayViewController = newActiveDisplayViewController
 		}
 	}
 }
@@ -338,26 +358,36 @@ extension DisplayHostViewController: Themeable {
 extension DisplayHostViewController {
 
 	@objc private func handleMediaPlaybackFinished(notification:Notification) {
-		if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
-			if let vc = vendNewViewController(from: mediaController, .after, includeOnlyMediaItems: true) {
-				self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) {
+				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
 			}
 		}
 	}
 
-    @objc private func handlePlayNextMedia(notification:Notification) {
-        if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
-            if let vc = vendNewViewController(from: mediaController, .after, includeOnlyMediaItems: true) {
-                self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
-            }
-        }
-    }
+	@objc private func handlePlayNextMedia(notification:Notification) {
+		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) {
+				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
+			}
+		}
+	}
 
-    @objc private func handlePlayPreviousMedia(notification:Notification) {
-        if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
-            if let vc = vendNewViewController(from: mediaController, .before, includeOnlyMediaItems: true) {
-                self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
-            }
-        }
-    }
+	@objc private func handlePlayPreviousMedia(notification:Notification) {
+		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .before, includeOnlyMediaItems: true) {
+				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
+			}
+		}
+	}
+}
+
+extension DisplayHostViewController {
+	private var scrollView: UIScrollView? {
+		return view.subviews.compactMap { $0 as? UIScrollView }.first
+	}
+
+	private func autoEnablePageScrolling() {
+		self.scrollView?.isScrollEnabled = (self.items?.count ?? 0 < 2) ? false : true
+	}
 }

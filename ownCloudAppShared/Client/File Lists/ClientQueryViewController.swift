@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -37,19 +37,67 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	public var quotaObservation : NSKeyValueObservation?
 	public var titleButtonThemeApplierToken : ThemeApplierToken?
 
+	public var breadCrumbsPush : Bool = false
+
 	weak public var clientRootViewController : UIViewController?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+	public var revealItemLocalID : String?
+	private var revealItemFound : Bool = false
 
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
+	private let moreCellIdentifier = "moreCell"
+	private let moreCellAccessibilityIdentifier = "more-results"
+
+	open override var activeQuery : OCQuery {
+		if let customSearchQuery = customSearchQuery {
+			return customSearchQuery
+		} else {
+			return query
+		}
+	}
+
+ 	var customSearchQuery : OCQuery? {
+ 		willSet {
+ 			if customSearchQuery != newValue, let customQuery = customSearchQuery {
+ 				core?.stop(customQuery)
+ 				customQuery.delegate = nil
+ 			}
+ 		}
+
+ 		didSet {
+ 			if customSearchQuery != nil, let customQuery = customSearchQuery {
+ 				customQuery.delegate = self
+ 				customQuery.sortComparator = sortMethod.comparator(direction: sortDirection)
+ 				core?.start(customQuery)
+ 			}
+ 		}
+ 	}
+
+	public var hasSearchResults : Bool {
+		return customSearchQuery?.queryResults?.count ?? 0 > 0
+	}
+
+	open override var searchScope: SearchScope {
+ 		set {
+ 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
+ 		}
+
+ 		get {
+ 			let scope = SearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SearchScope.local
+ 			return scope
+ 		}
+ 	}
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
 		self.init(core: inCore, query: inQuery, rootViewController: nil)
 	}
 
-	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: UIViewController?) {
+	public init(core inCore: OCCore, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
+		revealItemLocalID = inItem?.localID
+		breadCrumbsPush = revealItemLocalID != nil
 
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
@@ -97,6 +145,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	deinit {
+		customSearchQuery = nil
+
 		queryStateObservation = nil
 		quotaObservation = nil
 
@@ -105,6 +155,84 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			titleButtonThemeApplierToken = nil
 		}
 	}
+
+	open override func registerCellClasses() {
+		super.registerCellClasses()
+
+		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: moreCellIdentifier)
+	}
+
+	// MARK: - Search events
+	open override func willPresentSearchController(_ searchController: UISearchController) {
+ 		self.sortBar?.showSearchScope = true
+		self.tableView.setContentOffset(.zero, animated: false)
+ 	}
+
+	open override func willDismissSearchController(_ searchController: UISearchController) {
+ 		self.sortBar?.showSearchScope = false
+ 	}
+
+	// MARK: - Search scope support
+ 	private var searchText: String?
+ 	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
+ 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
+
+	open override func applySearchFilter(for searchText: String?, to query: OCQuery) {
+ 		self.searchText = searchText
+
+ 		updateCustomSearchQuery()
+ 	}
+
+	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+ 		updateCustomSearchQuery()
+ 	}
+
+	open override func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+ 		sortMethod = didUpdateSortMethod
+
+ 		let comparator = sortMethod.comparator(direction: sortDirection)
+
+ 		query.sortComparator = comparator
+ 		customSearchQuery?.sortComparator = comparator
+
+		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
+	 		updateCustomSearchQuery()
+		}
+ 	}
+
+	private var lastSearchText : String?
+	private var scrollToTopWithNextRefresh : Bool = false
+
+ 	public func updateCustomSearchQuery() {
+		if lastSearchText != searchText {
+			// Reset max result count when search text changes
+			maxResultCount = maxResultCountDefault
+			lastSearchText = searchText
+
+			// Scroll to top when search text changes
+			scrollToTopWithNextRefresh = true
+		}
+
+ 		if let searchText = searchText,
+		   let searchScope = sortBar?.searchScope,
+		   searchScope == .global,
+ 		   let condition = OCQueryCondition.fromSearchTerm(searchText) {
+			if let sortPropertyName = sortBar?.sortMethod.sortPropertyName {
+				condition.sortBy = sortPropertyName
+				condition.sortAscending = (sortDirection != .ascendant)
+			}
+
+			condition.maxResultCount = NSNumber(value: maxResultCount)
+
+			self.customSearchQuery = OCQuery(condition:condition, inputFilter: nil)
+ 		} else {
+ 			self.customSearchQuery = nil
+ 		}
+
+ 		super.applySearchFilter(for: searchText, to: query)
+
+ 		self.queryHasChangesAvailable(activeQuery)
+ 	}
 
 	// MARK: - View controller events
 	open override func viewDidLoad() {
@@ -136,6 +264,12 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	private var viewControllerVisible : Bool = false
 
+	open override func viewDidAppear(_ animated: Bool) {
+ 		super.viewDidAppear(animated)
+
+ 		searchController?.delegate = self
+ 	}
+
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
@@ -164,6 +298,52 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
 	}
 
+	// MARK: - Table view datasource
+	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		var numberOfRows = super.tableView(tableView, numberOfRowsInSection: section)
+
+		if customSearchQuery != nil, numberOfRows >= maxResultCount {
+			numberOfRows += 1
+		}
+
+		return numberOfRows
+	}
+
+	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let numberOfRows = super.tableView(tableView, numberOfRowsInSection: 0)
+		var cell : UITableViewCell?
+
+		if indexPath.row < numberOfRows {
+			cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+			if revealItemLocalID != nil, let itemCell = cell as? ClientItemCell, let itemLocalID = itemCell.item?.localID {
+				itemCell.revealHighlight = (itemLocalID == revealItemLocalID)
+			}
+		} else {
+			let moreCell = tableView.dequeueReusableCell(withIdentifier: moreCellIdentifier, for: indexPath) as? ThemeTableViewCell
+
+			moreCell?.accessibilityIdentifier = moreCellAccessibilityIdentifier
+			moreCell?.textLabel?.text = "Show more results".localized
+
+			cell = moreCell
+		}
+
+		return cell!
+	}
+
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let cell = tableView.cellForRow(at: indexPath), cell.accessibilityIdentifier == moreCellAccessibilityIdentifier {
+			maxResultCount += maxResultCountDefault
+			updateCustomSearchQuery()
+		} else {
+			super.tableView(tableView, didSelectRowAt: indexPath)
+		}
+	}
+
+	public override func showReveal(at path: IndexPath) -> Bool {
+		return (customSearchQuery != nil)
+	}
+
 	// MARK: - Table view delegate
 
 	open override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
@@ -184,15 +364,15 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	open func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
-				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
-					return UITableViewDropProposal(operation: .forbidden)
-				}
+			if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
+				return UITableViewDropProposal(operation: .forbidden)
+			}
 
-				if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
-					return UITableViewDropProposal(operation: .move)
-				} else {
-					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
-				}
+			if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
+				return UITableViewDropProposal(operation: .move)
+			} else {
+				return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+			}
 		} else {
 			return UITableViewDropProposal(operation: .copy)
 		}
@@ -222,12 +402,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				}
 			}
 		}
-
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
-
 	open func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+		if customSearchQuery != nil {
+			// No dropping on a smart search toolbar
+			return false
+		}
 		return true
 	}
 
@@ -251,8 +433,8 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 
 	open func dragInteraction(_ interaction: UIDragInteraction,
-						 session: UIDragSession,
-						 didEndWith operation: UIDropOperation) {
+							  session: UIDragSession,
+							  didEndWith operation: UIDropOperation) {
 		removeToolbar()
 	}
 
@@ -267,7 +449,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(true)
 			}
-		}) {
+		   }) {
 			self.progressSummarizer?.startTracking(progress: progress)
 		}
 	}
@@ -334,16 +516,26 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		if let shortName = core?.bookmark.shortName {
 			tableViewController.bookmarkShortName = shortName
 		}
+		if breadCrumbsPush {
+			tableViewController.navigationHandler = { [weak self] (path) in
+				if let self = self, let core = self.core {
+					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+					queryViewController.breadCrumbsPush = true
+
+					self.navigationController?.pushViewController(queryViewController, animated: true)
+				}
+			}
+		}
 
 		if #available(iOS 13, *) {
- 			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
- 			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
- 			let popoverArrowHeight : CGFloat = 13
+			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
+			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
+			let popoverArrowHeight : CGFloat = 13
 
-  			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
- 			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
- 			tableViewController.tableView.separatorInset = UIEdgeInsets()
- 		}
+			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
+			tableViewController.tableView.separatorInset = UIEdgeInsets()
+		}
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
@@ -364,13 +556,34 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Updates
 	open override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		if let rootItem = self.query.rootItem {
+		guard query == activeQuery else {
+			return
+		}
+
+		super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+
+		if let revealItemLocalID = revealItemLocalID, !revealItemFound {
+			var rowIdx : Int = 0
+
+			for item in items {
+				if item.localID == revealItemLocalID {
+					OnMainThread {
+						self.tableView.scrollToRow(at: IndexPath(row: rowIdx, section: 0), at: .middle, animated: true)
+					}
+					revealItemFound = true
+					break
+				}
+				rowIdx += 1
+			}
+		}
+
+		if let rootItem = self.query.rootItem, searchText == nil {
 			if query.queryPath != "/" {
 				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				if self.items.count == 1 {
-					totalSize = String(format: "%@ item | ", "\(self.items.count)") + totalSize
+					totalSize = String(format: "%@ item | ".localized, "\(self.items.count)") + totalSize
 				} else if self.items.count > 1 {
-					totalSize = String(format: "%@ items | ", "\(self.items.count)") + totalSize
+					totalSize = String(format: "%@ items | ".localized, "\(self.items.count)") + totalSize
 				}
 				self.updateFooter(text: totalSize)
 			}
@@ -381,6 +594,20 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
 					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
+			}
+		} else {
+			self.updateFooter(text: nil)
+		}
+	}
+
+	open override func delegatedTableViewDataReload() {
+		super.delegatedTableViewDataReload()
+
+		if scrollToTopWithNextRefresh {
+			scrollToTopWithNextRefresh = false
+
+			OnMainThread {
+				self.tableView.setContentOffset(.zero, animated: false)
 			}
 		}
 	}
@@ -411,12 +638,6 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	}
 }
 
-extension OCBookmarkManager {
-	public func bookmark(for uuidString: String) -> OCBookmark? {
-		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
-	}
-}
-
 // MARK: - Drag & Drop delegates
 extension ClientQueryViewController: UITableViewDropDelegate {
 	public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
@@ -427,7 +648,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 				var destinationItem: OCItem
 
-				guard let itemValues = item.dragItem.localObject as? OCItemDraggingValue, let itemName = itemValues.item.name, let sourceBookmark = OCBookmarkManager.shared.bookmark(for: itemValues.bookmarkUUID) else {
+				guard let itemValues = item.dragItem.localObject as? OCItemDraggingValue, let itemName = itemValues.item.name, let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: itemValues.bookmarkUUID) else {
 					return
 				}
 				let item = itemValues.item
@@ -457,7 +678,6 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 
 					destinationItem =  rootItem
-
 				}
 
 				// Move Items in the same Account
@@ -469,16 +689,13 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}) {
 						self.progressSummarizer?.startTracking(progress: progress)
 					}
-				// Copy Items between Accounts
+					// Copy Items between Accounts
 				} else {
 					OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
 						if error == nil {
 							srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
 								if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
-									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (error, _, _, _) in
-										if error == nil {
-
-										}
+									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
 									}
 								}
 							})
@@ -492,7 +709,10 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					kUTTypeImage,
 					kUTTypeMovie,
 					kUTTypePDF,
-					kUTTypeData
+					kUTTypeText,
+					kUTTypeRTF,
+					kUTTypeHTML,
+					kUTTypePlainText
 				]
 				var useUTI : String?
 				var useIndex : Int = Int.max
@@ -514,11 +734,43 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					}
 				}
 
-				guard let loadUTI = useUTI else { return }
+				if useUTI == nil, typeIdentifiers.count == 1 {
+					useUTI = typeIdentifiers.first
+				}
 
-				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: loadUTI) { (url, _ error) in
+				if useUTI == nil {
+					useUTI = kUTTypeData as String
+				}
+
+				var fileName: String?
+
+				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
 					guard let url = url else { return }
-					self.upload(itemURL: url, name: url.lastPathComponent)
+
+					let fileNameMaxLength = 16
+
+					if useUTI == kUTTypeUTF8PlainText as String {
+						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
+					}
+
+					if useUTI == kUTTypeRTF as String {
+						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
+						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
+					}
+
+					fileName = fileName?
+						.trimmingCharacters(in: .illegalCharacters)
+						.trimmingCharacters(in: .whitespaces)
+						.trimmingCharacters(in: .newlines)
+						.filter({ $0.isASCII })
+
+					if fileName == nil {
+						fileName = url.lastPathComponent
+					}
+
+					guard let name = fileName else { return }
+
+					self.upload(itemURL: url, name: name)
 				}
 			}
 		}
@@ -604,70 +856,70 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		switch item.type {
-			case .collection:
-				guard let data = item.serializedData() else { return nil }
+		case .collection:
+			guard let data = item.serializedData() else { return nil }
 
-				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: ItemDataUTI)
-				let dragItem = UIDragItem(itemProvider: itemProvider)
+			let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: ItemDataUTI)
+			let dragItem = UIDragItem(itemProvider: itemProvider)
 
-				dragItem.localObject = draggingValue
+			dragItem.localObject = draggingValue
 
-				return dragItem
+			return dragItem
 
-			case .file:
-				guard let itemMimeType = item.mimeType else { return nil }
+		case .file:
+			guard let itemMimeType = item.mimeType else { return nil }
 
-				let mimeTypeCF = itemMimeType as CFString
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
+			let mimeTypeCF = itemMimeType as CFString
+			guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
 
-				let itemProvider = NSItemProvider()
+			let itemProvider = NSItemProvider()
 
-				itemProvider.suggestedName = item.name
+			itemProvider.suggestedName = item.name
 
-				itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
-					var progress : Progress?
+			itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
+				var progress : Progress?
 
-					guard let core = core else {
-						completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
-						return nil
-					}
-
-					if let localFileURL = core.localCopy(of: item) {
-						// Provide local copies directly
-						completionHandler(localFileURL, true, nil)
-					} else {
-						// Otherwise download the file and provide it when done
-						progress = core.downloadItem(item, options: [
-							.returnImmediatelyIfOfflineOrUnavailable : true,
-							.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
-						], resultHandler: { [weak self] (error, core, item, file) in
-							guard error == nil, let fileURL = file?.url else {
-								completionHandler(nil, false, error)
-								return
-							}
-
-							completionHandler(fileURL, true, nil)
-
-							if let claim = file?.claim, let item = item, let self = self {
-								self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
-							}
-						})
-					}
-
-					return progress
-				})
-
-				itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
-					guard let data = item.serializedData() else { return nil }
-					completionHandler(data, nil)
-
+				guard let core = core else {
+					completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
 					return nil
 				}
 
-				let dragItem = UIDragItem(itemProvider: itemProvider)
-				dragItem.localObject = draggingValue
+				if let localFileURL = core.localCopy(of: item) {
+					// Provide local copies directly
+					completionHandler(localFileURL, true, nil)
+				} else {
+					// Otherwise download the file and provide it when done
+					progress = core.downloadItem(item, options: [
+						.returnImmediatelyIfOfflineOrUnavailable : true,
+						.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
+					], resultHandler: { [weak self] (error, core, item, file) in
+						guard error == nil, let fileURL = file?.url else {
+							completionHandler(nil, false, error)
+							return
+						}
 
-				return dragItem
+						completionHandler(fileURL, true, nil)
+
+						if let claim = file?.claim, let item = item, let self = self {
+							self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
+						}
+					})
+				}
+
+				return progress
+			})
+
+			itemProvider.registerDataRepresentation(forTypeIdentifier: ItemDataUTI, visibility: .ownProcess) { (completionHandler) -> Progress? in
+				guard let data = item.serializedData() else { return nil }
+				completionHandler(data, nil)
+
+				return nil
+			}
+
+			let dragItem = UIDragItem(itemProvider: itemProvider)
+			dragItem.localObject = draggingValue
+
+			return dragItem
 		}
 	}
 }

@@ -23,7 +23,7 @@ class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .toolbar, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -109,7 +109,15 @@ class OpenInAction: Action {
 						self.interactionController = UIDocumentInteractionController(url: fileURL)
 						self.interactionController?.delegate = self
 
-						if let sender = self.context.sender as? UITabBarController {
+						if self.context.sender as? UIKeyCommand != nil, let hostViewController = hostViewController {
+							var sourceRect = hostViewController.view.frame
+							sourceRect.origin.x = viewController.view.center.x
+							sourceRect.origin.y = viewController.navigationController?.navigationBar.frame.size.height ?? 0.0
+							sourceRect.size.width = 0.0
+							sourceRect.size.height = 0.0
+
+							self.interactionController?.presentOptionsMenu(from: sourceRect, in: hostViewController.view, animated: true)
+						} else if let sender = self.context.sender as? UITabBarController {
 							var sourceRect = sender.view.frame
 							sourceRect.origin.y = viewController.view.frame.size.height
 							sourceRect.size.width = 0.0
@@ -161,7 +169,7 @@ class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
 			if #available(iOS 13.0, *) {
 				return UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)
 			}

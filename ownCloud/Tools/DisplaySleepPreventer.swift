@@ -21,21 +21,40 @@ import UIKit
 class DisplaySleepPreventer : NSObject {
 	static var shared : DisplaySleepPreventer = DisplaySleepPreventer()
 
-	var preventCount : Int = 0
+	typealias Reason = String
 
-	func startPreventingDisplaySleep() {
-		if preventCount == 0 {
+	private var preventCount : Int = 0
+	private var preventReasons : Set<Reason> = Set()
+
+	private var effectiveReasonCount : Int {
+		return preventCount + preventReasons.count
+	}
+
+	func isPreventing(for reason: Reason) -> Bool {
+		return preventReasons.contains(reason)
+	}
+
+	func startPreventingDisplaySleep(for reason: Reason? = nil) {
+		if effectiveReasonCount == 0 {
 			UIApplication.shared.isIdleTimerDisabled = true
 		}
 
-		preventCount += 1
+		if let reason = reason {
+			preventReasons.insert(reason)
+		} else {
+			preventCount += 1
+		}
 	}
 
-	func stopPreventingDisplaySleep() {
-		if preventCount > 0 {
-			preventCount -= 1
+	func stopPreventingDisplaySleep(for reason: Reason? = nil) {
+		if effectiveReasonCount > 0 {
+			if let reason = reason {
+				preventReasons.remove(reason)
+			} else {
+				preventCount -= 1
+			}
 
-			if preventCount == 0 {
+			if effectiveReasonCount == 0 {
 				UIApplication.shared.isIdleTimerDisabled = false
 			}
 		}

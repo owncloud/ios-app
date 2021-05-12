@@ -71,8 +71,12 @@
 "Access Files" = "Access Files";
 "Logout" = "Logout";
 
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
+
 /* Client */
 "Browse" = "Browse";
+"Files" = "Files";
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
@@ -95,20 +99,33 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
-"Search this folder" = "Search this folder";
+"Search folder" = "Search folder";
+"Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
+"Reveal in folder" = "Reveal in folder";
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"Show more results" = "Show more results";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
+
 /* Static Login Setup */
 "Server error" = "Server error";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
+"Enter your username and password" = "Enter your username and password";
+"Please log in to authorize the app." = "Please log in to authorize the app.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -150,6 +167,8 @@
 "Sign in" = "Sign in";
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+"Waiting for response from login session in external browser…" = "Waiting for response from login session in external browser…";
 
 "All done" = "All done";
 "No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
@@ -208,7 +227,7 @@
 "After 1 minute" = "After 1 minute";
 "After 5 minutes" = "After 5 minutes";
 "After 30 minutes" = "After 30 minutes";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
@@ -349,6 +368,10 @@
 "Favorited" = "Favorited";
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Presentation Mode";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
+"Enable" = "Enable";
+"Exit Full Screen" = "Exit Full Screen";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -362,6 +385,13 @@
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
 
+"File" = "File";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
+
 /* PDF Viewer */
 "Resume" = "Resume";
 "Go to page" = "Go to page";
@@ -372,6 +402,9 @@
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
 "Search PDF" = "Search PDF";
 "Outline" = "Outline";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
 "Upload" = "Upload";
@@ -498,6 +531,10 @@
 "Private Link" = "Private Link";
 "Created Public Link" = "Created Public Link";
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
+"%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Share with user/group";
+"Share link" = "Share link";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -622,6 +659,13 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";
@@ -846,6 +890,9 @@
 "Limited Photo Access" = "Limited Photo Access";
 "Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
 "No Access to the media selected for upload" = "No Access to the media selected for upload";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
 
 /* MDM settings push */
 "New settings received from MDM" = "New settings received from MDM";

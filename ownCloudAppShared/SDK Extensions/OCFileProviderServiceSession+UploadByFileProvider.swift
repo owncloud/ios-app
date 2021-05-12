@@ -21,8 +21,8 @@ import ownCloudSDK
 import ownCloudApp
 
 public extension OCFileProviderServiceSession {
-	func importThroughFileProvider(url importItemURL: URL, to targetDirectory : OCItem, completion: @escaping (_ error: Error?) -> Void) {
-		let name = importItemURL.lastPathComponent
+	private func performThroughSession(url importItemURL: URL, as importName : String?, to targetDirectory : OCItem, action: @escaping (_ serviceHost: OCFileProviderServicesHost?, _ name: String, _ effectiveImportItemURL: URL, _ completeImport : @escaping (Error?) -> Void) -> Void, completion: @escaping (_ error: Error?) -> Void) {
+		let name = importName ?? importItemURL.lastPathComponent
 		var effectiveImportItemURL : URL = importItemURL
 		var tempFolderURL : URL?
 
@@ -83,22 +83,46 @@ public extension OCFileProviderServiceSession {
 				completeImport(error)
 			} else {
 				// Upload file from shared location
-				if serviceHost?.importItemNamed(name, at: targetDirectory, from: effectiveImportItemURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
-
-					if error != nil {
-						Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-					}
-
-					completeImport(error)
-				}) == nil {
-					Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-					let error = NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
-
-					completeImport(error)
-				}
+				action(serviceHost, name, effectiveImportItemURL, completeImport)
 			}
 		}, errorHandler: { (error) in
 			wrappedCompleteHandler(error)
 		})
+	}
+
+	func importThroughFileProvider(url importItemURL: URL, as importName : String? = nil, to targetDirectory : OCItem, completion: @escaping (_ error: Error?) -> Void) {
+		performThroughSession(url: importItemURL, as: importName, to: targetDirectory, action: { (serviceHost, name, effectiveImportItemURL, completeImport) in
+			// Upload file from shared location
+			if serviceHost?.importItemNamed(name, at: targetDirectory, from: effectiveImportItemURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
+				if error != nil {
+					Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+				}
+
+				completeImport(error)
+			}) == nil {
+				Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+				let error = NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
+
+				completeImport(error)
+			}
+		}, completion: completion)
+	}
+
+	func reportModificationThroughFileProvider(url importItemURL: URL, as importName : String? = nil, for item: OCItem, to targetDirectory : OCItem, lastModifiedDate: Date?, completion: @escaping (_ error: Error?) -> Void) {
+		performThroughSession(url: importItemURL, as: importName, to: targetDirectory, action: { (serviceHost, name, effectiveImportItemURL, completeImport) in
+			// Upload file from shared location
+			if serviceHost?.reportLocalModification(of: item, parentItem: targetDirectory, withContentsOfFileAt: effectiveImportItemURL, lastModifiedDate: lastModifiedDate, isSecurityScoped: false, placeholderCompletionHandler: { (error) in
+				if error != nil {
+					Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+				}
+
+				completeImport(error)
+			}) == nil {
+				Log.debug("Error setting up upload/update of \(Log.mask(name)) at \(Log.mask(targetDirectory.path))")
+				let error = NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: [NSLocalizedDescriptionKey: "Error setting up upload/update of \(Log.mask(name)) at \(Log.mask(targetDirectory.path))"])
+
+				completeImport(error)
+			}
+		}, completion: completion)
 	}
 }

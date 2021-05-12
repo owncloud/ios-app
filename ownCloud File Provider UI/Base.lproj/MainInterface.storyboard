@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="J6p-g8-CHO">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Document Action View Controller-->
+        <scene sceneID="Q8I-MS-tKG">
+            <objects>
+                <viewController id="J6p-g8-CHO" customClass="DocumentActionViewController" customModule="ownCloud_File_Provider_UI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Vdh-Gp-eV6">
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="zTo-CZ-ppy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="350" height="400"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UoZ-ya-W3e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-80" y="63.868065967016499"/>
+        </scene>
+        <!--Cancel Label View Controller-->
+        <scene sceneID="8yQ-qa-LGP">
+            <objects>
+                <viewController storyboardIdentifier="CancelLabelViewController" id="r5A-to-9hZ" customClass="CancelLabelViewController" customModule="ownCloud_File_Provider_UI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="emF-rs-ORf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rK3-2Z-5fu" customClass="ThemeButton" customModule="ownCloudAppShared">
+                                <rect key="frame" x="20" y="604" width="335" height="43"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="cancelScreen" destination="r5A-to-9hZ" eventType="touchUpInside" id="c5P-Tx-PWt"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ell-jz-Ctu">
+                                <rect key="frame" x="20" y="283.5" width="335" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="BiL-cH-IZF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="gNt-a6-NFc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Ell-jz-Ctu" firstAttribute="centerY" secondItem="emF-rs-ORf" secondAttribute="centerY" id="2ly-Tn-kQc"/>
+                            <constraint firstItem="gNt-a6-NFc" firstAttribute="trailing" secondItem="rK3-2Z-5fu" secondAttribute="trailing" constant="20" id="5FH-3K-9Ro"/>
+                            <constraint firstItem="gNt-a6-NFc" firstAttribute="trailing" secondItem="Ell-jz-Ctu" secondAttribute="trailing" constant="20" id="8Lh-A0-KdU"/>
+                            <constraint firstItem="Ell-jz-Ctu" firstAttribute="leading" secondItem="gNt-a6-NFc" secondAttribute="leading" constant="20" id="ORD-Ou-5fg"/>
+                            <constraint firstItem="gNt-a6-NFc" firstAttribute="bottom" secondItem="rK3-2Z-5fu" secondAttribute="bottom" constant="20" id="kbt-bv-Dqg"/>
+                            <constraint firstItem="rK3-2Z-5fu" firstAttribute="leading" secondItem="gNt-a6-NFc" secondAttribute="leading" constant="20" id="wl6-C3-nNC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="button" destination="rK3-2Z-5fu" id="zyZ-w4-8Og"/>
+                        <outlet property="label" destination="Ell-jz-Ctu" id="l9I-nW-SZG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n8n-Rw-evu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="710" y="184"/>
+        </scene>
+    </scenes>
+    <designables>
+        <designable name="rK3-2Z-5fu">
+            <size key="intrinsicContentSize" width="84" height="43"/>
+        </designable>
+    </designables>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

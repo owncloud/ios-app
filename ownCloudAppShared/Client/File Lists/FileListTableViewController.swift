@@ -27,6 +27,11 @@ public protocol MoreItemHandling {
 	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
 }
 
+public protocol RevealItemHandling {
+	@discardableResult func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool
+	func showReveal(at path: IndexPath) -> Bool
+}
+
 public protocol InlineMessageSupport {
 	func hasInlineMessage(for item: OCItem) -> Bool
 	func showInlineMessageFor(item: OCItem)
@@ -89,6 +94,16 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 	}
 
+	open func revealButtonTapped(cell: ClientItemCell) {
+		guard let item = cell.item, let core = core else {
+			return
+		}
+
+		if let revealItemHandling = self as? RevealItemHandling {
+			revealItemHandling.reveal(item: item, core: core, sender: cell)
+		}
+	}
+
 	// MARK: - Inline message support
 	open func hasMessage(for item: OCItem) -> Bool {
 		if let inlineMessageSupport = self as? InlineMessageSupport {
@@ -135,6 +150,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		if allowPullToRefresh {
 			pullToRefreshControl = UIRefreshControl()
 			pullToRefreshControl?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
+			pullToRefreshControl?.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 			pullToRefreshControl?.addTarget(self, action: #selector(self.pullToRefreshTriggered), for: .valueChanged)
 			self.tableView.insertSubview(pullToRefreshControl!, at: 0)
 			tableView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
@@ -213,7 +229,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 		}
 
 		if !ifNeeded || (ifNeeded && tableReloadNeeded) {
-			self.tableView.reloadData()
+			self.delegatedTableViewDataReload()
 
 			if viewControllerVisible {
 				tableReloadNeeded = false
@@ -221,6 +237,10 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 			self.restoreSelectionAfterTableReload()
 		}
+	}
+
+	open func delegatedTableViewDataReload() {
+		self.tableView.reloadData()
 	}
 
 	open func restoreSelectionAfterTableReload() {
@@ -320,6 +340,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
+		pullToRefreshControl?.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 
 		if event == .update {
 			self.reloadTableData()
