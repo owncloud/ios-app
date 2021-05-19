@@ -199,13 +199,13 @@ tag::app[]
 
 |app.is-beta-build
 |bool
-|`true`
+|`false`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
 |app.show-beta-warning
 |bool
-|`true`
+|`false`
 |Controls whether a warning should be shown on the first run of a beta version.
 |debugOnly
 
@@ -231,6 +231,12 @@ tag::authentication[]
 !===
 ! Value
 ! Description
+! `CustomScheme`
+! Replace http and https with custom schemes to delegate browser sessions to a different app.
+
+! `MIBrowser`
+! Replace `http` with `mibrowser` and `https` with `mibrowsers` to delegate browser sessions to the MobileIron browser.
+
 ! `UIWebView`
 ! Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.
 
@@ -351,7 +357,7 @@ branding.profile-definitions
 
 |branding.url-help
 |urlString
-|`https://www.owncloud.com/help`
+|`https://owncloud.com/docs-guides/`
 |URL to help for the app. Opened when selecting "Help" in the settings.
 |advanced `candidate`
 
@@ -512,6 +518,32 @@ branding.profile-welcome-message
 end::branding[]
 
 
+tag::browsersession[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|browser-session.custom-scheme-plain
+|string
+|
+|Scheme to use instead of plain `http` when using browser session class CustomScheme, i.e. `mibrowser`.
+|advanced `candidate`
+
+|browser-session.custom-scheme-secure
+|string
+|
+|Scheme to use instead of `https` when using browser session class CustomScheme, i.e. `mibrowsers`.
+|advanced `candidate`
+
+|===
+end::browsersession[]
+
+
 tag::connection[]
 [cols="1,2,3,4a,5",options=header]
 |=== 
@@ -560,6 +592,21 @@ The following placeholders can be used to make it dynamic:
 |string
 |`warn`
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
+|advanced `candidate`
+
+|connection.validator-flags
+|stringArray
+|
+|Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `clear-cookies`
+! Clear all cookies for the connection when entering connection validation.
+
+!===
+
 |advanced `candidate`
 
 |core.action-concurrency-budgets
