@@ -71,8 +71,12 @@
 "Access Files" = "Access Files";
 "Logout" = "Logout";
 
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
+
 /* Client */
 "Browse" = "Browse";
+"Files" = "Files";
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
@@ -95,20 +99,33 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
-"Search this folder" = "Search this folder";
+"Search folder" = "Search folder";
+"Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
+"Reveal in folder" = "Reveal in folder";
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"Show more results" = "Show more results";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
+
 /* Static Login Setup */
 "Server error" = "Server error";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
+"Enter your username and password" = "Enter your username and password";
+"Please log in to authorize the app." = "Please log in to authorize the app.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -352,6 +369,7 @@
 "Presentation Mode" = "Presentation Mode";
 "Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
 "Enable" = "Enable";
+"Exit Full Screen" = "Exit Full Screen";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -364,6 +382,13 @@
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
+
+"File" = "File";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -638,6 +663,7 @@
 "Go to Beginning" = "Go to Beginning";
 "Mute/Unmute" = "Mute/Unmute";
 "Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";

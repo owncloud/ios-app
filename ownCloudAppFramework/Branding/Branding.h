@@ -31,6 +31,11 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 - (void)initializeSharedBranding;
 @end
 
+@protocol StaticProfileBridge <NSObject>
++ (void)initializeStaticProfileBridge;
++ (nullable NSDictionary<NSString *, id> *)composeBrandingDict;
+@end
+
 @interface Branding : NSObject <OCClassSettingsSupport>
 
 @property(strong,nonatomic,readonly,class) Branding *sharedBranding;

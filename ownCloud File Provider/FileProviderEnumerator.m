@@ -43,6 +43,8 @@
 		_enumerationObservers = [NSMutableArray new];
 		_changeObservers = [NSMutableArray new];
 
+		_measurement = [OCMeasurement measurementWithTitle:[NSString stringWithFormat:@"Enumerator for item %@", enumeratedItemIdentifier]];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_displaySettingsChanged:) name:DisplaySettingsChanged object:nil];
 	}
 
@@ -124,9 +126,15 @@
 {
 	OCLogDebug(@"##### Starting query..");
 
+	OCMeasureEvent(self, @"fp.enumerator", @"Starting enumerator…");
+
 	if ((_core == nil) && (_query == nil))
 	{
+		OCMeasureEventBegin(self, @"fp.enumerator", coreRequestRef, @"Requesting core…");
+
 		[[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore *core, NSError *error) {
+			OCMeasureEventEnd(self, @"fp.enumerator", coreRequestRef, @"Received core…");
+
 			if (self->_core != nil)
 			{
 				// Already has a core - balance duplicate requested core
@@ -146,6 +154,8 @@
 			{
 				// Create and add query
 				__block OCPath queryPath = nil;
+
+				OCMeasureEventBegin(self, @"db.resolve-item", resolveEventRef, @"Resolve item identifier");
 
 				if ([self->_enumeratedItemIdentifier isEqualToString:NSFileProviderRootContainerItemIdentifier])
 				{
@@ -173,6 +183,8 @@
 //						}
 					}
 				}
+
+				OCMeasureEventEnd(self, @"db.resolve-item", resolveEventRef, @"Resolve item identifier");
 
 				if (queryPath == nil)
 				{
@@ -209,6 +221,8 @@
 					}
 
 					OCLogDebug(@"##### START QUERY FOR %@", self->_query.queryPath);
+
+					[self->_query attachMeasurement:self->_measurement];
 
 					[core startQuery:self->_query];
 				}
@@ -431,6 +445,11 @@
 	*/
 	// - (void)finishEnumeratingWithError:(NSError *)error;
 // }
+
+- (OCMeasurement *)hostedMeasurement
+{
+	return (_measurement);
+}
 
 + (NSArray<OCLogTagName> *)logTags
 {

@@ -154,6 +154,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
 			let attributedString = NSAttributedString(string: "Add email or name".localized, attributes: attributedStringColor)
 			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
+			searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.searchBarColors.labelColor
 		} else {
 			// Fallback on earlier versions
 			searchController?.searchBar.placeholder = "Add email or name".localized
@@ -376,7 +377,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		}
 	}
 
-	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+	public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
 		self.messageView?.message(show: false)
 

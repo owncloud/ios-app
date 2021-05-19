@@ -1,0 +1,6 @@
+Bugfix: State Restoration for Branded Login
+
+State restoration was not working for branded clients.
+This fix will restore the last shown item after an app restart for branded clients.
+
+https://github.com/owncloud/ios-app/issues/957

@@ -1,0 +1,5 @@
+Change: Automated Calens Changelog Creation
+
+This PR uses GitHub Actions to automatically generate a changelog file with Calens and commits the new CHANGELOG.md into the current branch.
+
+https://github.com/owncloud/ios-app/pull/879

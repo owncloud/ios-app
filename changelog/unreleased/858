@@ -1,0 +1,6 @@
+Change: Shortcut uploads and error handling improvements
+
+Improved error handling for Shortcut actions and now also reporting authentication errors.
+Added an optional "Wait for completion" option to the "Save File" and "Create Folder" action.
+
+https://github.com/owncloud/ios-app/issues/858

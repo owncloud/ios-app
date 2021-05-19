@@ -6,8 +6,10 @@
 	<false/>
 	<key>canEditAccount</key>
 	<true/>
+	<key>enableReviewPrompt</key>
+	<true/>
 	<key>organizationName</key>
-	<string>ownCloud.online</string>
+	<string>ownCloud Online</string>
 	<key>feedbackMail</key>
 	<string></string>
 	<key>Configuration</key>
@@ -16,23 +18,17 @@
 	<array>
 		<dict>
 			<key>identifier</key>
-			<string>ownCloud.online</string>
+			<string>ownCloud Online</string>
 			<key>name</key>
-			<string>ownCloud.online</string>
-			<key>welcome</key>
-			<string>Welcome to ownCloud.online</string>
-			<key>promptForPasswordAuth</key>
-			<string>Enter your username and password</string>
-			<key>promptForTokenAuth</key>
-			<string>Please log in to authorize the app.</string>
+			<string>ownCloud Online</string>
 			<key>promptForURL</key>
-			<string>Please enter your ownCloud.online URL</string>
+			<string>Please enter your ownCloud Online URL</string>
 			<key>promptForHelpURL</key>
-			<string>If you do not have an ownCloud.online account yet, you can request a free test account.</string>
+			<string>If you do not have an ownCloud Online account yet, you can request a free test account.</string>
 			<key>helpURLButtonString</key>
 			<string>TRY IT FOR FREE</string>
 			<key>bookmarkName</key>
-			<string>ownCloud.online</string>
+			<string>ownCloud Online</string>
 			<key>url</key>
 			<string></string>
 			<key>canConfigureURL</key>
@@ -150,7 +146,7 @@
 		<key>Tab</key>
 		<dict>
 			<key>Active</key>
-			<string>#000000</string>
+			<string>#00af90</string>
 			<key>Inactive</key>
 			<string>#777777</string>
 		</dict>
@@ -159,7 +155,7 @@
 	<array>
 		<dict>
 			<key>Name</key>
-			<string>ownCloud.online</string>
+			<string>ownCloud-online</string>
 			<key>Identifier</key>
 			<string>com.owncloud.branding</string>
 			<key>ThemeStyle</key>
@@ -373,11 +369,11 @@
 				<key>Toolbar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>Corporate.Color</string>
+					<string>Background.Standard</string>
 					<key>labelColor</key>
 					<string>Text.Inverse</string>
 					<key>secondaryLabelColor</key>
-					<string></string>
+					<string>Tab.Inactive</string>
 					<key>symbolColor</key>
 					<string></string>
 					<key>tintColor</key>

@@ -163,10 +163,10 @@ open class StaticTableViewController: UITableViewController, Themeable {
 
 	public var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
 	public var didDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
-	
+
 	@objc open func dismissAnimated() {
 		self.willDismissAction?(self)
-		
+
 		if self.extensionContext != nil {
 			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
 		} else {
@@ -245,7 +245,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 			return 216.0
 		}
 
-		return UITableView.automaticDimension
+		return tableView.rowHeight
 	}
 
 	override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

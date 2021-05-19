@@ -67,6 +67,11 @@
 				});
 			}];
 		}
+		else
+		{
+			OCLogError(@"File Provider Service unavailable: %@", error);
+			errorHandler(error);
+		}
 	}];
 }
 

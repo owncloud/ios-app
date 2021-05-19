@@ -99,17 +99,17 @@ class MediaDisplayViewController : DisplayViewController {
 		self.view.layoutIfNeeded()
 	}
 
-	override func requiresLocalCopyForPreview() -> Bool {
+	override var requiresLocalCopyForPreview : Bool {
 		return (OCAppIdentity.shared.userDefaults?.downloadMediaFiles ?? false)
 	}
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if let sourceURL = source {
+	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if let directURL = itemDirectURL {
 			playerItemStatusObservation?.invalidate()
 			playerItemStatusObservation = nil
 			player?.pause()
 
-			let asset = AVURLAsset(url: sourceURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
+			let asset = AVURLAsset(url: directURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
 			playerItem = AVPlayerItem(asset: asset)
 
 			playerItemStatusObservation = playerItem?.observe(\AVPlayerItem.status, options: [.initial, .new], changeHandler: { [weak self] (item, _) in
@@ -342,7 +342,7 @@ class MediaDisplayViewController : DisplayViewController {
 		nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItemTitle
 		nowPlayingInfo[MPMediaItemPropertyArtist] = mediaItemArtist
 		nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = self.playerItem?.currentDate()
-		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = source
+		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = itemDirectURL
 		nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = playerItem.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
 		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate

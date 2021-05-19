@@ -104,6 +104,14 @@ public class VendorServices : NSObject {
 		return Branding.shared.canEditAccount
 	}
 
+	public var enableReviewPrompt: Bool {
+		if VendorServices.shared.isBranded {
+			return Branding.shared.enableReviewPrompt
+		}
+
+		return true
+	}
+
 	public var showBetaWarning: Bool {
 		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
 			return showBetaWarning
@@ -223,7 +231,6 @@ public extension OCClassSettingsKey {
 	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
 	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
-	static let enableReviewPrompt = OCClassSettingsKey("enable-review-prompt")
 
 	static let appStoreLink = OCClassSettingsKey("app-store-link")
 	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
@@ -235,10 +242,10 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.isBetaBuild : true,
-				.showBetaWarning : true,
+				.isBetaBuild : false,
+				.showBetaWarning : false,
 				.enableUIAnimations: true,
-				.enableReviewPrompt: !VendorServices.shared.isBranded,
+				.enableReviewPrompt: VendorServices.shared.enableReviewPrompt,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 				.recommendToFriendEnabled: !VendorServices.shared.isBranded

@@ -22,7 +22,11 @@ import ownCloudApp
 import ownCloudAppShared
 import PocketSVG
 
-class ServerListTableViewController: UITableViewController, Themeable {
+public protocol StateRestorationConnectProtocol : class {
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage?)
+}
+
+class ServerListTableViewController: UITableViewController, Themeable, StateRestorationConnectProtocol {
 	// MARK: - Views
 	@IBOutlet var welcomeOverlayView: UIView!
 	@IBOutlet var welcomeTitleLabel : UILabel!
@@ -31,6 +35,19 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	@IBOutlet var welcomeLogoImageView : UIImageView!
 	@IBOutlet var welcomeLogoTVGView : VectorImageView!
 	// @IBOutlet var welcomeLogoSVGView : SVGImageView!
+
+	// MARK: - User Activity
+	static let showServerListActivityType = "com.owncloud.ios-app.showServerList"
+	static let showServerListActivityTitle = "showServerList"
+
+	static var showServerListActivity : NSUserActivity {
+		let userActivity = NSUserActivity(activityType: showServerListActivityType)
+
+		userActivity.title = showServerListActivityTitle
+		userActivity.userInfo = [ : ]
+
+		return userActivity
+	}
 
 	// MARK: - Internals
 	var shownFirstTime = true
@@ -105,7 +122,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		self.navigationItem.title = VendorServices.shared.appName
 
-		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
+		if #available(iOS 13, *) { } else {
+			// Log in automatically on iOS 12 (handled by scene restoration in iOS 13+)
+			NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
+		}
 
 		if ReleaseNotesDatasource().shouldShowReleaseNotes {
 			let releaseNotesHostController = ReleaseNotesHostViewController()
@@ -194,8 +214,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
-		var showBetaWarning = VendorServices.shared.showBetaWarning
-
 		super.viewDidAppear(animated)
 
 		ClientSessionManager.shared.add(delegate: self)
@@ -214,16 +232,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
 		}
 
-		if showBetaWarning, shownFirstTime {
-			showBetaWarning = !considerAutoLogin()
-		}
-
-		if showBetaWarning {
+		if VendorServices.shared.showBetaWarning, shownFirstTime {
 			considerBetaWarning()
 		}
 
 		if !shownFirstTime {
 			VendorServices.shared.considerReviewPrompt()
+		}
+
+		if #available(iOS 13, *) {
+			view.window?.windowScene?.userActivity = ServerListTableViewController.showServerListActivity
 		}
 	}
 
@@ -532,10 +550,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		let clientRootViewController = ClientSessionManager.shared.startSession(for: bookmark)!
 
-		let bookmarkRow = self.tableView.cellForRow(at: indexPath)
+		let bookmarkRow = self.tableView.cellForRow(at: indexPath) as? ServerListBookmarkCell
 		let activityIndicator = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 
 		var bookmarkRowAccessoryView : UIView?
+		var bookmarkDetailLabelContent : String?
 
 		if bookmarkRow != nil {
 			bookmarkRowAccessoryView = bookmarkRow?.accessoryView
@@ -552,7 +571,32 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		clientRootViewController.authDelegate = self
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart(lastVisibleItemId, completionHandler: { (error) in
+		clientRootViewController.afterCoreStart(lastVisibleItemId, busyHandler: { (progress) in
+			OnMainThread {
+				if let bookmarkRow = self.tableView.cellForRow(at: indexPath) as? ServerListBookmarkCell {
+					if progress != nil {
+						let progressView = ProgressView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+						progressView.progress = progress
+
+						bookmarkDetailLabelContent = bookmarkRow.detailLabel.text
+
+						activityIndicator.stopAnimating()
+
+						bookmarkRow.detailLabel.text = progress?.localizedDescription
+						bookmarkRow.accessoryView = progressView
+
+						bookmarkRow.detailLabel.beginPulsing()
+					} else {
+						bookmarkRow.detailLabel.endPulsing()
+
+						bookmarkRow.detailLabel.text = bookmarkDetailLabelContent
+						bookmarkRow.accessoryView = activityIndicator
+
+						activityIndicator.startAnimating()
+					}
+				}
+			}
+		}, completionHandler: { (error) in
 			if self.lastSelectedBookmark?.uuid == bookmark.uuid, // Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
 			   self.activeClientRootViewController == nil { // Make sure we don't present this ClientRootViewController while still presenting another
 				if let fromViewController = self.pushFromViewController ?? self.navigationController {
@@ -569,7 +613,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 						self.activeClientRootViewController = clientRootViewController // save this ClientRootViewController as the active one (only weakly referenced)
 
 						// Set up custom push transition for presentation
-						let transitionDelegate = PushTransitionDelegate()
+						let transitionDelegate = PushTransitionDelegate(with: { (toViewController, window) in
+							window.addSubview(toViewController.view)
+
+							if #available(iOS 13, *) {
+								window.windowScene?.userActivity = ServerListTableViewController.showServerListActivity
+							}
+						})
 
 						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
 						clientRootViewController.transitioningDelegate = transitionDelegate
@@ -670,7 +720,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let edit = UIAction(title: "Edit".localized, image: UIImage(systemName: "gear")) { _ in
 			self.showBookmarkUI(edit: bookmark)
 		}
-		menuItems.append(edit)
+		if VendorServices.shared.canEditAccount {
+			menuItems.append(edit)
+		}
 		let manage = UIAction(title: "Manage".localized, image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
 			self.showBookmarkInfoUI(bookmark)
 		}
@@ -774,10 +826,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			})
 			openAccountAction.backgroundColor = .orange
 
-			return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+			if VendorServices.shared.canEditAccount {
+				return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+			}
+			return [deleteRowAction, manageRowAction, openAccountAction]
 		}
 
-		return [deleteRowAction, editRowAction, manageRowAction]
+		if VendorServices.shared.canEditAccount {
+			return [deleteRowAction, editRowAction, manageRowAction]
+		}
+		return [deleteRowAction, manageRowAction]
 	}
 
 	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {

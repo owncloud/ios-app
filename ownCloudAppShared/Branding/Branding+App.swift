@@ -23,6 +23,7 @@ extension OCClassSettingsKey {
 	// Permissions
 	public static let canAddAccount : OCClassSettingsKey = OCClassSettingsKey("can-add-account")
 	public static let canEditAccount : OCClassSettingsKey = OCClassSettingsKey("can-edit-account")
+	public static let enableReviewPrompt : OCClassSettingsKey = OCClassSettingsKey("enable-review-prompt")
 
 	// Profiles
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
@@ -37,14 +38,15 @@ extension Branding : BrandingInitialization {
 		if #available(iOS 13, *) {
 			self.registerOCClassSettingsDefaults([
 				.documentationURL : "https://doc.owncloud.com/ios-app/",
-				.helpURL 	  : "https://www.owncloud.com/help",
+				.helpURL 	  : "https://owncloud.com/docs-guides/",
 				.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 				.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
 
 				.sendFeedbackAddress : "ios-app@owncloud.com",
 
 				.canAddAccount : true,
-				.canEditAccount : true
+				.canEditAccount : true,
+				.enableReviewPrompt : false
 
 	//			.profileDefinitions : [],
 	//			.themeGenericColors : [:],
@@ -99,9 +101,17 @@ extension Branding : BrandingInitialization {
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
 
+				.enableReviewPrompt : [
+ 					.type 		: OCClassSettingsMetadataType.boolean,
+ 					.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
+ 					.category	: "Branding",
+ 					.status		: OCClassSettingsKeyStatus.advanced
+ 				],
+
 				.profileDefinitions : [
 					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.description	: "Array of dictionaries, each specifying a static profile.",
+					.label		: "Profile definitions",
+					.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
@@ -134,6 +144,7 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("canAddAccount",		forClassSettingsKey: .canAddAccount)
 		registerLegacyKeyPath("canEditAccount",		forClassSettingsKey: .canEditAccount)
+		registerLegacyKeyPath("enableReviewPrompt",	forClassSettingsKey: .enableReviewPrompt)
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
@@ -193,8 +204,20 @@ extension Branding {
 		return computedValue(forClassSettingsKey: .canEditAccount) as? Bool ?? true
 	}
 
+	public var enableReviewPrompt : Bool {
+		return computedValue(forClassSettingsKey: .enableReviewPrompt) as? Bool ?? false
+	}
+
 	public var profileDefinitions : [[String : Any]]? {
-		return computedValue(forClassSettingsKey: .profileDefinitions) as? [[String : Any]]
+		var definitions = computedValue(forClassSettingsKey: .profileDefinitions) as? [[String : Any]]
+
+		if definitions == nil {
+			if let bridge = self as? StaticProfileBridge, let definitionDict = type(of: bridge).composeBrandingDict() {
+				definitions = [ definitionDict ]
+			}
+		}
+
+		return definitions
 	}
 }
 

@@ -104,6 +104,32 @@ extension ServerListTableViewController {
 	}
 }
 
+extension StaticLoginSingleAccountServerListViewController {
+
+	override var keyCommands: [UIKeyCommand]? {
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+
+		var shortcuts = [UIKeyCommand]()
+		if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
+			shortcuts.append(nextObjectCommand)
+			if selectedIndexPath.section != 0 || (selectedIndexPath.section == 0 && selectedIndexPath.row != 0) {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
+			shortcuts.append(nextObjectCommand)
+		}
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
 extension BookmarkViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
@@ -260,33 +286,79 @@ extension ClientRootViewController {
 			if excludeViewControllers.contains(where: {$0 == type(of: visibleController)}) {
 				return shortcuts
 			} else if let controller = visibleController as? PDFSearchViewController {
-
 				return controller.keyCommands
 			}
 		}
 
-		let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
-			let tabIndex = String(index + 1)
-			return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: "Tab %@".localized, tabIndex))
-		}
-		if let keyCommands = keyCommands {
-			shortcuts.append(contentsOf: keyCommands)
-		}
-
-		if let navigationController = self.selectedViewController as? ThemeNavigationController, (navigationController.visibleViewController is ClientQueryViewController || navigationController.visibleViewController is GroupSharingTableViewController) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
 			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
 			shortcuts.append(cancelCommand)
+
+			if let visibleViewController = navigationController.visibleViewController, let keyCommands = visibleViewController.keyCommands {
+				let newKeyCommands = keyCommands.map { (keyCommand) -> UIKeyCommand in
+					if let input = keyCommand.input, let discoverabilityTitle = keyCommand.discoverabilityTitle {
+					return UIKeyCommand(input: input, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController), discoverabilityTitle: discoverabilityTitle)
+					}
+
+					return UIKeyCommand(input: keyCommand.input!, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController))
+				}
+
+				shortcuts.append(contentsOf: newKeyCommands)
+			}
+		}
+
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, !((navigationController.visibleViewController as? UIAlertController) != nil) {
+			let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
+				let tabIndex = String(index + 1)
+				return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: "Tab %@".localized, tabIndex))
+			}
+			if let keyCommands = keyCommands, self.presentedViewController == nil {
+				shortcuts.append(contentsOf: keyCommands)
+			}
+		}
+
+		if let availableStyles = ThemeStyle.availableStyles, availableStyles.count > 1 {
+			let switchThemeCommand = UIKeyCommand(input: "T", modifierFlags: [.alternate], action: #selector(switchTheme), discoverabilityTitle: "Switch Theme Style".localized)
+			shortcuts.append(switchThemeCommand)
 		}
 
 		return shortcuts
 	}
 
+	@objc func switchTheme(sender: UIKeyCommand) {
+		if let availableStyles = ThemeStyle.availableStyles {
+		let currentIndex = availableStyles.index(of: ThemeStyle.preferredStyle) ?? 0
+			var newStyle = ThemeStyle.preferredStyle
+			if currentIndex + 1 < availableStyles.count {
+				newStyle = availableStyles[currentIndex + 1]
+			} else if let style = availableStyles.first {
+				newStyle = style
+			}
+
+			ThemeStyle.followSystemAppearance = false
+			ThemeStyle.preferredStyle = newStyle
+		}
+	}
+
+	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController, let keyCommands = visibleController.keyCommands {
+			let commands = keyCommands.filter { (keyCommand) -> Bool in
+				if keyCommand.discoverabilityTitle == sender.discoverabilityTitle {
+					return true
+				}
+				return false
+			}
+
+			if let command = commands.first {
+				visibleController.perform(command.action, with: sender)
+			}
+		}
+	}
+
 	@objc func dismissSearch(sender: UIKeyCommand) {
 		if let navigationController = self.selectedViewController as? ThemeNavigationController {
-			if let clientQueryViewController = navigationController.visibleViewController as? ClientQueryViewController {
-				clientQueryViewController.searchController?.isActive = false
-			} else if let groupSharingViewController = navigationController.visibleViewController as? GroupSharingTableViewController {
-				groupSharingViewController.searchController?.isActive = false
+			if let searchController = navigationController.visibleViewController?.navigationItem.searchController {
+				searchController.isActive = false
 			}
 		}
 	}
@@ -348,7 +420,11 @@ extension UITableViewController {
 		guard let selectedIndexPath = self.tableView?.indexPathForSelectedRow else { return }
 
 		if selectedIndexPath.row > 0 {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+			if selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
+				self.tableView.selectRow(at: NSIndexPath(row: tableView.numberOfRows(inSection: selectedIndexPath.section - 1) - 1, section: selectedIndexPath.section - 1) as IndexPath, animated: true, scrollPosition: .middle)
+			} else {
+				self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+			}
 		} else if selectedIndexPath.row == 0, selectedIndexPath.section > 0 {
 			let section = selectedIndexPath.section - 1
 			if let numberOfRows = self.tableView?.numberOfRows(inSection: section), numberOfRows > 0 {
@@ -449,7 +525,7 @@ extension PublicLinkEditTableViewController {
 			let showInfoObjectCommand = UIKeyCommand(input: "H", modifierFlags: [.command, .alternate], action: #selector(showInfoSubtitles), discoverabilityTitle: "Help".localized)
 			shortcuts.append(showInfoObjectCommand)
 		} else {
-			let shareObjectCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .alternate], action: #selector(shareLinkURL), discoverabilityTitle: "Share".localized)
+			let shareObjectCommand = UIKeyCommand(input: "S", modifierFlags: [.command], action: #selector(shareLinkURL), discoverabilityTitle: "Share".localized)
 			shortcuts.append(shareObjectCommand)
 		}
 
@@ -627,8 +703,19 @@ extension ClientQueryViewController {
 
 	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
+
+		let scopeCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(changeSearchScope(_:)), discoverabilityTitle: "Toggle Search Scope".localized)
+		if let searchController = searchController, searchController.isActive {
+			shortcuts.append(scopeCommand)
+		}
+
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
+		}
+
+		if searchController?.isActive ?? false, searchScope == .global, hasSearchResults, self.tableView?.indexPathForSelectedRow != nil {
+			let revealObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], action: #selector(revealItem), discoverabilityTitle: "Reveal in folder".localized)
+			shortcuts.append(revealObjectCommand)
 		}
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
@@ -647,7 +734,7 @@ extension ClientQueryViewController {
 			shortcuts.append(nextObjectCommand)
 		}
 
-		if let core = core, let rootItem = query.rootItem {
+		if let core = core, let rootItem = query.rootItem, !isMoreButtonPermanentlyHidden {
 			var item = rootItem
 			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
@@ -665,6 +752,23 @@ extension ClientQueryViewController {
 		}
 
 		return shortcuts
+	}
+
+	@objc func revealItem(_ command : UIKeyCommand) {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let cell = tableView(self.tableView, cellForRowAt: indexPath) as? ClientItemCell {
+			revealButtonTapped(cell: cell)
+		}
+	}
+
+	@objc func changeSearchScope(_ command : UIKeyCommand) {
+		if self.sortBar?.searchScope == .global {
+			self.sortBar?.searchScope = .local
+		} else {
+			self.sortBar?.searchScope = .global
+		}
+		updateCustomSearchQuery()
+		self.searchController?.isActive = true
+		self.searchController?.searchBar.becomeFirstResponder()
 	}
 
 	@objc func performFolderAction(_ command : UIKeyCommand) {
@@ -735,10 +839,10 @@ extension QueryFileListTableViewController {
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 		let scrollTopCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command, .shift], action: #selector(scrollToFirstRow), discoverabilityTitle: "Scroll to Top".localized)
 		let scrollBottomCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command, .shift], action: #selector(scrollToLastRow), discoverabilityTitle: "Scroll to Bottom".localized)
-		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .shift], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
+		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.alternate], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
 		let searchCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
 		// Add key commands for file name letters
-		if sortMethod == .alphabetically {
+		if sortMethod == .alphabetically, let searchController = searchController, !searchController.isActive {
 			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 			for title in indexTitles {
 				let letterCommand = UIKeyCommand(input: title, modifierFlags: [], action: #selector(selectLetter))
@@ -746,7 +850,7 @@ extension QueryFileListTableViewController {
 			}
 		}
 
-		if let core = core, let rootItem = query.rootItem {
+		if let core = core, let rootItem = query.rootItem, !isMoreButtonPermanentlyHidden {
 			var item = rootItem
 			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
 				item = selectedItem
@@ -763,12 +867,14 @@ extension QueryFileListTableViewController {
 			})
 		}
 
-		shortcuts.append(searchCommand)
+		if let searchController = searchController, !searchController.isActive {
+			shortcuts.append(searchCommand)
+		}
 		shortcuts.append(toggleSortCommand)
 
 		for (index, method) in SortMethod.all.enumerated() {
-			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
-			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
+			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
+			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
 			shortcuts.append(sortCommand)
 		}
 
@@ -835,7 +941,7 @@ extension QueryFileListTableViewController {
 
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
 		for method in SortMethod.all {
-			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
+			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
 			if command.discoverabilityTitle == sortTitle {
 				self.sortBar?.sortMethod = method
 				break
@@ -869,22 +975,8 @@ extension ClientDirectoryPickerViewController {
 	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
-		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-
-		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
-			if selectedIndexPath.row < self.items.count - 1 {
-				shortcuts.append(nextObjectCommand)
-			}
-			if selectedIndexPath.row > 0 || selectedIndexPath.section > 0 {
-				shortcuts.append(previousObjectCommand)
-			}
-			if let item : OCItem = self.itemAt(indexPath: selectedIndexPath), item.type == OCItemType.collection {
-				shortcuts.append(selectObjectCommand)
-			}
-		} else {
-			shortcuts.append(nextObjectCommand)
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
 		if let selectButtonTitle = selectButton?.title, let selector = selectButton?.action {
@@ -1131,6 +1223,11 @@ extension DisplayHostViewController {
 			shortcuts.append(replayCommand)
 			shortcuts.append(muteCommand)
 		}
+		if let viewController = (self.viewControllers?.first as? DisplayViewController), (viewController.navigationController?.isNavigationBarHidden ?? false) {
+			let closeCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closePresentationMode), discoverabilityTitle: "Exit Full Screen".localized)
+			shortcuts.append(closeCommand)
+		}
+
 		if items?.count ?? 0 > 1 {
 			showCommands = true
 		}
@@ -1145,7 +1242,7 @@ extension DisplayHostViewController {
 
 		if let item = currentViewController.item {
 			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
-			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
+			let actionContextCollaborate = ActionContext(viewController: currentViewController, core: core, items: [item], location: actionsLocationCollaborate)
 			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
 
 			actionsCollaborate.forEach({
@@ -1169,7 +1266,7 @@ extension DisplayHostViewController {
 
 		if let item = currentViewController.item {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actionContext = ActionContext(viewController: currentViewController, core: core, items: [item], location: actionsLocation)
 			actionContext.sender = command
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
@@ -1266,6 +1363,14 @@ extension DisplayHostViewController {
 
 		if let pdfController = currentViewController as? PDFViewerViewController {
 			pdfController.searchResultsView.close()
+		}
+	}
+
+	@objc func closePresentationMode() {
+		guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let controller = currentViewController as? DisplayViewController {
+			controller.navigationController?.setNavigationBarHidden(false, animated: true)
 		}
 	}
 
