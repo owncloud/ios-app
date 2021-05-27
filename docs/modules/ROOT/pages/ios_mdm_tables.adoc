@@ -439,21 +439,21 @@ branding.profile-bookmark-name
 |advanced `candidate`
 
 |`Profile` +
-**Onbording button title** +
+**Onboarding button title** +
  +
 branding.profile-help-button-label
 |string
 |
-|Text used for the onbording button title
+|Text used for the onboarding button title
 |advanced `candidate`
 
 |`Profile` +
-**Onbording URL** +
+**Onboarding URL** +
  +
 branding.profile-help-url
 |urlString
 |
-|Optional URL to onbording resources.
+|Optional URL to onboarding resources.
 |advanced `candidate`
 
 |`Profile` +
@@ -475,12 +475,12 @@ branding.profile-name
 |advanced `candidate`
 
 |`Profile` +
-**Open onbording URL message** +
+**Open onboarding URL message** +
  +
 branding.profile-open-help-message
 |string
 |
-|Message shown in an alert before opening the onbording URL.
+|Message shown in an alert before opening the onboarding URL.
 |advanced `candidate`
 
 |`Profile` +
