@@ -667,11 +667,11 @@ end
     )
 
     time = Time.now
-    ipaName = appName + "-" + version + "-" + time.strftime("%Y%m%d-%k:%M") + ".ipa"
+    ipaName = appName + "-" + version + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
 
     generate_appicon()
 
-    if !values[:BETA_APP_ICON].nil?
+    if values[:BETA_APP_ICON]
       commit = last_git_commit
       short_hash = commit[:abbreviated_commit_hash] # short sha of commit
       sh "brew install librsvg"
@@ -686,6 +686,7 @@ end
       scheme: "ownCloud",
       configuration: CONFIGURATION,
       codesigning_identity: ENTERPRISE_IDENTITY,
+      output_name: ipaName,
       export_method: EXPORT_METHOD,
       export_options: {
         method: EXPORT_METHOD,
