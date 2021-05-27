@@ -238,8 +238,8 @@ extension Branding : StaticProfileBridge {
 
 				StaticLoginProfile.Key.helpURL.settingsKey : [
 					.type 		: OCClassSettingsMetadataType.urlString,
-					.label 		: "Help URL",
-					.description	: "Optional URL to help/support resources.",
+					.label 		: "Onbording URL",
+					.description	: "Optional URL to onbording resources.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding",
 					.subCategory	: "Profile"
@@ -247,8 +247,8 @@ extension Branding : StaticProfileBridge {
 
 				StaticLoginProfile.Key.promptForHelpURL.settingsKey : [
 					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Open Help message",
-					.description 	: "Message shown in an alert before opening the help URL.",
+					.label		: "Open onbording URL message",
+					.description 	: "Message shown in an alert before opening the onbording URL.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding",
 					.subCategory	: "Profile"
@@ -256,8 +256,8 @@ extension Branding : StaticProfileBridge {
 
 				StaticLoginProfile.Key.helpURLButtonString.settingsKey : [
 					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Help button label",
-					.description 	: "Text used for the Help button label",
+					.label		: "Onbording button title",
+					.description 	: "Text used for the onbording button title",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding",
 					.subCategory	: "Profile"

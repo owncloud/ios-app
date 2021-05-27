@@ -444,6 +444,14 @@ end
     )
   end
 
+  lane :generate_appicon do
+    appicon(
+      appicon_image_file: 'ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png',
+      appicon_devices: [:ipad, :iphone, :ios_marketing],
+      appicon_path: "ownCloud/Resources/Assets.xcassets/"
+    )
+  end
+
   desc "In-House Enterprise IPA generation"
    lane :build_ipa_in_house do |values|
 
@@ -475,7 +483,6 @@ end
         appName = tmpAppName
       end
     end
-    ipaName = appName + ".ipa"
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
@@ -659,7 +666,12 @@ end
       version_key: "APP_SHORT_VERSION"
     )
 
-    if values[:BETA_APP_ICON]
+    time = Time.now
+    ipaName = appName + "-" + version + "-" + time.strftime("%Y%m%d-%k:%M") + ".ipa"
+
+    generate_appicon()
+
+    if !values[:BETA_APP_ICON].nil?
       commit = last_git_commit
       short_hash = commit[:abbreviated_commit_hash] # short sha of commit
       sh "brew install librsvg"

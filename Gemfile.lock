@@ -87,6 +87,9 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
+    fastlane-plugin-appicon (0.16.0)
+      json
+      mini_magick (>= 4.9.4, < 5.0.0)
     fastlane-plugin-badge (1.4.0)
       badge (~> 0.12.0)
     fastlane-plugin-json (1.0.0)
@@ -184,6 +187,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
+  fastlane-plugin-appicon
   fastlane-plugin-badge
   fastlane-plugin-json
 
