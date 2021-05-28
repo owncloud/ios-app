@@ -54,6 +54,7 @@ extension Branding : BrandingInitialization {
 			], metadata: [
 				.documentationURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
+					.label		: "Documentation URL",
 					.description 	: "URL to documentation for the app. Opened when selecting \"Documentation\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
@@ -61,20 +62,23 @@ extension Branding : BrandingInitialization {
 
 				.helpURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
-					.description 	: "URL to help for the app. Opened when selecting \"Help\" in the settings.",
+					.label		: "Help URL",
+					.description 	: "URL to get help for the app. Opened when selecting \"Help\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
 				],
 
 				.privacyURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
-					.description 	: "URL to privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
+					.label		: "Privacy URL",
+					.description 	: "URL to get privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
 				],
 
 				.termsOfUseURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
+					.label		: "Terms of use URL",
 					.description 	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
@@ -82,6 +86,7 @@ extension Branding : BrandingInitialization {
 
 				.sendFeedbackAddress : [
 					.type 		: OCClassSettingsMetadataType.string,
+					.label		: "Feedback Email address",
 					.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
@@ -89,6 +94,7 @@ extension Branding : BrandingInitialization {
 
 				.canAddAccount : [
 					.type 		: OCClassSettingsMetadataType.boolean,
+					.label		: "Allow adding accounts",
 					.description	: "Controls whether the user can add accounts.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
@@ -96,6 +102,7 @@ extension Branding : BrandingInitialization {
 
 				.canEditAccount : [
 					.type 		: OCClassSettingsMetadataType.boolean,
+					.label		: "Allow editing accounts",
 					.description	: "Controls whether the user can edit accounts.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced

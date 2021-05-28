@@ -305,13 +305,17 @@ tag::branding[]
 |Organization name to use throughout the app.
 |supported `candidate`
 
-|branding.can-add-account
+|**Allow adding accounts** +
+ +
+branding.can-add-account
 |bool
 |`true`
 |Controls whether the user can add accounts.
 |advanced `candidate`
 
-|branding.can-edit-account
+|**Allow editing accounts** +
+ +
+branding.can-edit-account
 |bool
 |`true`
 |Controls whether the user can edit accounts.
@@ -331,7 +335,9 @@ branding.profile-definitions
 |Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.
 |advanced `candidate`
 
-|branding.send-feedback-address
+|**Feedback Email address** +
+ +
+branding.send-feedback-address
 |string
 |`ios-app@owncloud.com`
 |Email address to send feedback to. Set to `null` to disable this feature.
@@ -349,25 +355,33 @@ branding.profile-definitions
 |Dictionary defining generic colors that can be used in the definitions.
 |advanced `candidate`
 
-|branding.url-documentation
+|**Documentation URL** +
+ +
+branding.url-documentation
 |urlString
 |`https://doc.owncloud.com/ios-app/`
 |URL to documentation for the app. Opened when selecting "Documentation" in the settings.
 |advanced `candidate`
 
-|branding.url-help
+|**Help URL** +
+ +
+branding.url-help
 |urlString
 |`https://owncloud.com/docs-guides/`
-|URL to help for the app. Opened when selecting "Help" in the settings.
+|URL to get help for the app. Opened when selecting "Help" in the settings.
 |advanced `candidate`
 
-|branding.url-privacy
+|**Privacy URL** +
+ +
+branding.url-privacy
 |urlString
 |`https://owncloud.org/privacy-policy/`
-|URL to privacy information for the app. Opened when selecting "Privacy" in the settings.
+|URL to get privacy information for the app. Opened when selecting "Privacy" in the settings.
 |advanced `candidate`
 
-|branding.url-terms-of-use
+|**Terms of use URL** +
+ +
+branding.url-terms-of-use
 |urlString
 |`https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE`
 |URL to terms of use for the app. Opened when selecting "Terms Of Use" in the settings.
@@ -425,21 +439,21 @@ branding.profile-bookmark-name
 |advanced `candidate`
 
 |`Profile` +
-**Help button label** +
+**Onboarding button title** +
  +
 branding.profile-help-button-label
 |string
 |
-|Text used for the Help button label
+|Text used for the onboarding button title
 |advanced `candidate`
 
 |`Profile` +
-**Help URL** +
+**Onboarding URL** +
  +
 branding.profile-help-url
 |urlString
 |
-|Optional URL to help/support resources.
+|Optional URL to onboarding resources.
 |advanced `candidate`
 
 |`Profile` +
@@ -461,12 +475,12 @@ branding.profile-name
 |advanced `candidate`
 
 |`Profile` +
-**Open Help message** +
+**Open onboarding URL message** +
  +
 branding.profile-open-help-message
 |string
 |
-|Message shown in an alert before opening the help URL.
+|Message shown in an alert before opening the onboarding URL.
 |advanced `candidate`
 
 |`Profile` +
