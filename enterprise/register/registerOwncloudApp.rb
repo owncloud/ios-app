@@ -199,19 +199,19 @@ class AppRegistration
 				puts ""
 				abort("You chose to create a new Bundle ID, but the given Bundle ID #{bundle_id} already exists. Please restart the script an enter a new Bundle ID.")
 			elsif registrationType == :existing && !app
-				puts "The entered Bundle ID does not exist!"
-				prepareAppID(target, profileFilename, groups, registrationType, suggestedBundleID)
+				puts "The entered Bundle ID does not exist. Creating a new App with the given Bundle ID."
+				prepareAppID(target, profileFilename, groups, :suggested, bundle_id, cert)
+				return
 			end
 			
 			if !app
 				puts ""
 				puts("App does not exist. Creating a new app…")
-				# App ID does not exist, create new App ID
-				bundle_name = gets.chomp
-				app = Spaceship::Portal.app.create!(bundle_id: bundle_id, name: bundle_name)
+				app = Spaceship::Portal.app.create!(bundle_id: bundle_id, name: "ownCloud Target #{target}")
 			end
-			app = app.associate_groups(groups)
 			app = app.update_service(Spaceship::Portal.app_service.associated_domains.on)
+			app = app.update_service(Spaceship::Portal.app_service.app_group.on)
+			app = app.associate_groups(groups)
 		end
 	
 		prepareProfile(bundle_id, profileFilename, cert)
@@ -219,19 +219,20 @@ class AppRegistration
 	
 	def prepareProfile(bundle_id, profileFilename, cert)
 		filtered_profiles = Spaceship::Portal.provisioning_profile.app_store.find_by_bundle_id(bundle_id: bundle_id)
-		puts bundle_id
-		puts filtered_profiles
 		
 		if filtered_profiles.count > 0 
 			profile = filtered_profiles.first
-		else
+			profile.delete!
+		end
 			#Profile does not exist, create new Profile
+			puts "Profile does not exist, create new Profile…"
 			profile = Spaceship::Portal.provisioning_profile.app_store.create!(bundle_id: bundle_id, certificate: cert,  name: "match AppStore #{bundle_id}")
-		end
+		#end
 		
-		if !profile.valid? || !profile.certificate_valid?
-			profile.repair!
-		end
+		#if !profile.valid? || !profile.certificate_valid?
+		#	puts "Repairing profile…"
+		#	profile.repair!
+		#end
 		
 		File.write("Assets/#{profileFilename}", profile.download)
 		puts "Saved profile for #{bundle_id} to: Assets/#{profileFilename}"

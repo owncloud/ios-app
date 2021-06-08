@@ -34,10 +34,7 @@ usage()
 }
 
 #Check if all required parameters exist
-if [ $# -lt 2 ]; then
-  usage
-fi
-if ! [[ "$2" =~ ^(ad-hoc|app-store)$ ]]; then
+if [ $# -lt 1 ]; then
   usage
 fi
 
