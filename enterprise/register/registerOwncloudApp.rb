@@ -211,7 +211,7 @@ class AppRegistration
 				app = Spaceship::Portal.app.create!(bundle_id: bundle_id, name: bundle_name)
 			end
 			app = app.associate_groups(groups)
-			app = app.update_service(Spaceship::Portal.associated_domains.on)
+			app = app.update_service(Spaceship::Portal.app_service.associated_domains.on)
 		end
 	
 		prepareProfile(bundle_id, profileFilename, cert)
