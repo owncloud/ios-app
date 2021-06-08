@@ -7,7 +7,7 @@
  # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 #Define output formats
 BOLD="$(tput bold)"
@@ -21,9 +21,9 @@ NC="$(tput sgr0)" # No Color
 
 usage()
 {
-  echo "Usage:  $0 CERTIFICATE_IDENTITY METHOD"
-  echo "        $0 \"Certificate Identity\" ad-hoc"
-  echo "        $0 \"Certificate Identity\" app-store"
+  echo "Usage:  $0 CERTIFICATE_IDENTITY"
+  echo "        $0 \"Certificate Identity\""
+  echo "        $0 \"Certificate Identity\""
   echo "Version: ${VERSION}"
   echo ""
   echo "Found Certificate Identities:"
@@ -50,22 +50,21 @@ echo ""
 
 #Define variables
 IDENTITY=$1
-METHOD=$2
 BUILD_DIR="App"
 NAME_FINAL_IPA="signed.ipa"
-UNSIGNED_IPA="$BUILD_DIR/$METHOD/unsigned.ipa"
+UNSIGNED_IPA="$BUILD_DIR/unsigned.ipa"
 ERROR_SHA1=0
-FINAL_IPA="$BUILD_DIR/$METHOD/$NAME_FINAL_IPA"
-APPTEMP="$BUILD_DIR/$METHOD/apptemp"
+FINAL_IPA="$BUILD_DIR/$NAME_FINAL_IPA"
+APPTEMP="$BUILD_DIR/apptemp"
 APPPAYLOAD="$APPTEMP/Payload"
 APPDIR="$APPPAYLOAD/ownCloud.app"
 PROVISIONING_DIR="Provisioning Files"
 
-DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/App.mobileprovision"
-FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/FileProvider.mobileprovision"
-FILEPROVIDERUI_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/FileProviderUI.mobileprovision"
-INTENT_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/Intent.mobileprovision"
-SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/ShareExtension.mobileprovision"
+DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/App.mobileprovision"
+FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/FileProvider.mobileprovision"
+FILEPROVIDERUI_MOBILEPROVISION="$PROVISIONING_DIR/FileProviderUI.mobileprovision"
+INTENT_MOBILEPROVISION="$PROVISIONING_DIR/Intent.mobileprovision"
+SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/ShareExtension.mobileprovision"
 
 declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
 declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
@@ -146,10 +145,10 @@ do
     echo ""
 
     # Duplicate each mobile provision as embedded.mobileprovision and move to correct destination folder
-    cp "${MOBILEPROVISIONS[$i]}" "$BUILD_DIR/$METHOD/embedded.mobileprovision"
+    cp "${MOBILEPROVISIONS[$i]}" "$BUILD_DIR/embedded.mobileprovision"
 
     {
-      mv "$BUILD_DIR/$METHOD/embedded.mobileprovision" "${LOCATIONS[$i]}"
+      mv "$BUILD_DIR/embedded.mobileprovision" "${LOCATIONS[$i]}"
     } || { # catch
       echo "${WARN}ERROR${NC}"
     }

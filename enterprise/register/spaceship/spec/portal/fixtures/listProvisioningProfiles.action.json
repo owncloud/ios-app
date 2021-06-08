@@ -1,0 +1,145 @@
+{
+  "creationTimestamp": "2015-05-14T14:55:57Z",
+  "resultCode": 0,
+  "userLocale": "en_US",
+  "protocolVersion": "QH65B2",
+  "requestId": "9d1eb364-dfa2-482b-9ff9-6bc3bb9c3d21",
+  "requestUrl": "https://developer.apple.com:443//services-account/QH65B2/account/ios/profile/listProvisioningProfiles.action?content-type=text/x-url-arguments&accept=application/json&requestId=9d1eb364-dfa2-482b-9ff9-6bc3bb9c3d21&userLocale=en_US&teamId=5A997XSHK2&includeInactiveProfiles=true&onlyCountLists=true",
+  "responseId": "b9ca036d-ed62-4cf0-948f-fdd4722b2702",
+  "isAdmin": false,
+  "isMember": true,
+  "isAgent": false,
+  "pageNumber": 1,
+  "pageSize": 500,
+  "totalRecords": 87,
+  "provisioningProfiles": [
+    {
+      "provisioningProfileId": "PP00000001",
+      "name": "1 Gut Altentann Ad Hoc",
+      "status": "Active",
+      "type": "iOS Distribution",
+      "distributionMethod": "adhoc",
+      "proProPlatform": "ios",
+      "version": "2",
+      "dateExpire": "2015-11-25T01:00:00Z",
+      "managingApp": null,
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID": "cc4d542e-1ee6-445f-967f-f19aea167e7a"
+    },
+    {
+      "provisioningProfileId": "PP00000002",
+      "name": "1 Gut Altentann AppStore",
+      "status": "Active",
+      "type": "iOS Distribution",
+      "distributionMethod": "store",
+      "proProPlatform": "ios",
+      "version": "2",
+      "dateExpire": "2015-11-25T02:00:00Z",
+      "managingApp": null,
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID": "662c2320-a097-4b04-82b3-c23ba4330493"
+    },
+    {
+      "provisioningProfileId": "PP00000003",
+      "name": "106 GC Goehrde AppStore",
+      "status": "Active",
+      "type": "iOS Distribution",
+      "distributionMethod": "store",
+      "proProPlatform": "ios",
+      "version": "2",
+      "dateExpire": "2015-11-25T03:00:00Z",
+      "managingApp": null,
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID": "e5bd56d9-397a-4323-be71-563b67e69347"
+    },
+    {
+      "provisioningProfileId": "PP00000004",
+      "name": "107 GC Lorenzen AppStore tvOS",
+      "status": "Active",
+      "type": "tvOS Distribution",
+      "distributionMethod": "store",
+      "proProPlatform": "ios",
+      "proProSubPlatform": "tvOS",
+      "version": "2",
+      "dateExpire": "2015-11-25T04:00:00Z",
+      "managingApp": null,
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID": "05322b38-3c32-42aa-a542-eee7f3c95541"
+    },
+    {
+      "provisioningProfileId": "PP00000005",
+      "name": "112 Wombats RC Development",
+      "status": "Active",
+      "type": "iOS Development",
+      "distributionMethod": "limited",
+      "proProPlatform": "ios",
+      "version": "2",
+      "dateExpire": "2015-11-25T05:00:00Z",
+      "managingApp": null,
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID": "1ed1c04b-43c9-4afe-9133-d8c8a36a5b59"
+    },
+    {
+      "provisioningProfileId": "PP00000006",
+      "name": "delete.me.please AppStore",
+      "status": "Active",
+      "type": "iOS Distribution",
+      "distributionMethod": "store",
+      "proProPlatform": "ios",
+      "version": "2",
+      "dateExpire": "2016-02-10T00:00:00Z",
+      "managingApp": null,
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID": "58ce5b78-15f8-4ceb-83f1-a29f6c4d066f"
+    },
+    {
+      "provisioningProfileId": "PP00000007",
+      "name": "Profile with Template App Store",
+      "status": "Active",
+      "type": "iOS Distribution",
+      "distributionMethod": "store",
+      "proProPlatform": "ios",
+      "version":"3",
+      "dateExpire":"2021-06-16T04:15:00Z",
+      "managingApp": null,
+      "isTemplateProfile": "true",
+      "deviceIds": [
+
+      ],
+      "certificateIds": [
+
+      ],
+      "UUID":"f7a0ce31-6482-4daa-9a98-21cb9ccc7036"
+    }
+  ]
+}

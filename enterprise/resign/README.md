@@ -1,7 +1,6 @@
 # Script to resign your iOS ownCloud App
 
 This script allows you to resign the ownCloud App IPA file with a different Apple certificate.
-Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the App Store(`app-store`).
 
 ## App IDs and Provisioning Files
 
@@ -37,9 +36,9 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
 1. Rename your `.ipa` file to `unsigned.ipa`
 
-2. Put the `unsigned.ipa` on the folder `App/ad-hoc/` or `App/app-store/`
+2. Put the `unsigned.ipa` on the folder `App/`
 
-3. Put your mobile provisioning inside `Provisioning Files/ad-hoc/` or `Provisioning Files/app-store/`
+3. Put your mobile provisioning inside `Provisioning Files/`
 
 4. The mobile provisioning must be named:
 
@@ -51,9 +50,9 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 
 5. Execute the script
 
-   - `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT" "ad-hoc"`
+   - `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT"`
 
-   - `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT" "app-store"`
+   - `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT"`
 
      
 

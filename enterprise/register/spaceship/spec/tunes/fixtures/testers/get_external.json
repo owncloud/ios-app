@@ -1,0 +1,120 @@
+{
+  "data": {
+    "sectionErrorKeys": [],
+    "sectionInfoKeys": [],
+    "sectionWarningKeys": [],
+    "testers": [{
+      "emailAddress": {
+        "value": "private@krausefx.com",
+        "isEditable": false,
+        "isRequired": false,
+        "errorKeys": null,
+        "maxLength": 2147483647,
+        "minLength": 0
+      },
+      "firstName": {
+        "value": "Detlef",
+        "isEditable": false,
+        "isRequired": false,
+        "errorKeys": null,
+        "maxLength": 2147483647,
+        "minLength": 0
+      },
+      "lastName": {
+        "value": "Müller",
+        "isEditable": false,
+        "isRequired": false,
+        "errorKeys": null,
+        "maxLength": 2147483647,
+        "minLength": 0
+      },
+      "testerId": "1d167b89-13c5-4dd8-b988-7a6a0190faaa",
+      "devices": [{
+        "model": "iPhone 6",
+        "os": "iOS",
+        "osVersion": "8.3",
+        "name": null
+      }],
+      "latestInstalledAppAdamId": 794902327,
+      "latestInstalledVersion": "0.9.14",
+      "latestInstalledShortVersion": "1",
+      "latestInstalledDate": 1427565638420,
+      "latestInstalledName": "App Name Yeah",
+      "latestInstallByPlatform": null,
+      "hasAddedOrInvitedApp": null,
+      "warnOnDelete": true,
+      "itcUsername": null,
+      "groups": [
+          {
+            "id": "e031d021-4f0f-4c1e-8d8a-c3341a267986",
+            "name": {
+              "value": "App Testers Group",
+              "isEditable": false,
+              "isRequired": false,
+              "errorKeys": null,
+              "maxLength": 25,
+              "minLength": 1
+            },
+            "testerCount": null,
+            "testers": null,
+            "isDeleted": null
+          }
+        ]
+    }, {
+      "emailAddress": {
+        "value": "ich@felixkrause.at",
+        "isEditable": false,
+        "isRequired": false,
+        "errorKeys": null,
+        "maxLength": 2147483647,
+        "minLength": 0
+      },
+      "firstName": {
+        "value": "Felix",
+        "isEditable": false,
+        "isRequired": false,
+        "errorKeys": null,
+        "maxLength": 2147483647,
+        "minLength": 0
+      },
+      "lastName": {
+        "value": "Krause",
+        "isEditable": false,
+        "isRequired": false,
+        "errorKeys": null,
+        "maxLength": 2147483647,
+        "minLength": 0
+      },
+      "testerId": "1399e231-27bd-496d-83f5-2f067e923140",
+      "devices": [],
+      "latestInstalledAppAdamId": null,
+      "latestInstalledVersion": null,
+      "latestInstalledShortVersion": null,
+      "latestInstalledDate": null,
+      "latestInstalledName": null,
+      "latestInstallByPlatform": null,
+      "hasAddedOrInvitedApp": null,
+      "warnOnDelete": true,
+      "itcUsername": null,
+      "groups": []
+    }],
+    "devices": {
+      "iPhone": ["iPhone 6"]
+    },
+    "groups": {
+      "8dfd9f94-3983-46d5-a298-c866b2369a33": "MyGroup",
+      "b6f65dbd-c845-4d91-bc39-0b661d608970": "Boarding",
+      "abe0122c-7b67-4931-ad91-54458118b3e2": "some random name",
+      "d5db2d1e-204d-434a-8672-cdae3582604a": "yolo new name yeah",
+      "3b493466-392c-49ce-8f6b-b2143fdf822a": "Test Group",
+      "c4739ccc-672f-46d4-9dad-23df8c60a35f": "boarding123",
+      "70402368-9deb-409f-9a26-bb3f215dfee3": "Automatic"
+    }
+  },
+  "messages": {
+    "warn": null,
+    "error": null,
+    "info": null
+  },
+  "statusCode": "SUCCESS"
+}
