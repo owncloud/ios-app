@@ -185,7 +185,7 @@ class AppRegistration
 			bundle_id = suggestedBundleID
 		else
 			puts ""
-			puts "Please enter the App ID for the target #{target}:"
+			puts "Please enter the Bundle ID for the target #{target}:"
 			bundle_id = gets.chomp
 		end
 		
@@ -197,9 +197,9 @@ class AppRegistration
 			
 			if registrationType != :existing && app
 				puts ""
-				abort("You chose to create a new App ID, but the given App ID #{bundle_id} already exists. Please restart the script an enter a new App ID.")
+				abort("You chose to create a new Bundle ID, but the given Bundle ID #{bundle_id} already exists. Please restart the script an enter a new Bundle ID.")
 			elsif registrationType == :existing && !app
-				puts "The entered App ID does not exist!"
+				puts "The entered Bundle ID does not exist!"
 				prepareAppID(target, profileFilename, groups, registrationType, suggestedBundleID)
 			end
 			
@@ -210,7 +210,7 @@ class AppRegistration
 				bundle_name = gets.chomp
 				app = Spaceship::Portal.app.create!(bundle_id: bundle_id, name: bundle_name)
 			end
-			app = app.associate_groups([groups])
+			app = app.associate_groups(groups)
 			app = app.update_service(Spaceship::Portal.associated_domains.on)
 		end
 	
