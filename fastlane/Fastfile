@@ -389,7 +389,7 @@ end
       ENTERPRISE_TEAM: "5QNK8L2PSC",
       ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
-      EXPORT_METHOD: "app-store",
+      EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false
     )
@@ -437,7 +437,7 @@ end
       ENTERPRISE_TEAM: "5QNK8L2PSC",
       ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
-      EXPORT_METHOD: "enterprise",
+      EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false
     )
