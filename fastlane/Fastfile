@@ -64,38 +64,6 @@ platform :ios do
       )
     end
 
-
-  desc "Copies the branding assets from the themes repository to the ios-app repository"
-    lane :prepare_branding_assets do |options|
-
-    if Dir.exist?("../../customer-themes-tmp") == false
-		UI.user_error!("Themes repository path does not exists!")
-    end
-
-    sh "git -C ../../customer-themes-tmp pull"
-
-    path = ""
-    customers = read_json(
-  		json_path: "../customer-themes-tmp/Customers.json"
-	)
-
-	customers.each do |customer|
-		if customer[:customer] == options[:CUSTOMER]
-       		path = "../../customer-themes-tmp/" + customer[:path] + "ios/"
-       		break
-    	end
-	end
-
-	if path == ""
-		UI.user_error!("Customer not found!")
-	end
-
-	sh "cp -R '" + path + "Theming/' ../ownCloud/Resources/Theming/"
-	sh "cp -R '" + path + "AppIcon.appiconset/' ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
-
-    end
-
-
     desc "Create Metadata Release Notes, Screenshots and push to git"
       lane :prepare_metadata do |options|
 
@@ -369,11 +337,7 @@ lane :owncloud_online_build do
   )
 end
 
-  lane :owncloud_branding_build do |options|
-  	prepare_branding_assets(
-      CUSTOMER: options[:CUSTOMER]
-  	)
-
+  lane :owncloud_branding_adhoc_build do
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
       ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
@@ -395,11 +359,7 @@ end
     )
   end
 
-  lane :owncloud_branding_appstore_build do |options|
-    prepare_branding_assets(
-      CUSTOMER: options[:CUSTOMER]
-  	)
-
+  lane :owncloud_branding_appstore_build do
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.ios-app",
       ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
@@ -422,25 +382,8 @@ end
   end
 
   lane :owncloud_ownbrander_build do
-    build_ipa_in_house(
-      ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
-      ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
-      ENTERPRISE_FP_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-Provider",
-      ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
-      ENTERPRISE_FP_UI_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI",
-      ENTERPRISE_FP_UI_PROFILE: "Enterprise Distribution iOS Neo File ProviderUI",
-      ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
-      ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
-      ENTERPRISE_SHARE_EXTENSION_ID: "com.owncloud.enterprise.ios-app.ownCloud-Share-Extension",
-      ENTERPRISE_SHARE_EXTENSION_PROFILE: "Enterprise Distribution iOS Neo Share Extension",
-      ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
-      ENTERPRISE_TEAM: "5QNK8L2PSC",
-      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
-      APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
-      EXPORT_METHOD: "enterprise",
-      CONFIGURATION: "Release",
-      BETA_APP_ICON: false
-    )
+    owncloud_branding_adhoc_build()
+    owncloud_branding_appstore_build()
   end
 
   lane :owncloud_enterprise_build do
@@ -467,12 +410,15 @@ end
   end
 
   lane :generate_appicon do
-    appicon(
-      appicon_image_file: 'ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png',
-      appicon_devices: [:ipad, :iphone, :ios_marketing],
-      appicon_path: "ownCloud/Resources/Assets.xcassets/",
-      appicon_name: 'AppIcon.appiconset'
-    )
+    iconPath = 'ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png'
+    if File.exist?(iconPath)
+      appicon(
+        appicon_image_file: iconPath,
+        appicon_devices: [:ipad, :iphone, :ios_marketing],
+        appicon_path: "ownCloud/Resources/Assets.xcassets/",
+        appicon_name: 'AppIcon.appiconset'
+      )
+    end
   end
 
   desc "In-House Enterprise IPA generation"
@@ -502,7 +448,7 @@ end
       appName = values[:APP_NAME]
     elsif File.exist?("../" + themePath)
       tmpAppName = get_info_plist_value(path: themePath, key: "branding.organization-name")
-      if tmpAppName != ""
+      if tmpAppName && tmpAppName.empty?
         appName = tmpAppName
       end
     end
@@ -690,7 +636,7 @@ end
     )
 
     time = Time.now
-    ipaName = appName + "-" + version + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
+    ipaName = appName + "-" + version + "-" + EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
 
     generate_appicon()
 
