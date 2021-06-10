@@ -36,11 +36,6 @@ Ad-Hoc Distribution IPA generation
 fastlane ios screenshots
 ```
 Generate the screenshots for the AppStore
-### ios prepare_branding_assets
-```
-fastlane ios prepare_branding_assets
-```
-Copies the branding assets from the themes repository to the ios-app repository
 ### ios prepare_metadata
 ```
 fastlane ios prepare_metadata
@@ -66,14 +61,19 @@ fastlane ios owncloud_emm_build
 fastlane ios owncloud_online_build
 ```
 
-### ios owncloud_branding_build
+### ios owncloud_branding_adhoc_build
 ```
-fastlane ios owncloud_branding_build
+fastlane ios owncloud_branding_adhoc_build
 ```
 
 ### ios owncloud_branding_appstore_build
 ```
 fastlane ios owncloud_branding_appstore_build
+```
+
+### ios owncloud_ownbrander_build
+```
+fastlane ios owncloud_ownbrander_build
 ```
 
 ### ios owncloud_enterprise_build
