@@ -146,6 +146,8 @@ class AppRegistration
 	  raw_data = certificate.download_raw
 	  File.write(path, raw_data)
 	  puts "Saved certificate to: Assets/#{cert_name}.cer"
+	  puts "Please open the saved certificate and import it into your keychain."
+		
 	  return path
 	end
 	
@@ -224,15 +226,9 @@ class AppRegistration
 			profile = filtered_profiles.first
 			profile.delete!
 		end
-			#Profile does not exist, create new Profile
-			puts "Profile does not exist, create new Profile…"
-			profile = Spaceship::Portal.provisioning_profile.app_store.create!(bundle_id: bundle_id, certificate: cert,  name: "match AppStore #{bundle_id}")
-		#end
 		
-		#if !profile.valid? || !profile.certificate_valid?
-		#	puts "Repairing profile…"
-		#	profile.repair!
-		#end
+		puts "Profile does not exist, create new Profile…"
+		profile = Spaceship::Portal.provisioning_profile.app_store.create!(bundle_id: bundle_id, certificate: cert,  name: "match AppStore #{bundle_id}")
 		
 		File.write("Assets/#{profileFilename}", profile.download)
 		puts "Saved profile for #{bundle_id} to: Assets/#{profileFilename}"
