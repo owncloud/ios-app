@@ -20,6 +20,7 @@ import Foundation
 import Photos
 import ownCloudSDK
 import ownCloudAppShared
+import ownCloudApp
 
 class MediaUploadOperation : Operation {
 
@@ -28,10 +29,15 @@ class MediaUploadOperation : Operation {
 	private var assetId: String
 	private var itemTracking : OCCoreItemTracking?
 
+	private var fpSession: OCFileProviderServiceSession?
+
 	init(core:OCCore, mediaUploadJob:MediaUploadJob, assetId:String) {
 		self.core = core
 		self.mediaUploadJob = mediaUploadJob
 		self.assetId = assetId
+		if let vault = self.core?.vault {
+			self.fpSession = OCFileProviderServiceSession(vault: vault)
+		}
 	}
 
 	override func main() {
@@ -39,6 +45,11 @@ class MediaUploadOperation : Operation {
 		guard let core = self.core else {
 			return
 		}
+
+		// Keep file provider session open
+		fpSession?.acquireFileProviderServicesHost { _, _, doneHandler in
+			doneHandler?()
+		} errorHandler: { _ in }
 
 		// Skip jobs for which local item IDs are valid and known in the scope of the current bookmark
 		if let localID = mediaUploadJob.scheduledUploadLocalID {
@@ -99,11 +110,16 @@ class MediaUploadOperation : Operation {
 			}
 
 			// Perform asset import
-			importGroup.enter()
-			if let itemLocalId = self.importAsset(asset: asset, with:core, at: item, uploadCompletion: {
+
+			//self.fpSession?.incrementSessionUsage()
+
+			if let itemLocalId = self.importAsset(asset: asset,
+												  with: core,
+												  at: item,
+												  uploadCompletion: {
 				// Import successful
 				self.removeUploadJob(with: path)
-				importGroup.leave()
+				//self.fpSession?.decrementSessionUsage()
 			})?.localID as OCLocalID? {
 
 				// Update media upload storage object
@@ -181,6 +197,7 @@ class MediaUploadOperation : Operation {
 		}
 
 		if let result = asset.upload(with: core,
+									 with: fpSession,
 									 at: rootItem,
 									 utisToConvert: utisToConvert,
 									 preferredResourceTypes: preferredResourceTypes,

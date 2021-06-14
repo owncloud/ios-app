@@ -19,6 +19,7 @@
 import Photos
 import ownCloudSDK
 import ownCloudAppShared
+import ownCloudApp
 import CoreServices
 
 extension URL {
@@ -433,9 +434,18 @@ extension PHAsset {
 	- parameter progressHandler: Receives progress of the at the moment running activity
 	- parameter uploadCompleteHandler: Called when core reports that upload is done
 	*/
-	func upload(with core:OCCore?, at rootItem:OCItem, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], preserveOriginalName:Bool = true, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
+	func upload(with core: OCCore?,
+				with fpSession: OCFileProviderServiceSession? = nil,
+				at rootItem: OCItem,
+				utisToConvert: [String] = [],
+				preferredResourceTypes: [PHAssetResourceType] = [],
+				preserveOriginalName: Bool = true,
+				progressHandler: ((_ progress:Progress) -> Void)? = nil,
+				uploadCompleteHandler: (() -> Void)? = nil) -> (OCItem?, Error?)? {
 
-		func performUpload(sourceURL:URL, copySource:Bool, cellularSwitchIdentifier:OCCellularSwitchIdentifier?) -> (OCItem?, Error?)? {
+		func performUpload(sourceURL: URL,
+						   copySource: Bool,
+						   cellularSwitchIdentifier: OCCellularSwitchIdentifier?) -> (OCItem?, Error?)? {
 
 			@discardableResult func removeSourceFile() -> Bool {
 				do {
@@ -456,40 +466,55 @@ extension PHAsset {
                 fileName = "\(self.ocStyleUploadFileName(with: sourceURL.deletingPathExtension().lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
 			}
 
-			// Synchronously import media file into the OCCore and schedule upload
-			let importSemaphore = DispatchSemaphore(value: 0)
+			if let fpSession = fpSession {
+				fpSession.importThroughFileProvider(url: sourceURL, as: fileName, to: rootItem) { error in
+					importResult = (nil, error)
+					// Nothing to track
+					uploadProgress = Progress()
+					uploadProgress?.totalUnitCount = 0
+					uploadProgress?.completedUnitCount = 0
+					uploadCompleteHandler?()
 
-			uploadProgress = sourceURL.upload(with: core,
-											  at: rootItem,
-											  alternativeName: fileName,
-											  modificationDate: self.creationDate,
-											  importByCopy: copySource,
-											  cellularSwitchIdentifier: cellularSwitchIdentifier,
-											  placeholderHandler: { (item, error) in
-												if !copySource && error != nil {
-													// Delete the temporary asset file in case of critical error
-													removeSourceFile()
-												}
-												if error != nil {
-													Log.error(tagged: ["MEDIA_UPLOAD"], "Sync engine import failed for asset ID \(self.localIdentifier)")
-												} else {
-													Log.debug(tagged: ["MEDIA_UPLOAD"], "Finished uploading asset ID \(self.localIdentifier)")
-												}
-												importResult = (item, error)
-												importSemaphore.signal()
-												uploadCompleteHandler?()
+					if !copySource {
+						removeSourceFile()
+					}
+				}
+			} else {
+				// Synchronously import media file into the OCCore and schedule upload
+				let importSemaphore = DispatchSemaphore(value: 0)
 
-			}, completionHandler: { (_, _) in
+				uploadProgress = sourceURL.upload(with: core,
+												  at: rootItem,
+												  alternativeName: fileName,
+												  modificationDate: self.creationDate,
+												  importByCopy: copySource,
+												  cellularSwitchIdentifier: cellularSwitchIdentifier,
+												  placeholderHandler: { (item, error) in
+													if !copySource && error != nil {
+														// Delete the temporary asset file in case of critical error
+														removeSourceFile()
+													}
+													if error != nil {
+														Log.error(tagged: ["MEDIA_UPLOAD"], "Sync engine import failed for asset ID \(self.localIdentifier)")
+													} else {
+														Log.debug(tagged: ["MEDIA_UPLOAD"], "Finished uploading asset ID \(self.localIdentifier)")
+													}
+													importResult = (item, error)
+													importSemaphore.signal()
+													uploadCompleteHandler?()
+
+				}, completionHandler: { (_, _) in
+					if uploadProgress != nil {
+						progressHandler?(uploadProgress!)
+					}
+				})
+
 				if uploadProgress != nil {
 					progressHandler?(uploadProgress!)
 				}
-			})
 
-			if uploadProgress != nil {
-				progressHandler?(uploadProgress!)
+				importSemaphore.wait()
 			}
-
-			importSemaphore.wait()
 
 			return importResult
 		}
