@@ -10,7 +10,7 @@ Before using the script, please run
 gem install bundler
 ```
 
-This will install the Ruby gem  `bundler`.
+This will install the Ruby gem  `bundler` which manage all needed dependencies.
 
 After this step is done, please run
 
@@ -24,7 +24,11 @@ in this directory. This will install all needed Ruby libraries into the path `ve
 
 ## Run Register Script
 
-After preparing the environement you can run the script `./registerOwncloudApp.rb`.
+After preparing the environement you can run the script:
+
+```
+bundle exec registerOwncloudApp.rb
+```
 
 The script will guide you to enter all needed values to setup all informations to register all targets for the ownCloud app to your Apple Developer account.
 
