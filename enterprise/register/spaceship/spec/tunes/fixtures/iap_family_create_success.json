@@ -1,9 +1,0 @@
-{
-  "data": null,
-  "messages": {
-    "warn": null,
-    "error": null,
-    "info": ["Successfully created new IAP with family"]
-  },
-  "statusCode": "SUCCESS"
-}

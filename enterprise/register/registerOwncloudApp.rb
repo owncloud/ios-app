@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
-$LOAD_PATH << '.'
-require 'spaceship/lib/spaceship.rb'
+
+require 'spaceship'
 
 class AppRegistration
 	
