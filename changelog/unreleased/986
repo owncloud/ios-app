@@ -1,0 +1,3 @@
+Bugfix: Views in File Provider UI (public links, share with user) could not be dismissed on iOS 12
+
+https://github.com/owncloud/ios-app/issues/986
