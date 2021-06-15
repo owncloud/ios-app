@@ -319,7 +319,8 @@ platform :ios do
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      URL_SCHEME: "owncloud-app"
     )
   end
 
@@ -342,7 +343,8 @@ platform :ios do
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      URL_SCHEME: "owncloud-emm"
     )
   end
 
@@ -365,7 +367,8 @@ lane :owncloud_online_build do
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Release",
     BETA_APP_ICON: false,
-    APP_NAME: "ownCloud Online"
+    APP_NAME: "ownCloud Online",
+    URL_SCHEME: "owncloud-online"
   )
 end
 
@@ -509,6 +512,15 @@ end
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
+    
+    if !values[:URL_SCHEME].nil?
+      update_url_schemes(
+        path: "ownCloud/Resources/Info.plist",
+        update_url_schemes: proc do |schemes|
+          schemes + [values[:URL_SCHEME]]
+        end
+      )
+    end
 
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleName", value: appName)
