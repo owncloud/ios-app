@@ -10,19 +10,22 @@ class AppRegistration
 		puts "1. Use Existing App"
 		puts "2. Create new App and use suggested bundle IDs"
 		puts "3. Create new App and enter custom bundle IDs"
+		puts "4. Download Provisioning Profiles for existing bundle IDs"
 		
 		choose = gets.chomp
 		
 		case choose
-		  when "1"
-			registrationType = :existing
-		  when "2"
-			  registrationType = :suggested
-		  when "3"
-			registrationType = :custom
-		  else
-			  puts "Value is not valid"
-			  getRegistrationType()
+		  	when "1"
+				registrationType = :existing
+		    when "2"
+				registrationType = :suggested
+			when "3"
+				registrationType = :custom
+			when "4"
+				registrationType = :download
+			else
+				puts "Value is not valid"
+				getRegistrationType()
 		end
 		
 		return registrationType
@@ -62,9 +65,14 @@ class AppRegistration
 	
 	def prepareCertificate()
 		allCerts = []
-		allCerts = Spaceship::Portal.certificate.AppleDistribution.all
-		if allCerts.count == 0
-			allCerts = Spaceship::Portal.certificate.production.all
+		
+		if Spaceship::Portal.client.in_house?
+			allCerts = Spaceship::Portal.certificate.InHouse.all
+		else
+			allCerts = Spaceship::Portal.certificate.AppleDistribution.all
+			if allCerts.count == 0
+				allCerts = Spaceship::Portal.certificate.production.all
+			end
 		end
 		
 		if allCerts.count == 0
@@ -194,7 +202,7 @@ class AppRegistration
 		puts "Preparing #{bundle_id}…"
 		if bundle_id.empty?
 			prepareAppID(target, profileFilename, groups, registrationType, suggestedBundleID)
-		else
+		elsif registrationType != :download
 			app = Spaceship::Portal.app.find(bundle_id)
 			
 			if registrationType != :existing && app
@@ -220,22 +228,38 @@ class AppRegistration
 	end
 	
 	def prepareProfile(bundle_id, profileFilename, cert)
-		filtered_profiles = Spaceship::Portal.provisioning_profile.app_store.find_by_bundle_id(bundle_id: bundle_id)
-		
-		if filtered_profiles.count > 0 
-			profile = filtered_profiles.first
-			profile.delete!
+		if Spaceship::Portal.client.in_house?
+			filtered_profiles = Spaceship::Portal.provisioning_profile.InHouse.find_by_bundle_id(bundle_id: bundle_id)
+		else
+			filtered_profiles = Spaceship::Portal.provisioning_profile.app_store.find_by_bundle_id(bundle_id: bundle_id)
 		end
 		
-		puts "Profile does not exist, create new Profile…"
-		profile = Spaceship::Portal.provisioning_profile.app_store.create!(bundle_id: bundle_id, certificate: cert,  name: "match AppStore #{bundle_id}")
+		if filtered_profiles.count == 0 
+			puts "Profile does not exist, create new Profile…"
+			
+			if Spaceship::Portal.client.in_house?
+				profile = Spaceship::Portal.provisioning_profile.InHouse.create!(bundle_id: bundle_id, certificate: cert,  name: "match InHouse #{bundle_id}")
+			else
+				profile = Spaceship::Portal.provisioning_profile.app_store.create!(bundle_id: bundle_id, certificate: cert,  name: "match AppStore #{bundle_id}")
+			end
+		end
 		
-		File.write("Assets/#{profileFilename}", profile.download)
-		puts "Saved profile for #{bundle_id} to: Assets/#{profileFilename}"
+		if profile.status == "Invalid"
+			profile.repair!
+		end
 		
-		if Dir.exist?("../resign/Provisioning Files/")
-			File.write("../resign/Provisioning Files/#{profileFilename}", profile.download)
-			puts "Saved profile for #{bundle_id} to: ../resign/Provisioning Files/#{profileFilename}"
+		profileData = profile.download
+		if !profileData.empty?
+			if !Dir.exist?("Assets")
+				Dir.mkdir "Assets"
+			end
+			File.write("Assets/#{profileFilename}", profile.download)
+			puts "Saved profile for #{bundle_id} to: Assets/#{profileFilename}"
+		
+			if Dir.exist?("../resign/Provisioning Files/")
+				File.write("../resign/Provisioning Files/#{profileFilename}", profile.download)
+				puts "Saved profile for #{bundle_id} to: ../resign/Provisioning Files/#{profileFilename}"
+			end
 		end
 	end
 
@@ -256,11 +280,13 @@ registrationType = register.getRegistrationType()
 
 # Get bundle prefix for suggested App IDs
 if registrationType == :suggested
-	bundlePrefix = getBundlePrefix()
+	bundlePrefix = register.getBundlePrefix()
 end
 
 # Choose keychain group
-groups = register.getKeychainGroup()
+if registrationType != :download
+	groups = register.getKeychainGroup()
+end
 
 # Prepare App IDs and Provisioning Profiles
 register.prepareAppID("iOS-App", "App.mobileprovision", groups, registrationType, "#{bundlePrefix}.ios-app", cert)

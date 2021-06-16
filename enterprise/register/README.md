@@ -7,7 +7,7 @@
 Before using the script, please run 
 
 ```
-gem install bundler
+sudo gem install bundler
 ```
 
 This will install the Ruby gem  `bundler` which manage all needed dependencies.
@@ -15,7 +15,7 @@ This will install the Ruby gem  `bundler` which manage all needed dependencies.
 After this step is done, please run
 
 ```
-bundle install --path vendor/bundle
+sudo bundle install --path vendor/bundle
 ```
 
 in this directory. This will install all needed Ruby libraries into the path `vendor/bundle`.

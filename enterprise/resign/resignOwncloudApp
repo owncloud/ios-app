@@ -48,7 +48,8 @@ echo ""
 #Define variables
 IDENTITY=$1
 BUILD_DIR="App"
-NAME_FINAL_IPA="signed.ipa"
+DATESTRING=`date +"%Y_%m_%d_%H_%M"`
+NAME_FINAL_IPA="signed_$DATESTRING.ipa"
 UNSIGNED_IPA="$BUILD_DIR/unsigned.ipa"
 ERROR_SHA1=0
 FINAL_IPA="$BUILD_DIR/$NAME_FINAL_IPA"
