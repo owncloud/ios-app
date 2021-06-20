@@ -448,10 +448,12 @@ end
       appName = values[:APP_NAME]
     elsif File.exist?("../" + themePath)
       tmpAppName = get_info_plist_value(path: themePath, key: "branding.organization-name")
-      if tmpAppName && tmpAppName.empty?
+      if tmpAppName && !tmpAppName.empty?
         appName = tmpAppName
       end
     end
+      
+    puts "App Name: " + appName
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
