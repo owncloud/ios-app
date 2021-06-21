@@ -411,7 +411,7 @@ end
 
   lane :generate_appicon do
     iconPath = "ownCloud/Resources/Theming/icon-1024.png"
-    #if File.exist?("../" + iconPath)
+    if File.exist?("../" + iconPath)
       puts "App Icon Path exists"
       appicon(
         appicon_image_file: iconPath,
@@ -419,7 +419,7 @@ end
         appicon_path: "ownCloud/Resources/Assets.xcassets/",
         appicon_name: "AppIcon.appiconset"
       )
-    #end
+    end
   end
 
   desc "In-House Enterprise IPA generation"
