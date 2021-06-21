@@ -29,6 +29,7 @@ class MediaUploadOperation : Operation {
 	private var assetId: String
 	private var itemTracking : OCCoreItemTracking?
 
+	// Session object to enque uploads in file provider extension
 	private var fpSession: OCFileProviderServiceSession?
 
 	init(core:OCCore, mediaUploadJob:MediaUploadJob, assetId:String) {
