@@ -1,3 +1,25 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.6.0...master
+
+Summary
+-------
+
+* Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
+
+Details
+-------
+
+* Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
+
+   Added an app additional URL scheme to open a specific app, if more than one ownCloud apps are
+   installed with different bundle IDs.
+
+   https://github.com/owncloud/ios-app/issues/979
+
 Changelog for ownCloud iOS Client [11.6.0] (2021-05-12)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.6.0 relevant to

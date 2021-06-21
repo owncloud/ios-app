@@ -1,0 +1,5 @@
+Change: Additional URL Scheme
+
+Added an app additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs.
+
+https://github.com/owncloud/ios-app/issues/979
