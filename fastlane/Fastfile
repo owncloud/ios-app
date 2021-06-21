@@ -410,7 +410,7 @@ end
   end
 
   lane :generate_appicon do
-    iconPath = "ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
+    iconPath = "ownCloud/Resources/Theming/icon-1024.png"
     if File.exist?("../" + iconPath)
       appicon(
         appicon_image_file: iconPath,
