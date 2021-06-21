@@ -412,6 +412,7 @@ end
   lane :generate_appicon do
     iconPath = "ownCloud/Resources/Theming/icon-1024.png"
     if File.exist?("../" + iconPath)
+      puts "App Icon Path exists"
       appicon(
         appicon_image_file: iconPath,
         appicon_devices: [:ipad, :iphone, :ios_marketing],
