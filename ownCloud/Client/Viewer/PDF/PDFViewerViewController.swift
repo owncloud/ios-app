@@ -59,7 +59,7 @@ class PulsatingButton: UIButton {
 	}
 }
 
-class PDFViewerViewController: DisplayViewController, DisplayExtension {
+class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopoverPresentationControllerDelegate {
 
 	enum ThumbnailViewPosition {
 		case left, right, bottom, none
@@ -320,7 +320,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		self.present(alertController, animated: true)
 	}
 
-	@objc func search() {
+	@objc func search(sender: UIBarButtonItem?) {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let pdfSearchController = PDFSearchViewController()
@@ -339,24 +339,24 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			}
 		}
 
-		if UIDevice.current.userInterfaceIdiom == .pad {
+		if UIDevice.current.userInterfaceIdiom == .pad, let sender = sender {
 			searchNavigationController.modalPresentationStyle = .popover
-			searchNavigationController.popoverPresentationController?.barButtonItem = searchButtonItem
+			searchNavigationController.popoverPresentationController?.barButtonItem = sender
 		}
 
 		self.present(searchNavigationController, animated: true)
 	}
 
-	@objc func showOutline() {
+	@objc func showOutline(sender: UIBarButtonItem?) {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let outlineViewController = PDFOutlineViewController()
 		let searchNavigationController = ThemeNavigationController(rootViewController: outlineViewController)
 		outlineViewController.pdfDocument = pdfDocument
 
-		if UIDevice.current.userInterfaceIdiom == .pad {
+		if UIDevice.current.userInterfaceIdiom == .pad, let sender = sender {
 			searchNavigationController.modalPresentationStyle = .popover
-			searchNavigationController.popoverPresentationController?.barButtonItem = outlineItem
+			searchNavigationController.popoverPresentationController?.barButtonItem = sender
 		}
 
 		self.present(searchNavigationController, animated: true)

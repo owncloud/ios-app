@@ -798,8 +798,14 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self.delete(bookmark: bookmark, at: indexPath ) {
-					self.ignoreServerListChanges = false
-				}
+				 OnMainThread {
+					 self.tableView.performBatchUpdates({
+						 self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+					 }, completion: { (_) in
+						 self.ignoreServerListChanges = false
+					 })
+				 }
+			 }
 			}
 		})
 

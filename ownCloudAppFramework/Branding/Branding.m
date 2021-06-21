@@ -27,6 +27,8 @@
 
 @implementation Branding
 
+INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
+
 + (void)load
 {
 	// Provide hook to allow Swift extensions in the app to register defaults and metadata

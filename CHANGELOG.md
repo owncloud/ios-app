@@ -1,9 +1,9 @@
-Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+Changelog for ownCloud iOS Client [11.6.0] (2021-05-12)
 =======================================
-The following sections list the changes in ownCloud iOS Client unreleased relevant to
+The following sections list the changes in ownCloud iOS Client 11.6.0 relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.5.2...master
+[11.6.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.2...milestone/11.6.0
 
 Summary
 -------
@@ -44,7 +44,6 @@ Summary
 * Change - File Provider Passcode Protection: [#880](https://github.com/owncloud/ios-app/issues/880)
 * Change - Updated Keyboard Shortcuts: [#902](https://github.com/owncloud/ios-app/issues/902)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
-* Change - Background Media Upload: [#940](https://github.com/owncloud/ios-app/pull/940)
 
 Details
 -------
@@ -307,15 +306,7 @@ Details
 
    https://github.com/owncloud/ios-app/pull/910
 
-* Change - Background Media Upload: [#940](https://github.com/owncloud/ios-app/pull/940)
-
-   Uploading media in the background can now be enabled in the app settings. This will
-   automatically upload new media files in the iOS Camera Roll when significant location changes
-   occur in the background, without opening the app.
-
-   https://github.com/owncloud/ios-app/pull/940
-
-Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
+Changelog for ownCloud iOS Client [11.5.2] (2021-03-03)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
 ownCloud admins and users.
@@ -352,7 +343,7 @@ Details
 
    https://github.com/owncloud/ios-app/issues/906
 
-Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
+Changelog for ownCloud iOS Client [11.5.1] (2021-02-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
 ownCloud admins and users.
@@ -373,7 +364,7 @@ Details
 
    https://github.com/owncloud/ios-app/pull/896
 
-Changelog for ownCloud iOS Client [11.5.0] (2020-02-10)
+Changelog for ownCloud iOS Client [11.5.0] (2021-02-10)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.0 relevant to
 ownCloud admins and users.

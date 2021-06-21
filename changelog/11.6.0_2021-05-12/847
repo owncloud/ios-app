@@ -1,0 +1,6 @@
+Change: Video upload improvements
+
+- Added ability to upload slo-mo videos etc
+- Added option to allow uploading original videos
+
+https://github.com/owncloud/ios-app/issues/847

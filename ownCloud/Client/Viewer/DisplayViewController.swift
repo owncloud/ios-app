@@ -285,7 +285,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 			infoLabel.centerXAnchor.constraint(equalTo: metadataInfoLabel.centerXAnchor),
 			infoLabel.topAnchor.constraint(equalTo: metadataInfoLabel.bottomAnchor, constant: verticalSpacing),
-			infoLabel.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+			infoLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: horizontalSpacing),
+			infoLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -horizontalSpacing),
 
 			connectionActivityView.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			connectionActivityView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: verticalSpacing)
@@ -369,7 +370,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		case alwaysUpdate
 		case neverUpdate
 	}
-	var updateStrategy : UpdateStrategy = .alwaysUpdate
+	var updateStrategy : UpdateStrategy = .ask
 
 	func shouldRenderItem(item: OCItem, isUpdate: Bool, shouldRender: @escaping (Bool) -> Void) {
 		if isUpdate {

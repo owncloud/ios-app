@@ -81,6 +81,11 @@ fastlane ios owncloud_branding_appstore_build
 fastlane ios owncloud_enterprise_build
 ```
 
+### ios generate_appicon
+```
+fastlane ios generate_appicon
+```
+
 ### ios build_ipa_in_house
 ```
 fastlane ios build_ipa_in_house

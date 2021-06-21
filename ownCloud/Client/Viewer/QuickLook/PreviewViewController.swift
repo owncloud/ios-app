@@ -83,10 +83,10 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 			qlPreviewController!.view.translatesAutoresizingMaskIntoConstraints = false
 
 			NSLayoutConstraint.activate([
-				qlPreviewController!.view.topAnchor.constraint(equalTo: view.topAnchor),
-				qlPreviewController!.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-				qlPreviewController!.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-				qlPreviewController!.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+				qlPreviewController!.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+				qlPreviewController!.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+				qlPreviewController!.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+				qlPreviewController!.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
 
 				overlayView!.topAnchor.constraint(equalTo: view.topAnchor),
 				overlayView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),

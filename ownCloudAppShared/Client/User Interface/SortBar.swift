@@ -116,6 +116,16 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			self.searchScopeSegmentedControl?.isHidden = false
 			self.searchScopeSegmentedControl?.alpha = oldValue ? 1.0 : 0.0
 
+			// Woraround for Accessibility: remove all elements, when element is hidden, otherwise the elements are still available for accessibility
+			if oldValue == false {
+				for scope in SearchScope.allCases {
+					searchScopeSegmentedControl?.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
+				}
+				searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
+			} else {
+				self.searchScopeSegmentedControl?.removeAllSegments()
+			}
+
 			UIView.animate(withDuration: 0.3, animations: {
 				self.searchScopeSegmentedControl?.alpha = self.showSearchScope ? 1.0 : 0.0
 			}, completion: { (_) in
@@ -142,14 +152,15 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
 			sortButton?.sizeToFit()
 
-			if let oldSementIndex = SortMethod.all.index(of: oldValue) {
-				sortSegmentedControl?.setTitle(oldValue.localizedName, forSegmentAt: oldSementIndex)
+			if let sortSegmentedControl = sortSegmentedControl, sortSegmentedControl.numberOfSegments > 0 {
+				if let oldSementIndex = SortMethod.all.index(of: oldValue) {
+					sortSegmentedControl.setTitle(oldValue.localizedName, forSegmentAt: oldSementIndex)
+				}
+				if let segmentIndex = SortMethod.all.index(of: sortMethod) {
+					sortSegmentedControl.selectedSegmentIndex = segmentIndex
+					sortSegmentedControl.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
+				}
 			}
-			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
-				sortSegmentedControl?.selectedSegmentIndex = segmentIndex
-				sortSegmentedControl?.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
-			}
-
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
 		}
 	}
@@ -184,11 +195,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
 			searchScopeSegmentedControl.accessibilityIdentifier = "sort-bar.searchScopeSegmentedControl"
 			searchScopeSegmentedControl.accessibilityLabel = "Search scope".localized
-
-			for scope in SearchScope.allCases {
-				searchScopeSegmentedControl.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
-			}
-			searchScopeSegmentedControl.selectedSegmentIndex = searchScope.rawValue
 			searchScopeSegmentedControl.isHidden = !self.showSearchScope
 			searchScopeSegmentedControl.addTarget(self, action: #selector(searchScopeValueChanged), for: .valueChanged)
 
@@ -208,23 +214,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				searchScopeSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding)
 			])
 
-			var longestTitleWidth : CGFloat = 0.0
-			for method in SortMethod.all {
-				sortSegmentedControl.insertSegment(withTitle: method.localizedName, at: SortMethod.all.index(of: method)!, animated: false)
-				let titleWidth = method.localizedName.appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
-				if titleWidth > longestTitleWidth {
-					longestTitleWidth = titleWidth
-				}
-				longestTitleWidth += 4 // add a padding to the longest title
-			}
-
-			var currentIndex = 0
-			for _ in SortMethod.all {
-				sortSegmentedControl.setWidth(longestTitleWidth, forSegmentAt: currentIndex)
-				currentIndex += 1
-			}
-
-			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
 			sortSegmentedControl.isHidden = true
 			sortSegmentedControl.accessibilityElementsHidden = true
 			sortSegmentedControl.isEnabled = false
@@ -303,6 +292,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public func updateForCurrentTraitCollection() {
 		switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
 		case (.compact, .regular):
+			sortSegmentedControl?.removeAllSegments()
 			sortSegmentedControl?.isHidden = true
 			sortSegmentedControl?.accessibilityElementsHidden = true
 			sortSegmentedControl?.isEnabled = false
@@ -310,6 +300,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortButton?.accessibilityElementsHidden = false
 			sortButton?.isEnabled = true
 		default:
+			updateSortSegmentControl()
 			sortSegmentedControl?.isHidden = false
 			sortSegmentedControl?.accessibilityElementsHidden = false
 			sortSegmentedControl?.isEnabled = true
@@ -326,6 +317,31 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	func updateSortButtonTitle() {
 		let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
 		sortButton?.setTitle(sortDirectionTitle(title), for: .normal)
+	}
+
+	func updateSortSegmentControl() {
+		if let sortSegmentedControl = sortSegmentedControl {
+			sortSegmentedControl.removeAllSegments()
+			var longestTitleWidth : CGFloat = 0.0
+			for method in SortMethod.all {
+				sortSegmentedControl.insertSegment(withTitle: method.localizedName, at: SortMethod.all.index(of: method)!, animated: false)
+				let titleWidth = method.localizedName.appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
+				if titleWidth > longestTitleWidth {
+					longestTitleWidth = titleWidth
+				}
+				longestTitleWidth += 4 // add a padding to the longest title
+			}
+
+			var currentIndex = 0
+			for _ in SortMethod.all {
+				sortSegmentedControl.setWidth(longestTitleWidth, forSegmentAt: currentIndex)
+				currentIndex += 1
+			}
+			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
+				sortSegmentedControl.selectedSegmentIndex = segmentIndex
+				sortSegmentedControl.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
+			}
+		}
 	}
 
 	func sortDirectionTitle(_ title: String) -> String {

@@ -23,7 +23,7 @@
 
 + (void)load
 {
-	[OCClassSettings.sharedSettings insertSource:[BrandingClassSettingsSource new] before:OCClassSettingsSourceIdentifierUserPreferences after:nil];
+	[OCClassSettings.sharedSettings insertSource:[BrandingClassSettingsSource new] before:OCClassSettingsSourceIdentifierManaged after:nil];
 }
 
 - (OCClassSettingsSourceIdentifier)settingsSourceIdentifier
