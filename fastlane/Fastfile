@@ -410,19 +410,15 @@ end
   end
 
   lane :generate_appicon do
-    iconPath = "../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
-    puts "generate_appicon"
-    sh("pwd")
-    sh("ls -la ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/")
-    #if File.exist?(iconPath)
-      puts "Icon Path Exists"
+    iconPath = "ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
+    if File.exist?("../" + iconPath)
       appicon(
-        appicon_image_file: "ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
+        appicon_image_file: iconPath,
         appicon_devices: [:ipad, :iphone, :ios_marketing],
         appicon_path: "ownCloud/Resources/Assets.xcassets/",
         appicon_name: "AppIcon.appiconset"
       )
-    #end
+    end
   end
 
   desc "In-House Enterprise IPA generation"
