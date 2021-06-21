@@ -413,7 +413,7 @@ end
     iconPath = "../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
     puts "generate_appicon"
     sh("pwd")
-    sh("ls")
+    sh("ls ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/")
     #if File.exist?(iconPath)
       puts "Icon Path Exists"
       appicon(
