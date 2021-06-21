@@ -417,9 +417,9 @@ end
     #if File.exist?(iconPath)
       puts "Icon Path Exists"
       appicon(
-        appicon_image_file: iconPath,
+        appicon_image_file: "ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
         appicon_devices: [:ipad, :iphone, :ios_marketing],
-        appicon_path: "../ownCloud/Resources/Assets.xcassets/",
+        appicon_path: "ownCloud/Resources/Assets.xcassets/",
         appicon_name: "AppIcon.appiconset"
       )
     #end
