@@ -57,3 +57,14 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
      
 
      Replace `"COMMON NAME DISTRIBUTION CERT"` with the name of your certificate, e.g. `"iPhone Distribution: YOUR COMPANY"`.
+
+
+
+## IPA Resigned Entitlements Inspection
+
+To check the resigning entitlements of a signed IPA file, please use the script 
+
+`./resignInspector.sh "Path to signed.ipa"` 
+
+to output the entitlements of the IPA file and all targets.
+
