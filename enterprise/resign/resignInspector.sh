@@ -26,6 +26,11 @@
    exit 1
  }
  
+ countDots()
+ {
+	echo "$1" | grep -o "\." | grep -c "\."
+ }
+ 
  #Check if all required parameters exist
  if [ $# -lt 1 ]; then
    usage
@@ -82,9 +87,44 @@ fi
 	echo ""
 	codesign -d --ent :- "$a"
 	echo ""
+	
+	PLISTVALUE=`PlistBuddy -c "print CFBundleIdentifier " "$a/Info.plist"`
+	if [[ `countDots "$PLISTVALUE"` -le "2" ]]; then
+		echo "${WARN}Value may be wrong for CFBundleIdentifier: $PLISTVALUE${NC}"
+	else 
+		echo "CFBundleIdentifier: ${SUCCESS}$PLISTVALUE${NC}"
+	fi
+	PLISTVALUE=`PlistBuddy -c "print OCAppGroupIdentifier " "$a/Info.plist"`
+	if [[ `countDots "$PLISTVALUE"` -le "2" ]]; then
+		echo "${WARN}Value may be wrong for OCAppGroupIdentifier: $PLISTVALUE${NC}"
+	else 
+		echo "OCAppGroupIdentifier: ${SUCCESS}$PLISTVALUE${NC}"
+	fi
+	PLISTVALUE=`PlistBuddy -c "print OCKeychainAccessGroupIdentifier " "$a/Info.plist"`
+	if [[ `countDots "$PLISTVALUE"` -le "2" ]]; then
+		echo "${WARN}Value may be wrong for OCKeychainAccessGroupIdentifier: $PLISTVALUE${NC}"
+	else 
+		echo "OCKeychainAccessGroupIdentifier: ${SUCCESS}$PLISTVALUE${NC}"
+	fi
+	PLISTVALUE=`PlistBuddy -c "print OCAppIdentifierPrefix " "$a/Info.plist"`
+	if [[ `countDots "$PLISTVALUE"` -le "0" ]]; then
+		echo "${WARN}Value may be wrong for OCAppIdentifierPrefix: $PLISTVALUE${NC}"
+	else 
+		echo "OCAppIdentifierPrefix: ${SUCCESS}$PLISTVALUE${NC}"
+	fi
+	if [[ "$a" =~ ^(ownCloud File Provider.appex)$ ]]; then
+		PLISTVALUE=`PlistBuddy -c "print NSExtension:NSExtensionFileProviderDocumentGroup " "$a/Info.plist"`
+		if [[ `countDots "$PLISTVALUE"` -le "2" ]]; then
+			echo "${WARN}Value may be wrong for NSExtensionFileProviderDocumentGroup: $PLISTVALUE${NC}"
+		else 
+			echo "NSExtension:NSExtensionFileProviderDocumentGroup: ${SUCCESS}$PLISTVALUE${NC}"
+		fi
+	fi
+	echo ""
+		
  done
  
  # Delete previous temporal app folder if exist
   if [ -d  "$APPTEMP" ]; then
-	  rm -rf "$APPTEMP"
+	rm -rf "$APPTEMP"
   fi
