@@ -8,15 +8,32 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
+* Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
 * Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
 
 Details
 -------
 
+* Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
+
+   https://github.com/owncloud/enterprise/issues/4547
+
+* Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
+
+   https://github.com/owncloud/enterprise/issues/4558
+
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
+
+   Views in FileProvider UI (public links, share with user) could not be dismissed on iOS 12
+
+   https://github.com/owncloud/ios-app/issues/986
+
 * Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
 
    Added an app additional URL scheme to open a specific app, if more than one ownCloud apps are
-   installed with different bundle IDs.
+   installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
 
    https://github.com/owncloud/ios-app/issues/979
 
