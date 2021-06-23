@@ -1228,6 +1228,53 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.6.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Additional URL Scheme</string>
+					<key>Subtitle</key>
+					<string>Added an app additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Let&apos;s encrypt</string>
+					<key>Subtitle</key>
+					<string>Fixed misleading warnings at let&apos;s encrypt cert renewal</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: FileProvider UI on iOS 12</string>
+					<key>Subtitle</key>
+					<string>Views in File Provider UI (public links, share with user) could not be dismissed on iOS 12</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Background Media Upload</string>
+					<key>Subtitle</key>
+					<string>In some cases, background media upload worked not as expected.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -1,0 +1,3 @@
+Bugfix: Fixed misleading warnings at let's encrypt cert renewal
+
+https://github.com/owncloud/enterprise/issues/4558
