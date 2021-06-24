@@ -169,7 +169,7 @@ platform :ios do
               overwrite_screenshots: create_screenshots,
               app_identifier: "com.owncloud.ios-app",
               skip_app_version_update: true,
-              ipa: "ownCloud.ipa"
+              ipa: "ownCloud-regular.ipa"
             )
           end
         end
@@ -205,7 +205,7 @@ platform :ios do
               overwrite_screenshots: create_screenshots,
               app_identifier: "com.owncloud.ios-app.emm",
               skip_app_version_update: true,
-              ipa: "ownCloud.ipa"
+              ipa: "ownCloud-emm.ipa"
             )
           end
       end
@@ -262,7 +262,7 @@ platform :ios do
             overwrite_screenshots: create_screenshots,
             app_identifier: "online.owncloud.ios-app",
             skip_app_version_update: true,
-            ipa: "ownCloud.ipa"
+            ipa: "ownCloud-online.ipa"
           )
         end
     end
@@ -287,7 +287,9 @@ platform :ios do
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      URL_SCHEME: "owncloud-app",
+      IPA_NAME: "ownCloud-regular.ipa"
     )
   end
 
@@ -310,7 +312,9 @@ platform :ios do
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      URL_SCHEME: "owncloud-emm",
+      IPA_NAME: "ownCloud-emm.ipa"
     )
   end
 
@@ -333,7 +337,9 @@ lane :owncloud_online_build do
     EXPORT_METHOD: "app-store",
     CONFIGURATION: "Release",
     BETA_APP_ICON: false,
-    APP_NAME: "ownCloud Online"
+    APP_NAME: "ownCloud Online",
+    URL_SCHEME: "owncloud-online",
+    IPA_NAME: "ownCloud-online.ipa"
   )
 end
 
@@ -405,7 +411,8 @@ end
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
       BETA_APP_ICON: true,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      IPA_NAME: "ownCloud.ipa"
     )
   end
 
@@ -457,6 +464,15 @@ end
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
+    
+    if !values[:URL_SCHEME].nil?
+      update_url_schemes(
+        path: "ownCloud/Resources/Info.plist",
+        update_url_schemes: proc do |schemes|
+          schemes + [values[:URL_SCHEME]]
+        end
+      )
+    end
 
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleName", value: appName)
@@ -637,8 +653,12 @@ end
       version_key: "APP_SHORT_VERSION"
     )
 
-    time = Time.now
-    ipaName = appName + "-" + version + "-" + EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
+    if !values[:IPA_NAME].nil?
+      ipaName = values[:IPA_NAME]
+    elsif
+      time = Time.now
+      ipaName = appName + "-" + version + "-" + EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
+    end
 
     generate_appicon()
 

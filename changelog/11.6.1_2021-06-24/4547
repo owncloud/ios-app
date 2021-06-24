@@ -1,0 +1,3 @@
+Bugfix: In some cases, background media upload worked not as expected
+
+https://github.com/owncloud/enterprise/issues/4547
