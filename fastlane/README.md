@@ -76,6 +76,11 @@ fastlane ios owncloud_branding_build
 fastlane ios owncloud_branding_appstore_build
 ```
 
+### ios owncloud_ownbrander_build
+```
+fastlane ios owncloud_ownbrander_build
+```
+
 ### ios owncloud_enterprise_build
 ```
 fastlane ios owncloud_enterprise_build

@@ -1237,7 +1237,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Additional URL Scheme</string>
 					<key>Subtitle</key>
-					<string>Added an app additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)</string>
+					<string>Added an additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
