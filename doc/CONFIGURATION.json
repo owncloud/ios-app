@@ -4,325 +4,212 @@
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
-    "className" : "ownCloud.CollaborateAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.collaborate.enabled",
-    "key" : "com.owncloud.action.collaborate.enabled",
-    "label" : "action.com.owncloud.action.collaborate.enabled",
+    "className" : "ownCloudAppShared.Action",
+    "defaultValue" : [
+
+    ],
+    "description" : "List of all allowed actions. If provided, actions not listed here are not allowed.",
+    "flatIdentifier" : "action.allowed",
+    "key" : "allowed",
+    "label" : "action.allowed",
+    "possibleValues" : [
+      {
+        "description" : "Sharing",
+        "value" : "com.owncloud.action.collaborate"
+      },
+      {
+        "description" : "Copy",
+        "value" : "com.owncloud.action.copy"
+      },
+      {
+        "description" : "Create folder",
+        "value" : "com.owncloud.action.createFolder"
+      },
+      {
+        "description" : "Delete",
+        "value" : "com.owncloud.action.delete"
+      },
+      {
+        "description" : "Duplicate",
+        "value" : "com.owncloud.action.duplicate"
+      },
+      {
+        "description" : "Favorite item",
+        "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Links",
+        "value" : "com.owncloud.action.links"
+      },
+      {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.makeAvailableOffline"
+      },
+      {
+        "description" : "Available Offline",
+        "value" : "com.owncloud.action.makeUnavailableOffline"
+      },
+      {
+        "description" : "Markup",
+        "value" : "com.owncloud.action.markup"
+      },
+      {
+        "description" : "Move",
+        "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Open in",
+        "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Go to page",
+        "value" : "com.owncloud.action.pdfpage"
+      },
+      {
+        "description" : "Presentation Mode",
+        "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Rename",
+        "value" : "com.owncloud.action.rename"
+      },
+      {
+        "description" : "Scan document",
+        "value" : "com.owncloud.action.scan"
+      },
+      {
+        "description" : "Image metadata",
+        "value" : "com.owncloud.action.show-exif"
+      },
+      {
+        "description" : "Unfavorite item",
+        "value" : "com.owncloud.action.unfavorite"
+      },
+      {
+        "description" : "Unshare",
+        "value" : "com.owncloud.action.unshare"
+      },
+      {
+        "description" : "Take photo or video",
+        "value" : "com.owncloud.action.upload.camera_media"
+      },
+      {
+        "description" : "Upload file",
+        "value" : "com.owncloud.action.uploadfile"
+      },
+      {
+        "description" : "Upload from your photo library",
+        "value" : "com.owncloud.action.uploadphotos"
+      }
+    ],
     "status" : "advanced",
-    "type" : "bool"
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
-    "className" : "ownCloud.CopyAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.copy.enabled",
-    "key" : "com.owncloud.action.copy.enabled",
-    "label" : "action.com.owncloud.action.copy.enabled",
+    "className" : "ownCloudAppShared.Action",
+    "defaultValue" : [
+
+    ],
+    "description" : "List of all disallowed actions. If provided, actions not listed here are allowed.",
+    "flatIdentifier" : "action.disallowed",
+    "key" : "disallowed",
+    "label" : "action.disallowed",
+    "possibleValues" : [
+      {
+        "description" : "Sharing",
+        "value" : "com.owncloud.action.collaborate"
+      },
+      {
+        "description" : "Copy",
+        "value" : "com.owncloud.action.copy"
+      },
+      {
+        "description" : "Create folder",
+        "value" : "com.owncloud.action.createFolder"
+      },
+      {
+        "description" : "Delete",
+        "value" : "com.owncloud.action.delete"
+      },
+      {
+        "description" : "Duplicate",
+        "value" : "com.owncloud.action.duplicate"
+      },
+      {
+        "description" : "Favorite item",
+        "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Links",
+        "value" : "com.owncloud.action.links"
+      },
+      {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.makeAvailableOffline"
+      },
+      {
+        "description" : "Available Offline",
+        "value" : "com.owncloud.action.makeUnavailableOffline"
+      },
+      {
+        "description" : "Markup",
+        "value" : "com.owncloud.action.markup"
+      },
+      {
+        "description" : "Move",
+        "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Open in",
+        "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Go to page",
+        "value" : "com.owncloud.action.pdfpage"
+      },
+      {
+        "description" : "Presentation Mode",
+        "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Rename",
+        "value" : "com.owncloud.action.rename"
+      },
+      {
+        "description" : "Scan document",
+        "value" : "com.owncloud.action.scan"
+      },
+      {
+        "description" : "Image metadata",
+        "value" : "com.owncloud.action.show-exif"
+      },
+      {
+        "description" : "Unfavorite item",
+        "value" : "com.owncloud.action.unfavorite"
+      },
+      {
+        "description" : "Unshare",
+        "value" : "com.owncloud.action.unshare"
+      },
+      {
+        "description" : "Take photo or video",
+        "value" : "com.owncloud.action.upload.camera_media"
+      },
+      {
+        "description" : "Upload file",
+        "value" : "com.owncloud.action.uploadfile"
+      },
+      {
+        "description" : "Upload from your photo library",
+        "value" : "com.owncloud.action.uploadphotos"
+      }
+    ],
     "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloudAppShared.CreateFolderAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.createFolder.enabled",
-    "key" : "com.owncloud.action.createFolder.enabled",
-    "label" : "action.com.owncloud.action.createFolder.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.DeleteAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.delete.enabled",
-    "key" : "com.owncloud.action.delete.enabled",
-    "label" : "action.com.owncloud.action.delete.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.DiscardSceneAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.discardscene.enabled",
-    "key" : "com.owncloud.action.discardscene.enabled",
-    "label" : "action.com.owncloud.action.discardscene.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.DuplicateAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.duplicate.enabled",
-    "key" : "com.owncloud.action.duplicate.enabled",
-    "label" : "action.com.owncloud.action.duplicate.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.FavoriteAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.favorite.enabled",
-    "key" : "com.owncloud.action.favorite.enabled",
-    "label" : "action.com.owncloud.action.favorite.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.LinksAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.links.enabled",
-    "key" : "com.owncloud.action.links.enabled",
-    "label" : "action.com.owncloud.action.links.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.MakeAvailableOfflineAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.makeAvailableOffline.enabled",
-    "key" : "com.owncloud.action.makeAvailableOffline.enabled",
-    "label" : "action.com.owncloud.action.makeAvailableOffline.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.MakeUnavailableOfflineAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.makeUnavailableOffline.enabled",
-    "key" : "com.owncloud.action.makeUnavailableOffline.enabled",
-    "label" : "action.com.owncloud.action.makeUnavailableOffline.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.DocumentEditingAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.markup.enabled",
-    "key" : "com.owncloud.action.markup.enabled",
-    "label" : "action.com.owncloud.action.markup.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.MediaEditingAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.mediaediting.enabled",
-    "key" : "com.owncloud.action.mediaediting.enabled",
-    "label" : "action.com.owncloud.action.mediaediting.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.MoveAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.move.enabled",
-    "key" : "com.owncloud.action.move.enabled",
-    "label" : "action.com.owncloud.action.move.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.OpenInAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.openin.enabled",
-    "key" : "com.owncloud.action.openin.enabled",
-    "label" : "action.com.owncloud.action.openin.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.OpenSceneAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.openscene.enabled",
-    "key" : "com.owncloud.action.openscene.enabled",
-    "label" : "action.com.owncloud.action.openscene.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.PDFGoToPageAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.pdfpage.enabled",
-    "key" : "com.owncloud.action.pdfpage.enabled",
-    "label" : "action.com.owncloud.action.pdfpage.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.PresentationModeAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.presentationmode.enabled",
-    "key" : "com.owncloud.action.presentationmode.enabled",
-    "label" : "action.com.owncloud.action.presentationmode.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.RenameAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.rename.enabled",
-    "key" : "com.owncloud.action.rename.enabled",
-    "label" : "action.com.owncloud.action.rename.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.ScanAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.scan.enabled",
-    "key" : "com.owncloud.action.scan.enabled",
-    "label" : "action.com.owncloud.action.scan.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.DisplayExifMetadataAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.show-exif.enabled",
-    "key" : "com.owncloud.action.show-exif.enabled",
-    "label" : "action.com.owncloud.action.show-exif.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.UnfavoriteAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.unfavorite.enabled",
-    "key" : "com.owncloud.action.unfavorite.enabled",
-    "label" : "action.com.owncloud.action.unfavorite.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.UnshareAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.unshare.enabled",
-    "key" : "com.owncloud.action.unshare.enabled",
-    "label" : "action.com.owncloud.action.unshare.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.UploadCameraMediaAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.upload.camera_media.enabled",
-    "key" : "com.owncloud.action.upload.camera_media.enabled",
-    "label" : "action.com.owncloud.action.upload.camera_media.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.UploadFileAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.uploadfile.enabled",
-    "key" : "com.owncloud.action.uploadfile.enabled",
-    "label" : "action.com.owncloud.action.uploadfile.enabled",
-    "status" : "advanced",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Actions",
-    "categoryTag" : "actions",
-    "classIdentifier" : "action",
-    "className" : "ownCloud.UploadMediaAction",
-    "description" : "Controls whether action can be accessed in the app UI.",
-    "flatIdentifier" : "action.com.owncloud.action.uploadphotos.enabled",
-    "key" : "com.owncloud.action.uploadphotos.enabled",
-    "label" : "action.com.owncloud.action.uploadphotos.enabled",
-    "status" : "advanced",
-    "type" : "bool"
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
@@ -1130,7 +1017,7 @@
     "categoryTag" : "security",
     "classIdentifier" : "connection",
     "className" : "OCConnection",
-    "defaultValue" : "(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))",
+    "defaultValue" : "(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true)) OR ((bookmarkCertificate.parentCertificate.sha256Fingerprint.asFingerPrintString == \"73 0C 1B DC D8 5F 57 CE 5D C0 BB A7 33 E5 F1 BA 5A 92 5B 2A 77 1D 64 0A 26 F7 A4 54 22 4D AD 3B\") AND (bookmarkCertificate.rootCertificate.sha256Fingerprint.asFingerPrintString == \"06 87 26 03 31 A7 24 03 D9 09 F1 05 E6 9B CF 0D 32 E1 BD 24 93 FF C6 D9 20 6D 11 BC D6 77 07 39\") AND (serverCertificate.parentCertificate.sha256Fingerprint.asFingerPrintString == \"67 AD D1 16 6B 02 0A E6 1B 8F 5F C9 68 13 C0 4C 2A A5 89 96 07 96 86 55 72 A3 C7 E7 37 61 3D FD\") AND (serverCertificate.rootCertificate.sha256Fingerprint.asFingerPrintString == \"96 BC EC 06 26 49 76 F3 74 60 77 9A CF 28 C5 A7 CF E8 A3 C0 AA E1 1A 8F FC EE 05 C0 BD DF 08 C6\") AND (serverCertificate.passedValidationOrIsUserAccepted == true))",
     "description" : "Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.",
     "flags" : 4,
     "flatIdentifier" : "connection.renewed-certificate-acceptance-rule",

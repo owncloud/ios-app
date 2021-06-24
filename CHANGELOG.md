@@ -1,3 +1,42 @@
+Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.6.1 relevant to
+ownCloud admins and users.
+
+[11.6.1]: https://github.com/owncloud/ios-app/compare/milestone/11.6.0...milestone/11.6.1
+
+Summary
+-------
+
+* Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
+* Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
+* Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
+
+Details
+-------
+
+* Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
+
+   https://github.com/owncloud/enterprise/issues/4547
+
+* Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
+
+   https://github.com/owncloud/enterprise/issues/4558
+
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
+
+   Views in FileProvider UI (public links, share with user) could not be dismissed on iOS 12
+
+   https://github.com/owncloud/ios-app/issues/986
+
+* Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
+
+   Added an additional URL scheme to open a specific app, if more than one ownCloud apps are
+   installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
+
+   https://github.com/owncloud/ios-app/issues/979
+
 Changelog for ownCloud iOS Client [11.6.0] (2021-05-12)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.6.0 relevant to

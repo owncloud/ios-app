@@ -1,50 +1,12 @@
-• Improved Local Search
-User can now switch from searching the local folder to a local account-wide search. Search now also supports using custom queries. Search terms and filter keywords can be combined in the search field to get more granular search results.
+• Additional URL Scheme
+Added an additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
 
-• Added File Provider Actions for Sharing and Public Links
-New file provider actions for Sharing and Public Links now will open the UI, allowing users to add or edit Sharing Links and Public Links to the selected item, directly from the file provider.
+• Fix: Let's encrypt
+Fixed misleading warnings at let's encrypt cert renewal
 
-• Improved File Provider Passcode Unlock
-If the app is protected with a passcode, the file provider extension now presents a user interface for direct unlocking.
+• Fix: FileProvider UI on iOS 12
+Views in File Provider UI (public links, share with user) could not be dismissed on iOS 12
 
-• Added Presentation Mode
-Presentation mode opens a file in a full screen detail view, preventing the display from entering sleep mode until the detail view is closed.
-
-• Moved "Go to Page" in PDF previews
-The "Go to Page" option for PDF files has moved to the Actions menu. It is also available by tapping on the page label.
-
-• Updated Keyboard Shortcuts
-The PDF view now has additional keyboard shortcuts. Media playback can now be operated entirely with just keyboard commands. Fixed some broken keyboard commands.
-
-• Improved UI
-Polished some UI elements.
-
-• Added French Localization
-The app is now localized in French.
-
-• Fix: Shortcut uploads and error handling improvements
-Improved error handling for Shortcut actions. Now also reporting authentication errors.
-
-Added an optional "Wait for completion" option to the "Save File" and "Create Folder" action.
-
-• Fix: Swiping PDF thumbnail view on the iPhone
-The App prevented the page container from scrolling when users tried to scroll inside the pdf thumbnail view on the iPhone
-
-• Fix: Preview update
-User can now decide do automatically update to a newer file version or to keep the current version in preview mode and we fixed some problems when displaying files. 
-
-• Fix: Enabling Markup Mode
-Previously, in some cases enabling markup mode failed.
-
-• Fix: Disable Markup Action for Mime-Type Gif
-Disabled markup actions for images with mime type image/gif that can not be edited.
-
-• Fix: Passcode Settings Section
-If a passcode is enabled or disabled in the settings, the UI section now gets properly updated.
-
-• Fix: Japanese Input Support 
-Fixed a problem in scan view when renaming a file and using a Japanese keyboard layout.
-
-• Fix: Added Dark Mode Support to Preview
-The preview view is now available in a dark mode theme.
+• Fix: Background Media Upload
+In some cases, background media upload worked not as expected.
 

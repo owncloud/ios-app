@@ -288,6 +288,21 @@ open class Action : NSObject {
 				return priority
 			}
 
+			// Honor allowed / disallowed lists
+			if let actionIdentifier = self.identifier {
+				if let allowedActions = self.classSetting(forOCClassSettingsKey: .allowedActions) as? [String],
+				   allowedActions.count > 0,
+				   !allowedActions.contains(actionIdentifier.rawValue) {
+					return .noMatch
+				}
+
+				if let disallowedActions = self.classSetting(forOCClassSettingsKey: .disallowedActions) as? [String],
+				   disallowedActions.count > 0,
+				   disallowedActions.contains(actionIdentifier.rawValue) {
+					return .noMatch
+				}
+			}
+
 			if self.applicablePosition(forContext: actionContext) == .none {
 				// Exclude actions whose applicablePosition returns .none
 				return .noMatch
@@ -483,36 +498,65 @@ extension OCClassSettingsIdentifier {
 	static let action = OCClassSettingsIdentifier("action")
 }
 
+extension OCClassSettingsKey {
+	static let allowedActions = OCClassSettingsKey("allowed")
+	static let disallowedActions = OCClassSettingsKey("disallowed")
+}
+
 extension Action : OCClassSettingsSupport {
 	public static let classSettingsIdentifier : OCClassSettingsIdentifier = .action
 
+	public static func includeInLogSnapshot() -> Bool {
+		return self == Action.self
+	}
+
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		return nil
-	}
-
-	static func enabledKey() -> OCClassSettingsKey? {
-		guard let identifier = Self.identifier?.rawValue else { return nil }
-		return OCClassSettingsKey(identifier + ".enabled")
-	}
-
-	static var enabled : Bool {
-		if let key = Self.enabledKey() {
-			if let value = Self.classSetting(forOCClassSettingsKey: key) as? Bool {
-				return value
-			}
-		}
-		return true
+		return [
+			.allowedActions : [],
+			.disallowedActions : []
+		]
 	}
 
 	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
-		guard let enabledKey = Self.enabledKey() else { return nil }
-		return [
-			enabledKey : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whether action can be accessed in the app UI.",
-				.category	: "Actions",
-				.status		: OCClassSettingsKeyStatus.advanced
+		if self == Action.self {
+			var possibleValues : [ String : String ] = [:]
+
+			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .action, identifier: nil), requirements: nil, preferences: nil)
+
+			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
+				for match in matches {
+					if let actionExtension = match.extension as? ActionExtension {
+						let actionName = actionExtension.name
+						let actionIdentifier = actionExtension.identifier
+
+					   	possibleValues[actionIdentifier.rawValue] = actionName
+					}
+				}
+			}
+
+			var metaData : [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]] = [
+				.allowedActions : [
+					.type : OCClassSettingsMetadataType.stringArray,
+					.description : "List of all allowed actions. If provided, actions not listed here are not allowed.",
+					.category : "Actions",
+					.status	: OCClassSettingsKeyStatus.advanced
+				],
+				.disallowedActions : [
+					.type : OCClassSettingsMetadataType.stringArray,
+					.description : "List of all disallowed actions. If provided, actions not listed here are allowed.",
+					.category : "Actions",
+					.status	: OCClassSettingsKeyStatus.advanced
+				]
 			]
-		]
+
+			if !possibleValues.isEmpty {
+				metaData[.allowedActions]?[.possibleValues] = possibleValues
+				metaData[.disallowedActions]?[.possibleValues] = possibleValues
+			}
+
+			return metaData
+		}
+
+		return [:]
 	}
 }
