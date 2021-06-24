@@ -102,51 +102,6 @@ Logging settings control the ammount and type of app internal log messages store
 
 include::./ios_mdm_tables.adoc[tag=logging]
 
-== AppConfig XML Example
-
-Here is an example of an XML spec-file based on AppConfig standard with minimal logging settings allowing to change a log level and disable / enable private information masking:
-
-```
-<managedAppConfiguration>
-	<version>1.0.0</version>
-	<bundleId>com.owncloud.ios-app</bundleId>
-	<dict>
-		<integer keyName="log.log-level">
-			<defaultValue>
-				<value>4</value>
-			</defaultValue>
-			<constraints  min="0" max="4" >
-			</constraints>
-		</integer>
-		<boolean keyName="log.log-privacy-mask">
-		</boolean>
-	</dict>
-	<presentation defaultLocale="en-US">
-	<fieldGroup>
-		<name>
-			<language value="en-US">Logging</language>
-		</name>
-		<field keyName="log.log-level" type="input">
-			<label>
-				<language value="en-US">Log Level</language>
-			</label>
-			<description>
-				<language value="en-US">0 - Debug, 1 - Info, 2 - Warning, 3 - Error, 4 - Off</language>
-			</description>
-		</field>
-		<field keyName="log.log-privacy-mask" type="checkbox">
-			<label>
-				<language value="en-US">Log Privacy Mask</language>
-			</label>
-			<description>
-				<language value="en-US">Hide private user's data</language>
-			</description>
-		</field>
-	</fieldGroup>
-	</presentation>
-</managedAppConfiguration>
-```
-
 == AppConfig XML Schema
 
 {appconfig-xml-format-url}[The XML format], developed by AppConfig community, makes it easy for developers to define and deploy an app configuration. It not only supports configuration variables having default values, but also provides a configuration UI description, which can be interpreted by the tool and which generates a plist file. Moreover, specfile XML is consistently supported by major EMM vendors.
