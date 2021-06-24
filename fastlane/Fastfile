@@ -408,7 +408,8 @@ end
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
       BETA_APP_ICON: true,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      IPA_NAME: "ownCloud.ipa"
     )
   end
 
@@ -649,8 +650,12 @@ end
       version_key: "APP_SHORT_VERSION"
     )
 
-    time = Time.now
-    ipaName = appName + "-" + version + "-" + EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
+    if !values[:IPA_NAME].nil?
+      ipaName = values[:IPA_NAME]
+    elsif
+      time = Time.now
+      ipaName = appName + "-" + version + "-" + EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
+    end
 
     generate_appicon()
 
