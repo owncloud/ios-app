@@ -111,6 +111,7 @@
 "%@ items | " = "%@ Objekte | ";
 
 "Show more results" = "Mehr Ergebnisse anzeigen";
+
 /* Search scope */
 
 "Search scope" = "Suchbereich";
@@ -382,8 +383,8 @@
 "Downloading" = "Lade herunter";
 "File couldn't be opened" = "Datei kann nicht geöffnet werden";
 "Connecting..." = "Verbinde...";
-"File" = "Datei";
 
+"File" = "Datei";
 "%@ was updated" = "%@ wurde aktualisiert";
 "Would you like to view the updated version?" = "Möchten Sie die aktualisierte Version anzeigen?";
 "Show new version" = "Neue Version anzeigen";
