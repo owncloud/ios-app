@@ -26,6 +26,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Cut",
+        "value" : "com.owncloud.action.cutpasteboard"
+      },
+      {
         "description" : "Delete",
         "value" : "com.owncloud.action.delete"
       },
@@ -36,6 +40,10 @@
       {
         "description" : "Favorite item",
         "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Paste",
+        "value" : "com.owncloud.action.importpasteboard"
       },
       {
         "description" : "Links",
@@ -132,6 +140,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Cut",
+        "value" : "com.owncloud.action.cutpasteboard"
+      },
+      {
         "description" : "Delete",
         "value" : "com.owncloud.action.delete"
       },
@@ -142,6 +154,10 @@
       {
         "description" : "Favorite item",
         "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Paste",
+        "value" : "com.owncloud.action.importpasteboard"
       },
       {
         "description" : "Links",
