@@ -533,6 +533,7 @@ extension OCClassSettingsIdentifier {
 
 extension OCClassSettingsKey {
 	static let passcodeEnforced = OCClassSettingsKey("enforced")
+	static let passcodeDigits = OCClassSettingsKey("passcodeDigits")
 }
 
 extension AppLockManager: OCClassSettingsSupport {
@@ -540,17 +541,24 @@ extension AppLockManager: OCClassSettingsSupport {
 
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
-			.passcodeEnforced : false
+			.passcodeEnforced : false,
+			.passcodeDigits: 4
 		]
 	}
 
 	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
-			OCClassSettingsKey.passcodeEnforced: [
-				OCClassSettingsMetadataKey.type: OCClassSettingsMetadataType.boolean,
-				OCClassSettingsMetadataKey.description: "Controls wether the user MUST establish a passcode upon app installation",
-				OCClassSettingsMetadataKey.category: "Passcode",
-				OCClassSettingsMetadataKey.status: OCClassSettingsKeyStatus.advanced
+			.passcodeEnforced: [
+				.type: OCClassSettingsMetadataType.boolean,
+				.description: "Controls wether the user MUST establish a passcode upon app installation",
+				.category: "Passcode",
+				.status: OCClassSettingsKeyStatus.advanced
+			],
+			.passcodeDigits : [
+				.type 		: OCClassSettingsMetadataType.integer,
+				.description	: "Controls who many passcode digits should be used for passcode lock.",
+				.category	: "Passcode",
+				.status		: OCClassSettingsKeyStatus.advanced
 			]
 		]
 	}
