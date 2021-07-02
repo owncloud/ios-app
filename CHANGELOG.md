@@ -1,3 +1,57 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.6.1...master
+
+Summary
+-------
+
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+Details
+-------
+
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+
+   Fixed a problem in scan view when renaming the file name and using a Japanese keyboard layout
+   (2-Byte character). After entering a character inside the file name the text cursor jumped to
+   the end.
+
+   https://github.com/owncloud/ios-app/issues/916
+
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+
+   Prevent page container scrolling, when try to scroll inside the pdf thumbnail view on the
+   iPhone
+
+   https://github.com/owncloud/ios-app/issues/918
+
+* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+
+   If a passcode was enabled or disabled in the settings, the UI section was not updated.
+
+   https://github.com/owncloud/ios-app/issues/923
+
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+
+   Added french localization.
+
+   https://github.com/owncloud/enterprise/issues/4450
+
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+
+   Added an action in detail view menu which enables presentation mode. Presentation mode
+   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
+   navigation bar will be hidden.
+
+   https://github.com/owncloud/ios-app/issues/704
+
 Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.6.1 relevant to
