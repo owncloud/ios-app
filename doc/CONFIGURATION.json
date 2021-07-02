@@ -1631,6 +1631,20 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "ownCloudAppShared.AppLockManager",
+    "defaultValue" : 4,
+    "description" : "Controls who many passcode digits should be used for passcode lock.",
+    "flatIdentifier" : "passcode.passcodeDigits",
+    "key" : "passcodeDigits",
+    "label" : "passcode.passcodeDigits",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Release Notes",
     "categoryTag" : "releasenotes",
     "classIdentifier" : "releasenotes",
