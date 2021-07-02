@@ -28,9 +28,9 @@ class WebViewDisplayViewController: DisplayViewController {
 		return UITapGestureRecognizer(target: self, action: #selector(self.tapToFullScreen))
 	}()
 
-	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
+	override func renderItem(completion: @escaping (Bool) -> Void) {
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
-			guard error == nil, let source = self.source else {
+			guard error == nil, let source = self.itemDirectURL else {
 				if let error = error {
 					Log.error("Error adding external content blocking rule list: \(error)")
 				}

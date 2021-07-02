@@ -49,6 +49,7 @@ public enum StaticTableViewRowActionType {
 	case changed
 	case didBegin
 	case didEnd
+	case didReturn
 }
 
 public enum StaticTableViewRowMessageStyle {
@@ -498,6 +499,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()
+		self.textFieldAction?(self, textField, .didReturn)
 
 		return true
 	}

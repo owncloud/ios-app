@@ -1,3 +1,12 @@
-• Fix: iOS 14 UI Adaptions
-Fixed some problems on iOS 14, with unresponsive UI elements.
+• Additional URL Scheme
+Added an additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
+
+• Fix: Let's encrypt
+Fixed misleading warnings at let's encrypt cert renewal
+
+• Fix: FileProvider UI on iOS 12
+Views in File Provider UI (public links, share with user) could not be dismissed on iOS 12
+
+• Fix: Background Media Upload
+In some cases, background media upload worked not as expected.
 

@@ -166,9 +166,14 @@ open class StaticTableViewController: UITableViewController, Themeable {
 
 	@objc open func dismissAnimated() {
 		self.willDismissAction?(self)
-		self.dismiss(animated: true, completion: {
-			self.didDismissAction?(self)
-		})
+
+		if self.extensionContext != nil {
+			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+		} else {
+			self.dismiss(animated: true, completion: {
+				self.didDismissAction?(self)
+			})
+		}
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {
@@ -240,7 +245,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 			return 216.0
 		}
 
-		return UITableView.automaticDimension
+		return tableView.rowHeight
 	}
 
 	override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

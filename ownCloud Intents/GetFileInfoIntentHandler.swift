@@ -41,7 +41,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 			return
 		}
 
-		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+		guard let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: uuid) else {
 			completion(GetFileInfoIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
@@ -51,7 +51,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 			return
 		}
 
-		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let targetItem = item {
 				let fileInfo = FileInfo(identifier: targetItem.localID, display: targetItem.name ?? "")
 
@@ -75,6 +75,10 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 				completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
 			} else if core != nil {
 				completion(GetFileInfoIntentResponse(code: .pathFailure, userActivity: nil))
+			} else if error?.isAuthenticationError == true {
+				completion(GetFileInfoIntentResponse(code: .authenticationFailed, userActivity: nil))
+			} else if error?.isNetworkConnectionError == true {
+				completion(GetFileInfoIntentResponse(code: .networkUnavailable, userActivity: nil))
 			} else {
 				completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
 			}
@@ -91,6 +95,11 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
 	func provideAccountOptions(for intent: GetFileInfoIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
 		completion(OCBookmarkManager.shared.accountList, nil)
+	}
+
+	@available(iOSApplicationExtension 14.0, *)
+	func provideAccountOptionsCollection(for intent: GetFileInfoIntent, with completion: @escaping (INObjectCollection<Account>?, Error?) -> Void) {
+		completion(INObjectCollection(items: OCBookmarkManager.shared.accountList), nil)
 	}
 
 	func resolvePath(for intent: GetFileInfoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {

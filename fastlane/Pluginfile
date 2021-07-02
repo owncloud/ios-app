@@ -4,3 +4,4 @@
 
 gem 'fastlane-plugin-badge'
 gem 'fastlane-plugin-json'
+gem 'fastlane-plugin-appicon'

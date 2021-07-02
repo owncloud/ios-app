@@ -27,6 +27,8 @@
 
 @implementation Branding
 
+INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
+
 + (void)load
 {
 	// Provide hook to allow Swift extensions in the app to register defaults and metadata
@@ -41,14 +43,15 @@
 			// BEGIN: Workaround for iOS 12 Swift crash bug - this code is usually in +initializeBranding in ownCloudAppShared.framework - remove when dropping iOS 12 support
 			[self registerOCClassSettingsDefaults:@{
 				@"url-documentation" 	: @"https://doc.owncloud.com/ios-app/",
-				@"url-help" 	  	: @"https://www.owncloud.com/help",
+				@"url-help" 	  	: @"https://owncloud.com/docs-guides/",
 				@"url-privacy" 	  	: @"https://owncloud.org/privacy-policy/",
 				@"url-terms-of-use" 	: @"https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
 
 				@"send-feedback-address" : @"ios-app@owncloud.com",
 
 				@"can-add-account" : @(YES),
-				@"can-edit-account" : @(YES)
+				@"can-edit-account" : @(YES),
+				@"enable-review-prompt" : @(NO)
 			} metadata:@{
 				@"url-documentation" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeURLString,
@@ -99,6 +102,13 @@
 					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
 				},
 
+				@"enable-review-prompt" : @{
+					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+					OCClassSettingsMetadataKeyDescription	: @"Controls whether the app should prompt for an App Store review.",
+					OCClassSettingsMetadataKeyCategory	: @"Branding",
+					OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced
+				},
+
 				@"profile-definitions" : @{
 					OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeDictionaryArray,
 					OCClassSettingsMetadataKeyDescription	: @"Array of dictionaries, each specifying a static profile.",
@@ -122,6 +132,12 @@
 			}];
 			// END: Workaround for iOS 12 Swift crash bug - this code is usually in +initializeBranding in ownCloudAppShared.framework - remove when dropping iOS 12 support
 		}
+	}
+
+	// Provide hook to allow Swift extensions in the app to register defaults and metadata
+	if ([self conformsToProtocol:@protocol(StaticProfileBridge)])
+	{
+		[((Class<StaticProfileBridge>)self) initializeStaticProfileBridge];
 	}
 }
 
@@ -166,6 +182,11 @@
 			if ((_brandingProperties = [NSPropertyListSerialization propertyListWithData:brandingPlistData options:NSPropertyListImmutable format:NULL error:&error]) == nil)
 			{
 				OCLogError(@"Error parsing %@: %@", _brandingPlistURL, error);
+			}
+			else
+			{
+				// Expand "flat" syntax
+				_brandingProperties = [_brandingProperties expandedDictionary];
 			}
 
 			_brandingPropertiesFromLocalFile = _brandingPlistURL.isFileURL;

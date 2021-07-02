@@ -19,6 +19,7 @@
 import Foundation
 import Photos
 import ownCloudSDK
+import ownCloudAppShared
 
 class MediaUploadJob : NSObject, NSSecureCoding {
 
@@ -108,39 +109,85 @@ class MediaUploadStorage : NSObject, NSSecureCoding {
 
 typealias MediaUploadStorageModifier = (_ storage:MediaUploadStorage) -> MediaUploadStorage
 
+extension OCKeyValueStore {
+	func registerMediaUploadClasses() {
+		// Check if NSCoding-compatible classes are not yet registered?
+		if registeredClasses(forKey: OCBookmark.MediaUploadStorageKey) == nil {
+
+			// This weird trickery is required since Set<AnyHashable> can't be created directly
+			if let classSet = NSSet(array: [
+				MediaUploadStorage.self,
+				MediaUploadJob.self,
+				OCProcessSession.self,
+				NSArray.self,
+				NSDictionary.self,
+				NSString.self
+			]) as? Set<AnyHashable> {
+				registerClasses(classSet, forKey: OCBookmark.MediaUploadStorageKey)
+			}
+		}
+	}
+}
+
 extension OCBookmark {
-	private static let MediaUploadStorageKey = OCKeyValueStoreKey(rawValue: "com.owncloud.media-upload-storage")
+	static let MediaUploadStorageKey = OCKeyValueStoreKey(rawValue: "com.owncloud.media-upload-storage")
 
 	//
 	// NOTE: Deriving KV store from bookmark rather than from OCCore since it simplifies adding upload jobs
 	// significantly without a need to initialize full blown core for that
 	//
 
-	var kvStore : OCKeyValueStore? {
-		let vault : OCVault = OCVault(bookmark: self)
-		if let store = vault.keyValueStore {
+	static var cachedKeyValueStores : [UUID : OCKeyValueStore] = [ : ]
 
-			// Check if NSCoding-compatible classes are not yet registered?
-			if store.registeredClasses(forKey: OCBookmark.MediaUploadStorageKey) == nil {
+	var mediaUploadKeyValueStore : OCKeyValueStore? {
+		var keyValueStore : OCKeyValueStore?
+		var vault : OCVault?
+		var migrateStorage : Bool = false
 
-				// This weird trickery is required since Set<AnyHashable> can't be created directly
-				if let classSet = NSSet(array: [MediaUploadStorage.self,
-												MediaUploadJob.self,
-												OCProcessSession.self,
-												NSArray.self,
-												NSDictionary.self,
-												NSString.self]) as? Set<AnyHashable> {
+		OCSynchronized(OCBookmark.self) {
+			// Retrieve Key Value Store for bookmark from cache
+			keyValueStore = OCBookmark.cachedKeyValueStores[self.uuid]
 
-					store.registerClasses(classSet, forKey: OCBookmark.MediaUploadStorageKey)
+			if keyValueStore == nil {
+				// Create KVS instance for bookmark and add it to the cache
+				vault = OCVault(bookmark: self)
+
+				if let vaultRootURL = vault?.rootURL {
+					keyValueStore = OCKeyValueStore(url: vaultRootURL.appendingPathComponent("mediaUploads.db", isDirectory: false), identifier: "\(uuid.uuidString).mediaUploads")
+					keyValueStore?.registerMediaUploadClasses()
+
+					OCBookmark.cachedKeyValueStores[uuid] = keyValueStore
 				}
 			}
-			return store
+
+			// Check if media uploads have been migrated
+			let migrationKey = "MediaUploadsMigrated:\(uuid.uuidString)"
+
+			if OCAppIdentity.shared.userDefaults?.bool(forKey: migrationKey) != true {
+				OCAppIdentity.shared.userDefaults?.setValue(true, forKey: migrationKey)
+				migrateStorage = true
+			}
 		}
-		return nil
+
+		// Migrate from legacy to new store
+		if migrateStorage, let vault = vault, let legacyStore = vault.keyValueStore, let keyValueStore = keyValueStore {
+			legacyStore.registerMediaUploadClasses()
+
+			// Read from "legacy" store
+			if let mediaUploadStorage = legacyStore.readObject(forKey: OCBookmark.MediaUploadStorageKey) as? MediaUploadStorage {
+				// Store in the dedicated store
+				keyValueStore.storeObject(mediaUploadStorage, forKey: OCBookmark.MediaUploadStorageKey)
+
+				// Remove from the "legacy" store
+				legacyStore.storeObject(nil, forKey: OCBookmark.MediaUploadStorageKey)
+			}
+		}
+
+		return keyValueStore
 	}
 
 	func modifyMediaUploadStorage(with modifier: @escaping MediaUploadStorageModifier) {
-		self.kvStore?.updateObject(forKey: OCBookmark.MediaUploadStorageKey, usingModifier: { (value, changesMadePtr) -> Any? in
+		mediaUploadKeyValueStore?.updateObject(forKey: OCBookmark.MediaUploadStorageKey, usingModifier: { (value, changesMadePtr) -> Any? in
 			var storage = value as? MediaUploadStorage
 
 			if storage == nil {
@@ -156,6 +203,6 @@ extension OCBookmark {
 	}
 
 	var mediaUploadStorage : MediaUploadStorage? {
-		return self.kvStore?.readObject(forKey: OCBookmark.MediaUploadStorageKey) as? MediaUploadStorage
+		return mediaUploadKeyValueStore?.readObject(forKey: OCBookmark.MediaUploadStorageKey) as? MediaUploadStorage
 	}
 }

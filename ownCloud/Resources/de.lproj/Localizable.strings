@@ -52,11 +52,11 @@
 
 "Error opening %@" = "Fehler beim Öffnen von %@";
 
-"Contacting server…" = "Kontaktiere Server...";
-"Authenticating…" = "Authentifiziere";
+"Contacting server…" = "Kontaktiere Server…";
+"Authenticating…" = "Authentifiziere…";
 
-"Fetching user information…" = "Nutzerinformationen abrufen ...";
-"Updating connection…" = "Aktualisierung der Verbindung...";
+"Fetching user information…" = "Nutzerinformationen abrufen…";
+"Updating connection…" = "Aktualisierung der Verbindung…";
 
 "Missing hostname" = "Hostname fehlt";
 "The entered URL does not include a hostname." = "Eingegebene URL enthält keinen Hostnamen.";
@@ -71,10 +71,14 @@
 "Access Files" = "Dateien öffnen";
 "Logout" = "Abmelden";
 
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
+
 /* Client */
 "Browse" = "Durchsuchen";
+"Files" = "Dateien";
 "Disconnect" = "Trennen";
-"Connecting…" = "Verbinde...";
+"Connecting…" = "Verbinde…";
 "Connected." = "Verbunden.";
 "Select" = "Auswählen";
 "Done" = "Fertig";
@@ -82,12 +86,12 @@
 "Folder" = "Ordner";
 
 "Stopped" = "Angehalten";
-"Started…" = "Gestartet...";
+"Started…" = "Gestartet…";
 "Contents from cache." = "Inhalte vom Cache.";
-"Waiting for server response…" = "Warte auf Serverantwort...";
+"Waiting for server response…" = "Warte auf Serverantwort…";
 "This folder no longer exists." = "Dieser Ordner existiert nicht mehr.";
 "Everything up-to-date." = "Alles aktuell.";
-"Please wait…" = "Bitte warten...";
+"Please wait…" = "Bitte warten…";
 "Sort by %@" = "Sortieren nach %@";
 "Sort by" = "Sortieren nach";
 
@@ -95,20 +99,33 @@
 "kind" = "Typ";
 "size" = "Größe";
 "date" = "Datum";
-"Search this folder" = "Diesen Ordner durchsuchen";
+"Search folder" = "Ordner durchsuchen";
+"Search account" = "Konto durchsuchen";
 "Pending" = "Ausstehend";
 "Show parent paths" = "Übergeordnete Pfade anzeigen";
+"Reveal in folder" = "Im Ordner anzeigen";
 
 "%@ of %@ used" = "%@ von %@ verwendet";
 "Total: %@" = "Gesamt: %@";
 "%@ item | " = "%@ Objekt | ";
 "%@ items | " = "%@ Objekte | ";
 
+"Show more results" = "Mehr Ergebnisse anzeigen";
+/* Search scope */
+
+"Search scope" = "Suchbereich";
+"Toggle Search Scope" = "Suchbereich umschalten";
+
 /* Static Login Setup */
 "Server error" = "Serverfehler";
 "The server doesn't support any allowed authentication method." = "Der Server unterstützt keine erlaubte Authentifizierungsmethode.";
 "The server doesn't support any known and allowed authentication method found." = "Der Server unterstützt keine bekannte und erlaubte Authentifizierungsmethode, die gefunden wurde.";
 "Retry detection" = "Erkennung wiederholen";
+"Enter your username and password" = "Geben Sie Ihren Benutzernamen und Ihr Passwort ein";
+"Please log in to authorize the app." = "Bitte melden Sie sich an, um die App zu autorisieren.";
+"Welcome to %@" = "Willkommen bei %@";
+"Please enter a server URL" = "Bitte geben Sie eine Server-URL ein";
+"Please pick a profile to begin setup" = "Bitte wählen Sie ein Profil, um mit der Einrichtung zu beginnen";
 
 /* Single Account */
 "You are connected as\n%@" = "Sie sind verbunden als\n%@";
@@ -340,7 +357,7 @@
 "Open in Window" = "In Fenster öffnen";
 "Take photo or video" = "Foto oder Video aufnehmen";
 
-"Preparing…" = "Vorbereiten...";
+"Preparing…" = "Vorbereiten…";
 
 "No actions available" = "Keine Aktionen verfügbar";
 "No actions are available for this folder, possibly because of missing permissions." = "Für diesen Ordner sind keine Aktionen verfügbar, möglicherweise aufgrund fehlender Berechtigungen.";
@@ -349,6 +366,10 @@
 "Favorited" = "Favorisiert";
 "Favorite item" = "Element favorisieren";
 "Unfavorite item" = "Favorit entfernen";
+"Presentation Mode" = "Präsentationsmodus";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Wenn Sie den Präsentationsmodus aktivieren, wird das Display nicht in den Ruhezustand versetzt, bis die Ansicht geschlossen wird.";
+"Enable" = "Aktivieren";
+"Exit Full Screen" = "Vollbildmodus beenden";
 
 /* Directory Picker Messages */
 "Move here" = "Hierhin verschieben";
@@ -361,6 +382,13 @@
 "Downloading" = "Lade herunter";
 "File couldn't be opened" = "Datei kann nicht geöffnet werden";
 "Connecting..." = "Verbinde...";
+"File" = "Datei";
+
+"%@ was updated" = "%@ wurde aktualisiert";
+"Would you like to view the updated version?" = "Möchten Sie die aktualisierte Version anzeigen?";
+"Show new version" = "Neue Version anzeigen";
+"Refresh without asking" = "Aktualisieren ohne Nachfrage";
+"Ignore updates" = "Aktualisierungen ignorieren";
 
 /* PDF Viewer */
 "Resume" = "Fortsetzen";
@@ -372,6 +400,9 @@
 "The entered page number doesn't exist" = "Die angegebene Seitennummer existiert nicht.";
 "Search PDF" = "PDF suchen";
 "Outline" = "Gliederung";
+"Find Next" = "Nächstes Suchergebnis";
+"Find Previous" = "Vorheriges Suchergebnis";
+"Close Search" = "Suche beenden";
 
 /* Photo Upload */
 "Upload" = "Hochladen";
@@ -471,7 +502,7 @@
 "Accept Share failed" = "Freigabe annehmen fehlgeschlagen";
 "Decline Share failed" = "Freigabe ablehnen fehlgeschlagen";
 "Accept" = "Akzeptieren";
-"Decline" = "Abgelehnt";
+"Decline" = "Ablehnen";
 "Declined" = "Abgelehnt";
 "Decline Share" = "Freigabe ablehnen";
 "Unshare" = "Freigabe aufheben";
@@ -498,6 +529,10 @@
 "Private Link" = "Privater Link";
 "Created Public Link" = "Öffentlichen Link erstellen";
 "URL was copied to the clipboard" = "Die Adresse wurde in die Zwischenablage kopiert";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ ist nicht verfügbar, wenn dieses Konto offline ist. Bitte öffnen Sie die App und melden Sie sich bei Ihrem Konto an, bevor Sie diese Aktion durchführen können.";
+"%@ is not available for this item." = "%@ ist für dieses Objekt nicht verfügbar.";
+"Share with user/group" = "Mit Benutzer/Gruppe teilen";
+"Share link" = "Link teilen";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
@@ -622,6 +657,13 @@
 "Previous" = "Zurück";
 "Favorite" = "Favorit";
 "Cut" = "Ausschneiden";
+"Play/Pause" = "Start/Pause";
+"Skip Back" = "Zurückspringen";
+"Skip Ahead" = "Vorspringen";
+"Go to Beginning" = "Zum Anfang";
+"Mute/Unmute" = "Stummschaltung/Stummschaltung aufheben";
+"Full Screen" = "Vollbildmodus";
+"Switch Theme Style" = "Theme wechseln";
 
 /* Markup */
 "How should this file be saved?" = "Wie soll diese Datei gespeichert werden?";
@@ -707,7 +749,7 @@
 "Importing item %ld of %ld" = "Importiere Objekt %ld von %ld";
 "Error importing %@" = "Fehler beim importieren von %@";
 "Error loading item" = "Fehler beim Laden des Objekt";
-"Preparing…" = "Vorbereiten...";
+"Preparing…" = "Vorbereiten…";
 "Save here" = "Hier speichern";
 
 /* Data migration from legacy app */
@@ -724,7 +766,7 @@
 "Enter multiple selection" = "Mehrfachauswahl beginnen";
 
 /* Universal Links */
-"Resolving link…" = "Link auflösen...";
+"Resolving link…" = "Link auflösen…";
 "Link resolution failed" = "Link-Auflösung fehlgeschlagen";
 "Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Ein privater Link konnte im Offline-Modus nicht aufgelöst werden - das entsprechende Element wurde noch nicht lokal zwischengespeichert.";
 "Couldn't resolve a private link since the item is not known to the server." = "Ein privater Link konnte nicht aufgelöst werden - das Element ist auf dem Server nicht mehr vorhanden.";
@@ -787,7 +829,7 @@
 "Strobe return light not detected" = "Strobe return light not detected";
 "Strobe return light detected" = "Strobe return light detected";
 "Compulsory flash firing" = "Compulsory flash firing";
-"Compulsory flash supression" = "Compulsory flash supression";
+"Compulsory flash supression" = "Bitzunterdrückung";
 "Auto mode" = "Auto-Modus";
 "Red eye detection supported" = "Rote-Augen-Erkennung unterstützt";
 "not present" = "nicht vorhanden";
@@ -846,3 +888,11 @@
 "Limited Photo Access" = "Eingeschränkter Fotozugriff";
 "Access for the media selected for upload is limited" = "Der Zugriff für die zum Hochladen ausgewählten Medien ist eingeschränkt";
 "No Access to the media selected for upload" = "Kein Zugriff auf die zum Hochladen ausgewählten Medien";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Der Passcode-Schutz wird auf diesem Gerät nicht unterstützt.\nBitte deaktivieren Sie die Passcode-Sperre in den App-Einstellungen.";
+
+/* MDM settings push */
+"New settings received from MDM" = "Neue Einstellungen vom MDM empfangen";
+"Tap to quit the app." = "Tippen Sie hier, um die App zu beenden.";
+"Tap to launch the app." = "Tippen Sie hier, um die App zu starten.";

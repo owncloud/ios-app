@@ -1,9 +1,12 @@
-• Fix: Links in PDF documents
-A tap on a hyperlink in PDF documents now opens the link.
+• Additional URL Scheme
+Added an additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
 
-• Fix: PDF thumbnail view on the iPad
-Fixed the position of the PDF thumbnail view on the iPad. Now, more PDF content is visible.
+• Fix: Let's encrypt
+Fixed misleading warnings at let's encrypt cert renewal
 
-• Fix: Message View
-In some cases, the message view hid content and also was not selectable.
+• Fix: FileProvider UI on iOS 12
+Views in File Provider UI (public links, share with user) could not be dismissed on iOS 12
+
+• Fix: Background Media Upload
+In some cases, background media upload worked not as expected.
 

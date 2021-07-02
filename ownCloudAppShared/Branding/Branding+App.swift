@@ -23,6 +23,7 @@ extension OCClassSettingsKey {
 	// Permissions
 	public static let canAddAccount : OCClassSettingsKey = OCClassSettingsKey("can-add-account")
 	public static let canEditAccount : OCClassSettingsKey = OCClassSettingsKey("can-edit-account")
+	public static let enableReviewPrompt : OCClassSettingsKey = OCClassSettingsKey("enable-review-prompt")
 
 	// Profiles
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
@@ -37,14 +38,15 @@ extension Branding : BrandingInitialization {
 		if #available(iOS 13, *) {
 			self.registerOCClassSettingsDefaults([
 				.documentationURL : "https://doc.owncloud.com/ios-app/",
-				.helpURL 	  : "https://www.owncloud.com/help",
+				.helpURL 	  : "https://owncloud.com/docs-guides/",
 				.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 				.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
 
 				.sendFeedbackAddress : "ios-app@owncloud.com",
 
 				.canAddAccount : true,
-				.canEditAccount : true
+				.canEditAccount : true,
+				.enableReviewPrompt : false
 
 	//			.profileDefinitions : [],
 	//			.themeGenericColors : [:],
@@ -52,6 +54,7 @@ extension Branding : BrandingInitialization {
 			], metadata: [
 				.documentationURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
+					.label		: "Documentation URL",
 					.description 	: "URL to documentation for the app. Opened when selecting \"Documentation\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
@@ -59,20 +62,23 @@ extension Branding : BrandingInitialization {
 
 				.helpURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
-					.description 	: "URL to help for the app. Opened when selecting \"Help\" in the settings.",
+					.label		: "Help URL",
+					.description 	: "URL to get help for the app. Opened when selecting \"Help\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
 				],
 
 				.privacyURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
-					.description 	: "URL to privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
+					.label		: "Privacy URL",
+					.description 	: "URL to get privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
 				],
 
 				.termsOfUseURL : [
 					.type 		: OCClassSettingsMetadataType.urlString,
+					.label		: "Terms of use URL",
 					.description 	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Branding"
@@ -80,6 +86,7 @@ extension Branding : BrandingInitialization {
 
 				.sendFeedbackAddress : [
 					.type 		: OCClassSettingsMetadataType.string,
+					.label		: "Feedback Email address",
 					.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
@@ -87,6 +94,7 @@ extension Branding : BrandingInitialization {
 
 				.canAddAccount : [
 					.type 		: OCClassSettingsMetadataType.boolean,
+					.label		: "Allow adding accounts",
 					.description	: "Controls whether the user can add accounts.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
@@ -94,14 +102,23 @@ extension Branding : BrandingInitialization {
 
 				.canEditAccount : [
 					.type 		: OCClassSettingsMetadataType.boolean,
+					.label		: "Allow editing accounts",
 					.description	: "Controls whether the user can edit accounts.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
 
+				.enableReviewPrompt : [
+ 					.type 		: OCClassSettingsMetadataType.boolean,
+ 					.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
+ 					.category	: "Branding",
+ 					.status		: OCClassSettingsKeyStatus.advanced
+ 				],
+
 				.profileDefinitions : [
 					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.description	: "Array of dictionaries, each specifying a static profile.",
+					.label		: "Profile definitions",
+					.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
@@ -134,6 +151,7 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("canAddAccount",		forClassSettingsKey: .canAddAccount)
 		registerLegacyKeyPath("canEditAccount",		forClassSettingsKey: .canEditAccount)
+		registerLegacyKeyPath("enableReviewPrompt",	forClassSettingsKey: .enableReviewPrompt)
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
@@ -193,8 +211,20 @@ extension Branding {
 		return computedValue(forClassSettingsKey: .canEditAccount) as? Bool ?? true
 	}
 
+	public var enableReviewPrompt : Bool {
+		return computedValue(forClassSettingsKey: .enableReviewPrompt) as? Bool ?? false
+	}
+
 	public var profileDefinitions : [[String : Any]]? {
-		return computedValue(forClassSettingsKey: .profileDefinitions) as? [[String : Any]]
+		var definitions = computedValue(forClassSettingsKey: .profileDefinitions) as? [[String : Any]]
+
+		if definitions == nil {
+			if let bridge = self as? StaticProfileBridge, let definitionDict = type(of: bridge).composeBrandingDict() {
+				definitions = [ definitionDict ]
+			}
+		}
+
+		return definitions
 	}
 }
 

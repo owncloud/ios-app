@@ -1,21 +1,140 @@
-Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
 =======================================
-The following sections list the changes in ownCloud iOS Client unreleased relevant to
+The following sections list the changes in ownCloud iOS Client 11.6.1 relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/client/compare/v11.5.2...master
+[11.6.1]: https://github.com/owncloud/ios-app/compare/milestone/11.6.0...milestone/11.6.1
 
 Summary
 -------
 
-* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
-* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
-* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
-* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
-* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+* Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
+* Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
+* Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
 
 Details
 -------
+
+* Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
+
+   https://github.com/owncloud/enterprise/issues/4547
+
+* Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
+
+   https://github.com/owncloud/enterprise/issues/4558
+
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
+
+   Views in FileProvider UI (public links, share with user) could not be dismissed on iOS 12
+
+   https://github.com/owncloud/ios-app/issues/986
+
+* Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
+
+   Added an additional URL scheme to open a specific app, if more than one ownCloud apps are
+   installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
+
+   https://github.com/owncloud/ios-app/issues/979
+
+Changelog for ownCloud iOS Client [11.6.0] (2021-05-12)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.6.0 relevant to
+ownCloud admins and users.
+
+[11.6.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.2...milestone/11.6.0
+
+Summary
+-------
+
+* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
+* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
+* Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
+* Bugfix - Changed wording in documentation: [#867](https://github.com/owncloud/ios-app/pull/867)
+* Bugfix - Fix bookmark name editing: [#877](https://github.com/owncloud/ios-app/pull/877)
+* Bugfix - Media Player Behaviour: [#884](https://github.com/owncloud/ios-app/pull/884)
+* Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
+* Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
+* Bugfix - Added Dark Mode Support to Preview: [#919](https://github.com/owncloud/ios-app/issues/919)
+* Bugfix - Passcode Settings Section: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Bugfix - Viewer fixes, refactoring and minor improvements: [#942](https://github.com/owncloud/ios-app/issues/942)
+* Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
+* Bugfix - UI refinements in action card: [#956](https://github.com/owncloud/ios-app/issues/956)
+* Bugfix - State Restoration for Branded Login: [#957](https://github.com/owncloud/ios-app/issues/957)
+* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+* Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+* Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
+* Change - Unified Branding with MDM support: [#697](https://github.com/owncloud/ios-app/issues/697)
+* Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
+* Change - Class Settings Metadata Support: [#831](https://github.com/owncloud/ios-app/issues/831)
+* Change - Video upload improvements: [#847](https://github.com/owncloud/ios-app/issues/847)
+* Change - Enhanced drag & drop support: [#850](https://github.com/owncloud/ios-app/pull/850)
+* Change - New photo picker / permissions model for iOS 14: [#851](https://github.com/owncloud/ios-app/issues/851)
+* Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
+* Change - Corporate Color + UI Refinements: [#860](https://github.com/owncloud/ios-app/issues/860)
+* Change - Improved Right-to-Left Language UI-Design: [#861](https://github.com/owncloud/ios-app/issues/861)
+* Change - Enforce User ID when updating token-based bookmarks: [#869](https://github.com/owncloud/ios-app/pull/869)
+* Change - TLS certificate comparison: [#872](https://github.com/owncloud/ios-app/pull/872)
+* Change - New Issue view / presentation: [#874](https://github.com/owncloud/ios-app/pull/874)
+* Change - Automated Calens Changelog Creation: [#879](https://github.com/owncloud/ios-app/pull/879)
+* Change - File Provider Passcode Protection: [#880](https://github.com/owncloud/ios-app/issues/880)
+* Change - Updated Keyboard Shortcuts: [#902](https://github.com/owncloud/ios-app/issues/902)
+* Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+
+Details
+-------
+
+* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
+
+   - adds a paragraph on top of the Acknowledgements to provide additional context - adds
+   PLCrashReporter license to acknowledgements
+
+   https://github.com/owncloud/enterprise/issues/4284
+
+* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
+
+   - UI fix for branded login on the iPad - Fill color for branded button was not used
+
+   https://github.com/owncloud/enterprise/issues/4367
+   https://github.com/owncloud/enterprise/issues/4366
+
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
+
+   In some cases enabling markup mode failed.
+
+   https://github.com/owncloud/enterprise/issues/4468
+
+* Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
+
+   Changed request time for In-App review and fixed storing the first launch date
+
+   https://github.com/owncloud/ios-app/pull/845
+
+* Bugfix - Changed wording in documentation: [#867](https://github.com/owncloud/ios-app/pull/867)
+
+   Changed wording so it no longer suggests username is editable
+
+   https://github.com/owncloud/ios-app/pull/867
+
+* Bugfix - Fix bookmark name editing: [#877](https://github.com/owncloud/ios-app/pull/877)
+
+   When editing bookmarks:
+
+   - if a name was set, it wasn't shown in the edit interface - bookmark name edits/additions would
+   get lost - bookmark name edits would not be presented in the list unless scrolling out of view and
+   back in
+
+   https://github.com/owncloud/ios-app/pull/877
+
+* Bugfix - Media Player Behaviour: [#884](https://github.com/owncloud/ios-app/pull/884)
+
+   Fix for an issue when playing multiple items in the same directory. If e.g. image item is the next
+   one, multi media playback would stop.
+
+   https://github.com/owncloud/ios-app/pull/884
 
 * Bugfix - Japanese Input Support: [#916](https://github.com/owncloud/ios-app/issues/916)
 
@@ -32,11 +151,67 @@ Details
 
    https://github.com/owncloud/ios-app/issues/918
 
-* Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
+* Bugfix - Added Dark Mode Support to Preview: [#919](https://github.com/owncloud/ios-app/issues/919)
+
+   Dark mode for QLPreviewController only worked, when system dark mode was used. Custom dark
+   mode theme was not able set the dark mode style before.
+
+   https://github.com/owncloud/ios-app/issues/919
+
+* Bugfix - Passcode Settings Section: [#923](https://github.com/owncloud/ios-app/issues/923)
 
    If a passcode was enabled or disabled in the settings, the UI section was not updated.
 
    https://github.com/owncloud/ios-app/issues/923
+
+* Bugfix - Viewer fixes, refactoring and minor improvements: [#942](https://github.com/owncloud/ios-app/issues/942)
+
+   - fix for items, which could not be opened - new refresh policy: asks the user before updating PDF
+   files
+
+   https://github.com/owncloud/ios-app/issues/942
+
+* Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
+
+   Images with mime type image/gif can not edited with markup action and needs to be disabled.
+
+   https://github.com/owncloud/ios-app/issues/952
+
+* Bugfix - UI refinements in action card: [#956](https://github.com/owncloud/ios-app/issues/956)
+
+   Fixed the corner radius. For larger UI width set a maximum width for the cardview and center the
+   view.
+
+   https://github.com/owncloud/ios-app/issues/956
+
+* Bugfix - State Restoration for Branded Login: [#957](https://github.com/owncloud/ios-app/issues/957)
+
+   State restoration was not working for branded clients. This fix will restore the last shown
+   item after an app restart for branded clients.
+
+   https://github.com/owncloud/ios-app/issues/957
+
+* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+
+   - Passcode lock enforcement via class setting. User can be forced to set-up a passcode when he
+   first starts the app - Auto-generated MDM documentation
+
+   https://github.com/owncloud/enterprise/issues/4104
+
+* Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
+
+   - A PDF file can be opened in fullscreen view and hides unnecessary UI elements. (Tap to trigger
+   full screen view) - Thumbnails positioned based on vertical size class after rotating the
+   device to give the displayed document more screen real estate.
+
+   https://github.com/owncloud/ios-app/issues/428
+
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+
+   The "Go to Page" option for PDF files has been reallocated to the Actions menu, and is also
+   available by tapping on the page label.
+
+   https://github.com/owncloud/enterprise/issues/4448
 
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 
@@ -44,20 +219,138 @@ Details
 
    https://github.com/owncloud/enterprise/issues/4450
 
+* Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
+
+   User can switch between local folder or local account-wide search. Search terms and filter
+   keywords can be combined inside the search field to get granular search results.
+
+   https://github.com/owncloud/ios-app/issues/53
+
+* Change - Unified Branding with MDM support: [#697](https://github.com/owncloud/ios-app/issues/697)
+
+   Refactored Branding, introducing a new Branding class, unifying branding support with class
+   settings while offering support for the legacy format and laying the ground for retrieving
+   branding assets from a remote server.
+
+   https://github.com/owncloud/ios-app/issues/697
+   https://github.com/owncloud/ios-app/issues/792
+
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
    Added an action in detail view menu which enables presentation mode. Presentation mode
-   prevents the display from sleep mode as long as the detail view is closed. Furthermore the
-   navigation bar will be hidden.
+   prevents the display from sleep mode as long as the detail view is closed, furthermore the
+   preview will be opened in full screen.
 
    https://github.com/owncloud/ios-app/issues/704
 
-Changelog for ownCloud iOS Client [11.5.2] (2020-03-03)
+* Change - Class Settings Metadata Support: [#831](https://github.com/owncloud/ios-app/issues/831)
+
+   Support for class settings metadata.
+
+   https://github.com/owncloud/ios-app/issues/831
+
+* Change - Video upload improvements: [#847](https://github.com/owncloud/ios-app/issues/847)
+
+   - Added ability to upload slo-mo videos etc - Added option to allow uploading original videos
+
+   https://github.com/owncloud/ios-app/issues/847
+
+* Change - Enhanced drag & drop support: [#850](https://github.com/owncloud/ios-app/pull/850)
+
+   Fix drag and drop and improve support to run the iOS app on M1 Macs:
+
+   - add drag-out support for files that are not locally available yet - improve drag-in support
+   for files, picking the best available representation that can be retrieved as data - support
+   for drag & drop in the log file browser
+
+   https://github.com/owncloud/ios-app/pull/850
+
+* Change - New photo picker / permissions model for iOS 14: [#851](https://github.com/owncloud/ios-app/issues/851)
+
+   - Using new PHPhotoPicker introduced in iOS14 instead of our custom picker. - Dealing with the
+   photo permission model introduced in iOS14 where user can grant access just to specific photo
+   assets or albums
+
+   https://github.com/owncloud/ios-app/issues/851
+
+* Change - Shortcut uploads and error handling improvements: [#858](https://github.com/owncloud/ios-app/issues/858)
+
+   Improved error handling for Shortcut actions and now also reporting authentication errors.
+   Added an optional "Wait for completion" option to the "Save File" and "Create Folder" action.
+
+   https://github.com/owncloud/ios-app/issues/858
+
+* Change - Corporate Color + UI Refinements: [#860](https://github.com/owncloud/ios-app/issues/860)
+
+   The corporate color of the UI themes was updated and furthermore some colors was adopted for a
+   better contrast. This PR includes also some refinements for some UI elements.
+
+   https://github.com/owncloud/ios-app/issues/860
+
+* Change - Improved Right-to-Left Language UI-Design: [#861](https://github.com/owncloud/ios-app/issues/861)
+
+   Fixed missing views, which missed Right-to-Left language support.
+
+   https://github.com/owncloud/ios-app/issues/861
+
+* Change - Enforce User ID when updating token-based bookmarks: [#869](https://github.com/owncloud/ios-app/pull/869)
+
+   This PR requires the user ID to remain the same when updating token-based bookmarks. If the user
+   logs in as a user other than the one with which the bookmark was originally created, an error will
+   be presented.
+
+   https://github.com/owncloud/ios-app/pull/869
+
+* Change - TLS certificate comparison: [#872](https://github.com/owncloud/ios-app/pull/872)
+
+   When logging into an account and experiencing a different certificate that does not fulfill
+   the rules for automatic acceptance as replacement, the issue it brings up now shows the
+   differences between the two certificates to allow an informed decision by the user.
+
+   https://github.com/owncloud/ios-app/pull/872
+
+* Change - New Issue view / presentation: [#874](https://github.com/owncloud/ios-app/pull/874)
+
+   As fixing an iPad layout issue in the old issues view proved too cumbersome, I've replaced the
+   entire implementation with a new issue view, based on code already there and in use for cards and
+   tables.
+
+   https://github.com/owncloud/ios-app/pull/874
+
+* Change - Automated Calens Changelog Creation: [#879](https://github.com/owncloud/ios-app/pull/879)
+
+   This PR uses GitHub Actions to automatically generate a changelog file with Calens and commits
+   the new CHANGELOG.md into the current branch.
+
+   https://github.com/owncloud/ios-app/pull/879
+
+* Change - File Provider Passcode Protection: [#880](https://github.com/owncloud/ios-app/issues/880)
+
+   If the app is protected with a passcode the file provider extension will present an user
+   interface for direct unlocking.
+
+   https://github.com/owncloud/ios-app/issues/880
+
+* Change - Updated Keyboard Shortcuts: [#902](https://github.com/owncloud/ios-app/issues/902)
+
+   Added keyboard shortcuts in PDF view, media playback can now completely controlled by the
+   keyboard and fixed broken keyboard commands.
+
+   https://github.com/owncloud/ios-app/issues/902
+
+* Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+
+   Added file provider actions for Sharing and Public Links, which will open the UI for adding and
+   editing sharing and public links to the selected item directly from the file provider.
+
+   https://github.com/owncloud/ios-app/pull/910
+
+Changelog for ownCloud iOS Client [11.5.2] (2021-03-03)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
 ownCloud admins and users.
 
-[11.5.2]: https://github.com/owncloud/client/compare/v11.5.1...v11.5.2
+[11.5.2]: https://github.com/owncloud/ios-app/compare/milestone/11.5.1...milestone/11.5.2
 
 Summary
 -------
@@ -89,12 +382,12 @@ Details
 
    https://github.com/owncloud/ios-app/issues/906
 
-Changelog for ownCloud iOS Client [11.5.1] (2020-02-17)
+Changelog for ownCloud iOS Client [11.5.1] (2021-02-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
 ownCloud admins and users.
 
-[11.5.1]: https://github.com/owncloud/client/compare/v11.5.0...v11.5.1
+[11.5.1]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.1
 
 Summary
 -------
@@ -110,12 +403,12 @@ Details
 
    https://github.com/owncloud/ios-app/pull/896
 
-Changelog for ownCloud iOS Client [11.5.0] (2020-02-10)
+Changelog for ownCloud iOS Client [11.5.0] (2021-02-10)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.0 relevant to
 ownCloud admins and users.
 
-
+[11.5.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.0
 
 Summary
 -------

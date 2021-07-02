@@ -95,12 +95,6 @@ open class FrameViewController: UIViewController, CardPresentationSizing {
 			viewController.view.topAnchor.constraint(equalTo: headerView.bottomAnchor)
 		])
 
-		headerView.layer.shadowColor = UIColor.black.cgColor
-		headerView.layer.shadowOpacity = 0.1
-		headerView.layer.shadowRadius = 10
-		headerView.layer.cornerRadius = 10
-		headerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-
 		self.view.layoutIfNeeded()
 	}
 
@@ -133,7 +127,9 @@ open class FrameViewController: UIViewController, CardPresentationSizing {
 
 	open override func viewDidLayoutSubviews() {
 		if self.view.superview != nil {
-			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: UIView.layoutFittingExpandedSize.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+			let maxWidth = (self.presentationController as? CardPresentationController)?.maxWidth ?? UIView.layoutFittingExpandedSize.width
+
+			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: maxWidth, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 		}
 
 		super.viewDidLayoutSubviews()

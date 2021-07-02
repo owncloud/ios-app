@@ -113,6 +113,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PresentationModeAction.actionExtension)
+		OCExtensionManager.shared.addExtension(PDFGoToPageAction.actionExtension)
+
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad {
 				// iPad & iOS 13+ only
@@ -165,6 +167,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 
+		ExternalBrowserBusyHandler.setup()
+
 		setupAndHandleCrashReports()
 
 		setupMDMPushRelaunch()
@@ -173,11 +177,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-		if url.matchesAppScheme {
+		if !OCAuthenticationBrowserSessionCustomScheme.handleOpen(url), // No custom scheme URL handling for this URL
+		   url.matchesAppScheme { // + URL matches app scheme
 			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 			openPrivateLink(url: url, in: window)
-
 		} else {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {

@@ -1,0 +1,6 @@
+Change: Full Screen PDF View
+
+- A PDF file can be opened in fullscreen view and hides unnecessary UI elements. (Tap to trigger full screen view)
+- Thumbnails positioned based on vertical size class after rotating the device to give the displayed document more screen real estate.
+
+https://github.com/owncloud/ios-app/issues/428

@@ -150,7 +150,7 @@ public extension NSObject {
 			searchBar.barStyle = collection.barStyle
 
 			if #available(iOS 13, *) {
-				searchBar.searchTextField.textColor = collection.searchBarColors.secondaryLabelColor
+				searchBar.searchTextField.textColor = collection.searchBarColors.labelColor
 				// Ensure search bar icon color is correct
 				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 				searchBar.searchTextField.backgroundColor = collection.searchBarColors.backgroundColor
@@ -161,7 +161,7 @@ public extension NSObject {
 				}
 				if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
 					clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-					clearButton.tintColor = collection.navigationBarColors.labelColor
+					clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
 				}
 			}
 		}
@@ -251,10 +251,12 @@ public extension NSObject {
 		}
 
 		if let segmentedControl = self as? UISegmentedControl {
-			segmentedControl.tintColor = collection.navigationBarColors.tintColor
 			if #available(iOS 13, *) {
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.labelColor], for: .normal)
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.tintColor], for: .selected)
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.tintColor], for: .normal)
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.backgroundColor!], for: .selected)
+				segmentedControl.selectedSegmentTintColor = collection.tintColor
+			} else {
+				segmentedControl.tintColor = collection.navigationBarColors.tintColor
 			}
 		}
 

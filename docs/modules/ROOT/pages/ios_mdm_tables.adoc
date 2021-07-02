@@ -9,142 +9,160 @@ tag::actions[]
 |Status
 
 
-|action.com.owncloud.action.collaborate.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
+|action.allowed
+|stringArray
+|`[]`
+|List of all allowed actions. If provided, actions not listed here are not allowed.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.action.collaborate`
+! Sharing
+
+! `com.owncloud.action.copy`
+! Copy
+
+! `com.owncloud.action.createFolder`
+! Create folder
+
+! `com.owncloud.action.delete`
+! Delete
+
+! `com.owncloud.action.duplicate`
+! Duplicate
+
+! `com.owncloud.action.favorite`
+! Favorite item
+
+! `com.owncloud.action.links`
+! Links
+
+! `com.owncloud.action.makeAvailableOffline`
+! Make available offline
+
+! `com.owncloud.action.makeUnavailableOffline`
+! Available Offline
+
+! `com.owncloud.action.markup`
+! Markup
+
+! `com.owncloud.action.move`
+! Move
+
+! `com.owncloud.action.openin`
+! Open in
+
+! `com.owncloud.action.pdfpage`
+! Go to page
+
+! `com.owncloud.action.presentationmode`
+! Presentation Mode
+
+! `com.owncloud.action.rename`
+! Rename
+
+! `com.owncloud.action.scan`
+! Scan document
+
+! `com.owncloud.action.show-exif`
+! Image metadata
+
+! `com.owncloud.action.unfavorite`
+! Unfavorite item
+
+! `com.owncloud.action.unshare`
+! Unshare
+
+! `com.owncloud.action.upload.camera_media`
+! Take photo or video
+
+! `com.owncloud.action.uploadfile`
+! Upload file
+
+! `com.owncloud.action.uploadphotos`
+! Upload from your photo library
+
+!===
+
 |advanced `candidate`
 
-|action.com.owncloud.action.copy.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+|action.disallowed
+|stringArray
+|`[]`
+|List of all disallowed actions. If provided, actions not listed here are allowed.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.action.collaborate`
+! Sharing
 
-|action.com.owncloud.action.createFolder.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.copy`
+! Copy
 
-|action.com.owncloud.action.delete.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.createFolder`
+! Create folder
 
-|action.com.owncloud.action.discardscene.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.delete`
+! Delete
 
-|action.com.owncloud.action.duplicate.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.duplicate`
+! Duplicate
 
-|action.com.owncloud.action.favorite.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.favorite`
+! Favorite item
 
-|action.com.owncloud.action.links.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.links`
+! Links
 
-|action.com.owncloud.action.makeAvailableOffline.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.makeAvailableOffline`
+! Make available offline
 
-|action.com.owncloud.action.makeUnavailableOffline.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.makeUnavailableOffline`
+! Available Offline
 
-|action.com.owncloud.action.markup.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.markup`
+! Markup
 
-|action.com.owncloud.action.mediaediting.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.move`
+! Move
 
-|action.com.owncloud.action.move.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.openin`
+! Open in
 
-|action.com.owncloud.action.openin.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.pdfpage`
+! Go to page
 
-|action.com.owncloud.action.openscene.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.presentationmode`
+! Presentation Mode
 
-|action.com.owncloud.action.rename.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.rename`
+! Rename
 
-|action.com.owncloud.action.scan.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.scan`
+! Scan document
 
-|action.com.owncloud.action.show-exif.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.show-exif`
+! Image metadata
 
-|action.com.owncloud.action.unfavorite.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.unfavorite`
+! Unfavorite item
 
-|action.com.owncloud.action.unshare.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.unshare`
+! Unshare
 
-|action.com.owncloud.action.upload.camera_media.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.upload.camera_media`
+! Take photo or video
 
-|action.com.owncloud.action.uploadfile.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
-|advanced `candidate`
+! `com.owncloud.action.uploadfile`
+! Upload file
 
-|action.com.owncloud.action.uploadphotos.enabled
-|bool
-|
-|Controls whether action can be accessed in the app UI.
+! `com.owncloud.action.uploadphotos`
+! Upload from your photo library
+
+!===
+
 |advanced `candidate`
 
 |===
@@ -219,6 +237,12 @@ tag::authentication[]
 !===
 ! Value
 ! Description
+! `CustomScheme`
+! Replace http and https with custom schemes to delegate browser sessions to a different app.
+
+! `MIBrowser`
+! Replace `http` with `mibrowser` and `https` with `mibrowsers` to delegate browser sessions to the MobileIron browser.
+
 ! `UIWebView`
 ! Use UIWebView for browser sessions. Requires compilation with `OC_FEATURE_AVAILABLE_UIWEBVIEW_BROWSER_SESSION=1` preprocessor flag.
 
@@ -258,7 +282,7 @@ tag::bookmarks[]
 |bookmark.url-editable
 |bool
 |`true`
-|Controls whetehr the server URL in the text field during the creation of new bookmarks can be changed.
+|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
 |supported `candidate`
 
 |===
@@ -287,25 +311,39 @@ tag::branding[]
 |Organization name to use throughout the app.
 |supported `candidate`
 
-|branding.can-add-account
+|**Allow adding accounts** +
+ +
+branding.can-add-account
 |bool
 |`true`
 |Controls whether the user can add accounts.
 |advanced `candidate`
 
-|branding.can-edit-account
+|**Allow editing accounts** +
+ +
+branding.can-edit-account
 |bool
 |`true`
 |Controls whether the user can edit accounts.
 |advanced `candidate`
 
-|branding.profile-definitions
-|dictionaryArray
-|
-|Array of dictionaries, each specifying a static profile.
+|branding.enable-review-prompt
+|bool
+|`false`
+|Controls whether the app should prompt for an App Store review. Only applies if the app is branded.
 |advanced `candidate`
 
-|branding.send-feedback-address
+|**Profile definitions** +
+ +
+branding.profile-definitions
+|dictionaryArray
+|
+|Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.
+|advanced `candidate`
+
+|**Feedback Email address** +
+ +
+branding.send-feedback-address
 |string
 |`ios-app@owncloud.com`
 |Email address to send feedback to. Set to `null` to disable this feature.
@@ -323,32 +361,207 @@ tag::branding[]
 |Dictionary defining generic colors that can be used in the definitions.
 |advanced `candidate`
 
-|branding.url-documentation
+|**Documentation URL** +
+ +
+branding.url-documentation
 |urlString
 |`https://doc.owncloud.com/ios-app/`
 |URL to documentation for the app. Opened when selecting "Documentation" in the settings.
 |advanced `candidate`
 
-|branding.url-help
+|**Help URL** +
+ +
+branding.url-help
 |urlString
-|`https://www.owncloud.com/help`
-|URL to help for the app. Opened when selecting "Help" in the settings.
+|`https://owncloud.com/docs-guides/`
+|URL to get help for the app. Opened when selecting "Help" in the settings.
 |advanced `candidate`
 
-|branding.url-privacy
+|**Privacy URL** +
+ +
+branding.url-privacy
 |urlString
 |`https://owncloud.org/privacy-policy/`
-|URL to privacy information for the app. Opened when selecting "Privacy" in the settings.
+|URL to get privacy information for the app. Opened when selecting "Privacy" in the settings.
 |advanced `candidate`
 
-|branding.url-terms-of-use
+|**Terms of use URL** +
+ +
+branding.url-terms-of-use
 |urlString
 |`https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE`
 |URL to terms of use for the app. Opened when selecting "Terms Of Use" in the settings.
 |advanced `candidate`
 
+|`Profile` +
+**Allow URL configuration** +
+ +
+branding.profile-allow-url-configuration
+|bool
+|
+|Indicates if the user can change the server URL for the account.
+|advanced `candidate`
+
+|`Profile` +
+**Allowed authentication methods** +
+ +
+branding.profile-allowed-authentication-methods
+|stringArray
+|
+|The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `com.owncloud.basicauth`
+! Basic Auth
+
+! `com.owncloud.oauth2`
+! OAuth2
+
+! `com.owncloud.openid-connect`
+! OpenID Connect
+
+!===
+
+|advanced `candidate`
+
+|`Profile` +
+**Allowed Hosts** +
+ +
+branding.profile-allowed-hosts
+|stringArray
+|
+|Domain names (can also include subdomain name), which are allowed as server url when adding a new account.
+|advanced `candidate`
+
+|`Profile` +
+**Bookmark Name** +
+ +
+branding.profile-bookmark-name
+|string
+|
+|The name that should be used for the bookmark that's generated from this profile and appears in the account list.
+|advanced `candidate`
+
+|`Profile` +
+**Onboarding button title** +
+ +
+branding.profile-help-button-label
+|string
+|
+|Text used for the onboarding button title
+|advanced `candidate`
+
+|`Profile` +
+**Onboarding URL** +
+ +
+branding.profile-help-url
+|urlString
+|
+|Optional URL to onboarding resources.
+|advanced `candidate`
+
+|`Profile` +
+**Identifier** +
+ +
+branding.profile-identifier
+|string
+|
+|Identifier uniquely identifying the profile.
+|advanced `candidate`
+
+|`Profile` +
+**Name** +
+ +
+branding.profile-name
+|string
+|
+|Name of the profile during setup.
+|advanced `candidate`
+
+|`Profile` +
+**Open onboarding URL message** +
+ +
+branding.profile-open-help-message
+|string
+|
+|Message shown in an alert before opening the onboarding URL.
+|advanced `candidate`
+
+|`Profile` +
+**Password prompt** +
+ +
+branding.profile-password-auth-prompt
+|string
+|
+|Text that is shown when asking the user to enter their password.
+|advanced `candidate`
+
+|`Profile` +
+**Token authentication prompt** +
+ +
+branding.profile-token-auth-prompt
+|string
+|
+|Text that is shown to the user before opening the authentication web view (f.ex. for OAuth2, OIDC).
+|advanced `candidate`
+
+|`Profile` +
+**URL** +
+ +
+branding.profile-url
+|urlString
+|
+|The URL of the server targeted by this profile.
+|advanced `candidate`
+
+|`Profile` +
+**URL prompt** +
+ +
+branding.profile-url-prompt
+|string
+|
+|Text shown above the URL field when setting up an account.
+|advanced `candidate`
+
+|`Profile` +
+**Welcome Message** +
+ +
+branding.profile-welcome-message
+|string
+|
+|Welcome message shown during account setup.
+|advanced `candidate`
+
 |===
 end::branding[]
+
+
+tag::browsersession[]
+[cols="1,2,3,4a,5",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|browser-session.custom-scheme-plain
+|string
+|
+|Scheme to use instead of plain `http` when using browser session class CustomScheme, i.e. `mibrowser`.
+|advanced `candidate`
+
+|browser-session.custom-scheme-secure
+|string
+|
+|Scheme to use instead of `https` when using browser session class CustomScheme, i.e. `mibrowsers`.
+|advanced `candidate`
+
+|===
+end::browsersession[]
 
 
 tag::connection[]
@@ -401,6 +614,21 @@ The following placeholders can be used to make it dynamic:
 |Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
 |advanced `candidate`
 
+|connection.validator-flags
+|stringArray
+|
+|Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `clear-cookies`
+! Clear all cookies for the connection when entering connection validation.
+
+!===
+
+|advanced `candidate`
+
 |core.action-concurrency-budgets
 |dictionary
 |`map[actions:10 all:0 download:3 download-wifi-and-cellular:3 download-wifi-only:2 transfer:6 upload:3 upload-cellular-and-wifi:3 upload-wifi-only:2]`
@@ -413,16 +641,16 @@ The following placeholders can be used to make it dynamic:
 |Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
 |debugOnly
 
-|connection.connection-minimum-server-version
-|string
-|`10.0`
-|The minimum server version required.
-|debugOnly
-
 |connection.force-background-url-sessions
 |bool
 |`false`
 |Forces the use of background URL sessions. Overrides `allow-background-url-sessions`.
+|debugOnly
+
+|connection.minimum-server-version
+|string
+|`10.0`
+|The minimum server version required.
 |debugOnly
 
 |core.override-availability-signal
@@ -636,7 +864,7 @@ tag::logging[]
 |Status
 
 
-|log.log-level
+|log.level
 |int
 |`4`
 |Log level
@@ -666,32 +894,35 @@ tag::logging[]
 
 |supported `candidate`
 
-|log.log-privacy-mask
+|log.privacy-mask
 |bool
 |`false`
 |Controls whether certain objects in log statements should be masked for privacy.
 |supported `candidate`
 
-|log.log-blank-filtered-messages
+|log.blank-filtered-messages
 |bool
 |`false`
 |Controls whether filtered out messages should still be logged, but with the message replaced with `-`.
 |advanced `candidate`
 
-|log.log-colored
+|log.colored
 |bool
 |`false`
 |Controls whether log levels should be replaced with colored emojis.
 |advanced `candidate`
 
-|log.log-enabled-components
+|log.enabled-components
 |stringArray
-|`[writer.stderr writer.file option.log-requests-and-responses]`
+|`[writer.stderr writer.file]`
 |List of enabled logging system components.
 [cols="1,2"]
 !===
 ! Value
 ! Description
+! `option.log-file-operations`
+! Log internal file operations
+
 ! `option.log-requests-and-responses`
 ! Log HTTP requests and responses
 
@@ -705,7 +936,7 @@ tag::logging[]
 
 |advanced `candidate`
 
-|log.log-format
+|log.format
 |string
 |`text`
 |Determines the format that log messages are saved in
@@ -726,47 +957,53 @@ tag::logging[]
 
 |advanced `candidate`
 
-|log.log-maximum-message-size
+|log.maximum-message-size
 |int
 |`0`
 |Maximum length of a log message before the message is truncated. A value of 0 means no limit.
 |advanced `candidate`
 
-|log.log-omit-matching
+|log.omit-matching
 |stringArray
 |
 |If set, omits logs messages containing any of the exact terms in this array.
 |advanced `candidate`
 
-|log.log-omit-tags
+|log.omit-tags
 |stringArray
 |
 |If set, omits all log messages tagged with tags in this array.
 |advanced `candidate`
 
-|log.log-only-matching
+|log.only-matching
 |stringArray
 |
 |If set, only logs messages containing at least one of the exact terms in this array.
 |advanced `candidate`
 
-|log.log-only-tags
+|log.only-tags
 |stringArray
 |
 |If set, omits all log messages not tagged with tags in this array.
 |advanced `candidate`
 
-|log.log-single-lined
+|log.single-lined
 |bool
 |`true`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
 |advanced `candidate`
 
-|log.log-synchronous
+|log.synchronous
 |bool
 |`false`
 |Controls whether log messages should be written synchronously (which can impact performance) or asynchronously (which can loose messages in case of a crash).
 |advanced `candidate`
+
+|measurements.enabled
+|bool
+|`true`
+|Turn measurements on or off
+|debugOnly
 
 |===
 end::logging[]
@@ -836,6 +1073,18 @@ tag::oidc[]
 |string
 |`oc://ios.owncloud.com`
 |OpenID Connect Redirect URI
+|supported `candidate`
+
+|authentication-oauth2.oidc-register-client
+|bool
+|`true`
+|Use OpenID Connect Dynamic Client Registration if the `.well-known/openid-configuration` provides a `registration_endpoint`. If this option is enabled and a registration endpoint is available, `oa2-client-id` and `oa2-client-secret` will be ignored.
+|supported `candidate`
+
+|authentication-oauth2.oidc-register-client-name-template
+|string
+|`ownCloud/{{os.name}} {{app.version}}`
+|Client Name Template to use during OpenID Connect Dynamic Client Registration. In addition to the placeholders available for `http.user-agent`, `{{url.hostname}}` can also be used.
 |supported `candidate`
 
 |authentication-oauth2.oidc-scope
@@ -956,7 +1205,7 @@ tag::security[]
 |Status
 
 
-|connection.connection-allowed-authentication-methods
+|connection.allowed-authentication-methods
 |stringArray
 |
 |Array of allowed authentication methods. Nil/Missing for no restrictions.
@@ -977,7 +1226,7 @@ tag::security[]
 
 |recommended `candidate`
 
-|connection.connection-preferred-authentication-methods
+|connection.preferred-authentication-methods
 |stringArray
 |`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
 |Array of authentication methods in order of preference (most preferred first).
@@ -998,7 +1247,7 @@ tag::security[]
 
 |recommended `candidate`
 
-|connection.connection-certificate-extended-validation-rule
+|connection.certificate-extended-validation-rule
 |string
 |`bookmarkCertificate == serverCertificate`
 |Rule that defines the criteria a certificate needs to meet for OCConnection to recognize it as valid for a bookmark.
@@ -1014,9 +1263,9 @@ Examples of expressions:
 
 |advanced `candidate`
 
-|connection.connection-renewed-certificate-acceptance-rule
+|connection.renewed-certificate-acceptance-rule
 |string
-|`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
+|`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true)) OR ((bookmarkCertificate.parentCertificate.sha256Fingerprint.asFingerPrintString == "73 0C 1B DC D8 5F 57 CE 5D C0 BB A7 33 E5 F1 BA 5A 92 5B 2A 77 1D 64 0A 26 F7 A4 54 22 4D AD 3B") AND (bookmarkCertificate.rootCertificate.sha256Fingerprint.asFingerPrintString == "06 87 26 03 31 A7 24 03 D9 09 F1 05 E6 9B CF 0D 32 E1 BD 24 93 FF C6 D9 20 6D 11 BC D6 77 07 39") AND (serverCertificate.parentCertificate.sha256Fingerprint.asFingerPrintString == "67 AD D1 16 6B 02 0A E6 1B 8F 5F C9 68 13 C0 4C 2A A5 89 96 07 96 86 55 72 A3 C7 E7 37 61 3D FD") AND (serverCertificate.rootCertificate.sha256Fingerprint.asFingerPrintString == "96 BC EC 06 26 49 76 F3 74 60 77 9A CF 28 C5 A7 CF E8 A3 C0 AA E1 1A 8F FC EE 05 C0 BD DF 08 C6") AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
 |advanced `candidate`
 

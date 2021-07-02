@@ -1,0 +1,5 @@
+Change: Added Actions to File Provider: Sharing & Public Links
+
+Added file provider actions for Sharing and Public Links, which will open the UI for adding and editing sharing and public links to the selected item directly from the file provider.
+
+https://github.com/owncloud/ios-app/pull/910

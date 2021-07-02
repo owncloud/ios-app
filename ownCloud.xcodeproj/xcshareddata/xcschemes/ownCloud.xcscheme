@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1230"
+   LastUpgradeVersion = "1240"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -303,6 +303,36 @@
          <EnvironmentVariable
             key = "oc:connection.allowed-authentication-methods"
             value = "[openid-connect,oauth2]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication.browser-session-class"
+            value = "string:CustomScheme"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:browser-session.custom-scheme-plain"
+            value = "string:mibrowser"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:browser-session.custom-scheme-secure"
+            value = "string:mibrowsers"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication.browser-session-class"
+            value = "string:MIBrowser"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:action.allowed"
+            value = "[com.owncloud.action.copy,com.owncloud.action.move]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:action.disallowed"
+            value = "[com.owncloud.action.copy,com.owncloud.action.move]"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
