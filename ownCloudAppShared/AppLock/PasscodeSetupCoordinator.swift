@@ -27,7 +27,7 @@ public enum PasscodeAction {
 		switch self {
 		case .setup: return "Enter code".localized
 		case .delete: return "Delete code".localized
-		case .upgrade: return String(format: "Enter a new code with at least %ld digits".localized, AppLockManager.shared.requiredPasscodeDigits)
+		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockManager.shared.requiredPasscodeDigits)
 		}
 	}
 }
