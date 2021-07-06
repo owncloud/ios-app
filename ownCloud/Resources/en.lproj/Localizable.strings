@@ -234,6 +234,7 @@
 "Passcode option" = "Passcode option";
 "Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
 "%ld digit code" = "%ld digit code";
+"Enter a new code with at least %ld digits" = "Enter a new code with at least %ld digits";
 
 "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "beta";

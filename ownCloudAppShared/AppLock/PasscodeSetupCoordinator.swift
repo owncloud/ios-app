@@ -21,11 +21,13 @@ import UIKit
 public enum PasscodeAction {
 	case setup
 	case delete
+	case upgrade
 
 	var localizedDescription : String {
 		switch self {
 		case .setup: return "Enter code".localized
 		case .delete: return "Delete code".localized
+		case .upgrade: return String(format: "Enter a new code with at least %ld digits".localized, AppLockManager.shared.requiredPasscodeDigits)
 		}
 	}
 }
@@ -78,7 +80,11 @@ public class PasscodeSetupCoordinator {
 		if self.action == .setup, AppLockManager.shared.requiredPasscodeDigits < self.maxPasscodeDigits {
 			showNumberOfDigitsSetup()
 		} else {
-			showPasscodeUI(requiredDigits: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
+			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits
+			if self.action == .upgrade {
+				requiredDigits = AppLockManager.shared.requiredPasscodeDigits
+			}
+			showPasscodeUI(requiredDigits: requiredDigits)
 		}
 	}
 
@@ -99,7 +105,7 @@ public class PasscodeSetupCoordinator {
 					// Entered passcode doesn't match saved ones
 					self.updateUI(with: self.action.localizedDescription, errorMessage: "Incorrect code".localized)
 				}
-			} else { // Setup
+			} else { // Setup or Upgrade
 				if self.passcodeFromFirstStep == nil {
 					// 1) Enter passcode
 					self.passcodeFromFirstStep = passcode
@@ -119,7 +125,7 @@ public class PasscodeSetupCoordinator {
 					self.passcodeFromFirstStep = nil
 				}
 			}
-		}, hasCancelButton: !AppLockManager.shared.isPasscodeEnforced, requiredLength: requiredDigits)
+		}, hasCancelButton: !(AppLockManager.shared.isPasscodeEnforced || self.action == .upgrade), requiredLength: requiredDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		if AppLockManager.shared.isPasscodeEnforced {
