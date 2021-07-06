@@ -1113,10 +1113,10 @@ tag::passcode[]
 |Controls wether the user MUST establish a passcode upon app installation
 |advanced `candidate`
 
-|passcode.passcodeDigits
+|passcode.requiredPasscodeDigits
 |int
 |`4`
-|Controls who many passcode digits should be used for passcode lock.
+|Controls how many passcode digits are minimal required for passcode lock.
 |advanced `candidate`
 
 |===
