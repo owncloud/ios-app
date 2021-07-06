@@ -147,6 +147,10 @@ public class AppLockManager: NSObject {
 		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
 	}
 
+	public var requiredPasscodeDigits : Int {
+		return (self.classSetting(forOCClassSettingsKey: .requiredPasscodeDigits) as? Int) ?? 4
+	}
+
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
 
@@ -318,7 +322,7 @@ public class AppLockManager: NSObject {
 
 		passcodeViewController = PasscodeViewController(completionHandler: { (viewController: PasscodeViewController, passcode: String) in
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
-		})
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
 
 		passcodeViewController.message = "Enter code".localized
 		passcodeViewController.cancelButtonHidden = false
@@ -533,7 +537,7 @@ extension OCClassSettingsIdentifier {
 
 extension OCClassSettingsKey {
 	static let passcodeEnforced = OCClassSettingsKey("enforced")
-	static let passcodeDigits = OCClassSettingsKey("passcodeDigits")
+	static let requiredPasscodeDigits = OCClassSettingsKey("requiredPasscodeDigits")
 }
 
 extension AppLockManager: OCClassSettingsSupport {
@@ -542,7 +546,7 @@ extension AppLockManager: OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
 			.passcodeEnforced : false,
-			.passcodeDigits: 4
+			.requiredPasscodeDigits: 4
 		]
 	}
 
@@ -554,9 +558,9 @@ extension AppLockManager: OCClassSettingsSupport {
 				.category: "Passcode",
 				.status: OCClassSettingsKeyStatus.advanced
 			],
-			.passcodeDigits : [
+			.requiredPasscodeDigits : [
 				.type 		: OCClassSettingsMetadataType.integer,
-				.description	: "Controls who many passcode digits should be used for passcode lock.",
+				.description	: "Controls how many passcode digits are minimal required for passcode lock.",
 				.category	: "Passcode",
 				.status		: OCClassSettingsKeyStatus.advanced
 			]

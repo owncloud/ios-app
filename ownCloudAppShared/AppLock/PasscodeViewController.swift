@@ -41,7 +41,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet public var cancelButton: ThemeButton?
 
 	// MARK: - Properties
-	public var passcodeLength: Int = 4
+	private var passcodeLength: Int
 
 	public var passcode: String? {
 		didSet {
@@ -127,13 +127,14 @@ public class PasscodeViewController: UIViewController, Themeable {
 	public var completionHandler: PasscodeViewControllerCompletionHandler?
 
 	// MARK: - Init
-	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
+	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true, requiredLength: Int) {
 		self.cancelHandler = cancelHandler
 		self.completionHandler = completionHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
 		self.cancelButtonHidden = hasCancelButton
 		self.keypadButtonsHidden = false
 		self.screenBlurringEnabled = false
+		self.passcodeLength = requiredLength
 
 		super.init(nibName: "PasscodeViewController", bundle: Bundle(for: PasscodeViewController.self))
 

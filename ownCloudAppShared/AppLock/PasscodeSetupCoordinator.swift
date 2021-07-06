@@ -40,6 +40,8 @@ public class PasscodeSetupCoordinator {
 	private var passcodeViewController: PasscodeViewController?
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
+	private var minPasscodeDigits: Int = 4
+	private var maxPasscodeDigits: Int = 6
 
 	public class var isPasscodeSecurityEnabled: Bool {
 		get {
@@ -73,7 +75,14 @@ public class PasscodeSetupCoordinator {
 	}
 
 	public func start() {
+		if self.action == .setup, AppLockManager.shared.requiredPasscodeDigits < self.maxPasscodeDigits {
+			showNumberOfDigitsSetup()
+		} else {
+			showPasscodeUI(requiredDigits: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
+		}
+	}
 
+	public func showPasscodeUI(requiredDigits: Int) {
 		passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController) in
 			passcodeViewController.dismiss(animated: true) {
 				self.completionHandler?(true)
@@ -110,7 +119,7 @@ public class PasscodeSetupCoordinator {
 					self.passcodeFromFirstStep = nil
 				}
 			}
-		}, hasCancelButton: !AppLockManager.shared.isPasscodeEnforced)
+		}, hasCancelButton: !AppLockManager.shared.isPasscodeEnforced, requiredLength: requiredDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		if AppLockManager.shared.isPasscodeEnforced {
@@ -125,6 +134,25 @@ public class PasscodeSetupCoordinator {
 		} else {
 			parentViewController.present(passcodeViewController!, animated: true, completion: nil)
 		}
+	}
+
+	public func showNumberOfDigitsSetup() {
+		let alertController = ThemedAlertController(title: "Passcode option".localized, message: "Please choose how many digits you want to use for the passcode lock?".localized, preferredStyle: .actionSheet)
+
+		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+			self.completionHandler?(true)
+		}))
+
+		var digit = self.maxPasscodeDigits
+		while digit >= AppLockManager.shared.requiredPasscodeDigits, digit >= self.minPasscodeDigits {
+			let currentDigit = digit
+				alertController.addAction(UIAlertAction(title: String(format: "%ld digit code".localized, currentDigit), style: .default, handler: { _ in
+					self.showPasscodeUI(requiredDigits: currentDigit)
+				}))
+			digit -= 2
+		}
+
+		parentViewController.present(alertController, animated: true, completion: nil)
 	}
 
 	public func startBiometricalFlow(_ enable:Bool) {
@@ -145,7 +173,7 @@ public class PasscodeSetupCoordinator {
 				passcodeViewController.errorMessage = "Incorrect code".localized
 				passcodeViewController.passcode = nil
 			}
-		})
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		parentViewController.present(passcodeViewController!, animated: true, completion: nil)
