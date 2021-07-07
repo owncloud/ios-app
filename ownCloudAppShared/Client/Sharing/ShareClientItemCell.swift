@@ -23,9 +23,10 @@ open class ShareClientItemCell: ClientItemResolvingCell {
 	var iconSize : CGSize = CGSize(width: 40, height: 40)
 
 	// MARK: - Share Item
-	open override func titleLabelString(for item: OCItem?) -> String {
+	open override func titleLabelString(for item: OCItem?) -> NSAttributedString {
 		if let shareItemPath = share?.itemPath {
-			return shareItemPath
+			return NSMutableAttributedString()
+					.bold(shareItemPath)
 		}
 
 		return super.titleLabelString(for: item)

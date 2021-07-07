@@ -19,6 +19,29 @@
 import UIKit
 import ownCloudSDK
 
+extension NSMutableAttributedString {
+	var boldFont:UIFont { return UIFont.systemFont(ofSize: 17.0, weight: .bold) }
+	var normalFont:UIFont { return UIFont.systemFont(ofSize: 15.0)}
+
+	func bold(_ value:String) -> NSMutableAttributedString {
+		let attributes:[NSAttributedString.Key : Any] = [
+			.font : boldFont
+		]
+
+		self.append(NSAttributedString(string: value, attributes:attributes))
+		return self
+	}
+
+	func normal(_ value:String) -> NSMutableAttributedString {
+		let attributes:[NSAttributedString.Key : Any] = [
+			.font : normalFont
+		]
+
+		self.append(NSAttributedString(string: value, attributes:attributes))
+		return self
+	}
+}
+
 public protocol ClientItemCellDelegate: class {
 
 	func moreButtonTapped(cell: ClientItemCell)
@@ -293,12 +316,18 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		}
 	}
 
-	open func titleLabelString(for item: OCItem?) -> String {
-		if let item = item, let itemName = item.name {
-			return itemName
+	open func titleLabelString(for item: OCItem?) -> NSAttributedString {
+		if let item = item, item.type == .file, let itemName = item.baseName, let itemExtension = item.fileExtension {
+			return NSMutableAttributedString()
+				.bold(itemName)
+				.normal(".")
+				.normal(itemExtension)
+		} else if let item = item, item.type == .collection, let itemName = item.name {
+			return NSMutableAttributedString()
+				.bold(itemName)
 		}
 
-		return ""
+		return NSAttributedString(string: "")
 	}
 
 	open func detailLabelString(for item: OCItem?) -> String {
@@ -419,7 +448,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	}
 
 	open func updateLabels(with item: OCItem?) {
-		self.titleLabel.text = titleLabelString(for: item)
+		self.titleLabel.attributedText = titleLabelString(for: item)
 		self.detailLabel.text = detailLabelString(for: item)
 	}
 
