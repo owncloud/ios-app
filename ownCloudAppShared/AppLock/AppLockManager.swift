@@ -151,6 +151,10 @@ public class AppLockManager: NSObject {
 		return (self.classSetting(forOCClassSettingsKey: .requiredPasscodeDigits) as? Int) ?? 4
 	}
 
+	public var maximumPasscodeDigits : Int {
+		return (self.classSetting(forOCClassSettingsKey: .maximumPasscodeDigits) as? Int) ?? 6
+	}
+
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
 
@@ -538,6 +542,7 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let passcodeEnforced = OCClassSettingsKey("enforced")
 	static let requiredPasscodeDigits = OCClassSettingsKey("requiredPasscodeDigits")
+	static let maximumPasscodeDigits = OCClassSettingsKey("maximumPasscodeDigits")
 }
 
 extension AppLockManager: OCClassSettingsSupport {
@@ -546,7 +551,8 @@ extension AppLockManager: OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
 			.passcodeEnforced : false,
-			.requiredPasscodeDigits: 4
+			.requiredPasscodeDigits: 4,
+			.maximumPasscodeDigits: 6
 		]
 	}
 
@@ -560,7 +566,13 @@ extension AppLockManager: OCClassSettingsSupport {
 			],
 			.requiredPasscodeDigits : [
 				.type 		: OCClassSettingsMetadataType.integer,
-				.description	: "Controls how many passcode digits are minimal required for passcode lock.",
+				.description	: "Controls how many passcode digits are at least required for passcode lock.",
+				.category	: "Passcode",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+			.maximumPasscodeDigits : [
+				.type 		: OCClassSettingsMetadataType.integer,
+				.description	: "Controls how many passcode digits are maximal possible for passcode lock.",
 				.category	: "Passcode",
 				.status		: OCClassSettingsKeyStatus.advanced
 			]

@@ -43,7 +43,7 @@ public class PasscodeSetupCoordinator {
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
 	private var minPasscodeDigits: Int = 4
-	private var maxPasscodeDigits: Int = 6
+	private var maxPasscodeDigits: Int = AppLockManager.shared.maximumPasscodeDigits
 
 	public class var isPasscodeSecurityEnabled: Bool {
 		get {
@@ -78,7 +78,7 @@ public class PasscodeSetupCoordinator {
 
 	public func start() {
 		if self.action == .setup, AppLockManager.shared.requiredPasscodeDigits < self.maxPasscodeDigits {
-			showNumberOfDigitsSetup()
+			showDigitsCountSelectionUI()
 		} else {
 			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits
 			if self.action == .upgrade {
@@ -142,7 +142,7 @@ public class PasscodeSetupCoordinator {
 		}
 	}
 
-	public func showNumberOfDigitsSetup() {
+	public func showDigitsCountSelectionUI() {
 		let alertController = ThemedAlertController(title: "Passcode option".localized, message: "Please choose how many digits you want to use for the passcode lock?".localized, preferredStyle: .actionSheet)
 
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
