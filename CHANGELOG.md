@@ -1,3 +1,25 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.6.1...master
+
+Summary
+-------
+
+* Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
+
+Details
+-------
+
+* Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
+
+   Adopted the filename layout to the new Web UI with bold font weight, large file name and normal
+   font weight, small file extension.
+
+   https://github.com/owncloud/ios-app/issues/968
+
 Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.6.1 relevant to
