@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 extension NSMutableAttributedString {
-	var boldFont:UIFont { return UIFont.systemFont(ofSize: 17.0, weight: .bold) }
+	var boldFont:UIFont { return UIFont.systemFont(ofSize: 17.0, weight: .semibold) }
 	var normalFont:UIFont { return UIFont.systemFont(ofSize: 15.0)}
 
 	func bold(_ value:String) -> NSMutableAttributedString {
