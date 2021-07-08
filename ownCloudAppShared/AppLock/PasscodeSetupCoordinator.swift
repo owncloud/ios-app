@@ -145,6 +145,12 @@ public class PasscodeSetupCoordinator {
 	public func showDigitsCountSelectionUI() {
 		let alertController = ThemedAlertController(title: "Passcode option".localized, message: "Please choose how many digits you want to use for the passcode lock?".localized, preferredStyle: .actionSheet)
 
+		if let popoverController = alertController.popoverPresentationController {
+			popoverController.sourceView = self.parentViewController.view
+			popoverController.sourceRect = CGRect(x: self.parentViewController.view.bounds.midX, y: self.parentViewController.view.bounds.midY, width: 0, height: 0)
+			popoverController.permittedArrowDirections = []
+		}
+
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
 			self.completionHandler?(true)
 		}))
