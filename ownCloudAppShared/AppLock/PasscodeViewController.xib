@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,6 +15,7 @@
                 <outlet property="deleteButton" destination="F9C-Vg-uCq" id="Dw1-Fd-gaD"/>
                 <outlet property="errorMessageLabel" destination="mT7-pc-IHc" id="GXQ-1O-GTr"/>
                 <outlet property="keypadContainerView" destination="C0s-hA-da3" id="9Kt-nZ-A9U"/>
+                <outlet property="landscapePasscodeTextField" destination="SOo-MB-t0E" id="BWm-9n-6ao"/>
                 <outlet property="lockscreenContainerView" destination="i5M-Pr-FkT" id="Sav-GJ-nBe"/>
                 <outlet property="messageLabel" destination="vti-jb-9pW" id="BwO-hj-COq"/>
                 <outlet property="passcodeLabel" destination="Udf-vz-0kh" id="uGX-ma-fKH"/>
@@ -50,17 +51,17 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timeout message label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ox7-yY-YRf">
-                            <rect key="frame" x="71.5" y="273.5" width="177" height="21"/>
+                            <rect key="frame" x="72" y="273.5" width="176" height="21"/>
                             <accessibility key="accessibilityConfiguration" identifier="timeoutMessageLabel"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view verifyAmbiguity="off" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C0s-hA-da3" userLabel="Keypad" customClass="KeyboardInput" customModule="ownCloudAppShared" customModuleProvider="target">
-                            <rect key="frame" x="36" y="137" width="248" height="339"/>
+                            <rect key="frame" x="45" y="137" width="230" height="315"/>
                             <subviews>
-                                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="66" height="66"/>
+                                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number1Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="85k-O3-nSF" secondAttribute="height" multiplier="1:1" id="Vh0-fP-3Vw"/>
@@ -73,8 +74,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="vL8-Xw-Q7c"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="91" y="0.0" width="66" height="66"/>
+                                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="85" y="0.0" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number2Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="VzK-5I-Ct8" secondAttribute="height" multiplier="1:1" id="UQj-g6-A3V"/>
@@ -87,8 +88,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="zEy-xF-rfL"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="182" y="0.0" width="66" height="66"/>
+                                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="170" y="0.0" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number3Button"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="Owh-E0-zIP"/>
@@ -101,8 +102,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="3yq-cM-ME1"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="91" width="66" height="66"/>
+                                <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="85" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number4Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="IVZ-la-esK" secondAttribute="height" multiplier="1:1" id="RMu-ty-Arw"/>
@@ -114,8 +115,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="EE2-ZJ-IKe"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="91" y="91" width="66" height="66"/>
+                                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="85" y="85" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number5Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="9xg-xz-Tph" secondAttribute="height" multiplier="1:1" id="CUF-qf-Jqe"/>
@@ -128,8 +129,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="But-ns-IRh"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="182" y="91" width="66" height="66"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="170" y="85" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number6Button"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="lessThanOrEqual" priority="700" constant="70" id="4Up-dH-UDB"/>
@@ -142,8 +143,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="RTV-5f-QoK"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="182" width="66" height="66"/>
+                                <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="170" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number7Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="fMx-64-bYq" secondAttribute="height" multiplier="1:1" id="7ly-Lj-IMy"/>
@@ -156,8 +157,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="5pr-ab-eOz"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="91" y="182" width="66" height="66"/>
+                                <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="85" y="170" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number8Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="qMI-IV-KI3" secondAttribute="height" multiplier="1:1" id="19A-do-8lq"/>
@@ -170,8 +171,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="bwW-CX-aLY"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="182" y="182" width="66" height="66"/>
+                                <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="170" y="170" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number9Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="48Q-nf-LTg" secondAttribute="height" multiplier="1:1" id="3ze-2B-jFg"/>
@@ -184,8 +185,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="Gw9-Gc-MOm"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="91" y="273" width="66" height="66"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="85" y="255" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number0Button"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="lessThanOrEqual" constant="700" id="Pq5-Dx-0EG"/>
@@ -198,8 +199,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="fxw-0Q-s08"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9C-Vg-uCq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="182" y="273" width="66" height="66"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9C-Vg-uCq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="170" y="255" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="deleteButton"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="MaJ-rl-XGF"/>
@@ -263,6 +264,15 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <textField hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SOo-MB-t0E">
+                                    <rect key="frame" x="0.0" y="0.0" width="97" height="34"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="UgL-ne-9zE"/>
+                                    </connections>
+                                </textField>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="vti-jb-9pW" firstAttribute="centerX" secondItem="oPw-HC-8y2" secondAttribute="centerX" id="3Df-UV-RCR"/>
@@ -276,7 +286,7 @@
                                 <constraint firstItem="Udf-vz-0kh" firstAttribute="centerX" secondItem="oPw-HC-8y2" secondAttribute="centerX" id="zJZ-al-5Qp"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0I-oo-iOZ" customClass="ThemeButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0I-oo-iOZ" customClass="ThemeButton" customModule="ownCloudAppShared" customModuleProvider="target">
                             <rect key="frame" x="20" y="518" width="280" height="40"/>
                             <accessibility key="accessibilityConfiguration" identifier="cancelButton"/>
                             <constraints>
@@ -290,6 +300,7 @@
                             </connections>
                         </button>
                     </subviews>
+                    <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
                     <constraints>
                         <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="g0I-oo-iOZ" secondAttribute="bottom" constant="10" id="0Px-wZ-QWT"/>
                         <constraint firstItem="g0I-oo-iOZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="C0s-hA-da3" secondAttribute="bottom" priority="950" constant="20" id="6uw-gm-S8h"/>
@@ -305,9 +316,9 @@
                         <constraint firstItem="g0I-oo-iOZ" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="rkx-CB-L4A"/>
                         <constraint firstItem="C0s-hA-da3" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="sXo-1O-IQ9"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vyp-4Q-SVo"/>
             <constraints>
                 <constraint firstItem="ZQ4-NE-Hrm" firstAttribute="top" secondItem="1ua-9z-VE2" secondAttribute="top" id="EXT-7Y-rVr"/>
                 <constraint firstAttribute="bottom" secondItem="ZQ4-NE-Hrm" secondAttribute="bottom" id="TL1-Id-icq"/>
@@ -318,8 +329,45 @@
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="1ua-9z-VE2" secondAttribute="top" id="tuy-QI-1Wf"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="trailing" secondItem="1ua-9z-VE2" secondAttribute="trailing" id="zyI-Ld-o7i"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vyp-4Q-SVo"/>
             <point key="canvasLocation" x="412.5" y="50"/>
         </view>
     </objects>
+    <designables>
+        <designable name="48Q-nf-LTg">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="85k-O3-nSF">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="9xg-xz-Tph">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="F9C-Vg-uCq">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="IVZ-la-esK">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="TIO-8z-Ags">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="VzK-5I-Ct8">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="fMx-64-bYq">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="g0I-oo-iOZ">
+            <size key="intrinsicContentSize" width="77" height="39"/>
+        </designable>
+        <designable name="gBp-H8-606">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="hgh-7z-Fto">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+        <designable name="qMI-IV-KI3">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
+    </designables>
 </document>
