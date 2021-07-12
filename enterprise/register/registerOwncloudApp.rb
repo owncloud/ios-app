@@ -242,10 +242,20 @@ class AppRegistration
 			else
 				profile = Spaceship::Portal.provisioning_profile.app_store.create!(bundle_id: bundle_id, certificate: cert,  name: "match AppStore #{bundle_id}")
 			end
-		end
-		
-		if profile.status == "Invalid"
-			profile.repair!
+		else
+			profile = filtered_profiles.first
+			
+			if !profile.valid?
+				puts "Repairing Profile…"
+				profile.repair!
+				
+				if Spaceship::Portal.client.in_house?
+					filtered_profiles = Spaceship::Portal.provisioning_profile.InHouse.find_by_bundle_id(bundle_id: bundle_id)
+				else
+					filtered_profiles = Spaceship::Portal.provisioning_profile.app_store.find_by_bundle_id(bundle_id: bundle_id)
+				end
+				profile = filtered_profiles.first
+			end
 		end
 		
 		profileData = profile.download
@@ -253,7 +263,7 @@ class AppRegistration
 			if !Dir.exist?("Assets")
 				Dir.mkdir "Assets"
 			end
-			File.write("Assets/#{profileFilename}", profile.download)
+			File.write("Assets/#{profileFilename}", profileData)
 			puts "Saved profile for #{bundle_id} to: Assets/#{profileFilename}"
 		
 			if Dir.exist?("../resign/Provisioning Files/")
@@ -294,5 +304,3 @@ register.prepareAppID("File Provider", "FileProvider.mobileprovision", groups,re
 register.prepareAppID("File Provider UI", "FileProviderUI.mobileprovision", groups, registrationType, "#{bundlePrefix}.ios-app.ownCloud-File-ProviderUI", cert)
 register.prepareAppID("Intent", "Intent.mobileprovision", groups, registrationType, "#{bundlePrefix}.ios-app.ownCloud-Intent", cert)
 register.prepareAppID("ShareExtension", "ShareExtension.mobileprovision", groups, registrationType,"#{bundlePrefix}.ios-app.ownCloud-Share-Extension", cert)
-
-
