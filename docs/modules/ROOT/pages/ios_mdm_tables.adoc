@@ -635,6 +635,12 @@ The following placeholders can be used to make it dynamic:
 |Concurrency budgets available for sync actions by action category.
 |advanced `candidate`
 
+|core.scan-for-changes-interval
+|int
+|
+|Minimum number of milliseconds until the next scan for changes, measured from the completion of the previous scan. If no value is provided, uses the pollinterval provided in the server's capabilities. If none is provided either, defaults to 10 seconds.
+|advanced `candidate`
+
 |connection.allow-background-url-sessions
 |bool
 |`true`

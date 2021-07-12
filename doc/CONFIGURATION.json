@@ -1160,6 +1160,19 @@
     "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
+    "description" : "Minimum number of milliseconds until the next scan for changes, measured from the completion of the previous scan. If no value is provided, uses the pollinterval provided in the server's capabilities. If none is provided either, defaults to 10 seconds.",
+    "flatIdentifier" : "core.scan-for-changes-interval",
+    "key" : "scan-for-changes-interval",
+    "label" : "core.scan-for-changes-interval",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
     "defaultValue" : [
       "*"
     ],
