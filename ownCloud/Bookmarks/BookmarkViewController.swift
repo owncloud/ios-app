@@ -566,10 +566,46 @@ class BookmarkViewController: StaticTableViewController {
 					if error == nil {
 						bookmark.displayName = connection.loggedInUser?.displayName
 						connection.disconnect(completionHandler: {
+							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+							strongSelf.userActionCompletionHandler = nil
+
+							let done = {
+								OnMainThread {
+									hudCompletion({
+										strongSelf.presentingViewController?.dismiss(animated: true, completion: {
+											OnMainThread {
+												userActionCompletionHandler?(bookmark, true)
+											}
+										})
+									})
+								}
+							}
+
 							switch strongSelf.mode {
 							case .create:
 								// Add bookmark
-								OCBookmarkManager.shared.addBookmark(bookmark)
+								OnMainThread {
+									var progressViewController : ProgressIndicatorViewController?
+
+									let prepopulateProgress = bookmark.prepopulate(completionHandler: { error in
+										OCBookmarkManager.shared.addBookmark(bookmark)
+
+										OnMainThread {
+											progressViewController?.dismiss(animated: true, completion: {
+												done()
+											})
+										}
+									})
+
+									progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing account…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
+										prepopulateProgress.cancel()
+									})
+									progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
+
+									if let progressViewController = progressViewController {
+										self?.topMostViewController.present(progressViewController, animated: true, completion: nil)
+									}
+								}
 
 							case .edit:
 								// Update original bookmark
@@ -577,21 +613,9 @@ class BookmarkViewController: StaticTableViewController {
 								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
 									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
 								}
+
+								done()
 							}
-
-							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
-							strongSelf.userActionCompletionHandler = nil
-
-							OnMainThread {
-								hudCompletion({
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: {
-										OnMainThread {
-											userActionCompletionHandler?(bookmark, true)
-										}
-									})
-								})
-							}
-
 						})
 					} else {
 						OnMainThread {
