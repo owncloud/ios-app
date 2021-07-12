@@ -39,7 +39,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var keypadButtons: [ThemeRoundedButton]?
 	@IBOutlet private var deleteButton: ThemeButton?
 	@IBOutlet public var cancelButton: ThemeButton?
-	@IBOutlet public var landscapePasscodeTextField: UITextField?
+	@IBOutlet public var compactHeightPasscodeTextField: UITextField?
 
 	// MARK: - Properties
 	private var passcodeLength: Int
@@ -97,52 +97,9 @@ public class PasscodeViewController: UIViewController, Themeable {
 			keypadContainerView?.isUserInteractionEnabled = !keypadButtonsHidden
 
 			if oldValue != keypadButtonsHidden {
-				if keypadButtonsHidden {
-
-						if UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown {
-
-							UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-								self.keypadContainerView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-								self.keypadContainerView?.alpha = 0
-							}, completion: { (_) in
-								self.keypadContainerView?.isHidden = self.keypadButtonsHidden
-							})
-						} else {
-							self.landscapePasscodeTextField?.resignFirstResponder()
-
-						}
-
-				} else {
-
-					if UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown {
-
-					 self.keypadContainerView?.isHidden = self.keypadButtonsHidden
-
-					 UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-						 self.keypadContainerView?.transform = .identity
-						 self.keypadContainerView?.alpha = 1
-					 }, completion: nil)
-					   } else {
-
-						self.landscapePasscodeTextField?.becomeFirstResponder()
-					   }
-				}
+				updateKeypadButtons()
 			}
 		}
-	}
-
-	public override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
-
-		/*
-		switch UIDevice.current.orientation{
-  case .portrait:
-	self.landscapePasscodeTextField
-  case .portraitUpsideDown:
-  case .landscapeLeft:
-  case .landscapeRight:
-  default:
-  }
-*/
 	}
 
 	var cancelButtonHidden: Bool {
@@ -150,6 +107,14 @@ public class PasscodeViewController: UIViewController, Themeable {
 			cancelButton?.isEnabled = cancelButtonHidden
 			cancelButton?.isHidden = !cancelButtonHidden
 		}
+	}
+
+	var hasCompactHeight: Bool {
+		if self.traitCollection.verticalSizeClass == .compact {
+			return true
+		}
+
+		return false
 	}
 
 	// MARK: - Handlers
@@ -192,24 +157,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
-		self.keypadButtonsHidden = true
-
-		switch UIDevice.current.orientation {
-		case .portrait:
-			self.errorMessageLabel?.text = "portrait"
-		case .portraitUpsideDown:
-			self.errorMessageLabel?.text = "portraitUpsideDown"
-		case .landscapeLeft:
-			self.errorMessageLabel?.text = "landscapeLeft"
-		case .landscapeRight:
-			self.errorMessageLabel?.text = "landscapeRight"
-		default:
-			self.errorMessageLabel?.text = "Foo"
-		}
-		/*
-		self.keypadContainerView?.isHidden = true
-		self.landscapePasscodeTextField?.isHidden = true
-		self.landscapePasscodeTextField?.becomeFirstResponder()*/
+		updateKeypadButtons()
 
 		if #available(iOS 13.4, *) {
 			for button in keypadButtons! {
@@ -221,18 +169,12 @@ public class PasscodeViewController: UIViewController, Themeable {
 	}
 
 	public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		self.keypadContainerView?.isHidden = true
+		self.compactHeightPasscodeTextField?.resignFirstResponder()
 
-		switch UIDevice.current.orientation {
-		case .portrait:
-			self.errorMessageLabel?.text = "portrait"
-		case .portraitUpsideDown:
-			self.errorMessageLabel?.text = "portraitUpsideDown"
-		case .landscapeLeft:
-			self.errorMessageLabel?.text = "landscapeLeft"
-		case .landscapeRight:
-			self.errorMessageLabel?.text = "landscapeRight"
-		default:
-			self.errorMessageLabel?.text = "Foo"
+		super.viewWillTransition(to: size, with: coordinator)
+		coordinator.animate(alongsideTransition: nil) { _ in
+			self.updateKeypadButtons()
 		}
 	}
 
@@ -250,16 +192,33 @@ public class PasscodeViewController: UIViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	// MARK: - Orientation
-	public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-		return .portrait
-	}
-
-	public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-		return .portrait
-	}
-
 	// MARK: - UI updates
+
+	private func updateKeypadButtons() {
+		if keypadButtonsHidden {
+			self.compactHeightPasscodeTextField?.resignFirstResponder()
+			UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+				self.keypadContainerView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+				self.keypadContainerView?.alpha = 0
+			}, completion: { (_) in
+				self.keypadContainerView?.isHidden = self.keypadButtonsHidden
+			})
+		} else {
+			if !self.hasCompactHeight {
+				self.keypadContainerView?.isHidden = self.keypadButtonsHidden
+				self.compactHeightPasscodeTextField?.resignFirstResponder()
+
+				UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+					self.keypadContainerView?.transform = .identity
+					self.keypadContainerView?.alpha = 1
+				}, completion: nil)
+			} else {
+				self.keypadContainerView?.isHidden = true
+				self.compactHeightPasscodeTextField?.becomeFirstResponder()
+			}
+		}
+	}
+
 	private func updatePasscodeDots() {
 		var placeholders = ""
 		let enteredDigits = passcode?.count ?? 0

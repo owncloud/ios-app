@@ -43,7 +43,12 @@ public class PasscodeSetupCoordinator {
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
 	private var minPasscodeDigits: Int = 4
-	private var maxPasscodeDigits: Int = AppLockManager.shared.maximumPasscodeDigits
+	private var maxPasscodeDigits: Int {
+		if AppLockManager.shared.maximumPasscodeDigits < minPasscodeDigits {
+			return minPasscodeDigits
+		}
+		return AppLockManager.shared.maximumPasscodeDigits
+	}
 
 	public class var isPasscodeSecurityEnabled: Bool {
 		get {
@@ -77,7 +82,7 @@ public class PasscodeSetupCoordinator {
 	}
 
 	public func start() {
-		if self.action == .setup, AppLockManager.shared.requiredPasscodeDigits < self.maxPasscodeDigits {
+		if self.action == .setup, self.minPasscodeDigits < self.maxPasscodeDigits {
 			showDigitsCountSelectionUI()
 		} else {
 			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits
@@ -156,7 +161,7 @@ public class PasscodeSetupCoordinator {
 		}))
 
 		var digit = self.maxPasscodeDigits
-		while digit >= AppLockManager.shared.requiredPasscodeDigits, digit >= self.minPasscodeDigits {
+		while digit >= self.minPasscodeDigits {
 			let currentDigit = digit
 				alertController.addAction(UIAlertAction(title: String(format: "%ld digit code".localized, currentDigit), style: .default, handler: { _ in
 					self.showPasscodeUI(requiredDigits: currentDigit)

@@ -148,7 +148,10 @@ public class AppLockManager: NSObject {
 	}
 
 	public var requiredPasscodeDigits : Int {
-		return (self.classSetting(forOCClassSettingsKey: .requiredPasscodeDigits) as? Int) ?? 4
+		if let digit = self.classSetting(forOCClassSettingsKey: .requiredPasscodeDigits) as? Int, digit > 4 {
+			return digit
+		}
+		return 4
 	}
 
 	public var maximumPasscodeDigits : Int {
