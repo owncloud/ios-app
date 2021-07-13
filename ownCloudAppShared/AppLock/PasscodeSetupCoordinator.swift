@@ -42,7 +42,12 @@ public class PasscodeSetupCoordinator {
 	private var passcodeViewController: PasscodeViewController?
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
-	private var minPasscodeDigits: Int = 4
+	private var minPasscodeDigits: Int {
+		if AppLockManager.shared.requiredPasscodeDigits > 4 {
+			return AppLockManager.shared.requiredPasscodeDigits
+		}
+		return 4
+	}
 	private var maxPasscodeDigits: Int {
 		if AppLockManager.shared.maximumPasscodeDigits < minPasscodeDigits {
 			return minPasscodeDigits

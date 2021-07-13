@@ -234,6 +234,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			}
 		}
 
+		self.compactHeightPasscodeTextField?.text = passcode
 		self.passcodeLabel?.text = placeholders
 	}
 
@@ -308,7 +309,13 @@ public class PasscodeViewController: UIViewController, Themeable {
 
 extension PasscodeViewController: UITextFieldDelegate {
 	open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-		appendDigit(digit: string)
-		return true
+
+		if range.length > 0 {
+			deleteLastDigit()
+		} else {
+			appendDigit(digit: string)
+		}
+
+		return false
 	}
 }
