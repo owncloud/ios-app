@@ -343,7 +343,7 @@ lane :owncloud_online_build do
   )
 end
 
-  lane :owncloud_branding_adhoc_build do
+  lane :owncloud_branding_adhoc_build do |values|
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
       ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
@@ -361,11 +361,12 @@ end
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      BUILD_NUMBER: values[:BUILD_NUMBER]
     )
   end
 
-  lane :owncloud_branding_appstore_build do
+  lane :owncloud_branding_appstore_build do |values|
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.ios-app",
       ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
@@ -383,15 +384,19 @@ end
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
-      BETA_APP_ICON: false
+      BETA_APP_ICON: false,
+      BUILD_NUMBER: values[:BUILD_NUMBER]
     )
   end
 
   lane :owncloud_ownbrander_build do
-    puts "Drone Build Number"
-    puts ENV["DRONE_BUILD_NUMBER"]
-    owncloud_branding_adhoc_build()
-    owncloud_branding_appstore_build()
+    puts "ownBrander Build with Drone Build Number" + ENV["DRONE_BUILD_NUMBER"]
+    owncloud_branding_adhoc_build(
+      BUILD_NUMBER: ENV["DRONE_BUILD_NUMBER"]
+    )
+    owncloud_branding_appstore_build(
+      BUILD_NUMBER: ENV["DRONE_BUILD_NUMBER"]
+    )
   end
 
   lane :owncloud_enterprise_build do
@@ -450,6 +455,7 @@ end
     APP_GROUP_IDENTIFIERS = values[:APP_GROUP_IDENTIFIERS]
     EXPORT_METHOD = values[:EXPORT_METHOD]
     CONFIGURATION = values[:CONFIGURATION]
+    BUILD_NUMBER = values[:BUILD_NUMBER]
 
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
@@ -466,6 +472,15 @@ end
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
+
+    if !values[:BUILD_NUMBER].nil?
+      puts "Set Drone Build Number: " + BUILD_NUMBER
+      set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleVersion", value: BUILD_NUMBER)
+      set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleVersion", value: BUILD_NUMBER)
+      set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleVersion", value: BUILD_NUMBER)
+      set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleVersion", value: BUILD_NUMBER)
+      set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "CFBundleVersion", value: BUILD_NUMBER)
+    end
 
     if !values[:URL_SCHEME].nil?
       update_url_schemes(
