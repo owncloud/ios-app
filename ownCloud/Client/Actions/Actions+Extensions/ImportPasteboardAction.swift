@@ -29,6 +29,11 @@ class ImportPasteboardAction : Action {
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
+	static let InternalPasteboardKey = "com.owncloud.pasteboard"
+	static let InternalPasteboardCopyKey = "com.owncloud.uti.ocitem.copy"
+	static let InternalPasteboardCutKey = "com.owncloud.uti.ocitem.cut"
+	static let InternalPasteboardChangedCounterKey = OCKeyValueStoreKey(rawValue: "com.owncloud.internal-pasteboard-changed-counter")
+
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		let pasteboard = UIPasteboard.general
@@ -47,25 +52,26 @@ class ImportPasteboardAction : Action {
 		}
 
 		let pasteboard = UIPasteboard.general
-
+		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
 		// Determine, if the internal pasteboard is the current item and use it
-		if pasteboard.changeCount == tabBarController.pasteboardChangedCounter {
+		if let pasteboardChangedCounter = vault.keyValueStore?.readObject(forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey) as? Int, pasteboard.changeCount == pasteboardChangedCounter {
 			// Internal Pasteboard
-			if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: false) {
-				if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.ocitem.copy"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
-					if let item = object as? OCItem, let name = item.name {
-						core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
-							if error != nil {
-								self.completed(with: NSError(ocError: .internal))
-							}
-						})
-					}
-				} else if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.ocitem.cut"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
-					if let item = object as? OCItem, let name = item.name {
-						core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
-							if error != nil {
-								self.completed(with: NSError(ocError: .internal))
-							}
+			if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false) {
+
+				if let data = pasteboard.data(forPasteboardType: ImportPasteboardAction.InternalPasteboardCopyKey), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+					guard let item = object as? OCItem, let name = item.name else { return }
+
+					core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+						if error != nil {
+							self.completed(with: error)
+						}
+					})
+				} else if let data = pasteboard.data(forPasteboardType: ImportPasteboardAction.InternalPasteboardCutKey), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+					guard let item = object as? OCItem, let name = item.name else { return }
+
+					core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
+						if error != nil {
+							self.completed(with: error)
 						}
 					}
 				}
@@ -90,13 +96,13 @@ class ImportPasteboardAction : Action {
 							],
 											 placeholderCompletionHandler: { (error, item) in
 												if error != nil {
-													self.completed(with: NSError(ocError: .internal))
+													self.completed(with: error)
 													Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
 												}
 						},
 											 resultHandler: { (error, _ core, _ item, _) in
 												if error != nil {
-													self.completed(with: NSError(ocError: .internal))
+													self.completed(with: error)
 													Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
 												} else {
 													Log.debug("Success uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path))")
@@ -104,7 +110,7 @@ class ImportPasteboardAction : Action {
 						}
 						)
 					} catch let error as NSError {
-						print(error)
+						self.completed(with: error)
 					}
 				}
 			}

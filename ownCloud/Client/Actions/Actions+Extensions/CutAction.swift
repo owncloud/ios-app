@@ -46,12 +46,13 @@ class CutAction : Action {
 		}
 
 		let items = context.items
+		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
 		items.forEach({ (item) in
-			if let fileData = item.serializedData() {
-				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
-				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.ocitem.cut")
-				tabBarController.pasteboardChangedCounter = UIPasteboard.general.changeCount
-			}
+			guard let fileData = item.serializedData() else { return }
+
+			let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true)
+			pasteboard?.setData(fileData as Data, forPasteboardType: ImportPasteboardAction.InternalPasteboardCutKey)
+			vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 		})
 	}
 

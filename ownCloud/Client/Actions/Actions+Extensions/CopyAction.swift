@@ -111,18 +111,18 @@ class CopyAction : Action {
 		}
 
 		let items = context.items
+		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
 		items.forEach({ (item) in
 			// Internal Pasteboard
 			if let fileData = item.serializedData() {
-				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
-				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.ocitem.copy")
-				tabBarController.pasteboardChangedCounter = UIPasteboard.general.changeCount
+				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true)
+				pasteboard?.setData(fileData as Data, forPasteboardType: ImportPasteboardAction.InternalPasteboardCopyKey)
+				vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 			}
 
 			// General system-wide Pasteboard
 			if item.type == .collection {
-				let pasteboard = UIPasteboard.general
-				tabBarController.pasteboardChangedCounter = pasteboard.changeCount
+				vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 			} else if item.type == .file {
 
 				guard let itemMimeType = item.mimeType else {
@@ -135,18 +135,16 @@ class CopyAction : Action {
 
 				core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, _) in
 					if error == nil {
-						if let item = item {
-							if let fileData = NSData(contentsOf: core.localURL(for: item)) {
-								let rawUtiString = rawUti as String
-								let pasteboard = UIPasteboard.general
-								pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
-								tabBarController.pasteboardChangedCounter = pasteboard.changeCount
+						guard let item = item, let fileData = NSData(contentsOf: core.localURL(for: item)) else { return }
+						
+						let rawUtiString = rawUti as String
+						let pasteboard = UIPasteboard.general
+						pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
+						vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 
-								OnMainThread {
-									if let navigationController = viewController.navigationController {
-										_ = NotificationHUDViewController(on: navigationController, title: item.name ?? "Copy".localized, subtitle: "Item was copied to the clipboard".localized)
-									}
-								}
+						OnMainThread {
+							if let navigationController = viewController.navigationController {
+								_ = NotificationHUDViewController(on: navigationController, title: item.name ?? "Copy".localized, subtitle: "Item was copied to the clipboard".localized)
 							}
 						}
 					}
