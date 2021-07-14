@@ -390,7 +390,7 @@ end
   end
 
   lane :owncloud_ownbrander_build do
-    puts "ownBrander Build with Drone Build Number" + ENV["DRONE_BUILD_NUMBER"]
+    puts "ownBrander Build with Drone Build Number: " + ENV["DRONE_BUILD_NUMBER"]
     owncloud_branding_adhoc_build(
       BUILD_NUMBER: ENV["DRONE_BUILD_NUMBER"]
     )
@@ -674,7 +674,11 @@ end
       ipaName = values[:IPA_NAME]
     elsif
       time = Time.now
-      ipaName = appName + "-" + version + "-" + EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M") + ".ipa"
+      ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
+      if !values[:BUILD_NUMBER].nil?
+        ipaSuffix += "-" + BUILD_NUMBER
+      end
+      ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
     end
 
     generate_appicon()
