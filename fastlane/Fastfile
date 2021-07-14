@@ -388,6 +388,8 @@ end
   end
 
   lane :owncloud_ownbrander_build do
+    puts "Drone Build Number"
+    puts ENV["DRONE_BUILD_NUMBER"]
     owncloud_branding_adhoc_build()
     owncloud_branding_appstore_build()
   end
@@ -459,12 +461,12 @@ end
         appName = tmpAppName
       end
     end
-      
+
     puts "App Name: " + appName
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
-    
+
     if !values[:URL_SCHEME].nil?
       update_url_schemes(
         path: "ownCloud/Resources/Info.plist",
