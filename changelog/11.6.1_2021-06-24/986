@@ -1,0 +1,5 @@
+Bugfix: FileProvider UI on iOS 12
+
+Views in FileProvider UI (public links, share with user) could not be dismissed on iOS 12
+
+https://github.com/owncloud/ios-app/issues/986
