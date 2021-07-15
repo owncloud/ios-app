@@ -504,6 +504,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 								self.addSection(self.tokenMaskSection())
 							}
 						}
+
+						if self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil {
+							self.addSection(self.urlHelpSection())
+						}
 					}
 				}
 
