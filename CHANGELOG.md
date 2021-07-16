@@ -9,6 +9,7 @@ Summary
 -------
 
 * Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
+* Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
 
 Details
 -------
@@ -19,6 +20,11 @@ Details
    font weight, small file extension.
 
    https://github.com/owncloud/ios-app/issues/968
+* Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
+
+   Passcode lock supports to set a passcode lock with 4 or 6 digits.
+
+   https://github.com/owncloud/ios-app/pull/958
 
 Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
 =======================================

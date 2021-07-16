@@ -1113,6 +1113,18 @@ tag::passcode[]
 |Controls wether the user MUST establish a passcode upon app installation
 |advanced `candidate`
 
+|passcode.maximumPasscodeDigits
+|int
+|`6`
+|Controls how many passcode digits are maximal possible for passcode lock.
+|advanced `candidate`
+
+|passcode.requiredPasscodeDigits
+|int
+|`4`
+|Controls how many passcode digits are at least required for passcode lock.
+|advanced `candidate`
+
 |===
 end::passcode[]
 
