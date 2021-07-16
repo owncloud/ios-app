@@ -26,7 +26,7 @@ open class ShareClientItemCell: ClientItemResolvingCell {
 	open override func titleLabelString(for item: OCItem?) -> NSAttributedString {
 		if let shareItemPath = share?.itemPath {
 			return NSMutableAttributedString()
-					.bold(shareItemPath)
+					.appendBold(shareItemPath)
 		}
 
 		return super.titleLabelString(for: item)

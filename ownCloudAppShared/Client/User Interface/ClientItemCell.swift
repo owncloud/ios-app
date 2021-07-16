@@ -20,10 +20,10 @@ import UIKit
 import ownCloudSDK
 
 extension NSMutableAttributedString {
-	var boldFont:UIFont { return UIFont.systemFont(ofSize: 17.0, weight: .semibold) }
-	var normalFont:UIFont { return UIFont.systemFont(ofSize: 15.0)}
+	var boldFont:UIFont { return UIFont.preferredFont(forTextStyle: .headline) }
+	var normalFont:UIFont { return UIFont.preferredFont(forTextStyle: .subheadline) }
 
-	func bold(_ value:String) -> NSMutableAttributedString {
+	func appendBold(_ value:String) -> NSMutableAttributedString {
 		let attributes:[NSAttributedString.Key : Any] = [
 			.font : boldFont
 		]
@@ -32,7 +32,7 @@ extension NSMutableAttributedString {
 		return self
 	}
 
-	func normal(_ value:String) -> NSMutableAttributedString {
+	func appendNormal(_ value:String) -> NSMutableAttributedString {
 		let attributes:[NSAttributedString.Key : Any] = [
 			.font : normalFont
 		]
@@ -317,14 +317,16 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	}
 
 	open func titleLabelString(for item: OCItem?) -> NSAttributedString {
-		if let item = item, item.type == .file, let itemName = item.baseName, let itemExtension = item.fileExtension {
+		guard let item = item else { return NSAttributedString(string: "") }
+
+		if item.type == .file, let itemName = item.baseName, let itemExtension = item.fileExtension {
 			return NSMutableAttributedString()
-				.bold(itemName)
-				.normal(".")
-				.normal(itemExtension)
-		} else if let item = item, item.type == .collection, let itemName = item.name {
+				.appendBold(itemName)
+				.appendNormal(".")
+				.appendNormal(itemExtension)
+		} else if item.type == .collection, let itemName = item.name {
 			return NSMutableAttributedString()
-				.bold(itemName)
+				.appendBold(itemName)
 		}
 
 		return NSAttributedString(string: "")
