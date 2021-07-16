@@ -21,11 +21,13 @@ import UIKit
 public enum PasscodeAction {
 	case setup
 	case delete
+	case upgrade
 
 	var localizedDescription : String {
 		switch self {
 		case .setup: return "Enter code".localized
 		case .delete: return "Delete code".localized
+		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockManager.shared.requiredPasscodeDigits)
 		}
 	}
 }
@@ -40,6 +42,18 @@ public class PasscodeSetupCoordinator {
 	private var passcodeViewController: PasscodeViewController?
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
+	private var minPasscodeDigits: Int {
+		if AppLockManager.shared.requiredPasscodeDigits > 4 {
+			return AppLockManager.shared.requiredPasscodeDigits
+		}
+		return 4
+	}
+	private var maxPasscodeDigits: Int {
+		if AppLockManager.shared.maximumPasscodeDigits < minPasscodeDigits {
+			return minPasscodeDigits
+		}
+		return AppLockManager.shared.maximumPasscodeDigits
+	}
 
 	public class var isPasscodeSecurityEnabled: Bool {
 		get {
@@ -73,7 +87,18 @@ public class PasscodeSetupCoordinator {
 	}
 
 	public func start() {
+		if self.action == .setup, self.minPasscodeDigits < self.maxPasscodeDigits {
+			showDigitsCountSelectionUI()
+		} else {
+			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits
+			if self.action == .upgrade {
+				requiredDigits = AppLockManager.shared.requiredPasscodeDigits
+			}
+			showPasscodeUI(requiredDigits: requiredDigits)
+		}
+	}
 
+	public func showPasscodeUI(requiredDigits: Int) {
 		passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController) in
 			passcodeViewController.dismiss(animated: true) {
 				self.completionHandler?(true)
@@ -90,7 +115,7 @@ public class PasscodeSetupCoordinator {
 					// Entered passcode doesn't match saved ones
 					self.updateUI(with: self.action.localizedDescription, errorMessage: "Incorrect code".localized)
 				}
-			} else { // Setup
+			} else { // Setup or Upgrade
 				if self.passcodeFromFirstStep == nil {
 					// 1) Enter passcode
 					self.passcodeFromFirstStep = passcode
@@ -110,7 +135,7 @@ public class PasscodeSetupCoordinator {
 					self.passcodeFromFirstStep = nil
 				}
 			}
-		}, hasCancelButton: !AppLockManager.shared.isPasscodeEnforced)
+		}, hasCancelButton: !(AppLockManager.shared.isPasscodeEnforced || self.action == .upgrade), requiredLength: requiredDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		if AppLockManager.shared.isPasscodeEnforced {
@@ -125,6 +150,31 @@ public class PasscodeSetupCoordinator {
 		} else {
 			parentViewController.present(passcodeViewController!, animated: true, completion: nil)
 		}
+	}
+
+	public func showDigitsCountSelectionUI() {
+		let alertController = ThemedAlertController(title: "Passcode option".localized, message: "Please choose how many digits you want to use for the passcode lock?".localized, preferredStyle: .actionSheet)
+
+		if let popoverController = alertController.popoverPresentationController {
+			popoverController.sourceView = self.parentViewController.view
+			popoverController.sourceRect = CGRect(x: self.parentViewController.view.bounds.midX, y: self.parentViewController.view.bounds.midY, width: 0, height: 0)
+			popoverController.permittedArrowDirections = []
+		}
+
+		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+			self.completionHandler?(true)
+		}))
+
+		var digit = self.maxPasscodeDigits
+		while digit >= self.minPasscodeDigits {
+			let currentDigit = digit
+				alertController.addAction(UIAlertAction(title: String(format: "%ld digit code".localized, currentDigit), style: .default, handler: { _ in
+					self.showPasscodeUI(requiredDigits: currentDigit)
+				}))
+			digit -= 2
+		}
+
+		parentViewController.present(alertController, animated: true, completion: nil)
 	}
 
 	public func startBiometricalFlow(_ enable:Bool) {
@@ -145,7 +195,7 @@ public class PasscodeSetupCoordinator {
 				passcodeViewController.errorMessage = "Incorrect code".localized
 				passcodeViewController.passcode = nil
 			}
-		})
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		parentViewController.present(passcodeViewController!, animated: true, completion: nil)

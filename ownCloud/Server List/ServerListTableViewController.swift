@@ -230,6 +230,8 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		if AppLockManager.shared.passcode == nil && AppLockManager.shared.isPasscodeEnforced {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
+		} else if let passcode = AppLockManager.shared.passcode, passcode.count < AppLockManager.shared.requiredPasscodeDigits {
+			PasscodeSetupCoordinator(parentViewController: self, action: .upgrade).start()
 		}
 
 		if VendorServices.shared.showBetaWarning, shownFirstTime {
