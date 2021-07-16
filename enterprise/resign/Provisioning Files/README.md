@@ -1,4 +1,4 @@
-#### Place the following provisioning files in this folder, which was created for the app-store:	
+#### Place the following provisioning files in this folder:	
 
 - App.mobileprovision
 - FileProvider.mobileprovision
