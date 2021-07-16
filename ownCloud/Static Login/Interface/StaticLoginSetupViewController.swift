@@ -49,7 +49,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		if profile.canConfigureURL {
 			self.addSection(urlSection())
-			if OCBookmarkManager.shared.bookmarks.count == 0, profile.promptForHelpURL != nil, profile.helpURLButtonString != nil, profile.helpURL != nil {
+			if OCBookmarkManager.shared.bookmarks.count == 0, profile.isOnboardingEnabled {
 				self.addSection(onboardingSection())
 			}
 		} else {
@@ -454,7 +454,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 								self.removeSection(busySection)
 							}
 							self.addSection(self.urlSection())
-							if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil, self.sectionForIdentifier("onboardingSection") == nil {
+							if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {
 								self.addSection(self.onboardingSection())
 							}
 						} else {
@@ -505,7 +505,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 							}
 						}
 
-						if self.profile.promptForHelpURL != nil, self.profile.helpURLButtonString != nil, self.profile.helpURL != nil, self.sectionForIdentifier("onboardingSection") == nil {
+						if self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {
 							self.addSection(self.onboardingSection())
 						}
 					}
