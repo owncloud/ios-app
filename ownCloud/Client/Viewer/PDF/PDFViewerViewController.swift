@@ -131,15 +131,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 	static var supportedMimeTypes: [String]? = ["application/pdf", "application/illustrator"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
-	required init() {
-		super.init()
-		updateStrategy = .ask
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 		if gotoPageNotificationObserver != nil {
