@@ -1,5 +1,0 @@
-Change: Background Media Upload
-
-Uploading media in the background can now be enabled in the app settings. This will automatically upload new media files in the iOS Camera Roll when significant location changes occur in the background, without opening the app.
-
-https://github.com/owncloud/ios-app/pull/940
