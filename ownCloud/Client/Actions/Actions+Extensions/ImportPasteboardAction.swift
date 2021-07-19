@@ -39,6 +39,8 @@ class ImportPasteboardAction : Action {
 		let pasteboard = UIPasteboard.general
 		if pasteboard.numberOfItems > 0 {
 			return .afterMiddle
+		} else if let internalPasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false), internalPasteboard.numberOfItems > 0 {
+			return .afterMiddle
 		}
 
 		return .none
