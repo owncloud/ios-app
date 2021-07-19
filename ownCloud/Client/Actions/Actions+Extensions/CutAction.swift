@@ -47,13 +47,16 @@ class CutAction : Action {
 
 		let items = context.items
 		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
-		items.forEach({ (item) in
-			guard let fileData = item.serializedData() else { return }
+		UIPasteboard.remove(withName: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey))
+		guard let internalPasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true) else {
+			return
+		}
+		let internalItems = items.map { item in
+			return [ImportPasteboardAction.InternalPasteboardCutKey : item.serializedData()]
+		}
+		internalPasteboard.addItems(internalItems)
 
-			let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true)
-			pasteboard?.setData(fileData as Data, forPasteboardType: ImportPasteboardAction.InternalPasteboardCutKey)
-			vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
-		})
+		vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {

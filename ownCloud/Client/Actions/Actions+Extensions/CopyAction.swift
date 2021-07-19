@@ -111,21 +111,29 @@ class CopyAction : Action {
 		}
 
 		let items = context.items
+
+		// Internal Pasteboard
 		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
+		UIPasteboard.remove(withName: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey))
+		guard let internalPasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true) else {
+			return
+		}
+		let internalItems = items.map { item in
+			return [ImportPasteboardAction.InternalPasteboardCopyKey : item.serializedData()]
+		}
+		internalPasteboard.addItems(internalItems)
+
+		// General system-wide Pasteboard
+		let globalPasteboard = UIPasteboard.general
+		globalPasteboard.items = []
+		let waitGroup = DispatchGroup()
+		var pasteboardItems : [[String : Any]] = []
+
 		items.forEach({ (item) in
-			// Internal Pasteboard
-			if let fileData = item.serializedData() {
-				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true)
-				pasteboard?.setData(fileData as Data, forPasteboardType: ImportPasteboardAction.InternalPasteboardCopyKey)
-				vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
-			}
-
-			// General system-wide Pasteboard
-			if item.type == .collection {
-				vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
-			} else if item.type == .file {
-
+			if item.type == .file { // only files can be added to the globale pasteboard
+				waitGroup.enter()
 				guard let itemMimeType = item.mimeType else {
+					waitGroup.leave()
 					return
 				}
 				let mimeTypeCF = itemMimeType as CFString
@@ -136,20 +144,29 @@ class CopyAction : Action {
 				core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, _) in
 					if error == nil {
 						guard let item = item, let fileData = NSData(contentsOf: core.localURL(for: item)) else { return }
-						
-						let rawUtiString = rawUti as String
-						let pasteboard = UIPasteboard.general
-						pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
-						vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 
-						OnMainThread {
-							if let navigationController = viewController.navigationController {
-								_ = NotificationHUDViewController(on: navigationController, title: item.name ?? "Copy".localized, subtitle: "Item was copied to the clipboard".localized)
-							}
-						}
+						let rawUtiString = rawUti as String
+						pasteboardItems.append([rawUtiString : fileData])
+
+						waitGroup.leave()
 					}
 				})
 			}
 		})
+
+		waitGroup.wait()
+		globalPasteboard.addItems(pasteboardItems)
+		vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
+
+		var subtitle = "%ld Item was copied to the clipboard".localized
+		if internalItems.count > 1 {
+			subtitle = "%ld Items was copied to the clipboard".localized
+		}
+
+		OnMainThread {
+			if let navigationController = viewController.navigationController {
+				_ = NotificationHUDViewController(on: navigationController, title: "Copy".localized, subtitle: String(format: subtitle, internalItems.count))
+			}
+		}
 	}
 }

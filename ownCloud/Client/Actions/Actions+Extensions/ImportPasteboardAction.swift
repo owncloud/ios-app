@@ -51,14 +51,13 @@ class ImportPasteboardAction : Action {
 			return
 		}
 
-		let pasteboard = UIPasteboard.general
 		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
-		// Determine, if the internal pasteboard is the current item and use it
-		if let pasteboardChangedCounter = vault.keyValueStore?.readObject(forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey) as? Int, pasteboard.changeCount == pasteboardChangedCounter {
-			// Internal Pasteboard
-			if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false) {
+		let generalPasteboard = UIPasteboard.general
 
-				if let data = pasteboard.data(forPasteboardType: ImportPasteboardAction.InternalPasteboardCopyKey), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+		// Determine, if the internal pasteboard has items available
+		if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false), let pasteboardChangedCounter = vault.keyValueStore?.readObject(forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey) as? Int, generalPasteboard.changeCount == pasteboardChangedCounter {
+			for item in pasteboard.items {
+				if let data = item[ImportPasteboardAction.InternalPasteboardCopyKey] as? Data, let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
 					guard let item = object as? OCItem, let name = item.name else { return }
 
 					core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
@@ -66,7 +65,7 @@ class ImportPasteboardAction : Action {
 							self.completed(with: error)
 						}
 					})
-				} else if let data = pasteboard.data(forPasteboardType: ImportPasteboardAction.InternalPasteboardCutKey), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+				} else if let data = item[ImportPasteboardAction.InternalPasteboardCutKey] as? Data, let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
 					guard let item = object as? OCItem, let name = item.name else { return }
 
 					core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
@@ -75,42 +74,46 @@ class ImportPasteboardAction : Action {
 						}
 					}
 				}
+
 			}
 		} else {
 			// System-wide Pasteboard
-			for type in pasteboard.types {
-				guard let data = pasteboard.data(forPasteboardType: type) else { return }
-				if let extUTI = UTTypeCopyPreferredTagWithClass(type as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue() {
-					let fileName = type
-					let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(extUTI as String)
-					do {
-						try data.write(to: localURL)
+			for type in generalPasteboard.types {
+				guard let dataArray = generalPasteboard.data(forPasteboardType: type, inItemSet: nil) else { return }
+				for data in dataArray {
 
-						core.importItemNamed(localURL.lastPathComponent,
-											 at: rootItem,
-											 from: localURL,
-											 isSecurityScoped: false,
-											 options: [
-												OCCoreOption.importByCopying : false,
-												OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
-							],
-											 placeholderCompletionHandler: { (error, item) in
-												if error != nil {
-													self.completed(with: error)
-													Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-												}
-						},
-											 resultHandler: { (error, _ core, _ item, _) in
-												if error != nil {
-													self.completed(with: error)
-													Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-												} else {
-													Log.debug("Success uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path))")
-												}
+					if let extUTI = UTTypeCopyPreferredTagWithClass(type as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue() {
+						let fileName = type
+						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(extUTI as String)
+						do {
+							try data.write(to: localURL)
+
+							core.importItemNamed(localURL.lastPathComponent,
+												 at: rootItem,
+												 from: localURL,
+												 isSecurityScoped: false,
+												 options: [
+													OCCoreOption.importByCopying : false,
+													OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
+								],
+												 placeholderCompletionHandler: { (error, item) in
+													if error != nil {
+														self.completed(with: error)
+														Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
+													}
+							},
+												 resultHandler: { (error, _ core, _ item, _) in
+													if error != nil {
+														self.completed(with: error)
+														Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
+													} else {
+														Log.debug("Success uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path))")
+													}
+							}
+							)
+						} catch let error as NSError {
+							self.completed(with: error)
 						}
-						)
-					} catch let error as NSError {
-						self.completed(with: error)
 					}
 				}
 			}
