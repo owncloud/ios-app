@@ -47,11 +47,6 @@ class MediaUploadOperation : Operation {
 			return
 		}
 
-		// Keep file provider session open
-		fpSession?.acquireFileProviderServicesHost { _, _, doneHandler in
-			doneHandler?()
-		} errorHandler: { _ in }
-
 		// Skip jobs for which local item IDs are valid and known in the scope of the current bookmark
 		if let localID = mediaUploadJob.scheduledUploadLocalID {
 			if let existingItem = self.findItem(for: localID as String) {
@@ -111,16 +106,12 @@ class MediaUploadOperation : Operation {
 			}
 
 			// Perform asset import
-
-			//self.fpSession?.incrementSessionUsage()
-
 			if let itemLocalId = self.importAsset(asset: asset,
 												  with: core,
 												  at: item,
 												  uploadCompletion: {
 				// Import successful
 				self.removeUploadJob(with: path)
-				//self.fpSession?.decrementSessionUsage()
 			})?.localID as OCLocalID? {
 
 				// Update media upload storage object
