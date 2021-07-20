@@ -1,0 +1,8 @@
+Change: Clipboard Support
+
+Clipboard support provides the following new features:
+- Copy: Files can be copied to the system-wide clipboard and pasted into other apps. Folders can also be copied within the ownCloud app.
+- Paste: Files can be pasted from the system-wide clipboard into the ownCloud app. Likewise, files and folders copied within the app can be pasted. 
+- Cut: Within an ownCloud account, files and folders can be cut and pasted to a different path. After this action, the items are no longer present in the original location.
+
+https://github.com/owncloud/ios-app/pull/514
