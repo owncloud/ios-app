@@ -12,6 +12,7 @@ Summary
 * Bugfix - Swiping PDF thumbnail view on the iPhone: [#918](https://github.com/owncloud/ios-app/issues/918)
 * Bugfix - Passcode Settings section not refreshed: [#923](https://github.com/owncloud/ios-app/issues/923)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+* Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 * Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
 * Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
@@ -45,6 +46,17 @@ Details
    Added french localization.
 
    https://github.com/owncloud/enterprise/issues/4450
+
+* Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
+
+   Clipboard support provides the following new features: - Copy: Files can be copied to the
+   system-wide clipboard and pasted into other apps. Folders can also be copied within the
+   ownCloud app. - Paste: Files can be pasted from the system-wide clipboard into the ownCloud
+   app. Likewise, files and folders copied within the app can be pasted. - Cut: Within an ownCloud
+   account, files and folders can be cut and pasted to a different path. After this action, the
+   items are no longer present in the original location.
+
+   https://github.com/owncloud/ios-app/pull/514
 
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 
