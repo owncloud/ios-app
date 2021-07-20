@@ -469,10 +469,7 @@ extension PHAsset {
 			if let fpSession = fpSession {
 				fpSession.importThroughFileProvider(url: sourceURL, as: fileName, to: rootItem) { error in
 					importResult = (nil, error)
-					// Nothing to track
-					uploadProgress = Progress()
-					uploadProgress?.totalUnitCount = 0
-					uploadProgress?.completedUnitCount = 0
+
 					uploadCompleteHandler?()
 
 					if !copySource {
