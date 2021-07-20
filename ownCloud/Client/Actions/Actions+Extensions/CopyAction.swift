@@ -126,36 +126,56 @@ class CopyAction : Action {
 		// General system-wide Pasteboard
 		let globalPasteboard = UIPasteboard.general
 		globalPasteboard.items = []
-		let waitGroup = DispatchGroup()
-		var pasteboardItems : [[String : Any]] = []
+		var itemProviderItems: [NSItemProvider] = []
 
 		items.forEach({ (item) in
 			if item.type == .file { // only files can be added to the globale pasteboard
-				waitGroup.enter()
-				guard let itemMimeType = item.mimeType else {
-					waitGroup.leave()
-					return
-				}
+				guard let itemMimeType = item.mimeType else { return }
+
 				let mimeTypeCF = itemMimeType as CFString
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() else {
-					return
-				}
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return }
 
-				core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, _) in
-					if error == nil {
-						guard let item = item, let fileData = NSData(contentsOf: core.localURL(for: item)) else { return }
+				let itemProvider = NSItemProvider()
 
-						let rawUtiString = rawUti as String
-						pasteboardItems.append([rawUtiString : fileData])
+				itemProvider.suggestedName = item.name
 
-						waitGroup.leave()
+				itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
+					var progress : Progress?
+
+					guard let core = core else {
+						completionHandler(nil, false, NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: nil))
+						return nil
 					}
+
+					if let localFileURL = core.localCopy(of: item) {
+						// Provide local copies directly
+						completionHandler(localFileURL, true, nil)
+					} else {
+						// Otherwise download the file and provide it when done
+						progress = core.downloadItem(item, options: [
+							.returnImmediatelyIfOfflineOrUnavailable : true,
+							.addTemporaryClaimForPurpose : OCCoreClaimPurpose.view.rawValue
+						], resultHandler: { [weak self] (error, core, item, file) in
+							guard error == nil, let fileURL = file?.url else {
+								completionHandler(nil, false, error)
+								return
+							}
+
+							completionHandler(fileURL, true, nil)
+
+							if let claim = file?.claim, let item = item, let self = self {
+								self.core?.remove(claim, on: item, afterDeallocationOf: [fileURL])
+							}
+						})
+					}
+
+					return progress
 				})
+				itemProviderItems.append(itemProvider)
 			}
 		})
 
-		waitGroup.wait()
-		globalPasteboard.addItems(pasteboardItems)
+		globalPasteboard.itemProviders = itemProviderItems
 		vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
 
 		var subtitle = "%ld Item was copied to the clipboard".localized
