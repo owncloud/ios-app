@@ -32,15 +32,15 @@ class ItemPolicyCell: ClientItemResolvingCell {
 	}
 
 	// MARK: - Item policy item
-	override func titleLabelString(for item: OCItem?) -> String {
+	override func titleLabelString(for item: OCItem?) -> NSAttributedString {
 		if (itemResolutionPath as NSString?)?.isRootPath == true {
-			return "Root folder".localized
+			return NSAttributedString(string: "Root folder".localized)
 		}
 
 		if let item = item {
 			return super.titleLabelString(for: item)
 		} else {
-			return "\((itemResolutionPath as NSString?)?.lastPathComponent ?? "") \("(no match)".localized)"
+			return NSAttributedString(string: "\((itemResolutionPath as NSString?)?.lastPathComponent ?? "") \("(no match)".localized)")
 		}
 	}
 

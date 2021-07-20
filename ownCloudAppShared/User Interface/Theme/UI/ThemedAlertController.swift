@@ -21,6 +21,15 @@ import UIKit
 public class ThemedAlertController: UIAlertController, Themeable {
 	private var themeRegistered : Bool = false
 
+	override open func viewDidLoad() {
+		super.viewDidLoad()
+
+		if #available(iOSApplicationExtension 13.0, *) {
+			self.overrideUserInterfaceStyle  = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+		}
+		view.tintColor = Theme.shared.activeCollection.navigationBarColors.tintColor
+	}
+
 	override open func viewWillAppear(_ animated: Bool) {
 		Theme.shared.register(client: self, applyImmediately: true)
 		super.viewWillAppear(animated)
