@@ -58,6 +58,7 @@ class ImportPasteboardAction : Action {
 
 		// Determine, if the internal pasteboard has items available
 		if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false), let pasteboardChangedCounter = vault.keyValueStore?.readObject(forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey) as? Int, generalPasteboard.changeCount == pasteboardChangedCounter {
+
 			for item in pasteboard.items {
 				if let data = item[ImportPasteboardAction.InternalPasteboardCopyKey] as? Data, let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
 					guard let item = object as? OCItem, let name = item.name else { return }
@@ -73,6 +74,8 @@ class ImportPasteboardAction : Action {
 					core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
 						if error != nil {
 							self.completed(with: error)
+						} else {
+							UIPasteboard.remove(withName: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey))
 						}
 					}
 				}
