@@ -68,6 +68,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	public var moveMultipleBarButtonItem: UIBarButtonItem?
 	public var duplicateMultipleBarButtonItem: UIBarButtonItem?
 	public var copyMultipleBarButtonItem: UIBarButtonItem?
+	public var cutMultipleBarButtonItem: UIBarButtonItem?
 	public var openMultipleBarButtonItem: UIBarButtonItem?
 	public var isMoreButtonPermanentlyHidden: Bool = false
 	public var didSelectCellAction: ((_ completion: @escaping () -> Void) -> Void)?

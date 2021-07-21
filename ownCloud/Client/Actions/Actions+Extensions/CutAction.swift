@@ -40,23 +40,33 @@ class CutAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController, let tabBarController = viewController.tabBarController as? ClientRootViewController else {
+		guard context.items.count > 0, let viewController = context.viewController, let core = context.core else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
 		let items = context.items
-		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
-		UIPasteboard.remove(withName: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey))
-		guard let internalPasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: true) else {
-			return
-		}
-		let internalItems = items.map { item in
-			return [ImportPasteboardAction.InternalPasteboardCutKey : item.serializedData()]
-		}
-		internalPasteboard.addItems(internalItems)
+		let uuid = core.bookmark.uuid.uuidString
+		var itemProviderItems: [NSItemProvider] = []
+		let globalPasteboard = UIPasteboard.general
+		globalPasteboard.items = []
 
-		vault.keyValueStore?.storeObject(UIPasteboard.general.changeCount as NSNumber, forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey)
+		items.forEach({ (item) in
+
+			let itemProvider = NSItemProvider()
+
+			itemProvider.suggestedName = item.name
+
+			itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
+				let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encode()
+				completionBlock(data, nil)
+				return nil
+			}
+			itemProviderItems.append(itemProvider)
+
+		})
+		globalPasteboard.itemProviders = itemProviderItems
+		completed()
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {

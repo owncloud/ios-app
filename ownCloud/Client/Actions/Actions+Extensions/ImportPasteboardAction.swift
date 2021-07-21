@@ -39,7 +39,6 @@ class ImportPasteboardAction : Action {
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
-	static let InternalPasteboardKey = "com.owncloud.pasteboard"
 	static let InternalPasteboardCopyKey = "com.owncloud.uti.ocitem.copy"
 	static let InternalPasteboardCutKey = "com.owncloud.uti.ocitem.cut"
 	static let InternalPasteboardChangedCounterKey = OCKeyValueStoreKey(rawValue: "com.owncloud.internal-pasteboard-changed-counter")
@@ -49,8 +48,6 @@ class ImportPasteboardAction : Action {
 		let pasteboard = UIPasteboard.general
 		if pasteboard.numberOfItems > 0 {
 			return .afterMiddle
-		} else if let internalPasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false), internalPasteboard.numberOfItems > 0 {
-			return .afterMiddle
 		}
 
 		return .none
@@ -58,41 +55,91 @@ class ImportPasteboardAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core, let rootItem = context.query?.rootItem, let tabBarController = viewController.tabBarController as? ClientRootViewController else {
+		guard context.items.count > 0, let core = self.core, let rootItem = context.query?.rootItem else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
-
-		let vault : OCVault = OCVault(bookmark: tabBarController.bookmark)
 		let generalPasteboard = UIPasteboard.general
 
-		// Determine, if the internal pasteboard has items available
-		if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey), create: false), let pasteboardChangedCounter = vault.keyValueStore?.readObject(forKey: ImportPasteboardAction.InternalPasteboardChangedCounterKey) as? Int, generalPasteboard.changeCount == pasteboardChangedCounter {
+		if generalPasteboard.contains(pasteboardTypes: [ImportPasteboardAction.InternalPasteboardCopyKey, ImportPasteboardAction.InternalPasteboardCutKey]) {
 
-			for item in pasteboard.items {
-				if let data = item[ImportPasteboardAction.InternalPasteboardCopyKey] as? Data, let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
-					guard let item = object as? OCItem, let name = item.name else { return }
+			for item in generalPasteboard.itemProviders {
+				// Copy Items Internally
+				item.loadDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCopyKey, completionHandler: { data, error in
+					if let data = data, let object = OCItemPasteboardValue(data: data) {
+							let item = object.item
+							let bookmarkUUID = object.bookmarkUUID
+						guard let name = item.name else { return }
 
-					core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
-						if error != nil {
-							self.completed(with: error)
-						}
-					})
-				} else if let data = item[ImportPasteboardAction.InternalPasteboardCutKey] as? Data, let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
-					guard let item = object as? OCItem, let name = item.name else { return }
-
-					core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
-						if error != nil {
-							self.completed(with: error)
+						if core.bookmark.uuid.uuidString == bookmarkUUID {
+							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+								if error != nil {
+									self.completed(with: error)
+								}
+							})
 						} else {
-							UIPasteboard.remove(withName: UIPasteboard.Name(rawValue: ImportPasteboardAction.InternalPasteboardKey))
+							// Move between Accounts
+							guard let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID), let destinationItem = self.context.items.first else {return }
+
+								OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
+									if error == nil {
+										srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
+											if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
+												core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
+												}
+											}
+										})
+									}
+								}
 						}
 					}
-				}
+				})
 
+				// Cut Item Internally
+				item.loadDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, completionHandler: { data, error in
+					if let data = data, let object = OCItemPasteboardValue(data: data) {
+
+							let item = object.item
+							let bookmarkUUID = object.bookmarkUUID
+						guard let name = item.name else { return }
+
+						if core.bookmark.uuid.uuidString == bookmarkUUID {
+							core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
+						  if error != nil {
+							  self.completed(with: error)
+						  } else {
+							generalPasteboard.items = []
+						  }
+					  }
+						} else {
+							// Move between Accounts
+							guard let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID), let destinationItem = self.context.items.first else {return }
+
+								OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
+									if error == nil {
+										srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
+											if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
+												core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
+
+													srcCore?.delete(srcItem, requireMatch: true, resultHandler: { (error, _, _, _) in
+													   if error != nil {
+														   Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+													} else {
+
+														generalPasteboard.items = []
+													}
+												   })
+												}
+											}
+										})
+									}
+								}
+						}
+					}
+				})
 			}
 		} else {
-			// System-wide Pasteboard
+			// System-wide Pasteboard Items
 
 			for item in generalPasteboard.itemProviders {
 				let typeIdentifiers = item.registeredTypeIdentifiers
@@ -158,7 +205,7 @@ class ImportPasteboardAction : Action {
 					if fileName == nil {
 						fileName = url.lastPathComponent
 					}
-					
+
 					guard let name = fileName else { return }
 
 					self.upload(itemURL: url, rootItem: rootItem, name: name)
