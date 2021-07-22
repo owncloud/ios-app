@@ -802,7 +802,9 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 				self.delete(bookmark: bookmark, at: indexPath ) {
 				 OnMainThread {
 					 self.tableView.performBatchUpdates({
-						 self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						if self.tableView.cellForRow(at: indexPath) != nil {
+							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						}
 					 }, completion: { (_) in
 						 self.ignoreServerListChanges = false
 					 })
