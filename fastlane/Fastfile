@@ -676,7 +676,7 @@ end
       time = Time.now
       ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
       if !values[:BUILD_NUMBER].nil?
-        ipaSuffix += "-" + BUILD_NUMBER
+        version += "." + BUILD_NUMBER
       end
       ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
     end
