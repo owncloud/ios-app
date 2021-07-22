@@ -9,6 +9,7 @@ Summary
 -------
 
 * Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
+* Change - Background Media Upload: [#958](https://github.com/owncloud/ios-app/pull/958)
 * Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
 * Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
 
@@ -25,6 +26,13 @@ Details
    items are no longer present in the original location.
 
    https://github.com/owncloud/ios-app/pull/514
+
+* Change - Background Media Upload: [#958](https://github.com/owncloud/ios-app/pull/958)
+
+   Uploading new media files is now more reliable in the background when "Use background location
+   updates" is enabled in the settings.
+
+   https://github.com/owncloud/ios-app/pull/958
 
 * Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
 
