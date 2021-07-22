@@ -1160,6 +1160,20 @@
     "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
+    "defaultValue" : 10,
+    "description" : "Minimum number of seconds until the next scan for changes, measured from the completion of the previous scan.",
+    "flatIdentifier" : "core.scan-for-changes-interval",
+    "key" : "scan-for-changes-interval",
+    "label" : "core.scan-for-changes-interval",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
     "defaultValue" : [
       "*"
     ],
