@@ -217,13 +217,13 @@ tag::app[]
 
 |app.is-beta-build
 |bool
-|`true`
+|`false`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
 |app.show-beta-warning
 |bool
-|`true`
+|`false`
 |Controls whether a warning should be shown on the first run of a beta version.
 |debugOnly
 
