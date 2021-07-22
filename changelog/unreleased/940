@@ -2,4 +2,4 @@ Change: Background Media Upload
 
 Uploading new media files is now more reliable in the background when "Use background location updates" is enabled in the settings.
 
-https://github.com/owncloud/ios-app/pr/940
+https://github.com/owncloud/ios-app/pull/958
