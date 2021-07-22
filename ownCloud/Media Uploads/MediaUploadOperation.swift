@@ -112,7 +112,7 @@ class MediaUploadOperation : Operation {
 												  uploadCompletion: {
 				// Import successful
 				self.removeUploadJob(with: path)
-			})?.localID as OCLocalID? {
+			}) {
 
 				// Update media upload storage object
 				core.bookmark.modifyMediaUploadStorage { (storage) in
@@ -159,7 +159,7 @@ class MediaUploadOperation : Operation {
 		return nil
 	}
 
-	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
+	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCLocalID? {
 
 		// Determine the list of preferred media formats
 		var utisToConvert = [String]()

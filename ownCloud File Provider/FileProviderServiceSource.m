@@ -112,7 +112,7 @@
 }
 
 #pragma mark - Service API
-- (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler
+- (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error, OCLocalID _Nullable placeholderLocalID))completionHandler
 {
 	OCLogDebug(@"FileProviderServiceSource[%p].importItemNamed:%@ at:%@ fromURL:%@ isSecurityScoped:%d importByCopying:%d automaticConflictResolutionNameStyle:%lu", self.fileProviderExtension, newFileName, parentItem, inputFileURL, isSecurityScoped, importByCopying, (unsigned long)nameStyle);
 
@@ -125,7 +125,7 @@
 				       OCCoreOptionAutomaticConflictResolutionNameStyle : @(nameStyle)
 			       }
 	  placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
-		completionHandler(error);
+		completionHandler(error, item.localID);
 	} resultHandler:nil]);
 }
 

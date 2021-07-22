@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol OCFileProviderServicesHost
 
-- (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler;
+- (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped importByCopying:(BOOL)importByCopying automaticConflictResolutionNameStyle:(OCCoreDuplicateNameStyle)nameStyle placeholderCompletionHandler:(void(^)(NSError * _Nullable error, OCLocalID _Nullable placeholderLocalID))completionHandler;
 
 - (nullable NSProgress *)reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)parentItem withContentsOfFileAtURL:(NSURL *)inputFileURL lastModifiedDate:(nullable NSDate *)lastModifiedDate isSecurityScoped:(BOOL)isSecurityScoped placeholderCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler;
 

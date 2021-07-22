@@ -202,7 +202,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 
 								let didStartSecurityScopedResource = fileURL.startAccessingSecurityScopedResource()
 
-								fpServiceSession.importThroughFileProvider(url: fileURL, as: newFilename, to: targetItem, completion: { (error) in
+								fpServiceSession.importThroughFileProvider(url: fileURL, as: newFilename, to: targetItem, completion: { (error, _) in
 									let itemPath = (targetItem.path as NSString? ?? path as NSString?)?.appendingPathComponent(newFilename)
 									completeWithResult(error, itemPath)
 
