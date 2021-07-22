@@ -76,6 +76,8 @@
 		<string>iVBORw0KGgoAAAANSUhEUgAAACoAAAAfCAYAAACRdF9FAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAABIAAAAAQACOqEAAAfmAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACqgAwAEAAAAAQAAAB8AAAAA8iRd5QAAAAlwSFlzAAALEwAACxwBhwKA1wAAATBJREFUWAntk79LQlEUxx+GiEMoDu2Ce0NL4NQSKEG0mNDUEG2SgzpGW/9JqPk3CYI0FYSoFP36nOTA4+H9Mdc58OHcd875vvvul3eTxMIcMAfMAXPAHDAH/rIDO47D1akP4ATWMIWYOGKoD01YwAxi4pihHkh+hjkE45KJL/hOcRNUJUknNS9aecdVhE4MSe/1yXM7pMsz8JIRykvE1RK4YpfGCtIbyvoVCuCKCo03yOqeqOVcIqlXISvS5wOPcN+jq3l0hx7dnkf3e3r5t/TjNL9Tk9O7okxjmzNL6kWXiLp8zAfoPprlP3XdH1qb6JJUoPlOm558u0UnFyQU9wzoPpqvQyLtn7IYwiOcazEit5gZwwjOIuZ15ILFBB6goUXL5oA5YA6YA+aAOfB/HPgBlnFiXvxcvhEAAAAASUVORK5CYII=</string>
 		<key>arrow.up.doc</key>
 		<string>iVBORw0KGgoAAAANSUhEUgAAAC4AAAA8CAYAAAAZp4inAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAADB85AAAqagAFcD4AABM1AAOgAQADAAAAAQABAACgAgAEAAAAAQAAAC6gAwAEAAAAAQAAADwAAAAAB5fSqAAAAAlwSFlzAAALQQAACyYB4+33UgAAAvFJREFUaAXtmNuLTVEcx8ctGbzIo0telAeKlMQDUu5SbjPyIq8K5cVl8sDfodzLH+ASYZR3eVBeMGY8YEhyaZB8vjUru91e56zrORPrV59mn7XXb63P/PY6+6y9e3pKlAqUCpQKlApQgUkOVZhJn9WwAHod+qvLbxiFe/ARkkcrcZ07AWdgBJ7BN3CNvXQcg31w1zUpRb8BBnkNawIH0z97HD7BlsAxvNPmkvEVVnhn/k2Q+BLYDB2T72eyRxATRlxjJJefbDFbRPtTy7mQ5tsk9cF1SLJsbOK6k3yBlFGV3xo7sE08dlxbvpG/Roco+U6L6x9KIt8N8STy3RKvy29Tg090U1ye1WXjJd9tcSO/nwN9YZ3lJ4J4XX67GtrFRBGXp5aNKn8V2srnFNfWdhr4hLN8TvFXGG/0sR7va+Qv83mZLX+q7USC9rOMcQOOwOfA8Y6Sd7gpN6f4AyZcCIthdtPkbdpWcd56l8kpLi89MT3RQUDMImeXLS/nGrfNmaQ9p7ieorJFLvFNGA/DuVzmOcT1mKYfkR+gO8J5SB6pxfVYJund8A705dLrieTyKe8qunVdAUkPwhR4C+vhIeg9zWlIEqnEtbeQ9B64P26mqyn5IZD8IEj+FERHCvEdWEhaS0Kv3ExI3Iw/wvE6MPInOY4KM3DoIDtJlHQf3KkNInFhYpgDU3m1RclXBzYTuP6dT0dt/g/ATUuSlkY1hviwAQ6CrlBwxFT8DbMuhZees7+g/0rQK77giBHXfttX2ojqbhMVMUslauLY5CIeW0Hf/FJx34rF9i8Vj62gb/4/V/FfVMD3ZU69aNoF6lcyNDT/T1uyreJ6CJhnS3Jsv0S/Mce+Td00//umE63alnNyFHpbdcp87hbjHwuZQ3vnC6CHgU7HISb8AHNsE9e3ndV+ulR6j6d1dhGew3fIFVrT2irrOXUt6BFQb8Mao5W4EqZDP+h1gwadAblCBdJ36zHoSnuvb3JKlAqUCpQK/G8V+AO+yXQA+gIbAQAAAABJRU5ErkJggg==</string>
+		<key>doc.on.clipboard.fill</key>
+		<string>iVBORw0KGgoAAAANSUhEUgAAADcAAABLCAYAAADUOx/8AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAADcAAAAAwADS18AAAuvAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADegAwAEAAAAAQAAAEsAAAAASd656wAAAAlwSFlzAAALRwAACxoBRkdtsAAAA11JREFUeAHtmkuoTlEUx6/3VUoKw1seZcRARISBR0ZKpiYyuiEpESklIkUeSQwNxMhjJmbuRInu6HYp5ZYBA+R1TTz+/6+7a7mdfc4++3H2+T5r1f9+5+y919rrt/Z3Hvvr9vWpaQW0AloBrYBWQCugFdAKNFiBKRHnWo9Yu6Hl0FwoZmyE69g4/o5Bj6Bb0E8ouV3GDH8a1gjmG0hNtqdhKFnEodRwwxnhCLrKBjjd1uHYPgfjeI252AcMOgh9rRg8Ff38NuysGGe61+HguTmRn6Fw8xHM9cbxAmPvyMlLjmehzxVuoS1OKNwMW+CC9m1oewC5rNzGAn9bk5XB2mGLFNDOr9uOAP/arqFw7zEjrw9ps3GyGNoFLZIdbT5m5fsdZK7BmRh7FpK37hTH5zCHl7HyN6C30C/IJbllGEe/tRDtMOTi5zvGC24NkvrskRjh6PsD2gLRjkC+yVf51YabhmReeyZk4JiUBDzmGc8bjtdRkW1A49KijpptvLk8hLiCvP5OQI2ZDW5lxAwk4BnEPRkxdmkoG9y8Uq/6nRLwFNyp5GaDs7WHJCQBuXpcxaSWAqIsYQnI66/2na4s+OS+puE4vwTkHfT85KRineeAY+4S8CjOL8QCknFywTEHCci3mEsysRjHOeGYvwQ8hPMrMaBMjNxwzEMCcqd+zSQX+tkGODJIwAM4vx4KRv9UcL89kjOAm+G7D7rrEeMflxRwCzDDG4gvzXXNAG6C415orG4AOT50Jy5jmeOtOBiCVkCrIZ85uCv5Dt2ETkNe5jNx1UTcu3EfeA+6D3HL4mPc0b/0cTQ+KeD6EfzihMw8Pp9L4PTFx9H4pLjmTOwYn76r3pm77XBBBVK4oPJldNaVy1j8oKl15YLKl9G5F1bO+izsBTjrW0wvwI3YvvndDvcJYI97EY7X2n6IW6NC68aVI9QzaDt0u5BqojHFlqdsvrp9w3DghtfYOA7eQdwvVlrb4b6BoPB/TCrJMKAbv5YuXJ0x/yWcz09zzhV1HBicg23lPjomkHJYcA42uKBfnSIQ83dP62tVaHxCv4L4TMmh46EAVf58vvD1pmm4J5iT/32U3AYww1VoFOIDNAUobxws4lNoEGr7sxcpqmkFtAJaAa2AVkAroBXQChRU4C8f7owJOdu5QgAAAABJRU5ErkJggg==</string>
 	</dict>
 	<key>Versions</key>
 	<array>
@@ -1272,6 +1274,43 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<string>Fix</string>
 					<key>ImageName</key>
 					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.7.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Clipboard Support</string>
+					<key>Subtitle</key>
+					<string>Clipboard support provides copy and paste actions! Use the system-wide clipboard to copy and paste files and content to the ownCloud app or third-party apps!</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>doc.on.clipboard.fill</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Filename Layout</string>
+					<key>Subtitle</key>
+					<string>Adopted the filename layout to the new Web UI layout.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintbrush</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Six Digits Passcode</string>
+					<key>Subtitle</key>
+					<string>Passcode lock supports to set a passcode lock with 4 or 6 digits.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock.shield</string>
 				</dict>
 			</array>
 		</dict>
