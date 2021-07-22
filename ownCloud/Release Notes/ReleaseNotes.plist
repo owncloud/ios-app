@@ -1294,6 +1294,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Background Media Upload</string>
+					<key>Subtitle</key>
+					<string>Uploading new media files is now more reliable in the background when &quot;Use background location updates&quot; is enabled in the settings.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>photo</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Filename Layout</string>
 					<key>Subtitle</key>
 					<string>Adopted the filename layout to the new Web UI layout.</string>
