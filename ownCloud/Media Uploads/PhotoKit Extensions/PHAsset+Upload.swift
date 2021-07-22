@@ -19,22 +19,23 @@
 import Photos
 import ownCloudSDK
 import ownCloudAppShared
+import ownCloudApp
 import CoreServices
 
 extension URL {
 	var audioVideoAssetType : AVFileType? {
 		let ext = self.pathExtension.lowercased()
 		switch ext {
-		case "mov":
-			return AVFileType.mov
-		case "mp4":
-			return AVFileType.mp4
-		case "m4v":
-			return AVFileType.m4v
-		case "3gp", "3gpp", "sdv":
-			return AVFileType.mobile3GPP
-		default:
-			return nil
+			case "mov":
+				return AVFileType.mov
+			case "mp4":
+				return AVFileType.mp4
+			case "m4v":
+				return AVFileType.m4v
+			case "3gp", "3gpp", "sdv":
+				return AVFileType.mobile3GPP
+			default:
+				return nil
 		}
 	}
 }
@@ -52,19 +53,19 @@ extension PHAssetResource {
 
 	var isPhoto: Bool {
 		switch self.type {
-		case .photo, .fullSizePhoto, .alternatePhoto, .adjustmentBasePhoto:
-			return true
-		default:
-			return false
+			case .photo, .fullSizePhoto, .alternatePhoto, .adjustmentBasePhoto:
+				return true
+			default:
+				return false
 		}
 	}
 
 	var isVideo: Bool {
 		switch self.type {
-		case .video, .fullSizeVideo, .pairedVideo, .adjustmentBasePairedVideo:
-			return true
-		default:
-			return false
+			case .video, .fullSizeVideo, .pairedVideo, .adjustmentBasePairedVideo:
+				return true
+			default:
+				return false
 		}
 	}
 
@@ -76,28 +77,28 @@ extension PHAssetResource {
 		var ext = ""
 		// Append correct file extension to export URL
 		switch uti {
-		case AVFileType.jpg.rawValue:
-			ext = "jpg"
-		case String(kUTTypePNG):
-			ext = "png"
-		case String(kUTTypeGIF):
-			ext = "gif"
-		case AVFileType.heic.rawValue:
-			ext = "heic"
-		case AVFileType.heif.rawValue:
-			ext = "heif"
-		case AVFileType.mov.rawValue:
-			ext = "mov"
-		case AVFileType.mp4.rawValue:
-			ext = "mp4"
-		case AVFileType.m4v.rawValue:
-			ext = "m4v"
-		case String(kUTTypeTIFF):
-			ext = "tiff"
-		case String(kUTTypeRawImage), AVFileType.dng.rawValue:
-			ext = "dng"
-		default:
-			break
+			case AVFileType.jpg.rawValue:
+				ext = "jpg"
+			case String(kUTTypePNG):
+				ext = "png"
+			case String(kUTTypeGIF):
+				ext = "gif"
+			case AVFileType.heic.rawValue:
+				ext = "heic"
+			case AVFileType.heif.rawValue:
+				ext = "heif"
+			case AVFileType.mov.rawValue:
+				ext = "mov"
+			case AVFileType.mp4.rawValue:
+				ext = "mp4"
+			case AVFileType.m4v.rawValue:
+				ext = "m4v"
+			case String(kUTTypeTIFF):
+				ext = "tiff"
+			case String(kUTTypeRawImage), AVFileType.dng.rawValue:
+				ext = "dng"
+			default:
+				break
 		}
 
 		return ext.uppercased()
@@ -137,12 +138,12 @@ extension PHAsset {
 		var types: Set<PHAssetResourceType> = []
 
 		switch mediaType {
-		case .video:
-			types = [.video]
-		case .image:
-			types = [.photo]
-		default:
-			break
+			case .video:
+				types = [.video]
+			case .image:
+				types = [.photo]
+			default:
+				break
 		}
 
 		return resources.first { types.contains($0.type)} ?? resources.first
@@ -201,12 +202,12 @@ extension PHAsset {
 
 		// Add textual media description
 		switch self.mediaType {
-		case .image:
-			fileName += "Photo"
-		case .video:
-			fileName += "Video"
-		default:
-			break
+			case .image:
+				fileName += "Photo"
+			case .video:
+				fileName += "Video"
+			default:
+				break
 		}
 
 		// Add time stamp
@@ -229,10 +230,10 @@ extension PHAsset {
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
 	func exportPhoto(resources:[PHAssetResource],
-					 fileName:String,
-					 utisToConvert:[String] = [],
-					 preferredResourceTypes:[PHAssetResourceType] = [],
-					 completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+			 fileName:String,
+			 utisToConvert:[String] = [],
+			 preferredResourceTypes:[PHAssetResourceType] = [],
+			 completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		// Filter resources which are prefered for export
 		let filteredResources = resources.filter({preferredResourceTypes.contains($0.type)})
@@ -395,26 +396,18 @@ extension PHAsset {
 		// We have actual data on the device and we can export it directly
 		if self.mediaType == .image {
 			if assetResources.count > 0 {
-				exportPhoto(resources: assetResources,
-							fileName: fileName,
-							utisToConvert: utisToConvert,
-							preferredResourceTypes: preferredResourceTypes,
-							completionHandler: { (url, error) in
+				exportPhoto(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert, preferredResourceTypes: preferredResourceTypes, completionHandler: { (url, error) in
 					completion(url, error)
 				})
 			} else {
-				exportPhoto(fileName: fileName,
-							utisToConvert: utisToConvert,
-							completionHandler: { (url, error) in
+				exportPhoto(fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
 					completion(url, error)
 				})
 			}
 
 		} else if self.mediaType == .video {
 			let preferOriginal = preferredResourceTypes.contains(.video)
-			exportVideo(fileName: fileName,
-						utisToConvert: utisToConvert,
-						preferOriginal: preferOriginal) { (url, error) in
+			exportVideo(fileName: fileName, utisToConvert: utisToConvert, preferOriginal: preferOriginal) { (url, error) in
 				completion(url, error)
 			}
 		} else {
@@ -433,9 +426,18 @@ extension PHAsset {
 	- parameter progressHandler: Receives progress of the at the moment running activity
 	- parameter uploadCompleteHandler: Called when core reports that upload is done
 	*/
-	func upload(with core:OCCore?, at rootItem:OCItem, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], preserveOriginalName:Bool = true, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
+	func upload(with core: OCCore?,
+		    with fpSession: OCFileProviderServiceSession? = nil,
+		    at rootItem: OCItem,
+		    utisToConvert: [String] = [],
+		    preferredResourceTypes: [PHAssetResourceType] = [],
+		    preserveOriginalName: Bool = true,
+		    progressHandler: ((_ progress:Progress) -> Void)? = nil,
+		    uploadCompleteHandler: (() -> Void)? = nil) -> (OCLocalID?, Error?)? {
 
-		func performUpload(sourceURL:URL, copySource:Bool, cellularSwitchIdentifier:OCCellularSwitchIdentifier?) -> (OCItem?, Error?)? {
+		func performUpload(sourceURL: URL,
+				   copySource: Bool,
+				   cellularSwitchIdentifier: OCCellularSwitchIdentifier?) -> (OCLocalID?, Error?)? {
 
 			@discardableResult func removeSourceFile() -> Bool {
 				do {
@@ -447,46 +449,53 @@ extension PHAsset {
 			}
 
 			var uploadProgress: Progress?
-			var importResult:(OCItem?, Error?)?
+			var importResult: (OCLocalID?, Error?)?
 
 			// Sometimes if the image was edited, the name is FullSizeRender.jpg but it is stored in the subfolder
 			// in the PhotoLibrary which is named after original image
 			var fileName = sourceURL.lastPathComponent
 			if !preserveOriginalName {
-                fileName = "\(self.ocStyleUploadFileName(with: sourceURL.deletingPathExtension().lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
+				fileName = "\(self.ocStyleUploadFileName(with: sourceURL.deletingPathExtension().lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
 			}
 
-			// Synchronously import media file into the OCCore and schedule upload
 			let importSemaphore = DispatchSemaphore(value: 0)
 
-			uploadProgress = sourceURL.upload(with: core,
-											  at: rootItem,
-											  alternativeName: fileName,
-											  modificationDate: self.creationDate,
-											  importByCopy: copySource,
-											  cellularSwitchIdentifier: cellularSwitchIdentifier,
-											  placeholderHandler: { (item, error) in
-												if !copySource && error != nil {
-													// Delete the temporary asset file in case of critical error
-													removeSourceFile()
-												}
-												if error != nil {
-													Log.error(tagged: ["MEDIA_UPLOAD"], "Sync engine import failed for asset ID \(self.localIdentifier)")
-												} else {
-													Log.debug(tagged: ["MEDIA_UPLOAD"], "Finished uploading asset ID \(self.localIdentifier)")
-												}
-												importResult = (item, error)
-												importSemaphore.signal()
-												uploadCompleteHandler?()
+			if let fpSession = fpSession {
+				fpSession.importThroughFileProvider(url: sourceURL, as: fileName, to: rootItem) { (error, newItemLocalID) in
+					importResult = (newItemLocalID, error)
+					importSemaphore.signal()
+					uploadCompleteHandler?()
 
-			}, completionHandler: { (_, _) in
+					if !copySource {
+						removeSourceFile()
+					}
+				}
+			} else {
+				// Synchronously import media file into the OCCore and schedule upload
+
+				uploadProgress = sourceURL.upload(with: core, at: rootItem, alternativeName: fileName, modificationDate: self.creationDate, importByCopy: copySource, cellularSwitchIdentifier: cellularSwitchIdentifier, placeholderHandler: { (item, error) in
+					if !copySource, error != nil {
+						// Delete the temporary asset file in case of critical error
+						removeSourceFile()
+					}
+					if error != nil {
+						Log.error(tagged: ["MEDIA_UPLOAD"], "Sync engine import failed for asset ID \(self.localIdentifier)")
+					} else {
+						Log.debug(tagged: ["MEDIA_UPLOAD"], "Finished uploading asset ID \(self.localIdentifier)")
+					}
+					importResult = (item?.localID as OCLocalID?, error)
+					importSemaphore.signal()
+					uploadCompleteHandler?()
+
+				}, completionHandler: { (_, _) in
+					if uploadProgress != nil {
+						progressHandler?(uploadProgress!)
+					}
+				})
+
 				if uploadProgress != nil {
 					progressHandler?(uploadProgress!)
 				}
-			})
-
-			if uploadProgress != nil {
-				progressHandler?(uploadProgress!)
 			}
 
 			importSemaphore.wait()
@@ -496,7 +505,7 @@ extension PHAsset {
 
 		Log.debug(tagged: ["MEDIA_UPLOAD"], "Prepare uploading asset ID \(self.localIdentifier), type:\(self.mediaType), subtypes:\(self.mediaSubtypes), sourceType:\(self.sourceType), creationDate:\(String(describing: self.creationDate)), modificationDate:\(String(describing: self.modificationDate)), favorite:\(self.isFavorite), hidden:\(self.isHidden)")
 
-		var uploadResult:(OCItem?, Error?)?
+		var uploadResult:(OCLocalID?, Error?)?
 
 		if let assetName = self.assetFileName {
 			var exportedAssetURL: URL?

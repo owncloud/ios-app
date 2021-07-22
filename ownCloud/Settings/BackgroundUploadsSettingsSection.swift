@@ -109,6 +109,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		self.add(row: backgroundLocationRow!)
 
 		// Add option to enable local notifications reporting that some number of media files got enqueued for upload
+
 		notificationsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				if enableSwitch.isOn {
@@ -120,16 +121,18 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 									enableSwitch.isOn = granted
 									userDefaults.backgroundMediaUploadsNotificationsEnabled = granted
 								}
-
 							}
+						} else if settings.authorizationStatus == .authorized {
+							userDefaults.backgroundMediaUploadsNotificationsEnabled = true
+						} else {
+							userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 						}
 					})
 				} else {
 					userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 				}
-
 			}
-			}, title: "Background upload notifications".localized, value: false, identifier: "background-upload-notifications")
+			}, title: "Background upload notifications".localized, value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
 
 		self.add(row: notificationsRow!)
 
@@ -143,7 +146,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		// Add section footer with detailed explanations
 		var footerText = ""
 		if #available(iOS 13, *) {
-			footerText += "if you would like background media uploads to be more reliable, you should enable background location updates.".localized
+			footerText += "If you would like background media uploads to be more reliable, you should enable background location updates.".localized
 		} else {
 			footerText += "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.".localized
 		}
@@ -170,7 +173,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		self.viewController?.present(alertController, animated: true, completion: nil)
 	}
 
-	private func updateUI() {
+	public func updateUI() {
 		let enableRows = self.userDefaults.instantUploadPhotos || self.userDefaults.instantUploadVideos
 		backgroundUploadsRow?.enabled = enableRows
 		backgroundLocationRow?.enabled = enableRows

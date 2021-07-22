@@ -20,6 +20,7 @@ import Foundation
 import Photos
 import ownCloudSDK
 import ownCloudAppShared
+import ownCloudApp
 
 class MediaUploadOperation : Operation {
 
@@ -28,10 +29,16 @@ class MediaUploadOperation : Operation {
 	private var assetId: String
 	private var itemTracking : OCCoreItemTracking?
 
+	// Session object to enque uploads in file provider extension
+	private var fpSession: OCFileProviderServiceSession?
+
 	init(core:OCCore, mediaUploadJob:MediaUploadJob, assetId:String) {
 		self.core = core
 		self.mediaUploadJob = mediaUploadJob
 		self.assetId = assetId
+		if let vault = self.core?.vault {
+			self.fpSession = OCFileProviderServiceSession(vault: vault)
+		}
 	}
 
 	override func main() {
@@ -99,12 +106,13 @@ class MediaUploadOperation : Operation {
 			}
 
 			// Perform asset import
-			importGroup.enter()
-			if let itemLocalId = self.importAsset(asset: asset, with:core, at: item, uploadCompletion: {
+			if let itemLocalId = self.importAsset(asset: asset,
+												  with: core,
+												  at: item,
+												  uploadCompletion: {
 				// Import successful
 				self.removeUploadJob(with: path)
-				importGroup.leave()
-			})?.localID as OCLocalID? {
+			}) {
 
 				// Update media upload storage object
 				core.bookmark.modifyMediaUploadStorage { (storage) in
@@ -151,7 +159,7 @@ class MediaUploadOperation : Operation {
 		return nil
 	}
 
-	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
+	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCLocalID? {
 
 		// Determine the list of preferred media formats
 		var utisToConvert = [String]()
@@ -181,6 +189,7 @@ class MediaUploadOperation : Operation {
 		}
 
 		if let result = asset.upload(with: core,
+									 with: fpSession,
 									 at: rootItem,
 									 utisToConvert: utisToConvert,
 									 preferredResourceTypes: preferredResourceTypes,
