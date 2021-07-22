@@ -26,6 +26,9 @@ tag::actions[]
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
+! `com.owncloud.action.cutpasteboard`
+! Cut
+
 ! `com.owncloud.action.delete`
 ! Delete
 
@@ -34,6 +37,9 @@ tag::actions[]
 
 ! `com.owncloud.action.favorite`
 ! Favorite item
+
+! `com.owncloud.action.importpasteboard`
+! Paste
 
 ! `com.owncloud.action.links`
 ! Links
@@ -104,6 +110,9 @@ tag::actions[]
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
+! `com.owncloud.action.cutpasteboard`
+! Cut
+
 ! `com.owncloud.action.delete`
 ! Delete
 
@@ -112,6 +121,9 @@ tag::actions[]
 
 ! `com.owncloud.action.favorite`
 ! Favorite item
+
+! `com.owncloud.action.importpasteboard`
+! Paste
 
 ! `com.owncloud.action.links`
 ! Links
