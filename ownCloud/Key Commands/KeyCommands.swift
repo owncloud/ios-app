@@ -748,7 +748,7 @@ extension ClientQueryViewController {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, preferences: ["rootItem" :  rootItem])
 			let actions = Action.sortedApplicableActions(for: actionContext)
 
 			actions.forEach({
@@ -927,7 +927,7 @@ extension QueryFileListTableViewController {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, preferences: ["rootItem" : rootItem])
 			actionContext.sender = command
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
