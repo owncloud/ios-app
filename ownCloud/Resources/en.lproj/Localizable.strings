@@ -661,6 +661,7 @@
 "Scroll to Bottom" = "Scroll to Bottom";
 "Copy to Clipboard" = "Copy to Clipboard";
 "Import from Clipboard" = "Import from Clipboard";
+"Choose destination directory…" = "Choose destination directory…";
 "Next" = "Next";
 "Previous" = "Previous";
 "Favorite" = "Favorite";
