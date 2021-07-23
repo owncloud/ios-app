@@ -634,6 +634,9 @@ The following placeholders can be used to make it dynamic:
 !===
 ! Value
 ! Description
+! `502-triggers`
+! Connection validation is triggered when receiving a responses with 502 status.
+
 ! `clear-cookies`
 ! Clear all cookies for the connection when entering connection validation.
 

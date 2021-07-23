@@ -1070,6 +1070,10 @@
     "label" : "connection.validator-flags",
     "possibleValues" : [
       {
+        "description" : "Connection validation is triggered when receiving a responses with 502 status.",
+        "value" : "502-triggers"
+      },
+      {
         "description" : "Clear all cookies for the connection when entering connection validation.",
         "value" : "clear-cookies"
       }
