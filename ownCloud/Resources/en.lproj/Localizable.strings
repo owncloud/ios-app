@@ -207,7 +207,6 @@
 "Touch ID" = "Touch ID";
 "Videos" = "Videos";
 "Photos" = "Photos";
-"Background uploads" = "Background uploads";
 "Wifi only" = "Wifi only";
 "Settings" = "Settings";
 "Lock application" = "Lock application";
@@ -363,7 +362,7 @@
 "Open in Window" = "Open in Window";
 "Take photo or video" = "Take photo or video";
 "%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
-"%ld Items was copied to the clipboard" = "%ld Items was copied to the clipboard";
+"%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
 
 "Preparing…" = "Preparing…";
 
@@ -578,8 +577,10 @@
 "Video upload" = "Video upload";
 
 /* Background media uploads */
+"Background uploads (Lab Version)" = "Background uploads (Lab Version)";
 "Background uploads" = "Background uploads";
 "Use background refresh" = "Use background refresh";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Allow this app to refresh the content when on Wi-Fi or mobile network in background.";
 "Enable background uploads" = "Enable background uploads";
 "Use background location updates" = "Use background location updates";
 "Background upload notifications" = "Background upload notifications";

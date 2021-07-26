@@ -224,7 +224,7 @@ class CopyAction : Action {
 
 				var subtitle = "%ld Item was copied to the clipboard".localized
 				if itemProviderItems.count > 1 {
-					subtitle = "%ld Items was copied to the clipboard".localized
+					subtitle = "%ld Items were copied to the clipboard".localized
 				}
 
 				OnMainThread {

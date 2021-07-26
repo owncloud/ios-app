@@ -70,7 +70,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
-		self.headerTitle = "Background uploads".localized
+		self.headerTitle = "Background uploads (Lab Version)".localized
 
 		// Add option for iOS13 to use BackgroundTasks framework for background uploads
 		if #available(iOS 13, *) {
@@ -78,7 +78,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				if let enableSwitch = sender as? UISwitch {
 					userDefaults.backgroundMediaUploadsEnabled = enableSwitch.isOn
 				}
-				}, title: "Use background refresh".localized, value: self.userDefaults.backgroundMediaUploadsEnabled, identifier: "background-refresh")
+			}, title: "Use background refresh".localized, subtitle: "Allow this app to refresh the content when on Wi-Fi or mobile network in background.".localized, value: self.userDefaults.backgroundMediaUploadsEnabled, identifier: "background-refresh")
 
 			self.add(row: backgroundUploadsRow!)
 		}
