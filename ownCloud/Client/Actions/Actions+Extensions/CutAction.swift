@@ -50,12 +50,16 @@ class CutAction : Action {
 		var itemProviderItems: [NSItemProvider] = []
 		let globalPasteboard = UIPasteboard.general
 		globalPasteboard.items = []
+		var containsFolders = false
 
 		items.forEach({ (item) in
 
 			let itemProvider = NSItemProvider()
 
 			itemProvider.suggestedName = item.name
+			if item.type == .collection {
+				containsFolders = true
+			}
 
 			itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
 				let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encode()
@@ -66,6 +70,23 @@ class CutAction : Action {
 
 		})
 		globalPasteboard.itemProviders = itemProviderItems
+
+		var subtitle = "%ld Item was copied to the clipboard".localized
+		if itemProviderItems.count > 1 {
+			subtitle = "%ld Items were copied to the clipboard".localized
+		}
+
+		if OCBookmarkManager.shared.bookmarks.count > 1, containsFolders {
+			let subtitleFolder = "Please note: Folders can only be pasted into the same account.".localized
+			subtitle = String(format: "%@\n\n%@", subtitle, subtitleFolder)
+		}
+
+		OnMainThread {
+			if let navigationController = viewController.navigationController {
+				_ = NotificationHUDViewController(on: navigationController, title: "Cut".localized, subtitle: String(format: subtitle, itemProviderItems.count))
+			}
+		}
+
 		completed()
 	}
 

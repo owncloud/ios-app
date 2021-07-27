@@ -363,6 +363,7 @@
 "Take photo or video" = "Take photo or video";
 "%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
 "%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
+"Please note: Folders can only be pasted into the same account." = "Please note: Folders can only be pasted into the same account.";
 
 "Preparing…" = "Preparing…";
 

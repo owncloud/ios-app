@@ -144,6 +144,7 @@ class CopyAction : Action {
 		let globalPasteboard = UIPasteboard.general
 		globalPasteboard.items = []
 		var itemProviderItems: [NSItemProvider] = []
+		var containsFolders = false
 
 		let fileItems = context.items.filter { item in
 			if item.type == .file {
@@ -169,6 +170,9 @@ class CopyAction : Action {
 				items.forEach({ (item) in
 					let itemProvider = NSItemProvider()
 					itemProvider.suggestedName = item.name
+					if item.type == .collection {
+						containsFolders = true
+					}
 
 					// Prepare Items for internal use
 					itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCopyKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
@@ -225,6 +229,11 @@ class CopyAction : Action {
 				var subtitle = "%ld Item was copied to the clipboard".localized
 				if itemProviderItems.count > 1 {
 					subtitle = "%ld Items were copied to the clipboard".localized
+				}
+
+				if OCBookmarkManager.shared.bookmarks.count > 1, containsFolders {
+					let subtitleFolder = "Please note: Folders can only be pasted into the same account.".localized
+					subtitle = String(format: "%@\n\n%@", subtitle, subtitleFolder)
 				}
 
 				OnMainThread {
