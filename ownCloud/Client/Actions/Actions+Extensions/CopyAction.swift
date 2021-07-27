@@ -231,8 +231,8 @@ class CopyAction : Action {
 					subtitle = "%ld Items were copied to the clipboard".localized
 				}
 
-				if OCBookmarkManager.shared.bookmarks.count > 1, containsFolders {
-					let subtitleFolder = "Please note: Folders can only be pasted into the same account.".localized
+				if containsFolders {
+					let subtitleFolder = String(format:"Please note: Folders can only be pasted into the %@ app and the same account.".localized, VendorServices.shared.appName)
 					subtitle = String(format: "%@\n\n%@", subtitle, subtitleFolder)
 				}
 
