@@ -712,7 +712,7 @@ extension StaticTableViewController {
 	@objc override func selectCurrent(sender: UIKeyCommand) {
 		if let indexPath = self.tableView?.indexPathForSelectedRow {
 			let staticRow = staticRowForIndexPath(indexPath)
-			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch {
+			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch, switchButton.isEnabled {
 				if switchButton.isOn {
 					switchButton.setOn(false, animated: true)
 					staticRow.value = false

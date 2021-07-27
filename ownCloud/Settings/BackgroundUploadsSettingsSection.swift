@@ -91,6 +91,19 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 			locationServicesRowTitle = "Enable background uploads".localized
 		}
 
+		// Add section footer with detailed explanations
+		var locationServicesRowSubtitle = ""
+		if #available(iOS 13, *) {
+			locationServicesRowSubtitle += "If you would like background media uploads to be more reliable, you should enable background location updates.".localized
+		} else {
+			locationServicesRowSubtitle += "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.".localized
+		}
+
+		if #available(iOS 13, *) {
+			locationServicesRowSubtitle += " "
+			locationServicesRowSubtitle += "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.".localized
+		}
+
 		let currentAuthStatus = CLLocationManager.authorizationStatus() == .authorizedAlways
 		backgroundLocationRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
@@ -104,7 +117,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				}
 				userDefaults.backgroundMediaUploadsLocationUpdatesEnabled = enableSwitch.isOn
 			}
-		}, title: locationServicesRowTitle, value: (currentAuthStatus && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled), identifier: "background-location")
+		}, title: locationServicesRowTitle, subtitle: locationServicesRowSubtitle, value: (currentAuthStatus && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled), identifier: "background-location")
 
 		self.add(row: backgroundLocationRow!)
 
@@ -142,20 +155,6 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				self.notificationsRow?.value = userDefaults.backgroundMediaUploadsNotificationsEnabled && settings.authorizationStatus == .authorized
 			}
 		})
-
-		// Add section footer with detailed explanations
-		var footerText = ""
-		if #available(iOS 13, *) {
-			footerText += "If you would like background media uploads to be more reliable, you should enable background location updates.".localized
-		} else {
-			footerText += "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.".localized
-		}
-
-		if #available(iOS 13, *) {
-			footerText += " "
-			footerText += "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.".localized
-		}
-		self.footerTitle = footerText
 
 		// Monitor media upload settings changes
 		NotificationCenter.default.addObserver(self, selector: #selector(mediaUploadSettingsDidChange), name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
