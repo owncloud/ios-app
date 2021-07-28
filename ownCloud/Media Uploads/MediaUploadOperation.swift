@@ -83,13 +83,17 @@ class MediaUploadOperation : Operation {
 		}
 
 		let importGroup = DispatchGroup()
+		var importGroupLeaveOnce : DispatchGroup? = importGroup
 
 		// Track the target path
 		importGroup.enter()
 
 		self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (_, item, isInitial) in
+			let importGroup = importGroupLeaveOnce
+			importGroupLeaveOnce = nil
+
 			defer {
-				importGroup.leave()
+				importGroup?.leave()
 			}
 
 			if isInitial {
