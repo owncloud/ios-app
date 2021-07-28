@@ -186,10 +186,12 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 				}
 			}
 
-			NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
-				if granted {
-					OnMainThread {
-						UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+			if !ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
+					if granted {
+						OnMainThread {
+							UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+						}
 					}
 				}
 			}
