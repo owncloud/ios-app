@@ -156,14 +156,6 @@ class ScreenshotsTests: XCTestCase {
 		passwordSecureTextField.typeText(password)
 		tablesQuery.buttons["Login"].tap()
 
-		addUIInterruptionMonitor(withDescription: "System Dialog") {
-			(alert) -> Bool in
-			alert.buttons["Allow"].tap()
-			return true
-		}
-		app.tap()
-
-
 		if waitForAccessFilesCell(app: app) != .completed {
 			   XCTFail("Error: Can not check auth method of the server")
 		}
