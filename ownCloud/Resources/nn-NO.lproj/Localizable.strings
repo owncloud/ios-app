@@ -519,7 +519,7 @@
 "Enable background uploads" = "Enable background uploads";
 "Use background location updates" = "Use background location updates";
 "Background upload notifications" = "Background upload notifications";
-"if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "If you would like background media uploads to be more reliable, you should enable background location updates.";
 "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
 "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
 "Location permission denied" = "Location permission denied";
@@ -595,8 +595,8 @@
 "Select Last Item on Page" = "Select Last Item on Page";
 "Scroll to Top" = "Scroll to Top";
 "Scroll to Bottom" = "Scroll to Bottom";
-"Copy to Pasteboard" = "Copy to Pasteboard";
-"Import from Pasteboard" = "Import from Pasteboard";
+"Copy to Clipboard" = "Copy to Clipboard";
+"Import from Clipboard" = "Import from Clipboard";
 "Next" = "Neste";
 "Previous" = "Førre";
 "Favorite" = "Favoritt";

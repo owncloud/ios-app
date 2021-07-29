@@ -60,7 +60,7 @@ class ScreenshotsTests: XCTestCase {
 		app.launchArguments += ["UI-Testing"]
 		setupSnapshot(app)
 		app.launch()
-
+		
 		if !takeBrandedScreenshots {
 			regularAppSetup(app: app)
 
@@ -156,14 +156,6 @@ class ScreenshotsTests: XCTestCase {
 		passwordSecureTextField.typeText(password)
 		tablesQuery.buttons["Login"].tap()
 
-		addUIInterruptionMonitor(withDescription: "System Dialog") {
-			(alert) -> Bool in
-			alert.buttons["Allow"].tap()
-			return true
-		}
-		app.tap()
-
-
 		if waitForAccessFilesCell(app: app) != .completed {
 			   XCTFail("Error: Can not check auth method of the server")
 		}
@@ -231,6 +223,8 @@ class ScreenshotsTests: XCTestCase {
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		snapshot("22_ios_files_preview_pdf_demo")
+
+		app.navigationBars["ownCloud Manual.pdf"].buttons[accountName].tap()
 	}
 
 	func preparePhotos(app: XCUIApplication) {
@@ -246,7 +240,7 @@ class ScreenshotsTests: XCTestCase {
 		sleep(5)
 
 		snapshot("20_ios_files_list_demo")
-		app.navigationBars.firstMatch.buttons[accountName].tap()
+		app.navigationBars["Photos"].buttons[accountName].tap()
 	}
 
 	func prepareQuickAccess(app: XCUIApplication) {

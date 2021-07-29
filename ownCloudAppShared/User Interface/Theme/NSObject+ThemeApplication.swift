@@ -251,12 +251,16 @@ public extension NSObject {
 		}
 
 		if let segmentedControl = self as? UISegmentedControl {
+			var tintColor = collection.tintColor
+			   if let navigationTintColor = collection.navigationBarColors.tintColor {
+				   tintColor = navigationTintColor
+			   }
 			if #available(iOS 13, *) {
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.tintColor], for: .normal)
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : tintColor], for: .normal)
 				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.backgroundColor!], for: .selected)
-				segmentedControl.selectedSegmentTintColor = collection.tintColor
+				segmentedControl.selectedSegmentTintColor = tintColor
 			} else {
-				segmentedControl.tintColor = collection.navigationBarColors.tintColor
+				segmentedControl.tintColor = tintColor
 			}
 		}
 

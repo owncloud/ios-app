@@ -1,0 +1,5 @@
+Change: Filename Layout
+
+Adopted the filename layout to the new Web UI with bold font weight, large file name and normal font weight, small file extension.
+
+https://github.com/owncloud/ios-app/issues/968

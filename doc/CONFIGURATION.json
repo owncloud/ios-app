@@ -26,6 +26,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Cut",
+        "value" : "com.owncloud.action.cutpasteboard"
+      },
+      {
         "description" : "Delete",
         "value" : "com.owncloud.action.delete"
       },
@@ -36,6 +40,10 @@
       {
         "description" : "Favorite item",
         "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Paste",
+        "value" : "com.owncloud.action.importpasteboard"
       },
       {
         "description" : "Links",
@@ -132,6 +140,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Cut",
+        "value" : "com.owncloud.action.cutpasteboard"
+      },
+      {
         "description" : "Delete",
         "value" : "com.owncloud.action.delete"
       },
@@ -142,6 +154,10 @@
       {
         "description" : "Favorite item",
         "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Paste",
+        "value" : "com.owncloud.action.importpasteboard"
       },
       {
         "description" : "Links",
@@ -1054,6 +1070,10 @@
     "label" : "connection.validator-flags",
     "possibleValues" : [
       {
+        "description" : "Connection validation is triggered when receiving a responses with 502 status.",
+        "value" : "502-triggers"
+      },
+      {
         "description" : "Clear all cookies for the connection when entering connection validation.",
         "value" : "clear-cookies"
       }
@@ -1153,6 +1173,20 @@
     "label" : "core.override-reachability-signal",
     "status" : "debugOnly",
     "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "core",
+    "className" : "OCCore",
+    "defaultValue" : 10,
+    "description" : "Minimum number of seconds until the next scan for changes, measured from the completion of the previous scan.",
+    "flatIdentifier" : "core.scan-for-changes-interval",
+    "key" : "scan-for-changes-interval",
+    "label" : "core.scan-for-changes-interval",
+    "status" : "advanced",
+    "type" : "int"
   },
   {
     "autoExpansion" : "none",
@@ -1628,6 +1662,34 @@
     "label" : "passcode.enforced",
     "status" : "advanced",
     "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "ownCloudAppShared.AppLockManager",
+    "defaultValue" : 6,
+    "description" : "Controls how many passcode digits are maximal possible for passcode lock.",
+    "flatIdentifier" : "passcode.maximumPasscodeDigits",
+    "key" : "maximumPasscodeDigits",
+    "label" : "passcode.maximumPasscodeDigits",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "ownCloudAppShared.AppLockManager",
+    "defaultValue" : 4,
+    "description" : "Controls how many passcode digits are at least required for passcode lock.",
+    "flatIdentifier" : "passcode.requiredPasscodeDigits",
+    "key" : "requiredPasscodeDigits",
+    "label" : "passcode.requiredPasscodeDigits",
+    "status" : "advanced",
+    "type" : "int"
   },
   {
     "autoExpansion" : "none",

@@ -43,6 +43,14 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 		copyMultipleBarButtonItem?.accessibilityLabel = "Copy".localized
 		copyMultipleBarButtonItem?.isEnabled = false
 
+		var cutImage = UIImage(named: "clipboard")
+		if #available(iOS 13.0, *) {
+			cutImage = UIImage(systemName: "scissors")
+		}
+		cutMultipleBarButtonItem = UIBarButtonItem(image: cutImage, target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CutAction.identifier!)
+		cutMultipleBarButtonItem?.accessibilityLabel = "Cut".localized
+		cutMultipleBarButtonItem?.isEnabled = false
+
 		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
 		openMultipleBarButtonItem?.accessibilityLabel = "Open in".localized
 		openMultipleBarButtonItem?.isEnabled = false
@@ -140,6 +148,8 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 			moveMultipleBarButtonItem!,
 			flexibleSpaceBarButton,
 			copyMultipleBarButtonItem!,
+			flexibleSpaceBarButton,
+			cutMultipleBarButtonItem!,
 			flexibleSpaceBarButton,
 			duplicateMultipleBarButtonItem!,
 			flexibleSpaceBarButton,

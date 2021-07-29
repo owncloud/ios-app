@@ -24,6 +24,7 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 	private var proPhotoSettingsSection: StaticTableViewSection?
 	private var autoUploadSection : AutoUploadSettingsSection?
+	private var backgroundUploadsSection : BackgroundUploadsSettingsSection?
 	private var licenseObserver : OCLicenseObserver?
 
 	deinit {
@@ -50,20 +51,32 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 		OnMainThread {
 			guard let proSettingsSection = self.proPhotoSettingsSection else { return }
 
-			if OCBookmarkManager.shared.bookmarks.count > 0 {
-				if self.autoUploadSection == nil, let userDefaults = OCAppIdentity.shared.userDefaults {
+			if OCBookmarkManager.shared.bookmarks.count > 0, let userDefaults = OCAppIdentity.shared.userDefaults {
+				if self.autoUploadSection == nil {
 					self.autoUploadSection = AutoUploadSettingsSection(userDefaults: userDefaults)
+
+					self.autoUploadSection?.changeHandler = { [weak self] in
+						self?.backgroundUploadsSection?.updateUI()
+					}
+				}
+				if self.backgroundUploadsSection == nil {
+					self.backgroundUploadsSection = BackgroundUploadsSettingsSection(userDefaults: userDefaults)
 				}
 
 				if let autoUploadSection = self.autoUploadSection, !autoUploadSection.attached {
 					self.addSection(autoUploadSection)
 				}
-				// TODO: Re-add this section when we re-gain an ability to run background NSURLSessions
-				//self.addSection(BackgroundUploadsSettingsSection(userDefaults: userDefaults))
+				if let backgroundUploadsSection = self.backgroundUploadsSection, !backgroundUploadsSection.attached {
+					self.addSection(backgroundUploadsSection)
+				}
 			} else {
 				if let autoUploadSection = self.autoUploadSection, autoUploadSection.attached {
 					self.removeSection(autoUploadSection)
 					self.autoUploadSection = nil
+				}
+				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.attached {
+					self.removeSection(backgroundUploadsSection)
+					self.backgroundUploadsSection = nil
 				}
 			}
 

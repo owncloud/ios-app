@@ -39,9 +39,10 @@ public class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var keypadButtons: [ThemeRoundedButton]?
 	@IBOutlet private var deleteButton: ThemeButton?
 	@IBOutlet public var cancelButton: ThemeButton?
+	@IBOutlet public var compactHeightPasscodeTextField: UITextField?
 
 	// MARK: - Properties
-	public var passcodeLength: Int = 4
+	private var passcodeLength: Int
 
 	public var passcode: String? {
 		didSet {
@@ -96,21 +97,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			keypadContainerView?.isUserInteractionEnabled = !keypadButtonsHidden
 
 			if oldValue != keypadButtonsHidden {
-				if keypadButtonsHidden {
-					UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-						self.keypadContainerView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-						self.keypadContainerView?.alpha = 0
-					}, completion: { (_) in
-						self.keypadContainerView?.isHidden = self.keypadButtonsHidden
-					})
-				} else {
-					self.keypadContainerView?.isHidden = self.keypadButtonsHidden
-
-					UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-						self.keypadContainerView?.transform = .identity
-						self.keypadContainerView?.alpha = 1
-					}, completion: nil)
-				}
+				updateKeypadButtons()
 			}
 		}
 	}
@@ -122,18 +109,27 @@ public class PasscodeViewController: UIViewController, Themeable {
 		}
 	}
 
+	var hasCompactHeight: Bool {
+		if self.traitCollection.verticalSizeClass == .compact {
+			return true
+		}
+
+		return false
+	}
+
 	// MARK: - Handlers
 	public var cancelHandler: PasscodeViewControllerCancelHandler?
 	public var completionHandler: PasscodeViewControllerCompletionHandler?
 
 	// MARK: - Init
-	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
+	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true, requiredLength: Int) {
 		self.cancelHandler = cancelHandler
 		self.completionHandler = completionHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
 		self.cancelButtonHidden = hasCancelButton
 		self.keypadButtonsHidden = false
 		self.screenBlurringEnabled = false
+		self.passcodeLength = requiredLength
 
 		super.init(nibName: "PasscodeViewController", bundle: Bundle(for: PasscodeViewController.self))
 
@@ -161,6 +157,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
+		updateKeypadButtons()
 
 		if #available(iOS 13.4, *) {
 			for button in keypadButtons! {
@@ -168,6 +165,16 @@ public class PasscodeViewController: UIViewController, Themeable {
 			}
 			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
 			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+		}
+	}
+
+	public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		self.keypadContainerView?.isHidden = true
+		self.compactHeightPasscodeTextField?.resignFirstResponder()
+
+		super.viewWillTransition(to: size, with: coordinator)
+		coordinator.animate(alongsideTransition: nil) { _ in
+			self.updateKeypadButtons()
 		}
 	}
 
@@ -185,16 +192,33 @@ public class PasscodeViewController: UIViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	// MARK: - Orientation
-	public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-		return .portrait
-	}
-
-	public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-		return .portrait
-	}
-
 	// MARK: - UI updates
+
+	private func updateKeypadButtons() {
+		if keypadButtonsHidden {
+			self.compactHeightPasscodeTextField?.resignFirstResponder()
+			UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+				self.keypadContainerView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+				self.keypadContainerView?.alpha = 0
+			}, completion: { (_) in
+				self.keypadContainerView?.isHidden = self.keypadButtonsHidden
+			})
+		} else {
+			if !self.hasCompactHeight {
+				self.keypadContainerView?.isHidden = self.keypadButtonsHidden
+				self.compactHeightPasscodeTextField?.resignFirstResponder()
+
+				UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+					self.keypadContainerView?.transform = .identity
+					self.keypadContainerView?.alpha = 1
+				}, completion: nil)
+			} else {
+				self.keypadContainerView?.isHidden = true
+				self.compactHeightPasscodeTextField?.becomeFirstResponder()
+			}
+		}
+	}
+
 	private func updatePasscodeDots() {
 		var placeholders = ""
 		let enteredDigits = passcode?.count ?? 0
@@ -210,6 +234,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			}
 		}
 
+		self.compactHeightPasscodeTextField?.text = passcode
 		self.passcodeLabel?.text = placeholders
 	}
 
@@ -279,5 +304,18 @@ public class PasscodeViewController: UIViewController, Themeable {
 		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: .clear))
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
+	}
+}
+
+extension PasscodeViewController: UITextFieldDelegate {
+	open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+		if range.length > 0 {
+			deleteLastDigit()
+		} else {
+			appendDigit(digit: string)
+		}
+
+		return false
 	}
 }
