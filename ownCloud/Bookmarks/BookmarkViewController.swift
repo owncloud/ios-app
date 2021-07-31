@@ -587,7 +587,8 @@ class BookmarkViewController: StaticTableViewController {
 								OnMainThread {
 									var progressViewController : ProgressIndicatorViewController?
 
-									let prepopulateProgress = bookmark.prepopulate(completionHandler: { error in
+									// let prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
+									let prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
 										OCBookmarkManager.shared.addBookmark(bookmark)
 
 										OnMainThread {
