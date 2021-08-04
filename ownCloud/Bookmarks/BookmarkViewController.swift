@@ -562,8 +562,11 @@ class BookmarkViewController: StaticTableViewController {
 			let connection = instantiateConnection(for: bookmark)
 
 			connection.connect { [weak self] (error, issue) in
+
 				if let strongSelf = self {
 					if error == nil {
+						let serverSupportsInfinitePropfind = connection.capabilities?.prepopulateWithInfinitePropfind
+
 						bookmark.displayName = connection.loggedInUser?.displayName
 						connection.disconnect(completionHandler: {
 							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
@@ -585,26 +588,69 @@ class BookmarkViewController: StaticTableViewController {
 							case .create:
 								// Add bookmark
 								OnMainThread {
-									var progressViewController : ProgressIndicatorViewController?
+									var prepopulationMethod : BookmarkPrepopulationMethod?
 
-									// let prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
-									let prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
-										OCBookmarkManager.shared.addBookmark(bookmark)
+									// Determine prepopulation method
+									if prepopulationMethod == nil, let prepopulationMethodClassSetting = BookmarkViewController.classSetting(forOCClassSettingsKey: .prepopulation) as? String {
+										prepopulationMethod = BookmarkPrepopulationMethod(rawValue: prepopulationMethodClassSetting)
+									}
 
-										OnMainThread {
-											progressViewController?.dismiss(animated: true, completion: {
-												done()
-											})
+									if prepopulationMethod == nil, serverSupportsInfinitePropfind?.boolValue == true {
+										prepopulationMethod = .streaming
+									}
+
+									if prepopulationMethod == nil {
+										prepopulationMethod = .doNot
+									}
+
+									// Prepopulation y/n?
+									if let prepopulationMethod = prepopulationMethod, prepopulationMethod != .doNot {
+										// Perform prepopulation
+										var progressViewController : ProgressIndicatorViewController?
+										var prepopulateProgress : Progress?
+										let prepopulateCompletionHandler = {
+											// Wrap up
+											OCBookmarkManager.shared.addBookmark(bookmark)
+
+											OnMainThread {
+												progressViewController?.dismiss(animated: true, completion: {
+													done()
+												})
+											}
 										}
-									})
 
-									progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing account…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
-										prepopulateProgress.cancel()
-									})
-									progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
+										// Perform prepopulation method
+										switch prepopulationMethod {
+											case .streaming:
+												prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
+													prepopulateCompletionHandler()
+												})
 
-									if let progressViewController = progressViewController {
-										self?.topMostViewController.present(progressViewController, animated: true, completion: nil)
+											case .split:
+												prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
+													prepopulateCompletionHandler()
+												})
+
+											default:
+												done()
+										}
+
+										// Present progress
+										if let prepopulateProgress = prepopulateProgress {
+
+											progressViewController = ProgressIndicatorViewController(initialTitleLabel: "Preparing account".localized, initialProgressLabel: "Please wait…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
+												prepopulateProgress.cancel()
+											})
+											progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
+
+											if let progressViewController = progressViewController {
+												self?.topMostViewController.present(progressViewController, animated: true, completion: nil)
+											}
+										}
+
+									} else {
+										// No prepopulation
+										done()
 									}
 								}
 
@@ -943,6 +989,13 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
 	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
+	static let prepopulation = OCClassSettingsKey("prepopulation")
+}
+
+enum BookmarkPrepopulationMethod : String {
+	case doNot
+	case streaming
+	case split
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
@@ -972,6 +1025,27 @@ extension BookmarkViewController : OCClassSettingsSupport {
 				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
 				.category	: "Bookmarks",
 				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.prepopulation : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported,
+				.possibleValues	: [
+					[
+						OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
+					]
+				]
 			]
 		]
 	}

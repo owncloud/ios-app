@@ -25,6 +25,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 	open var progressView : UIProgressView
 	open var activityIndicator : UIActivityIndicatorView
 	open var label : UILabel
+	open var titleLabel : UILabel?
 	open var cancelButton : UIButton?
 
 	var progressMessageObservation : NSKeyValueObservation?
@@ -63,7 +64,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		}
 	}
 
-	public init(initialProgressLabel: String?, progress : Progress?, cancelLabel: String? = nil, cancelHandler: (() -> Void)? = nil) {
+	public init(initialTitleLabel: String? = nil, initialProgressLabel: String?, progress : Progress?, cancelLabel: String? = nil, cancelHandler: (() -> Void)? = nil) {
 		progressView = UIProgressView(progressViewStyle: .bar)
 		progressView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -81,6 +82,15 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		super.init(nibName: nil, bundle: nil)
 
 		self.progress = progress
+
+		if let initialTitleLabel = initialTitleLabel {
+			titleLabel = UILabel()
+			titleLabel?.translatesAutoresizingMaskIntoConstraints = false
+			titleLabel?.text = initialTitleLabel
+			titleLabel?.font = .preferredFont(forTextStyle: .title2)
+
+			label.font = .preferredFont(forTextStyle: .subheadline)
+		}
 
 		if let initialProgressLabel = initialProgressLabel {
 			label.text = initialProgressLabel
@@ -112,6 +122,10 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		centerView.addSubview(progressView)
 		centerView.addSubview(label)
 
+		if let titleLabel = titleLabel {
+			centerView.addSubview(titleLabel)
+		}
+
 		if let cancelButton = cancelButton {
 			centerView.addSubview(cancelButton)
 		}
@@ -120,7 +134,8 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		rootView.addSubview(activityIndicator)
 
 		let outerSpacing : CGFloat = 10
-		let labelProgressBarSpacing : CGFloat  = 15
+		let titleLabelSpacing : CGFloat = 5
+		let labelProgressBarSpacing : CGFloat  = 20
 		let cancelProgressBarSpacing : CGFloat  = 40
 		let progressBarWidth : CGFloat  = 280
 
@@ -133,7 +148,6 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 
 			label.centerXAnchor.constraint(equalTo: centerView.centerXAnchor),
 
-			label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
 			progressView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: labelProgressBarSpacing),
 
 			centerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: outerSpacing),
@@ -149,6 +163,20 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 			activityIndicator.widthAnchor.constraint(equalToConstant: 20),
 			activityIndicator.heightAnchor.constraint(equalToConstant: 20)
 		]
+
+		if let titleLabel = titleLabel {
+			constraints.append(contentsOf: [
+				titleLabel.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
+				titleLabel.centerXAnchor.constraint(greaterThanOrEqualTo: centerView.centerXAnchor),
+				titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: centerView.leftAnchor),
+				titleLabel.rightAnchor.constraint(lessThanOrEqualTo: centerView.rightAnchor),
+				label.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: titleLabelSpacing)
+			])
+		} else {
+			constraints.append(contentsOf: [
+				label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
+			])
+		}
 
 		if let cancelButton = cancelButton {
 			constraints.append(contentsOf: [
@@ -187,8 +215,10 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		self.view.backgroundColor = collection.tableBackgroundColor
 
 		self.progressView.applyThemeCollection(collection)
+		self.titleLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
 		self.label.applyThemeCollection(collection)
 		self.cancelButton?.applyThemeCollection(collection)
+		self.activityIndicator.style = collection.activityIndicatorViewStyle
 	}
 
 	open func update(progress: Float? = nil, text: String? = nil) {

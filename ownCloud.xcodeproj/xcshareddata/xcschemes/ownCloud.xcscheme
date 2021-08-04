@@ -335,6 +335,11 @@
             value = "[com.owncloud.action.copy,com.owncloud.action.move]"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:bookmark.prepopulation"
+            value = "string:streaming"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
