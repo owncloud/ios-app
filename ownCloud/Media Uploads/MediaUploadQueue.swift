@@ -59,7 +59,7 @@ class MediaUploadQueue : OCActivitySource {
 		OCCellularManager.shared.registerSwitch(videoCellularSwitch)
 
 		importQueue.qualityOfService = .utility
-		importQueue.maxConcurrentOperationCount = ProcessInfo.processInfo.activeProcessorCount
+		importQueue.maxConcurrentOperationCount = 1 // Limit resource usage (was: ProcessInfo.processInfo.activeProcessorCount)
 	}
 
 	func addUpload(_ asset:PHAsset, for bookmark:OCBookmark, at path:String) {
