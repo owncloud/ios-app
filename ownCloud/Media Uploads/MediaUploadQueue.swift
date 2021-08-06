@@ -89,17 +89,29 @@ class MediaUploadQueue : OCActivitySource {
 	private var _needsSchedulingCountByBookmarkUUID : [UUID : Int] = [:]
 	func setNeedsScheduling(in bookmark: OCBookmark) {
 		// Increment counter by one
-		_needsSchedulingCountByBookmarkUUID[bookmark.uuid] = (_needsSchedulingCountByBookmarkUUID[bookmark.uuid] ?? 0) + 1
+		OCSynchronized(self) {
+			_needsSchedulingCountByBookmarkUUID[bookmark.uuid] = (_needsSchedulingCountByBookmarkUUID[bookmark.uuid] ?? 0) + 1
+		}
 
 		// Schedule right away. If it's already busy, it'll return quickly. If not, it'll schedule.
 		self.scheduleUploads(in: bookmark)
+	}
+
+	func needsSchedulingCount(for bookmarkUUID: UUID) -> Int {
+		var needsSchedulingCountAtEntry : Int = 0
+
+		OCSynchronized(self) {
+			needsSchedulingCountAtEntry = _needsSchedulingCountByBookmarkUUID[bookmarkUUID] ?? 0
+		}
+
+		return needsSchedulingCountAtEntry
 	}
 
 	func scheduleUploads(in bookmark:OCBookmark) {
 
 		var uploadStorageAlreadyProcessing = false
 		var uploadStorageQueueEmpty = false
-		let needsSchedulingCountAtEntry = _needsSchedulingCountByBookmarkUUID[bookmark.uuid]
+		let needsSchedulingCountAtEntry : Int = needsSchedulingCount(for: bookmark.uuid)
 
 		// Avoid race conditions by performing checks and modifications atomically
 		bookmark.modifyMediaUploadStorage { (mediaUploadStorage) -> MediaUploadStorage in
@@ -153,7 +165,7 @@ class MediaUploadQueue : OCActivitySource {
 					// Check if .setNeedsScheduling() has been called since starting the scheduling:
 					// since any new entries added to the queue after scheduling has started will not be handled,
 					// it's important to start scheduling again if any change to the queue has been performed since
-					if needsSchedulingCountAtEntry != self._needsSchedulingCountByBookmarkUUID[bookmark.uuid] {
+					if needsSchedulingCountAtEntry != self.needsSchedulingCount(for: bookmark.uuid) {
 						self.scheduleUploads(in: bookmark)
 					}
 				}
@@ -219,7 +231,7 @@ class MediaUploadQueue : OCActivitySource {
 
 	private func publishImportActivity(for core:OCCore, itemCount:Int) {
 		let activityId = "MediaUploadQueue:\(UUID())"
-        self.uploadActivity = MediaUploadActivity(identifier: activityId, assetCount: itemCount)
+		self.uploadActivity = MediaUploadActivity(identifier: activityId, assetCount: itemCount)
 		core.activityManager.update(OCActivityUpdate.publishingActivity(for: self))
 	}
 

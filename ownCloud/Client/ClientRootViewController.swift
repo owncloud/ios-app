@@ -48,8 +48,6 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	var notificationPresenter : NotificationMessagePresenter?
 	var cardMessagePresenter : CardIssueMessagePresenter?
 
-	var pasteboardChangedCounter = 0
-
 	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
 
 	var skipAuthorizationFailure : Bool = false

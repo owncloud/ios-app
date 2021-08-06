@@ -41,6 +41,12 @@ class StaticLoginProfile: NSObject {
 	var allowedHosts : [String]?
 	var allowedAuthenticationMethods : [OCAuthenticationMethodIdentifier]?
 	var themeStyleID : ThemeStyleIdentifier?
+	var isOnboardingEnabled : Bool {
+		if promptForHelpURL != nil, helpURLButtonString != nil, helpURL != nil {
+			return true
+		}
+		return false
+	}
 
 	enum Key : String, CaseIterable {
 		case identifier

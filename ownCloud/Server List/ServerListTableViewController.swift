@@ -186,10 +186,12 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 				}
 			}
 
-			NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
-				if granted {
-					OnMainThread {
-						UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+			if !ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
+					if granted {
+						OnMainThread {
+							UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+						}
 					}
 				}
 			}
@@ -230,6 +232,8 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		if AppLockManager.shared.passcode == nil && AppLockManager.shared.isPasscodeEnforced {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
+		} else if let passcode = AppLockManager.shared.passcode, passcode.count < AppLockManager.shared.requiredPasscodeDigits {
+			PasscodeSetupCoordinator(parentViewController: self, action: .upgrade).start()
 		}
 
 		if VendorServices.shared.showBetaWarning, shownFirstTime {
@@ -800,7 +804,9 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 				self.delete(bookmark: bookmark, at: indexPath ) {
 				 OnMainThread {
 					 self.tableView.performBatchUpdates({
-						 self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						if self.tableView.cellForRow(at: indexPath) != nil {
+							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						}
 					 }, completion: { (_) in
 						 self.ignoreServerListChanges = false
 					 })
