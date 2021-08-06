@@ -565,7 +565,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				if let strongSelf = self {
 					if error == nil {
-						let serverSupportsInfinitePropfind = connection.capabilities?.prepopulateWithInfinitePropfind
+						let serverSupportsInfinitePropfind = connection.capabilities?.supportsInfinitePropfind
 
 						bookmark.displayName = connection.loggedInUser?.displayName
 						connection.disconnect(completionHandler: {

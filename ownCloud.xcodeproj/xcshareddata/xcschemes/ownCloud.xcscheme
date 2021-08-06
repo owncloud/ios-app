@@ -338,7 +338,12 @@
          <EnvironmentVariable
             key = "oc:bookmark.prepopulation"
             value = "string:streaming"
-            isEnabled = "YES">
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:bookmark.prepopulation"
+            value = "string:split"
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
