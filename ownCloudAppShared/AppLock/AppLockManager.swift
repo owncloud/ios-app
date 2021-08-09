@@ -147,6 +147,17 @@ public class AppLockManager: NSObject {
 		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
 	}
 
+	public var requiredPasscodeDigits : Int {
+		if let digit = self.classSetting(forOCClassSettingsKey: .requiredPasscodeDigits) as? Int, digit > 4 {
+			return digit
+		}
+		return 4
+	}
+
+	public var maximumPasscodeDigits : Int {
+		return (self.classSetting(forOCClassSettingsKey: .maximumPasscodeDigits) as? Int) ?? 6
+	}
+
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
 
@@ -318,7 +329,7 @@ public class AppLockManager: NSObject {
 
 		passcodeViewController = PasscodeViewController(completionHandler: { (viewController: PasscodeViewController, passcode: String) in
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
-		})
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
 
 		passcodeViewController.message = "Enter code".localized
 		passcodeViewController.cancelButtonHidden = false
@@ -533,6 +544,8 @@ extension OCClassSettingsIdentifier {
 
 extension OCClassSettingsKey {
 	static let passcodeEnforced = OCClassSettingsKey("enforced")
+	static let requiredPasscodeDigits = OCClassSettingsKey("requiredPasscodeDigits")
+	static let maximumPasscodeDigits = OCClassSettingsKey("maximumPasscodeDigits")
 }
 
 extension AppLockManager: OCClassSettingsSupport {
@@ -540,17 +553,31 @@ extension AppLockManager: OCClassSettingsSupport {
 
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
-			.passcodeEnforced : false
+			.passcodeEnforced : false,
+			.requiredPasscodeDigits: 4,
+			.maximumPasscodeDigits: 6
 		]
 	}
 
 	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
-			OCClassSettingsKey.passcodeEnforced: [
-				OCClassSettingsMetadataKey.type: OCClassSettingsMetadataType.boolean,
-				OCClassSettingsMetadataKey.description: "Controls wether the user MUST establish a passcode upon app installation",
-				OCClassSettingsMetadataKey.category: "Passcode",
-				OCClassSettingsMetadataKey.status: OCClassSettingsKeyStatus.advanced
+			.passcodeEnforced: [
+				.type: OCClassSettingsMetadataType.boolean,
+				.description: "Controls wether the user MUST establish a passcode upon app installation",
+				.category: "Passcode",
+				.status: OCClassSettingsKeyStatus.advanced
+			],
+			.requiredPasscodeDigits : [
+				.type 		: OCClassSettingsMetadataType.integer,
+				.description	: "Controls how many passcode digits are at least required for passcode lock.",
+				.category	: "Passcode",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+			.maximumPasscodeDigits : [
+				.type 		: OCClassSettingsMetadataType.integer,
+				.description	: "Controls how many passcode digits are maximal possible for passcode lock.",
+				.category	: "Passcode",
+				.status		: OCClassSettingsKeyStatus.advanced
 			]
 		]
 	}

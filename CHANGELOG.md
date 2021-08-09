@@ -1,3 +1,52 @@
+Changelog for ownCloud iOS Client [11.7.0] (2021-07-29)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.7.0 relevant to
+ownCloud admins and users.
+
+[11.7.0]: https://github.com/owncloud/ios-app/compare/milestone/11.6.1...milestone/11.7.0
+
+Summary
+-------
+
+* Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
+* Change - Background Media Upload: [#958](https://github.com/owncloud/ios-app/pull/958)
+* Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
+* Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
+
+Details
+-------
+
+* Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
+
+   Clipboard support provides the following new features: - Copy: Files can be copied to the
+   system-wide clipboard and pasted into other apps. Folders can also be copied within the
+   ownCloud app. - Paste: Files can be pasted from the system-wide clipboard into the ownCloud
+   app. Likewise, files and folders copied within the app can be pasted. - Cut: Within an ownCloud
+   account, files and folders can be cut and pasted to a different path. After this action, the
+   items are no longer present in the original location.
+
+   https://github.com/owncloud/ios-app/pull/514
+
+* Change - Background Media Upload: [#958](https://github.com/owncloud/ios-app/pull/958)
+
+   Uploading new media files is now more reliable in the background when "Use background location
+   updates" is enabled in the settings.
+
+   https://github.com/owncloud/ios-app/pull/958
+
+* Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
+
+   Passcode lock supports to set a passcode lock with 4 or 6 digits.
+
+   https://github.com/owncloud/ios-app/pull/958
+
+* Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
+
+   Adopted the filename layout to the new Web UI with bold font weight, large file name and normal
+   font weight, small file extension.
+
+   https://github.com/owncloud/ios-app/issues/968
+
 Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.6.1 relevant to

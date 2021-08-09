@@ -332,7 +332,7 @@ class ShareViewController: MoreStaticTableViewController {
 											}
 
 											if let tempFileURL = tempFileURL {
-												serviceSession.importThroughFileProvider(url: tempFileURL, to: targetDirectory, completion: { (error) in
+												serviceSession.importThroughFileProvider(url: tempFileURL, to: targetDirectory, completion: { (error, _) in
 													try? FileManager.default.removeItem(at: tempFileURL)
 
 													if let error = error {
@@ -379,7 +379,7 @@ class ShareViewController: MoreStaticTableViewController {
 
 									attachment.loadFileRepresentation(forTypeIdentifier: type) { (url, error) in
 										if error == nil, let url = url {
-											serviceSession.importThroughFileProvider(url: url, to: targetDirectory, completion: { (error) in
+											serviceSession.importThroughFileProvider(url: url, to: targetDirectory, completion: { (error, _) in
 												if let error = error {
 													Log.error("Error importing item at \(url.absoluteString) through file provider: \(String(describing: error))")
 

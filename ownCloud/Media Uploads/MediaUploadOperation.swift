@@ -20,6 +20,7 @@ import Foundation
 import Photos
 import ownCloudSDK
 import ownCloudAppShared
+import ownCloudApp
 
 class MediaUploadOperation : Operation {
 
@@ -27,11 +28,18 @@ class MediaUploadOperation : Operation {
 	private var mediaUploadJob: MediaUploadJob
 	private var assetId: String
 	private var itemTracking : OCCoreItemTracking?
+	private var didImportAsset : Bool = false
+
+	// Session object to enque uploads in file provider extension
+	private var fpSession: OCFileProviderServiceSession?
 
 	init(core:OCCore, mediaUploadJob:MediaUploadJob, assetId:String) {
 		self.core = core
 		self.mediaUploadJob = mediaUploadJob
 		self.assetId = assetId
+		if let vault = self.core?.vault {
+			self.fpSession = OCFileProviderServiceSession(vault: vault)
+		}
 	}
 
 	override func main() {
@@ -76,13 +84,17 @@ class MediaUploadOperation : Operation {
 		}
 
 		let importGroup = DispatchGroup()
+		var importGroupLeaveOnce : DispatchGroup? = importGroup
 
 		// Track the target path
 		importGroup.enter()
 
 		self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (_, item, isInitial) in
+			let importGroup = importGroupLeaveOnce
+			importGroupLeaveOnce = nil
+
 			defer {
-				importGroup.leave()
+				importGroup?.leave()
 			}
 
 			if isInitial {
@@ -98,18 +110,20 @@ class MediaUploadOperation : Operation {
 				return
 			}
 
-			// Perform asset import
-			importGroup.enter()
-			if let itemLocalId = self.importAsset(asset: asset, with:core, at: item, uploadCompletion: {
-				// Import successful
-				self.removeUploadJob(with: path)
-				importGroup.leave()
-			})?.localID as OCLocalID? {
+			// Ensure the asset of the import is only run once
+			if !self.didImportAsset {
+				self.didImportAsset = true
 
-				// Update media upload storage object
-				core.bookmark.modifyMediaUploadStorage { (storage) in
-					storage.update(localItemID: itemLocalId, assetId: self.assetId, targetPath: path)
-					return storage
+				// Perform asset import
+				if let itemLocalId = self.importAsset(asset: asset, with: core, at: item, uploadCompletion: {
+					// Import successful
+					self.removeUploadJob(with: path)
+				}) {
+					// Update media upload storage object
+					core.bookmark.modifyMediaUploadStorage { (storage) in
+						storage.update(localItemID: itemLocalId, assetId: self.assetId, targetPath: path)
+						return storage
+					}
 				}
 			}
 		})
@@ -151,7 +165,7 @@ class MediaUploadOperation : Operation {
 		return nil
 	}
 
-	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
+	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCLocalID? {
 
 		// Determine the list of preferred media formats
 		var utisToConvert = [String]()
@@ -181,6 +195,7 @@ class MediaUploadOperation : Operation {
 		}
 
 		if let result = asset.upload(with: core,
+									 with: fpSession,
 									 at: rootItem,
 									 utisToConvert: utisToConvert,
 									 preferredResourceTypes: preferredResourceTypes,

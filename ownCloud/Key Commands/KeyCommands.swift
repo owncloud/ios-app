@@ -217,7 +217,7 @@ extension ThemeNavigationController {
 
 		var shortcuts = [UIKeyCommand]()
 
-		if self.viewControllers.count > 1 {
+		if self.viewControllers.count > 1, !(self.visibleViewController?.isKind(of: UIAlertController.self) ?? true) {
 			let backCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command], action: #selector(popViewControllerAnimated), discoverabilityTitle: "Back".localized)
 			shortcuts.append(backCommand)
 		}
@@ -554,6 +554,17 @@ extension StaticTableViewController {
 
 		var shortcuts = [UIKeyCommand]()
 
+		if let visibleViewController = self.presentedViewController as? UIAlertController, let keyCommands = visibleViewController.keyCommands {
+			let newKeyCommands = keyCommands.map { (keyCommand) -> UIKeyCommand in
+				if let input = keyCommand.input, let discoverabilityTitle = keyCommand.discoverabilityTitle {
+					return UIKeyCommand(input: input, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController), discoverabilityTitle: discoverabilityTitle)
+				}
+
+				return UIKeyCommand(input: keyCommand.input!, modifierFlags: keyCommand.modifierFlags, action: #selector(performActionOnVisibleViewController))
+			}
+			return newKeyCommands
+		}
+
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
 			let selectedRow = selectedIndexPath.row
 			let selectedSection = selectedIndexPath.section
@@ -585,6 +596,22 @@ extension StaticTableViewController {
 
 	open override var canBecomeFirstResponder: Bool {
 		return true
+	}
+
+	@objc func performActionOnVisibleViewController(sender: UIKeyCommand) {
+		if let visibleViewController = self.presentedViewController as? UIAlertController, let keyCommands = visibleViewController.keyCommands {
+
+				let commands = keyCommands.filter { (keyCommand) -> Bool in
+					if keyCommand.discoverabilityTitle == sender.discoverabilityTitle {
+						return true
+					}
+					return false
+				}
+
+				if let command = commands.first {
+					visibleViewController.perform(command.action, with: sender)
+				}
+		}
 	}
 
 	@objc func sliderDown() {
@@ -685,7 +712,7 @@ extension StaticTableViewController {
 	@objc override func selectCurrent(sender: UIKeyCommand) {
 		if let indexPath = self.tableView?.indexPathForSelectedRow {
 			let staticRow = staticRowForIndexPath(indexPath)
-			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch {
+			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch, switchButton.isEnabled {
 				if switchButton.isOn {
 					switchButton.setOn(false, animated: true)
 					staticRow.value = false
@@ -748,7 +775,7 @@ extension ClientQueryViewController {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, preferences: ["rootItem" :  rootItem])
 			let actions = Action.sortedApplicableActions(for: actionContext)
 
 			actions.forEach({
@@ -927,7 +954,7 @@ extension QueryFileListTableViewController {
 				item = selectedItem
 			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, preferences: ["rootItem" : rootItem])
 			actionContext.sender = command
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({

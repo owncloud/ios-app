@@ -26,6 +26,9 @@ tag::actions[]
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
+! `com.owncloud.action.cutpasteboard`
+! Cut
+
 ! `com.owncloud.action.delete`
 ! Delete
 
@@ -34,6 +37,9 @@ tag::actions[]
 
 ! `com.owncloud.action.favorite`
 ! Favorite item
+
+! `com.owncloud.action.importpasteboard`
+! Paste
 
 ! `com.owncloud.action.links`
 ! Links
@@ -104,6 +110,9 @@ tag::actions[]
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
+! `com.owncloud.action.cutpasteboard`
+! Cut
+
 ! `com.owncloud.action.delete`
 ! Delete
 
@@ -112,6 +121,9 @@ tag::actions[]
 
 ! `com.owncloud.action.favorite`
 ! Favorite item
+
+! `com.owncloud.action.importpasteboard`
+! Paste
 
 ! `com.owncloud.action.links`
 ! Links
@@ -643,6 +655,9 @@ The following placeholders can be used to make it dynamic:
 !===
 ! Value
 ! Description
+! `502-triggers`
+! Connection validation is triggered when receiving a responses with 502 status.
+
 ! `clear-cookies`
 ! Clear all cookies for the connection when entering connection validation.
 
@@ -658,8 +673,8 @@ The following placeholders can be used to make it dynamic:
 
 |core.scan-for-changes-interval
 |int
-|
-|Minimum number of milliseconds until the next scan for changes, measured from the completion of the previous scan. If no value is provided, uses the pollinterval provided in the server's capabilities. If none is provided either, defaults to 10 seconds.
+|`10`
+|Minimum number of seconds until the next scan for changes, measured from the completion of the previous scan.
 |advanced `candidate`
 
 |connection.allow-background-url-sessions
@@ -1138,6 +1153,18 @@ tag::passcode[]
 |bool
 |`false`
 |Controls wether the user MUST establish a passcode upon app installation
+|advanced `candidate`
+
+|passcode.maximumPasscodeDigits
+|int
+|`6`
+|Controls how many passcode digits are maximal possible for passcode lock.
+|advanced `candidate`
+
+|passcode.requiredPasscodeDigits
+|int
+|`4`
+|Controls how many passcode digits are at least required for passcode lock.
 |advanced `candidate`
 
 |===

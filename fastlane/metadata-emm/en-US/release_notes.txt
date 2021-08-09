@@ -1,12 +1,12 @@
-• Additional URL Scheme
-Added an additional URL scheme to open a specific app, if more than one ownCloud apps are installed with different bundle IDs. (owncloud-app, owncloud-emm or owncloud-online)
+• Clipboard Support
+Clipboard support provides copy and paste actions! Use the system-wide clipboard to copy and paste files and content to the ownCloud app or third-party apps!
 
-• Fix: Let's encrypt
-Fixed misleading warnings at let's encrypt cert renewal
+• Background Media Upload
+Uploading new media files is now more reliable in the background when "Use background location updates" is enabled in the settings.
 
-• Fix: FileProvider UI on iOS 12
-Views in File Provider UI (public links, share with user) could not be dismissed on iOS 12
+• Filename Layout
+Adopted the filename layout to the new Web UI layout.
 
-• Fix: Background Media Upload
-In some cases, background media upload worked not as expected.
+• Six Digits Passcode
+Passcode lock supports to set a passcode lock with 4 or 6 digits.
 

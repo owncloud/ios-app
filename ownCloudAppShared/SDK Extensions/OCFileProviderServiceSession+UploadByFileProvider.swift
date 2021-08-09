@@ -21,14 +21,14 @@ import ownCloudSDK
 import ownCloudApp
 
 public extension OCFileProviderServiceSession {
-	private func performThroughSession(url importItemURL: URL, as importName : String?, to targetDirectory : OCItem, action: @escaping (_ serviceHost: OCFileProviderServicesHost?, _ name: String, _ effectiveImportItemURL: URL, _ completeImport : @escaping (Error?) -> Void) -> Void, completion: @escaping (_ error: Error?) -> Void) {
+	private func performThroughSession(url importItemURL: URL, as importName : String?, to targetDirectory : OCItem, action: @escaping (_ serviceHost: OCFileProviderServicesHost?, _ name: String, _ effectiveImportItemURL: URL, _ completeImport : @escaping (Error?, Any?) -> Void) -> Void, completion: @escaping (_ error: Error?, _ result: Any?) -> Void) {
 		let name = importName ?? importItemURL.lastPathComponent
 		var effectiveImportItemURL : URL = importItemURL
 		var tempFolderURL : URL?
 
 		guard let vault = vault else {
 			Log.error("Not importing file \(importItemURL.lastPathComponent) due to insufficient parameters…")
-			completion(NSError(ocError: .insufficientParameters))
+			completion(NSError(ocError: .insufficientParameters), nil)
 			return
 		}
 
@@ -57,14 +57,14 @@ public extension OCFileProviderServiceSession {
 					if let tempFolderURL = tempFolderURL {
 						try? FileManager.default.removeItem(at: tempFolderURL)
 					}
-					completion(error)
+					completion(error, nil)
 					return
 				}
 			}
 		}
 
-		let wrappedCompleteHandler : (Error?) -> Void = { (error) in
-			completion(error)
+		let wrappedCompleteHandler : (Error?, Any?) -> Void = { (error, result) in
+			completion(error, result)
 
 			// Remove unique temporary shared location when no longer needed
 			if let tempFolderURL = tempFolderURL {
@@ -73,39 +73,41 @@ public extension OCFileProviderServiceSession {
 		}
 
 		self.acquireFileProviderServicesHost(completionHandler: { (error, serviceHost, doneHandler) in
-			let completeImport : (Error?) -> Void = { (error) in
-				wrappedCompleteHandler(error)
+			let completeImport : (Error?, Any?) -> Void = { (error, result) in
+				wrappedCompleteHandler(error, result)
 				doneHandler?()
 			}
 
 			if error != nil {
 				Log.debug("Error acquiring file provider host: \(error?.localizedDescription ?? "" )")
-				completeImport(error)
+				completeImport(error, nil)
 			} else {
 				// Upload file from shared location
 				action(serviceHost, name, effectiveImportItemURL, completeImport)
 			}
 		}, errorHandler: { (error) in
-			wrappedCompleteHandler(error)
+			wrappedCompleteHandler(error, nil)
 		})
 	}
 
-	func importThroughFileProvider(url importItemURL: URL, as importName : String? = nil, to targetDirectory : OCItem, completion: @escaping (_ error: Error?) -> Void) {
+	func importThroughFileProvider(url importItemURL: URL, as importName : String? = nil, to targetDirectory : OCItem, completion: @escaping (_ error: Error?, _ newItemLocalID : OCLocalID?) -> Void) {
 		performThroughSession(url: importItemURL, as: importName, to: targetDirectory, action: { (serviceHost, name, effectiveImportItemURL, completeImport) in
 			// Upload file from shared location
-			if serviceHost?.importItemNamed(name, at: targetDirectory, from: effectiveImportItemURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error) in
+			if serviceHost?.importItemNamed(name, at: targetDirectory, from: effectiveImportItemURL, isSecurityScoped: false, importByCopying: true, automaticConflictResolutionNameStyle: .bracketed, placeholderCompletionHandler: { (error, localID) in
 				if error != nil {
 					Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
 				}
 
-				completeImport(error)
+				completeImport(error, localID)
 			}) == nil {
 				Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
 				let error = NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: [NSLocalizedDescriptionKey: "Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))"])
 
-				completeImport(error)
+				completeImport(error, nil)
 			}
-		}, completion: completion)
+		}, completion: { error, result in
+			completion(error, result as? OCLocalID)
+		})
 	}
 
 	func reportModificationThroughFileProvider(url importItemURL: URL, as importName : String? = nil, for item: OCItem, to targetDirectory : OCItem, lastModifiedDate: Date?, completion: @escaping (_ error: Error?) -> Void) {
@@ -116,13 +118,15 @@ public extension OCFileProviderServiceSession {
 					Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
 				}
 
-				completeImport(error)
+				completeImport(error, nil)
 			}) == nil {
 				Log.debug("Error setting up upload/update of \(Log.mask(name)) at \(Log.mask(targetDirectory.path))")
 				let error = NSError(domain: OCErrorDomain, code: Int(OCError.internal.rawValue), userInfo: [NSLocalizedDescriptionKey: "Error setting up upload/update of \(Log.mask(name)) at \(Log.mask(targetDirectory.path))"])
 
-				completeImport(error)
+				completeImport(error, nil)
 			}
-		}, completion: completion)
+		}, completion: { (error, _) in
+			completion(error)
+		})
 	}
 }
