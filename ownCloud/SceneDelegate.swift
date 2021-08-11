@@ -123,8 +123,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		   firstURL.matchesAppScheme {  // + URL matches app scheme
 			openPrivateLink(url: firstURL, in: scene)
 		} else {
-			URLContexts.forEach { (urlContext) in
-				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
+			if ImportFilesController.shared.importAllowed(alertUserOtherwise: true) {
+				URLContexts.forEach { (urlContext) in
+					ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
+				}
 			}
 		}
 	}

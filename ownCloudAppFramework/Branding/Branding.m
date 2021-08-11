@@ -231,6 +231,11 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 	return ([self computedValueForClassSettingsKey:BrandingKeyOrganizationName]);
 }
 
+- (NSArray<BrandingFileImportMethod> *)disabledImportMethods
+{
+	return ([self computedValueForClassSettingsKey:BrandingKeyDisabledImportMethods]);
+}
+
 - (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName
 {
 	return ([UIImage imageNamed:imageName inBundle:self.appBundle compatibleWithTraitCollection:nil]);
@@ -311,6 +316,19 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 			OCClassSettingsMetadataKeyDescription 	: @"Organization name to use throughout the app.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Branding",
+		},
+
+		// Disabled import methods
+		BrandingKeyDisabledImportMethods : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeStringArray,
+			OCClassSettingsMetadataKeyDescription 	: @"List of disabled import methods that can't be used.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
+			OCClassSettingsMetadataKeyCategory	: @"Branding",
+			OCClassSettingsMetadataKeyPossibleValues : @{
+				BrandingFileImportMethodOpenWith	: @"Disallow import through \"Open with\"",
+				BrandingFileImportMethodShareExtension  : @"Disallow import through the Share Extension",
+				BrandingFileImportMethodFileProvider	: @"Disallow import through the File Provider (Files.app)"
+			}
 		}
 	});
 }
@@ -319,5 +337,10 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierBranding = @"branding";
 
-OCClassSettingsKey BrandingKeyAppName = @"app-name"; 			// Legacy Branding Key: organizationName
+OCClassSettingsKey BrandingKeyAppName = @"app-name";
 OCClassSettingsKey BrandingKeyOrganizationName = @"organization-name"; 	// Legacy Branding Key: organizationName
+OCClassSettingsKey BrandingKeyDisabledImportMethods = @"disabled-import-methods";
+
+BrandingFileImportMethod BrandingFileImportMethodOpenWith = @"open-with";
+BrandingFileImportMethod BrandingFileImportMethodShareExtension = @"share-extension";
+BrandingFileImportMethod BrandingFileImportMethodFileProvider = @"file-provider";
