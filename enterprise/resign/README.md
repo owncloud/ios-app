@@ -32,6 +32,10 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
 - Get the name of your signing certificate. In most cases this will be named `iPhone Distribution: YOUR COMPANY`.
 
+## Associated Domains
+
+Create a text file containing a list of line-break separated domain names (FQN) and name it `domains.txt`. This file is expected to be found in the same folder where provisioning profiles are stored. Currently only domains of type `applinks` are supported (others being `webcredentials` and `appclips`).
+
 ## Instructions
 
 1. Rename your `.ipa` file to `unsigned.ipa`
