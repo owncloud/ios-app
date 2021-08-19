@@ -236,6 +236,16 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 	return ([self computedValueForClassSettingsKey:BrandingKeyDisabledImportMethods]);
 }
 
+- (BOOL)isImportMethodAllowed:(BrandingFileImportMethod)importMethod
+{
+	if ((importMethod != nil) && [self.disabledImportMethods containsObject:importMethod])
+	{
+		return (NO);
+	}
+
+	return (YES);
+}
+
 - (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName
 {
 	return ([UIImage imageNamed:imageName inBundle:self.appBundle compatibleWithTraitCollection:nil]);

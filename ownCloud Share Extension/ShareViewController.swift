@@ -54,7 +54,7 @@ class ShareViewController: MoreStaticTableViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if Branding.shared.disabledImportMethods?.contains(.shareExtension) != true {
+		if Branding.shared.isImportMethodAllowed(.shareExtension) {
 			// Share extension allowed
 			if !willAppearInitial {
 				willAppearInitial = true
@@ -78,7 +78,7 @@ class ShareViewController: MoreStaticTableViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
-		if Branding.shared.disabledImportMethods?.contains(.shareExtension) == true {
+		if !Branding.shared.isImportMethodAllowed(.shareExtension) {
 			// Share extension disabled, alert user
 			let alertController = ThemedAlertController(title: "Share Extension disabled".localized, message: "Importing files through the Share Extension is not allowed on this device.".localized, preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [weak self] _ in

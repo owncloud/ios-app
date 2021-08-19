@@ -54,6 +54,8 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 @property(strong,nullable,nonatomic,readonly) NSString *organizationName; //!< Custom organization name
 @property(strong,nullable,nonatomic,readonly) NSArray<BrandingFileImportMethod> *disabledImportMethods; //!< Disabled file import methods
 
+- (BOOL)isImportMethodAllowed:(BrandingFileImportMethod)importMethod;
+
 - (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName; //!< Returns the respective image from the appBundle
 
 - (nullable id)computedValueForClassSettingsKey:(OCClassSettingsKey)classSettingsKey;

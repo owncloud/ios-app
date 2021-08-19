@@ -72,7 +72,7 @@ class ImportFilesController: NSObject {
 extension ImportFilesController {
 
 	public func importAllowed(alertUserOtherwise: Bool) -> Bool {
-		let importAllowed = Branding.shared.disabledImportMethods?.contains(.openWith) == false
+		let importAllowed = Branding.shared.isImportMethodAllowed(.openWith)
 
 		if !importAllowed, alertUserOtherwise {
 			// Open with disabled, alert user
