@@ -317,6 +317,27 @@ tag::branding[]
 |App name to use throughout the app.
 |supported `candidate`
 
+|branding.disabled-import-methods
+|stringArray
+|
+|List of disabled import methods that can't be used.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `file-provider`
+! Disallow import through the File Provider (Files.app)
+
+! `open-with`
+! Disallow import through "Open with"
+
+! `share-extension`
+! Disallow import through the Share Extension
+
+!===
+
+|supported `candidate`
+
 |branding.organization-name
 |string
 |
