@@ -118,14 +118,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-		if let firstURL = URLContexts.first?.url,
-		   !OCAuthenticationBrowserSessionCustomScheme.handleOpen(firstURL), // No custom scheme URL handling for this URL
-		   firstURL.matchesAppScheme {  // + URL matches app scheme
-			openPrivateLink(url: firstURL, in: scene)
-		} else {
-			if ImportFilesController.shared.importAllowed(alertUserOtherwise: true) {
-				URLContexts.forEach { (urlContext) in
-					ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
+		if let firstURL = URLContexts.first?.url { // Ensure the set isn't empty
+			if !OCAuthenticationBrowserSessionCustomScheme.handleOpen(firstURL), // No custom scheme URL handling for this URL
+			   firstURL.matchesAppScheme {  // + URL matches app scheme
+				openPrivateLink(url: firstURL, in: scene)
+			} else {
+				if ImportFilesController.shared.importAllowed(alertUserOtherwise: true) {
+					URLContexts.forEach { (urlContext) in
+						ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
+					}
 				}
 			}
 		}
