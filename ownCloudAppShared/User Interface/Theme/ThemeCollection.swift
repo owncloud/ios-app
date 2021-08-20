@@ -156,6 +156,7 @@ public class ThemeCollection : NSObject {
 	// MARK: - Login colors
 	@objc public var loginColors : ThemeColorCollection
 	@objc public var informalColors : ThemeColorCollection
+	@objc public var cancelColors : ThemeColorCollection
 
 	@objc public var favoriteEnabledColor : UIColor?
 	@objc public var favoriteDisabledColor : UIColor?
@@ -276,7 +277,6 @@ public class ThemeCollection : NSObject {
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
-				self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
 
 				// Table view
 				self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", navigationBarColors.backgroundColor!.darker(0.1))
@@ -337,7 +337,6 @@ public class ThemeCollection : NSObject {
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.navigationBarColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.navigationBarColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
-				self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
 
 				// Bar styles
 				if #available(iOS 13, *) {
@@ -371,7 +370,6 @@ public class ThemeCollection : NSObject {
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", tmpDarkBrandColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
-				self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
 
 				// Bar styles
 				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
@@ -387,6 +385,9 @@ public class ThemeCollection : NSObject {
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
 		}
+
+		self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
+		self.cancelColors = colors.resolveThemeColorCollection("Cancel", self.lightBrandColors)
 
 		let iconSymbolColor = self.tableRowColors.symbolColor
 
