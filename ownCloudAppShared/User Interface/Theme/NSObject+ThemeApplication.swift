@@ -89,6 +89,9 @@ public extension NSObject {
 				case .welcome:
 					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
 
+				case .informal:
+					themeButton.themeColorCollection = collection.informalColors.filledColorPairCollection
+
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
 			}
