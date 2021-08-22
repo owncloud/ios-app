@@ -335,6 +335,11 @@
             value = "[com.owncloud.action.copy,com.owncloud.action.move]"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:core.scan-for-changes-interval"
+            value = "5000"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
