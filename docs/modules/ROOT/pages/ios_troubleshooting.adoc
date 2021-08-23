@@ -37,7 +37,7 @@ image:ios-app-settings-logging.png[ios-app-settings-logging, width=40%]
 
 === Locating App Logs and iOS App Crash Logs
 
-There are two kind of logs which can be accesed from different locations:
+There are two kinds of logs which can be accessed from different locations:
 
 .The Log Created by the App
 See xref:ios_troubleshooting.html#capturing-app-debug-logs[Capturing App Debug Logs] for how to enable app debug logs.
