@@ -478,6 +478,17 @@ end
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
+    
+    # Special handling for app build flag DISABLE_BACKGROUND_LOCATION needed:
+    # calls to set_info_plist_value before building with xcodebuild
+    # strip preprocessor instructions from Info.plist, so that the
+    # Location keys they aim to remove stay in place. Working around this
+    # by removing anything between "#ifndef DISABLE_BACKGROUND_LOCATION"
+    # and "#endif" via sed 
+    if appBuildFlags.include? "DISABLE_BACKGROUND_LOCATION"
+        sh "sed '/#ifndef DISABLE_BACKGROUND_LOCATION/,/#endif/d' ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod"
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
@@ -709,7 +720,7 @@ end
       codesigning_identity: ENTERPRISE_IDENTITY,
       output_name: ipaName,
       export_method: EXPORT_METHOD,
-      xcargs: "APP_BUILD_FLAGS=\"" + appBuildFlags + "\"",
+      xcargs: "APP_BUILD_FLAGS='" + appBuildFlags + "'",
       export_options: {
         method: EXPORT_METHOD,
         provisioningProfiles: {
