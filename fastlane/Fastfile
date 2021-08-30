@@ -458,6 +458,7 @@ end
     BUILD_NUMBER = values[:BUILD_NUMBER]
 
     appName = "ownCloud"
+    appBuildFlags = ""
     themePath = "ownCloud/Resources/Theming/Branding.plist"
     if !values[:APP_NAME].nil?
       appName = values[:APP_NAME]
@@ -467,8 +468,16 @@ end
         appName = tmpAppName
       end
     end
+    
+    if File.exist?("../" + themePath)
+      tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "app.build-flags")
+      if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
+        appBuildFlags = tmpAppBuildFlags
+      end
+    end
 
     puts "App Name: " + appName
+    puts "App Build Flags: " + appBuildFlags
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
@@ -693,13 +702,14 @@ end
     end
 
     #Create the build
-    gym(
+    build_app(
       workspace: "ownCloud.xcworkspace",
       scheme: "ownCloud",
       configuration: CONFIGURATION,
       codesigning_identity: ENTERPRISE_IDENTITY,
       output_name: ipaName,
       export_method: EXPORT_METHOD,
+      xcargs: "APP_BUILD_FLAGS=\"" + appBuildFlags + "\"",
       export_options: {
         method: EXPORT_METHOD,
         provisioningProfiles: {

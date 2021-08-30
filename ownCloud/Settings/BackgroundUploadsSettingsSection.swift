@@ -84,6 +84,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		}
 
 		// Add option to enable background location updates which will trigger background media uploads
+		#if !DISABLE_BACKGROUND_LOCATION
 		var locationServicesRowTitle: String = ""
 		if #available(iOS 13, *) {
 			locationServicesRowTitle = "Use background location updates".localized
@@ -120,6 +121,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		}, title: locationServicesRowTitle, subtitle: locationServicesRowSubtitle, value: (currentAuthStatus && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled), identifier: "background-location")
 
 		self.add(row: backgroundLocationRow!)
+		#endif /* !DISABLE_BACKGROUND_LOCATION */
 
 		// Add option to enable local notifications reporting that some number of media files got enqueued for upload
 
