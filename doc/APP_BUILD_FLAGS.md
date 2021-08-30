@@ -6,7 +6,12 @@ App Build Flags can be used to control the inclusion or exclusion of certain fun
 
 ## Usage in Branding
 
-A space-separated list of flags can be specified in the `Branding.plist` with the key `app.build-flags`.
+A space-separated list of flags can be specified in the `Branding.plist` with the key `app.build-flags`, f.ex.:
+
+```xml
+<key>app.build-flags</key>
+<string>DISABLE_BACKGROUND_LOCATION</string>
+```
 
 ## Flags
 
