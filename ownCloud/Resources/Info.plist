@@ -147,7 +147,9 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
+		#ifndef DISABLE_BACKGROUND_LOCATION
 		<string>location</string>
+		#endif
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
