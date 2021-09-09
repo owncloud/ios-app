@@ -335,6 +335,11 @@
             value = "[com.owncloud.action.copy,com.owncloud.action.move]"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:passcode.lockDelay"
+            value = "31"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption

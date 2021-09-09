@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudApp
 
 public enum PasscodeAction {
 	case setup
@@ -27,7 +28,7 @@ public enum PasscodeAction {
 		switch self {
 		case .setup: return "Enter code".localized
 		case .delete: return "Delete code".localized
-		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockManager.shared.requiredPasscodeDigits)
+		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockSettings.shared.requiredPasscodeDigits)
 		}
 	}
 }
@@ -43,16 +44,16 @@ public class PasscodeSetupCoordinator {
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
 	private var minPasscodeDigits: Int {
-		if AppLockManager.shared.requiredPasscodeDigits > 4 {
-			return AppLockManager.shared.requiredPasscodeDigits
+		if AppLockSettings.shared.requiredPasscodeDigits > 4 {
+			return AppLockSettings.shared.requiredPasscodeDigits
 		}
 		return 4
 	}
 	private var maxPasscodeDigits: Int {
-		if AppLockManager.shared.maximumPasscodeDigits < minPasscodeDigits {
+		if AppLockSettings.shared.maximumPasscodeDigits < minPasscodeDigits {
 			return minPasscodeDigits
 		}
-		return AppLockManager.shared.maximumPasscodeDigits
+		return AppLockSettings.shared.maximumPasscodeDigits
 	}
 
 	public class var isPasscodeSecurityEnabled: Bool {
@@ -60,11 +61,11 @@ public class PasscodeSetupCoordinator {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
 			} else {
-				return AppLockManager.shared.lockEnabled
+				return AppLockSettings.shared.lockEnabled
 			}
 		}
 		set(newValue) {
-			AppLockManager.shared.lockEnabled = newValue
+			AppLockSettings.shared.lockEnabled = newValue
 		}
 	}
 	public class var isBiometricalSecurityEnabled: Bool {
@@ -72,11 +73,11 @@ public class PasscodeSetupCoordinator {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
 			} else {
-				return AppLockManager.shared.biometricalSecurityEnabled
+				return AppLockSettings.shared.biometricalSecurityEnabled
 			}
 		}
 		set(newValue) {
-			AppLockManager.shared.biometricalSecurityEnabled = newValue
+			AppLockSettings.shared.biometricalSecurityEnabled = newValue
 		}
 	}
 
@@ -90,9 +91,9 @@ public class PasscodeSetupCoordinator {
 		if self.action == .setup, self.minPasscodeDigits < self.maxPasscodeDigits {
 			showDigitsCountSelectionUI()
 		} else {
-			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits
+			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits
 			if self.action == .upgrade {
-				requiredDigits = AppLockManager.shared.requiredPasscodeDigits
+				requiredDigits = AppLockSettings.shared.requiredPasscodeDigits
 			}
 			showPasscodeUI(requiredDigits: requiredDigits)
 		}
@@ -135,10 +136,10 @@ public class PasscodeSetupCoordinator {
 					self.passcodeFromFirstStep = nil
 				}
 			}
-		}, hasCancelButton: !(AppLockManager.shared.isPasscodeEnforced || self.action == .upgrade), requiredLength: requiredDigits)
+		}, hasCancelButton: !(AppLockSettings.shared.isPasscodeEnforced || self.action == .upgrade), requiredLength: requiredDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
-		if AppLockManager.shared.isPasscodeEnforced {
+		if AppLockSettings.shared.isPasscodeEnforced {
 			passcodeViewController?.errorMessage = "You are required to set the passcode".localized
 		}
 
@@ -195,7 +196,7 @@ public class PasscodeSetupCoordinator {
 				passcodeViewController.errorMessage = "Incorrect code".localized
 				passcodeViewController.passcode = nil
 			}
-		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		parentViewController.present(passcodeViewController!, animated: true, completion: nil)
