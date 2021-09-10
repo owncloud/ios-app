@@ -206,6 +206,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		self.bookmark = bookmark
 		self.lastVisibleItemId = lastVisibleItemId
+		self.openBookmark(bookmark)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -365,7 +366,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart(nil, completionHandler: { (error) in
+		clientRootViewController.afterCoreStart(self.lastVisibleItemId, completionHandler: { (error) in
 			// Set up custom push transition for presentation
 			if let navigationController = self.navigationController {
 				if let error = error {
