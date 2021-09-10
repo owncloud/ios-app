@@ -340,6 +340,11 @@
             value = "[share-extension,open-with,file-provider]"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:passcode.lockDelay"
+            value = "31"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
