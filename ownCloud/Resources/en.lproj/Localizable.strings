@@ -506,7 +506,7 @@
 "Shared with others" = "Shared with others";
 "Shares" = "Shares";
 "Copy Private Link" = "Copy Private Link";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Only recipients can use this link. Use it as a permanent link to point to this resource";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.";
 "Accept Share failed" = "Accept Share failed";
 "Decline Share failed" = "Decline Share failed";
 "Accept" = "Accept";
