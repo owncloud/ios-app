@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
