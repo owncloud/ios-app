@@ -277,8 +277,11 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 
 		if ((url = OCTypedCast(urlString, NSURL)) != nil)
 		{
-			// urlString is already an NSURL - return it
-			return (url);
+			// urlString is already an NSURL - return it, unless it is empty
+			if (url.absoluteString.length > 0)
+			{
+				return (url);
+			}
 		}
 		else if (urlString.length > 0)
 		{
