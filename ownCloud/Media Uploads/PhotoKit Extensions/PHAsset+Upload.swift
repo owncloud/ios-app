@@ -226,7 +226,7 @@ extension PHAsset {
 	- parameter resources: array of PHAssetResource objects belonging to PHAsset
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for image formats which shall be converted to JPEG format
-	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
+	- parameter preferredResourceTypes: list of resource types which shall be preferably exported
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
 	func exportPhoto(resources:[PHAssetResource],
@@ -387,7 +387,7 @@ extension PHAsset {
 
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for media formats which shall be converted
-	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
+	- parameter preferredResourceTypes: list of resource types which shall be preferably exported
 	- parameter completion: called when the file is written to disk or if an error occurs
 	*/
 	func export(fileName:String, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
@@ -420,7 +420,7 @@ extension PHAsset {
 	- parameter core: Reference to the core to be used for the upload
 	- parameter rootItem: Directory item where the media file shall be uploaded
 	- parameter utisToConvert: Array of UTI identifiers describing desired output formats
-	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
+	- parameter preferredResourceTypes: list of resource types which shall be preferably exported
 	- parameter preserveOriginalName If true, use original file name from the photo library
 	- parameter completionHandler: Completion handler called after the media file is imported into the core and placeholder item is created.
 	- parameter progressHandler: Receives progress of the at the moment running activity
