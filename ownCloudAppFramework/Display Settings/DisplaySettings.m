@@ -82,7 +82,7 @@
 {
 	if ((self = [super init]) != nil)
 	{
-		[OCIPNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameDisplaySettingsChanged withHandler:^(OCIPNotificationCenter * _Nonnull notificationCenter, DisplaySettings *displaySettings, OCIPCNotificationName  _Nonnull notificationName) {
+		[OCIPCNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameDisplaySettingsChanged withHandler:^(OCIPCNotificationCenter * _Nonnull notificationCenter, DisplaySettings *displaySettings, OCIPCNotificationName  _Nonnull notificationName) {
 			[displaySettings _handleDisplaySettingsChanged];
 		}];
 
@@ -96,7 +96,7 @@
 
 - (void)dealloc
 {
-	[OCIPNotificationCenter.sharedNotificationCenter removeObserver:self forName:OCIPCNotificationNameDisplaySettingsChanged];
+	[OCIPCNotificationCenter.sharedNotificationCenter removeObserver:self forName:OCIPCNotificationNameDisplaySettingsChanged];
 }
 
 #pragma mark - Change notifications
@@ -119,7 +119,7 @@
 
 - (void)postChangeNotifications
 {
-	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
+	[OCIPCNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
 	[[NSNotificationCenter defaultCenter] postNotificationName:DisplaySettingsChanged object:self];
 }
 
