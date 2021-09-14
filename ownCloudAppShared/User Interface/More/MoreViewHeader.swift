@@ -138,7 +138,7 @@ open class MoreViewHeader: UIView {
 
 		if showFavoriteButton {
 			updateFavoriteButtonImage()
-			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
+			favoriteButton.addTarget(self, action: #selector(toggleFavoriteState), for: UIControl.Event.touchUpInside)
 			self.addSubview(favoriteButton)
 			if #available(iOS 13.4, *) {
 				favoriteButton.isPointerInteractionEnabled = true
@@ -231,7 +231,7 @@ open class MoreViewHeader: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	@objc public func toogleFavoriteState() {
+	@objc public func toggleFavoriteState() {
 		if item.isFavorite == true {
 			item.isFavorite = false
 		} else {

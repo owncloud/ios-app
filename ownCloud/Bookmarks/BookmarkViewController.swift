@@ -47,8 +47,8 @@ class BookmarkViewController: StaticTableViewController {
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
-	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toogleTextField))
-	lazy var previousBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-up"), style: .plain, target: self, action: #selector(toogleTextField))
+	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toggleTextField))
+	lazy var previousBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-up"), style: .plain, target: self, action: #selector(toggleTextField))
 	lazy var inputToolbar: UIToolbar = {
 		var toolbar = UIToolbar()
 		toolbar.barStyle = .default
@@ -895,7 +895,7 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	// MARK: - Keyboard AccessoryView
-	@objc func toogleTextField (_ sender: UIBarButtonItem) {
+	@objc func toggleTextField (_ sender: UIBarButtonItem) {
 		if passwordRow?.textField?.isFirstResponder ?? false {
 			// Found next responder, so set it
 			usernameRow?.textField?.becomeFirstResponder()

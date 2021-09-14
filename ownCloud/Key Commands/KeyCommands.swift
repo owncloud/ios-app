@@ -1243,7 +1243,7 @@ extension DisplayHostViewController {
 			shortcuts.append(gotoCommand)
 		} else if let viewController = (self.viewControllers?.first as? MediaDisplayViewController) {
 			let fullscreenCommand = UIKeyCommand(input: "F", modifierFlags: [], action: #selector(enterFullScreen), discoverabilityTitle: "Full Screen".localized)
-			let playbackCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: "Play/Pause".localized)
+			let playbackCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(togglePlayback), discoverabilityTitle: "Play/Pause".localized)
 			let seekBackwardCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Back".localized)
 			let seekForwardCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Ahead".localized)
 			let replayCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: "Go to Beginning".localized)
@@ -1312,7 +1312,7 @@ extension DisplayHostViewController {
 		}
 	}
 
-	@objc func tooglePlayback() {
+	@objc func togglePlayback() {
 		guard let currentViewController = self.viewControllers?.first else { return }
 
 		if let mediaController = currentViewController as? MediaDisplayViewController {
