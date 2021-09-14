@@ -2,7 +2,7 @@
 
 
 
-## Prepare Environement
+## Prepare Environment
 
 Before using the script, please run 
 
@@ -24,7 +24,7 @@ in this directory. This will install all needed Ruby libraries into the path `ve
 
 ## Run Register Script
 
-After preparing the environement you can run the script:
+After preparing the environment you can run the script:
 
 ```
 sudo bundle exec registerOwncloudApp.rb
