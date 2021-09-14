@@ -166,7 +166,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		if shouldStartSearch {
 			shouldStartSearch = false
 			// Setting search bar to first responder does only work, if view did appeared
-			activateRecipienSearch()
+			activateRecipientSearch()
 		}
 	}
 
@@ -216,7 +216,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 				if self.sectionForIdentifier("action-section") == nil {
 					let title = ((self.item.type == .collection) ? "Share this folder" : "Share this file").localized
 					let shareRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-						self?.activateRecipienSearch()
+						self?.activateRecipientSearch()
 						if let actionSection = self?.sectionForIdentifier("action-section") {
 							self?.removeSection(actionSection)
 						}
@@ -462,7 +462,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		}
 	}
 
-	func activateRecipienSearch() {
+	func activateRecipientSearch() {
 		self.searchController?.searchBar.becomeFirstResponder()
 	}
 
