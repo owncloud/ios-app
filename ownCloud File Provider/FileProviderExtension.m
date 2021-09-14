@@ -469,7 +469,7 @@
 
 	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
 	{
-		// Detect collission with existing items
+		// Detect collision with existing items
 		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
 
 		if (!self.skipLocalErrorChecks)
@@ -478,7 +478,7 @@
 
 			if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 			{
-				FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
+				FPLogCmd(@"Completed with collision with existingItem=%@ (locally detected)", existingItem);
 				if (@available(iOS 13.3, *))
 				{
 					completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
@@ -511,7 +511,7 @@
 
 					if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 					{
-						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
+						FPLogCmd(@"Completed with collision with existingItem=%@ (server response)", existingItem);
 						if (@available(iOS 13.3, *))
 						{
 							if (!calledCompletionHandler)
@@ -670,13 +670,13 @@
 
 		if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
 		{
-			// Detect name collissions
+			// Detect name collisions
 			OCItem *existingItem;
 
 			if ((existingItem = [self.core cachedItemInParent:parentItem withName:importFileName isDirectory:NO error:NULL]) != nil)
 			{
-				// Return collission error
-				FPLogCmd(@"Completed with collission with existingItem=%@ (local)", existingItem);
+				// Return collision error
+				FPLogCmd(@"Completed with collision with existingItem=%@ (local)", existingItem);
 				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]);
 				return;
 			}
@@ -692,7 +692,7 @@
 			} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 				if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
 				{
-					// Collission: file already exists
+					// Collision: file already exists
 					if ((parameter != nil) && ([parameter isKindOfClass:[OCItem class]]))
 					{
 						OCItem *placeholderItem = (OCItem *)parameter;
