@@ -26,7 +26,7 @@ public extension UIImageView {
 		let specID = item.mimeType != nil ? item.mimeType! : "_none_"
 		let event = OCEvent(type: .retrieveThumbnail,
 				    userInfo: [OCEventUserInfoKey(rawValue: "specID") : NSString(string: specID), .itemVersionIdentifier : itemVersionIdentifier],
-				    ephermalUserInfo: nil,
+				    ephemeralUserInfo: nil,
 				    result: nil)
 
 		let thumbnail = OCItemThumbnail()

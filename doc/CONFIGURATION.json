@@ -490,9 +490,9 @@
     "className" : "OCAuthenticationMethod",
     "defaultValue" : false,
     "description" : "Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.",
-    "flatIdentifier" : "authentication.browser-session-prefers-ephermal",
-    "key" : "browser-session-prefers-ephermal",
-    "label" : "authentication.browser-session-prefers-ephermal",
+    "flatIdentifier" : "authentication.browser-session-prefers-ephemeral",
+    "key" : "browser-session-prefers-ephemeral",
+    "label" : "authentication.browser-session-prefers-ephemeral",
     "status" : "supported",
     "type" : "bool"
   },

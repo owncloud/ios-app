@@ -265,7 +265,7 @@ tag::authentication[]
 
 |supported `candidate`
 
-|authentication.browser-session-prefers-ephermal
+|authentication.browser-session-prefers-ephemeral
 |bool
 |`false`
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
