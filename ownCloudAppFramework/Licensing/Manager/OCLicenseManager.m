@@ -678,7 +678,7 @@
 		authStatus = [self _authorizationStatusForEntitlements:product.entitlements inEnvironment:environment];
 	}
 
-	OCLogDebug(@"Returning authorizationStatus %lu for produt %@ in environment %@…", (unsigned long)authStatus, productIdentifier, environment);
+	OCLogDebug(@"Returning authorizationStatus %lu for product %@ in environment %@…", (unsigned long)authStatus, productIdentifier, environment);
 
 	return (authStatus);
 }
