@@ -116,7 +116,7 @@ public class SortBar: UIView, Themable, UIPopoverPresentationControllerDelegate 
 			self.searchScopeSegmentedControl?.isHidden = false
 			self.searchScopeSegmentedControl?.alpha = oldValue ? 1.0 : 0.0
 
-			// Woraround for Accessibility: remove all elements, when element is hidden, otherwise the elements are still available for accessibility
+			// Workaround for Accessibility: remove all elements, when element is hidden, otherwise the elements are still available for accessibility
 			if oldValue == false {
 				for scope in SearchScope.allCases {
 					searchScopeSegmentedControl?.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
