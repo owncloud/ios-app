@@ -41,7 +41,7 @@ include::./ios_mdm_tables.adoc[tag=actions]
 
 ==== Display Settings
 
-To customize file list UI behevior, following settings are available: 
+To customize file list UI behavior, following settings are available: 
 
 // include::./ios_mdm_tables.adoc[tag=displaysettings]
 
