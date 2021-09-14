@@ -159,7 +159,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 			self.title = "All Photos".localized
 		}
 
-		// If the fetchResult property was not pre-populdated, fetch all photos from the library
+		// If the fetchResult property was not pre-populated, fetch all photos from the library
 		if fetchResult == nil {
 			let allPhotosOptions = PHFetchOptions()
 			allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
