@@ -28,7 +28,7 @@ class PDFSearchResultsView : UIView {
 	let stackViewSpacing: CGFloat = 8.0
 	let overlayAlpha: CGFloat = 0.8
 
-	private let closeButtton = UIButton()
+	private let closeButton = UIButton()
 	public let backButton = UIButton()
 	public let forwardButton = UIButton()
 	private let searchTermButton = UIButton()
@@ -82,18 +82,18 @@ class PDFSearchResultsView : UIView {
 		stackView.addArrangedSubview(backButton)
 		stackView.addArrangedSubview(searchTermButton)
 		stackView.addArrangedSubview(forwardButton)
-		stackView.addArrangedSubview(closeButtton)
+		stackView.addArrangedSubview(closeButton)
 
-		closeButtton.addTarget(self, action: #selector(close), for: .touchUpInside)
+		closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
 		backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
 		forwardButton.addTarget(self, action: #selector(forward), for: .touchUpInside)
 
 		if #available(iOS 13, *) {
-			closeButtton.setImage(UIImage(systemName: "xmark")?.tinted(with: .white), for: .normal)
+			closeButton.setImage(UIImage(systemName: "xmark")?.tinted(with: .white), for: .normal)
 			backButton.setImage(UIImage(systemName: "chevron.left")?.tinted(with: .white), for: .normal)
 			forwardButton.setImage(UIImage(systemName: "chevron.right")?.tinted(with: .white), for: .normal)
 		} else {
-			closeButtton.setImage(UIImage(named: "xmark")?.tinted(with: .white), for: .normal)
+			closeButton.setImage(UIImage(named: "xmark")?.tinted(with: .white), for: .normal)
 			backButton.setImage(UIImage(named: "chevron.left")?.tinted(with: .white), for: .normal)
 			forwardButton.setImage(UIImage(named: "chevron.right")?.tinted(with: .white), for: .normal)
 		}
