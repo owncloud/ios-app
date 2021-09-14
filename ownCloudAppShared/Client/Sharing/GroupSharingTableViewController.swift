@@ -503,7 +503,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		return []
 	}
 
-	// MARK: Themeing
+	// MARK: Theming
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 

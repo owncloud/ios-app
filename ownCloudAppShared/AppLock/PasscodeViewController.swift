@@ -283,7 +283,7 @@ public class PasscodeViewController: UIViewController, Themable {
 		cancelHandler?(self)
 	}
 
-	// MARK: - Themeing
+	// MARK: - Theming
 	public override var preferredStatusBarStyle : UIStatusBarStyle {
 		return Theme.shared.activeCollection.statusBarStyle
 	}
