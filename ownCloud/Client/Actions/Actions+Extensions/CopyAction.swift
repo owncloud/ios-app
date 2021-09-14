@@ -181,8 +181,8 @@ class CopyAction : Action {
 						return nil
 					}
 
-					// Prepare Items for globale usage
-					if item.type == .file { // only files can be added to the globale pasteboard
+					// Prepare Items for global usage
+					if item.type == .file { // only files can be added to the global pasteboard
 						guard let itemMimeType = item.mimeType else { return }
 
 						let mimeTypeCF = itemMimeType as CFString
