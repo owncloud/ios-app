@@ -1,5 +1,5 @@
 //
-//  PDFSerachViewController.swift
+//  PDFSearchViewController.swift
 //  ownCloud
 //
 //  Created by Michael Neuwert on 12.09.2018.
