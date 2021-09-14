@@ -807,7 +807,7 @@
 		This File Provider does not actually support trashing items - and also indicates so via NSFileProviderItem.capabilities.
 
 		Regardless, iOS will call -trashItemWithIdentifier: instead of -deleteItemWithIdentifier: when a user chooses to replace an
-		existing file. And - if we return NSFeatureUnsupportedError - will make the replace action unusuable.
+		existing file. And - if we return NSFeatureUnsupportedError - will make the replace action unusable.
 
 		This File Provider therefore implements this method to work around this problem. As soon as iOS uses NSFileProviderItem.capabilities
 		and picks the correct action in that case, this implementation can and should be removed.
