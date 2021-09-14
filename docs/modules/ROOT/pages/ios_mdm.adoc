@@ -98,7 +98,7 @@ include::./ios_mdm_tables.adoc[tag=shortcuts]
 
 ==== Logging
 
-Logging settings control the ammount and type of app internal log messages stored as text files and accessible via settings menu.
+Logging settings control the amount and type of app internal log messages stored as text files and accessible via settings menu.
 
 include::./ios_mdm_tables.adoc[tag=logging]
 
