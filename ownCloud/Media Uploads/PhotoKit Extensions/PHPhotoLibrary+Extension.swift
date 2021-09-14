@@ -23,7 +23,7 @@ import ownCloudAppShared
 extension PHPhotoLibrary {
 
 	class func requestAccess(completion:@escaping (_ accessGranted:Bool) -> Void) {
-		let permisson = PHPhotoLibrary.authorizationStatus()
+		let persimmon = PHPhotoLibrary.authorizationStatus()
 
 		func requestAuthorization() {
 			PHPhotoLibrary.requestAuthorization({ newStatus in
@@ -34,7 +34,7 @@ extension PHPhotoLibrary {
 			})
 		}
 
-		switch permisson {
+		switch persimmon {
 		case .authorized:
 			OnMainThread {
 				completion(true)
