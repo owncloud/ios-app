@@ -128,8 +128,8 @@ extension PHAsset {
 	}
 
 	/**
-	Returns a primary resource for an asset. E.g. live photos usually contain 2x asset ressources: still image in JPG or HEIC format plus video clip.
-	Same applies for RAW photos shot with 3rd party apps which consist of compressed and uncompressed asset ressources. Edited photos may include adjust data as separate PHAssetResource
+	Returns a primary resource for an asset. E.g. live photos usually contain 2x asset resources: still image in JPG or HEIC format plus video clip.
+	Same applies for RAW photos shot with 3rd party apps which consist of compressed and uncompressed asset resources. Edited photos may include adjust data as separate PHAssetResource
 
 	Below property returns a PHAssetResource corresponding to original still image (unedited)
 	*/
