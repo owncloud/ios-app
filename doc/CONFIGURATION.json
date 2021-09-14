@@ -733,7 +733,7 @@
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : true,
-    "description" : "Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.",
+    "description" : "Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overridden by `force-background-url-sessions`.",
     "flags" : 4,
     "flatIdentifier" : "connection.allow-background-url-sessions",
     "key" : "allow-background-url-sessions",

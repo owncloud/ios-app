@@ -659,7 +659,7 @@ The following placeholders can be used to make it dynamic:
 |connection.allow-background-url-sessions
 |bool
 |`true`
-|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
+|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overridden by `force-background-url-sessions`.
 |debugOnly
 
 |connection.force-background-url-sessions
