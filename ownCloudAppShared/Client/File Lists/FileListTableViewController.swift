@@ -37,7 +37,7 @@ public protocol InlineMessageSupport {
 	func showInlineMessageFor(item: OCItem)
 }
 
-open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
+open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themable {
 	open weak var core : OCCore?
 
 	public let estimatedTableRowHeight : CGFloat = 62

@@ -31,7 +31,7 @@ class ScanPage {
 	}
 }
 
-class ScanPageCell : UICollectionViewCell, Themeable {
+class ScanPageCell : UICollectionViewCell, Themable {
 	private var imageView : FixedHeightImageView?
 
 	var page : ScanPage? {
@@ -94,7 +94,7 @@ class ScanPageCell : UICollectionViewCell, Themeable {
 	}
 }
 
-class ScanPagesCollectionViewController : UICollectionViewController, UICollectionViewDelegateFlowLayout, Themeable {
+class ScanPagesCollectionViewController : UICollectionViewController, UICollectionViewDelegateFlowLayout, Themable {
 	var flowLayout : UICollectionViewFlowLayout
 
 	var pages : [ScanPage] = [] {

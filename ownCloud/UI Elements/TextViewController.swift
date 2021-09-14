@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudAppShared
 
-class TextViewController: UIViewController, Themeable {
+class TextViewController: UIViewController, Themable {
 	var textView : UITextView?
 
 	var attributedText : NSAttributedString? {

@@ -18,7 +18,7 @@
 
 import UIKit
 
-public class ProgressView: UIView, Themeable, CAAnimationDelegate {
+public class ProgressView: UIView, Themable, CAAnimationDelegate {
 	var backgroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var foregroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var stopButtonLayer : CAShapeLayer = CAShapeLayer()

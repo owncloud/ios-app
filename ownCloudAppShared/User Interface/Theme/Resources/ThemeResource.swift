@@ -101,7 +101,7 @@ public class ThemeResource : NSObject {
 	}
 }
 
-extension ThemeResource : Themeable {
+extension ThemeResource : Themable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		flushThemedResources()
 	}

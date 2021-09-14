@@ -205,7 +205,7 @@ class DownloadItemsHUDViewController: CardViewController {
 		}
 	}
 
-	// MARK: - Themeable
+	// MARK: - Themable
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		progressView.applyThemeCollection(collection)
 		messageLabel.applyThemeCollection(collection)

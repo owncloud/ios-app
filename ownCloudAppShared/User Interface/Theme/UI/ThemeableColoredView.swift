@@ -1,5 +1,5 @@
 //
-//  ThemeableColoredView.swift
+//  ThemableColoredView.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 18.02.19.
@@ -18,7 +18,7 @@
 
 import UIKit
 
-open class ThemeableColoredView: UIView, Themeable {
+open class ThemableColoredView: UIView, Themable {
 
 	// MARK: - Instance variables.
 

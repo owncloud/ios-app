@@ -42,7 +42,7 @@ extension PHAssetCollection {
 	}
 }
 
-class PhotoAlbumTableViewController : UITableViewController, Themeable {
+class PhotoAlbumTableViewController : UITableViewController, Themable {
 
 	class PhotoAlbum {
 		var name: String?

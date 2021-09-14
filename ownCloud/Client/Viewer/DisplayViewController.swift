@@ -36,7 +36,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
+class DisplayViewController: UIViewController, Themable, OCQueryDelegate {
 
 	private let moreButtonTag = 777
 
@@ -684,7 +684,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 	}
 
-	// MARK: - Themeable implementation
+	// MARK: - Themable implementation
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		progressView.applyThemeCollection(collection)
 		cancelButton.applyThemeCollection(collection)

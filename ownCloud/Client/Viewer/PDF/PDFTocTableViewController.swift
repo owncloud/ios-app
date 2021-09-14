@@ -20,7 +20,7 @@ import UIKit
 import PDFKit
 import ownCloudAppShared
 
-class PDFTocTableViewController: UITableViewController, Themeable {
+class PDFTocTableViewController: UITableViewController, Themable {
 
     let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
 
@@ -89,7 +89,7 @@ class PDFTocTableViewController: UITableViewController, Themeable {
 		}
 	}
 
-    // MARK: - Themeable support
+    // MARK: - Themable support
 
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
         self.tableView.applyThemeCollection(collection)

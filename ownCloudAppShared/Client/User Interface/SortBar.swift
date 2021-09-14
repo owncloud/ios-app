@@ -66,7 +66,7 @@ public protocol SortBarDelegate: class {
 	func toggleSelectMode()
 }
 
-public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
+public class SortBar: UIView, Themable, UIPopoverPresentationControllerDelegate {
 
 	weak public var delegate: SortBarDelegate? {
 		didSet {

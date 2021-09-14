@@ -260,7 +260,7 @@ open class MoreViewHeader: UIView {
 	}
 }
 
-extension MoreViewHeader: Themeable {
+extension MoreViewHeader: Themable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		titleLabel.applyThemeCollection(collection)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message)

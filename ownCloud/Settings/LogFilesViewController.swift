@@ -60,7 +60,7 @@ extension OCLogFileRecord {
 	}
 }
 
-class LogFilesViewController : UITableViewController, UITableViewDragDelegate, Themeable {
+class LogFilesViewController : UITableViewController, UITableViewDragDelegate, Themable {
 
 	var logRecords = [OCLogFileRecord]()
 

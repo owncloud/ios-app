@@ -51,7 +51,7 @@ class DragView: UIView {
 	}
 }
 
-final class CardPresentationController: UIPresentationController, Themeable {
+final class CardPresentationController: UIPresentationController, Themable {
 
 	// MARK: - Instance Variables.
 	private var cardPosition: CardPosition = .open

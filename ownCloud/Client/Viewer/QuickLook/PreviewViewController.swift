@@ -135,7 +135,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		return QLPreviewController.canPreview(url as QLPreviewItem)
 	}
 
-	// MARK: - Themeable implementation
+	// MARK: - Themable implementation
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 

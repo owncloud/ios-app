@@ -58,11 +58,11 @@ public enum ThemeItemState {
 	}
 }
 
-public protocol ThemeableSectionHeader : class {
+public protocol ThemableSectionHeader : class {
 	var sectionHeaderColor : UIColor? { get set }
 }
 
-public protocol ThemeableSectionFooter : class {
+public protocol ThemableSectionFooter : class {
 	var sectionFooterColor : UIColor? { get set }
 }
 
@@ -132,12 +132,12 @@ public extension NSObject {
 			tableView.backgroundColor = tableView.style == .grouped ? collection.tableGroupBackgroundColor : collection.tableBackgroundColor
 			tableView.separatorColor = collection.tableSeparatorColor
 
-			if let themeableSectionHeaderTableView = tableView as? ThemeableSectionHeader {
-				themeableSectionHeaderTableView.sectionHeaderColor = collection.tableSectionHeaderColor
+			if let themableSectionHeaderTableView = tableView as? ThemableSectionHeader {
+				themableSectionHeaderTableView.sectionHeaderColor = collection.tableSectionHeaderColor
 			}
 
-			if let themeableSectionFooterTableView = tableView as? ThemeableSectionFooter {
-				themeableSectionFooterTableView.sectionFooterColor = collection.tableSectionFooterColor
+			if let themableSectionFooterTableView = tableView as? ThemableSectionFooter {
+				themableSectionFooterTableView.sectionFooterColor = collection.tableSectionFooterColor
 			}
 		}
 
@@ -272,7 +272,7 @@ public extension NSObject {
 	}
 }
 
-extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter {
+extension UITableViewController : ThemableSectionHeader, ThemableSectionFooter {
 	public var sectionHeaderColor: UIColor? {
 		get {
 			return self.value(forAnnotatedProperty: "sectionHeaderColor") as? UIColor

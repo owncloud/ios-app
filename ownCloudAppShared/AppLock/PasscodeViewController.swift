@@ -21,7 +21,7 @@ import UIKit
 public typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
 public typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
 
-public class PasscodeViewController: UIViewController, Themeable {
+public class PasscodeViewController: UIViewController, Themable {
 
 	// MARK: - Constants
 	fileprivate var passCodeCompletionDelay: TimeInterval = 0.1

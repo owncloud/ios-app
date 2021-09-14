@@ -349,7 +349,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 	}
 }
 
-extension DisplayHostViewController: Themeable {
+extension DisplayHostViewController: Themable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}

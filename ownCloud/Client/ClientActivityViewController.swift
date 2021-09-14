@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate, ClientActivityCellDelegate {
+class ClientActivityViewController: UITableViewController, Themable, MessageGroupCellDelegate, ClientActivityCellDelegate {
 
 	enum ActivitySection : Int, CaseIterable {
 		case messageGroups

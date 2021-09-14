@@ -153,8 +153,8 @@ class ReleaseNotesHostViewController: UIViewController {
 	}
 }
 
-// MARK: - Themeable implementation
-extension ReleaseNotesHostViewController : Themeable {
+// MARK: - Themable implementation
+extension ReleaseNotesHostViewController : Themable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
 		self.view.backgroundColor = collection.tableBackgroundColor

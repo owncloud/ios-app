@@ -38,7 +38,7 @@ class AlertOption : NSObject {
 	}
 }
 
-class AlertView: UIView, Themeable {
+class AlertView: UIView, Themable {
 	var localizedHeader : String?
 
 	var localizedTitle : String

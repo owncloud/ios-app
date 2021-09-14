@@ -38,7 +38,7 @@ private extension PHAssetResource {
 
 typealias PhotosSelectedCallback = ([PHAsset]) -> Void
 
-class PhotoSelectionViewController: UICollectionViewController, Themeable {
+class PhotoSelectionViewController: UICollectionViewController, Themable {
 
 	// MARK: - Constants
 	private let thumbnailSizeMultiplier: CGFloat = 0.205
@@ -215,7 +215,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		calculateItemSize()
 	}
 
-	// MARK: - Themeable support
+	// MARK: - Themable support
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.collectionView!.applyThemeCollection(collection)

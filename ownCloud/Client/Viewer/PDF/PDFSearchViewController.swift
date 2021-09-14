@@ -20,7 +20,7 @@ import UIKit
 import PDFKit
 import ownCloudAppShared
 
-class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Themeable, UISearchBarDelegate {
+class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Themable, UISearchBarDelegate {
 
     typealias PDFSearchMatchSelectedCallback = (String?, [PDFSelection], PDFSelection) -> Void
 

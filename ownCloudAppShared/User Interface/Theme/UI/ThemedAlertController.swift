@@ -18,7 +18,7 @@
 
 import UIKit
 
-public class ThemedAlertController: UIAlertController, Themeable {
+public class ThemedAlertController: UIAlertController, Themable {
 	private var themeRegistered : Bool = false
 
 	override open func viewDidLoad() {

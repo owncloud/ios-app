@@ -26,7 +26,7 @@ public protocol StateRestorationConnectProtocol : class {
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage?)
 }
 
-class ServerListTableViewController: UITableViewController, Themeable, StateRestorationConnectProtocol {
+class ServerListTableViewController: UITableViewController, Themable, StateRestorationConnectProtocol {
 	// MARK: - Views
 	@IBOutlet var welcomeOverlayView: UIView!
 	@IBOutlet var welcomeTitleLabel : UILabel!

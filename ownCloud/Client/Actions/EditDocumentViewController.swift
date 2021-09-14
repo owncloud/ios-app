@@ -22,7 +22,7 @@ import ownCloudAppShared
 import QuickLook
 
 @available(iOS 13.0, *)
-class EditDocumentViewController: QLPreviewController, Themeable {
+class EditDocumentViewController: QLPreviewController, Themable {
 
 	weak var core: OCCore?
 	var item: OCItem

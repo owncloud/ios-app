@@ -473,7 +473,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	}
 }
 
-extension ClientRootViewController : Themeable {
+extension ClientRootViewController : Themable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tabBar.applyThemeCollection(collection)
 

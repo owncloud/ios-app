@@ -24,7 +24,7 @@ private struct CollapsibleProgressBarUpdate {
 	var message: String?
 }
 
-class CollapsibleProgressBar: UIView, Themeable {
+class CollapsibleProgressBar: UIView, Themable {
 	var contentView : UIView = UIView()
 	var fillView : UIView = UIView()
 	var progressView : UIProgressView = UIProgressView()

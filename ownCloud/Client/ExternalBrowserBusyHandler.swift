@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class ExternalBrowserBusyHandler: UIViewController, Themeable {
+class ExternalBrowserBusyHandler: UIViewController, Themable {
 	static func setup() {
 		OCAuthenticationBrowserSessionCustomScheme.busyPresenter = { (session, cancelHandler) in
 			let viewController = ExternalBrowserBusyHandler()

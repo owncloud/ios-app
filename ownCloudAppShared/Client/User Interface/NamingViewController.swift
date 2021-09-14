@@ -22,7 +22,7 @@ import ownCloudSDK
 public typealias StringValidatorResult = (Bool, String?, String?)
 public typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-open class NamingViewController: UIViewController, Themeable {
+open class NamingViewController: UIViewController, Themable {
 	weak open var item: OCItem?
 	weak open var core: OCCore?
 	open var completion: (String?, NamingViewController) -> Void
