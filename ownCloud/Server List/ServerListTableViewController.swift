@@ -989,5 +989,5 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 }
 
 extension NSNotification.Name {
-	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
+	static let BookmarkMessageCountChanged = NSNotification.Name("bookmark.message-count.changed")
 }
