@@ -130,7 +130,7 @@ class PDFTocTableViewController: UITableViewController, Themeable {
         var currentOutline = fromRoot
         var stack: [OutlineStackItem] = []
 
-        func addTocItemForCurrnetOutline() {
+        func addTocItemForCurrentOutline() {
             guard let outlineLabel = currentOutline.label else { return }
 
             guard !outlineLabel.isEmpty else { return }
@@ -146,7 +146,7 @@ class PDFTocTableViewController: UITableViewController, Themeable {
         }
 
         func pushCurrent() {
-            addTocItemForCurrnetOutline()
+            addTocItemForCurrentOutline()
             stack.append(OutlineStackItem(outline: currentOutline))
             if currentOutline.numberOfChildren > 0 {
                 currentOutline = currentOutline.child(at: 0)!
@@ -175,7 +175,7 @@ class PDFTocTableViewController: UITableViewController, Themeable {
                     }
                 } else {
                     // No children -> just add to ToC
-                    addTocItemForCurrnetOutline()
+                    addTocItemForCurrentOutline()
                     if stack.count > 0 {
                         // Get the next child at the same level
                         let stackTop = stack.last!
