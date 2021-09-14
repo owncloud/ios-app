@@ -563,7 +563,7 @@ extension AppLockManager: OCClassSettingsSupport {
 		return [
 			.passcodeEnforced: [
 				.type: OCClassSettingsMetadataType.boolean,
-				.description: "Controls wether the user MUST establish a passcode upon app installation",
+				.description: "Controls whether the user MUST establish a passcode upon app installation",
 				.category: "Passcode",
 				.status: OCClassSettingsKeyStatus.advanced
 			],

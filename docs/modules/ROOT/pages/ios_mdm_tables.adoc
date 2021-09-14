@@ -1131,7 +1131,7 @@ tag::passcode[]
 |passcode.enforced
 |bool
 |`false`
-|Controls wether the user MUST establish a passcode upon app installation
+|Controls whether the user MUST establish a passcode upon app installation
 |advanced `candidate`
 
 |passcode.maximumPasscodeDigits

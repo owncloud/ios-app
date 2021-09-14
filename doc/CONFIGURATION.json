@@ -1656,7 +1656,7 @@
     "classIdentifier" : "passcode",
     "className" : "ownCloudAppShared.AppLockManager",
     "defaultValue" : false,
-    "description" : "Controls wether the user MUST establish a passcode upon app installation",
+    "description" : "Controls whether the user MUST establish a passcode upon app installation",
     "flatIdentifier" : "passcode.enforced",
     "key" : "enforced",
     "label" : "passcode.enforced",
