@@ -167,22 +167,22 @@ open class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if item.type == .collection {
 
-			var canIncreasePemissions = true
+			var canIncreasePermissions = true
 			if item.isSharedWithUser && (item.owner?.userName != self.core.connection.loggedInUser?.userName) {
-				canIncreasePemissions = false
+				canIncreasePermissions = false
 			}
 
 			var values = [[String : Any]]()
 
-			if (share.permissions.isSuperset(of: [.read])) || canIncreasePemissions {
+			if (share.permissions.isSuperset(of: [.read])) || canIncreasePermissions {
 				values.append(["Download / View".localized : 0])
 			}
 
-			if (share.permissions.isSuperset(of: [.read, .update, .create, .delete])) || canIncreasePemissions {
+			if (share.permissions.isSuperset(of: [.read, .update, .create, .delete])) || canIncreasePermissions {
 				values.append(["Download / View / Upload".localized : 1])
 			}
 
-			if (share.permissions.isSuperset(of: [.create])) || canIncreasePemissions {
+			if (share.permissions.isSuperset(of: [.create])) || canIncreasePermissions {
 				values.append(["Upload only (File Drop)".localized : 2])
 			}
 
