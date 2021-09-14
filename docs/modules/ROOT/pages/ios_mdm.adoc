@@ -63,7 +63,7 @@ include::./ios_mdm_tables.adoc[tag=policies]
 
 ==== Connection
 
-Settings concerinng HTTP user agent, cookies, background support etc.
+Settings concerning HTTP user agent, cookies, background support etc.
 
 include::./ios_mdm_tables.adoc[tag=connection]
 
