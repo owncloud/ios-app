@@ -623,7 +623,7 @@ The following placeholders can be used to make it dynamic:
 |connection.plain-http-policy
 |string
 |`warn`
-|Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
+|Policy regarding the use of plain (unencrypted) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
 |advanced `candidate`
 
 |connection.validator-flags

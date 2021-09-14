@@ -986,7 +986,7 @@
     "classIdentifier" : "connection",
     "className" : "OCConnection",
     "defaultValue" : "warn",
-    "description" : "Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.",
+    "description" : "Policy regarding the use of plain (unencrypted) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.",
     "flags" : 4,
     "flatIdentifier" : "connection.plain-http-policy",
     "key" : "plain-http-policy",
