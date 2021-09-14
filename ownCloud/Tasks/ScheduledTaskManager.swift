@@ -152,8 +152,8 @@ class ScheduledTaskManager : NSObject {
 
 	// MARK: - Notifications handling
 
-	@objc private func applicationStateChange(notificaton:Notification) {
-		switch notificaton.name {
+	@objc private func applicationStateChange(notification:Notification) {
+		switch notification.name {
 		case UIApplication.didBecomeActiveNotification:
 			state = .foreground
             stopLocationMonitoring()
