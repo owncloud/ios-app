@@ -180,7 +180,7 @@ extension PHAsset {
 	}
 
 	/**
-	OCCellurSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
+	OCCellularSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
 	*/
 	private var cellSwitchIdentifier: OCCellularSwitchIdentifier? {
 		var identifier: OCCellularSwitchIdentifier?
