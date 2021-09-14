@@ -57,14 +57,14 @@ class DeleteAction : Action {
 			message = "Are you sure you want to delete this item from the server?".localized
 		}
 
-		let itemDescripton: String?
+		let itemDescription: String?
 		if items.count > 1 {
-			itemDescripton = "Multiple items".localized
+			itemDescription = "Multiple items".localized
 		} else {
-			itemDescripton = items.first?.name
+			itemDescription = items.first?.name
 		}
 
-		guard let name = itemDescripton else {
+		guard let name = itemDescription else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
