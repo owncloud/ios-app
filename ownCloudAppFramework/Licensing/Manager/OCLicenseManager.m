@@ -799,7 +799,7 @@
 	}
 }
 
-#pragma mark - Update coalescation
+#pragma mark - Update collation
 - (void)_setNeedsRun:(BOOL *)inOutNeedsRun async:(void(^)(OCLicenseManager *manager, dispatch_block_t completionHandler))block
 {
 	BOOL triggerRun = NO;
