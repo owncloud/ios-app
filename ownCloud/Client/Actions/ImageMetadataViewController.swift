@@ -324,7 +324,7 @@ class ImageMetadataParser {
 
 					switch (flashBitMask >> 3) & 0b11 {
 					case 0b01: flashInfo.append("Compulsory flash firing".localized)
-					case 0b10: flashInfo.append("Compulsory flash supression".localized)
+					case 0b10: flashInfo.append("Compulsory flash suppression".localized)
 					case 0b11: flashInfo.append("Auto mode".localized)
 					default: break
 					}
