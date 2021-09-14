@@ -313,7 +313,7 @@ open class NamingViewController: UIViewController, Themeable {
 	@objc open func keyboardWillShow(notification: NSNotification) {
 		if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
 			if self.view.frame.origin.y == 0 {
-				// TODO: Improve this for center the stackview with the keyboard not only when the keyboard partialy cover the thumbnailImage
+				// TODO: Improve this for center the stackview with the keyboard not only when the keyboard partially cover the thumbnailImage
 				let thumbnailImageMaxY = self.view.convert(self.thumbnailImageView.frame, from:stackView).maxY
 				let thumbnailTopSpace = self.view.convert(self.thumbnailImageView.frame, from:stackView).minY - self.navigationController!.navigationBar.frame.maxY
 				let keyboardY = self.view.frame.height - keyboardSize.height
