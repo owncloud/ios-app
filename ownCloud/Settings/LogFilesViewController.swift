@@ -224,9 +224,9 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 		// Create a file name for sharing with format ownCloud_<date>_<time>.log.txt
 		var time = ""
 		if let creationDate = logRecord.creationDate {
-			let delimiteresRegex = try? NSRegularExpression(pattern: "[/ ,:]", options: .caseInsensitive)
+			let delimitersRegex = try? NSRegularExpression(pattern: "[/ ,:]", options: .caseInsensitive)
 			let timestamp = self.dateFormatter.string(from: creationDate)
-			time = delimiteresRegex?.stringByReplacingMatches(in: timestamp, options: .withoutAnchoringBounds, range: NSRange(location: 0, length: timestamp.count), withTemplate: "_") ?? ""
+			time = delimitersRegex?.stringByReplacingMatches(in: timestamp, options: .withoutAnchoringBounds, range: NSRange(location: 0, length: timestamp.count), withTemplate: "_") ?? ""
 
 		}
 		let shareableFileName = "ownCloud_" + time + ".log.txt"
