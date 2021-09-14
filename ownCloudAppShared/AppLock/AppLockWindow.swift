@@ -18,7 +18,7 @@
 
 import UIKit
 
-//Subclass that only allows the protrait mode
+//Subclass that only allows the portrait mode
 public class AppLockWindow: UIWindow {
 	// MARK: - Show and hide animations
 	public func showWindowAnimation(completion: (() -> Void)? = nil) {
