@@ -155,7 +155,7 @@ extension PHAsset {
 	}
 
 	/**
-	This property tries to find an original fileName usually starting with IMG_ prefix. Unfortunatelly Photos framework messes up names and in some cases,
+	This property tries to find an original fileName usually starting with IMG_ prefix. Unfortunately Photos framework messes up names and in some cases,
 	PHAssetResource.originalFilename will return a name based on local identifier of asset (sort of UUID) although at the same time it stores a URL starting
 	with IMG_ in it's private properties (see PHAssetResource.description output). Here kind of a hack is used accessing non-documented PHAsset property
 	'filename' and PHAssetResource.originalFilename is only used as fallback.
