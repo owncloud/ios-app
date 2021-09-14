@@ -32,7 +32,7 @@ class PasscodeTests: XCTestCase {
 	/*
 	* PASSED if: Passcode correct. "Add Server" view displayed
 	*/
-	func testUnlockRightPasccode() {
+	func testUnlockRightPasscode() {
 
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
