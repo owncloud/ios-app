@@ -1152,7 +1152,13 @@ tag::passcode[]
 |passcode.enforced
 |bool
 |`false`
-|Controls wether the user MUST establish a passcode upon app installation
+|Controls wether the user MUST establish a passcode upon app installation.
+|advanced `candidate`
+
+|passcode.lockDelay
+|int
+|
+|Number of seconds before the lock snaps and the passcode is requested again.
 |advanced `candidate`
 
 |passcode.maximumPasscodeDigits

@@ -10,6 +10,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import LocalAuthentication
+import ownCloudApp
 import ownCloudAppShared
 
 @testable import ownCloud
@@ -23,8 +24,8 @@ class BiometricalTests: XCTestCase {
 	
 	override func tearDown() {
 		AppLockManager.shared.passcode = nil
-		AppLockManager.shared.lockEnabled = false
-		AppLockManager.shared.biometricalSecurityEnabled = false
+		AppLockSettings.shared.lockEnabled = false
+		AppLockSettings.shared.biometricalSecurityEnabled = false
 		super.tearDown()
 	}
 	
@@ -34,8 +35,8 @@ class BiometricalTests: XCTestCase {
 		
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
-		AppLockManager.shared.lockEnabled = true
-		AppLockManager.shared.biometricalSecurityEnabled = true
+		AppLockSettings.shared.lockEnabled = true
+		AppLockSettings.shared.biometricalSecurityEnabled = true
 		
 		AppLockManager.shared.showLockscreenIfNeeded(context: TestLAContext(success: true, error: nil))
 		
@@ -55,8 +56,8 @@ class BiometricalTests: XCTestCase {
 		
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
-		AppLockManager.shared.lockEnabled = true
-		AppLockManager.shared.biometricalSecurityEnabled = true
+		AppLockSettings.shared.lockEnabled = true
+		AppLockSettings.shared.biometricalSecurityEnabled = true
 		
 		AppLockManager.shared.showLockscreenIfNeeded(context: TestLAContext(success: false, error: nil))
 		
