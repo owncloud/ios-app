@@ -103,8 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadCameraMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
-		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
-		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
@@ -114,6 +112,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PresentationModeAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PDFGoToPageAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad {
@@ -134,8 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
-		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
-		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 
 		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
