@@ -90,9 +90,9 @@ class PDFOutlineViewController: UIViewController {
             tocViewController.outlineRoot = self.pdfDocument?.outlineRoot
             toViewController = tocViewController
         } else {
-            let thumbnaisViewController = PDFThumbnailsCollectionViewController()
-            thumbnaisViewController.pdfDocument = self.pdfDocument
-            toViewController = thumbnaisViewController
+            let thumbnailsViewController = PDFThumbnailsCollectionViewController()
+            thumbnailsViewController.pdfDocument = self.pdfDocument
+            toViewController = thumbnailsViewController
         }
 
         change(fromViewController: fromViewController, toViewController: toViewController!)

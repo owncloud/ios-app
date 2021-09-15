@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudAppShared
 
-class ServerListTableHeaderView: UIView, Themeable {
+class ServerListTableHeaderView: UIView, Themable {
 
 	// MARK: - Constants
 	fileprivate let shadowHeight: CGFloat = 1.0

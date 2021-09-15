@@ -152,8 +152,8 @@ class ScheduledTaskManager : NSObject {
 
 	// MARK: - Notifications handling
 
-	@objc private func applicationStateChange(notificaton:Notification) {
-		switch notificaton.name {
+	@objc private func applicationStateChange(notification:Notification) {
+		switch notification.name {
 		case UIApplication.didBecomeActiveNotification:
 			state = .foreground
             stopLocationMonitoring()
@@ -314,7 +314,7 @@ extension ScheduledTaskManager {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
 			// Submitting new task if there is already one in the queue will fail.
-			// iOS permitts 1 pending refresh task at a time and up to 10 processing tasks
+			// iOS permits 1 pending refresh task at a time and up to 10 processing tasks
 			Log.error(tagged: ["TASK_MANAGER"], "Failed to submit BGAppRefreshTask request")
 		}
 	}

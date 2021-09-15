@@ -128,10 +128,10 @@ extension PHAsset {
 	}
 
 	/**
-	Returns a primary resource for an asset. E.g. live photos usually contain 2x asset ressources: still image in JPG or HEIC format plus video clip.
-	Same applies for RAW photos shot with 3rd party apps which consist of compressed and uncompressed asset ressources. Edited photos may include adjust data as separate PHAssetResource
+	Returns a primary resource for an asset. E.g. live photos usually contain 2x asset resources: still image in JPG or HEIC format plus video clip.
+	Same applies for RAW photos shot with 3rd party apps which consist of compressed and uncompressed asset resources. Edited photos may include adjust data as separate PHAssetResource
 
-	Below property returns a PHAssetRessouce corresponding to original still image (unedited)
+	Below property returns a PHAssetResource corresponding to original still image (unedited)
 	*/
 	private var primaryResource: PHAssetResource? {
 		let resources = PHAssetResource.assetResources(for: self)
@@ -155,7 +155,7 @@ extension PHAsset {
 	}
 
 	/**
-	This property tries to find an original fileName usually starting with IMG_ prefix. Unfortunatelly Photos framework messes up names and in some cases,
+	This property tries to find an original fileName usually starting with IMG_ prefix. Unfortunately Photos framework messes up names and in some cases,
 	PHAssetResource.originalFilename will return a name based on local identifier of asset (sort of UUID) although at the same time it stores a URL starting
 	with IMG_ in it's private properties (see PHAssetResource.description output). Here kind of a hack is used accessing non-documented PHAsset property
 	'filename' and PHAssetResource.originalFilename is only used as fallback.
@@ -180,7 +180,7 @@ extension PHAsset {
 	}
 
 	/**
-	OCCellurSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
+	OCCellularSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
 	*/
 	private var cellSwitchIdentifier: OCCellularSwitchIdentifier? {
 		var identifier: OCCellularSwitchIdentifier?
@@ -226,7 +226,7 @@ extension PHAsset {
 	- parameter resources: array of PHAssetResource objects belonging to PHAsset
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for image formats which shall be converted to JPEG format
-	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
+	- parameter preferredResourceTypes: list of resource types which shall be preferably exported
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
 	func exportPhoto(resources:[PHAssetResource],
@@ -387,7 +387,7 @@ extension PHAsset {
 
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for media formats which shall be converted
-	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
+	- parameter preferredResourceTypes: list of resource types which shall be preferably exported
 	- parameter completion: called when the file is written to disk or if an error occurs
 	*/
 	func export(fileName:String, utisToConvert:[String] = [], preferredResourceTypes:[PHAssetResourceType] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
@@ -420,7 +420,7 @@ extension PHAsset {
 	- parameter core: Reference to the core to be used for the upload
 	- parameter rootItem: Directory item where the media file shall be uploaded
 	- parameter utisToConvert: Array of UTI identifiers describing desired output formats
-	- parameter preferredResourceTypes: list of resource types which shall be preferrably exported
+	- parameter preferredResourceTypes: list of resource types which shall be preferably exported
 	- parameter preserveOriginalName If true, use original file name from the photo library
 	- parameter completionHandler: Completion handler called after the media file is imported into the core and placeholder item is created.
 	- parameter progressHandler: Receives progress of the at the moment running activity

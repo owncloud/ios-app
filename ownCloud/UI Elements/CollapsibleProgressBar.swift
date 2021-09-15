@@ -24,7 +24,7 @@ private struct CollapsibleProgressBarUpdate {
 	var message: String?
 }
 
-class CollapsibleProgressBar: UIView, Themeable {
+class CollapsibleProgressBar: UIView, Themable {
 	var contentView : UIView = UIView()
 	var fillView : UIView = UIView()
 	var progressView : UIProgressView = UIProgressView()
@@ -224,7 +224,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 		self.collapse(doAutoCollapse, animate: true)
 	}
 
-	// MARK: - Update coalescating
+	// MARK: - Update coalescing
 	private var scheduledUpdate : CollapsibleProgressBarUpdate?
 
 	private func performUpdate() {

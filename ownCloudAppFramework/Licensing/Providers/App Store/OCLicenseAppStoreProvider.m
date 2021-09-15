@@ -67,7 +67,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 		__weak OCLicenseAppStoreProvider *weakSelf = self;
 
-		[OCIPNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged withHandler:^(OCIPNotificationCenter * _Nonnull notificationCenter, id  _Nonnull observer, OCIPCNotificationName  _Nonnull notificationName) {
+		[OCIPCNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged withHandler:^(OCIPCNotificationCenter * _Nonnull notificationCenter, id  _Nonnull observer, OCIPCNotificationName  _Nonnull notificationName) {
 			OCLogDebug(@"Received AppStoreProviderDataChanged notification");
 			[weakSelf loadReceipt];
 		}];
@@ -78,7 +78,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)dealloc
 {
-	[OCIPNotificationCenter.sharedNotificationCenter removeObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged];
+	[OCIPCNotificationCenter.sharedNotificationCenter removeObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged];
 }
 
 #pragma mark - Purchases allowed
@@ -251,7 +251,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)_ipcNotifyToReloadReceipt
 {
-	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged ignoreSelf:YES];
+	[OCIPCNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged ignoreSelf:YES];
 }
 
 + (NSURL *)sharedReceiptLocation

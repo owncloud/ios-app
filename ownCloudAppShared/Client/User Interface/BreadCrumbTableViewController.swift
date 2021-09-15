@@ -48,13 +48,13 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 
 		var rows : [StaticTableViewRow] = []
 		let pathCount = pathComp.count
-		var currentViewContollerIndex = 2
+		var currentViewControllerIndex = 2
 		let contentHeight : CGFloat = rowHeight * CGFloat(pathCount)
 		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
 		for (idx, currentPath) in pathComp.enumerated().reversed() {
-			var stackIndex = stackViewControllers.count - currentViewContollerIndex
+			var stackIndex = stackViewControllers.count - currentViewControllerIndex
 			if stackIndex < 0 {
 				stackIndex = 0
 			}
@@ -79,7 +79,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 			}, title: pathTitle, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))
 
 			rows.append(aRow)
-			currentViewContollerIndex += 1
+			currentViewControllerIndex += 1
 		}
 
 		let section : StaticTableViewSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, rows: rows)

@@ -36,7 +36,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
+class DisplayViewController: UIViewController, Themable, OCQueryDelegate {
 
 	private let moreButtonTag = 777
 
@@ -406,7 +406,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 	}
 
-	// MARK: - Methods to be overriden in subclasses
+	// MARK: - Methods to be overridden in subclasses
 
 	func renderItem(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the itemDirectURL property.s
@@ -423,7 +423,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		return true
 	}
 
-	// Can be overriden in subclasses e.g. if item can be previewed without downloadint it (e.g. streamable video
+	// Can be overridden in subclasses e.g. if item can be previewed without downloadint it (e.g. streamable video
 	var requiresLocalCopyForPreview : Bool {
 		if type(of: self) === DisplayViewController.self {
 			return false
@@ -684,7 +684,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 	}
 
-	// MARK: - Themeable implementation
+	// MARK: - Themable implementation
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		progressView.applyThemeCollection(collection)
 		cancelButton.applyThemeCollection(collection)

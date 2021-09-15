@@ -294,7 +294,7 @@ class ShareViewController: MoreStaticTableViewController {
 										jobDone()
 										return
 									}
-									// Workaround for saving attachements from Mail.app. Attachments from Mail.app contains two types e.g. "com.adobe.pdf" AND "public.file-url". For loading the file the type "public.file-url" is needed. Otherwise the resource could not be accessed (NSItemProviderSandboxedResource)
+									// Workaround for saving attachments from Mail.app. Attachments from Mail.app contains two types e.g. "com.adobe.pdf" AND "public.file-url". For loading the file the type "public.file-url" is needed. Otherwise the resource could not be accessed (NSItemProviderSandboxedResource)
 									if attachment.registeredTypeIdentifiers.contains("public.file-url") {
 										type = "public.file-url"
 									}

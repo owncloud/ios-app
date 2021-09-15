@@ -323,7 +323,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
  		}
 	}
 
-	// MARK: - Themeable
+	// MARK: - Themable
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 

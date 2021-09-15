@@ -216,7 +216,7 @@ extension ImageDisplayViewController: DisplayExtension {
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }
 
-// MARK: - Gesture recognizer delegete.
+// MARK: - Gesture recognizer delegate.
 extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {

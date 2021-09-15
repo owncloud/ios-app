@@ -18,7 +18,7 @@
 
 import UIKit
 
-open class ThemeTableViewCell: UITableViewCell, Themeable {
+open class ThemeTableViewCell: UITableViewCell, Themable {
 	private var themeRegistered = false
 
 	public var updateLabelColors : Bool = true

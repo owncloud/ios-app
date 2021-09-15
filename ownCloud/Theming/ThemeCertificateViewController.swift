@@ -20,7 +20,7 @@ import UIKit
 import ownCloudUI
 import ownCloudAppShared
 
-class ThemeCertificateViewController: OCCertificateViewController, Themeable {
+class ThemeCertificateViewController: OCCertificateViewController, Themable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 

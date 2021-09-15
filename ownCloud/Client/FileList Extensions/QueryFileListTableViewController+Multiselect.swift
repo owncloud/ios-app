@@ -133,7 +133,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 	}
 
 	@objc public func exitedMultiselection() {
-		// may be overriden in subclasses
+		// may be overridden in subclasses
 	}
 
 	@objc public func updateMultiselection() {

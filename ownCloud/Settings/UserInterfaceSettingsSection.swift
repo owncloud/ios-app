@@ -69,7 +69,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 			var themeIdentifiersByName : [[String:Any]] = []
 			var selectedValue = ThemeStyle.preferredStyle.identifier
 			if #available(iOS 13.0, *) {
-				themeIdentifiersByName = [["System Appeareance".localized : "com.owncloud.system"]]
+				themeIdentifiersByName = [["System Appearance".localized : "com.owncloud.system"]]
 				if ThemeStyle.followSystemAppearance {
 					selectedValue = "com.owncloud.system"
 				}

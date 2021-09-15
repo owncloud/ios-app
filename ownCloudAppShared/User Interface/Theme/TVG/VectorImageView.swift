@@ -19,7 +19,7 @@
 import UIKit
 import PocketSVG
 
-public class VectorImageView: UIView, Themeable {
+public class VectorImageView: UIView, Themable {
 	internal var _vectorImage : TVGImage?
 	public var vectorImage : TVGImage? {
 		get {

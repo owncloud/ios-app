@@ -158,7 +158,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		}
 	}
 
-	// MARK: - Themeing
+	// MARK: - Theming
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let itemState = ThemeItemState(selected: self.isSelected)
 

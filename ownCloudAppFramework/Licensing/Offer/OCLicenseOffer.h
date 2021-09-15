@@ -31,7 +31,7 @@ typedef void(^OCLicenseOfferCommitHandler)(OCLicenseOffer *offer, OCLicenseOffer
 
 typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 {
-	OCLicenseOfferStateUncommitted,	//!< The offer has not been commited to (bought) by the user.
+	OCLicenseOfferStateUncommitted,	//!< The offer has not been committed to (bought) by the user.
 	OCLicenseOfferStateUnavailable, //!< The offer is not available
 	OCLicenseOfferStateRedundant,	//!< The user has not committed to (bought) the offer, but committed to (an)other offer(s) that also cover the entirety of the contents of this offer. It is therefore redundant.
 

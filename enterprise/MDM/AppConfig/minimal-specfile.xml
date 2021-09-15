@@ -13,7 +13,7 @@
 	<presentation defaultLocale="en-US">
 	<fieldGroup>
 		<name>
-			<language value="en-US">Bookmark Setttings</language>
+			<language value="en-US">Bookmark Settings</language>
 		</name>
 		<field keyName="bookmark.default-url" type="input">
 			<label>

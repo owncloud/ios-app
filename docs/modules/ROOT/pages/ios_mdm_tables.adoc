@@ -265,7 +265,7 @@ tag::authentication[]
 
 |supported `candidate`
 
-|authentication.browser-session-prefers-ephermal
+|authentication.browser-session-prefers-ephemeral
 |bool
 |`false`
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
@@ -623,7 +623,7 @@ The following placeholders can be used to make it dynamic:
 |connection.plain-http-policy
 |string
 |`warn`
-|Policy regarding the use of plain (unencryped) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
+|Policy regarding the use of plain (unencrypted) HTTP URLs for creating bookmarks. A value of `warn` will create an issue (typically then presented to the user as a warning), but ultimately allow the creation of the bookmark. A value of `forbidden` will block the use of `http`-URLs for the creation of new bookmarks.
 |advanced `candidate`
 
 |connection.validator-flags
@@ -659,7 +659,7 @@ The following placeholders can be used to make it dynamic:
 |connection.allow-background-url-sessions
 |bool
 |`true`
-|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overriden by `force-background-url-sessions`.
+|Allow the use of background URL sessions. Note: depending on iOS version, the app may still choose not to use them. This settings is overridden by `force-background-url-sessions`.
 |debugOnly
 
 |connection.force-background-url-sessions
@@ -1131,7 +1131,7 @@ tag::passcode[]
 |passcode.enforced
 |bool
 |`false`
-|Controls wether the user MUST establish a passcode upon app installation
+|Controls whether the user MUST establish a passcode upon app installation
 |advanced `candidate`
 
 |passcode.maximumPasscodeDigits

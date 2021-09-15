@@ -25,7 +25,7 @@ enum ThemeImageType {
 
 typealias ThemeImageRenderer = (_ image: ThemeImage, _ theme : Theme, _ ThemeCollection: ThemeCollection) -> UIImage?
 
-class ThemeImage : Themeable {
+class ThemeImage : Themable {
 	var type : ThemeImageType = .image
 
 	var renderer : ThemeImageRenderer?
@@ -77,7 +77,7 @@ class ThemeImage : Themeable {
 		return _image
 	}
 
-	// MARK: - Themeable
+	// MARK: - Themable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		_image = nil
 	}

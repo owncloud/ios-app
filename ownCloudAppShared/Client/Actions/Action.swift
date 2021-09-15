@@ -104,7 +104,7 @@ public class ActionContext: OCExtensionContext {
 
 	private var rootItems: Int = 0
 	private var moveableItems: Int = 0
-	private var deleteableItems: Int = 0
+	private var deletableItems: Int = 0
 	private var cachedSharedItems = [OCItem]()
 	private var cachedParentFolders = [OCLocalID : OCItem]()
 	private var itemStorage: [OCItem]
@@ -124,7 +124,7 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	public var allItemsDeleteable: Bool {
-		return items.count == deleteableItems
+		return items.count == deletableItems
 	}
 
 	public var allItemsMoveable: Bool {
@@ -192,11 +192,11 @@ public class ActionContext: OCExtensionContext {
 			rootItems -= 1
 		}
 
-		if item.permissions.contains(.delete), deleteableItems > 0 {
-			deleteableItems -= 1
+		if item.permissions.contains(.delete), deletableItems > 0 {
+			deletableItems -= 1
 		}
 
-		if item.permissions.contains(.move), deleteableItems > 0 {
+		if item.permissions.contains(.move), deletableItems > 0 {
 			moveableItems -= 1
 		}
 	}
@@ -218,7 +218,7 @@ public class ActionContext: OCExtensionContext {
 		}
 
 		if item.permissions.contains(.delete) {
-			deleteableItems += 1
+			deletableItems += 1
 		}
 
 		if item.permissions.contains(.move) {
@@ -255,7 +255,7 @@ public class ActionContext: OCExtensionContext {
 	private func updateCaches() {
 		cachedSharedItems = itemStorage.sharedWithUser
 		rootItems = itemStorage.filter({ $0.isRoot }).count
-		deleteableItems = itemStorage.filter({$0.permissions.contains(.delete)}).count
+		deletableItems = itemStorage.filter({$0.permissions.contains(.delete)}).count
 		moveableItems = itemStorage.filter({$0.permissions.contains(.move)}).count
 	}
 }

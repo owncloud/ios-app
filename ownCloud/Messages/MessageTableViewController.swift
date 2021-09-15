@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class MessageTableViewController: UITableViewController, Themeable {
+class MessageTableViewController: UITableViewController, Themable {
 	weak var core : OCCore? {
 		willSet {
 			messageSelector = nil

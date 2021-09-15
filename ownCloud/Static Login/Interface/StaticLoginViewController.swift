@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
+class StaticLoginViewController: UIViewController, Themable, StateRestorationConnectProtocol {
 	private var bookmark: OCBookmark?
 	private var lastVisibleItemId: String?
 

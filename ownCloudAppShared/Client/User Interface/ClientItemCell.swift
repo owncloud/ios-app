@@ -545,7 +545,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		}
 	}
 
-	// MARK: - Themeing
+	// MARK: - Theming
 	open var revealHighlight : Bool = false {
 		didSet {
 			if revealHighlight {

@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudAppShared
 
-class AlertViewController: UIViewController, Themeable {
+class AlertViewController: UIViewController, Themable {
 	var localizedHeader : String?
 	var localizedTitle : String
 	var localizedDescription : String

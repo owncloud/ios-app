@@ -18,7 +18,7 @@
 
 import UIKit
 
-open class ProgressIndicatorViewController: UIViewController, Themeable {
+open class ProgressIndicatorViewController: UIViewController, Themable {
 	open var cancelled : Bool = false
 	open var cancelHandler : (() -> Void)?
 

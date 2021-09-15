@@ -21,7 +21,7 @@ import PDFKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themeable {
+class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themable {
 
     fileprivate let thumbnailSizeMultiplierLandscape: CGFloat = 0.2
 	fileprivate let thumbnailSizeMultiplierPortrait: CGFloat = 0.3
@@ -88,7 +88,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 		})
 	}
 
-    // MARK: - Themeable support
+    // MARK: - Themable support
 
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
         self.collectionView!.applyThemeCollection(collection)

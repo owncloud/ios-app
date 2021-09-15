@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudAppShared
 
-class ThemeView: UIView, Themeable {
+class ThemeView: UIView, Themable {
 	private var hasRegistered : Bool = false
 
 	init() {

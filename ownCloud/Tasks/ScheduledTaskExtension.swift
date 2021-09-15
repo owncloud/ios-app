@@ -27,7 +27,7 @@ extension OCExtensionLocationIdentifier {
 	static let appLaunch: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("appLaunch") //!< Application launch
 	static let appDidBecomeBackgrounded: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("appDidBecomeBackgrounded") //!< Application did come into background
 	static let appDidComeToForeground: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("appDidComeToForeground") //!< Application did come into foreground
-	static let appBackgroundFetch: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("appBackgroundFetch") //!< Application woke up to peform background fetch
+	static let appBackgroundFetch: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("appBackgroundFetch") //!< Application woke up to perform background fetch
 }
 
 class ScheduledTaskAction : NSObject {

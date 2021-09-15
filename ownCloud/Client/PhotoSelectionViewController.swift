@@ -38,7 +38,7 @@ private extension PHAssetResource {
 
 typealias PhotosSelectedCallback = ([PHAsset]) -> Void
 
-class PhotoSelectionViewController: UICollectionViewController, Themeable {
+class PhotoSelectionViewController: UICollectionViewController, Themable {
 
 	// MARK: - Constants
 	private let thumbnailSizeMultiplier: CGFloat = 0.205
@@ -131,7 +131,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		super.viewDidLoad()
 		Theme.shared.register(client: self)
 
-		// Workaround for pan to multi-select which has beeen introduced in iOS 13 but stopped working on iOS 14
+		// Workaround for pan to multi-select which has been introduced in iOS 13 but stopped working on iOS 14
 		if #available(iOS 14, *) {
 			self.collectionView.allowsSelectionDuringEditing = true
 			self.collectionView.allowsMultipleSelectionDuringEditing = true
@@ -159,7 +159,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 			self.title = "All Photos".localized
 		}
 
-		// If the fetchResult property was not pre-populdated, fetch all photos from the library
+		// If the fetchResult property was not pre-populated, fetch all photos from the library
 		if fetchResult == nil {
 			let allPhotosOptions = PHFetchOptions()
 			allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -204,7 +204,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		updateCachedAssets()
-		// Workaround for pan to multi-select which has beeen introduced in iOS 13 but stopped working on iOS 14
+		// Workaround for pan to multi-select which has been introduced in iOS 13 but stopped working on iOS 14
 		if #available(iOS 14, *) {
 			collectionView.isEditing = true
 		}
@@ -215,7 +215,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		calculateItemSize()
 	}
 
-	// MARK: - Themeable support
+	// MARK: - Themable support
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.collectionView!.applyThemeCollection(collection)

@@ -26,7 +26,7 @@ public enum StaticTableViewEvent {
 	case tableViewDidDisappear
 }
 
-open class StaticTableViewController: UITableViewController, Themeable {
+open class StaticTableViewController: UITableViewController, Themable {
 	public var sections : [StaticTableViewSection] = Array()
 
 	public var needsLiveUpdates : Bool {

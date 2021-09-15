@@ -88,11 +88,11 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 
 		var newFilename = file.filename
 		if let filename = intent.filename as NSString?, filename.length > 0, let defaultFilename = file.filename as NSString? {
-			var pathExtention = defaultFilename.pathExtension
+			var pathExtension = defaultFilename.pathExtension
 			if let fileExtension = intent.fileextension, fileExtension.count > 0 {
-				pathExtention = fileExtension
+				pathExtension = fileExtension
 			}
-			if let changedFilename = filename.appendingPathExtension(pathExtention) {
+			if let changedFilename = filename.appendingPathExtension(pathExtension) {
 				newFilename = changedFilename
 			}
 		} else if let fileExtension = intent.fileextension, fileExtension.count > 0, let defaultFilename = file.filename as NSString? {

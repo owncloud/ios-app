@@ -20,7 +20,7 @@ import UIKit
 import ownCloudApp
 import ownCloudAppShared
 
-class MigrationViewController: UITableViewController, Themeable {
+class MigrationViewController: UITableViewController, Themable {
 
 	var activities = [MigrationActivity]()
 

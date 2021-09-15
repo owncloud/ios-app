@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class CardViewController: UIViewController, Themeable, CardPresentationSizing {
+open class CardViewController: UIViewController, Themable, CardPresentationSizing {
 	deinit {
 		Theme.shared.unregister(client: self)
 	}
@@ -27,7 +27,7 @@ open class CardViewController: UIViewController, Themeable, CardPresentationSizi
 		view.layoutIfNeeded()
 	}
 
-	// MARK: - Themeable
+	// MARK: - Themable
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		view.backgroundColor = collection.tableBackgroundColor
 	}

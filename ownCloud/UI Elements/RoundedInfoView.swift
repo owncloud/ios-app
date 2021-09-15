@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudAppShared
 
-class RoundedInfoView: UIView, Themeable {
+class RoundedInfoView: UIView, Themable {
 
 	// MARK: - Constants
 	let cornerRadius : CGFloat = 10.0

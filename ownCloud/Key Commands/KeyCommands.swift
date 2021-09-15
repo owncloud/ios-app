@@ -665,8 +665,8 @@ extension StaticTableViewController {
 
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
 			let staticRow = staticRowForIndexPath(selectedIndexPath)
-			if staticRow.type == .switchButton, let switchButon = staticRow.cell?.accessoryView as? UISwitch {
-				switchButon.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
+			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch {
+				switchButton.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 				staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 			} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 				textField.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
@@ -678,8 +678,8 @@ extension StaticTableViewController {
 		if let indexPath = self.tableView?.indexPathForSelectedRow {
 			let staticRow = staticRowForIndexPath(indexPath)
 			self.tableView.endEditing(true)
-			if staticRow.type == .switchButton, let switchButon = staticRow.cell?.accessoryView as? UISwitch {
-				switchButon.tintColor = .white
+			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch {
+				switchButton.tintColor = .white
 				staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
 			} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 				textField.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
@@ -699,8 +699,8 @@ extension StaticTableViewController {
 
 			if let indexPath = self.tableView?.indexPathForSelectedRow {
 				let staticRow = staticRowForIndexPath(indexPath)
-				if staticRow.type == .switchButton, let switchButon = staticRow.cell?.accessoryView as? UISwitch {
-					switchButon.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
+				if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch {
+					switchButton.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 					staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 				} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 					textField.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
@@ -1243,7 +1243,7 @@ extension DisplayHostViewController {
 			shortcuts.append(gotoCommand)
 		} else if let viewController = (self.viewControllers?.first as? MediaDisplayViewController) {
 			let fullscreenCommand = UIKeyCommand(input: "F", modifierFlags: [], action: #selector(enterFullScreen), discoverabilityTitle: "Full Screen".localized)
-			let playbackCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: "Play/Pause".localized)
+			let playbackCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(togglePlayback), discoverabilityTitle: "Play/Pause".localized)
 			let seekBackwardCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Back".localized)
 			let seekForwardCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Ahead".localized)
 			let replayCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: "Go to Beginning".localized)
@@ -1312,7 +1312,7 @@ extension DisplayHostViewController {
 		}
 	}
 
-	@objc func tooglePlayback() {
+	@objc func togglePlayback() {
 		guard let currentViewController = self.viewControllers?.first else { return }
 
 		if let mediaController = currentViewController as? MediaDisplayViewController {

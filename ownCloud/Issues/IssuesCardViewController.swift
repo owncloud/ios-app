@@ -37,7 +37,7 @@ class CardCellBackgroundView : UIView {
 	}
 }
 
-class CardHeaderView : UIView, Themeable {
+class CardHeaderView : UIView, Themable {
 	var label : UILabel
 
 	init(title: String) {

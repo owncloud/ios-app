@@ -678,7 +678,7 @@
 		authStatus = [self _authorizationStatusForEntitlements:product.entitlements inEnvironment:environment];
 	}
 
-	OCLogDebug(@"Returning authorizationStatus %lu for produt %@ in environment %@…", (unsigned long)authStatus, productIdentifier, environment);
+	OCLogDebug(@"Returning authorizationStatus %lu for product %@ in environment %@…", (unsigned long)authStatus, productIdentifier, environment);
 
 	return (authStatus);
 }
@@ -799,7 +799,7 @@
 	}
 }
 
-#pragma mark - Update coalescation
+#pragma mark - Update collation
 - (void)_setNeedsRun:(BOOL *)inOutNeedsRun async:(void(^)(OCLicenseManager *manager, dispatch_block_t completionHandler))block
 {
 	BOOL triggerRun = NO;

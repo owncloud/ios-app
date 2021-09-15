@@ -242,7 +242,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			// If the app is already running, just start link resolution
 			url.resolveAndPresent(in: window)
 		} else {
-			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
+			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfere
 			// with activities of the just instantiated ServerListTableViewController
 			OnMainThread(after:delayForLinkResolution) {
 				url.resolveAndPresent(in: window)
