@@ -82,8 +82,8 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 	}
 
 	@objc func handleActivityNotification(_ notification: Notification) {
-		if let activitiyUpdates = notification.userInfo?[OCActivityManagerNotificationUserInfoUpdatesKey] as? [ [ String : Any ] ] {
-			for activityUpdate in activitiyUpdates {
+		if let activityUpdates = notification.userInfo?[OCActivityManagerNotificationUserInfoUpdatesKey] as? [ [ String : Any ] ] {
+			for activityUpdate in activityUpdates {
 				if let updateTypeInt = activityUpdate[OCActivityManagerUpdateTypeKey] as? UInt, let updateType = OCActivityUpdateType(rawValue: updateTypeInt) {
 					switch updateType {
 						case .publish, .unpublish:
