@@ -637,6 +637,13 @@
 	NSError *error = nil;
 	BOOL stopAccess = NO;
 
+	if (![Branding.sharedBranding isImportMethodAllowed:BrandingFileImportMethodFileProvider])
+	{
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"Importing files through the File Provider is not allowed on this device.")) translatedError]);
+
+		return;
+	}
+
 	if ([fileURL startAccessingSecurityScopedResource])
 	{
 		stopAccess = YES;

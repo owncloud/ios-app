@@ -336,6 +336,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:branding.disabled-import-methods"
+            value = "[share-extension,open-with,file-provider]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:core.scan-for-changes-interval"
             value = "5000"
             isEnabled = "NO">
