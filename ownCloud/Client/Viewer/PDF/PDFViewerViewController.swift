@@ -306,6 +306,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 			if let pageLabel = alertController.textFields?.first?.text {
 				self.selectPage(with: pageLabel)
 			}
+			self.view.endEditing(true)										  
+													  
 		}))
 
 		self.present(alertController, animated: true)
