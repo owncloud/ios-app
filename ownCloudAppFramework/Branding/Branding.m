@@ -273,7 +273,17 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 
 	if ((urlString = [self computedValueForClassSettingsKey:settingsKey]) != nil)
 	{
-		if (urlString.length > 0)
+		NSURL *url = nil;
+
+		if ((url = OCTypedCast(urlString, NSURL)) != nil)
+		{
+			// urlString is already an NSURL - return it, unless it is empty
+			if (url.absoluteString.length > 0)
+			{
+				return (url);
+			}
+		}
+		else if (urlString.length > 0)
 		{
 			return ([NSURL URLWithString:urlString]);
 		}
