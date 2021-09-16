@@ -502,7 +502,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 		guard let pdf = pdfView.document else { return }
 
 		if let pageNr = Int(label) {
-			if pageNr > 0 && pageNr < pdf.pageCount {
+			if pageNr > 0 && pageNr <= pdf.pageCount {
 				if let page = pdf.page(at: pageNr - 1) {
 					self.pdfView.go(to: page)
 				}
