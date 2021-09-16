@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.7.0...master
+
+Summary
+-------
+
+* Bugfix - Open Private Link in Branded App: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+
+Details
+-------
+
+* Bugfix - Open Private Link in Branded App: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+
+   Private links will now be opened in detail view, if the app client is branded.
+
+   https://github.com/owncloud/ios-app/issues/1031
+
 Changelog for ownCloud iOS Client [11.7.0] (2021-07-29)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.7.0 relevant to
