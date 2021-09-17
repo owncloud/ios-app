@@ -43,7 +43,8 @@ Details
 * Bugfix - Open Private Link in Branded Client: [#1031](https://github.com/owncloud/ios-app/issues/1031)
 
    This PR fixes a bug, when trying to open a private link via the custom url scheme `owncloud://` or
-   via associated domains `applinks:`.
+   via associated domains `applinks:`. Resolving a private link opened via the URL scheme
+   owncloud:// was not successful in some cases.
 
    https://github.com/owncloud/ios-app/issues/1031
 
