@@ -101,7 +101,9 @@ class ScheduledTaskManager : NSObject {
 		}
 	}
 
+	#if !DISABLE_BACKGROUND_LOCATION
 	let locationManager = CLLocationManager()
+	#endif
 
 	private let taskQueue = DispatchQueue(label: "com.owncloud.task-scheduler.queue", qos: .background, attributes: .concurrent)
 
@@ -139,7 +141,9 @@ class ScheduledTaskManager : NSObject {
 
 		startMonitoringPhotoLibraryChangesIfNecessary()
 
+		#if !DISABLE_BACKGROUND_LOCATION
 		locationManager.delegate = self
+		#endif
 
 		if #available(iOS 13, *) {
 			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-refresh-task", using: nil) { (task) in
@@ -154,17 +158,21 @@ class ScheduledTaskManager : NSObject {
 
 	@objc private func applicationStateChange(notificaton:Notification) {
 		switch notificaton.name {
-		case UIApplication.didBecomeActiveNotification:
-			state = .foreground
-            stopLocationMonitoring()
-		case UIApplication.didEnterBackgroundNotification:
-			state = .background
-            startLocationMonitoringIfAuthorized()
-			if #available(iOS 13, *) {
-				scheduleBackgroundRefreshTask()
-			}
-		default:
-			break
+			case UIApplication.didBecomeActiveNotification:
+				state = .foreground
+				#if !DISABLE_BACKGROUND_LOCATION
+				stopLocationMonitoring()
+				#endif
+			case UIApplication.didEnterBackgroundNotification:
+				state = .background
+				#if !DISABLE_BACKGROUND_LOCATION
+				startLocationMonitoringIfAuthorized()
+				#endif
+				if #available(iOS 13, *) {
+					scheduleBackgroundRefreshTask()
+				}
+			default:
+				break
 		}
 	}
 
@@ -177,7 +185,9 @@ class ScheduledTaskManager : NSObject {
 			startMonitoringPhotoLibraryChangesIfNecessary()
 		} else {
 			stopMonitoringPhotoLibraryChanges()
+			#if !DISABLE_BACKGROUND_LOCATION
 			stopLocationMonitoring()
+			#endif
 		}
 	}
 
@@ -392,6 +402,7 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 	}
 }
 
+#if !DISABLE_BACKGROUND_LOCATION
 extension ScheduledTaskManager : CLLocationManagerDelegate {
 
     private func startLocationTracking() {
@@ -480,3 +491,4 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
         }
     }
 }
+#endif /* !DISABLE_BACKGROUND_LOCATION */
