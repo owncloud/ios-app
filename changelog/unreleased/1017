@@ -1,0 +1,5 @@
+Bugfix: Automatic photo upload crash on iOS 15
+
+On iOS 15, automatic photo upload seems to consume more resources than are available, leading to a crash. This pull requests reduces the number of concurrent photo upload operations from `available cores` to `1`.
+
+https://github.com/owncloud/ios-app/pull/1017

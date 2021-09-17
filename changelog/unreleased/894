@@ -1,0 +1,5 @@
+Bugfix: (PDF-Viewer) Keyboard does not disappear
+
+Keyboard does not disappear when using the "Go to page" action on the iPad.
+
+https://github.com/owncloud/ios-app/issues/894

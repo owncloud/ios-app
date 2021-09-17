@@ -1,0 +1,5 @@
+Bugfix: Enabling Markup Edit Mode on iOS 15
+
+Auto-enabling the markup edit mode on iOS 15 was broken.
+
+https://github.com/owncloud/ios-app/issues/1012

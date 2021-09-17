@@ -1,0 +1,5 @@
+Change: (Branding) Add build flags support
+
+Add support for app build flags to enable/disable features at compile time via branding parameters
+
+https://github.com/owncloud/ios-app/pull/1026
