@@ -85,7 +85,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		}, placeholder: "https://", value: self.urlString ?? "", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "url"))
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
-			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, proceedItemStyle: .welcome, cancelLabel: "Cancel".localized)
+			let (proceedButton, cancelButton) = urlSection.addButtonFooter(proceedLabel: "Continue".localized, proceedItemStyle: .welcome, cancelLabel: "Cancel".localized, cancelItemStyle: .cancel)
 			proceedButton?.addTarget(self, action: #selector(self.proceedWithURL), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {

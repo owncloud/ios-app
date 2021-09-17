@@ -29,6 +29,7 @@ public enum ThemeItemStyle {
 	case approval
 	case neutral
 	case destructive
+	case cancel
 
 	case logo
 	case title
@@ -88,6 +89,12 @@ public extension NSObject {
 
 				case .welcome:
 					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
+
+				case .informal:
+					themeButton.themeColorCollection = collection.informalColors.filledColorPairCollection
+
+				case .cancel:
+					themeButton.themeColorCollection = collection.cancelColors.filledColorPairCollection
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
