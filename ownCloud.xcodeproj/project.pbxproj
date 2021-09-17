@@ -506,6 +506,7 @@
 		DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */; };
 		DCFB74C421AD7E18005796AF /* StaticLoginServerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */; };
 		DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */; };
 		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
 		DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1469,6 +1470,7 @@
 		DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginServerListViewController.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
+		DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VendorServices+App.swift"; sourceTree = "<group>"; };
 		DCFEFE28236876BD009A142F /* OCLicenseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseManager.h; sourceTree = "<group>"; };
 		DCFEFE29236876BD009A142F /* OCLicenseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseManager.m; sourceTree = "<group>"; };
 		DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseProvider.h; sourceTree = "<group>"; };
@@ -3053,6 +3055,7 @@
 				DC3DEC7C22AFFE8E00F3352D /* KVOWaiter.swift */,
 				4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */,
 				DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */,
+				DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -3990,6 +3993,7 @@
 				4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */,
 				DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */,
 				0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */,
+				DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */,
 				4C9BFA2323158C3F0059CA3E /* PreviewViewController.swift in Sources */,
 				399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
@@ -4704,8 +4708,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 199;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4769,8 +4773,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 199;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4826,8 +4830,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 199;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -4859,8 +4863,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 199;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -5216,8 +5220,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 199;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
@@ -5260,8 +5264,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 199;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;

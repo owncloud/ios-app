@@ -162,7 +162,7 @@ open class PublicLinkTableViewController: SharingTableViewController {
 			self.removeSection(section)
 		}
 
-		let footer = "Only recipients can use this link. Use it as a permanent link to point to this resource".localized
+		let footer = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.".localized
 
 		OnMainThread {
 			let section = StaticTableViewSection(headerTitle: "Private Link".localized, footerTitle: footer, identifier: "private-link-section")

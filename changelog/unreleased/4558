@@ -1,0 +1,5 @@
+Bugfix: Open Private Link in Branded App
+
+Private links will now be opened in detail view, if the app client is branded.
+
+https://github.com/owncloud/ios-app/issues/1031

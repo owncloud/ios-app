@@ -570,6 +570,33 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "description" : "List of disabled import methods that can't be used.",
+    "flatIdentifier" : "branding.disabled-import-methods",
+    "key" : "disabled-import-methods",
+    "label" : "branding.disabled-import-methods",
+    "possibleValues" : [
+      {
+        "description" : "Disallow import through the File Provider (Files.app)",
+        "value" : "file-provider"
+      },
+      {
+        "description" : "Disallow import through \"Open with\"",
+        "value" : "open-with"
+      },
+      {
+        "description" : "Disallow import through the Share Extension",
+        "value" : "share-extension"
+      }
+    ],
+    "status" : "supported",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
     "defaultValue" : false,
     "description" : "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
     "flatIdentifier" : "branding.enable-review-prompt",

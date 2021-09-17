@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 extension Array where Element: Equatable {
@@ -70,18 +71,37 @@ class ImportFilesController: NSObject {
 
 extension ImportFilesController {
 
-	public func importFile(_ importFile: ImportFile) {
-		importFiles.append(importFile)
+	public func importAllowed(alertUserOtherwise: Bool) -> Bool {
+		let importAllowed = Branding.shared.isImportMethodAllowed(.openWith)
 
-		prepareInputFileForImport(file: importFile, completion: { (error) in
-			guard error == nil else {
-				Log.error("Couldn't import file \(importFile.url.absoluteString) because of error: \(String(describing: error))")
+		if !importAllowed, alertUserOtherwise {
+			// Open with disabled, alert user
+			OnMainThread {
+				let alertController = ThemedAlertController(title: "Opening not allowed".localized, message: "Importing files through opening is not allowed on this device.".localized, preferredStyle: .alert)
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-				return
+				UserInterfaceContext.shared.currentViewControllerForPresenting?.present(alertController, animated: true, completion: nil)
 			}
+		}
 
-			self.showAccountUI()
-		})
+		return importAllowed
+	}
+
+	public func importFile(_ importFile: ImportFile) {
+		if self.importAllowed(alertUserOtherwise: true) {
+			// Import file
+			importFiles.append(importFile)
+
+			prepareInputFileForImport(file: importFile, completion: { (error) in
+				guard error == nil else {
+					Log.error("Couldn't import file \(importFile.url.absoluteString) because of error: \(String(describing: error))")
+
+					return
+				}
+
+				self.showAccountUI()
+			})
+		}
 	}
 
 	func makeLocalCopy(of itemURL: URL, completion: (_ error: Error?) -> Void) {

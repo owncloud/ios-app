@@ -182,7 +182,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 			openPrivateLink(url: url, in: window)
-		} else {
+		} else if url.isFileURL {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
 				copyBeforeUsing = !shouldOpenInPlace

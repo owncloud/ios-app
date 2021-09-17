@@ -107,17 +107,19 @@ extension URL {
 					OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
 						if core != nil {
 							internetReachable = core!.connectionStatusSignals.contains(.reachable)
-							core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
-								if foundItem == nil {
-									foundItem = item
-								}
-								if components?.host == bookmark.url?.host {
-									matchedBookmark = bookmark
-								}
-								lastError = error
-								OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
-								group.leave()
-							})
+							OnMainThread {
+								core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
+									if foundItem == nil {
+										foundItem = item
+									}
+									if components?.host == bookmark.url?.host {
+										matchedBookmark = bookmark
+									}
+									lastError = error
+									OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+									group.leave()
+								})
+							}
 						} else {
 							group.leave()
 						}
