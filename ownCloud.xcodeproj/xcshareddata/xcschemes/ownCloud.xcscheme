@@ -341,8 +341,8 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:core.scan-for-changes-interval"
-            value = "5000"
+            key = "oc:passcode.lockDelay"
+            value = "31"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

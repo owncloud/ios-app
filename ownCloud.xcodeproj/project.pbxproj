@@ -340,6 +340,8 @@
 		DC66F3AD2396630100CF4812 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = DC66F3A823965BF400CF4812 /* AppleIncRootCertificate.cer */; };
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
+		DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6A0E5226EA9E740076B533 /* AppLockSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6A0E5326EA9E740076B533 /* AppLockSettings.m */; };
 		DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */; };
 		DC6CC3152642C3560040ECAC /* ExternalBrowserBusyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */; };
 		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
@@ -1298,6 +1300,8 @@
 		DC66F3AA23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreReceiptInAppPurchase.m; sourceTree = "<group>"; };
 		DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManagementViewController.swift; sourceTree = "<group>"; };
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
+		DC6A0E5226EA9E740076B533 /* AppLockSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppLockSettings.h; sourceTree = "<group>"; };
+		DC6A0E5326EA9E740076B533 /* AppLockSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppLockSettings.m; sourceTree = "<group>"; };
 		DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = PLCrashReporter.LICENSE; sourceTree = "<group>"; };
 		DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalBrowserBusyHandler.swift; sourceTree = "<group>"; };
 		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
@@ -2419,6 +2423,15 @@
 			path = "Certificate Management";
 			sourceTree = "<group>";
 		};
+		DC6A0E4F26EA9E2B0076B533 /* AppLock Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DC6A0E5326EA9E740076B533 /* AppLockSettings.m */,
+				DC6A0E5226EA9E740076B533 /* AppLockSettings.h */,
+			);
+			path = "AppLock Settings";
+			sourceTree = "<group>";
+		};
 		DC774E5422F44DF6000B11A1 /* SDK Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2662,6 +2675,7 @@
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
+				DC6A0E4F26EA9E2B0076B533 /* AppLock Settings */,
 				DCB2C05C250C1ECD001083CA /* Branding */,
 				DCF2DA6F24C82C820026D790 /* File Provider Services */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
@@ -3199,6 +3213,7 @@
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
+				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
 				DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4310,6 +4325,7 @@
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
+				DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 				DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,

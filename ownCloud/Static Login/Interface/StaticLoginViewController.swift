@@ -228,9 +228,9 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 			}
 		}
 
-		if AppLockManager.shared.passcode == nil && AppLockManager.shared.isPasscodeEnforced {
+		if AppLockManager.shared.passcode == nil && AppLockSettings.shared.isPasscodeEnforced {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
-		} else if let passcode = AppLockManager.shared.passcode, passcode.count < AppLockManager.shared.requiredPasscodeDigits {
+		} else if let passcode = AppLockManager.shared.passcode, passcode.count < AppLockSettings.shared.requiredPasscodeDigits {
 			PasscodeSetupCoordinator(parentViewController: self, action: .upgrade).start()
 		}
 	}
