@@ -24,13 +24,13 @@ extension UIWindow {
     func display(itemWithID Identifier:String, in bookmark:OCBookmark) {
         if let rootViewController = self.rootViewController as? ThemeNavigationController {
             rootViewController.popToRootViewController(animated: false)
-            if let serverListController = rootViewController.topViewController as? ServerListTableViewController {
-                if serverListController.presentedViewController != nil {
-                    serverListController.dismiss(animated: false, completion: {
-                        serverListController.connect(to: bookmark, lastVisibleItemId: Identifier, animated: false)
+            if let serverListController = rootViewController.topViewController as? StateRestorationConnectProtocol {
+				if let viewController = serverListController as? UIViewController, viewController.presentedViewController != nil {
+					viewController.dismiss(animated: false, completion: {
+                        serverListController.connect(to: bookmark, lastVisibleItemId: Identifier, animated: false, present: nil)
                     })
-                } else {
-                    serverListController.connect(to: bookmark, lastVisibleItemId: Identifier, animated: false)
+				} else {
+                    serverListController.connect(to: bookmark, lastVisibleItemId: Identifier, animated: false, present: nil)
                 }
             }
         }

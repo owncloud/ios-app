@@ -19,6 +19,7 @@
 import UIKit
 import LocalAuthentication
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 // MARK: - SecurityAskfrequency
@@ -29,15 +30,21 @@ import ownCloudAppShared
 	case thirtyMinutes = 1800
 
 	func toString() -> String {
-		switch self {
-		case .always:
+		return SecurityAskFrequency.toString(sec: rawValue)
+	}
+
+	static func toString(sec: Int) -> String {
+		switch sec {
+		case self.always.rawValue:
 			return "Immediately".localized
-		case .oneMinute:
+		case self.oneMinute.rawValue:
 			return "After 1 minute".localized
-		case .fiveMinutes:
+		case self.fiveMinutes.rawValue:
 			return "After 5 minutes".localized
-		case .thirtyMinutes:
+		case self.thirtyMinutes.rawValue:
 			return "After 30 minutes".localized
+		default:
+			return NSString.init(format: "After %ld seconds".localized as NSString, sec) as String
 		}
 	}
 }
@@ -49,11 +56,11 @@ class SecuritySettingsSection: SettingsSection {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return .always
 			} else {
-				return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+				return SecurityAskFrequency.init(rawValue: AppLockSettings.shared.lockDelay) ?? .always
 			}
 		}
 		set(newValue) {
-			AppLockManager.shared.lockDelay = newValue.rawValue
+			AppLockSettings.shared.lockDelay = newValue.rawValue
 		}
 	}
 
@@ -62,11 +69,11 @@ class SecuritySettingsSection: SettingsSection {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
 			} else {
-				return AppLockManager.shared.biometricalSecurityEnabled
+				return AppLockSettings.shared.biometricalSecurityEnabled
 			}
 		}
 		set(newValue) {
-			AppLockManager.shared.biometricalSecurityEnabled = newValue
+			AppLockSettings.shared.biometricalSecurityEnabled = newValue
 		}
 	}
 
@@ -99,31 +106,35 @@ class SecuritySettingsSection: SettingsSection {
 	func createRows() {
 
 		// Creation of the frequency row.
-		frequencyRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (row, _) in
-			if let vc = self?.viewController {
+		if AppLockSettings.shared.lockDelayUserSettable {
+			frequencyRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (row, _) in
+				if let vc = self?.viewController {
 
-				let newVC = StaticTableViewController(style: .grouped)
-				newVC.title = "Lock application".localized
-				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.".localized)
+					let newVC = StaticTableViewController(style: .grouped)
+					newVC.title = "Lock application".localized
+					let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.".localized)
 
-				var radioButtons: [[String : Any]] = []
+					var radioButtons: [[String : Any]] = []
 
-				for frequency in SecurityAskFrequency.allCases {
-					radioButtons.append([frequency.toString() : frequency.rawValue])
+					for frequency in SecurityAskFrequency.allCases {
+						radioButtons.append([frequency.toString() : frequency.rawValue])
+					}
+
+					frequencySection.add(radioGroupWithArrayOfLabelValueDictionaries: radioButtons, radioAction: { (row, _) in
+						if let rawFrequency = row.value! as? Int, let frequency = SecurityAskFrequency.init(rawValue: rawFrequency) {
+							self?.frequency = frequency
+							self?.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
+						}
+					}, groupIdentifier: "frequency-group-identifier", selectedValue: self!.frequency.rawValue, animated: true)
+
+					newVC.addSection(frequencySection)
+					vc.navigationController?.pushViewController(newVC, animated: true)
 				}
 
-				frequencySection.add(radioGroupWithArrayOfLabelValueDictionaries: radioButtons, radioAction: { (row, _) in
-					if let rawFrequency = row.value! as? Int, let frequency = SecurityAskFrequency.init(rawValue: rawFrequency) {
-						self?.frequency = frequency
-						self?.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
-					}
-				}, groupIdentifier: "frequency-group-identifier", selectedValue: self!.frequency.rawValue, animated: true)
-
-				newVC.addSection(frequencySection)
-				vc.navigationController?.pushViewController(newVC, animated: true)
-			}
-
-		}, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator, identifier: "lockFrequency")
+			}, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator, identifier: "lockFrequency")
+		} else {
+			frequencyRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Lock application".localized, subtitle: SecurityAskFrequency.toString(sec: AppLockSettings.shared.lockDelay), accessoryType: .none, identifier: "lockFrequency")
+		}
 
 		// Creation of the passcode row.
 		passcodeRow = StaticTableViewRow(switchWithAction: { [weak self] (row, sender) in
@@ -180,7 +191,7 @@ class SecuritySettingsSection: SettingsSection {
 		var rowsToAdd: [StaticTableViewRow] = []
 		var rowsToRemove: [StaticTableViewRow] = []
 
-		if !AppLockManager.shared.isPasscodeEnforced {
+		if !AppLockSettings.shared.isPasscodeEnforced {
 			if !rows.contains(passcodeRow!) {
 				rowsToAdd.append(passcodeRow!)
 			}

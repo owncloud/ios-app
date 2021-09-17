@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
@@ -206,6 +207,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		self.bookmark = bookmark
 		self.lastVisibleItemId = lastVisibleItemId
+		self.openBookmark(bookmark)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -226,9 +228,9 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 			}
 		}
 
-		if AppLockManager.shared.passcode == nil && AppLockManager.shared.isPasscodeEnforced {
+		if AppLockManager.shared.passcode == nil && AppLockSettings.shared.isPasscodeEnforced {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
-		} else if let passcode = AppLockManager.shared.passcode, passcode.count < AppLockManager.shared.requiredPasscodeDigits {
+		} else if let passcode = AppLockManager.shared.passcode, passcode.count < AppLockSettings.shared.requiredPasscodeDigits {
 			PasscodeSetupCoordinator(parentViewController: self, action: .upgrade).start()
 		}
 	}
@@ -365,7 +367,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart(nil, completionHandler: { (error) in
+		clientRootViewController.afterCoreStart(self.lastVisibleItemId, completionHandler: { (error) in
 			// Set up custom push transition for presentation
 			if let navigationController = self.navigationController {
 				if let error = error {
