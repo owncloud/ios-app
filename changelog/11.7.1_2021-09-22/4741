@@ -1,0 +1,5 @@
+Change: MDM-configurable App Lock Interval
+
+New MDM / class setting option `passcode.lockDelay` to enforce locking after `N` seconds.
+
+https://github.com/owncloud/enterprise/issues/4741

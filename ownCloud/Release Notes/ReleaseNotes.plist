@@ -1324,6 +1324,63 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.7.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Enabling Markup Edit Mode</string>
+					<key>Subtitle</key>
+					<string>Auto-enabling the markup edit mode on iOS 15 was broken.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: PDF-Viewer</string>
+					<key>Subtitle</key>
+					<string>The last page of a PDF file could not be opened with the &quot;Go to page&quot; action</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: PDF-Viewer</string>
+					<key>Subtitle</key>
+					<string>Keyboard does not disappear when using the &quot;Go to page&quot; action on the iPad.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Private Link</string>
+					<key>Subtitle</key>
+					<string>Resolving a private link opened via the URL scheme was not successful in some cases.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Automatic Photo Upload </string>
+					<key>Subtitle</key>
+					<string>Fixed an crash on iOS 15.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -1,0 +1,5 @@
+Bugfix: (Branding) iOS 12 crash when entering Settings
+
+Addresses an issue where a branded build of the app crashes on iOS 12 upon entering Settings.
+
+https://github.com/owncloud/enterprise/issues/4701

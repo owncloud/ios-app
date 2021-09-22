@@ -1,0 +1,5 @@
+Change: Added associated domains to resign script
+
+Resign script can now inject associated domains into the resigned application's entitlements.
+
+https://github.com/owncloud/ios-app/pull/1028

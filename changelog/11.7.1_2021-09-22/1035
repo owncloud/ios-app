@@ -1,0 +1,5 @@
+Change: (Branding) Send Feedback via URL
+
+Currently feedback could only be provided via email. Now it is possible to define a feedback url in a branded client.
+
+https://github.com/owncloud/ios-app/pull/1035

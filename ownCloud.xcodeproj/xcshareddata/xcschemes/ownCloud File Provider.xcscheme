@@ -146,6 +146,11 @@
             value = "false"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.disabled-import-methods"
+            value = "[share-extension,open-with,file-provider]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption

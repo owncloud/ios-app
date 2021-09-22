@@ -68,7 +68,7 @@ extension UIColor {
 			       alpha: selfAlpha)
 	}
 
-	public func greyscale() -> UIColor {
+	public var greyscale : UIColor {
 		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0, greyscale : CGFloat = 0
 
 		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
@@ -79,6 +79,18 @@ extension UIColor {
 			       green: CGFloat(greyscale),
 			       blue:  CGFloat(greyscale),
 			       alpha: selfAlpha)
+	}
+
+	public var luminance : CGFloat {
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
+		var luminance : CGFloat = 0
+
+		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
+
+		// Luminance according to https://de.wikipedia.org/wiki/Luminanz
+		luminance = selfRed * 0.2126 + selfGreen * 0.7152 + selfBlue * 0.0722
+
+		return luminance
 	}
 
 	public func hexString(leadIn: String = "#") -> String {

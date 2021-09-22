@@ -1,0 +1,5 @@
+Change: Configurable poll interval
+
+Add support for configurable poll interval via capabilities.php and MDM.
+
+https://github.com/owncloud/client/pull/8777

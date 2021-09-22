@@ -189,10 +189,10 @@ class Migration {
 
 								if passcode.count == 4 && passcode.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
 									AppLockManager.shared.passcode = passcode
-									AppLockManager.shared.lockEnabled = true
+									AppLockSettings.shared.lockEnabled = true
 
 									if let biometricalIdEnabled = dict?["is_touch_id"] as? Bool {
-										AppLockManager.shared.biometricalSecurityEnabled = biometricalIdEnabled
+										AppLockSettings.shared.biometricalSecurityEnabled = biometricalIdEnabled
 									}
 
 									self.postAccountMigrationNotification(activity: activityName, state: .finished, type: .passcode)

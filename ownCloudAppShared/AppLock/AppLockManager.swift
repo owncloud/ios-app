@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import LocalAuthentication
 
 public class AppLockManager: NSObject {
@@ -87,7 +88,6 @@ public class AppLockManager: NSObject {
 	// MARK: - Passcode
 	private let keychainAccount = "app.passcode"
 	private let keychainPasscodePath = "passcode"
-	private let keychainLockEnabledPath = "lockEnabled"
 	private let keychainLockedDate = "lockedDate"
 	private let keychainUnlocked = "unlocked"
 
@@ -111,51 +111,6 @@ public class AppLockManager: NSObject {
 				_ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainPasscodePath)
 			}
 		}
-	}
-
-	// MARK: - Settings
-	public var lockEnabled: Bool {
-		get {
-			return userDefaults.bool(forKey: "applock-lock-enabled")
-		}
-		set(newValue) {
-			self.userDefaults.set(newValue, forKey: "applock-lock-enabled")
-		}
-	}
-
-	public var lockDelay: Int {
-		get {
-			return userDefaults.integer(forKey: "applock-lock-delay")
-		}
-
-		set(newValue) {
-			self.userDefaults.set(newValue, forKey: "applock-lock-delay")
-		}
-	}
-
-	public var biometricalSecurityEnabled: Bool {
-		get {
-			return self.userDefaults.bool(forKey: "security-settings-use-biometrical")
-		}
-
-		set(newValue) {
-			self.userDefaults.set(newValue, forKey: "security-settings-use-biometrical")
-		}
-	}
-
-	public var isPasscodeEnforced : Bool {
-		return (self.classSetting(forOCClassSettingsKey: .passcodeEnforced) as? Bool) ?? false
-	}
-
-	public var requiredPasscodeDigits : Int {
-		if let digit = self.classSetting(forOCClassSettingsKey: .requiredPasscodeDigits) as? Int, digit > 4 {
-			return digit
-		}
-		return 4
-	}
-
-	public var maximumPasscodeDigits : Int {
-		return (self.classSetting(forOCClassSettingsKey: .maximumPasscodeDigits) as? Int) ?? 6
 	}
 
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
@@ -329,7 +284,7 @@ public class AppLockManager: NSObject {
 
 		passcodeViewController = PasscodeViewController(completionHandler: { (viewController: PasscodeViewController, passcode: String) in
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
-		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)
 
 		passcodeViewController.message = "Enter code".localized
 		passcodeViewController.cancelButtonHidden = false
@@ -380,13 +335,13 @@ public class AppLockManager: NSObject {
 
 	// MARK: - Status
 	private var shouldDisplayLockscreen: Bool {
-		if !self.lockEnabled {
+		if !AppLockSettings.shared.lockEnabled {
 			return false
 		}
 
 		if unlocked, !self.shouldDisplayCountdown {
 			if let date = self.lastApplicationBackgroundedDate {
-				if Int(-date.timeIntervalSinceNow) < self.lockDelay {
+				if Int(-date.timeIntervalSinceNow) < AppLockSettings.shared.lockDelay {
 					return false
 				}
 			}
@@ -465,7 +420,7 @@ public class AppLockManager: NSObject {
 	private var biometricalAuthenticationInterfaceShown : Bool = false
 
 	func showBiometricalAuthenticationInterface(context: LAContext) {
-		if shouldDisplayLockscreen, biometricalSecurityEnabled, !biometricalAuthenticationInterfaceShown {
+		if shouldDisplayLockscreen, AppLockSettings.shared.biometricalSecurityEnabled, !biometricalAuthenticationInterfaceShown {
 			var evaluationError: NSError?
 
 			// Check if the device can evaluate the policy.
@@ -524,7 +479,7 @@ public class AppLockManager: NSObject {
 					}
 				}
 			} else {
-				if let error = evaluationError, biometricalSecurityEnabled {
+				if let error = evaluationError, AppLockSettings.shared.biometricalSecurityEnabled {
 					OnMainThread {
 						self.performPasscodeViewControllerUpdates { (passcodeViewController) in
 							passcodeViewController.errorMessage = error.localizedDescription
@@ -533,52 +488,5 @@ public class AppLockManager: NSObject {
 				}
 			}
 		}
-	}
-}
-
-// MARK: - OCClassSettings support
-
-extension OCClassSettingsIdentifier {
-	static let passcode = OCClassSettingsIdentifier("passcode")
-}
-
-extension OCClassSettingsKey {
-	static let passcodeEnforced = OCClassSettingsKey("enforced")
-	static let requiredPasscodeDigits = OCClassSettingsKey("requiredPasscodeDigits")
-	static let maximumPasscodeDigits = OCClassSettingsKey("maximumPasscodeDigits")
-}
-
-extension AppLockManager: OCClassSettingsSupport {
-	public static var classSettingsIdentifier: OCClassSettingsIdentifier = .passcode
-
-	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		return [
-			.passcodeEnforced : false,
-			.requiredPasscodeDigits: 4,
-			.maximumPasscodeDigits: 6
-		]
-	}
-
-	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
-		return [
-			.passcodeEnforced: [
-				.type: OCClassSettingsMetadataType.boolean,
-				.description: "Controls wether the user MUST establish a passcode upon app installation",
-				.category: "Passcode",
-				.status: OCClassSettingsKeyStatus.advanced
-			],
-			.requiredPasscodeDigits : [
-				.type 		: OCClassSettingsMetadataType.integer,
-				.description	: "Controls how many passcode digits are at least required for passcode lock.",
-				.category	: "Passcode",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
-			.maximumPasscodeDigits : [
-				.type 		: OCClassSettingsMetadataType.integer,
-				.description	: "Controls how many passcode digits are maximal possible for passcode lock.",
-				.category	: "Passcode",
-				.status		: OCClassSettingsKeyStatus.advanced
-			]
-		]
 	}
 }

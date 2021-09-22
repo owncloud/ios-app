@@ -138,7 +138,7 @@ extension StaticTableViewSection {
 	}
 
 	@discardableResult
-	func addButtonFooter(message: String? = nil, messageItemStyle: ThemeItemStyle = .title, proceedLabel: String? = nil, proceedItemStyle: ThemeItemStyle = .approval, cancelLabel : String? = nil, topSpacing : CGFloat = 30) -> (UIButton?, UIButton?) {
+	func addButtonFooter(message: String? = nil, messageItemStyle: ThemeItemStyle = .title, proceedLabel: String? = nil, proceedItemStyle: ThemeItemStyle = .approval, cancelLabel : String? = nil, cancelItemStyle: ThemeItemStyle = .defaultForItem, topSpacing : CGFloat = 30) -> (UIButton?, UIButton?) {
 		let containerView = FullWidthHeaderView()
 		var continueButton : ThemeButton?
 		var cancelButton : UIButton?
@@ -213,7 +213,7 @@ extension StaticTableViewSection {
 
 		containerView.addThemeApplier({ [weak continueButton, cancelButton] (_, collection, _) in
 			continueButton?.applyThemeCollection(collection, itemStyle: proceedItemStyle)
-			cancelButton?.applyThemeCollection(collection)
+			cancelButton?.applyThemeCollection(collection, itemStyle: cancelItemStyle)
 		})
 		self.footerView = containerView
 
