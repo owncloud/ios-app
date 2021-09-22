@@ -457,6 +457,9 @@ end
     CONFIGURATION = values[:CONFIGURATION]
     BUILD_NUMBER = values[:BUILD_NUMBER]
 
+    # Check if Xcode version matches the required (as in .xcode-version defined)
+    ensure_xcode_version()
+
     appName = "ownCloud"
     appBuildFlags = ""
     themePath = "ownCloud/Resources/Theming/Branding.plist"
