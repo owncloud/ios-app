@@ -462,8 +462,8 @@ end
     if File.exist?(xcode_version_paths)
       required_version = File.read(xcode_version_paths).strip
       puts "Found required Xcode version: " + required_version
-      ensure_xcode_version()
       xcversion(version: required_version)
+      ensure_xcode_version()
     end
 
     appName = "ownCloud"
