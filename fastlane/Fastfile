@@ -458,7 +458,13 @@ end
     BUILD_NUMBER = values[:BUILD_NUMBER]
 
     # Check if Xcode version matches the required (as in .xcode-version defined)
-    ensure_xcode_version()
+    xcode_version_paths = "../.xcode-version"
+    if File.exist?(xcode_version_paths)
+      required_version = File.read(xcode_version_paths).strip
+      puts "Found required Xcode version: " + required_version
+      ensure_xcode_version()
+      xcversion(version: required_version)
+    end
 
     appName = "ownCloud"
     appBuildFlags = ""
@@ -471,7 +477,7 @@ end
         appName = tmpAppName
       end
     end
-    
+
     if File.exist?("../" + themePath)
       tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "app.build-flags")
       if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
