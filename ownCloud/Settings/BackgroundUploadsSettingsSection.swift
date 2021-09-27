@@ -84,6 +84,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		}
 
 		// Add option to enable background location updates which will trigger background media uploads
+		#if !DISABLE_BACKGROUND_LOCATION
 		var locationServicesRowTitle: String = ""
 		if #available(iOS 13, *) {
 			locationServicesRowTitle = "Use background location updates".localized
@@ -120,34 +121,36 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		}, title: locationServicesRowTitle, subtitle: locationServicesRowSubtitle, value: (currentAuthStatus && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled), identifier: "background-location")
 
 		self.add(row: backgroundLocationRow!)
+		#endif /* !DISABLE_BACKGROUND_LOCATION */
 
 		// Add option to enable local notifications reporting that some number of media files got enqueued for upload
-
-		notificationsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-			if let enableSwitch = sender as? UISwitch {
-				if enableSwitch.isOn {
-					// Request authorization for notifications
-					NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in
-						if settings.authorizationStatus == .notDetermined {
-							NotificationManager.shared.requestAuthorization(options: [.alert]) { (granted, _) in
-								OnMainThread {
-									enableSwitch.isOn = granted
-									userDefaults.backgroundMediaUploadsNotificationsEnabled = granted
+		if #available(iOS 13, *) {
+			notificationsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+				if let enableSwitch = sender as? UISwitch {
+					if enableSwitch.isOn {
+						// Request authorization for notifications
+						NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in
+							if settings.authorizationStatus == .notDetermined {
+								NotificationManager.shared.requestAuthorization(options: [.alert]) { (granted, _) in
+									OnMainThread {
+										enableSwitch.isOn = granted
+										userDefaults.backgroundMediaUploadsNotificationsEnabled = granted
+									}
 								}
+							} else if settings.authorizationStatus == .authorized {
+								userDefaults.backgroundMediaUploadsNotificationsEnabled = true
+							} else {
+								userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 							}
-						} else if settings.authorizationStatus == .authorized {
-							userDefaults.backgroundMediaUploadsNotificationsEnabled = true
-						} else {
-							userDefaults.backgroundMediaUploadsNotificationsEnabled = false
-						}
-					})
-				} else {
-					userDefaults.backgroundMediaUploadsNotificationsEnabled = false
+						})
+					} else {
+						userDefaults.backgroundMediaUploadsNotificationsEnabled = false
+					}
 				}
-			}
-			}, title: "Background upload notifications".localized, value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
+				}, title: "Background upload notifications".localized, value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
 
-		self.add(row: notificationsRow!)
+			self.add(row: notificationsRow!)
+		}
 
 		// Update notifications option
 		NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in

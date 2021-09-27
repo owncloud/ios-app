@@ -637,6 +637,13 @@
 	NSError *error = nil;
 	BOOL stopAccess = NO;
 
+	if (![Branding.sharedBranding isImportMethodAllowed:BrandingFileImportMethodFileProvider])
+	{
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"Importing files through the File Provider is not allowed on this device.")) translatedError]);
+
+		return;
+	}
+
 	if ([fileURL startAccessingSecurityScopedResource])
 	{
 		stopAccess = YES;
@@ -854,15 +861,14 @@
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
-	NSUserDefaults *userDefaults = [[OCAppIdentity sharedAppIdentity] userDefaults];
-	if ([userDefaults boolForKey:@"applock-lock-enabled"])
+	if (AppLockSettings.sharedAppLockSettings.lockEnabled)
 	{
 		NSData *lockedDateData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"lockedDate"];
 		NSData *unlockData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"unlocked"];
 
-		if ((lockedDateData != nil) && (unlockData != nil) && ([userDefaults objectForKey:@"applock-lock-delay"] != nil))
+		if ((lockedDateData != nil) && (unlockData != nil))
 		{
-			NSInteger lockDelay = [userDefaults integerForKey:@"applock-lock-delay"];
+			NSInteger lockDelay = AppLockSettings.sharedAppLockSettings.lockDelay;
 			NSDate *lockDate = [NSKeyedUnarchiver unarchivedObjectOfClass:NSDate.class fromData:lockedDateData error:NULL];
 			BOOL unlocked = [[NSKeyedUnarchiver unarchivedObjectOfClass:NSNumber.class fromData:unlockData error:NULL] boolValue];
 

@@ -570,6 +570,33 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "description" : "List of disabled import methods that can't be used.",
+    "flatIdentifier" : "branding.disabled-import-methods",
+    "key" : "disabled-import-methods",
+    "label" : "branding.disabled-import-methods",
+    "possibleValues" : [
+      {
+        "description" : "Disallow import through the File Provider (Files.app)",
+        "value" : "file-provider"
+      },
+      {
+        "description" : "Disallow import through \"Open with\"",
+        "value" : "open-with"
+      },
+      {
+        "description" : "Disallow import through the Share Extension",
+        "value" : "share-extension"
+      }
+    ],
+    "status" : "supported",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
     "defaultValue" : false,
     "description" : "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
     "flatIdentifier" : "branding.enable-review-prompt",
@@ -1654,9 +1681,9 @@
     "category" : "Passcode",
     "categoryTag" : "passcode",
     "classIdentifier" : "passcode",
-    "className" : "ownCloudAppShared.AppLockManager",
+    "className" : "AppLockSettings",
     "defaultValue" : false,
-    "description" : "Controls wether the user MUST establish a passcode upon app installation",
+    "description" : "Controls wether the user MUST establish a passcode upon app installation.",
     "flatIdentifier" : "passcode.enforced",
     "key" : "enforced",
     "label" : "passcode.enforced",
@@ -1668,7 +1695,20 @@
     "category" : "Passcode",
     "categoryTag" : "passcode",
     "classIdentifier" : "passcode",
-    "className" : "ownCloudAppShared.AppLockManager",
+    "className" : "AppLockSettings",
+    "description" : "Number of seconds before the lock snaps and the passcode is requested again.",
+    "flatIdentifier" : "passcode.lockDelay",
+    "key" : "lockDelay",
+    "label" : "passcode.lockDelay",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "AppLockSettings",
     "defaultValue" : 6,
     "description" : "Controls how many passcode digits are maximal possible for passcode lock.",
     "flatIdentifier" : "passcode.maximumPasscodeDigits",
@@ -1682,7 +1722,7 @@
     "category" : "Passcode",
     "categoryTag" : "passcode",
     "classIdentifier" : "passcode",
-    "className" : "ownCloudAppShared.AppLockManager",
+    "className" : "AppLockSettings",
     "defaultValue" : 4,
     "description" : "Controls how many passcode digits are at least required for passcode lock.",
     "flatIdentifier" : "passcode.requiredPasscodeDigits",

@@ -44,4 +44,14 @@ open class UserInterfaceContext: NSObject {
 	public var currentWindow : UIWindow? {
 		return provider?.provideCurrentWindow()
 	}
+
+	public var currentViewControllerForPresenting : UIViewController? {
+		let viewController = currentWindow?.rootViewController
+
+		if let navigationController = viewController as? UINavigationController, let viewController = navigationController.visibleViewController {
+			return viewController
+		}
+
+		return viewController
+	}
 }

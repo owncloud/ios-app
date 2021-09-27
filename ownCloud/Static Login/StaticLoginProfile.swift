@@ -142,11 +142,19 @@ class StaticLoginProfile: NSObject {
 			self.url = URL(string: url)
 		} else if let url = profileDict[Key.url.settingsKey.rawValue] as? String {
 			self.url = URL(string: url)
+		} else if let url = profileDict[Key.url.rawValue] as? URL {
+			self.url = url
+		} else if let url = profileDict[Key.url.settingsKey.rawValue] as? URL {
+			self.url = url
 		}
 		if let helpURL = profileDict[Key.helpURL.rawValue] as? String {
 			self.helpURL = URL(string: helpURL)
 		} else if let helpURL = profileDict[Key.helpURL.settingsKey.rawValue] as? String {
 			self.helpURL = URL(string: helpURL)
+		} else if let helpURL = profileDict[Key.helpURL.rawValue] as? URL {
+			self.helpURL = helpURL
+		} else if let helpURL = profileDict[Key.helpURL.settingsKey.rawValue] as? URL {
+			self.helpURL = helpURL
 		}
 		if let canConfigureURL = profileDict[Key.canConfigureURL.rawValue] as? Bool {
 			self.canConfigureURL = canConfigureURL

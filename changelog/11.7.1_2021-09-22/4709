@@ -1,0 +1,5 @@
+Change: (Branding) Option to disable file imports
+
+Adds a new MDM option `branding.disabled-import-methods` to disable import methods
+
+https://github.com/owncloud/enterprise/issues/4709

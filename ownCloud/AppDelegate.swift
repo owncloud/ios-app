@@ -103,8 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadCameraMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
-		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
-		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
@@ -114,6 +112,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PresentationModeAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PDFGoToPageAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad {
@@ -134,8 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
-		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
-		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 
 		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
@@ -161,7 +159,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// If the app was re-installed, make sure to wipe keychain data. Since iOS 10.3 keychain entries are not deleted if the app is deleted, but since everything else is lost,
 		// it might lead to some inconsistency in the app state. Nevertheless we shall be careful here and consider that prior versions of the app didn't have the flag created upon
 		// very first app launch in UserDefaults. Thus we will check few more factors: no bookmarks configured and no passcode is set
-		if OCBookmarkManager.shared.bookmarks.count == 0 && AppLockManager.shared.lockEnabled == false {
+		if OCBookmarkManager.shared.bookmarks.count == 0 && AppLockSettings.shared.lockEnabled == false {
 			VendorServices.shared.onFirstLaunch {
 				OCAppIdentity.shared.keychain?.wipe()
 			}
@@ -182,7 +180,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
 			openPrivateLink(url: url, in: window)
-		} else {
+		} else if url.isFileURL {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
 				copyBeforeUsing = !shouldOpenInPlace

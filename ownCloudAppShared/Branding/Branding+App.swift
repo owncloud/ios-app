@@ -19,6 +19,7 @@ extension OCClassSettingsKey {
 
 	// Email
 	public static let sendFeedbackAddress : OCClassSettingsKey = OCClassSettingsKey("send-feedback-address")
+	public static let sendFeedbackURL : OCClassSettingsKey = OCClassSettingsKey("send-feedback-url")
 
 	// Permissions
 	public static let canAddAccount : OCClassSettingsKey = OCClassSettingsKey("can-add-account")
@@ -37,7 +38,7 @@ extension Branding : BrandingInitialization {
 	public static func initializeBranding() {
 		if #available(iOS 13, *) {
 			self.registerOCClassSettingsDefaults([
-				.documentationURL : "https://doc.owncloud.com/ios-app/",
+				.documentationURL : "https://doc.owncloud.com/ios-app/latest/",
 				.helpURL 	  : "https://owncloud.com/docs-guides/",
 				.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 				.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
@@ -88,6 +89,14 @@ extension Branding : BrandingInitialization {
 					.type 		: OCClassSettingsMetadataType.string,
 					.label		: "Feedback Email address",
 					.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
+					.category	: "Branding",
+					.status		: OCClassSettingsKeyStatus.advanced
+				],
+
+				.sendFeedbackURL : [
+					.type 		: OCClassSettingsMetadataType.string,
+					.label		: "Feedback URL",
+					.description	: "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
 					.category	: "Branding",
 					.status		: OCClassSettingsKeyStatus.advanced
 				],
@@ -196,11 +205,25 @@ extension Branding {
 	public var feedbackEmailAddress : String? {
 		var feedbackEmailAddress = computedValue(forClassSettingsKey: .sendFeedbackAddress) as? String
 
-		if feedbackEmailAddress == "" {
+		if feedbackEmailAddress == "" || feedbackEmailAddress == "null" {
 			feedbackEmailAddress = nil
 		}
 
 		return feedbackEmailAddress
+	}
+
+	public var feedbackURL : URL? {
+		var feedbackURLTemplate = computedValue(forClassSettingsKey: .sendFeedbackURL) as? String
+
+		if let template = feedbackURLTemplate {
+			feedbackURLTemplate = OCHTTPPipeline.string(forTemplate:template, variables: nil)
+		}
+
+		if let feedbackURLTemplate = feedbackURLTemplate, feedbackURLTemplate.count > 0 {
+			return URL(string: feedbackURLTemplate)
+		}
+
+		return nil
 	}
 
 	public var canAddAccount : Bool {

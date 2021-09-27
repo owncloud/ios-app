@@ -20,9 +20,9 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
    - `group.com.yourcompany.ios-app`
 
-     
 
-     Please keep the prefix `group.` and append the bundle identifier of the app target. 
+
+     Please keep the prefix `group.` and append the bundle identifier of the app target.
 
 3. Edit the App IDs and assign the App Group created on step 2.
 
@@ -31,6 +31,10 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 ## Certificate
 
 - Get the name of your signing certificate. In most cases this will be named `iPhone Distribution: YOUR COMPANY`.
+
+## Associated Domains
+
+Create a text file containing a list of line-break separated domain names (FQN) and name it `domains.txt`. This file is expected to be found in the same folder where this `README.md` file is stored. Currently only domains of type `applinks` are supported (others being `webcredentials` and `appclips`).
 
 ## Instructions
 
@@ -54,7 +58,7 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
    - `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT"`
 
-     
+
 
      Replace `"COMMON NAME DISTRIBUTION CERT"` with the name of your certificate, e.g. `"iPhone Distribution: YOUR COMPANY"`.
 
@@ -62,9 +66,8 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
 ## IPA Resigned Entitlements Inspection
 
-To check the resigning entitlements of a signed IPA file, please use the script 
+To check the resigning entitlements of a signed IPA file, please use the script
 
-`./resignInspector.sh "Path to signed.ipa"` 
+`./resignInspector.sh "Path to signed.ipa"`
 
 to output the entitlements of the IPA file and all targets.
-

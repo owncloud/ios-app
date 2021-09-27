@@ -1,0 +1,5 @@
+Bugfix: (PDF-Viewer) "Go to page" action does not open last page
+
+The last page of a PDF file could not be opened with the "Go to page" action.
+
+https://github.com/owncloud/ios-app/issues/1033

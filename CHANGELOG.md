@@ -1,3 +1,122 @@
+Changelog for ownCloud iOS Client [11.7.1] (2021-09-22)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.7.1 relevant to
+ownCloud admins and users.
+
+[11.7.1]: https://github.com/owncloud/ios-app/compare/milestone/11.7.0...milestone/11.7.1
+
+Summary
+-------
+
+* Bugfix - Enabling Markup Edit Mode on iOS 15: [#1012](https://github.com/owncloud/ios-app/issues/1012)
+* Bugfix - Automatic photo upload crash on iOS 15: [#1017](https://github.com/owncloud/ios-app/pull/1017)
+* Bugfix - Open Private Link in Branded Client: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+* Bugfix - (PDF-Viewer) "Go to page" action does not open last page: [#1033](https://github.com/owncloud/ios-app/issues/1033)
+* Bugfix - Open Private Link in Branded App: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+* Bugfix - (Branding) iOS 12 crash when entering Settings: [#4701](https://github.com/owncloud/enterprise/issues/4701)
+* Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
+* Change - (Branding) Add build flags support: [#1026](https://github.com/owncloud/ios-app/pull/1026)
+* Change - Added associated domains to resign script: [#1028](https://github.com/owncloud/ios-app/pull/1028)
+* Change - (Branding) Send Feedback via URL: [#1035](https://github.com/owncloud/ios-app/pull/1035)
+* Change - (Branding) Option to disable file imports: [#4709](https://github.com/owncloud/enterprise/issues/4709)
+* Change - (Branding) New Color Parameters: [#4716](https://github.com/owncloud/enterprise/issues/4716)
+* Change - MDM-configurable App Lock Interval: [#4741](https://github.com/owncloud/enterprise/issues/4741)
+* Change - Configurable poll interval: [#8777](https://github.com/owncloud/client/pull/8777)
+
+Details
+-------
+
+* Bugfix - Enabling Markup Edit Mode on iOS 15: [#1012](https://github.com/owncloud/ios-app/issues/1012)
+
+   Auto-enabling the markup edit mode on iOS 15 was broken.
+
+   https://github.com/owncloud/ios-app/issues/1012
+
+* Bugfix - Automatic photo upload crash on iOS 15: [#1017](https://github.com/owncloud/ios-app/pull/1017)
+
+   On iOS 15, automatic photo upload seems to consume more resources than are available, leading
+   to a crash. This pull requests reduces the number of concurrent photo upload operations from
+   `available cores` to `1`.
+
+   https://github.com/owncloud/ios-app/pull/1017
+
+* Bugfix - Open Private Link in Branded Client: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+
+   This PR fixes a bug, when trying to open a private link via the custom url scheme `owncloud://` or
+   via associated domains `applinks:`. Resolving a private link opened via the URL scheme
+   owncloud:// was not successful in some cases.
+
+   https://github.com/owncloud/ios-app/issues/1031
+
+* Bugfix - (PDF-Viewer) "Go to page" action does not open last page: [#1033](https://github.com/owncloud/ios-app/issues/1033)
+
+   The last page of a PDF file could not be opened with the "Go to page" action.
+
+   https://github.com/owncloud/ios-app/issues/1033
+
+* Bugfix - Open Private Link in Branded App: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+
+   Private links will now be opened in detail view, if the app client is branded.
+
+   https://github.com/owncloud/ios-app/issues/1031
+
+* Bugfix - (Branding) iOS 12 crash when entering Settings: [#4701](https://github.com/owncloud/enterprise/issues/4701)
+
+   Addresses an issue where a branded build of the app crashes on iOS 12 upon entering Settings.
+
+   https://github.com/owncloud/enterprise/issues/4701
+
+* Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
+
+   Keyboard does not disappear when using the "Go to page" action on the iPad.
+
+   https://github.com/owncloud/ios-app/issues/894
+
+* Change - (Branding) Add build flags support: [#1026](https://github.com/owncloud/ios-app/pull/1026)
+
+   Add support for app build flags to enable/disable features at compile time via branding
+   parameters
+
+   https://github.com/owncloud/ios-app/pull/1026
+
+* Change - Added associated domains to resign script: [#1028](https://github.com/owncloud/ios-app/pull/1028)
+
+   Resign script can now inject associated domains into the resigned application's
+   entitlements.
+
+   https://github.com/owncloud/ios-app/pull/1028
+
+* Change - (Branding) Send Feedback via URL: [#1035](https://github.com/owncloud/ios-app/pull/1035)
+
+   Currently feedback could only be provided via email. Now it is possible to define a feedback url
+   in a branded client.
+
+   https://github.com/owncloud/ios-app/pull/1035
+
+* Change - (Branding) Option to disable file imports: [#4709](https://github.com/owncloud/enterprise/issues/4709)
+
+   Adds a new MDM option `branding.disabled-import-methods` to disable import methods
+
+   https://github.com/owncloud/enterprise/issues/4709
+
+* Change - (Branding) New Color Parameters: [#4716](https://github.com/owncloud/enterprise/issues/4716)
+
+   Adds additional possibilities and simplifications for branding colors.
+
+   https://github.com/owncloud/enterprise/issues/4716
+
+* Change - MDM-configurable App Lock Interval: [#4741](https://github.com/owncloud/enterprise/issues/4741)
+
+   New MDM / class setting option `passcode.lockDelay` to enforce locking after `N` seconds.
+
+   https://github.com/owncloud/enterprise/issues/4741
+
+* Change - Configurable poll interval: [#8777](https://github.com/owncloud/client/pull/8777)
+
+   Add support for configurable poll interval via capabilities.php and MDM.
+
+   https://github.com/owncloud/client/pull/8777
+
 Changelog for ownCloud iOS Client [11.7.0] (2021-07-29)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.7.0 relevant to

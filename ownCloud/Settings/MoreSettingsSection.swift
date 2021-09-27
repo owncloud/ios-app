@@ -170,7 +170,7 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(helpRow!)
 		}
 
-		if VendorServices.shared.feedbackMail != nil {
+		if VendorServices.shared.feedbackMail != nil || Branding.shared.feedbackURL != nil {
 			rows.append(sendFeedbackRow!)
 		}
 

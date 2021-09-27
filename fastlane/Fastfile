@@ -457,7 +457,17 @@ end
     CONFIGURATION = values[:CONFIGURATION]
     BUILD_NUMBER = values[:BUILD_NUMBER]
 
+    # Check if Xcode version matches the required (as in .xcode-version defined)
+    xcode_version_paths = "../.xcode-version"
+    if File.exist?(xcode_version_paths)
+      required_version = File.read(xcode_version_paths).strip
+      puts "Found required Xcode version: " + required_version
+      xcversion(version: required_version)
+      ensure_xcode_version()
+    end
+
     appName = "ownCloud"
+    appBuildFlags = ""
     themePath = "ownCloud/Resources/Theming/Branding.plist"
     if !values[:APP_NAME].nil?
       appName = values[:APP_NAME]
@@ -468,7 +478,26 @@ end
       end
     end
 
+    if File.exist?("../" + themePath)
+      tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "app.build-flags")
+      if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
+        appBuildFlags = tmpAppBuildFlags
+      end
+    end
+
     puts "App Name: " + appName
+    puts "App Build Flags: " + appBuildFlags
+    
+    # Special handling for app build flag DISABLE_BACKGROUND_LOCATION needed:
+    # calls to set_info_plist_value before building with xcodebuild
+    # strip preprocessor instructions from Info.plist, so that the
+    # Location keys they aim to remove stay in place. Working around this
+    # by removing anything between "#ifndef DISABLE_BACKGROUND_LOCATION"
+    # and "#endif" via sed 
+    if appBuildFlags.include? "DISABLE_BACKGROUND_LOCATION"
+        sh "sed '/#ifndef DISABLE_BACKGROUND_LOCATION/,/#endif/d' ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod"
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
@@ -693,13 +722,14 @@ end
     end
 
     #Create the build
-    gym(
+    build_app(
       workspace: "ownCloud.xcworkspace",
       scheme: "ownCloud",
       configuration: CONFIGURATION,
       codesigning_identity: ENTERPRISE_IDENTITY,
       output_name: ipaName,
       export_method: EXPORT_METHOD,
+      xcargs: "APP_BUILD_FLAGS='" + appBuildFlags + "'",
       export_options: {
         method: EXPORT_METHOD,
         provisioningProfiles: {

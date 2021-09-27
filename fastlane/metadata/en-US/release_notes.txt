@@ -1,12 +1,15 @@
-• Clipboard Support
-Clipboard support provides copy and paste actions! Use the system-wide clipboard to copy and paste files and content to the ownCloud app or third-party apps!
+• Fix: Enabling Markup Edit Mode
+Auto-enabling the markup edit mode on iOS 15 was broken.
 
-• Background Media Upload
-Uploading new media files is now more reliable in the background when "Use background location updates" is enabled in the settings.
+• Fix: PDF-Viewer
+The last page of a PDF file could not be opened with the "Go to page" action
 
-• Filename Layout
-Adopted the filename layout to the new Web UI layout.
+• Fix: PDF-Viewer
+Keyboard does not disappear when using the "Go to page" action on the iPad.
 
-• Six Digits Passcode
-Passcode lock supports to set a passcode lock with 4 or 6 digits.
+• Fix: Private Link
+Resolving a private link opened via the URL scheme was not successful in some cases.
+
+• Fix: Automatic Photo Upload 
+Fixed an crash on iOS 15.
 
