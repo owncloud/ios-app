@@ -24,6 +24,7 @@
 + (void)load
 {
 	[OCClassSettings.sharedSettings insertSource:[BrandingClassSettingsSource new] before:OCClassSettingsSourceIdentifierManaged after:nil];
+	[Branding.sharedBranding registerUserDefaultsDefaults];
 }
 
 - (OCClassSettingsSourceIdentifier)settingsSourceIdentifier
