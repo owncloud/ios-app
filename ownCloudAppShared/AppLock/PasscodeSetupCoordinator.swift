@@ -110,7 +110,9 @@ public class PasscodeSetupCoordinator {
 				if passcode == AppLockManager.shared.passcode {
 					// Success -> Remove stored passcode and unlock the app
 					self.resetPasscode()
-					self.showSuggestBiometricalUnlockUI()
+					self.passcodeViewController?.dismiss(animated: true, completion: {
+						self.completionHandler?(false)
+					})
 				} else {
 					// Entered passcode doesn't match saved ones
 					self.updateUI(with: self.action.localizedDescription, errorMessage: "Incorrect code".localized)
@@ -170,6 +172,10 @@ public class PasscodeSetupCoordinator {
 
 			self.passcodeViewController?.present(alertController, animated: true, completion: {
 			})
+		} else {
+			self.passcodeViewController?.dismiss(animated: true, completion: {
+				   self.completionHandler?(false)
+			   })
 		}
 	}
 
@@ -182,9 +188,11 @@ public class PasscodeSetupCoordinator {
 			popoverController.permittedArrowDirections = []
 		}
 
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
-			self.completionHandler?(true)
-		}))
+		if !AppLockSettings.shared.isPasscodeEnforced {
+			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+				self.completionHandler?(true)
+			}))
+		}
 
 		var digit = self.maxPasscodeDigits
 		while digit >= self.minPasscodeDigits {
