@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import LocalAuthentication
 
 public enum PasscodeAction {
 	case setup
@@ -104,14 +105,12 @@ public class PasscodeSetupCoordinator {
 			passcodeViewController.dismiss(animated: true) {
 				self.completionHandler?(true)
 			}
-		}, completionHandler: { (passcodeViewController, passcode) in
+		}, completionHandler: { (_, passcode) in
 			if self.action == .delete {
 				if passcode == AppLockManager.shared.passcode {
 					// Success -> Remove stored passcode and unlock the app
 					self.resetPasscode()
-					self.passcodeViewController?.dismiss(animated: true, completion: {
-						self.completionHandler?(false)
-					})
+					self.showSuggestBiometricalUnlockUI()
 				} else {
 					// Entered passcode doesn't match saved ones
 					self.updateUI(with: self.action.localizedDescription, errorMessage: "Incorrect code".localized)
@@ -126,9 +125,7 @@ public class PasscodeSetupCoordinator {
 					if self.passcodeFromFirstStep == passcode {
 						// Confirmed passcode matches the original ones -> save and lock the app
 						self.lock(with: passcode)
-						self.passcodeViewController?.dismiss(animated: true, completion: {
-							self.completionHandler?(false)
-						})
+						self.showSuggestBiometricalUnlockUI()
 					} else {
 						//Passcode is not the same
 						self.updateUI(with: self.action.localizedDescription, errorMessage: "The entered codes are different".localized)
@@ -150,6 +147,29 @@ public class PasscodeSetupCoordinator {
 			}
 		} else {
 			parentViewController.present(passcodeViewController!, animated: true, completion: nil)
+		}
+	}
+
+	public func showSuggestBiometricalUnlockUI() {
+		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
+			let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
+
+			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { _ in
+				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true
+				self.passcodeViewController?.dismiss(animated: true, completion: {
+					self.completionHandler?(false)
+				})
+			}))
+
+			alertController.addAction(UIAlertAction(title: "Disable".localized, style: .cancel, handler: { _ in
+				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = false
+				self.passcodeViewController?.dismiss(animated: true, completion: {
+					self.completionHandler?(false)
+				})
+			}))
+
+			self.passcodeViewController?.present(alertController, animated: true, completion: {
+			})
 		}
 	}
 
