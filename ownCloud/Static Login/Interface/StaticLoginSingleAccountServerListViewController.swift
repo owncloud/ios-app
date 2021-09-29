@@ -41,6 +41,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 	private enum SettingsRowIndex : Int, CaseIterable {
 		case settings
+		case addAccount
 	}
 
 	// Implementation
@@ -48,6 +49,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	weak var staticLoginViewController : StaticLoginViewController?
 	var canConfigureURL: Bool = true
 	private var actionRows: [ActionRowIndex] = [.editLogin, .manageStorage, .logout]
+	private var settingsRows: [SettingsRowIndex] = [.settings]
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -59,12 +61,37 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		if !VendorServices.shared.canEditAccount {
 			actionRows = [.manageStorage, .logout]
 		}
+
+		if VendorServices.shared.canAddAccount {
+			staticLoginViewController?.toolbarShown = true
+			settingsRows = [.settings, .addAccount]
+
+			var items = self.staticLoginViewController?.toolbarItems
+
+			let accountItems = items?.filter({ item in
+				if item.responds(to: #selector(addAccount)) {
+					return true
+				}
+				return false
+			})
+
+			print("-->>>>items \(accountItems)")
+			if accountItems?.count == 0 {
+				let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addAccount))
+				addServerBarButtonItem.accessibilityLabel = "Add account".localized
+				addServerBarButtonItem.accessibilityIdentifier = "addAccount"
+
+				items?.insert(addServerBarButtonItem, at: 0)
+				self.staticLoginViewController?.toolbarItems = items
+			}
+			self.staticLoginViewController?.toolbarItems = nil
+		} else {
+			staticLoginViewController?.toolbarShown = false
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-
-		staticLoginViewController?.toolbarShown = false
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -75,7 +102,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		switch SingleAccountSection(rawValue: section) {
 			case .accessFiles: return AccessFilesRowIndex.allCases.count
 			case .actions: 	   return actionRows.count
-			case .settings:    return SettingsRowIndex.allCases.count
+			case .settings:    return settingsRows.count
 
 			default: 	   return 0
 		}
@@ -86,61 +113,65 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		var rowCell : UITableViewCell
 
 		switch section {
-			case .accessFiles:
-				guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "login-cell", for: indexPath) as? ThemeTableViewCell else {
-					return ThemeTableViewCell()
-				}
+		case .accessFiles:
+			guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "login-cell", for: indexPath) as? ThemeTableViewCell else {
+				return ThemeTableViewCell()
+			}
 
-				bookmarkCell.textLabel?.text = "Access Files".localized
-				bookmarkCell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+			bookmarkCell.textLabel?.text = "Access Files".localized
+			bookmarkCell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+			if #available(iOS 13.0, *) {
+				bookmarkCell.imageView?.image = UIImage(systemName: "folder")
+			} else {
+				bookmarkCell.imageView?.image = UIImage(named: "folder")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
+			}
+
+			rowCell = bookmarkCell
+
+		case .actions:
+			guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "tool-cell", for: indexPath) as? ServerListToolCell else {
+				return ServerListToolCell()
+			}
+
+			switch actionRows[indexPath.row] {
+			case .editLogin:
+				bookmarkCell.textLabel?.text = "Edit Login".localized
+
 				if #available(iOS 13.0, *) {
-					bookmarkCell.imageView?.image = UIImage(systemName: "folder")
+					bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
 				} else {
-					bookmarkCell.imageView?.image = UIImage(named: "folder")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
+					bookmarkCell.imageView?.image = UIImage(named: "square.and.pencil")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
 
-				rowCell = bookmarkCell
+			case .manageStorage:
+				bookmarkCell.textLabel?.text = "Manage Storage".localized
 
-			case .actions:
-				guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "tool-cell", for: indexPath) as? ServerListToolCell else {
-					return ServerListToolCell()
+				if #available(iOS 13.0, *) {
+					bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
+				} else {
+					bookmarkCell.imageView?.image = UIImage(named: "arrow.3.trianglepath")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
 
-				switch actionRows[indexPath.row] {
-					case .editLogin:
-						bookmarkCell.textLabel?.text = "Edit Login".localized
+			case .logout:
+				bookmarkCell.textLabel?.text = "Logout".localized
 
-						if #available(iOS 13.0, *) {
-							bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
-						} else {
-							bookmarkCell.imageView?.image = UIImage(named: "square.and.pencil")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-						}
-
-					case .manageStorage:
-						bookmarkCell.textLabel?.text = "Manage Storage".localized
-
-						if #available(iOS 13.0, *) {
-							bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
-						} else {
-							bookmarkCell.imageView?.image = UIImage(named: "arrow.3.trianglepath")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-						}
-
-					case .logout:
-						bookmarkCell.textLabel?.text = "Logout".localized
-
-						if #available(iOS 13.0, *) {
-							bookmarkCell.imageView?.image = UIImage(systemName: "power")
-						} else {
-							bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-						}
+				if #available(iOS 13.0, *) {
+					bookmarkCell.imageView?.image = UIImage(systemName: "power")
+				} else {
+					bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
+			}
+			rowCell = bookmarkCell
 
-				rowCell = bookmarkCell
+		case .settings:
+
+			guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "tool-cell", for: indexPath) as? ServerListToolCell else {
+				return ServerListToolCell()
+			}
+
+			switch settingsRows[indexPath.row] {
 
 			case .settings:
-				guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "tool-cell", for: indexPath) as? ServerListToolCell else {
-					return ServerListToolCell()
-				}
 
 				bookmarkCell.textLabel?.text = "Settings".localized
 				if #available(iOS 13.0, *) {
@@ -149,10 +180,20 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 					bookmarkCell.imageView?.image = UIImage(named: "gear")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
 
-				rowCell = bookmarkCell
+			case .addAccount:
+				bookmarkCell.textLabel?.text = "Add Account".localized
+				if #available(iOS 13.0, *) {
+					bookmarkCell.imageView?.image = UIImage(systemName: "plus")
+				} else {
+					bookmarkCell.imageView?.image = UIImage(named: "round-add-button")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
+				}
 
-			default:
-				rowCell = ServerListToolCell()
+			}
+
+			rowCell = bookmarkCell
+
+		default:
+			rowCell = ServerListToolCell()
 		}
 
 		return rowCell
@@ -195,7 +236,12 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 			case .settings:
 				tableView.deselectRow(at: indexPath, animated: true)
-				settings()
+				switch settingsRows[indexPath.row] {
+					case .settings:
+						settings()
+					case .addAccount:
+						addAccount()
+				}
 
 			default: break
 		}
@@ -242,5 +288,15 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		resetPreviousBookmarkSelection()
 
 		self.showModal(viewController: navigationController)
+	}
+
+	@objc func addAccount() {
+		if staticLoginViewController?.loginBundle.profiles.count == 1, let profile = staticLoginViewController?.loginBundle.profiles.first {
+			if let setupViewController = staticLoginViewController?.buildSetupViewController(for: profile) {
+				self.navigationController?.pushViewController(setupViewController, animated: true)
+			}
+		} else if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
+			self.navigationController?.pushViewController(viewController, animated: false)
+		}
 	}
 }

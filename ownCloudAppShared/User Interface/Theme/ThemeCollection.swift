@@ -243,10 +243,15 @@ public class ThemeCollection : NSObject {
 		let rowColor : UIColor? = UIColor.black.withAlphaComponent(0.1)
 		self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowColor)
 
+		var defaultTableRowLabelColor = darkColor
+		if VendorServices.shared.isBranded {
+			defaultTableRowLabelColor = UIColor(hex: 0x000000)
+		}
+
 		self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
 			backgroundColor: tableBackgroundColor,
 			tintColor: nil,
-			labelColor: darkColor,
+			labelColor: defaultTableRowLabelColor,
 			secondaryLabelColor: UIColor(hex: 0x475770),
 			symbolColor: UIColor(hex: 0x475770),
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
@@ -368,7 +373,14 @@ public class ThemeCollection : NSObject {
 				let tmpDarkBrandColors = self.darkBrandColors
 				tmpDarkBrandColors.secondaryLabelColor = .lightGray
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", tmpDarkBrandColors)
-				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
+
+				let defaultSearchBarColor = self.darkBrandColors
+				if VendorServices.shared.isBranded {
+					defaultSearchBarColor.labelColor = UIColor(hex: 0x000000)
+				}
+
+				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", defaultSearchBarColor)
+
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
