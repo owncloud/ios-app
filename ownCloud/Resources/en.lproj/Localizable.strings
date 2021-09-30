@@ -205,6 +205,7 @@
 "Passcode Lock" = "Passcode Lock";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
+"Unlock using %@?" = "Unlock using %@?";
 "Videos" = "Videos";
 "Photos" = "Photos";
 "Wifi only" = "Wifi only";
