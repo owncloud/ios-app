@@ -377,6 +377,8 @@ public class ThemeCollection : NSObject {
 				let defaultSearchBarColor = self.darkBrandColors
 				if VendorServices.shared.isBranded {
 					defaultSearchBarColor.labelColor = UIColor(hex: 0x000000)
+					defaultSearchBarColor.secondaryLabelColor = UIColor.gray
+					defaultSearchBarColor.backgroundColor = UIColor(hex: 0xF7F7F7)
 				}
 
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", defaultSearchBarColor)

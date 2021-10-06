@@ -98,9 +98,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	}
 
 	override func didUpdateServerList() {
-		if OCBookmarkManager.shared.bookmarks.count == 0 {
-			self.staticLoginViewController?.showFirstScreen()
-		}
+		self.staticLoginViewController?.showFirstScreen()
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

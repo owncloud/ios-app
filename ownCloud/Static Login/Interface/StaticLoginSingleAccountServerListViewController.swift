@@ -65,26 +65,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		if VendorServices.shared.canAddAccount {
 			staticLoginViewController?.toolbarShown = true
 			settingsRows = [.settings, .addAccount]
-
-			var items = self.staticLoginViewController?.toolbarItems
-
-			let accountItems = items?.filter({ item in
-				if item.responds(to: #selector(addAccount)) {
-					return true
-				}
-				return false
-			})
-
-			print("-->>>>items \(accountItems)")
-			if accountItems?.count == 0 {
-				let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addAccount))
-				addServerBarButtonItem.accessibilityLabel = "Add account".localized
-				addServerBarButtonItem.accessibilityIdentifier = "addAccount"
-
-				items?.insert(addServerBarButtonItem, at: 0)
-				self.staticLoginViewController?.toolbarItems = items
-			}
-			self.staticLoginViewController?.toolbarItems = nil
 		} else {
 			staticLoginViewController?.toolbarShown = false
 		}
@@ -92,6 +72,22 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		if !VendorServices.shared.isBranded, UIDevice.current.isIpad {
+			// Set a maximum table view width of 400 on iPad
+			let width = self.view.frame.size.width
+			let height = self.view.frame.size.height
+			var margin : CGFloat = 0
+
+			if width > height {
+				margin = (height - 400) / 2
+			} else {
+				margin = (width - 400) / 2
+			}
+
+			self.tableView.layoutMargins.left = margin
+			self.tableView.layoutMargins.right = margin
+		}
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -203,7 +199,11 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let userName = bookmark.userName {
 				let headerText = String(format: "You are connected as\n%@".localized, userName)
-				headerView = StaticTableViewSection.buildHeader(title: headerText)
+				if VendorServices.shared.isBranded {
+					headerView = StaticTableViewSection.buildHeader(title: headerText)
+				} else {
+					headerView = StaticTableViewSection.buildHeader(title: headerText, image: UIImage(named: "branding-login-logo"), topSpacing: 10)
+				}
 			}
 
 			return headerView
@@ -229,7 +229,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 						case .logout:
 							delete(bookmark: bookmark, at: IndexPath(row: 0, section: 0) ) {
-								self.staticLoginViewController?.showFirstScreen()
+								self.didUpdateServerList()
 							}
 					}
 				}
@@ -257,23 +257,38 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	}
 
 	override func didUpdateServerList() {
-		if OCBookmarkManager.shared.bookmarks.count == 0 {
-			self.staticLoginViewController?.showFirstScreen()
+		if VendorServices.shared.isBranded {
+			if OCBookmarkManager.shared.bookmarks.count == 0 {
+				self.staticLoginViewController?.showFirstScreen()
+			}
+		} else {
+			if OCBookmarkManager.shared.bookmarks.count != 1 {
+				let serverListTableViewController = ServerListTableViewController(style: .plain)
+				self.navigationController?.setViewControllers([serverListTableViewController], animated: false)
+			}
 		}
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-		self.tableView.backgroundColor = .clear
+		if VendorServices.shared.isBranded {
+			self.tableView.backgroundColor = .clear
+		} else {
+			self.tableView.backgroundColor = collection.navigationBarColors.backgroundColor
+		}
 	}
 
 	override func showModal(viewController: UIViewController, completion: (() -> Void)? = nil) {
-		// Ensure the presenting view controller isn't removed when the presentation ends
- 		if viewController.modalPresentationStyle == .fullScreen {
- 			viewController.modalPresentationStyle = .overFullScreen
- 		}
+		if let staticLoginViewController = self.staticLoginViewController {
+			// Ensure the presenting view controller isn't removed when the presentation ends
+			if viewController.modalPresentationStyle == .fullScreen {
+				viewController.modalPresentationStyle = .overFullScreen
+			}
 
-  		self.staticLoginViewController?.present(viewController, animated: true, completion: completion)
+			staticLoginViewController.present(viewController, animated: true, completion: completion)
+		} else {
+			super.showModal(viewController: viewController, completion: completion)
+		}
 	}
 
 	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
@@ -291,12 +306,16 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	}
 
 	@objc func addAccount() {
-		if staticLoginViewController?.loginBundle.profiles.count == 1, let profile = staticLoginViewController?.loginBundle.profiles.first {
-			if let setupViewController = staticLoginViewController?.buildSetupViewController(for: profile) {
-				self.navigationController?.pushViewController(setupViewController, animated: true)
+		if VendorServices.shared.isBranded {
+			if staticLoginViewController?.loginBundle.profiles.count == 1, let profile = staticLoginViewController?.loginBundle.profiles.first {
+				if let setupViewController = staticLoginViewController?.buildSetupViewController(for: profile) {
+					self.navigationController?.pushViewController(setupViewController, animated: true)
+				}
+			} else if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
+				self.navigationController?.pushViewController(viewController, animated: false)
 			}
-		} else if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
-			self.navigationController?.pushViewController(viewController, animated: false)
+		} else {
+			super.addBookmark()
 		}
 	}
 }

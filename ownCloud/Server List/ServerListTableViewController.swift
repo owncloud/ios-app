@@ -373,7 +373,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		showBookmarkUI()
+		showBookmarkUI(attemptLoginOnSuccess: true)
 	}
 
 	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
@@ -395,6 +395,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		if attemptLoginOnSuccess {
 			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
 				if success, let bookmark = bookmark, let self = self {
+					self.didUpdateServerList()
 					if let error = autosolveErrorOnSuccess as Error? {
 						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
 					}
@@ -646,6 +647,21 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 	func didUpdateServerList() {
 		// This is a hook for subclasses
+
+		if !VendorServices.shared.isBranded {
+			if OCBookmarkManager.shared.bookmarks.count == 1 {
+				var serverListTableViewController : ServerListTableViewController?
+				if #available(iOS 13.0, *) {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+				} else {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .grouped)
+				}
+
+				guard let serverListTableViewController = serverListTableViewController else { return }
+
+				self.navigationController?.setViewControllers([ serverListTableViewController ], animated: false)
+			}
+		}
 	}
 
 	var clientViewController : ClientRootViewController? {
@@ -743,6 +759,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 						self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 					}, completion: { (_) in
 						self.ignoreServerListChanges = false
+						self.didUpdateServerList()
 					})
 				}
 			}
@@ -808,7 +825,8 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 						}
 					 }, completion: { (_) in
-						 self.ignoreServerListChanges = false
+						self.ignoreServerListChanges = false
+						self.didUpdateServerList()
 					 })
 				 }
 			 }
