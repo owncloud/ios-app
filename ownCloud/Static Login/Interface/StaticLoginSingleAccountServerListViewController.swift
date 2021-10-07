@@ -195,6 +195,12 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		return rowCell
 	}
 
+	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		if VendorServices.shared.isBranded {
+			self.colorSection(tableView, willDisplay: cell, forRowAt: indexPath, borderColor: Theme.shared.activeCollection.navigationBarColors.backgroundColor)
+		}
+	}
+
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let userName = bookmark.userName {
