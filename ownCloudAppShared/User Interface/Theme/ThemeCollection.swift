@@ -398,6 +398,11 @@ public class ThemeCollection : NSObject {
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
+
+				if lightBrandColor.isEqual(UIColor(hex: 0xFFFFFF)) {
+					self.neutralColors.normal.background = self.darkBrandColor
+					self.lightBrandColors.filledColorPairCollection.normal.background = self.darkBrandColor
+				}
 		}
 
 		self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)

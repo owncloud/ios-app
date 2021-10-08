@@ -236,7 +236,7 @@ public class Theme: NSObject {
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchBarColors.tintColor
 			}
 			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
-			UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
+			UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tableRowColors.labelColor
 			UITextField.appearance().tintColor = collection.searchBarColors.tintColor
 		}
 	}
