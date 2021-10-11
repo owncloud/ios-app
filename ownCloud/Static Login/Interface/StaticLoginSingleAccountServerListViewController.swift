@@ -121,6 +121,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			} else {
 				bookmarkCell.imageView?.image = UIImage(named: "folder")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 			}
+			bookmarkCell.imageView?.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
 
 			rowCell = bookmarkCell
 

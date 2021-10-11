@@ -240,10 +240,10 @@ public class Theme: NSObject {
 				if ThemeStyle.userInterfaceStyle() == .dark {
 					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .lightGray
 				} else {
-					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tableRowColors.labelColor
+					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
 				}
 			} else {
-				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tableRowColors.labelColor
+				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
 			}
 			UITextField.appearance().tintColor = collection.searchBarColors.tintColor
 		}
