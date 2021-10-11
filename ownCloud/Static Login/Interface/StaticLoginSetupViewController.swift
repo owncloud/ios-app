@@ -46,7 +46,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		self.tableView.separatorStyle = .none
 
 		if profile.canConfigureURL {
@@ -291,7 +291,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		guard self.bookmark != nil else {
 			let alertController = ThemedAlertController(title: "Missing Profile URL".localized, message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.".localized, profile.name ?? ""), preferredStyle: .alert)
 
-			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { _ in
+				self.popViewController()
+			}))
 
 			self.loginViewController?.present(alertController, animated: true, completion: nil)
 			return
