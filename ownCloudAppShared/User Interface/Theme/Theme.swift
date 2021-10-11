@@ -236,7 +236,15 @@ public class Theme: NSObject {
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchBarColors.tintColor
 			}
 			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
-			UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tableRowColors.labelColor
+			if #available(iOSApplicationExtension 13.0, *) {
+				if ThemeStyle.userInterfaceStyle() == .dark {
+					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
+				} else {
+					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tableRowColors.labelColor
+				}
+			} else {
+				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tableRowColors.labelColor
+			}
 			UITextField.appearance().tintColor = collection.searchBarColors.tintColor
 		}
 	}
