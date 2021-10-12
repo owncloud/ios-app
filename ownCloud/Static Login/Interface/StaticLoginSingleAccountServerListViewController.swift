@@ -198,7 +198,12 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		if VendorServices.shared.isBranded {
-			self.colorSection(tableView, willDisplay: cell, forRowAt: indexPath, borderColor: Theme.shared.activeCollection.navigationBarColors.backgroundColor)
+			var borderColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
+			if borderColor == UIColor(hex: 0xFFFFFF) {
+				borderColor = Theme.shared.activeCollection.navigationBarColors.tintColor
+			}
+
+			self.colorSection(tableView, willDisplay: cell, forRowAt: indexPath, borderColor: borderColor)
 		}
 	}
 
