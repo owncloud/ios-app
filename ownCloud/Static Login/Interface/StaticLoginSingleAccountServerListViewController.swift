@@ -161,8 +161,11 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first {
-				let headerText = String(format: "You are connected as\n%@".localized, bookmark.displayName ?? bookmark.userName)
-				headerView = StaticTableViewSection.buildHeader(title: headerText)
+				let displayName = bookmark.displayName ?? bookmark.userName
+				if let displayName = displayName {
+					let headerText = String(format: "You are connected as\n%@".localized, userName)
+				 headerView = StaticTableViewSection.buildHeader(title: headerText)
+				}
 			}
 
 			return headerView
