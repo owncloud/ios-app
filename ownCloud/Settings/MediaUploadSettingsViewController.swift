@@ -66,8 +66,16 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 				if let autoUploadSection = self.autoUploadSection, !autoUploadSection.attached {
 					self.addSection(autoUploadSection)
 				}
-				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.rows.count > 0, !backgroundUploadsSection.attached {
-					self.addSection(backgroundUploadsSection)
+				if let backgroundUploadsSection = self.backgroundUploadsSection {
+					if !backgroundUploadsSection.attached, backgroundUploadsSection.rows.count > 0, (userDefaults.instantUploadPhotos || userDefaults.instantUploadVideos) {
+						if let autoUploadSection = self.autoUploadSection, let index = self.indexForSection(autoUploadSection) {
+							self.insertSection(backgroundUploadsSection, at: (index + 1), animated: true)
+						} else {
+							self.addSection(backgroundUploadsSection)
+						}
+					} else {
+						self.removeSection(backgroundUploadsSection, animated: true)
+					}
 				}
 			} else {
 				if let autoUploadSection = self.autoUploadSection, autoUploadSection.attached {
