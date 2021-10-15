@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import <Foundation/Foundation.h>
 #import "OCLicenseAppStoreItem.h"
 
@@ -105,3 +107,5 @@ typedef NSNumber* OCLicenseAppStoreLineItemID;
 NS_ASSUME_NONNULL_END
 
 #import "OCLicenseAppStoreReceiptInAppPurchase.h"
+
+#endif /* DISABLE_APPSTORE_LICENSING */

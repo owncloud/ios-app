@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import <StoreKit/StoreKit.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
@@ -936,3 +938,5 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 OCLicenseProviderIdentifier OCLicenseProviderIdentifierAppStore = @"app-store";
 
 NSErrorDomain OCLicenseAppStoreProviderErrorDomain = @"OCLicenseAppStoreProviderError";
+
+#endif /* DISABLE_APPSTORE_LICENSING */

@@ -16,6 +16,8 @@
  *
  */
 
+#if !DISABLE_APPSTORE_LICENSING
+
 import UIKit
 import ownCloudAppShared
 
@@ -61,3 +63,5 @@ class LicenseOfferButton: ThemeButton {
 		fatalError("init(coder:) has not been implemented")
 	}
 }
+
+#endif

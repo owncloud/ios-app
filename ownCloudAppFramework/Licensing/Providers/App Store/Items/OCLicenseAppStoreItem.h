@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "OCLicenseOffer.h"
@@ -47,3 +49,5 @@ typedef NSString* OCLicenseAppStoreProductIdentifier;
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif /* DISABLE_APPSTORE_LICENSING */
