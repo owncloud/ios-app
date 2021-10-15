@@ -61,6 +61,8 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 - (nullable id)computedValueForClassSettingsKey:(OCClassSettingsKey)classSettingsKey;
 - (nullable NSURL *)urlForClassSettingsKey:(OCClassSettingsKey)settingsKey;
 
+- (void)registerUserDefaultsDefaults;
+
 @end
 
 extern OCClassSettingsIdentifier OCClassSettingsIdentifierBranding;
@@ -68,6 +70,7 @@ extern OCClassSettingsIdentifier OCClassSettingsIdentifierBranding;
 extern BrandingKey BrandingKeyAppName;
 extern BrandingKey BrandingKeyOrganizationName;
 extern BrandingKey BrandingKeyDisabledImportMethods;
+extern BrandingKey BrandingKeyUserDefaultsDefaultValues;
 
 extern BrandingFileImportMethod BrandingFileImportMethodOpenWith;
 extern BrandingFileImportMethod BrandingFileImportMethodShareExtension;
