@@ -1,46 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>branding.organization-name</key>
-	<string>DamkenCloud</string>
-	<key>branding.profile-allow-url-configuration</key>
-	<false/>
-	<key>branding.profile-bookmark-name</key>
-	<string>DCloud</string>
-	<key>branding.profile-help-button-label</key>
-	<string>Register Account</string>
-	<key>branding.profile-help-url</key>
-	<string>https://cloud.damken.com/index.php/apps/registration/</string>
-	<key>branding.profile-open-help-message</key>
-	<string></string>
-	<key>branding.profile-url</key>
-	<string>https://cloud.damken.com</string>
-	<key>branding.send-feedback-address</key>
-	<string>cloud@damken.com</string>
-	<key>branding.url-help</key>
-	<string>https://cloud.damken.com</string>
-	<key>branding.url-privacy</key>
-	<string></string>
-	<key>branding.theme-definitions$[0].Styles.statusBarStyle</key>
-	<string>darkContent</string>
-	<key>branding.theme-definitions$[0].Colors.Searchbar.tintColor</key>
-	<string>#666666</string>
-	<key>branding.theme-definitions$[0].Colors.Searchbar.secondaryLabelColor</key>
-	<string>#666666</string>
-	<key>branding.theme-definitions$[0].Colors.Searchbar.backgroundColor</key>
-	<string>#F2F2F3</string>
-	<key>branding.theme-definitions$[0].Colors.Searchbar.labelColor</key>
-	<string>#000000</string>
-	<key>branding.theme-definitions$[0].Colors.NavigationBar.tintColor</key>
-	<string>#5bb75b</string>
-	<key>branding.theme-definitions$[0].Colors.NavigationBar.backgroundColor</key>
-	<string>#FFFFFF</string>
-	<key>branding.theme-definitions$[0].Colors.NavigationBar.labelColor</key>
-	<string>#000000</string>
-	<key>branding.theme-definitions$[0].darkBrandColor</key>
-	<string>#5bb75b</string>
-	<key>branding.theme-definitions$[0].lightBrandColor</key>
-	<string>#000000</string>
-</dict>
+<dict/>
 </plist>
