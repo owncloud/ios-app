@@ -195,7 +195,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
-			textColor = themeCollection.tintColor
+			textColor = themeCollection.tableRowColors.labelColor
 			backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 			self?.cell?.textLabel?.textColor = textColor
@@ -296,7 +296,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		if withButtonStyle {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-			let textColor = themeCollection.tintColor
+			let textColor = themeCollection.tableRowColors.labelColor
 
 			self?.cell?.textLabel?.textColor = textColor
 			self?.cell?.detailTextLabel?.textColor = textColor
@@ -604,7 +604,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			switch style {
 				case .plain:
-					textColor = themeCollection.tintColor
+					textColor = themeCollection.tableRowColors.tintColor
 					tintColor = textColor
 					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
@@ -742,7 +742,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			switch style {
 			case .plain:
-				textColor = themeCollection.tintColor
+				textColor = themeCollection.tableRowColors.labelColor
 				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 			case .plainNonOpaque:

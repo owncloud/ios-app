@@ -51,8 +51,21 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	private var actionRows: [ActionRowIndex] = [.editLogin, .manageStorage, .logout]
 	private var settingsRows: [SettingsRowIndex] = [.settings]
 
+	var themeApplierToken : ThemeApplierToken?
+
+	deinit {
+		Theme.shared.unregister(client: self)
+
+		if themeApplierToken != nil {
+			Theme.shared.remove(applierForToken: themeApplierToken)
+			themeApplierToken = nil
+		}
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		Theme.shared.register(client: self, applyImmediately: true)
 
 		self.tableView.isScrollEnabled = true
 		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "login-cell")
@@ -121,7 +134,10 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			} else {
 				bookmarkCell.imageView?.image = UIImage(named: "folder")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 			}
-			bookmarkCell.imageView?.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
+
+			themeApplierToken = Theme.shared.add(applier: { (_, themeCollection, _) in
+				bookmarkCell.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+			})
 
 			rowCell = bookmarkCell
 

@@ -236,8 +236,8 @@ public class Theme: NSObject {
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchBarColors.tintColor
 			}
 			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
-			if #available(iOSApplicationExtension 13.0, *) {
-				if ThemeStyle.userInterfaceStyle() == .dark {
+			if #available(iOS 13, *) {
+				if ThemeStyle.preferredStyle.themeStyle == .dark {
 					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .lightGray
 				} else {
 					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
