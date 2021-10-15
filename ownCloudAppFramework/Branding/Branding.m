@@ -17,6 +17,8 @@
  */
 
 #import "Branding.h"
+//#import <ownCloudApp/ownCloudApp.h>
+//#import <ownCloudAppShared/ownCloudAppShared.h>
 
 @interface Branding ()
 {
@@ -41,6 +43,11 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 		else
 		{
 			// BEGIN: Workaround for iOS 12 Swift crash bug - this code is usually in +initializeBranding in ownCloudAppShared.framework - remove when dropping iOS 12 support
+			/*BOOL defaultValue = YES;
+			if ([[VendorServices shared] isBranded]) {
+				defaultValue = NO;
+			}*/
+
 			[self registerOCClassSettingsDefaults:@{
 				@"url-documentation" 	: @"https://doc.owncloud.com/ios-app/",
 				@"url-help" 	  	: @"https://owncloud.com/docs-guides/",

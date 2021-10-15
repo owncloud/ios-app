@@ -37,6 +37,11 @@ extension OCClassSettingsKey {
 extension Branding : BrandingInitialization {
 	public static func initializeBranding() {
 		if #available(iOS 13, *) {
+			var defaultValue = true
+			if VendorServices.shared.isBranded {
+				defaultValue = false
+			}
+
 			self.registerOCClassSettingsDefaults([
 				.documentationURL : "https://doc.owncloud.com/ios-app/latest/",
 				.helpURL 	  : "https://owncloud.com/docs-guides/",
@@ -45,8 +50,8 @@ extension Branding : BrandingInitialization {
 
 				.sendFeedbackAddress : "ios-app@owncloud.com",
 
-				.canAddAccount : true,
-				.canEditAccount : true,
+				.canAddAccount : defaultValue,
+				.canEditAccount : defaultValue,
 				.enableReviewPrompt : false
 
 	//			.profileDefinitions : [],

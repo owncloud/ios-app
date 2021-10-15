@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public class VendorServices : NSObject {
+@objc public class VendorServices : NSObject {
 
 	enum UserDefaultsKeys: String {
 		case notFirstAppLaunch
@@ -91,7 +91,7 @@ public class VendorServices : NSObject {
 		return false
 	}
 
-	public var isBranded: Bool {
+	@objc public var isBranded: Bool {
 		return Branding.shared.isBranded
 	}
 
@@ -119,7 +119,7 @@ public class VendorServices : NSObject {
 		return false
 	}
 
-	static public var shared : VendorServices = {
+	@objc static public var shared : VendorServices = {
 		return VendorServices()
 	}()
 
