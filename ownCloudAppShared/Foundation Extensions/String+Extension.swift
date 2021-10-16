@@ -18,6 +18,7 @@
 
 import Foundation
 import UIKit
+import ownCloudSDK
 
 private let _sharedAppBundle = Bundle(identifier: "com.owncloud.ownCloudAppShared")
 
@@ -30,11 +31,7 @@ public extension Bundle {
 extension String {
 
 	public var localized: String {
-		return NSLocalizedString(self, comment: "")
-	}
-
-	public var slocalized : String {
-		return NSLocalizedString(self, tableName: nil, bundle: Bundle.sharedAppBundle, value: self, comment: "")
+		return OCLocale.localize(self)
 	}
 
 	public var isNumeric: Bool {

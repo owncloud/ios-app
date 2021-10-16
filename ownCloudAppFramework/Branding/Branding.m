@@ -202,6 +202,9 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 		{
 			[(id<BrandingInitialization>)self initializeSharedBranding];
 		}
+
+		// Set app.name localization variable to branded name
+		[OCLocaleFilterVariables.shared setVariable:@"app.name" value:self.appDisplayName];
 	}
 
 	return (self);
@@ -239,6 +242,17 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 - (NSString *)organizationName
 {
 	return ([self computedValueForClassSettingsKey:BrandingKeyOrganizationName]);
+}
+
+- (NSString *)appDisplayName
+{
+	NSString *appName;
+
+	if ((appName = self.appName) != nil) { return (appName); }
+	if ((appName = self.organizationName) != nil) { return (appName); }
+	if ((appName = OCAppIdentity.sharedAppIdentity.appDisplayName) != nil) { return (appName); }
+
+	return (@"ownCloud");
 }
 
 - (NSDictionary *)userDefaultsDefaultValues
