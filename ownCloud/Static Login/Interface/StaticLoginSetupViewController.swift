@@ -50,6 +50,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		self.tableView.separatorStyle = .none
 
 		if profile.canConfigureURL {
+			self.urlString = profile.url?.absoluteString
 			self.addSection(urlSection())
 			if OCBookmarkManager.shared.bookmarks.count == 0, profile.isOnboardingEnabled {
 				self.addSection(onboardingSection())
