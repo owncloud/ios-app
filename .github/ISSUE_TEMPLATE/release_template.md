@@ -30,6 +30,9 @@ Xcode version to work with:
 - [ ] [GIT] Merge branch `release/[major].[minor].[patch]` in master
 - [ ] [GIT] Create tag and sign it `[major].[minor].[patch]`
 - [ ] [GIT] Add the new release on [GitHub ios-app](https://github.com/owncloud/ios-app/releases)
+- [ ] [DEV] ownBrander: Update the ownBrander git tag in repository `customer_portal` to new release tag
+- [ ] [DEV] Update used Xcode version for the release in [.xcode-version](https://github.com/owncloud/ios-app/blob/master/.xcode-version)
+- [ ] [DEV] Inform #documentation about the new release to set new documentation branch tag
 
 If it is required to update the iOS-SDK version:
 

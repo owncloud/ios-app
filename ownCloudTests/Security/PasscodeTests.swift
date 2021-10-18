@@ -10,6 +10,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import LocalAuthentication
+import ownCloudApp
 import ownCloudAppShared
 
 @testable import ownCloud
@@ -23,7 +24,7 @@ class PasscodeTests: XCTestCase {
 
 	override func tearDown() {
 		AppLockManager.shared.passcode = nil
-		AppLockManager.shared.lockEnabled = false
+		AppLockSettings.shared.lockEnabled = false
 		super.tearDown()
 	}
 
@@ -36,7 +37,7 @@ class PasscodeTests: XCTestCase {
 
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
-		AppLockManager.shared.lockEnabled = true
+		AppLockSettings.shared.lockEnabled = true
 
 		// Show the passcode
 		AppLockManager.shared.showLockscreenIfNeeded()
@@ -64,7 +65,7 @@ class PasscodeTests: XCTestCase {
 
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "2222"
-		AppLockManager.shared.lockEnabled = true
+		AppLockSettings.shared.lockEnabled = true
 
 		// Show the passcode
 		AppLockManager.shared.showLockscreenIfNeeded()
@@ -89,7 +90,7 @@ class PasscodeTests: XCTestCase {
 	func testCancelPasscode() {
 
 		// Assure that the passcode is disabled
-		AppLockManager.shared.lockEnabled = false
+		AppLockSettings.shared.lockEnabled = false
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
@@ -116,7 +117,7 @@ class PasscodeTests: XCTestCase {
 	func testCancelSecondTryPasscode() {
 
 		// Assure that the passcode is disabled
-		AppLockManager.shared.lockEnabled = false
+		AppLockSettings.shared.lockEnabled = false
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
@@ -149,7 +150,7 @@ class PasscodeTests: XCTestCase {
 	func testEnterDifferentPasscodes() {
 
 		// Assure that the passcode is disabled
-		AppLockManager.shared.lockEnabled = false
+		AppLockSettings.shared.lockEnabled = false
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
@@ -184,7 +185,7 @@ class PasscodeTests: XCTestCase {
 
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
-		AppLockManager.shared.lockEnabled = true
+		AppLockSettings.shared.lockEnabled = true
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
@@ -214,7 +215,7 @@ class PasscodeTests: XCTestCase {
 
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
-		AppLockManager.shared.lockEnabled = true
+		AppLockSettings.shared.lockEnabled = true
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
@@ -243,7 +244,7 @@ class PasscodeTests: XCTestCase {
 
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
-		AppLockManager.shared.lockEnabled = true
+		AppLockSettings.shared.lockEnabled = true
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
@@ -259,6 +260,6 @@ class PasscodeTests: XCTestCase {
 
 		//Reset status
 		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
-		AppLockManager.shared.lockEnabled = false
+		AppLockSettings.shared.lockEnabled = false
 	}
 }

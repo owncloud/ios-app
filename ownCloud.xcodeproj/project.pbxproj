@@ -50,6 +50,7 @@
 		392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6624D848550000E3F9 /* branding-splashscreen.png */; };
 		3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
+		392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392CFEB62705831700631D2B /* LAContext+Extension.swift */; };
 		392DDAE624C8923B009E5406 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392DDB1324CF024C009E5406 /* ImportFilesController.swift */; };
 		393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
@@ -193,7 +194,6 @@
 		6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFD2199A75900F680C4 /* MoveAction.swift */; };
 		6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFF2199A78E00F680C4 /* DeleteAction.swift */; };
 		6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5FC171221590B000F60846 /* DisplayHostViewController.swift */; };
-		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
@@ -340,6 +340,8 @@
 		DC66F3AD2396630100CF4812 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = DC66F3A823965BF400CF4812 /* AppleIncRootCertificate.cer */; };
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
+		DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6A0E5226EA9E740076B533 /* AppLockSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6A0E5326EA9E740076B533 /* AppLockSettings.m */; };
 		DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */; };
 		DC6CC3152642C3560040ECAC /* ExternalBrowserBusyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */; };
 		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
@@ -504,6 +506,7 @@
 		DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */; };
 		DCFB74C421AD7E18005796AF /* StaticLoginServerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */; };
 		DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */; };
 		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
 		DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -950,6 +953,7 @@
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		39265BB123D9987500B0C4CA /* MediaEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaEditingAction.swift; sourceTree = "<group>"; };
+		392CFEB62705831700631D2B /* LAContext+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		392DDB1324CF024C009E5406 /* ImportFilesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
 		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
 		3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccountIntentHandler.swift; sourceTree = "<group>"; };
@@ -1192,7 +1196,6 @@
 		6E586CFD2199A75900F680C4 /* MoveAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveAction.swift; sourceTree = "<group>"; };
 		6E586CFF2199A78E00F680C4 /* DeleteAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAction.swift; sourceTree = "<group>"; };
 		6E5FC171221590B000F60846 /* DisplayHostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayHostViewController.swift; sourceTree = "<group>"; };
-		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		6E91F37D21ECA6FD009436D2 /* CopyAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyAction.swift; sourceTree = "<group>"; };
 		6EA78B8E2179B55400A5216A /* ImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
 		6EB8EDBE2114358300C2BF44 /* folder-create.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-create.tvg"; path = "img/filetypes-tvg/folder-create.tvg"; sourceTree = SOURCE_ROOT; };
@@ -1297,6 +1300,8 @@
 		DC66F3AA23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreReceiptInAppPurchase.m; sourceTree = "<group>"; };
 		DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManagementViewController.swift; sourceTree = "<group>"; };
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
+		DC6A0E5226EA9E740076B533 /* AppLockSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppLockSettings.h; sourceTree = "<group>"; };
+		DC6A0E5326EA9E740076B533 /* AppLockSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppLockSettings.m; sourceTree = "<group>"; };
 		DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = PLCrashReporter.LICENSE; sourceTree = "<group>"; };
 		DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalBrowserBusyHandler.swift; sourceTree = "<group>"; };
 		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
@@ -1465,6 +1470,7 @@
 		DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginServerListViewController.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
+		DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VendorServices+App.swift"; sourceTree = "<group>"; };
 		DCFEFE28236876BD009A142F /* OCLicenseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseManager.h; sourceTree = "<group>"; };
 		DCFEFE29236876BD009A142F /* OCLicenseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseManager.m; sourceTree = "<group>"; };
 		DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseProvider.h; sourceTree = "<group>"; };
@@ -1768,7 +1774,6 @@
 		239F1314205A69240029F186 /* UIKit Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				6E83C78320A33C180066EC23 /* LAContext+Extension.swift */,
 				4CB8ADDF22DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift */,
 				39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */,
 				39CC8AE5228C12100020253B /* Array+Extension.swift */,
@@ -1882,6 +1887,7 @@
 		399725DF233DF37300FC3B94 /* UIKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				392CFEB62705831700631D2B /* LAContext+Extension.swift */,
 				399EA73925E656A900B6FF11 /* UITableView+Extension.swift */,
 				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
 				DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */,
@@ -2417,6 +2423,15 @@
 			path = "Certificate Management";
 			sourceTree = "<group>";
 		};
+		DC6A0E4F26EA9E2B0076B533 /* AppLock Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DC6A0E5326EA9E740076B533 /* AppLockSettings.m */,
+				DC6A0E5226EA9E740076B533 /* AppLockSettings.h */,
+			);
+			path = "AppLock Settings";
+			sourceTree = "<group>";
+		};
 		DC774E5422F44DF6000B11A1 /* SDK Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2660,6 +2675,7 @@
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
+				DC6A0E4F26EA9E2B0076B533 /* AppLock Settings */,
 				DCB2C05C250C1ECD001083CA /* Branding */,
 				DCF2DA6F24C82C820026D790 /* File Provider Services */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
@@ -3039,6 +3055,7 @@
 				DC3DEC7C22AFFE8E00F3352D /* KVOWaiter.swift */,
 				4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */,
 				DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */,
+				DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -3196,6 +3213,7 @@
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
+				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
 				DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3975,6 +3993,7 @@
 				4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */,
 				DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */,
 				0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */,
+				DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */,
 				4C9BFA2323158C3F0059CA3E /* PreviewViewController.swift in Sources */,
 				399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
@@ -3984,7 +4003,6 @@
 				DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */,
 				4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */,
 				39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */,
-				6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */,
 				DCE28F602433683700879DEC /* ClientSessionManager.swift in Sources */,
 				3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
@@ -4175,6 +4193,7 @@
 				DCE4E45924C1F0F70051722F /* ClientQueryViewController.swift in Sources */,
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
+				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
 				DC0A359724C0E64500FB58FC /* UIImageView+Thumbnails.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
@@ -4306,6 +4325,7 @@
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
+				DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 				DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
@@ -4687,9 +4707,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD_FLAGS = "$(inherited)";
+				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 201;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4730,6 +4752,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"APP_IDENTIFIER_PREFIX=\"\\\"$(AppIdentifierPrefix)\\\"\"",
+					"$(APP_BUILD_FLAGS)",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -4738,11 +4761,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREPROCESSOR_DEFINITIONS = "$(APP_BUILD_FLAGS)";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(APP_BUILD_FLAGS_SWIFT)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALIDATE_WORKSPACE = YES;
 			};
@@ -4752,9 +4776,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_BUILD_FLAGS = "$(inherited)";
+				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 201;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4790,15 +4816,22 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"APP_IDENTIFIER_PREFIX=\"\\\"$(AppIdentifierPrefix)\\\"\"",
+					"$(APP_BUILD_FLAGS)",
+					"$(inherited)",
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREPROCESSOR_DEFINITIONS = "$(APP_BUILD_FLAGS)";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(APP_BUILD_FLAGS_SWIFT)";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -4810,8 +4843,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 201;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -4823,6 +4856,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
+				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4843,8 +4877,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 201;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4856,6 +4890,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
+				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5200,8 +5235,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 201;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
@@ -5244,8 +5279,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				APP_SHORT_VERSION = 11.7.0;
-				APP_VERSION = 197;
+				APP_SHORT_VERSION = 11.7.1;
+				APP_VERSION = 201;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;

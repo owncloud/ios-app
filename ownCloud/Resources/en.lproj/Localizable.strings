@@ -209,6 +209,7 @@
 "Passcode Lock" = "Passcode Lock";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
+"Unlock using %@?" = "Unlock using %@?";
 "Videos" = "Videos";
 "Photos" = "Photos";
 "Wifi only" = "Wifi only";
@@ -230,6 +231,7 @@
 "After 1 minute" = "After 1 minute";
 "After 5 minutes" = "After 5 minutes";
 "After 30 minutes" = "After 30 minutes";
+"After %ld seconds" = "After %ld seconds";
 "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
@@ -302,9 +304,9 @@
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
 
-"Cellular transfers" = "Cellular transfers";
+"Cellular Data Usage" = "Cellular Data Usage";
 "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
-"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.";
 "General" = "General";
 "By feature" = "By feature";
 
@@ -510,7 +512,7 @@
 "Shared with others" = "Shared with others";
 "Shares" = "Shares";
 "Copy Private Link" = "Copy Private Link";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Only recipients can use this link. Use it as a permanent link to point to this resource";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.";
 "Accept Share failed" = "Accept Share failed";
 "Decline Share failed" = "Decline Share failed";
 "Accept" = "Accept";
@@ -766,6 +768,19 @@
 "Error loading item" = "Error loading item";
 "Preparing…" = "Preparing…";
 "Save here" = "Save here";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Share Extension disabled";
+"Importing files through the Share Extension is not allowed on this device." = "Importing files through the Share Extension is not allowed on this device.";
+
+/* - Open with */
+"Opening not allowed" = "Opening not allowed";
+"Importing files through opening is not allowed on this device." = "Importing files through opening is not allowed on this device.";
+
+/* - Files.app */
+"Import not allowed" = "Import not allowed";
+"Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
 
 /* Data migration from legacy app */
 "Account Migration" = "Account Migration";

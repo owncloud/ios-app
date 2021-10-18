@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSString* BrandingLegacyKeyPath;
 typedef NSString* BrandingLegacyKey;
 typedef OCClassSettingsKey BrandingKey NS_TYPED_EXTENSIBLE_ENUM;
+typedef NSString* BrandingFileImportMethod NS_TYPED_EXTENSIBLE_ENUM;
 typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 
 @protocol BrandingInitialization <NSObject>
@@ -51,11 +52,16 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 
 @property(strong,nullable,nonatomic,readonly) NSString *appName; //!< Custom app name
 @property(strong,nullable,nonatomic,readonly) NSString *organizationName; //!< Custom organization name
+@property(strong,nullable,nonatomic,readonly) NSArray<BrandingFileImportMethod> *disabledImportMethods; //!< Disabled file import methods
+
+- (BOOL)isImportMethodAllowed:(BrandingFileImportMethod)importMethod;
 
 - (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName; //!< Returns the respective image from the appBundle
 
 - (nullable id)computedValueForClassSettingsKey:(OCClassSettingsKey)classSettingsKey;
 - (nullable NSURL *)urlForClassSettingsKey:(OCClassSettingsKey)settingsKey;
+
+- (void)registerUserDefaultsDefaults;
 
 @end
 
@@ -63,6 +69,12 @@ extern OCClassSettingsIdentifier OCClassSettingsIdentifierBranding;
 
 extern BrandingKey BrandingKeyAppName;
 extern BrandingKey BrandingKeyOrganizationName;
+extern BrandingKey BrandingKeyDisabledImportMethods;
+extern BrandingKey BrandingKeyUserDefaultsDefaultValues;
+
+extern BrandingFileImportMethod BrandingFileImportMethodOpenWith;
+extern BrandingFileImportMethod BrandingFileImportMethodShareExtension;
+extern BrandingFileImportMethod BrandingFileImportMethodFileProvider;
 
 NS_ASSUME_NONNULL_END
 

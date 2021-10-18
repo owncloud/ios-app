@@ -86,12 +86,14 @@
 	<string>This permission is needed to scan documents.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
+	#ifndef DISABLE_BACKGROUND_LOCATION
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
+	#endif
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This permission is needed to record videos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -145,7 +147,9 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
+		#ifndef DISABLE_BACKGROUND_LOCATION
 		<string>location</string>
+		#endif
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

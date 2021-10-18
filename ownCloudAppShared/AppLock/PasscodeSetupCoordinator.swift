@@ -17,6 +17,8 @@
 */
 
 import UIKit
+import ownCloudApp
+import LocalAuthentication
 
 public enum PasscodeAction {
 	case setup
@@ -27,7 +29,7 @@ public enum PasscodeAction {
 		switch self {
 		case .setup: return "Enter code".localized
 		case .delete: return "Delete code".localized
-		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockManager.shared.requiredPasscodeDigits)
+		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockSettings.shared.requiredPasscodeDigits)
 		}
 	}
 }
@@ -43,16 +45,16 @@ public class PasscodeSetupCoordinator {
 	private var passcodeFromFirstStep: String?
 	private var completionHandler: PasscodeSetupCompletion?
 	private var minPasscodeDigits: Int {
-		if AppLockManager.shared.requiredPasscodeDigits > 4 {
-			return AppLockManager.shared.requiredPasscodeDigits
+		if AppLockSettings.shared.requiredPasscodeDigits > 4 {
+			return AppLockSettings.shared.requiredPasscodeDigits
 		}
 		return 4
 	}
 	private var maxPasscodeDigits: Int {
-		if AppLockManager.shared.maximumPasscodeDigits < minPasscodeDigits {
+		if AppLockSettings.shared.maximumPasscodeDigits < minPasscodeDigits {
 			return minPasscodeDigits
 		}
-		return AppLockManager.shared.maximumPasscodeDigits
+		return AppLockSettings.shared.maximumPasscodeDigits
 	}
 
 	public class var isPasscodeSecurityEnabled: Bool {
@@ -60,11 +62,11 @@ public class PasscodeSetupCoordinator {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
 			} else {
-				return AppLockManager.shared.lockEnabled
+				return AppLockSettings.shared.lockEnabled
 			}
 		}
 		set(newValue) {
-			AppLockManager.shared.lockEnabled = newValue
+			AppLockSettings.shared.lockEnabled = newValue
 		}
 	}
 	public class var isBiometricalSecurityEnabled: Bool {
@@ -72,11 +74,11 @@ public class PasscodeSetupCoordinator {
 			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
 				return true
 			} else {
-				return AppLockManager.shared.biometricalSecurityEnabled
+				return AppLockSettings.shared.biometricalSecurityEnabled
 			}
 		}
 		set(newValue) {
-			AppLockManager.shared.biometricalSecurityEnabled = newValue
+			AppLockSettings.shared.biometricalSecurityEnabled = newValue
 		}
 	}
 
@@ -90,9 +92,9 @@ public class PasscodeSetupCoordinator {
 		if self.action == .setup, self.minPasscodeDigits < self.maxPasscodeDigits {
 			showDigitsCountSelectionUI()
 		} else {
-			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits
+			var requiredDigits = AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits
 			if self.action == .upgrade {
-				requiredDigits = AppLockManager.shared.requiredPasscodeDigits
+				requiredDigits = AppLockSettings.shared.requiredPasscodeDigits
 			}
 			showPasscodeUI(requiredDigits: requiredDigits)
 		}
@@ -103,7 +105,7 @@ public class PasscodeSetupCoordinator {
 			passcodeViewController.dismiss(animated: true) {
 				self.completionHandler?(true)
 			}
-		}, completionHandler: { (passcodeViewController, passcode) in
+		}, completionHandler: { (_, passcode) in
 			if self.action == .delete {
 				if passcode == AppLockManager.shared.passcode {
 					// Success -> Remove stored passcode and unlock the app
@@ -125,9 +127,7 @@ public class PasscodeSetupCoordinator {
 					if self.passcodeFromFirstStep == passcode {
 						// Confirmed passcode matches the original ones -> save and lock the app
 						self.lock(with: passcode)
-						self.passcodeViewController?.dismiss(animated: true, completion: {
-							self.completionHandler?(false)
-						})
+						self.showSuggestBiometricalUnlockUI()
 					} else {
 						//Passcode is not the same
 						self.updateUI(with: self.action.localizedDescription, errorMessage: "The entered codes are different".localized)
@@ -135,10 +135,10 @@ public class PasscodeSetupCoordinator {
 					self.passcodeFromFirstStep = nil
 				}
 			}
-		}, hasCancelButton: !(AppLockManager.shared.isPasscodeEnforced || self.action == .upgrade), requiredLength: requiredDigits)
+		}, hasCancelButton: !(AppLockSettings.shared.isPasscodeEnforced || self.action == .upgrade), requiredLength: requiredDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
-		if AppLockManager.shared.isPasscodeEnforced {
+		if AppLockSettings.shared.isPasscodeEnforced {
 			passcodeViewController?.errorMessage = "You are required to set the passcode".localized
 		}
 
@@ -152,6 +152,33 @@ public class PasscodeSetupCoordinator {
 		}
 	}
 
+	public func showSuggestBiometricalUnlockUI() {
+		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
+			let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
+
+			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { _ in
+				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true
+				self.passcodeViewController?.dismiss(animated: true, completion: {
+					self.completionHandler?(false)
+				})
+			}))
+
+			alertController.addAction(UIAlertAction(title: "Disable".localized, style: .cancel, handler: { _ in
+				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = false
+				self.passcodeViewController?.dismiss(animated: true, completion: {
+					self.completionHandler?(false)
+				})
+			}))
+
+			self.passcodeViewController?.present(alertController, animated: true, completion: {
+			})
+		} else {
+			self.passcodeViewController?.dismiss(animated: true, completion: {
+				   self.completionHandler?(false)
+			   })
+		}
+	}
+
 	public func showDigitsCountSelectionUI() {
 		let alertController = ThemedAlertController(title: "Passcode option".localized, message: "Please choose how many digits you want to use for the passcode lock?".localized, preferredStyle: .actionSheet)
 
@@ -161,9 +188,11 @@ public class PasscodeSetupCoordinator {
 			popoverController.permittedArrowDirections = []
 		}
 
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
-			self.completionHandler?(true)
-		}))
+		if !AppLockSettings.shared.isPasscodeEnforced {
+			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+				self.completionHandler?(true)
+			}))
+		}
 
 		var digit = self.maxPasscodeDigits
 		while digit >= self.minPasscodeDigits {
@@ -195,7 +224,7 @@ public class PasscodeSetupCoordinator {
 				passcodeViewController.errorMessage = "Incorrect code".localized
 				passcodeViewController.passcode = nil
 			}
-		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockManager.shared.requiredPasscodeDigits)
+		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)
 
 		passcodeViewController?.message = self.action.localizedDescription
 		parentViewController.present(passcodeViewController!, animated: true, completion: nil)

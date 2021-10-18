@@ -7,7 +7,7 @@
  # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
 
-VERSION="1.1.0"
+VERSION="1.2.0"
 
 #Define output formats
 BOLD="$(tput bold)"
@@ -63,6 +63,7 @@ FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/FileProvider.mobileprovision"
 FILEPROVIDERUI_MOBILEPROVISION="$PROVISIONING_DIR/FileProviderUI.mobileprovision"
 INTENT_MOBILEPROVISION="$PROVISIONING_DIR/Intent.mobileprovision"
 SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/ShareExtension.mobileprovision"
+ASSOCIATED_DOMAINS="domains.txt"
 
 declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
 declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
@@ -182,14 +183,33 @@ do
     PlistBuddy -c "Set com.apple.security.application-groups:0 ${APPGROUP}" "${ENTITLEMENTS[$i]}"
     PlistBuddy -c "Set OCAppIdentifierPrefix $APP_ID_PREFIX." "${LOCATIONS[$i]}/Info.plist"
     PlistBuddy -c "Set com.apple.developer.team-identifier ${TEAMID}" "${ENTITLEMENTS[$i]}"
+
     if [[ "${ENTITLEMENTS[$i]}" =~ ^(ownCloud_File_Provider.entitlements)$ ]]; then
 	    PlistBuddy -c "Set NSExtension:NSExtensionFileProviderDocumentGroup $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
-	fi
+	  fi
+
+    if [[ "${ENTITLEMENTS[$i]}" =~ ^(ownCloud.entitlements)$ ]]; then
+        ## Add associated domains
+        if [ ! -z "$ASSOCIATED_DOMAINS" ]; then
+            PlistBuddy -c "Delete com.apple.developer.associated-domains array" "${ENTITLEMENTS[$i]}"
+            PlistBuddy -c "Add com.apple.developer.associated-domains array" "${ENTITLEMENTS[$i]}"
+            let COUNT=0;
+            for DOMAIN in $(cat $ASSOCIATED_DOMAINS)
+            do
+                echo "Adding associated domain: ${INFO}$DOMAIN${NC} into entitlement: ${INFO}${ENTITLEMENTS[$i]}${NC}"
+                PlistBuddy -c "Add com.apple.developer.associated-domains:$COUNT string applinks:$DOMAIN" "${ENTITLEMENTS[$i]}"
+                ((COUNT++))
+                if [[ $COUNT -eq 20 ]]; then
+                    echo "${WARN}Can not add more then 20 associated-domains as per apple guide lines${NC}";
+                    break;
+                fi
+            done
+        fi
+    fi
 
     # Remove old Code Signatures
     rm -rf "${LOCATIONS[$i]}/_CodeSignature"
-
-    echo  ""$APPGROUP
+    echo ""
 done
 
 echo "${SUCCESS}Resign App, Extensions and Frameworks…${NC}"

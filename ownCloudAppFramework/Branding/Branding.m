@@ -207,6 +207,16 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 	return (self);
 }
 
+- (void)registerUserDefaultsDefaults
+{
+	// Register user defaults
+	NSDictionary *userDefaultsDefaults;
+	if ((userDefaultsDefaults = self.userDefaultsDefaultValues) != nil)
+	{
+		[OCAppIdentity.sharedAppIdentity.userDefaults registerDefaults:userDefaultsDefaults];
+	}
+}
+
 - (void)registerLegacyKeyPath:(BrandingLegacyKeyPath)keyPath forClassSettingsKey:(OCClassSettingsKey)classSettingsKey;
 {
 	NSMutableDictionary<OCClassSettingsKey, BrandingLegacyKeyPath> *mutableLegacyKeyPathsByClassSettingsKeys = nil;
@@ -229,6 +239,26 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 - (NSString *)organizationName
 {
 	return ([self computedValueForClassSettingsKey:BrandingKeyOrganizationName]);
+}
+
+- (NSDictionary *)userDefaultsDefaultValues
+{
+	return ([self computedValueForClassSettingsKey:BrandingKeyUserDefaultsDefaultValues]);
+}
+
+- (NSArray<BrandingFileImportMethod> *)disabledImportMethods
+{
+	return ([self computedValueForClassSettingsKey:BrandingKeyDisabledImportMethods]);
+}
+
+- (BOOL)isImportMethodAllowed:(BrandingFileImportMethod)importMethod
+{
+	if ((importMethod != nil) && [self.disabledImportMethods containsObject:importMethod])
+	{
+		return (NO);
+	}
+
+	return (YES);
 }
 
 - (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName
@@ -273,7 +303,17 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 
 	if ((urlString = [self computedValueForClassSettingsKey:settingsKey]) != nil)
 	{
-		if (urlString.length > 0)
+		NSURL *url = nil;
+
+		if ((url = OCTypedCast(urlString, NSURL)) != nil)
+		{
+			// urlString is already an NSURL - return it, unless it is empty
+			if (url.absoluteString.length > 0)
+			{
+				return (url);
+			}
+		}
+		else if (urlString.length > 0)
 		{
 			return ([NSURL URLWithString:urlString]);
 		}
@@ -311,6 +351,27 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 			OCClassSettingsMetadataKeyDescription 	: @"Organization name to use throughout the app.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Branding",
+		},
+
+		// Disabled import methods
+		BrandingKeyDisabledImportMethods : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeStringArray,
+			OCClassSettingsMetadataKeyDescription 	: @"List of disabled import methods that can't be used.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
+			OCClassSettingsMetadataKeyCategory	: @"Branding",
+			OCClassSettingsMetadataKeyPossibleValues : @{
+				BrandingFileImportMethodOpenWith	: @"Disallow import through \"Open with\"",
+				BrandingFileImportMethodShareExtension  : @"Disallow import through the Share Extension",
+				BrandingFileImportMethodFileProvider	: @"Disallow import through the File Provider (Files.app)"
+			}
+		},
+
+		// User Defaults
+		BrandingKeyUserDefaultsDefaultValues : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeDictionary,
+			OCClassSettingsMetadataKeyDescription 	: @"Default values for user defaults. Allows overriding default settings.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+			OCClassSettingsMetadataKeyCategory	: @"Branding"
 		}
 	});
 }
@@ -319,5 +380,11 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierBranding = @"branding";
 
-OCClassSettingsKey BrandingKeyAppName = @"app-name"; 			// Legacy Branding Key: organizationName
-OCClassSettingsKey BrandingKeyOrganizationName = @"organization-name"; 	// Legacy Branding Key: organizationName
+BrandingKey BrandingKeyAppName = @"app-name";
+BrandingKey BrandingKeyOrganizationName = @"organization-name"; 	// Legacy Branding Key: organizationName
+BrandingKey BrandingKeyDisabledImportMethods = @"disabled-import-methods";
+BrandingKey BrandingKeyUserDefaultsDefaultValues = @"user-defaults-default-values";
+
+BrandingFileImportMethod BrandingFileImportMethodOpenWith = @"open-with";
+BrandingFileImportMethod BrandingFileImportMethodShareExtension = @"share-extension";
+BrandingFileImportMethod BrandingFileImportMethodFileProvider = @"file-provider";

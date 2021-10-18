@@ -9,6 +9,7 @@
 import Foundation
 import ownCloudSDK
 import ownCloudMocking
+import ownCloudApp
 import ownCloudAppShared
 
 @testable import ownCloud
@@ -41,9 +42,9 @@ class UtilsTests {
 	
 	static func removePasscode() {
 		AppLockManager.shared.passcode = nil
-		AppLockManager.shared.lockEnabled = false
-		AppLockManager.shared.biometricalSecurityEnabled = false
-		AppLockManager.shared.lockDelay = SecurityAskFrequency.always.rawValue
+		AppLockSettings.shared.lockEnabled = false
+		AppLockSettings.shared.biometricalSecurityEnabled = false
+		AppLockSettings.shared.lockDelay = SecurityAskFrequency.always.rawValue
 		AppLockManager.shared.dismissLockscreen(animated: false)
 	}
 

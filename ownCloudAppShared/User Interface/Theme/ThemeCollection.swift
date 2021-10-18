@@ -38,6 +38,12 @@ public class ThemeColorPairCollection : NSObject {
 		highlighted = ThemeColorPair(foreground: fromPair.foreground, background: fromPair.background.lighter(0.25))
 		disabled = ThemeColorPair(foreground: fromPair.foreground, background: fromPair.background.lighter(0.25))
 	}
+
+	public init(fromPairCollection: ThemeColorPairCollection) {
+		normal = ThemeColorPair(foreground: fromPairCollection.normal.foreground, background: fromPairCollection.normal.background)
+		highlighted = ThemeColorPair(foreground: fromPairCollection.highlighted.foreground, background: fromPairCollection.highlighted.background)
+		disabled = ThemeColorPair(foreground: fromPairCollection.disabled.foreground, background: fromPairCollection.disabled.background)
+	}
 }
 
 public class ThemeColorCollection : NSObject {
@@ -149,6 +155,8 @@ public class ThemeCollection : NSObject {
 
 	// MARK: - Login colors
 	@objc public var loginColors : ThemeColorCollection
+	@objc public var informalColors : ThemeColorCollection
+	@objc public var cancelColors : ThemeColorCollection
 
 	@objc public var favoriteEnabledColor : UIColor?
 	@objc public var favoriteDisabledColor : UIColor?
@@ -182,7 +190,7 @@ public class ThemeCollection : NSObject {
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
 
-		let colors = ThemeColorValueResolver(colorValues: customColors, genericValues: genericColors)
+		let colors = ThemeColorValueResolver(colorValues: customColors, genericValues: genericColors, themeCollectionStyle: style)
 		let styleResolver = ThemeStyleValueResolver(styleValues: interfaceStyles)
 
 		self.darkBrandColors = colors.resolveThemeColorCollection("darkBrandColors", ThemeColorCollection(
@@ -211,7 +219,7 @@ public class ThemeCollection : NSObject {
 		self.approvalColors = colors.resolveThemeColorPairCollection("Fill.approvalColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763))))
 		self.neutralColors = colors.resolveThemeColorPairCollection("Fill.neutralColors", lightBrandColors.filledColorPairCollection)
 		self.purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
-		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale()
+		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale
 		self.destructiveColors = colors.resolveThemeColorPairCollection("Fill.destructiveColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red)))
 
 		self.tintColor = colors.resolveColor("tintColor", self.lightBrandColor)
@@ -378,6 +386,9 @@ public class ThemeCollection : NSObject {
 				logoFillColor = UIColor.lightGray
 		}
 
+		self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
+		self.cancelColors = colors.resolveThemeColorCollection("Cancel", self.lightBrandColors)
+
 		let iconSymbolColor = self.tableRowColors.symbolColor
 
 		self.iconColors = [
@@ -519,9 +530,12 @@ class ThemeColorValueResolver : NSObject {
 	var generic: NSDictionary?
 	var colors: NSDictionary?
 
-	init(colorValues : NSDictionary?, genericValues: NSDictionary?) {
+	var themeCollectionStyle : ThemeCollectionStyle?
+
+	init(colorValues : NSDictionary?, genericValues: NSDictionary?, themeCollectionStyle: ThemeCollectionStyle? = nil) {
 		colors = colorValues
 		generic = genericValues
+		self.themeCollectionStyle = themeCollectionStyle
 	}
 
 	func resolveColor(_ forKeyPath: String, _ fallback : UIColor) -> UIColor {
@@ -567,11 +581,16 @@ class ThemeColorValueResolver : NSObject {
 	}
 
 	func resolveThemeColorPairCollection(_ forKeyPath: String, _ colorPairCollection : ThemeColorPairCollection) -> ThemeColorPairCollection {
-		let newColorPairCollection = colorPairCollection
+		let newColorPairCollection = ThemeColorPairCollection(fromPairCollection: colorPairCollection)
 
-		newColorPairCollection.normal = self.resolveThemeColorPair(forKeyPath.appending(".normal"), colorPairCollection.normal)
-		newColorPairCollection.highlighted = self.resolveThemeColorPair(forKeyPath.appending(".highlighted"), colorPairCollection.highlighted)
-		newColorPairCollection.disabled = self.resolveThemeColorPair(forKeyPath.appending(".disabled"), colorPairCollection.disabled)
+		if let baseForegroundColor = self.resolveColor(forKeyPath.appending(".baseForegroundColor")),
+		   let baseBackgroundColor = self.resolveColor(forKeyPath.appending(".baseBackgroundColor")) {
+			return ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: baseForegroundColor, background: baseBackgroundColor))
+		} else {
+			newColorPairCollection.normal = self.resolveThemeColorPair(forKeyPath.appending(".normal"), colorPairCollection.normal)
+			newColorPairCollection.highlighted = self.resolveThemeColorPair(forKeyPath.appending(".highlighted"), colorPairCollection.highlighted)
+			newColorPairCollection.disabled = self.resolveThemeColorPair(forKeyPath.appending(".disabled"), colorPairCollection.disabled)
+		}
 
 		return newColorPairCollection
 	}
