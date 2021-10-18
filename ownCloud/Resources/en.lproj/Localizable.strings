@@ -609,13 +609,14 @@
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
 "Include available offline files" = "Include available offline files";
-"Delete Local Copies" = "Delete Local Copies";
+"Delete all Offline Files" = "Delete all Offline Files";
 "Manage" = "Manage";
 "Storage" = "Storage";
 "Compacting" = "Compacting";
 
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
 
 /* Diagnostic */
 "Diagnostic Overview" = "Diagnostic Overview";
