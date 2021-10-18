@@ -170,6 +170,12 @@ public extension NSObject {
 					clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
 					clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
 				}
+			} else {
+				if let textField = searchBar.subviews.first?.subviews.last as? UITextField, let backgroundview = textField.subviews.first {
+					backgroundview.backgroundColor = collection.searchBarColors.backgroundColor
+					backgroundview.layer.cornerRadius = 10
+					backgroundview.clipsToBounds = true
+				}
 			}
 		}
 
