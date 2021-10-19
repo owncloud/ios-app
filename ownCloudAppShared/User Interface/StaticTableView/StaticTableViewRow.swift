@@ -54,6 +54,7 @@ public enum StaticTableViewRowActionType {
 
 public enum StaticTableViewRowMessageStyle {
 	case plain
+	case text
 	case warning
 	case alert
 	case confirmation
@@ -606,6 +607,11 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				case .plain:
 					textColor = themeCollection.tableRowColors.tintColor
 					tintColor = textColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+				case .text:
+					textColor = themeCollection.tableRowColors.labelColor
+					tintColor = themeCollection.tableRowColors.labelColor
 					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case .confirmation:
