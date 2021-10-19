@@ -50,7 +50,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.tableView.separatorStyle = .none
+
 		if profile.canConfigureURL {
+			self.urlString = profile.url?.absoluteString
 			self.addSection(urlSection())
 			if OCBookmarkManager.shared.bookmarks.count == 0, profile.isOnboardingEnabled {
 				self.addSection(onboardingSection())
@@ -124,7 +127,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let value = row.value as? String {
 				self?.username = value
 			}
-			}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
+		}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username", borderStyle: .roundedRect))
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, type) in
 			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
@@ -136,7 +139,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if type == .didReturn, let value = row.value as? String, value.count > 0 {
 				self?.startAuthentication(nil)
 			}
-			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
+			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password", borderStyle: .roundedRect)
 		if let passwordRow = passwordRow {
 			loginMaskSection.add(row: passwordRow)
 		}
@@ -307,7 +310,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		guard self.bookmark != nil else {
 			let alertController = ThemedAlertController(title: "Missing Profile URL".localized, message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.".localized, profile.name ?? ""), preferredStyle: .alert)
 
-			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { _ in
+				self.popViewController()
+			}))
 
 			self.loginViewController?.present(alertController, animated: true, completion: nil)
 			return

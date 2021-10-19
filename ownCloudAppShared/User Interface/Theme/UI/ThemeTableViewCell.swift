@@ -138,7 +138,7 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 
 				switch messageStyle {
 					case .plain:
-						textColor = collection.tintColor
+						textColor = collection.tableRowColors.labelColor
 						backgroundColor = collection.tableRowColors.backgroundColor
 
 					case .confirmation:

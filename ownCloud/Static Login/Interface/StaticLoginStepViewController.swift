@@ -67,11 +67,27 @@ class FullWidthHeaderView : ThemeView {
 }
 
 extension StaticTableViewSection {
-	static func buildHeader(title: String, message: String? = nil, cellSpacing: CGFloat = 20, topSpacing : CGFloat = 30, bottomSpacing : CGFloat = 20 ) -> UIView {
+	static func buildHeader(title: String, message: String? = nil, image: UIImage? = nil, cellSpacing: CGFloat = 20, topSpacing: CGFloat = 30, bottomSpacing: CGFloat = 20, imageWidth: CGFloat = 100) -> UIView {
 		let horizontalPadding: CGFloat = 0
 
 		let headerView = FullWidthHeaderView()
 		headerView.translatesAutoresizingMaskIntoConstraints = false
+
+		let imageView = UIImageView()
+		if let image = image {
+			imageView.image = image
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+			imageView.contentMode = .scaleAspectFit
+
+			headerView.addSubview(imageView)
+
+			NSLayoutConstraint.activate([
+				imageView.centerXAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.centerXAnchor),
+				imageView.widthAnchor.constraint(equalToConstant: imageWidth),
+				imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
+				imageView.topAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.topAnchor, constant: topSpacing)
+		 ])
+		}
 
 		let titleLabel = UILabel()
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -83,18 +99,28 @@ extension StaticTableViewSection {
 		headerView.addSubview(titleLabel)
 
 		headerView.addThemeApplier({ (_, collection, _) in
-			titleLabel.applyThemeCollection(collection, itemStyle: .welcomeTitle)
+			if VendorServices.shared.isBranded {
+				titleLabel.applyThemeCollection(collection, itemStyle: .welcomeTitle)
+			} else {
+				titleLabel.applyThemeCollection(collection, itemStyle: .logo)
+				imageView.image = imageView.image?.tinted(with: collection.navigationBarColors.labelColor)
+			}
 		})
 		titleLabel.textColor = .red
 
 		titleLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.5, weight: .bold)
+
+		var layoutAnchor = headerView.safeAreaLayoutGuide.topAnchor
+		if image != nil {
+			layoutAnchor = imageView.bottomAnchor
+		}
 
 		NSLayoutConstraint.activate([
 			titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: headerView.safeAreaLayoutGuide.leftAnchor, constant: horizontalPadding),
 			titleLabel.rightAnchor.constraint(lessThanOrEqualTo: headerView.safeAreaLayoutGuide.rightAnchor, constant: -horizontalPadding),
 			titleLabel.centerXAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.centerXAnchor),
 
-			titleLabel.topAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.topAnchor, constant: topSpacing)
+			titleLabel.topAnchor.constraint(equalTo: layoutAnchor, constant: topSpacing)
 		])
 
 		if message != nil {

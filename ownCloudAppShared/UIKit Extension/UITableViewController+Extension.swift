@@ -19,6 +19,7 @@
 import UIKit
 
 public extension UITableViewController {
+
 	func addThemableBackgroundView() {
 		// UITableView background view is nil for default. Set a UIView with clear color to can insert a subview above
 		let backgroundView = UIView.init(frame: self.tableView.frame)
@@ -37,5 +38,53 @@ public extension UITableViewController {
 			coloredView.widthAnchor.constraint(equalTo: self.tableView.widthAnchor),
 			coloredView.heightAnchor.constraint(equalToConstant: self.view.frame.size.height + 1)
 			])
+	}
+
+	func colorSection(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath, borderColor: UIColor?) {
+		let cornerRadius: CGFloat = 10.0
+		let layer: CAShapeLayer = CAShapeLayer()
+		let pathRef: CGMutablePath = CGMutablePath()
+
+		let bounds: CGRect = cell.bounds.insetBy(dx: 0, dy: 0)
+
+		if indexPath.row == 0 && indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+			pathRef.__addRoundedRect(transform: nil, rect: bounds, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+		} else if indexPath.row == 0 {
+			pathRef.move(to: CGPoint(x: bounds.minX, y: bounds.maxY))
+			pathRef.addArc(tangent1End: CGPoint(x: bounds.minX, y: bounds.minY),
+						   tangent2End: CGPoint(x: bounds.midX, y: bounds.minY),
+						   radius: cornerRadius)
+
+			pathRef.addArc(tangent1End: CGPoint(x: bounds.maxX, y: bounds.minY),
+						   tangent2End: CGPoint(x: bounds.maxX, y: bounds.midY),
+						   radius: cornerRadius)
+			pathRef.addLine(to: CGPoint(x: bounds.maxX, y: bounds.maxY))
+		} else if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+			pathRef.move(to: CGPoint(x: bounds.minX, y: bounds.minY))
+			pathRef.addArc(tangent1End: CGPoint(x: bounds.minX, y: bounds.maxY),
+						   tangent2End: CGPoint(x: bounds.midX, y: bounds.maxY),
+						   radius: cornerRadius)
+
+			pathRef.addArc(tangent1End: CGPoint(x: bounds.maxX, y: bounds.maxY),
+						   tangent2End: CGPoint(x: bounds.maxX, y: bounds.midY),
+						   radius: cornerRadius)
+			pathRef.addLine(to: CGPoint(x: bounds.maxX, y: bounds.minY))
+		} else {
+			pathRef.move(to: CGPoint(x: bounds.minX, y: bounds.minY))
+			pathRef.addLine(to: CGPoint(x: bounds.minX, y: bounds.maxY))
+
+			pathRef.move(to: CGPoint(x: bounds.maxX, y: bounds.maxY))
+			pathRef.addLine(to: CGPoint(x: bounds.maxX, y: bounds.minY))
+		}
+
+		layer.path = pathRef
+		layer.strokeColor = borderColor?.cgColor ?? UIColor.lightGray.cgColor
+		layer.lineWidth = 1.0
+		layer.fillColor =  UIColor.clear.cgColor
+
+		let backgroundView: UIView = UIView(frame: bounds)
+		backgroundView.layer.insertSublayer(layer, at: 0)
+		backgroundView.backgroundColor = .clear
+		cell.backgroundView = backgroundView
 	}
 }

@@ -309,7 +309,8 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 	func buildBookmarkSelector() -> UIViewController {
 		var serverList : ServerListTableViewController?
 
-		if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
+		if OCBookmarkManager.shared.bookmarks.count > 1 {
+		//if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
 			if #available(iOS 13.0, *) {
 				serverList = StaticLoginServerListViewController(style: .insetGrouped)
 			} else {
