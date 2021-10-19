@@ -991,3 +991,37 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 extension NSNotification.Name {
 	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
 }
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let account = OCClassSettingsIdentifier("account")
+}
+
+extension OCClassSettingsKey {
+	static let accountAutoConnect = OCClassSettingsKey("auto-connect")
+}
+
+extension ServerListTableViewController : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .account
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .account {
+			return [
+				.accountAutoConnect : false
+			]
+		}
+
+		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.accountAutoConnect : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Skip \"Account\" screen / automatically open \"Files\" screen after login",
+				.category	: "Account",
+				.status		: OCClassSettingsKeyStatus.supported
+			]
+		]
+	}
+}
