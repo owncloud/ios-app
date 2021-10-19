@@ -51,6 +51,7 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 @property(assign,nonatomic,readonly) BOOL brandingPropertiesFromLocalFile;
 
 @property(strong,nullable,nonatomic,readonly) NSString *appName; //!< Custom app name
+@property(strong,nonatomic,readonly) NSString *appDisplayName; //!< Branded app name, drawing from .appName, .organizationName and OCAppIdentity, with "ownCloud" as fallback
 @property(strong,nullable,nonatomic,readonly) NSString *organizationName; //!< Custom organization name
 @property(strong,nullable,nonatomic,readonly) NSArray<BrandingFileImportMethod> *disabledImportMethods; //!< Disabled file import methods
 
