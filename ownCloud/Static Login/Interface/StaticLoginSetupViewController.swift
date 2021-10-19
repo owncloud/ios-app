@@ -31,6 +31,8 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	private var password : String?
 	private var passwordRow : StaticTableViewRow?
 	private var isAuthenticating = false
+	private var retryTimeout : Date?
+	private var retryInterval : TimeInterval = 10
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
@@ -460,27 +462,37 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			var proceed : Bool = true
 
 			if let issue = connectionIssue {
-				proceed = self.show(issue: issue, proceed: { () in
+				if self.retryTimeout == nil {
+					self.retryTimeout = Date().addingTimeInterval(self.retryInterval)
+				}
+				if let retryDate = self.retryTimeout, Date() < retryDate {
+					proceed = false
 					OnMainThread {
-						if isInitialRequest {
-							self.determineSupportedAuthMethod(false)
-						}
+						self.determineSupportedAuthMethod(false)
 					}
-				}, cancel: { () in
-					OnMainThread {
-						if self.profile.canConfigureURL {
-							if let busySection = self.busySection, busySection.attached {
-								self.removeSection(busySection)
+				} else {
+					proceed = self.show(issue: issue, proceed: { () in
+						OnMainThread {
+							if isInitialRequest {
+								self.determineSupportedAuthMethod(false)
 							}
-							self.addSection(self.urlSection())
-							if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {
-								self.addSection(self.onboardingSection())
-							}
-						} else {
-							self.cancel(nil)
 						}
-					}
-				})
+					}, cancel: { () in
+						OnMainThread {
+							if self.profile.canConfigureURL {
+								if let busySection = self.busySection, busySection.attached {
+									self.removeSection(busySection)
+								}
+								self.addSection(self.urlSection())
+								if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {
+									self.addSection(self.onboardingSection())
+								}
+							} else {
+								self.cancel(nil)
+							}
+						}
+					})
+				}
 			}
 
 			if proceed {
