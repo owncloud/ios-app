@@ -271,7 +271,7 @@
 "Advanced settings" = "Avanserte innstillinger";
 "Show hidden files and folders" = "Show hidden files and folders";
 "Show folders at the top" = "Show folders at the top";
-"Prevent gestures" = "Prevent gestures";
+"Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
 /* Advanced settings */
