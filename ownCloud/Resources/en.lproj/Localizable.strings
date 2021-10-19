@@ -69,7 +69,7 @@
 "Edit Login" = "Edit Login";
 "Manage Storage" = "Manage Storage";
 "Access Files" = "Access Files";
-"Logout" = "Logout";
+"Log out" = "Log out";
 
 /* Bookmark Info */
 "Bookmark Metadata" = "Bookmark Metadata";
@@ -187,7 +187,7 @@
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Really delete '%@'?";
-"Really logout from '%@'?" = "Really logout from '%@'?";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Remove" = "Remove";
