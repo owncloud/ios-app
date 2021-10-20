@@ -163,7 +163,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first {
 				let displayName = bookmark.displayName ?? bookmark.userName
 				if let displayName = displayName {
-					let headerText = String(format: "You are connected as\n%@".localized, userName)
+					let headerText = String(format: "You are connected as\n%@".localized, displayName)
 				 headerView = StaticTableViewSection.buildHeader(title: headerText)
 				}
 			}
