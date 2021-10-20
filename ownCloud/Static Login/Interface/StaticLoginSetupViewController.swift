@@ -578,7 +578,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 							self.removeSection(busySection)
 						}
 						self.retrySection = self.retrySection(issues: displayIssues)
-						if let retrySection = self.retrySection {
+						if let retrySection = self.retrySection, issue.error?.isNetworkConnectionError == true {
 							self.addSection(retrySection)
 						}
 
