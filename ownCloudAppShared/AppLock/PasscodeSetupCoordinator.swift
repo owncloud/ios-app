@@ -154,8 +154,7 @@ public class PasscodeSetupCoordinator {
 
 	public func showSuggestBiometricalUnlockUI() {
 		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			if AppLockSettings.shared.useBiometricalUnlock {
-				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true
+			if AppLockSettings.shared.biometricalSecurityEnabled {
 				self.passcodeViewController?.dismiss(animated: true, completion: {
 					self.completionHandler?(false)
 				})

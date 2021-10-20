@@ -54,7 +54,7 @@
 		OCClassSettingsKeyPasscodeEnforced : @(NO),
 		OCClassSettingsKeyRequiredPasscodeDigits : @(4),
 		OCClassSettingsKeyMaximumPasscodeDigits : @(6),
-		OCClassSettingsKeyPasscodeBiometricalUnlock : @(NO)
+		OCClassSettingsKeyPasscodeUseBiometricalUnlock : @(NO)
 	});
 }
 
@@ -89,7 +89,7 @@
 			OCClassSettingsMetadataKeyCategory	: @"Passcode"
 		},
 
-		OCClassSettingsKeyPasscodeBiometricalUnlock : @{
+		OCClassSettingsKeyPasscodeUseBiometricalUnlock : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
 			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the biometrical unlock will be enabled automatically.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
@@ -128,7 +128,14 @@
 
 - (BOOL)biometricalSecurityEnabled
 {
-	return ([_userDefaults boolForKey:@"security-settings-use-biometrical"]);
+	NSNumber *useBiometricalUnlock = [self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeUseBiometricalUnlock];
+
+	if (useBiometricalUnlock == nil)
+	{
+		useBiometricalUnlock = [_userDefaults objectForKey:@"security-settings-use-biometrical"];
+	}
+
+	return (useBiometricalUnlock.boolValue);
 }
 
 - (void)setBiometricalSecurityEnabled:(BOOL)biometricalSecurityEnabled
@@ -174,17 +181,6 @@
 	return ([self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeLockDelay] == nil);
 }
 
-- (BOOL)useBiometricalUnlock
-{
-	NSNumber *useBiometricalUnlock = [self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeBiometricalUnlock];
-
-	if (useBiometricalUnlock != nil) {
-		return (useBiometricalUnlock.boolValue);
-	}
-
-	return (NO);
-}
-
 @end
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierPasscode = @"passcode";
@@ -193,4 +189,4 @@ OCClassSettingsKey OCClassSettingsKeyPasscodeEnforced = @"enforced";
 OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits = @"requiredPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits = @"maximumPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay = @"lockDelay";
-OCClassSettingsKey OCClassSettingsKeyPasscodeBiometricalUnlock = @"biometrical-unlock";
+OCClassSettingsKey OCClassSettingsKeyPasscodeUseBiometricalUnlock = @"use-biometrical-unlock";
