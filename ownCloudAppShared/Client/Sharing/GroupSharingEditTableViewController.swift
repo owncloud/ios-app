@@ -306,7 +306,7 @@ open class GroupSharingEditTableViewController: StaticTableViewController {
 			footer = String(format: "Invited: %@".localized, dateFormatter.string(from: date))
 		}
 
-		let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer)
+		let section = StaticTableViewSection(headerTitle: "", footerTitle: footer)
 		section.add(rows: [
 			StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)

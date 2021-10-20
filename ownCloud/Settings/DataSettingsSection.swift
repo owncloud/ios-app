@@ -28,7 +28,7 @@ class DataSettingsSection: SettingsSection {
 
 		cellularRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushCellularSettings()
-		}, title: "Cellular transfers".localized, value: self.cellularSummary, accessoryType: .disclosureIndicator, identifier: "storage-use-cellular")
+		}, title: "Cellular Data Usage".localized, value: self.cellularSummary, accessoryType: .disclosureIndicator, identifier: "storage-use-cellular")
 
 		self.add(row: cellularRow!)
 

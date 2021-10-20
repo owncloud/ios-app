@@ -257,9 +257,9 @@
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
 
-"Cellular transfers" = "Cellular transfers";
+"Cellular Data Usage" = "Cellular Data Usage";
 "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
-"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.";
 "General" = "Hlavní";
 "By feature" = "By feature";
 
@@ -270,7 +270,7 @@
 "Advanced settings" = "Pokročilá nastavení";
 "Show hidden files and folders" = "Show hidden files and folders";
 "Show folders at the top" = "Show folders at the top";
-"Prevent gestures" = "Prevent gestures";
+"Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
 /* Advanced settings */
@@ -541,7 +541,7 @@
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
 "Include available offline files" = "Include available offline files";
-"Delete Local Copies" = "Delete Local Copies";
+"Delete all Offline Files" = "Delete all Offline Files";
 "Manage" = "Manage";
 "Storage" = "Úložiště";
 "Compacting" = "Compacting";

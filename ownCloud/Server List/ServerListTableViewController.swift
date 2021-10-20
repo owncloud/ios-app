@@ -454,9 +454,9 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		var destructiveTitle = "Delete".localized
 		var failureTitle = "Deletion of '%@' failed".localized
 		if VendorServices.shared.isBranded {
-			alertTitle = "Really logout from '%@'?".localized
-			destructiveTitle = "Logout".localized
-			failureTitle = "Logout of '%@' failed".localized
+			alertTitle = "Do you want to log out from '%@'?".localized
+			destructiveTitle = "Log out".localized
+			failureTitle = "Log out of '%@' failed".localized
 		}
 
 		let alertController = ThemedAlertController(title: NSString(format: alertTitle as NSString, bookmark.shortName) as String,
@@ -734,7 +734,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
-			destructiveTitle = "Logout".localized
+			destructiveTitle = "Log out".localized
 		}
 		let delete = UIAction(title: destructiveTitle, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
 			self.delete(bookmark: bookmark, at: indexPath ) {
@@ -796,7 +796,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
-			destructiveTitle = "Logout".localized
+			destructiveTitle = "Log out".localized
 		}
 
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
