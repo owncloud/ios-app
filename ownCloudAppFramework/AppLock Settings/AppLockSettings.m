@@ -53,7 +53,8 @@
 	return (@{
 		OCClassSettingsKeyPasscodeEnforced : @(NO),
 		OCClassSettingsKeyRequiredPasscodeDigits : @(4),
-		OCClassSettingsKeyMaximumPasscodeDigits : @(6)
+		OCClassSettingsKeyMaximumPasscodeDigits : @(6),
+		OCClassSettingsKeyPasscodeBiometricalUnlock : @(NO)
 	});
 }
 
@@ -84,6 +85,13 @@
 		OCClassSettingsKeyPasscodeLockDelay : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeInteger,
 			OCClassSettingsMetadataKeyDescription 	: @"Number of seconds before the lock snaps and the passcode is requested again.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+			OCClassSettingsMetadataKeyCategory	: @"Passcode"
+		},
+
+		OCClassSettingsKeyPasscodeBiometricalUnlock : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the biometrical unlock will be enabled automatically.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
 			OCClassSettingsMetadataKeyCategory	: @"Passcode"
 		}
@@ -166,6 +174,17 @@
 	return ([self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeLockDelay] == nil);
 }
 
+- (BOOL)useBiometricalUnlock
+{
+	NSNumber *useBiometricalUnlock = [self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeBiometricalUnlock];
+
+	if (useBiometricalUnlock != nil) {
+		return (useBiometricalUnlock.boolValue);
+	}
+
+	return (NO);
+}
+
 @end
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierPasscode = @"passcode";
@@ -174,3 +193,4 @@ OCClassSettingsKey OCClassSettingsKeyPasscodeEnforced = @"enforced";
 OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits = @"requiredPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits = @"maximumPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay = @"lockDelay";
+OCClassSettingsKey OCClassSettingsKeyPasscodeBiometricalUnlock = @"biometrical-unlock";
