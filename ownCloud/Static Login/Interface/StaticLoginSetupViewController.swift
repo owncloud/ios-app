@@ -387,7 +387,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 							OCBookmarkManager.shared.addBookmark(bookmark)
 
 							self.loginViewController?.showFirstScreen()
-							//self.pushSuccessViewController()
+							if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false {
+								self.loginViewController?.openBookmark(bookmark)
+							}
 						} else {
 							var issue : OCIssue?
 							let nsError = error as NSError?
