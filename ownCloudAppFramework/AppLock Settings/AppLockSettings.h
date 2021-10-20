@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(readonly,nonatomic) NSInteger requiredPasscodeDigits;
 @property(readonly,nonatomic) NSInteger maximumPasscodeDigits;
 @property(readonly,nonatomic) BOOL lockDelayUserSettable;
+@property(readonly,nonatomic) BOOL useBiometricalUnlock;
 
 @end
 
@@ -45,5 +46,6 @@ extern OCClassSettingsKey OCClassSettingsKeyPasscodeEnforced;
 extern OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay;
+extern OCClassSettingsKey OCClassSettingsKeyPasscodeBiometricalUnlock;
 
 NS_ASSUME_NONNULL_END
