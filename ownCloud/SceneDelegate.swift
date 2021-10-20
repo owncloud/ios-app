@@ -60,7 +60,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			} else {
 				configure(window: window, with: userActivity)
 			}
-		} else if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false, let bookmark = OCBookmarkManager.shared.bookmark(at: 0) {
+		} else if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false, let bookmark = OCBookmarkManager.shared.bookmarks.first {
 			connect(to: bookmark)
 		}
 	}
