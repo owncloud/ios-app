@@ -128,14 +128,14 @@
 
 - (BOOL)biometricalSecurityEnabled
 {
-	NSNumber *useBiometricalUnlock = [self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeUseBiometricalUnlock];
+	NSNumber *useBiometricalUnlock;
 
-	if (useBiometricalUnlock == nil)
+	if ((useBiometricalUnlock = [_userDefaults objectForKey:@"security-settings-use-biometrical"]) != nil)
 	{
-		useBiometricalUnlock = [_userDefaults objectForKey:@"security-settings-use-biometrical"];
+		return (useBiometricalUnlock.boolValue);
 	}
 
-	return (useBiometricalUnlock.boolValue);
+	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeUseBiometricalUnlock] boolValue]);
 }
 
 - (void)setBiometricalSecurityEnabled:(BOOL)biometricalSecurityEnabled
