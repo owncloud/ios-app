@@ -41,6 +41,12 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		staticLoginViewController?.navigationController?.setNeedsStatusBarAppearanceUpdate()
+	}
+
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
