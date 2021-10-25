@@ -32,7 +32,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	private var passwordRow : StaticTableViewRow?
 	private var isAuthenticating = false
 	private var retryTimeout : Date?
-	private var retryInterval : TimeInterval = 10
+	private let retryInterval : TimeInterval = 30
+	private var retries : Int = 0
+	private let numberOfRetries : Int = 3
+	private let busySectionMessageLabel : UILabel = UILabel()
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
@@ -194,23 +197,22 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 		let containerView : FullWidthHeaderView = FullWidthHeaderView()
 		let centerView : UIView = UIView()
-		let messageLabel : UILabel = UILabel()
 
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 		centerView.translatesAutoresizingMaskIntoConstraints = false
-		messageLabel.translatesAutoresizingMaskIntoConstraints = false
+		busySectionMessageLabel.translatesAutoresizingMaskIntoConstraints = false
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 
 		centerView.addSubview(activityIndicator)
-		centerView.addSubview(messageLabel)
+		centerView.addSubview(busySectionMessageLabel)
 
 		containerView.addSubview(centerView)
 
 		containerView.addThemeApplier({ (_, collection, _) in
-			messageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
+			self.busySectionMessageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
 		})
 
-		messageLabel.text = message
+		busySectionMessageLabel.text = message
 
 		NSLayoutConstraint.activate([
 			activityIndicator.widthAnchor.constraint(equalToConstant: 30),
@@ -219,9 +221,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			activityIndicator.topAnchor.constraint(equalTo: centerView.topAnchor),
 			activityIndicator.bottomAnchor.constraint(equalTo: centerView.bottomAnchor),
 
-			messageLabel.centerYAnchor.constraint(equalTo: centerView.centerYAnchor),
-			messageLabel.leftAnchor.constraint(equalTo: activityIndicator.rightAnchor, constant: 20),
-			messageLabel.rightAnchor.constraint(equalTo: centerView.rightAnchor),
+			busySectionMessageLabel.centerYAnchor.constraint(equalTo: centerView.centerYAnchor),
+			busySectionMessageLabel.leftAnchor.constraint(equalTo: activityIndicator.rightAnchor, constant: 20),
+			busySectionMessageLabel.rightAnchor.constraint(equalTo: centerView.rightAnchor),
 
 			centerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 40),
 			centerView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
@@ -472,9 +474,11 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				if self.retryTimeout == nil {
 					self.retryTimeout = Date().addingTimeInterval(self.retryInterval)
 				}
-				if let retryDate = self.retryTimeout, Date() < retryDate, issue.error?.isNetworkConnectionError == true {
+				if let retryDate = self.retryTimeout, ((Date() < retryDate) || self.retries <= self.numberOfRetries), issue.error?.isNetworkConnectionError == true {
+					self.retries += 1
 					proceed = false
 					OnMainThread {
+						self.busySectionMessageLabel.text = String(format: "%@ (%ld)", "Contacting server…".localized, self.retries)
 						self.determineSupportedAuthMethod(false)
 					}
 				} else {
