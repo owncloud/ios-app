@@ -22,6 +22,16 @@ open class ThemeNavigationController: UINavigationController {
 	private var themeToken : ThemeApplierToken?
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
+		if let object = self.viewControllers.last {
+			let loginController = ["StaticLoginViewController", "StaticLoginSingleAccountServerListViewController"]
+
+			if self.presentedViewController == nil, loginController.contains(String(describing: type(of: object))) {
+				return Theme.shared.activeCollection.loginStatusBarStyle
+			} else {
+				return Theme.shared.activeCollection.statusBarStyle
+			}
+		}
+
 		return Theme.shared.activeCollection.statusBarStyle
 	}
 

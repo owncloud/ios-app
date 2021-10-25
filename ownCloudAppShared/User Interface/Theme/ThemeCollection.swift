@@ -138,6 +138,7 @@ public class ThemeCollection : NSObject {
 	@objc public var navigationBarColors : ThemeColorCollection
 	@objc public var toolbarColors : ThemeColorCollection
 	@objc public var statusBarStyle : UIStatusBarStyle
+	@objc public var loginStatusBarStyle : UIStatusBarStyle
 	@objc public var barStyle : UIBarStyle
 
 	// MARK: - SearchBar
@@ -309,7 +310,8 @@ public class ThemeCollection : NSObject {
 				))
 
 				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
+				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
@@ -345,10 +347,11 @@ public class ThemeCollection : NSObject {
 
 				// Bar styles
 				if #available(iOS 13, *) {
-					self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .darkContent)
+					self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .darkContent)
 				} else {
-					self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .default)
+					self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .default)
 				}
+				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
 
 				// Progress
@@ -389,7 +392,8 @@ public class ThemeCollection : NSObject {
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
+				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
@@ -435,8 +439,8 @@ class ThemeStyleValueResolver : NSObject {
 		styles = styleValues
 	}
 
-	func resolveStatusBarStyle(fallback: UIStatusBarStyle) -> UIStatusBarStyle {
-		if let styleValue = styles?.value(forKeyPath: "statusBarStyle") as? String {
+	func resolveStatusBarStyle(for key: String, fallback: UIStatusBarStyle) -> UIStatusBarStyle {
+		if let styleValue = styles?.value(forKeyPath: key) as? String {
 			switch styleValue {
 			case "default":
 				return .default

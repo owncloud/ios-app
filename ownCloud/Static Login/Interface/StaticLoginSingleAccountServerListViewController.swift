@@ -103,6 +103,12 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		staticLoginViewController?.navigationController?.setNeedsStatusBarAppearanceUpdate()
+	}
+
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return SingleAccountSection.allCases.count
 	}
