@@ -467,7 +467,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				if self.retryTimeout == nil {
 					self.retryTimeout = Date().addingTimeInterval(self.retryInterval)
 				}
-				if let retryDate = self.retryTimeout, self.retries <= self.numberOfRetries, Date() < retryDate, issue.error?.isNetworkConnectionError == true {
+				if let retryDate = self.retryTimeout, ((Date() < retryDate) || self.retries <= self.numberOfRetries), issue.error?.isNetworkConnectionError == true {
 					self.retries += 1
 					proceed = false
 					OnMainThread {
