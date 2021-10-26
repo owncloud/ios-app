@@ -474,7 +474,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				if self.retryTimeout == nil {
 					self.retryTimeout = Date().addingTimeInterval(self.retryInterval)
 				}
-				if let retryDate = self.retryTimeout, ((Date() < retryDate) || self.retries <= self.numberOfRetries), issue.error?.isNetworkConnectionError == true {
+				if let retryDate = self.retryTimeout, ((Date() < retryDate) || self.retries <= self.numberOfRetries), issue.issues?.first?.error?.isNetworkConnectionError == true {
 					self.retries += 1
 					proceed = false
 					OnMainThread {
@@ -584,7 +584,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 							self.removeSection(busySection)
 						}
 						self.retrySection = self.retrySection(issues: displayIssues)
-						if let retrySection = self.retrySection, issue.error?.isNetworkConnectionError == true {
+						if let retrySection = self.retrySection, issue.issues?.first?.error?.isNetworkConnectionError == true {
 							self.addSection(retrySection)
 						}
 
