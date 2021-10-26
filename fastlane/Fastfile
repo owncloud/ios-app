@@ -487,13 +487,13 @@ end
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
-    
+
     # Special handling for app build flag DISABLE_BACKGROUND_LOCATION needed:
     # calls to set_info_plist_value before building with xcodebuild
     # strip preprocessor instructions from Info.plist, so that the
     # Location keys they aim to remove stay in place. Working around this
     # by removing anything between "#ifndef DISABLE_BACKGROUND_LOCATION"
-    # and "#endif" via sed 
+    # and "#endif" via sed
     if appBuildFlags.include? "DISABLE_BACKGROUND_LOCATION"
         sh "sed '/#ifndef DISABLE_BACKGROUND_LOCATION/,/#endif/d' ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod"
         sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
@@ -501,6 +501,20 @@ end
 
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
+
+    if File.exist?("../" + themePath)
+        tmpCustomAppVersionNumber = get_info_plist_value(path: themePath, key: "app.version-number")
+        if tmpCustomAppVersionNumber && !tmpCustomAppVersionNumber.empty?
+          customAppVersionNumber = tmpCustomAppVersionNumber
+
+          puts "Set Version Number from Branding.plist: " + customAppVersionNumber
+          set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+        end
+    end
 
     if !values[:BUILD_NUMBER].nil?
       puts "Set Drone Build Number: " + BUILD_NUMBER
@@ -704,6 +718,9 @@ end
     elsif
       time = Time.now
       ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
+      if !customAppVersionNumber.nil?
+        version = customAppVersionNumber
+      end
       if !values[:BUILD_NUMBER].nil?
         version += "." + BUILD_NUMBER
       end
