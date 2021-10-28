@@ -478,7 +478,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					self.retries += 1
 					proceed = false
 					OnMainThread {
-						self.busySectionMessageLabel.text = String(format: "%@ (%ld)", "Contacting server…".localized, self.retries)
+						Log.warning(String(format: "%@ (%ld)", "Contacting server…".localized, self.retries))
 						self.determineSupportedAuthMethod(false)
 					}
 				} else {
