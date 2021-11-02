@@ -54,6 +54,7 @@ public enum StaticTableViewRowActionType {
 
 public enum StaticTableViewRowMessageStyle {
 	case plain
+	case text
 	case warning
 	case alert
 	case confirmation
@@ -606,6 +607,11 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 					tintColor = textColor
 					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
+				case .text:
+					textColor = themeCollection.tableRowColors.labelColor
+					tintColor = themeCollection.tableRowColors.labelColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
+
 				case .confirmation:
 					textColor = themeCollection.approvalColors.normal.foreground
 					tintColor = textColor
@@ -719,6 +725,18 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		self.cell = ThemeTableViewCell(withLabelColorUpdates: false)
+
+		if alignment == .center, let cell = self.cell, let textLabel = cell.textLabel {
+			textLabel.translatesAutoresizingMaskIntoConstraints = false
+
+			NSLayoutConstraint.activate([
+				textLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 0),
+				textLabel.heightAnchor.constraint(equalToConstant: 44.0),
+				textLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 15),
+				textLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -15)
+			])
+		}
+
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.imageView?.image = image

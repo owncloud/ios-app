@@ -315,6 +315,7 @@
 		DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */; };
 		DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */; };
+		DC3F4522271A23A000ED2383 /* AcknowledgementsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */; };
 		DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC4331FF2472E1B4002DC0E5 /* OCLicenseEMMProvider.m */; };
 		DC44343E21ABFA5200376B16 /* StaticLoginProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44343D21ABFA5200376B16 /* StaticLoginProfile.swift */; };
@@ -1265,6 +1266,7 @@
 		DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadItemsHUDViewController.swift; sourceTree = "<group>"; };
 		DC3DEC7C22AFFE8E00F3352D /* KVOWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOWaiter.swift; sourceTree = "<group>"; };
 		DC3DEC7F22B03AE700F3352D /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
+		DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsTableViewController.swift; sourceTree = "<group>"; };
 		DC422449207CAFAA0006A2A6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollection.swift; sourceTree = "<group>"; };
 		DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ThemeApplication.swift"; sourceTree = "<group>"; };
@@ -3043,6 +3045,7 @@
 				025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */,
 				02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */,
 				025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */,
+				DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -4060,6 +4063,7 @@
 				397E276C23D05A5400117B07 /* ServerListToolCell.swift in Sources */,
 				DCC8535823CE1236007BA3EB /* LicenseInAppProductListViewController.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
+				DC3F4522271A23A000ED2383 /* AcknowledgementsTableViewController.swift in Sources */,
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
 				025FC7272478123E009307A7 /* MediaExportSettingsSection.swift in Sources */,
 				39B394492385334D00892E8D /* ThemeView.swift in Sources */,
