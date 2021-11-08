@@ -49,9 +49,9 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 	@objc private func reconsiderSections() {
 		OnMainThread {
-			guard let proSettingsSection = self.proPhotoSettingsSection else { return }
+			guard let proSettingsSection = self.proPhotoSettingsSection, let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-			if OCBookmarkManager.shared.bookmarks.count > 0, let userDefaults = OCAppIdentity.shared.userDefaults {
+			if OCBookmarkManager.shared.bookmarks.count > 0 {
 				if self.autoUploadSection == nil {
 					self.autoUploadSection = AutoUploadSettingsSection(userDefaults: userDefaults)
 
@@ -73,7 +73,7 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 						} else {
 							self.addSection(backgroundUploadsSection)
 						}
-					} else {
+					} else if !userDefaults.instantUploadPhotos, !userDefaults.instantUploadVideos {
 						self.removeSection(backgroundUploadsSection, animated: true)
 					}
 				}
@@ -82,7 +82,7 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 					self.removeSection(autoUploadSection)
 					self.autoUploadSection = nil
 				}
-				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.attached {
+				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.attached, !userDefaults.instantUploadPhotos, !userDefaults.instantUploadVideos {
 					self.removeSection(backgroundUploadsSection)
 					self.backgroundUploadsSection = nil
 				}
