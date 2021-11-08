@@ -126,7 +126,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 						}
 
 					case .logout:
-						bookmarkCell.textLabel?.text = "Logout".localized
+						bookmarkCell.textLabel?.text = "Log out".localized
 
 						if #available(iOS 13.0, *) {
 							bookmarkCell.imageView?.image = UIImage(systemName: "power")

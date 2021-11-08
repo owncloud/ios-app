@@ -203,6 +203,7 @@ class SecuritySettingsSection: SettingsSection {
 			}
 
 			if biometricalRow != nil, !rows.contains(biometricalRow!) {
+				biometricalRow?.value = isBiometricalSecurityEnabled
 				rowsToAdd.append(biometricalRow!)
 			}
 		} else {
