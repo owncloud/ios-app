@@ -153,39 +153,39 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 		case .actions:
 			guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "tool-cell", for: indexPath) as? ServerListToolCell else {
-				return ServerListToolCell()
-			}
+				   return ServerListToolCell()
+			   }
 
-				switch actionRows[indexPath.row] {
-					case .editLogin:
-						bookmarkCell.textLabel?.text = "Edit Login".localized
+			   switch actionRows[indexPath.row] {
+				   case .editLogin:
+					   bookmarkCell.textLabel?.text = "Edit Login".localized
 
-						if #available(iOS 13.0, *) {
-							bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
-						} else {
-							bookmarkCell.imageView?.image = UIImage(named: "square.and.pencil")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-						}
+					   if #available(iOS 13.0, *) {
+						   bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
+					   } else {
+						   bookmarkCell.imageView?.image = UIImage(named: "square.and.pencil")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
+					   }
 
-					case .manageStorage:
-						bookmarkCell.textLabel?.text = "Manage Storage".localized
+				   case .manageStorage:
+					   bookmarkCell.textLabel?.text = "Manage Storage".localized
 
-						if #available(iOS 13.0, *) {
-							bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
-						} else {
-							bookmarkCell.imageView?.image = UIImage(named: "arrow.3.trianglepath")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-						}
+					   if #available(iOS 13.0, *) {
+						   bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
+					   } else {
+						   bookmarkCell.imageView?.image = UIImage(named: "arrow.3.trianglepath")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
+					   }
 
-					case .logout:
-						bookmarkCell.textLabel?.text = "Log out".localized
+				   case .logout:
+					   bookmarkCell.textLabel?.text = "Log out".localized
 
-						if #available(iOS 13.0, *) {
-							bookmarkCell.imageView?.image = UIImage(systemName: "power")
-						} else {
-							bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-						}
-				}
-			}
-			rowCell = bookmarkCell
+					   if #available(iOS 13.0, *) {
+						   bookmarkCell.imageView?.image = UIImage(systemName: "power")
+					   } else {
+						   bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
+					   }
+			   }
+
+			   rowCell = bookmarkCell
 
 		case .settings:
 
