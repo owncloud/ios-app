@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class StaticLoginSingleAccountServerListViewController: ServerListTableViewController {
+class StaticLoginSingleAccountServerListViewController: ServerListTableViewController, CustomStatusBarViewControllerProtocol {
 	// Sections in the table view controller
 	private enum SingleAccountSection : Int, CaseIterable {
 		case accessFiles
@@ -107,6 +107,10 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		super.viewDidAppear(animated)
 
 		staticLoginViewController?.navigationController?.setNeedsStatusBarAppearanceUpdate()
+	}
+
+	func statusBarStyle() -> UIStatusBarStyle {
+		return Theme.shared.activeCollection.loginStatusBarStyle
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int {

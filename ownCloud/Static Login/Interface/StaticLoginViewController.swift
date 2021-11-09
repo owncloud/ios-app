@@ -21,7 +21,8 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
+class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol, CustomStatusBarViewControllerProtocol {
+
 	private var bookmark: OCBookmark?
 	private var lastVisibleItemId: String?
 
@@ -110,6 +111,10 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	func statusBarStyle() -> UIStatusBarStyle {
+		return Theme.shared.activeCollection.loginStatusBarStyle
 	}
 
 	override func loadView() {

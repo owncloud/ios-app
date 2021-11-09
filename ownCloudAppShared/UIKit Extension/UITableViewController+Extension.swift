@@ -48,7 +48,7 @@ public extension UITableViewController {
 		let bounds: CGRect = cell.bounds.insetBy(dx: 0, dy: 0)
 
 		if indexPath.row == 0 && indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-			pathRef.__addRoundedRect(transform: nil, rect: bounds, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+			pathRef.addRoundedRect(in: bounds, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: .identity)
 		} else if indexPath.row == 0 {
 			pathRef.move(to: CGPoint(x: bounds.minX, y: bounds.maxY))
 			pathRef.addArc(tangent1End: CGPoint(x: bounds.minX, y: bounds.minY),

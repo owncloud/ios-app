@@ -18,15 +18,17 @@
 
 import UIKit
 
+public protocol CustomStatusBarViewControllerProtocol : class {
+	func statusBarStyle() -> UIStatusBarStyle
+}
+
 open class ThemeNavigationController: UINavigationController {
 	private var themeToken : ThemeApplierToken?
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
 		if let object = self.viewControllers.last {
-			let loginController = ["StaticLoginViewController", "StaticLoginSingleAccountServerListViewController"]
-
-			if self.presentedViewController == nil, loginController.contains(String(describing: type(of: object))) {
-				return Theme.shared.activeCollection.loginStatusBarStyle
+			if self.presentedViewController == nil, let loginViewController = object as? CustomStatusBarViewControllerProtocol {
+				return loginViewController.statusBarStyle()
 			} else {
 				return Theme.shared.activeCollection.statusBarStyle
 			}
