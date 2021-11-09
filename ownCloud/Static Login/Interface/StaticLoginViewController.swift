@@ -338,10 +338,6 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 		// PushTransition correctly restores the view
 		serverList?.pushFromViewController = self
 
-		if let bookmark = bookmark {
-			serverList?.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false)
-		}
-
 		return serverList!
 	}
 

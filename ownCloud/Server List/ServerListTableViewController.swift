@@ -455,9 +455,9 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		var destructiveTitle = "Delete".localized
 		var failureTitle = "Deletion of '%@' failed".localized
 		if VendorServices.shared.isBranded {
-			alertTitle = "Really logout from '%@'?".localized
-			destructiveTitle = "Logout".localized
-			failureTitle = "Logout of '%@' failed".localized
+			alertTitle = "Do you want to log out from '%@'?".localized
+			destructiveTitle = "Log out".localized
+			failureTitle = "Log out of '%@' failed".localized
 		}
 
 		let alertController = ThemedAlertController(title: NSString(format: alertTitle as NSString, bookmark.shortName) as String,
@@ -750,7 +750,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
-			destructiveTitle = "Logout".localized
+			destructiveTitle = "Log out".localized
 		}
 		let delete = UIAction(title: destructiveTitle, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
 			self.delete(bookmark: bookmark, at: indexPath ) {
@@ -813,7 +813,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
-			destructiveTitle = "Logout".localized
+			destructiveTitle = "Log out".localized
 		}
 
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
@@ -1008,4 +1008,38 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 
 extension NSNotification.Name {
 	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
+}
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let account = OCClassSettingsIdentifier("account")
+}
+
+extension OCClassSettingsKey {
+	static let accountAutoConnect = OCClassSettingsKey("auto-connect")
+}
+
+extension ServerListTableViewController : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .account
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .account {
+			return [
+				.accountAutoConnect : false
+			]
+		}
+
+		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.accountAutoConnect : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Skip \"Account\" screen / automatically open \"Files\" screen after login",
+				.category	: "Account",
+				.status		: OCClassSettingsKeyStatus.supported
+			]
+		]
+	}
 }

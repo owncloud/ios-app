@@ -51,6 +51,7 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 @property(assign,nonatomic,readonly) BOOL brandingPropertiesFromLocalFile;
 
 @property(strong,nullable,nonatomic,readonly) NSString *appName; //!< Custom app name
+@property(strong,nonatomic,readonly) NSString *appDisplayName; //!< Branded app name, drawing from .appName, .organizationName and OCAppIdentity, with "ownCloud" as fallback
 @property(strong,nullable,nonatomic,readonly) NSString *organizationName; //!< Custom organization name
 @property(strong,nullable,nonatomic,readonly) NSArray<BrandingFileImportMethod> *disabledImportMethods; //!< Disabled file import methods
 
@@ -61,6 +62,8 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 - (nullable id)computedValueForClassSettingsKey:(OCClassSettingsKey)classSettingsKey;
 - (nullable NSURL *)urlForClassSettingsKey:(OCClassSettingsKey)settingsKey;
 
+- (void)registerUserDefaultsDefaults;
+
 @end
 
 extern OCClassSettingsIdentifier OCClassSettingsIdentifierBranding;
@@ -68,6 +71,7 @@ extern OCClassSettingsIdentifier OCClassSettingsIdentifierBranding;
 extern BrandingKey BrandingKeyAppName;
 extern BrandingKey BrandingKeyOrganizationName;
 extern BrandingKey BrandingKeyDisabledImportMethods;
+extern BrandingKey BrandingKeyUserDefaultsDefaultValues;
 
 extern BrandingFileImportMethod BrandingFileImportMethodOpenWith;
 extern BrandingFileImportMethod BrandingFileImportMethodShareExtension;

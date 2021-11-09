@@ -68,6 +68,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			} else {
 				configure(window: window, with: userActivity)
 			}
+		} else if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false, let bookmark = OCBookmarkManager.shared.bookmarks.first {
+			connect(to: bookmark)
 		}
 	}
 
@@ -96,12 +98,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
 		if let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String,
 		   let bookmarkUUID = UUID(uuidString: bookmarkUUIDString),
-		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
-		   let navigationController = window?.rootViewController as? ThemeNavigationController,
-		   let serverListController = navigationController.topViewController as? StateRestorationConnectProtocol {
+		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
 			if activity.title == OCBookmark.ownCloudOpenAccountPath {
-				serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false, present: nil)
-				window?.windowScene?.userActivity = bookmark.openAccountUserActivity
+				connect(to: bookmark)
 
 				return true
 			} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
@@ -110,8 +109,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				}
 
 				// At first connect to the bookmark for the item
-				serverListController.connect(to: bookmark, lastVisibleItemId: itemLocalID, animated: false, present: nil)
-				window?.windowScene?.userActivity = activity
+				connect(to: bookmark, lastVisibleItemId: itemLocalID, activity: activity)
 
 				return true
 			}
@@ -123,6 +121,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		}
 
 		return false
+	}
+
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String? = nil, activity: NSUserActivity? = nil) {
+		if let navigationController = window?.rootViewController as? ThemeNavigationController,
+		   let serverListController = navigationController.topViewController as? StateRestorationConnectProtocol {
+			serverListController.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false, present: nil)
+			window?.windowScene?.userActivity = activity ?? bookmark.openAccountUserActivity
+		}
 	}
 
 	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

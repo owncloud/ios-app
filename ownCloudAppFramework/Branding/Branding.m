@@ -202,9 +202,22 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 		{
 			[(id<BrandingInitialization>)self initializeSharedBranding];
 		}
+
+		// Set app.name localization variable to branded name
+		[OCLocaleFilterVariables.shared setVariable:@"app.name" value:self.appDisplayName];
 	}
 
 	return (self);
+}
+
+- (void)registerUserDefaultsDefaults
+{
+	// Register user defaults
+	NSDictionary *userDefaultsDefaults;
+	if ((userDefaultsDefaults = self.userDefaultsDefaultValues) != nil)
+	{
+		[OCAppIdentity.sharedAppIdentity.userDefaults registerDefaults:userDefaultsDefaults];
+	}
 }
 
 - (void)registerLegacyKeyPath:(BrandingLegacyKeyPath)keyPath forClassSettingsKey:(OCClassSettingsKey)classSettingsKey;
@@ -229,6 +242,22 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 - (NSString *)organizationName
 {
 	return ([self computedValueForClassSettingsKey:BrandingKeyOrganizationName]);
+}
+
+- (NSString *)appDisplayName
+{
+	NSString *appName;
+
+	if ((appName = self.appName) != nil) { return (appName); }
+	if ((appName = self.organizationName) != nil) { return (appName); }
+	if ((appName = OCAppIdentity.sharedAppIdentity.appDisplayName) != nil) { return (appName); }
+
+	return (@"ownCloud");
+}
+
+- (NSDictionary *)userDefaultsDefaultValues
+{
+	return ([self computedValueForClassSettingsKey:BrandingKeyUserDefaultsDefaultValues]);
 }
 
 - (NSArray<BrandingFileImportMethod> *)disabledImportMethods
@@ -349,6 +378,14 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 				BrandingFileImportMethodShareExtension  : @"Disallow import through the Share Extension",
 				BrandingFileImportMethodFileProvider	: @"Disallow import through the File Provider (Files.app)"
 			}
+		},
+
+		// User Defaults
+		BrandingKeyUserDefaultsDefaultValues : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeDictionary,
+			OCClassSettingsMetadataKeyDescription 	: @"Default values for user defaults. Allows overriding default settings.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+			OCClassSettingsMetadataKeyCategory	: @"Branding"
 		}
 	});
 }
@@ -357,9 +394,10 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierBranding = @"branding";
 
-OCClassSettingsKey BrandingKeyAppName = @"app-name";
-OCClassSettingsKey BrandingKeyOrganizationName = @"organization-name"; 	// Legacy Branding Key: organizationName
-OCClassSettingsKey BrandingKeyDisabledImportMethods = @"disabled-import-methods";
+BrandingKey BrandingKeyAppName = @"app-name";
+BrandingKey BrandingKeyOrganizationName = @"organization-name"; 	// Legacy Branding Key: organizationName
+BrandingKey BrandingKeyDisabledImportMethods = @"disabled-import-methods";
+BrandingKey BrandingKeyUserDefaultsDefaultValues = @"user-defaults-default-values";
 
 BrandingFileImportMethod BrandingFileImportMethodOpenWith = @"open-with";
 BrandingFileImportMethod BrandingFileImportMethodShareExtension = @"share-extension";

@@ -62,7 +62,7 @@ class CellularSettingsViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.title = "Cellular transfers".localized
+		navigationItem.title = "Cellular Data Usage".localized
 
 		if OCConnection.allowCellular {
 			let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "".localized, identifier: "main-section", rows: [
@@ -84,7 +84,7 @@ class CellularSettingsViewController: StaticTableViewController {
 			updateSwitchesVisibility(animated: false)
 		} else {
 			let cellularDisabledSection = StaticTableViewSection(headerTitle: "General".localized, identifier: "cellular-disabled-section", rows: [
-				StaticTableViewRow(label: "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.".localized)
+				StaticTableViewRow(label: "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.".localized)
 			])
 
 			addSection(cellularDisabledSection)
