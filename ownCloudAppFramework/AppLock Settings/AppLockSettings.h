@@ -45,5 +45,6 @@ extern OCClassSettingsKey OCClassSettingsKeyPasscodeEnforced;
 extern OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay;
+extern OCClassSettingsKey OCClassSettingsKeyPasscodeUseBiometricalUnlock;
 
 NS_ASSUME_NONNULL_END
