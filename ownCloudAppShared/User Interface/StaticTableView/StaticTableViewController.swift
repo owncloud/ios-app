@@ -153,6 +153,10 @@ open class StaticTableViewController: UITableViewController, Themeable {
 		return nil
 	}
 
+	open func indexForSection(_ inSection: StaticTableViewSection) -> Int? {
+		return sections.index(of: inSection)
+	}
+
 	// MARK: - View Controller
 	override open func viewDidLoad() {
 		super.viewDidLoad()

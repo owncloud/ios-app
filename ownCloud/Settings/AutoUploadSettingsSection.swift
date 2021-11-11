@@ -210,6 +210,8 @@ class AutoUploadSettingsSection: SettingsSection {
 				updateDynamicUI()
 			}
 		}
+
+		NotificationCenter.default.post(name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	private func setupVideoAutoUpload(enabled:Bool) {
@@ -226,6 +228,8 @@ class AutoUploadSettingsSection: SettingsSection {
 			   updateDynamicUI()
 		   }
 		}
+
+		NotificationCenter.default.post(name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	private func getSelectedBookmark(for mediaType:MediaType) -> OCBookmark? {
