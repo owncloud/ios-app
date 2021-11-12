@@ -55,7 +55,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			navigationController?.setNavigationBarHidden(true, animated: false)
 			rootViewController = navigationController
 		} else {
-			serverListTableViewController = ServerListTableViewController(style: .plain)
+			if OCBookmarkManager.shared.bookmarks.count == 1 {
+				if #available(iOS 13.0, *) {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+				} else {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .grouped)
+				}
+			} else {
+				serverListTableViewController = ServerListTableViewController(style: .plain)
+			}
 
 			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 			rootViewController = navigationController

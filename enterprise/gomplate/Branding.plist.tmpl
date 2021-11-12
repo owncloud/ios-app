@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">{{- $config := .config }}
+{{- $hasThemeDefinitionsStyles := false }}
+{{- $hasThemeNavigationColors := false }}
+{{- $hasThemeSearchColors := false }}
+{{- $hasDarkColor := false }}
+{{- $hasLightColor := false }}
+{{- $darkColor := "" }}
+{{- $lightColor := "" }}
+{{- $brandingStyle := "" }}
+{{- $brandingNavigationStyle := "" }}
+<dict>
+{{- range $key, $value := $config }}
+{{- if eq (printf "%T" $value) "<nil>"}}
+{{- if strings.HasSuffix "_check" $key }}
+{{$value = false }}
+{{- else if strings.HasSuffix "_text" $key }}
+{{$value = "" }}
+{{- end }}{{- end }}
+{{- if hasPrefix $key "ios_branding" }}
+{{- if $key | strings.Contains "ios_branding.theme-definitions$[0].darkBrandColor_color" }}
+{{ $darkColor = $value }}
+{{- else if $key | strings.Contains "ios_branding.theme-definitions$[0].lightBrandColor_color" }}
+{{ $lightColor = $value }}
+{{- else if $key | strings.Contains "ios_branding.style_select" }}
+{{ $brandingStyle = $value }}
+{{- else if $key | strings.Contains "ios_branding.navigation.style_select" }}
+{{ $brandingNavigationStyle = $value }}
+{{- else }}
+<key>{{ $key | strings.TrimPrefix "ios_" | strings.TrimSuffix "_check" | strings.TrimSuffix "_text" | strings.TrimSuffix "_color" }}</key>
+{{- if eq (printf "%T" $value) "string"}}
+<string>{{$value}}</string>
+{{- else if eq $value true}}
+<true/>
+{{- else if eq $value false}}
+<false/>{{end}}{{end}}{{end}}
+{{- if hasPrefix $key "ios_json_override_longtext"}}
+{{- if $value | strings.Contains "branding.theme-definitions" }}
+{{- if $value | strings.Contains ".Styles." }}
+{{ $hasThemeDefinitionsStyles = true}}
+{{end}}
+{{- if $value | strings.Contains ".Colors.NavigationBar." }}
+{{ $hasThemeNavigationColors = true}}
+{{end}}
+{{- if $value | strings.Contains ".Colors.Searchbar." }}
+{{ $hasThemeSearchColors = true}}
+{{end}}
+{{end}}
+{{- if $value | strings.Contains "branding.theme-definitions$[0].darkBrandColor" }}
+{{ $hasDarkColor = true }}{{end}}
+{{- if $value | strings.Contains "branding.theme-definitions$[0].lightBrandColor" }}
+{{ $hasLightColor = true }}{{end}}
+{{$value}}{{end}}{{end}}
+{{- if $brandingNavigationStyle | strings.Contains "bright" }}
+{{- if eq $hasThemeSearchColors false }}
+<key>branding.theme-definitions$[0].Colors.Searchbar.tintColor</key>
+<string>#666666</string>
+<key>branding.theme-definitions$[0].Colors.Searchbar.secondaryLabelColor</key>
+<string>#666666</string>
+<key>branding.theme-definitions$[0].Colors.Searchbar.backgroundColor</key>
+<string>#F2F2F3</string>
+<key>branding.theme-definitions$[0].Colors.Searchbar.labelColor</key>
+<string>#000000</string>
+{{end}}
+{{- if eq $hasThemeNavigationColors false }}
+<key>branding.theme-definitions$[0].Colors.NavigationBar.tintColor</key>
+<string>{{$darkColor}}</string>
+<key>branding.theme-definitions$[0].Colors.NavigationBar.backgroundColor</key>
+<string>#FFFFFF</string>
+<key>branding.theme-definitions$[0].Colors.NavigationBar.labelColor</key>
+<string>#000000</string>
+{{end}}{{- end }}
+{{- if eq $hasThemeDefinitionsStyles false }}
+{{- if $brandingStyle | strings.Contains "dark" }}
+<key>branding.theme-definitions$[0].Styles.searchBarActivityIndicatorViewStyle</key>
+<string>gray</string>
+<key>branding.theme-definitions$[0].Styles.statusBarStyle</key>
+<string>lightContent</string>
+<key>branding.theme-definitions$[0].Styles.backgroundBlurEffectStyle</key>
+<string>dark</string>
+<key>branding.theme-definitions$[0].Styles.interfaceStyle</key>
+<string>dark</string>
+<key>branding.theme-definitions$[0].Styles.keyboardAppearance</key>
+<string>dark</string>
+<key>branding.theme-definitions$[0].Styles.activityIndicatorViewStyle</key>
+<string>white</string>
+<key>branding.theme-definitions$[0].Styles.barStyle</key>
+<string>default</string>
+{{- end }}{{end}}
+{{- if eq $hasDarkColor false }}
+<key>branding.theme-definitions$[0].darkBrandColor</key>
+<string>{{$darkColor}}</string>{{end}}
+{{- if eq $hasLightColor false }}
+<key>branding.theme-definitions$[0].lightBrandColor</key>
+<string>{{$lightColor}}</string>{{end}}
+</dict>
+</plist>
