@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
+import CoreMedia
 
 class StaticLoginSingleAccountServerListViewController: ServerListTableViewController {
 	// Sections in the table view controller
@@ -161,10 +162,14 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first {
-				let displayName = bookmark.displayName ?? bookmark.userName
-				if let displayName = displayName {
-					let headerText = String(format: "You are connected as\n%@".localized, displayName)
-				 headerView = StaticTableViewSection.buildHeader(title: headerText)
+
+				let connection = OCConnection(bookmark: bookmark)
+				connection.connect { error, issue in
+					let displayName = connection.loggedInUser?.displayName ?? bookmark.userName
+					if let displayName = displayName {
+						let headerText = String(format: "You are connected as\n%@".localized, displayName)
+						self.headerView = StaticTableViewSection.buildHeader(title: headerText)
+					}
 				}
 			}
 
