@@ -49,6 +49,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	weak var staticLoginViewController : StaticLoginViewController?
 	var canConfigureURL: Bool = true
 	private var actionRows: [ActionRowIndex] = [.editLogin, .manageStorage, .logout]
+	var displayName: String?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -60,6 +61,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		if !VendorServices.shared.canEditAccount {
 			actionRows = [.manageStorage, .logout]
 		}
+		retrieveDisplayName()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -162,14 +164,9 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first {
-
-				let connection = OCConnection(bookmark: bookmark)
-				connection.connect { error, issue in
-					let displayName = connection.loggedInUser?.displayName ?? bookmark.userName
-					if let displayName = displayName {
-						let headerText = String(format: "You are connected as\n%@".localized, displayName)
-						self.headerView = StaticTableViewSection.buildHeader(title: headerText)
-					}
+				if let displayName = self.displayName ?? bookmark.userName {
+					let headerText = String(format: "You are connected as\n%@".localized, displayName)
+					self.headerView = StaticTableViewSection.buildHeader(title: headerText)
 				}
 			}
 
@@ -251,4 +248,24 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 		self.showModal(viewController: navigationController)
 	}
+}
+
+extension StaticLoginSingleAccountServerListViewController {
+
+	func retrieveDisplayName() {
+		guard let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first else { return }
+		let connection = OCConnection(bookmark: bookmark)
+
+		connection.connect { error, issue in
+			guard error == nil, issue == nil, let displayName = connection.loggedInUser?.displayName else { return }
+			self.displayName = displayName
+			self.headerView = nil
+			OnMainThread {
+				self.tableView.reloadData()
+			}
+			connection.disconnect {
+			}
+		}
+	}
+
 }
