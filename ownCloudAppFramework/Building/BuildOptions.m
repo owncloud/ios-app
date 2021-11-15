@@ -26,6 +26,12 @@ OCClassSettingsKey	  OCClassSettingsKeyCustomAuthScheme = @"custom-auth-scheme";
 
 @implementation BuildOptions
 
++ (void)load
+{
+	// Make sure the class is loaded
+	[self classSettingsIdentifier];
+}
+
 + (OCClassSettingsIdentifier)classSettingsIdentifier
 {
 	return (OCClassSettingsIdentifierBuildOptions);
