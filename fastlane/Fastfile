@@ -482,6 +482,23 @@ end
     end
 
     if File.exist?("../" + themePath)
+      # Extract from Branding.plist
+      tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "build.flags")
+      if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
+        appBuildFlags = tmpAppBuildFlags
+      end
+
+      tmpAppCustomAppScheme = get_info_plist_value(path: themePath, key: "build.custom-app-scheme")
+      if tmpAppCustomAppScheme && !tmpAppCustomAppScheme.empty?
+        appCustomAppScheme = tmpAppCustomAppScheme
+      end
+
+      tmpAuthCustomAuthScheme = get_info_plist_value(path: themePath, key: "build.custom-auth-scheme")
+      if tmpAuthCustomAuthScheme && !tmpAuthCustomAuthScheme.empty?
+        appCustomAuthScheme = tmpAuthCustomAuthScheme
+      end
+
+      # Fallback (legacy key name support)
       tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "app.build-flags")
       if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
         appBuildFlags = tmpAppBuildFlags

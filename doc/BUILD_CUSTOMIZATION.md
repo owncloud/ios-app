@@ -1,21 +1,21 @@
-# App Build Flags
+# Build Flags
 
 ## Description
 
-App Build Flags can be used to control the inclusion or exclusion of certain functionality or features.
+Build Flags can be used to control the inclusion or exclusion of certain functionality or features.
 
 ## Usage in Branding
 
-A space-separated list of flags can be specified in the `Branding.plist` with the key `app.build-flags`, f.ex.:
+A space-separated list of flags can be specified in the `Branding.plist` with the key `build.flags`, f.ex.:
 
 ```xml
-<key>app.build-flags</key>
+<key>build.flags</key>
 <string>DISABLE_BACKGROUND_LOCATION</string>
 ```
 
 ## Flags
 
-The following options can be used as `APP_BUILD_FLAGS`:
+The following options can be used as `build.flags`:
 
 ### `DISABLE_BACKGROUND_LOCATION`
 
@@ -46,19 +46,19 @@ Both schemes are part of the app's `Info.plist`, which can only be changed at bu
 
 ### Private Links
 
-The default `owncloud` app URL scheme in `Info.plist` can be changed by providing an alternative scheme name in the `Branding.plist` with the key `app.custom-app-scheme`, f.ex.:
+The default `owncloud` app URL scheme in `Info.plist` can be changed by providing an alternative scheme name in the `Branding.plist` with the key `build.custom-app-scheme`, f.ex.:
 
 ```xml
-<key>app.custom-app-scheme</key>
+<key>build.custom-app-scheme</key>
 <string>myscheme</string>
 ```
 
 ### Authentication
 
-The default `oc` app URL scheme in `Info.plist` can be changed by providing an alternative scheme name in the `Branding.plist` with the key `app.custom-auth-scheme`, f.ex.:
+The default `oc` app URL scheme in `Info.plist` can be changed by providing an alternative scheme name in the `Branding.plist` with the key `build.custom-auth-scheme`, f.ex.:
 
 ```xml
-<key>app.custom-auth-scheme</key>
+<key>build.custom-auth-scheme</key>
 <string>ms</string>
 ```
 
