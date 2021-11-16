@@ -342,6 +342,11 @@ public class AppLockManager: NSObject {
 		if unlocked, !self.shouldDisplayCountdown {
 			if let date = self.lastApplicationBackgroundedDate {
 				if Int(-date.timeIntervalSinceNow) < AppLockSettings.shared.lockDelay {
+					// Clear unlocked state immediately if it has expired, so subsequently
+					// changing the device's clock time can't lead to an unlock
+					unlocked = false
+					lastApplicationBackgroundedDate = nil
+
 					return false
 				}
 			}
