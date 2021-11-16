@@ -352,19 +352,19 @@ public class AppLockManager: NSObject {
 					Log.error(tagged: ["Security"], "Current device time \(Date().description) preceeds last application backgrounded date \(lastApplicationBackgroundedDate?.description ?? "?"), possibly indicating device time manipulation. Unlock status cleared.")
 
 					return false
-				}
-
-				if Int(-date.timeIntervalSinceNow) < AppLockSettings.shared.lockDelay {
-					// Clear unlocked state immediately if it has expired, so subsequently
-					// changing the device's clock time can't lead to an unlock
-					unlocked = false
-					lastApplicationBackgroundedDate = nil
-
-					return false
+				} else {
+					if Int(-date.timeIntervalSinceNow) < AppLockSettings.shared.lockDelay {
+						return false
+					}
 				}
 			}
 		}
+
+		// Clear unlocked state immediately if it has expired, so subsequently
+		// changing the device's clock time can't lead to an unlock
 		unlocked = false
+		lastApplicationBackgroundedDate = nil
+
 		return true
 	}
 
