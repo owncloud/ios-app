@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
+import CoreMedia
 
 class StaticLoginSingleAccountServerListViewController: ServerListTableViewController, CustomStatusBarViewControllerProtocol {
 	// Sections in the table view controller
@@ -49,6 +50,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	weak var staticLoginViewController : StaticLoginViewController?
 	var canConfigureURL: Bool = true
 	private var actionRows: [ActionRowIndex] = [.editLogin, .manageStorage, .logout]
+	var displayName: String?
+
 	private var settingsRows: [SettingsRowIndex] = [.settings]
 
 	var themeApplierToken : ThemeApplierToken?
@@ -81,6 +84,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		} else {
 			staticLoginViewController?.toolbarShown = false
 		}
+
+		retrieveDisplayName()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -236,8 +241,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
-			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let userName = bookmark.userName {
-				let headerText = String(format: "You are connected as\n%@".localized, userName)
+			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let displayName = self.displayName ?? bookmark.userName {
+				let headerText = String(format: "You are connected as\n%@".localized, displayName)
 				if VendorServices.shared.isBranded {
 					headerView = StaticTableViewSection.buildHeader(title: headerText)
 				} else {
@@ -357,4 +362,24 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			super.addBookmark()
 		}
 	}
+}
+
+extension StaticLoginSingleAccountServerListViewController {
+
+	func retrieveDisplayName() {
+		guard let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first else { return }
+		let connection = OCConnection(bookmark: bookmark)
+
+		connection.connect { error, issue in
+			guard error == nil, issue == nil, let displayName = connection.loggedInUser?.displayName else { return }
+			self.displayName = displayName
+			self.headerView = nil
+			OnMainThread {
+				self.tableView.reloadData()
+			}
+			connection.disconnect {
+			}
+		}
+	}
+
 }
