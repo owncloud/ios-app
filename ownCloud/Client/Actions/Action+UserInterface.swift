@@ -94,6 +94,7 @@ extension Action {
 		if !isLicensed {
 			if let core = core, let requirements = type(of:self).licenseRequirements {
 				OnMainThread {
+					#if !DISABLE_APPSTORE_LICENSING
 					OCLicenseManager.appStoreProvider?.refreshProductsIfNeeded(completionHandler: { (error) in
 						OnMainThread {
 							if error != nil {
@@ -107,6 +108,7 @@ extension Action {
 							}
 						}
 					})
+					#endif
 				}
 			}
 

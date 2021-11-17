@@ -41,6 +41,7 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 
+			#if !DISABLE_APPSTORE_LICENSING
 			if #available(iOS 13, *), // Require iOS 13
 			   !OCLicenseEMMProvider.isEMMVersion, // Do not show purchases in the EMM version
 			   // Do only show purchases section if there's at least one non-Enterprise account
@@ -48,6 +49,7 @@ class SettingsViewController: StaticTableViewController {
 			{
 				self.addSection(PurchasesSettingsSection(userDefaults: userDefaults))
 			}
+			#endif
 
 			self.addSection(MoreSettingsSection(userDefaults: userDefaults))
 		}
