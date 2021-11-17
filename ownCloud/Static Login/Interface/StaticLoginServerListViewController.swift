@@ -41,6 +41,12 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		staticLoginViewController?.navigationController?.setNeedsStatusBarAppearanceUpdate()
+	}
+
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
@@ -79,6 +85,12 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 		return bookmarkCell
 	}
 
+	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		if VendorServices.shared.isBranded {
+			self.colorSection(tableView, willDisplay: cell, forRowAt: indexPath, borderColor: Theme.shared.activeCollection.navigationBarColors.backgroundColor)
+		}
+	}
+
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if headerView == nil {
 			headerView = StaticTableViewSection.buildHeader(title: "Accounts".localized)
@@ -98,9 +110,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	}
 
 	override func didUpdateServerList() {
-		if OCBookmarkManager.shared.bookmarks.count == 0 {
-			self.staticLoginViewController?.showFirstScreen()
-		}
+		self.staticLoginViewController?.showFirstScreen()
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

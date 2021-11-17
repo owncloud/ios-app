@@ -154,24 +154,36 @@ public class PasscodeSetupCoordinator {
 
 	public func showSuggestBiometricalUnlockUI() {
 		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
-
-			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { _ in
-				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true
+			if AppLockSettings.shared.biometricalSecurityEnabled {
 				self.passcodeViewController?.dismiss(animated: true, completion: {
 					self.completionHandler?(false)
 				})
-			}))
+				if AppLockManager.supportedOnDevice {
+					AppLockManager.shared.showLockscreenIfNeeded()
+				}
+			} else {
+				let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
 
-			alertController.addAction(UIAlertAction(title: "Disable".localized, style: .cancel, handler: { _ in
-				PasscodeSetupCoordinator.isBiometricalSecurityEnabled = false
-				self.passcodeViewController?.dismiss(animated: true, completion: {
-					self.completionHandler?(false)
+				alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { _ in
+					PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true
+					self.passcodeViewController?.dismiss(animated: true, completion: {
+						self.completionHandler?(false)
+					})
+					if AppLockManager.supportedOnDevice {
+						AppLockManager.shared.showLockscreenIfNeeded()
+					}
+				}))
+
+				alertController.addAction(UIAlertAction(title: "Disable".localized, style: .cancel, handler: { _ in
+					PasscodeSetupCoordinator.isBiometricalSecurityEnabled = false
+					self.passcodeViewController?.dismiss(animated: true, completion: {
+						self.completionHandler?(false)
+					})
+				}))
+
+				self.passcodeViewController?.present(alertController, animated: true, completion: {
 				})
-			}))
-
-			self.passcodeViewController?.present(alertController, animated: true, completion: {
-			})
+			}
 		} else {
 			self.passcodeViewController?.dismiss(animated: true, completion: {
 				   self.completionHandler?(false)

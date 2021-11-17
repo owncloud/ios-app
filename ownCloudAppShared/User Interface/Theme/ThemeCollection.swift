@@ -138,6 +138,7 @@ public class ThemeCollection : NSObject {
 	@objc public var navigationBarColors : ThemeColorCollection
 	@objc public var toolbarColors : ThemeColorCollection
 	@objc public var statusBarStyle : UIStatusBarStyle
+	@objc public var loginStatusBarStyle : UIStatusBarStyle
 	@objc public var barStyle : UIBarStyle
 
 	// MARK: - SearchBar
@@ -243,10 +244,15 @@ public class ThemeCollection : NSObject {
 		let rowColor : UIColor? = UIColor.black.withAlphaComponent(0.1)
 		self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowColor)
 
+		var defaultTableRowLabelColor = darkColor
+		if VendorServices.shared.isBranded {
+			defaultTableRowLabelColor = UIColor(hex: 0x000000)
+		}
+
 		self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
 			backgroundColor: tableBackgroundColor,
 			tintColor: nil,
-			labelColor: darkColor,
+			labelColor: defaultTableRowLabelColor,
 			secondaryLabelColor: UIColor(hex: 0x475770),
 			symbolColor: UIColor(hex: 0x475770),
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
@@ -304,7 +310,8 @@ public class ThemeCollection : NSObject {
 				))
 
 				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
+				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
@@ -340,10 +347,11 @@ public class ThemeCollection : NSObject {
 
 				// Bar styles
 				if #available(iOS 13, *) {
-					self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .darkContent)
+					self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .darkContent)
 				} else {
-					self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .default)
+					self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .default)
 				}
+				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
 
 				// Progress
@@ -366,13 +374,26 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				let tmpDarkBrandColors = self.darkBrandColors
-				tmpDarkBrandColors.secondaryLabelColor = .lightGray
+				tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
+				if self.tintColor == UIColor(hex: 0xFFFFFF) {
+					tmpDarkBrandColors.secondaryLabelColor = .lightGray
+				}
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", tmpDarkBrandColors)
-				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
+
+				let defaultSearchBarColor = self.darkBrandColors
+				if VendorServices.shared.isBranded {
+					defaultSearchBarColor.labelColor = UIColor(hex: 0x000000)
+					defaultSearchBarColor.secondaryLabelColor = UIColor.gray
+					defaultSearchBarColor.backgroundColor = UIColor(hex: 0xF7F7F7)
+				}
+
+				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", defaultSearchBarColor)
+
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(fallback: .lightContent)
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
+				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
 				// Progress
@@ -384,6 +405,11 @@ public class ThemeCollection : NSObject {
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
+
+				if lightBrandColor.isEqual(UIColor(hex: 0xFFFFFF)) {
+					self.neutralColors.normal.background = self.darkBrandColor
+					self.lightBrandColors.filledColorPairCollection.normal.background = self.darkBrandColor
+				}
 		}
 
 		self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
@@ -413,8 +439,8 @@ class ThemeStyleValueResolver : NSObject {
 		styles = styleValues
 	}
 
-	func resolveStatusBarStyle(fallback: UIStatusBarStyle) -> UIStatusBarStyle {
-		if let styleValue = styles?.value(forKeyPath: "statusBarStyle") as? String {
+	func resolveStatusBarStyle(for key: String, fallback: UIStatusBarStyle) -> UIStatusBarStyle {
+		if let styleValue = styles?.value(forKeyPath: key) as? String {
 			switch styleValue {
 			case "default":
 				return .default
