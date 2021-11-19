@@ -340,8 +340,8 @@ public class AppLockManager: NSObject {
 		}
 
 		if unlocked, !self.shouldDisplayCountdown {
-			if let date = self.lastApplicationBackgroundedDate {
-				if date.timeIntervalSinceNow > 0 {
+			if let backgroundedDate = lastApplicationBackgroundedDate {
+				if backgroundedDate.timeIntervalSinceNow > 0 {
 					// Device time is earlier than lastApplicationBackgroundedDate,
 					// which should not be possible. Clear unlocked state immediately
 					// to protect against this or other attempts to gain access by
@@ -349,11 +349,12 @@ public class AppLockManager: NSObject {
 					unlocked = false
 					lastApplicationBackgroundedDate = nil
 
-					Log.error(tagged: ["Security"], "Current device time \(Date().description) preceeds last application backgrounded date \(lastApplicationBackgroundedDate?.description ?? "?"), possibly indicating device time manipulation. Unlock status cleared.")
+					Log.error(tagged: ["Security"], "Current device time \(Date().description) preceeds last application backgrounded date \(backgroundedDate.description), possibly indicating device time manipulation. Unlock status cleared.")
 
-					return false
+					return true
 				} else {
-					if Int(-date.timeIntervalSinceNow) < AppLockSettings.shared.lockDelay {
+					if Int(-backgroundedDate.timeIntervalSinceNow) < AppLockSettings.shared.lockDelay {
+						// Unlock still valid
 						return false
 					}
 				}
