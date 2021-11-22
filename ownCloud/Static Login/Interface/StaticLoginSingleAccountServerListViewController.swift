@@ -143,6 +143,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			}
 
 			bookmarkCell.textLabel?.text = "Access Files".localized
+                        bookmarkCell.accessibilityIdentifier = "access-files"
 			bookmarkCell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
 			if #available(iOS 13.0, *) {
 				bookmarkCell.imageView?.image = UIImage(systemName: "folder")
