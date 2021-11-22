@@ -1381,6 +1381,23 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.8.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Account Overview</string>
+					<key>Subtitle</key>
+					<string>There is a fresh new look for the account overview.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintbrush</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -49,9 +49,9 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 	@objc private func reconsiderSections() {
 		OnMainThread {
-			guard let proSettingsSection = self.proPhotoSettingsSection else { return }
+			guard let proSettingsSection = self.proPhotoSettingsSection, let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-			if OCBookmarkManager.shared.bookmarks.count > 0, let userDefaults = OCAppIdentity.shared.userDefaults {
+			if OCBookmarkManager.shared.bookmarks.count > 0 {
 				if self.autoUploadSection == nil {
 					self.autoUploadSection = AutoUploadSettingsSection(userDefaults: userDefaults)
 
@@ -66,15 +66,23 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 				if let autoUploadSection = self.autoUploadSection, !autoUploadSection.attached {
 					self.addSection(autoUploadSection)
 				}
-				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.rows.count > 0, !backgroundUploadsSection.attached {
-					self.addSection(backgroundUploadsSection)
+				if let backgroundUploadsSection = self.backgroundUploadsSection {
+					if !backgroundUploadsSection.attached, backgroundUploadsSection.rows.count > 0, (userDefaults.instantUploadPhotos || userDefaults.instantUploadVideos) {
+						if let autoUploadSection = self.autoUploadSection, let index = self.indexForSection(autoUploadSection) {
+							self.insertSection(backgroundUploadsSection, at: (index + 1), animated: true)
+						} else {
+							self.addSection(backgroundUploadsSection)
+						}
+					} else if !userDefaults.instantUploadPhotos, !userDefaults.instantUploadVideos {
+						self.removeSection(backgroundUploadsSection, animated: true)
+					}
 				}
 			} else {
 				if let autoUploadSection = self.autoUploadSection, autoUploadSection.attached {
 					self.removeSection(autoUploadSection)
 					self.autoUploadSection = nil
 				}
-				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.attached {
+				if let backgroundUploadsSection = self.backgroundUploadsSection, backgroundUploadsSection.attached, !userDefaults.instantUploadPhotos, !userDefaults.instantUploadVideos {
 					self.removeSection(backgroundUploadsSection)
 					self.backgroundUploadsSection = nil
 				}

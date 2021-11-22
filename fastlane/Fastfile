@@ -556,6 +556,20 @@ end
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
 
+    if File.exist?("../" + themePath)
+        tmpCustomAppVersionNumber = get_info_plist_value(path: themePath, key: "app.version-number")
+        if tmpCustomAppVersionNumber && !tmpCustomAppVersionNumber.empty?
+          customAppVersionNumber = tmpCustomAppVersionNumber
+
+          puts "Set Version Number from Branding.plist: " + customAppVersionNumber
+          set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+        end
+    end
+
     if !values[:BUILD_NUMBER].nil?
       puts "Set Drone Build Number: " + BUILD_NUMBER
       set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleVersion", value: BUILD_NUMBER)
@@ -758,6 +772,9 @@ end
     elsif
       time = Time.now
       ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
+      if !customAppVersionNumber.nil?
+        version = customAppVersionNumber
+      end
       if !values[:BUILD_NUMBER].nil?
         version += "." + BUILD_NUMBER
       end
