@@ -468,6 +468,8 @@ end
 
     appName = "ownCloud"
     appBuildFlags = ""
+    appCustomAppScheme = ""
+    appCustomAuthScheme = ""
     themeFolder = "ownCloud/Resources/Theming/"
     themePath = themeFolder + "Branding.plist"
     if !values[:APP_NAME].nil?
@@ -480,9 +482,36 @@ end
     end
 
     if File.exist?("../" + themePath)
+      # Extract from Branding.plist
+      tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "build.flags")
+      if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
+        appBuildFlags = tmpAppBuildFlags
+      end
+
+      tmpAppCustomAppScheme = get_info_plist_value(path: themePath, key: "build.custom-app-scheme")
+      if tmpAppCustomAppScheme && !tmpAppCustomAppScheme.empty?
+        appCustomAppScheme = tmpAppCustomAppScheme
+      end
+
+      tmpAuthCustomAuthScheme = get_info_plist_value(path: themePath, key: "build.custom-auth-scheme")
+      if tmpAuthCustomAuthScheme && !tmpAuthCustomAuthScheme.empty?
+        appCustomAuthScheme = tmpAuthCustomAuthScheme
+      end
+
+      # Fallback (legacy key name support)
       tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "app.build-flags")
       if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
         appBuildFlags = tmpAppBuildFlags
+      end
+
+      tmpAppCustomAppScheme = get_info_plist_value(path: themePath, key: "app.custom-app-scheme")
+      if tmpAppCustomAppScheme && !tmpAppCustomAppScheme.empty?
+        appCustomAppScheme = tmpAppCustomAppScheme
+      end
+
+      tmpAuthCustomAuthScheme = get_info_plist_value(path: themePath, key: "app.custom-auth-scheme")
+      if tmpAuthCustomAuthScheme && !tmpAuthCustomAuthScheme.empty?
+        appCustomAuthScheme = tmpAuthCustomAuthScheme
       end
 
       # Set the Git commit hash for the ios-app and ios-sdk repository into the Branding.plist
@@ -498,6 +527,8 @@ end
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
+    puts "Custom App Scheme: " + appCustomAppScheme
+    puts "Custom Auth Scheme: " + appCustomAuthScheme
 
     # Special handling for app build flag DISABLE_BACKGROUND_LOCATION needed:
     # calls to set_info_plist_value before building with xcodebuild
@@ -507,6 +538,18 @@ end
     # and "#endif" via sed
     if appBuildFlags.include? "DISABLE_BACKGROUND_LOCATION"
         sh "sed '/#ifndef DISABLE_BACKGROUND_LOCATION/,/#endif/d' ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod"
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
+
+	# update_url_schemes can't seem to reach the second URL scheme ("oc") for authentication
+	# so using sed and a XML property instead 
+    if !appCustomAppScheme.empty?
+        sh 'sed "s#<string octype=\"app\">owncloud</string>#<string>' + appCustomAppScheme + '</string>#" ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod'
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
+
+    if !appCustomAuthScheme.empty?
+        sh 'sed "s#<string octype=\"auth\">oc</string>#<string>' + appCustomAuthScheme + '</string>#" ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod'
         sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
     end
 
