@@ -542,7 +542,7 @@ end
     end
 
 	# update_url_schemes can't seem to reach the second URL scheme ("oc") for authentication
-	# so using sed and a XML property instead 
+	# so using sed and a XML property instead
     if !appCustomAppScheme.empty?
         sh 'sed "s#<string octype=\"app\">owncloud</string>#<string>' + appCustomAppScheme + '</string>#" ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod'
         sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
@@ -782,7 +782,7 @@ end
 
       if File.exist?("../" + themePath)
         # Copy the Branding.plist file with additional app and build informtion in the file name
-        sh "cp " + "../" + themePath + " ../" + themeFolder + appName + "-" + version + "-" + ipaSuffix + ".plist"
+        sh "cp " + "\"../" + themePath + "\" \"../" + themeFolder + appName + "-" + version + "-" + ipaSuffix + ".plist\""
       end
     end
 
