@@ -1396,6 +1396,36 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>paintbrush</string>
 				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Biometrical Unlock</string>
+					<key>Subtitle</key>
+					<string>When protecting the app with a pin code, biometrical unlock will be suggested as default.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock.shield</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Display Name</string>
+					<key>Subtitle</key>
+					<string>If the users display name is available, it will be shown in the account view, instead of the user name.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintbrush</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Improvements</string>
+					<key>Subtitle</key>
+					<string>There are a lot of improvements under the hood.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
 			</array>
 		</dict>
 	</array>
