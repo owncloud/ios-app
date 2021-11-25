@@ -237,10 +237,10 @@ public class Theme: NSObject {
 			}
 			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
 			if #available(iOS 13, *) {
-				if ThemeStyle.preferredStyle.themeStyle == .dark {
-					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .lightGray
-				} else {
+				if VendorServices.shared.isBranded {
 					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
+				} else {
+					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
 				}
 			} else {
 				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black

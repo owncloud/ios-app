@@ -85,23 +85,34 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			staticLoginViewController?.toolbarShown = false
 		}
 
+		if !VendorServices.shared.isBranded {
+			hasToolbar = false
+			self.navigationItem.rightBarButtonItem = nil
+		}
+
 		retrieveDisplayName()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		updateTableViewMargins(for: self.view.frame.size)
+	}
+
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+
+		updateTableViewMargins(for: size)
+	}
+
+	func updateTableViewMargins(for size: CGSize) {
 		if !VendorServices.shared.isBranded, UIDevice.current.isIpad {
 			// Set a maximum table view width of 400 on iPad
-			let width = self.view.frame.size.width
-			let height = self.view.frame.size.height
+			let width = size.width
 			var margin : CGFloat = 0
+			let tableViewWidth : CGFloat = 400
 
-			if width > height {
-				margin = (height - 400) / 2
-			} else {
-				margin = (width - 400) / 2
-			}
+			margin = (width - tableViewWidth) / 2
 
 			self.tableView.layoutMargins.left = margin
 			self.tableView.layoutMargins.right = margin
@@ -292,11 +303,6 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		}
 	}
 
-	@available(iOS 13.0, *)
-	override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-		return nil
-	}
-
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return nil
 	}
@@ -381,6 +387,29 @@ extension StaticLoginSingleAccountServerListViewController {
 			connection.disconnect {
 			}
 		}
+	}
+
+}
+
+extension StaticLoginSingleAccountServerListViewController {
+
+	override func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if indexPath.section == 0, indexPath.row == 0 {
+			return super.tableView(tableView, itemsForBeginning: session, at: indexPath)
+		}
+
+		return []
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if indexPath.section == 0, indexPath.row == 0 {
+			return super.tableView(tableView, contextMenuConfigurationForRowAt: indexPath, point: point)
+		}
+
+		return nil
 	}
 
 }

@@ -239,7 +239,7 @@ public extension NSObject {
 
 		if let cell = self as? UITableViewCell {
 			cell.backgroundColor = collection.tableRowColors.backgroundColor
-			cell.tintColor = collection.tableRowColors.labelColor
+			cell.tintColor = collection.lightBrandColor
 
 			if cell.selectionStyle != .none {
 				if collection.tableRowHighlightColors.backgroundColor != nil {
