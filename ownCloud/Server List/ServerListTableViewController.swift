@@ -222,13 +222,15 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		updateNoServerMessageVisibility()
 
-		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
-		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+		if hasToolbar {
+			let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
+			settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
-		self.toolbarItems = [
-			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
-			settingsBarButtonItem
-		]
+			self.toolbarItems = [
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+				settingsBarButtonItem
+			]
+		}
 
 		if AppLockManager.shared.passcode == nil && AppLockSettings.shared.isPasscodeEnforced {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
