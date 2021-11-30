@@ -1,0 +1,5 @@
+Change: (Branding) Biometrical Unlock Setting
+
+Control via branding parameter to auto enable biometrical unlock and immediately show Face ID authorization after the feature was enabled.
+
+https://github.com/owncloud/enterprise/issues/4818

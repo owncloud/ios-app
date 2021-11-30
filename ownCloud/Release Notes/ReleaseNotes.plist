@@ -1388,9 +1388,9 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 			<array>
 				<dict>
 					<key>Title</key>
-					<string>Account Overview</string>
+					<string>Account List</string>
 					<key>Subtitle</key>
-					<string>There is a fresh new look for the account overview.</string>
+					<string>There is a fresh new look for the single account overview.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1415,6 +1415,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<string>New</string>
 					<key>ImageName</key>
 					<string>paintbrush</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Background Location Settings</string>
+					<key>Subtitle</key>
+					<string>Only show background location settings if needed.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>bandage</string>
 				</dict>
 				<dict>
 					<key>Title</key>
