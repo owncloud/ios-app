@@ -55,15 +55,15 @@ class ImportPasteboardAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		var rootItem : OCItem?
+		var importToRootItem : OCItem?
 
 		if let root = context.query?.rootItem {
-			rootItem = root
+			importToRootItem = root
 		} else if let root = context.preferences?["rootItem"] as? OCItem { // KeyCommands send the rootItem via Preferences, because if a table view cell is selected, we need the folder root item
-			rootItem = root
+			importToRootItem = root
 		}
 
-		guard context.items.count > 0, let core = self.core, let rootItem = rootItem else {
+		guard context.items.count > 0, let core = self.core, let rootItem = importToRootItem else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}

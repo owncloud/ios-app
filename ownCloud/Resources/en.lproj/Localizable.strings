@@ -69,7 +69,8 @@
 "Edit Login" = "Edit Login";
 "Manage Storage" = "Manage Storage";
 "Access Files" = "Access Files";
-"Logout" = "Logout";
+"Log out" = "Log out";
+"Retry" = "Retry";
 
 /* Bookmark Info */
 "Bookmark Metadata" = "Bookmark Metadata";
@@ -187,7 +188,7 @@
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Really delete '%@'?";
-"Really logout from '%@'?" = "Really logout from '%@'?";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Remove" = "Remove";
@@ -205,6 +206,7 @@
 "Passcode Lock" = "Passcode Lock";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
+"Unlock using %@?" = "Unlock using %@?";
 "Videos" = "Videos";
 "Photos" = "Photos";
 "Wifi only" = "Wifi only";
@@ -219,6 +221,7 @@
 "Privacy Policy" = "Privacy Policy";
 "Terms Of Use" = "Terms Of Use";
 "Acknowledgements" = "Acknowledgements";
+"license" = "license";
 "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
@@ -299,9 +302,9 @@
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
 
-"Cellular transfers" = "Cellular transfers";
+"Cellular Data Usage" = "Cellular Data Usage";
 "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
-"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.";
 "General" = "General";
 "By feature" = "By feature";
 
@@ -312,7 +315,7 @@
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
 "Show folders on top" = "Show folders on top";
-"Prevent gestures" = "Prevent gestures";
+"Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
 /* Advanced settings */
@@ -608,13 +611,14 @@
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
 "Include available offline files" = "Include available offline files";
-"Delete Local Copies" = "Delete Local Copies";
+"Delete all Offline Files" = "Delete all Offline Files";
 "Manage" = "Manage";
 "Storage" = "Storage";
 "Compacting" = "Compacting";
 
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
 
 /* Diagnostic */
 "Diagnostic Overview" = "Diagnostic Overview";

@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import "OCLicenseAppStoreItem.h"
 
 @implementation OCLicenseAppStoreItem
@@ -50,3 +52,5 @@
 }
 
 @end
+
+#endif /* DISABLE_APPSTORE_LICENSING */

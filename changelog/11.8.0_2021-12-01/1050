@@ -1,0 +1,5 @@
+Bugfix: Background Location Settings
+
+Do not show the Background Location settings section, if no upload path was chosen.
+
+https://github.com/owncloud/ios-app/issues/1050

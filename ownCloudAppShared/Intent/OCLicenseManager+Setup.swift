@@ -66,6 +66,7 @@ public extension OCLicenseManager {
 		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup, .photoProFeatures]))
 
 		// Set up App Store License Provider
+		#if !DISABLE_APPSTORE_LICENSING
 		if let disableAppStoreLicensing = classSetting(forOCClassSettingsKey: .disableAppStoreLicensing) as? Bool, disableAppStoreLicensing == false, // only add AppStore IAP provider (and IAPs) if IAP licernsing has not been disabled via ClassSettings
 		   !OCLicenseEMMProvider.isEMMVersion { // only add AppStore IAP provider (and IAPs) if this is not the EMM version (which is supposed to already include all of them)
 			let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
@@ -78,6 +79,7 @@ public extension OCLicenseManager {
 
 			add(appStoreLicenseProvider)
 		}
+		#endif
 
 		// Set up Enterprise Provider
 		if let disableEnterpriseLicensing = classSetting(forOCClassSettingsKey: .disableEnterpriseLicensing) as? Bool, disableEnterpriseLicensing == false { // only add Enterprise provider if not disabled via ClassSettings

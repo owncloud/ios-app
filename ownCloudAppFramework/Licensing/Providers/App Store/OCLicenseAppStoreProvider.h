@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import <ownCloudSDK/ownCloudSDK.h>
 
 #import "OCLicenseProvider.h"
@@ -70,3 +72,4 @@ extern NSErrorDomain OCLicenseAppStoreProviderErrorDomain;
 
 NS_ASSUME_NONNULL_END
 
+#endif /* DISABLE_APPSTORE_LICENSING */

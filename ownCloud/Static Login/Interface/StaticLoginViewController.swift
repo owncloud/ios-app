@@ -21,7 +21,8 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol {
+class StaticLoginViewController: UIViewController, Themeable, StateRestorationConnectProtocol, CustomStatusBarViewControllerProtocol {
+
 	private var bookmark: OCBookmark?
 	private var lastVisibleItemId: String?
 
@@ -110,6 +111,10 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	func statusBarStyle() -> UIStatusBarStyle {
+		return Theme.shared.activeCollection.loginStatusBarStyle
 	}
 
 	override func loadView() {
@@ -309,7 +314,8 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 	func buildBookmarkSelector() -> UIViewController {
 		var serverList : ServerListTableViewController?
 
-		if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
+		if OCBookmarkManager.shared.bookmarks.count > 1 {
+		//if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
 			if #available(iOS 13.0, *) {
 				serverList = StaticLoginServerListViewController(style: .insetGrouped)
 			} else {
@@ -331,10 +337,6 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
 		// PushTransition correctly restores the view
 		serverList?.pushFromViewController = self
-
-		if let bookmark = bookmark {
-			serverList?.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false)
-		}
 
 		return serverList!
 	}

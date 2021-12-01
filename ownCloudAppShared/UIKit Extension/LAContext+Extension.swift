@@ -20,7 +20,7 @@ import LocalAuthentication
 
 extension LAContext {
 
-    func supportedBiometricsAuthenticationName() -> String? {
+    public func supportedBiometricsAuthenticationName() -> String? {
 
         if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
             switch self.biometryType {
