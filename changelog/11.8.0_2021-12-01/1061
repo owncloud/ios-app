@@ -1,0 +1,5 @@
+Bugfix: Clear Passcode Lock
+
+Clear unlock and in case an unlock has expired, to protect against subsequent attempts setting the device time to an earlier date.
+
+https://github.com/owncloud/ios-app/pull/1061

@@ -1,15 +1,15 @@
-• Fix: Enabling Markup Edit Mode
-Auto-enabling the markup edit mode on iOS 15 was broken.
+• Account List
+There is a fresh new look for the single account overview.
 
-• Fix: PDF-Viewer
-The last page of a PDF file could not be opened with the "Go to page" action
+• Biometrical Unlock
+When protecting the app with a pin code, biometrical unlock will be suggested as default.
 
-• Fix: PDF-Viewer
-Keyboard does not disappear when using the "Go to page" action on the iPad.
+• Display Name
+If the users display name is available, it will be shown in the account view, instead of the user name.
 
-• Fix: Private Link
-Resolving a private link opened via the URL scheme was not successful in some cases.
+• Background Location Settings
+Only show background location settings if needed.
 
-• Fix: Automatic Photo Upload 
-Fixed an crash on iOS 15.
+• Improvements
+There are a lot of improvements under the hood.
 

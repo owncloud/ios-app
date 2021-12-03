@@ -1,0 +1,5 @@
+Change: (Branding) Modular Localization
+
+Allowing complex customization of localized strings with variables, value sources and complete text replacements.
+
+https://github.com/owncloud/ios-app/pull/1054

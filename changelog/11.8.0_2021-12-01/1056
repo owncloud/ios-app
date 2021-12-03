@@ -1,0 +1,5 @@
+Change: (Branding) Skip Account Screen
+
+Skip "Manage" screen / automatically open "Files" screen after login via branding parameter.
+
+https://github.com/owncloud/ios-app/pull/1056
