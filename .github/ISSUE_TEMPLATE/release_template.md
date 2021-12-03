@@ -26,7 +26,7 @@ Xcode version to work with:
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
 - [ ] [DOC] Update user manual with the new functionalities
-- [ ] [DOC] Update owncloud.org/download version numbers (notify #wordpress)
+- [ ] [DOC] Update https://owncloud.com/mobile-apps/#ios version numbers (notify #marketing)
 - [ ] [GIT] Merge branch `release/[major].[minor].[patch]` in master
 - [ ] [GIT] Create tag and sign it `[major].[minor].[patch]`
 - [ ] [GIT] Add the new release on [GitHub ios-app](https://github.com/owncloud/ios-app/releases)
