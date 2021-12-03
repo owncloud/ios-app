@@ -20,6 +20,7 @@ import UIKit
 import ownCloudApp
 import ownCloudAppShared
 
+#if !DISABLE_APPSTORE_LICENSING
 class PurchasesSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
 
@@ -62,3 +63,4 @@ class PurchasesSettingsSection: SettingsSection {
 		add(rows: rows)
 	}
 }
+#endif

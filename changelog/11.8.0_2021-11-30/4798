@@ -1,0 +1,5 @@
+Change: Display Name
+
+Show display name in branded single account view if available, otherwise show the userName.
+
+https://github.com/owncloud/enterprise/issues/4798

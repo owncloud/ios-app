@@ -1,3 +1,127 @@
+Changelog for ownCloud iOS Client [11.8.0] (2021-11-30)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.8.0 relevant to
+ownCloud admins and users.
+
+[11.8.0]: https://github.com/owncloud/ios-app/compare/milestone/11.7.1...milestone/11.8.0
+
+Summary
+-------
+
+* Bugfix - Background Location Settings: [#1050](https://github.com/owncloud/ios-app/issues/1050)
+* Bugfix - Clear Passcode Lock: [#1061](https://github.com/owncloud/ios-app/pull/1061)
+* Bugfix - Quick Access: [#4767](https://github.com/owncloud/enterprise/issues/4767)
+* Bugfix - (Branding) Retry Section for Login Error: [#4786](https://github.com/owncloud/enterprise/issues/4786)
+* Change - Account List: [#1014](https://github.com/owncloud/ios-app/issues/1014)
+* Change - (Branding) Modular Localization: [#1054](https://github.com/owncloud/ios-app/pull/1054)
+* Change - (Branding) Skip Account Screen: [#1056](https://github.com/owncloud/ios-app/pull/1056)
+* Change - (Branding) Color and UI Improvements: [#1057](https://github.com/owncloud/ios-app/pull/1057)
+* Change - Suggest Biometrical Unlock: [#4747](https://github.com/owncloud/enterprise/issues/4747)
+* Change - (Branding) Default User Settings: [#4766](https://github.com/owncloud/enterprise/issues/4766)
+* Change - Display Name: [#4798](https://github.com/owncloud/enterprise/issues/4798)
+* Change - Licenses Overview: [#4801](https://github.com/owncloud/enterprise/issues/4801)
+* Change - (Branding) Remove Code via Build Flag: [#4805](https://github.com/owncloud/enterprise/issues/4805)
+* Change - (Branding) Biometrical Unlock Setting: [#4818](https://github.com/owncloud/enterprise/issues/4818)
+* Change - (Branding) Custom App/Auth Schemes: [#4857](https://github.com/owncloud/enterprise/issues/4857)
+
+Details
+-------
+
+* Bugfix - Background Location Settings: [#1050](https://github.com/owncloud/ios-app/issues/1050)
+
+   Do not show the Background Location settings section, if no upload path was chosen.
+
+   https://github.com/owncloud/ios-app/issues/1050
+
+* Bugfix - Clear Passcode Lock: [#1061](https://github.com/owncloud/ios-app/pull/1061)
+
+   Clear unlock and in case an unlock has expired, to protect against subsequent attempts setting
+   the device time to an earlier date.
+
+   https://github.com/owncloud/ios-app/pull/1061
+
+* Bugfix - Quick Access: [#4767](https://github.com/owncloud/enterprise/issues/4767)
+
+   Fix bug where a quick access entry showed no items when selected a second time.
+
+   https://github.com/owncloud/enterprise/issues/4767
+
+* Bugfix - (Branding) Retry Section for Login Error: [#4786](https://github.com/owncloud/enterprise/issues/4786)
+
+   This adds a retry section to the branded login, e.g. if a server url could not be reached.
+
+   https://github.com/owncloud/enterprise/issues/4786
+
+* Change - Account List: [#1014](https://github.com/owncloud/ios-app/issues/1014)
+
+   Show a new detailed single account view instead of the server list if only one account is
+   configured.
+
+   https://github.com/owncloud/ios-app/issues/1014
+
+* Change - (Branding) Modular Localization: [#1054](https://github.com/owncloud/ios-app/pull/1054)
+
+   Allowing complex customization of localized strings with variables, value sources and
+   complete text replacements.
+
+   https://github.com/owncloud/ios-app/pull/1054
+
+* Change - (Branding) Skip Account Screen: [#1056](https://github.com/owncloud/ios-app/pull/1056)
+
+   Skip "Manage" screen / automatically open "Files" screen after login via branding parameter.
+
+   https://github.com/owncloud/ios-app/pull/1056
+
+* Change - (Branding) Color and UI Improvements: [#1057](https://github.com/owncloud/ios-app/pull/1057)
+
+   Setup a branding with only two color values and simplified a lot of branding values and
+   furthermore fixed some UI issues.
+
+   https://github.com/owncloud/ios-app/pull/1057
+
+* Change - Suggest Biometrical Unlock: [#4747](https://github.com/owncloud/enterprise/issues/4747)
+
+   Suggest enabling biometrical unlock after setting up passcode protection.
+
+   https://github.com/owncloud/enterprise/issues/4747
+
+* Change - (Branding) Default User Settings: [#4766](https://github.com/owncloud/enterprise/issues/4766)
+
+   Adds a new class setting to allow registration of alternative defaults for user defaults.
+
+   https://github.com/owncloud/enterprise/issues/4766
+
+* Change - Display Name: [#4798](https://github.com/owncloud/enterprise/issues/4798)
+
+   Show display name in branded single account view if available, otherwise show the userName.
+
+   https://github.com/owncloud/enterprise/issues/4798
+
+* Change - Licenses Overview: [#4801](https://github.com/owncloud/enterprise/issues/4801)
+
+   Add a new view controller to present license texts for each component individually.
+
+   https://github.com/owncloud/enterprise/issues/4801
+
+* Change - (Branding) Remove Code via Build Flag: [#4805](https://github.com/owncloud/enterprise/issues/4805)
+
+   Adds support for disable code via parameters which can be specified via Branding.plist.
+
+   https://github.com/owncloud/enterprise/issues/4805
+
+* Change - (Branding) Biometrical Unlock Setting: [#4818](https://github.com/owncloud/enterprise/issues/4818)
+
+   Control via branding parameter to auto enable biometrical unlock and immediately show Face ID
+   authorization after the feature was enabled.
+
+   https://github.com/owncloud/enterprise/issues/4818
+
+* Change - (Branding) Custom App/Auth Schemes: [#4857](https://github.com/owncloud/enterprise/issues/4857)
+
+   New branding parameter to change the schemes for private links and auth scheme.
+
+   https://github.com/owncloud/enterprise/issues/4857
+
 Changelog for ownCloud iOS Client [11.7.1] (2021-09-22)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.7.1 relevant to

@@ -1,0 +1,5 @@
+Change: (Branding) Custom App/Auth Schemes
+
+New branding parameter to change the schemes for private links and auth scheme.
+
+https://github.com/owncloud/enterprise/issues/4857

@@ -26,6 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	// UIWindowScene delegate
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+		// Set up HTTP pipelines
+		OCHTTPPipelineManager.setupPersistentPipelines()
+		
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
 			var navigationController: UINavigationController?
@@ -35,7 +38,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
 				navigationController?.setNavigationBarHidden(true, animated: false)
 			} else {
-				let serverListTableViewController = ServerListTableViewController(style: .plain)
+				var serverListTableViewController : ServerListTableViewController?
+				if OCBookmarkManager.shared.bookmarks.count == 1 {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+				} else {
+					serverListTableViewController = ServerListTableViewController(style: .plain)
+				}
+
+				guard let serverListTableViewController = serverListTableViewController else { return }
+
 				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
 
 				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)

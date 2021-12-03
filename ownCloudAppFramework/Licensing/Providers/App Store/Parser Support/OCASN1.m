@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import "OCASN1.h"
 #import "NSDate+RFC3339.h"
 
@@ -217,3 +219,5 @@
 }
 
 @end
+
+#endif /* DISABLE_APPSTORE_LICENSING */

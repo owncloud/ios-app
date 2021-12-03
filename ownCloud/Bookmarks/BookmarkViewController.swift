@@ -584,11 +584,10 @@ class BookmarkViewController: StaticTableViewController {
 
 							OnMainThread {
 								hudCompletion({
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: {
-										OnMainThread {
-											userActionCompletionHandler?(bookmark, true)
-										}
-									})
+									OnMainThread {
+										userActionCompletionHandler?(bookmark, true)
+									}
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								})
 							}
 

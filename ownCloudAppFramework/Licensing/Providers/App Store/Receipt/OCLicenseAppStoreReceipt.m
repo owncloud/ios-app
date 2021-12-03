@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import <UIKit/UIKit.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
@@ -243,3 +245,5 @@
 }
 
 @end
+
+#endif /* DISABLE_APPSTORE_LICENSING */
