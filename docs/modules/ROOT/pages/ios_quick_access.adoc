@@ -27,6 +27,9 @@ These are files that were used sometime within the previous week, where used cov
 Files marked as favorite::
 See a list of all resources in your account set as favourite.
 
+Files available offline::
+See a list of all files and folders in your account that are xref:ios_available_offline.adoc[available offline].
+
 Image files::
 See a list of all image files in your account.
 

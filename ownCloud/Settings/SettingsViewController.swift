@@ -27,8 +27,15 @@ class SettingsViewController: StaticTableViewController {
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(SecuritySettingsSection(userDefaults: userDefaults))
 			self.addSection(UserInterfaceSettingsSection(userDefaults: userDefaults))
+			self.addSection(StorageSettingsSection(userDefaults: userDefaults))
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
+			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaUploadSettingsSection(userDefaults: userDefaults))
+
+			if #available(iOS 13, *) {
+				self.addSection(PurchasesSettingsSection(userDefaults: userDefaults))
+			}
+
 			self.addSection(MoreSettingsSection(userDefaults: userDefaults))
 		}
 	}

@@ -25,7 +25,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Constants
 	fileprivate var passCodeCompletionDelay: TimeInterval = 0.1
-	fileprivate let inputDelete: String = "\u{8}"
 
 	// MARK: - Views
 	@IBOutlet private var messageLabel: UILabel?
@@ -39,7 +38,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var keypadContainerView : UIView?
 	@IBOutlet private var keypadButtons: [ThemeRoundedButton]?
 	@IBOutlet private var deleteButton: ThemeButton?
-	@IBOutlet private var cancelButton: ThemeButton?
+	@IBOutlet public var cancelButton: ThemeButton?
 
 	// MARK: - Properties
 	var passcodeLength: Int = 4
@@ -137,6 +136,8 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = false
 
 		super.init(nibName: "PasscodeViewController", bundle: nil)
+
+		self.modalPresentationStyle = .fullScreen
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -159,6 +160,14 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
+
+		if #available(iOS 13.4, *) {
+			for button in keypadButtons! {
+				PointerEffect.install(on: button, effectStyle: .highlight)
+			}
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -208,7 +217,7 @@ class PasscodeViewController: UIViewController, Themeable {
         appendDigit(digit: String(sender.tag))
 	}
 
-    private func appendDigit(digit: String) {
+    public func appendDigit(digit: String) {
         if !keypadButtonsEnabled || keypadButtonsHidden {
             return
         }
@@ -237,7 +246,7 @@ class PasscodeViewController: UIViewController, Themeable {
         deleteLastDigit()
 	}
 
-    private func deleteLastDigit() {
+    public func deleteLastDigit() {
         if passcode != nil, passcode!.count > 0 {
             passcode?.removeLast()
             updatePasscodeDots()
@@ -270,54 +279,4 @@ class PasscodeViewController: UIViewController, Themeable {
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 	}
-
-    // MARK: - External Keyboard Commands
-
-    @objc func performKeyCommand(sender: UIKeyCommand) {
-        guard let key = sender.input else {
-            return
-        }
-
-        switch key {
-        case inputDelete:
-            deleteLastDigit()
-        case UIKeyCommand.inputEscape:
-            cancelHandler?(self)
-        default:
-            appendDigit(digit: key)
-        }
-
-    }
-
-    override var keyCommands: [UIKeyCommand]? {
-
-        var keyCommands : [UIKeyCommand] = []
-        for i in 0 ..< 10 {
-            keyCommands.append(
-                UIKeyCommand(input:String(i),
-                             modifierFlags: [],
-                             action: #selector(self.performKeyCommand(sender:)),
-                             discoverabilityTitle: String(i))
-            )
-        }
-
-        keyCommands.append(
-            UIKeyCommand(input: inputDelete,
-                         modifierFlags: [],
-                         action: #selector(self.performKeyCommand(sender:)),
-                         discoverabilityTitle: "Delete".localized)
-        )
-
-        if cancelButton?.isHidden == false {
-            keyCommands.append(
-
-                UIKeyCommand(input: UIKeyCommand.inputEscape,
-                            modifierFlags: [],
-                            action: #selector(self.performKeyCommand(sender:)),
-                            discoverabilityTitle: "Cancel".localized)
-            )
-        }
-
-        return keyCommands
-    }
 }

@@ -39,7 +39,14 @@ extension OCBookmarkManager {
 
 			switch waitGroup.wait(timeout: .now() + 5.0) {
 				case .success: break
-				case .timedOut: assertionFailure("timed out waiting for bookmarks to complete deletion")
+				case .timedOut:
+					let remainingBookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
+
+					for bookmark in remainingBookmarks {
+						NSLog("timed out waiting for bookmark \(bookmark.uuid) to complete deletion")
+						OCBookmarkManager.shared.removeBookmark(bookmark)
+					}
+					// assertionFailure("timed out waiting for bookmarks to complete deletion")
 			}
 		}
 

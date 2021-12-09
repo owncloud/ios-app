@@ -43,6 +43,8 @@ class FileProviderInterfaceManager: NSObject {
 	}
 
 	func updateDomainsFromBookmarks() {
+		if !OCVault.hostHasFileProvider { return }
+
 		NSFileProviderManager.getDomainsWithCompletionHandler { (fileProviderDomains, error) in
 			OnMainThread {
 				if error != nil {

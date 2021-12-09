@@ -22,12 +22,18 @@ class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Rename".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
+	override class var keyCommand : String? { return "\r" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count > 1 {
 			return .none
+		}
+		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.rename)}).count > 0 {
+			return .none
+
 		}
 		// Examine items in context
 		return .middle
@@ -79,7 +85,7 @@ class RenameAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "folder")
 		}
 

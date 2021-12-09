@@ -27,19 +27,24 @@ protocol ClientItemCellDelegate: class {
 
 class ClientItemCell: ThemeTableViewCell {
 	private let horizontalMargin : CGFloat = 15
-	private let verticalLabelMargin : CGFloat = 15
-	private let verticalIconMargin : CGFloat = 15
+	private let verticalLabelMargin : CGFloat = 10
+	private let verticalIconMargin : CGFloat = 10
 	private let horizontalSmallMargin : CGFloat = 10
 	private let spacing : CGFloat = 15
-	private let iconViewWidth : CGFloat = 60
+	private let smallSpacing : CGFloat = 2
+	private let iconViewWidth : CGFloat = 40
+	private let detailIconViewHeight : CGFloat = 15
 	private let moreButtonWidth : CGFloat = 60
 	private let verticalLabelMarginFromCenter : CGFloat = 2
+	private let iconSize : CGSize = CGSize(width: 40, height: 40)
+	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 
 	weak var delegate: ClientItemCellDelegate?
 
 	var titleLabel : UILabel = UILabel()
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
+	var showingIcon : Bool = false
 	var cloudStatusIconView : UIImageView = UIImageView()
 	var sharedStatusIconView : UIImageView = UIImageView()
 	var publicLinkStatusIconView : UIImageView = UIImageView()
@@ -47,8 +52,14 @@ class ClientItemCell: ThemeTableViewCell {
 	var progressView : ProgressView?
 
 	var moreButtonWidthConstraint : NSLayoutConstraint?
+
+	var sharedStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
+	var publicLinkStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
+	var cloudStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
+
 	var sharedStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 	var publicLinkStatusIconViewRightMarginConstraint : NSLayoutConstraint?
+	var cloudStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -83,6 +94,12 @@ class ClientItemCell: ThemeTableViewCell {
 			blankView.layer.masksToBounds = true
 			return blankView
 		}()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
+
+		if #available(iOS 13.4, *) {
+			PointerEffect.install(on: self.contentView, effectStyle: .hover)
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -90,6 +107,7 @@ class ClientItemCell: ThemeTableViewCell {
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 		self.localID = nil
 	}
 
@@ -105,15 +123,19 @@ class ClientItemCell: ThemeTableViewCell {
 
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
+		cloudStatusIconView.contentMode = .scaleAspectFit
 
 		sharedStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		sharedStatusIconView.contentMode = .center
+		sharedStatusIconView.contentMode = .scaleAspectFit
 
 		publicLinkStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		publicLinkStatusIconView.contentMode = .center
+		publicLinkStatusIconView.contentMode = .scaleAspectFit
 
-		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
 		titleLabel.adjustsFontForContentSizeCategory = true
+		titleLabel.lineBreakMode = .byTruncatingMiddle
 
 		detailLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
 		detailLabel.adjustsFontForContentSizeCategory = true
@@ -128,6 +150,9 @@ class ClientItemCell: ThemeTableViewCell {
 
 		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
 		moreButton.contentMode = .center
+		if #available(iOS 13.4, *) {
+			moreButton.isPointerInteractionEnabled = true
+		}
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
 
@@ -152,40 +177,53 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
-		sharedStatusIconViewRightMarginConstraint = sharedStatusIconView.rightAnchor.constraint(equalTo: publicLinkStatusIconView.leftAnchor, constant: 0)
-		publicLinkStatusIconViewRightMarginConstraint = publicLinkStatusIconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: 0)
+
+		cloudStatusIconViewZeroWidthConstraint = cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+		sharedStatusIconViewZeroWidthConstraint = sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+		publicLinkStatusIconViewZeroWidthConstraint = publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+
+		cloudStatusIconViewRightMarginConstraint = sharedStatusIconView.leftAnchor.constraint(equalTo: cloudStatusIconView.rightAnchor)
+		sharedStatusIconViewRightMarginConstraint = publicLinkStatusIconView.leftAnchor.constraint(equalTo: sharedStatusIconView.rightAnchor)
+		publicLinkStatusIconViewRightMarginConstraint = detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor)
 
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
 			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
-			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -spacing),
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
-			titleLabel.rightAnchor.constraint(equalTo: sharedStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+
+			cloudStatusIconViewZeroWidthConstraint!,
+			sharedStatusIconViewZeroWidthConstraint!,
+			publicLinkStatusIconViewZeroWidthConstraint!,
+
+			cloudStatusIconView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: spacing),
+			cloudStatusIconViewRightMarginConstraint!,
 			sharedStatusIconViewRightMarginConstraint!,
 			publicLinkStatusIconViewRightMarginConstraint!,
-			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
 
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
 			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
 			detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
 			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
 
+			cloudStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+			sharedStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+			publicLinkStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+
+			cloudStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+
 			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			moreButtonWidthConstraint!,
-			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
-
-			sharedStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-
-			publicLinkStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-
-			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -horizontalSmallMargin),
-			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
-			])
+			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
+		])
 	}
 
 	// MARK: - Present item
@@ -199,9 +237,29 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 	}
 
+	func titleLabelString(for item: OCItem?) -> String {
+		if let item = item, let itemName = item.name {
+			return itemName
+		}
+
+		return ""
+	}
+
+	func detailLabelString(for item: OCItem?) -> String {
+		if let item = item {
+			var size: String = item.sizeLocalized
+
+			if item.size < 0 {
+				size = "Pending".localized
+			}
+
+			return size + " - " + item.lastModifiedLocalized
+		}
+
+		return ""
+	}
+
 	func updateWith(_ item: OCItem) {
-		let iconSize : CGSize = CGSize(width: 40, height: 40)
-		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 		var iconImage : UIImage?
 
 		// Cancel any already active request
@@ -209,76 +267,45 @@ class ClientItemCell: ThemeTableViewCell {
 			activeThumbnailRequestProgress?.cancel()
 		}
 
+		// Set the icon and initiate thumbnail generation
 		iconImage = item.icon(fitInSize: iconSize)
+		self.iconView.image = iconImage
 
-		var size: String = item.sizeLocalized
-
-		if item.size < 0 {
-			size = "Pending".localized
-		}
-
-		self.detailLabel.text = size + " - " + item.lastModifiedLocalized
+  		if let core = core {
+ 			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
+ 				if self?.activeThumbnailRequestProgress === progress {
+ 					self?.activeThumbnailRequestProgress = nil
+ 				}
+ 			})
+ 		}
 
 		self.accessoryType = .none
 
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.iconView.image = image
-						}
-					}
-				})
-			}
-
-			if let thumbnail = item.thumbnail {
-				displayThumbnail(thumbnail)
-			} else {
-				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
-					displayThumbnail(thumbnail)
-
-					if self?.activeThumbnailRequestProgress === progress {
-						self?.activeThumbnailRequestProgress = nil
-					}
-				})
-			}
-		}
-
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
-			sharedStatusIconViewRightMarginConstraint?.constant = -horizontalSmallMargin
+			sharedStatusIconViewRightMarginConstraint?.constant = smallSpacing
+			sharedStatusIconViewZeroWidthConstraint?.isActive = false
 		} else {
 			sharedStatusIconView.image = nil
 			sharedStatusIconViewRightMarginConstraint?.constant = 0
+			sharedStatusIconViewZeroWidthConstraint?.isActive = true
 		}
+		sharedStatusIconView.invalidateIntrinsicContentSize()
+
 		if item.sharedByPublicLink {
 			publicLinkStatusIconView.image = UIImage(named: "link")
-			publicLinkStatusIconViewRightMarginConstraint?.constant = -horizontalSmallMargin
+			publicLinkStatusIconViewRightMarginConstraint?.constant = smallSpacing
+			publicLinkStatusIconViewZeroWidthConstraint?.isActive = false
 		} else {
 			publicLinkStatusIconView.image = nil
 			publicLinkStatusIconViewRightMarginConstraint?.constant = 0
+			publicLinkStatusIconViewZeroWidthConstraint?.isActive = true
 		}
+		publicLinkStatusIconView.invalidateIntrinsicContentSize()
 
-		if item.type == .file {
-			switch item.cloudStatus {
-			case .cloudOnly:
-				cloudStatusIconView.image = UIImage(named: "cloud-only")
+		self.updateCloudStatusIcon(with: item)
 
-			case .localCopy:
-				cloudStatusIconView.image = nil
-
-			case .locallyModified, .localOnly:
-				cloudStatusIconView.image = UIImage(named: "cloud-local-only")
-			}
-		} else {
-			cloudStatusIconView.image = nil
-		}
-
-		self.iconView.image = iconImage
-		self.titleLabel.text = item.name
+		self.updateLabels(with: item)
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
@@ -286,6 +313,61 @@ class ClientItemCell: ThemeTableViewCell {
 		self.moreButton.accessibilityLabel = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
 
 		self.updateProgress()
+	}
+
+	func updateCloudStatusIcon(with item: OCItem?) {
+		var cloudStatusIcon : UIImage?
+		var cloudStatusIconAlpha : CGFloat = 1.0
+
+		if let item = item {
+			let availableOfflineCoverage : OCCoreAvailableOfflineCoverage = core?.availableOfflinePolicyCoverage(of: item) ?? .none
+
+			switch availableOfflineCoverage {
+				case .direct, .none: cloudStatusIconAlpha = 1.0
+				case .indirect: cloudStatusIconAlpha = 0.5
+			}
+
+			if item.type == .file {
+				switch item.cloudStatus {
+				case .cloudOnly:
+					cloudStatusIcon = UIImage(named: "cloud-only")
+					cloudStatusIconAlpha = 1.0
+
+				case .localCopy:
+					cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
+
+				case .locallyModified, .localOnly:
+					cloudStatusIcon = UIImage(named: "cloud-local-only")
+					cloudStatusIconAlpha = 1.0
+				}
+			} else {
+				if availableOfflineCoverage == .none {
+					cloudStatusIcon = nil
+				} else {
+					cloudStatusIcon = UIImage(named: "cloud-available-offline")
+				}
+			}
+		}
+
+		cloudStatusIconView.image = cloudStatusIcon
+		cloudStatusIconView.alpha = cloudStatusIconAlpha
+
+		cloudStatusIconViewZeroWidthConstraint?.isActive = (cloudStatusIcon == nil)
+		cloudStatusIconViewRightMarginConstraint?.constant = (cloudStatusIcon == nil) ? 0 : smallSpacing
+
+		cloudStatusIconView.invalidateIntrinsicContentSize()
+	}
+
+	func updateLabels(with item: OCItem?) {
+		self.titleLabel.text = titleLabelString(for: item)
+		self.detailLabel.text = detailLabelString(for: item)
+	}
+
+	// MARK: - Available offline tracking
+	@objc func updateAvailableOfflineStatus(_ notification: Notification) {
+		OnMainThread { [weak self] in
+			self?.updateCloudStatusIcon(with: self?.item)
+		}
 	}
 
 	// MARK: - Progress
@@ -361,7 +443,11 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
-		moreButton.tintColor = collection.tableRowColors.labelColor
+		moreButton.tintColor = collection.tableRowColors.secondaryLabelColor
+
+		if showingIcon, let item = item {
+			iconView.image = item.icon(fitInSize: iconSize)
+		}
 	}
 
 	// MARK: - Editing mode

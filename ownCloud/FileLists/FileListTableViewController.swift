@@ -22,14 +22,14 @@ import ownCloudSDK
 class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	weak var core : OCCore?
 
-	let estimatedTableRowHeight : CGFloat = 80
+	let estimatedTableRowHeight : CGFloat = 62
 
 	var progressSummarizer : ProgressSummarizer?
 	private var _actionProgressHandler : ActionProgressHandler?
 
-	public init(core inCore: OCCore) {
+	public init(core inCore: OCCore, style: UITableView.Style = .plain) {
 		core = inCore
-		super.init(style: .plain)
+		super.init(style: style)
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 	}
@@ -72,7 +72,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, sender: cell)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
 			self.present(asCard: moreViewController, animated: true)
@@ -107,6 +107,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 		if allowPullToRefresh {
 			pullToRefreshControl = UIRefreshControl()
+			pullToRefreshControl?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 			pullToRefreshControl?.addTarget(self, action: #selector(self.pullToRefreshTriggered), for: .valueChanged)
 			self.tableView.insertSubview(pullToRefreshControl!, at: 0)
 			tableView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
@@ -213,62 +214,57 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Table view delegate
-	var lastTappedItemLocalID : String?
-
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+
 		if !self.tableView.isEditing {
 			guard let rowItem : OCItem = itemAt(indexPath: indexPath) else {
 				return
 			}
 
-			if let core = self.core {
-				switch rowItem.type {
-					case .collection:
-						if let path = rowItem.path {
-							self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
-						}
+			open(item: rowItem, animated: true)
+		}
+	}
 
-					case .file:
-						guard let query = self.query(forItem: rowItem) else {
-							return
-						}
-
-						if lastTappedItemLocalID != rowItem.localID {
-							lastTappedItemLocalID = rowItem.localID
-
-							if let progress = core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self, query] (error, core, item, _) in
-
-								guard let self = self else { return }
-								OnMainThread { [weak core] in
-									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
-										if let item = item, let core = core {
-											if item.localID == self.lastTappedItemLocalID {
-												let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
-												itemViewController.hidesBottomBarWhenPushed = true
-												itemViewController.progressSummarizer = self.progressSummarizer
-												self.navigationController?.pushViewController(itemViewController, animated: true)
-											}
-										}
-									}
-
-									if self.lastTappedItemLocalID == item?.localID {
-										self.lastTappedItemLocalID = nil
-									}
-								}
-							}) {
-								progressSummarizer?.startTracking(progress: progress)
-							}
-						}
+	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
+		if let core = self.core {
+			if #available(iOS 13.0, *) {
+				if  let tabBarController = self.tabBarController as? ClientRootViewController {
+					let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
 			}
 
-			tableView.deselectRow(at: indexPath, animated: true)
+			switch item.type {
+				case .collection:
+					if let path = item.path {
+						let clientQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+						if pushViewController {
+							self.navigationController?.pushViewController(clientQueryViewController, animated: animated)
+						}
+
+						return clientQueryViewController
+					}
+
+				case .file:
+					guard let query = self.query(forItem: item) else {
+						return nil
+					}
+
+					let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
+					itemViewController.hidesBottomBarWhenPushed = true
+					itemViewController.progressSummarizer = self.progressSummarizer
+					self.navigationController?.pushViewController(itemViewController, animated: animated)
+			}
 		}
+
+		return nil
 	}
 
 	// MARK: - Themable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
 
 		if event == .update {
 			self.reloadTableData()

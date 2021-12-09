@@ -84,7 +84,8 @@ class ProgressView: UIView, Themeable, CAAnimationDelegate {
 				self.update()
 			}
 		} else {
-			super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+			// This doesn't seem to be needed - and if it is called, throws an exception
+			// super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
 		}
 	}
 

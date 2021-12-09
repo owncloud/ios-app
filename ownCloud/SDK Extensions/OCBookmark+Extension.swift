@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 extension OCBookmark {
-	static let OCBookmarkDisplayName : NSString = "OCBookmarkDisplayName"
+	static let OCBookmarkDisplayName : OCBookmarkUserInfoKey = OCBookmarkUserInfoKey(rawValue: "OCBookmarkDisplayName")
 
 	var userName : String? {
 		if let authenticationData = self.authenticationData,

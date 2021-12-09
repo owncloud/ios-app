@@ -178,7 +178,7 @@
 				{
 					// Start query
 					self->_query = [OCQuery queryForPath:queryPath];
-					self->_query.includeRootItem = YES;
+					self->_query.includeRootItem = queryPath.isRootPath; // Include the root item only for the root folder. If it's not included, no folder can be created in the root directory. If a non-root folder is included in a query result for its content, the Files Duplicate action will loop infinitely.
 					self->_query.delegate = self;
 
 					[DisplaySettings.sharedDisplaySettings updateQueryWithDisplaySettings:self->_query];
@@ -322,9 +322,11 @@
 
 - (void)queryHasChangesAvailable:(OCQuery *)query
 {
-	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu", query.queryPath, (unsigned long)query.state);
+	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query.queryPath, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
 
-	if ((query.state == OCQueryStateContentsFromCache) || ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) || (query.state == OCQueryStateIdle))
+	if ( (query.state == OCQueryStateContentsFromCache) ||
+	    ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) ||
+	     (query.state == OCQueryStateIdle))
 	{
 		dispatch_async(dispatch_get_main_queue(), ^{
 			@synchronized(self)
@@ -421,5 +423,15 @@
 	*/
 	// - (void)finishEnumeratingWithError:(NSError *)error;
 // }
+
++ (NSArray<OCLogTagName> *)logTags
+{
+	return (@[ @"FPEnum" ]);
+}
+
+- (NSArray<OCLogTagName> *)logTags
+{
+	return (@[ @"FPEnum", OCLogTagInstance(self)]);
+}
 
 @end

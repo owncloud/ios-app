@@ -42,6 +42,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
+	var pasteboardChangedCounter = 0
+
 	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
 
 	var skipAuthorizationFailure : Bool = false
@@ -97,7 +99,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		if let connectionStatus = core?.connectionStatus {
 			var connectionShortDescription = core?.connectionStatusShortDescription
 
-			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription! + ". ") : ""
+			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription!.hasSuffix(".") ? connectionShortDescription! + " " : connectionShortDescription! + ". ") : ""
 
 			switch connectionStatus {
 				case .online:
@@ -137,13 +139,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	}
 
 	// MARK: - Startup
-	func afterCoreStart(_ completionHandler: @escaping (() -> Void)) {
+	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
+
+			// Remove skip available offline when user opens the bookmark
+			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
-				self.coreReady()
+				self.coreReady(lastVisibleItemId)
 			}
 
 			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
@@ -169,13 +174,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		self.tabBar.isTranslucent = false
 
+		// Add tab bar icons
+		Theme.shared.add(tvgResourceFor: "folder")
+		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+		Theme.shared.add(tvgResourceFor: "status-flash")
+
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
-
-		Theme.shared.add(tvgResourceFor: "status-flash")
 
 		activityViewController = ClientActivityViewController()
 		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
@@ -233,19 +241,17 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		})
 	}
 
-	func coreReady() {
+	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
-				let query = OCQuery(forPath: "/")
-//				let query = OCQuery(condition: OCQueryCondition.require([
-//					.where(.name, contains: "i"),
-//					.where(.type, isEqualTo: OCItemType.file.rawValue),
-//					.where(.size, isGreaterThan: 220000)
-//				]).sorted(by: .size, ascending: true), inputFilter:nil)
-
-				let queryViewController = ClientQueryViewController(core: core, query: query)
-				// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
-				self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+				if let localItemId = lastVisibleItemId {
+					self.createFileListStack(for: localItemId)
+				} else {
+					let query = OCQuery(forPath: "/")
+					let queryViewController = ClientQueryViewController(core: core, query: query)
+					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
+					self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+				}
 
 				let emptyViewController = self.emptyViewController
 				emptyViewController.navigationItem.title = "Accounts".localized
@@ -261,8 +267,29 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				}
 				self.activityViewController?.core = core
 				self.libraryViewController?.core = core
-				self.libraryViewController?.setupQueries()
+
+				self.connectionInitializedObservation = core.observe(\OCCore.connection.connectionInitializationPhaseCompleted, options: [.initial], changeHandler: { [weak self] (core, _) in
+					if core.connection.connectionInitializationPhaseCompleted {
+						self?.connectionInitialized()
+					}
+				})
 			}
+		}
+	}
+
+	private var connectionInitializedObservation : NSKeyValueObservation?
+
+	func connectionInitialized() {
+		OCSynchronized(self) {
+			if connectionInitializedObservation == nil {
+				return
+			}
+
+			connectionInitializedObservation = nil
+		}
+
+		OnMainThread {
+			self.libraryViewController?.setupQueries()
 		}
 	}
 
@@ -278,6 +305,49 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
 		self.progressBar?.setNeedsLayout()
 //		self.view.setNeedsLayout()
+	}
+
+	func createFileListStack(for itemLocalID: String) {
+		if let core = core {
+			// retrieve the item for the item id
+			core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
+				OnMainThread {
+					let query = OCQuery(forPath: "/")
+					let queryViewController = ClientQueryViewController(core: core, query: query)
+
+					if error == nil, let item = item {
+						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
+						let parentItems = core.retrieveParentItems(for: item)
+
+						var subController = queryViewController
+						var newViewControllersStack : [UIViewController] = []
+						for item in parentItems {
+							if let controller = self.open(item: item, in: subController) {
+								subController = controller
+								newViewControllersStack.append(controller)
+							}
+						}
+
+						newViewControllersStack.insert(self.emptyViewController, at: 0)
+						self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
+
+						// open the controller for the item
+						subController.open(item: item, animated: false)
+					} else {
+						// Fallback, if item no longer exists show root folder
+						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+					}
+				}
+		})
+		}
+	}
+
+	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
+			return subController
+		}
+
+		return nil
 	}
 }
 
@@ -324,6 +394,10 @@ extension ClientRootViewController : OCCoreDelegate {
 					if bookmark.isTokenBased == true {
 						authFailureTitle = "Access denied".localized
 						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+
+						if let localizedDescription = nsError.userInfo[NSLocalizedDescriptionKey] {
+							authFailureMessage = "\(authFailureMessage!)\n\n(\(localizedDescription))"
+						}
 					} else {
 						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
 					}
@@ -362,7 +436,7 @@ extension ClientRootViewController : OCCoreDelegate {
 			var queueCompletionHandlerScheduled : Bool = false
 
 			if isAuthFailure {
-				let alertController = UIAlertController(title: authFailureTitle,
+				let alertController = ThemedAlertController(title: authFailureTitle,
 									message: authFailureMessage,
 									preferredStyle: .alert)
 
@@ -394,7 +468,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				var presentViewController : UIViewController?
 
 				if presentIssue?.type == .multipleChoice {
-					presentViewController = UIAlertController(with: presentIssue!, completion: queueCompletionHandler)
+					presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
 				} else {
 					presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
  						switch response {

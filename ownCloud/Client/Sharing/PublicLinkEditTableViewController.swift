@@ -77,7 +77,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			self.navigationItem.title = linkName
 		}
 
-		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
+		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL(sender:)))
 		if item.type == .collection {
 			let infoButton = UIButton(type: .infoLight)
 			infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
@@ -137,11 +137,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					if error == nil {
 						guard let changedShare = share else { return }
 						self.share.name = changedShare.name
-						self.title = changedShare.name
+						OnMainThread {
+							self.title = changedShare.name
+						}
 					} else {
 						if let shareError = error {
 							OnMainThread {
-								let alertController = UIAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								let alertController = ThemedAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 								self.present(alertController, animated: true)
 							}
 						}
@@ -165,11 +167,24 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if item.type == .collection {
 
-			let values = [
-				["Download / View".localized : 0],
-				["Download / View / Upload".localized : 1],
-				["Upload only (File Drop)".localized : 2]
-			]
+			var canIncreasePemissions = true
+			if item.isSharedWithUser && (item.owner?.userName != self.core.connection.loggedInUser?.userName) {
+				canIncreasePemissions = false
+			}
+
+			var values = [[String : Any]]()
+
+			if (share.permissions.isSuperset(of: [.read])) || canIncreasePemissions {
+				values.append(["Download / View".localized : 0])
+			}
+
+			if (share.permissions.isSuperset(of: [.read, .update, .create, .delete])) || canIncreasePemissions {
+				values.append(["Download / View / Upload".localized : 1])
+			}
+
+			if (share.permissions.isSuperset(of: [.create])) || canIncreasePemissions {
+				values.append(["Upload only (File Drop)".localized : 2])
+			}
 
 			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { [weak self] (row, _) in
 				if let self = self {
@@ -205,7 +220,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								} else {
 									if let shareError = error {
 										OnMainThread {
-											let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											let alertController = ThemedAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 											self.present(alertController, animated: true)
 										}
 									}
@@ -216,7 +231,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							row.section?.setSelected(self.currentPermissionIndex, groupIdentifier: "permission-group")
 							let permissionName = Array(values[selectedValueFromSection])[0].key
 
-							let alertController = UIAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}
@@ -301,7 +316,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -338,7 +353,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						} else {
 							if let shareError = error {
 								OnMainThread {
-									let alertController = UIAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -362,6 +377,11 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			hasExpireDate = true
 		}
+
+		if self.createLink && self.core.connection.capabilities?.publicSharingDefaultExpireDateDays != nil {
+			hasExpireDate = true
+		}
+
 		var needsExpireDate = false
 		if self.core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			needsExpireDate = true
@@ -410,7 +430,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -438,6 +458,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .long
 		dateFormatter.timeStyle = .none
+
+		var maximumSelectableDate: Date?
+
+		if core.connection.capabilities?.publicSharingExpireDateEnforced == true, let defaultDays = self.core.connection.capabilities?.publicSharingDefaultExpireDateDays {
+			maximumSelectableDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: Date())
+		}
+
 		let expireDateRow = StaticTableViewRow(buttonWithAction: { [weak self, weak expireSection] (_, _) in
 			guard let expireSection = expireSection else { return }
 
@@ -471,14 +498,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
 							}
 						})
 					}
-				}, date: expireDate, identifier: "date-picker-row")
+				}, date: expireDate, maximumDate: maximumSelectableDate, identifier: "date-picker-row")
 				expireSection.add(row: datePickerRow, animated: true)
 				if let indexPath = datePickerRow.indexPath {
 					self?.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -490,6 +517,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			}
 		}, title: dateFormatter.string(from: expireDate), style: .plain, alignment: .left, identifier: "expire-date-row")
 
+		expireDateRow.representedObject = expireDate
 		expireSection.add(row: expireDateRow)
 	}
 
@@ -538,7 +566,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								self.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -560,7 +588,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		addPermissionsSection()
 	}
 
-	@objc func shareLinkURL() {
+	@objc func shareLinkURL(sender: UIBarButtonItem) {
 		guard let shareURL = share.url, let capabilities = self.core.connection.capabilities else { return }
 
 		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
@@ -575,7 +603,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				UIActivity.ActivityType("com.facebook.Facebook")
 			]
 		}
-		activityViewController.popoverPresentationController?.sourceView = self.view
+
+		activityViewController.popoverPresentationController?.barButtonItem = sender
+		activityViewController.popoverPresentationController?.permittedArrowDirections = .down
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 
@@ -628,7 +658,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				} else {
 					if let shareError = error {
 						OnMainThread {
-							let alertController = UIAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}

@@ -70,8 +70,6 @@ class ClientActivityCell: ThemeTableViewCell {
 			statusLabel.rightAnchor.constraint(equalTo: statusCircle.leftAnchor, constant: -20),
 
 			statusCircle.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-			statusCircle.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-			statusCircle.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			statusCircle.widthAnchor.constraint(equalToConstant: 50),
 			statusCircle.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
 		])

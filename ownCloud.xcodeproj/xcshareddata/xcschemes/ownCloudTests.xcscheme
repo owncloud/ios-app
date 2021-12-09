@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1030"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -38,6 +38,17 @@
                BlueprintName = "ownCloudTests"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CreateFolderTests">
+               </Test>
+               <Test
+                  Identifier = "DeleteBookmarkTests">
+               </Test>
+               <Test
+                  Identifier = "EditBookmarkTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <AdditionalOptions>

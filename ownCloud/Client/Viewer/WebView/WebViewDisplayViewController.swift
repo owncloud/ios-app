@@ -27,40 +27,54 @@ class WebViewDisplayViewController: DisplayViewController {
 		return UITapGestureRecognizer(target: self, action: #selector(self.tapToFullScreen))
 	}()
 
-	override func renderSpecificView() {
+	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
 			guard error == nil, let source = self.source else {
 				if let error = error {
 					Log.error("Error adding external content blocking rule list: \(error)")
 				}
+
+				completion(false)
+
 				return
 			}
 
-			let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
+			if self.webView == nil {
+				let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
 
-			configuration.preferences.javaScriptEnabled = true
+				configuration.preferences.javaScriptEnabled = true
 
-			if blockList != nil {
+				if blockList != nil {
 
-				configuration.userContentController.add(blockList!)
+					configuration.userContentController.add(blockList!)
 
-				self.webView = WKWebView(frame: .zero, configuration: configuration)
-				self.webView?.scrollView.bouncesZoom = false
-				self.webView?.translatesAutoresizingMaskIntoConstraints = false
-				self.view.addSubview(self.webView!)
+					self.webView = WKWebView(frame: .zero, configuration: configuration)
 
-				NSLayoutConstraint.activate([
-					self.webView!.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-					self.webView!.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-					self.webView!.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-					self.webView!.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor)
-					])
+					if let webView = self.webView {
+						let layoutGuide = self.view.safeAreaLayoutGuide
 
+						webView.scrollView.bouncesZoom = false
+						webView.translatesAutoresizingMaskIntoConstraints = false
+						self.view.addSubview(webView)
+
+						NSLayoutConstraint.activate([
+							webView.topAnchor.constraint(equalTo: layoutGuide.topAnchor),
+							webView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor),
+							webView.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor),
+							webView.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor)
+						])
+
+						webView.loadFileURL(source, allowingReadAccessTo: source)
+
+						self.fullScreenGesture.delegate = self
+						webView.addGestureRecognizer(self.fullScreenGesture)
+					}
+				}
+			} else {
 				self.webView?.loadFileURL(source, allowingReadAccessTo: source)
-
-				self.fullScreenGesture.delegate = self
-				self.webView?.addGestureRecognizer(self.fullScreenGesture)
 			}
+
+			completion(true)
 		}
 	}
 
@@ -114,17 +128,17 @@ extension WebViewDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(application/javascript)|(application/json)|(application/octet-stream)|(application/x-php)|(video/(?!(x-flv|ogg|x-ms-wmv|x-msvideo)))|(audio/)|(image/(gif|svg))|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
+				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/(html|css))|(image/gif)|(application/(javascript|json|x-php|octet-stream)))", options: .caseInsensitive)
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {
-					return OCExtensionPriority.locationMatch
+					return .locationMatch
 				}
 			}
 
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		} catch {
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		}
 	}
 	static var displayExtensionIdentifier: String = "org.owncloud.webview"

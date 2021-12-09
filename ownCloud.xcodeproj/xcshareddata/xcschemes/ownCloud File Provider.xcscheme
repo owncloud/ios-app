@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1030"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -42,6 +42,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
+            BuildableName = "ownCloud.app"
+            BlueprintName = "ownCloud"
+            ReferencedContainer = "container:ownCloud.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -73,24 +82,24 @@
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DCC085632293F1FD008CC05C"
+               BuildableName = "ownCloudAppTests.xctest"
+               BlueprintName = "ownCloudAppTests"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "ownCloud.app"
-            BlueprintName = "ownCloud"
-            ReferencedContainer = "container:ownCloud.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
+      askForAppToLaunch = "Yes"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -98,9 +107,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "0"
+         runnableDebuggingMode = "1"
          BundleIdentifier = "com.owncloud.ios-app"
-         RemotePath = "/var/containers/Bundle/Application/5FF9AF8A-2171-4750-8C7B-7785079F446A/ownCloud.app">
+         RemotePath = "/Users/felix/Library/Developer/CoreSimulator/Devices/348A2D78-5A15-4E50-8EAF-1170115BC798/data/Containers/Bundle/Application/AD282E5C-E658-4707-8C08-A292831061C2/ownCloud.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -122,9 +131,12 @@
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-colored"
+            value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

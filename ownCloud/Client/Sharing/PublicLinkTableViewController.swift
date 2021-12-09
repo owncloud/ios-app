@@ -192,22 +192,6 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 	}
 
-	func retrievePrivateLink(for item: OCItem, in row: StaticTableViewRow) {
-		let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
-		progressView.startAnimating()
-		row.cell?.accessoryView = progressView
-
-		self.core?.retrievePrivateLink(for: item, completionHandler: { (error, url) in
-			OnMainThread {
-				row.cell?.accessoryView = nil
-			}
-			if error == nil {
-				guard let url = url else { return }
-				UIPasteboard.general.url = url
-			}
-		})
-	}
-
 	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -219,7 +203,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Delete Public Link".localized,
+					let alertController = ThemedAlertController(title: "Delete Public Link".localized,
 										message: nil,
 										preferredStyle: presentationStyle)
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -231,7 +215,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 									self.navigationController?.popViewController(animated: true)
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -257,16 +241,47 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	@objc func addPublicLink() {
 		if let path = item.path, let core = core {
-			var permissions : OCSharePermissionsMask = .create
-			if item.type == .file {
-				permissions = .read
+
+			func createLink(for itemPath:String, with permissions:OCSharePermissionsMask) {
+				let share = OCShare(publicLinkToPath: itemPath, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
+				let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
+				editPublicLinkViewController.createLink = true
+				let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
+				self.navigationController?.present(navigationController, animated: true, completion: nil)
 			}
 
-			let share = OCShare(publicLinkToPath: path, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
-			let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
-			editPublicLinkViewController.createLink = true
-			let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
-			self.navigationController?.present(navigationController, animated: true, completion: nil)
+			var permissions : OCSharePermissionsMask?
+
+			if item.isSharedWithUser {
+				core.sharesSharedWithMe(for: item, initialPopulationHandler: { shares in
+					OnMainThread {
+						var deepestShare : OCShare?
+
+						for share in shares {
+							if share.itemPath == path {
+								deepestShare = share
+								break
+							} else {
+								if path.hasPrefix(share.itemPath) {
+									if deepestShare == nil {
+										deepestShare = share
+									} else if let deepestShareItemPath = deepestShare?.itemPath, share.itemPath.count > deepestShareItemPath.count {
+										deepestShare = share
+									}
+								}
+							}
+						}
+
+						if let share = deepestShare {
+							permissions = share.permissions
+							createLink(for: path, with: permissions!)
+						}
+					}
+				}, allowPartialMatch: true)
+			} else {
+				permissions = [.create, .read]
+				createLink(for: path, with: permissions!)
+			}
 		}
 	}
 

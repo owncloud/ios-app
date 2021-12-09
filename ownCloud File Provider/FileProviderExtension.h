@@ -30,6 +30,8 @@
 
 @end
 
+extern OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider;
+
 #define FPLogCmdBegin(command, format,...) \
 	NSString *actionLogCmdUUID = nil; \
 	NSArray *actionLogTags = nil; \

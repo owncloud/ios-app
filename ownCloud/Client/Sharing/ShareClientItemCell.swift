@@ -19,35 +19,31 @@
 import UIKit
 import ownCloudSDK
 
-class ShareClientItemCell: ClientItemCell {
-
-	var itemTracker : OCCoreItemTracking?
+class ShareClientItemCell: ClientItemResolvingCell {
 	var iconSize : CGSize = CGSize(width: 40, height: 40)
 
 	// MARK: - Share Item
+	override func titleLabelString(for item: OCItem?) -> String {
+		if let shareItemPath = share?.itemPath {
+			return shareItemPath
+		}
+
+		return super.titleLabelString(for: item)
+	}
 
 	var share : OCShare? {
 		didSet {
 			if let share = share {
-				self.titleLabel.text = share.itemPath
 				if share.itemType == .collection {
 					self.iconView.image = Theme.shared.image(for: "folder", size: iconSize)
 				} else {
 					self.iconView.image = Theme.shared.image(for: "file", size: iconSize)
 				}
-				itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
-					if error == nil, let item = item, isInitial {
-						OnMainThread {
-							self.item = item
-						}
-					}
-				})
+
+				self.itemResolutionPath = share.itemPath
+
+				self.updateLabels(with: item)
 			}
 		}
 	}
-
-	deinit {
-		itemTracker = nil
-	}
-
 }

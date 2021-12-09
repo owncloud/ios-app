@@ -163,16 +163,15 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 			color = Theme.shared.activeCollection.errorColor
 		}
 
-		cell.textLabel?.attributedText = NSAttributedString(string: issue.localizedTitle ?? "", attributes: [
-			.foregroundColor : color,
-			.font : UIFont.systemFont(ofSize: 18, weight: .semibold)
-			])
+		cell.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+		cell.textLabel?.textColor = color
+		cell.textLabel?.text = issue.localizedTitle ?? ""
 
-		cell.detailTextLabel?.attributedText = NSAttributedString(string: issue.localizedDescription ?? "", attributes: [
-			.foregroundColor : UIColor(hex: 0x4F4F4F),
-			.font : UIFont.systemFont(ofSize: 15, weight: .regular)
-			])
+		cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+		cell.detailTextLabel?.text = issue.localizedDescription ?? ""
+
 		cell.detailTextLabel?.numberOfLines = 0
+		cell.accessibilityIdentifier = "issue-row.\(indexPath.row)"
 		return cell
 	}
 }

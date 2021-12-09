@@ -32,29 +32,30 @@ class CreateBookmarkTests: XCTestCase {
 	func testCheckInitialViewAuth () {
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
 	* PASSED if: Alert view with missing URL displayed if Continue is clicked with empty URL
 	*/
 	func testCheckURLEmptyBasicAuth () {
-		
+
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).assert(grey_not(grey_enabled()))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).assert(grey_not(grey_enabled()))
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -71,18 +72,20 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 		
 		//Assert
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
-			
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.top))
+			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.bottom))
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -90,7 +93,7 @@ class CreateBookmarkTests: XCTestCase {
 		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -107,17 +110,18 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("approve-button")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -134,19 +138,21 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("approve-button")).perform(grey_tap())
 		
 		//Assert
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
-			
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.top))
+			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.bottom))
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -154,7 +160,7 @@ class CreateBookmarkTests: XCTestCase {
 		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -171,19 +177,19 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_notVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -200,29 +206,29 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("ok-button")).perform(grey_tap())
 		
 		//Assert
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
 			
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
 		
 		GREYAssertTrue(!isServerChecked, reason: "Failed check the server")
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -244,17 +250,17 @@ class CreateBookmarkTests: XCTestCase {
 			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-			EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 			
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).assert(grey_sufficientlyVisible())
-			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_text("Certificate".localized)).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
 			
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Approve".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 		} else {
 			assertionFailure("Not possible to read the test_certificate.cer")
 		}
@@ -278,20 +284,20 @@ class CreateBookmarkTests: XCTestCase {
 			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-			EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("issue-row.0")).perform(grey_tap())
 
 			//Assert
 			EarlGrey.waitForElement(withMatcher: grey_text("Certificate Details".localized), label: "Certificate Details")
-			EarlGrey.select(elementWithMatcher: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button-certificate-details")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("ok-button-certificate-details")).perform(grey_tap())
 
-			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Approve".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 		} else {
 			assertionFailure("Not possible to read the test_certificate.cer")
 		}
@@ -316,17 +322,17 @@ class CreateBookmarkTests: XCTestCase {
 			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-			EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Approve".localized)).perform(grey_tap())
 			
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 			
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 			
 		} else {
 			assertionFailure("Not possible to read the test_certificate.cer")
@@ -352,17 +358,17 @@ class CreateBookmarkTests: XCTestCase {
 			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-			EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
 			
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
 			
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 			
 		} else {
 			assertionFailure("Not possible to read the test_certificate.cer")
@@ -396,18 +402,19 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier as OCAuthenticationMethodIdentifier, dictionary: dictionary, error: error)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("approve-button")).perform(grey_tap())
 		
 		//Assert
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
 			
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -415,7 +422,7 @@ class CreateBookmarkTests: XCTestCase {
 		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 	
 	/*
@@ -432,15 +439,16 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
 
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_text("If you 'Continue', you will be prompted to allow the ownCloud App to open OAuth2 login where you can enter your credentials.".localized)).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_text("If you 'Continue', you will be prompted to allow the ownCloud App to open OAuth2 login where you can enter your credentials.".localized)).assert(grey_sufficientlyVisible(), error: &error)
 
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -448,7 +456,7 @@ class CreateBookmarkTests: XCTestCase {
 		GREYAssertTrue(!isServerChecked, reason: "Failed check the server")
 
 		//Reset
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 		OCMockManager.shared.removeAllMockingBlocks()
 		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
@@ -484,13 +492,14 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
 		
 		//Reset
 		OCMockManager.shared.removeAllMockingBlocks()
@@ -524,16 +533,17 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("approve-button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
 		
 		//Reset
 		OCMockManager.shared.removeAllMockingBlocks()
@@ -565,23 +575,24 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
 		
 		//Assert
 		//TO-DO: catch shake
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("ok-button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
 	}
 	
 	/*
@@ -609,20 +620,21 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 		
 		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
-		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
+		EarlGrey.waitForElement(accessibilityID: "addServer")
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+		EarlGrey.selectElement(with: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("ok-button")).perform(grey_tap())
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 }

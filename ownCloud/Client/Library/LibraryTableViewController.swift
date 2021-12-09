@@ -23,6 +23,12 @@ protocol LibraryShareList: UIViewController {
 	func updateWith(shares: [OCShare])
 }
 
+struct QuickAccessQuery {
+	var name : String
+	var mimeType : [String]
+	var imageName : String
+}
+
 class LibraryShareView {
 	enum Identifier : String {
 		case sharedWithYou
@@ -59,6 +65,10 @@ class LibraryTableViewController: StaticTableViewController {
 	weak var core : OCCore?
 
 	deinit {
+		for applierToken in applierTokens {
+			Theme.shared.remove(applierForToken: applierToken)
+		}
+
 		self.stopQueries()
 	}
 
@@ -67,6 +77,8 @@ class LibraryTableViewController: StaticTableViewController {
 
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
+
+		Theme.shared.add(tvgResourceFor: "icon-available-offline")
 
 		shareSection = StaticTableViewSection(headerTitle: "Shares".localized, footerTitle: nil, identifier: "share-section")
 		self.addThemableBackgroundView()
@@ -89,6 +101,7 @@ class LibraryTableViewController: StaticTableViewController {
 	var shareQueryByUser : OCShareQuery?
 	var shareQueryAcceptedCloudShares : OCShareQuery?
 	var shareQueryPendingCloudShares : OCShareQuery?
+	private var applierTokens : [ThemeApplierToken] = []
 
 	private func start(query: OCCoreQuery) {
 		core?.start(query)
@@ -377,28 +390,60 @@ class LibraryTableViewController: StaticTableViewController {
 				})
 			})
 
-			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
-			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
+			addCollectionRow(to: section, title: "Available Offline".localized, image: UIImage(named: "cloud-available-offline")!, query: nil, actionHandler: { [weak self] (completion) in
+				if let core = self?.core {
+					let availableOfflineListController = ItemPolicyTableViewController(core: core, policyKind: .availableOffline)
 
-			let pdfQuery = OCQuery(condition: .where(.mimeType, contains: "pdf"), inputFilter:nil)
-			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery, actionHandler: nil)
+					self?.navigationController?.pushViewController(availableOfflineListController, animated: true)
+				}
+				completion()
+			})
+
+			let queries = [
+				QuickAccessQuery(name: "PDF Documents".localized, mimeType: ["pdf"], imageName: "application-pdf"),
+				QuickAccessQuery(name: "Documents".localized, mimeType: ["doc", "application/vnd", "application/msword", "application/ms-doc", "text/rtf", "application/rtf", "application/mspowerpoint", "application/powerpoint", "application/x-mspowerpoint", "application/excel", "application/x-excel", "application/x-msexcel"], imageName: "x-office-document"),
+				QuickAccessQuery(name: "Text".localized, mimeType: ["text/plain"], imageName: "text"),
+				QuickAccessQuery(name: "Images".localized, mimeType: ["image"], imageName: "image"),
+				QuickAccessQuery(name: "Videos".localized, mimeType: ["video"], imageName: "video"),
+				QuickAccessQuery(name: "Audio".localized, mimeType: ["audio"], imageName: "audio")
+			]
+
+			for query in queries {
+				let conditions = query.mimeType.map { (mimeType) -> OCQueryCondition in
+					return .where(.mimeType, contains: mimeType)
+				}
+
+				let customQuery = OCQuery(condition: .any(of: conditions), inputFilter:nil)
+				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, query: customQuery, actionHandler: nil)
+			}
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage? = nil, themeImageName: String? = nil, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 
 				if let query = query {
-					let customFileListController = LibraryFilesTableViewController(core: core, query: query)
+					let customFileListController = QueryFileListTableViewController(core: core, query: query)
 					customFileListController.title = title
 					customFileListController.pullToRefreshAction = actionHandler
 					self?.navigationController?.pushViewController(customFileListController, animated: true)
 				}
 
 				actionHandler?({})
-			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)
+			}, title: title, image: image, imageTintColorKey: "secondaryLabelColor", accessoryType: .disclosureIndicator, identifier: identifier)
+
+			if themeImageName != nil {
+				let themeApplierToken = Theme.shared.add(applier: { [weak row] (theme, _, _) in
+					if let themeImageName = themeImageName {
+						row?.cell?.imageView?.image = theme.image(for: themeImageName, size: CGSize(width: 25, height: 25))
+					}
+				}, applyImmediately: true)
+
+				applierTokens.append(themeApplierToken)
+			}
+
 			section.add(row: row)
 		}
 	}

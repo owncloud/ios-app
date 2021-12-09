@@ -37,7 +37,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - Gesture recognizers
 	var tapToZoomGestureRecognizer : UITapGestureRecognizer!
-	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
+	var showHideBarsTapGestureRecognizer: UITapGestureRecognizer!
 
 	// MARK: - View controller lifecycle
 
@@ -52,69 +52,89 @@ class ImageDisplayViewController : DisplayViewController {
 		scrollView?.updateScaleForRotation(size: self.view!.bounds.size)
 	}
 
-	func downSampleImage() {
+	func downSampleImage(completion:@escaping (_ downsampledImage:CGImage?) -> Void) {
 		if let source = source {
-			activityIndicatorView.startAnimating()
 			let size: CGSize = self.view.bounds.size
 			let scale: CGFloat = UIScreen.main.scale
 			let imageSourceOptions = [kCGImageSourceShouldCache: true] as CFDictionary
-			let imageSource = CGImageSourceCreateWithURL(source as CFURL, imageSourceOptions)!
-			let maxDimensionInPixels = max(size.width, size.height) * scale
-			let downsampleOptions =  [kCGImageSourceCreateThumbnailFromImageAlways: true,
-									  kCGImageSourceShouldCacheImmediately: true,
-									  kCGImageSourceCreateThumbnailWithTransform: true,
-									  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
-			serialQueue.async {
-				if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
-					let image = UIImage(cgImage: downsampledImage)
-					OnMainThread {
-						self.activityIndicatorView.stopAnimating()
-						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
-					}
-				} else {
-					OnMainThread {
-						self.activityIndicatorView.stopAnimating()
+
+			if let imageSource = CGImageSourceCreateWithURL(source as CFURL, imageSourceOptions) {
+				let maxDimensionInPixels = max(size.width, size.height) * scale
+				let downsampleOptions =  [kCGImageSourceCreateThumbnailFromImageAlways: true,
+										  kCGImageSourceShouldCacheImmediately: true,
+										  kCGImageSourceCreateThumbnailWithTransform: true,
+										  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
+				serialQueue.async {
+					if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
+						OnMainThread {
+							completion(downsampledImage)
+						}
+					} else {
+						OnMainThread {
+							completion(nil)
+						}
 					}
 				}
 			}
 		}
-
 	}
 
 	// MARK: - Specific view
-	override func renderSpecificView() {
-		scrollView = ImageScrollView(frame: .zero)
-		scrollView?.translatesAutoresizingMaskIntoConstraints = false
 
-		self.view.addSubview(scrollView!)
-		NSLayoutConstraint.activate([
-			scrollView!.leftAnchor.constraint(equalTo: view.leftAnchor),
-			scrollView!.rightAnchor.constraint(equalTo: view.rightAnchor),
-			scrollView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-			scrollView!.topAnchor.constraint(equalTo: view.topAnchor)
-			])
-
-		self.scrollView?.addSubview(activityIndicatorView)
-		NSLayoutConstraint.activate([
-			activityIndicatorView.centerYAnchor.constraint(equalTo: scrollView!.centerYAnchor),
-			activityIndicatorView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
-			activityIndicatorView.heightAnchor.constraint(equalToConstant: activityIndicatorHeight),
-			activityIndicatorView.widthAnchor.constraint(equalTo: activityIndicatorView.heightAnchor)
-			])
+	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 
 		if source != nil {
-			downSampleImage()
-			tapToZoomGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToZoom))
-			tapToZoomGestureRecognizer.numberOfTapsRequired = 2
-			scrollView?.addGestureRecognizer(tapToZoomGestureRecognizer)
+			activityIndicatorView.startAnimating()
 
-			tapToHideBarsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToHideBars))
-			scrollView?.addGestureRecognizer(tapToHideBarsGestureRecognizer)
+			downSampleImage {(downsampledImage) in
+				self.activityIndicatorView.stopAnimating()
 
-			tapToZoomGestureRecognizer.delegate = self
-			tapToHideBarsGestureRecognizer.delegate = self
+				if downsampledImage != nil {
+					let image = UIImage(cgImage: downsampledImage!)
+
+					if self.scrollView == nil {
+						self.scrollView = ImageScrollView(frame: .zero)
+						self.scrollView?.translatesAutoresizingMaskIntoConstraints = false
+
+						self.view.addSubview(self.scrollView!)
+						NSLayoutConstraint.activate([
+							self.scrollView!.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+							self.scrollView!.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+							self.scrollView!.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+							self.scrollView!.topAnchor.constraint(equalTo: self.view.topAnchor)
+							])
+
+						self.scrollView?.addSubview(self.activityIndicatorView)
+						NSLayoutConstraint.activate([
+							self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.scrollView!.centerYAnchor),
+							self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.scrollView!.centerXAnchor),
+							self.activityIndicatorView.heightAnchor.constraint(equalToConstant: self.activityIndicatorHeight),
+							self.activityIndicatorView.widthAnchor.constraint(equalTo: self.activityIndicatorView.heightAnchor)
+							])
+
+						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+
+						self.tapToZoomGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapToZoom))
+						self.tapToZoomGestureRecognizer.numberOfTapsRequired = 2
+						self.scrollView?.addGestureRecognizer(self.tapToZoomGestureRecognizer)
+
+						self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
+						self.scrollView?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
+
+						self.tapToZoomGestureRecognizer.delegate = self
+						self.showHideBarsTapGestureRecognizer.delegate = self
+					} else {
+						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+					}
+
+					completion(true)
+				} else {
+					completion(false)
+				}
+			}
+
 		} else {
-			let alert = UIAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
+			let alert = ThemedAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
 			self.parent?.present(alert, animated: true) {
 				self.parent?.dismiss(animated: true)
 			}
@@ -138,7 +158,7 @@ class ImageDisplayViewController : DisplayViewController {
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
-	@objc func tapToHideBars() {
+	@objc func showHideBars() {
 		guard let navigationController = navigationController else {
 			return
 		}
@@ -178,13 +198,13 @@ extension ImageDisplayViewController: DisplayExtension {
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {
-					return OCExtensionPriority.locationMatch
+					return .locationMatch
 				}
 			}
 
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		} catch {
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		}
 	}
 	static var displayExtensionIdentifier: String = "org.owncloud.image"
@@ -196,7 +216,7 @@ extension ImageDisplayViewController: DisplayExtension {
 extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === tapToHideBarsGestureRecognizer {
+		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return true
 		}
 
@@ -204,11 +224,11 @@ extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 	}
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === tapToHideBarsGestureRecognizer {
+		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return false
 		}
 
-		if gestureRecognizer === tapToHideBarsGestureRecognizer && otherGestureRecognizer === tapToZoomGestureRecognizer {
+		if gestureRecognizer === showHideBarsTapGestureRecognizer && otherGestureRecognizer === tapToZoomGestureRecognizer {
 			return false
 		}
 

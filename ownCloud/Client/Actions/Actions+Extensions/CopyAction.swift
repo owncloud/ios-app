@@ -23,7 +23,19 @@ class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
+	override class var keyCommand : String? { return "C" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
+
+	// MARK: - Extension matching
+	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
+
+		return .middle
+	}
 
 	// MARK: - Action implementation
 	override func run() {
@@ -58,7 +70,7 @@ class CopyAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "copy-file")
 		}
 

@@ -19,6 +19,30 @@
 import UIKit
 import ownCloudSDK
 
+class DisplaySleepPreventer : NSObject {
+	static var shared : DisplaySleepPreventer = DisplaySleepPreventer()
+
+	var preventCount : Int = 0
+
+	func startPreventingDisplaySleep() {
+		if preventCount == 0 {
+			UIApplication.shared.isIdleTimerDisabled = true
+		}
+
+		preventCount += 1
+	}
+
+	func stopPreventingDisplaySleep() {
+		if preventCount > 0 {
+			preventCount -= 1
+
+			if preventCount == 0 {
+				UIApplication.shared.isIdleTimerDisabled = false
+			}
+		}
+	}
+}
+
 class ClientActivityViewController: UITableViewController, Themeable {
 
 	weak var core : OCCore? {
@@ -36,10 +60,37 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	}
 
 	var activities : [OCActivity]?
-	var isOnScreen : Bool = false
+	var isOnScreen : Bool = false {
+		didSet {
+			updateDisplaySleep()
+		}
+	}
+
+	private var shouldPauseDisplaySleep : Bool = false {
+		didSet {
+			updateDisplaySleep()
+		}
+	}
+
+	private func updateDisplaySleep() {
+		pauseDisplaySleep = isOnScreen && shouldPauseDisplaySleep
+	}
+
+	private var pauseDisplaySleep : Bool = false {
+		didSet {
+			if pauseDisplaySleep != oldValue {
+				if pauseDisplaySleep {
+					DisplaySleepPreventer.shared.startPreventingDisplaySleep()
+				} else {
+					DisplaySleepPreventer.shared.stopPreventingDisplaySleep()
+				}
+			}
+		}
+	}
 
 	deinit {
 		Theme.shared.unregister(client: self)
+		self.shouldPauseDisplaySleep = false
 		self.core = nil
 	}
 
@@ -50,6 +101,12 @@ class ClientActivityViewController: UITableViewController, Themeable {
 					switch updateType {
 						case .publish, .unpublish:
 							setNeedsDataReload()
+
+							if core?.activityManager.activities.count == 0 {
+								shouldPauseDisplaySleep = false
+							} else {
+								shouldPauseDisplaySleep = true
+							}
 
 						case .property:
 							if isOnScreen,

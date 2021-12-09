@@ -15,7 +15,7 @@ extension EarlGrey {
 		let condition : GREYCondition = GREYCondition(name: "Wait for \(label)") { () -> Bool in
 			var error : NSError?
 
-			EarlGrey.select(elementWithMatcher: withMatcher).assert(with: grey_notNil(), error: &error)
+			EarlGrey.select(elementWithMatcher: withMatcher).assert(grey_notNil(), error: &error)
 
 			return error == nil
 		}
@@ -28,7 +28,7 @@ extension EarlGrey {
 		let condition : GREYCondition = GREYCondition(name: "Wait for \(label)") { () -> Bool in
 			var error : NSError?
 
-			EarlGrey.select(elementWithMatcher: withMatcher).assert(with: grey_nil(), error: &error)
+			EarlGrey.select(elementWithMatcher: withMatcher).assert(grey_nil(), error: &error)
 
 			return error == nil
 		}

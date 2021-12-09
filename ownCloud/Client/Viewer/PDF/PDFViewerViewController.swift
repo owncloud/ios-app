@@ -51,7 +51,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	fileprivate let thumbnailViewHeightMultiplier: CGFloat = 0.1
 	fileprivate let thumbnailMargin: CGFloat = 32.0
 	fileprivate let filenameContainerTopMargin: CGFloat = 10.0
-	fileprivate let pdfView = PDFView()
+	public let pdfView = PDFView()
 	fileprivate let thumbnailView = PDFThumbnailView()
 
 	fileprivate let containerView = UIStackView()
@@ -64,12 +64,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	fileprivate var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
 		didSet {
 			switch thumbnailViewPosition {
-			case .left, .right:
-				thumbnailView.layoutMode = .vertical
-			case .bottom:
-				thumbnailView.layoutMode = .horizontal
-			default:
-				break
+				case .left, .right:
+					thumbnailView.layoutMode = .vertical
+				case .bottom:
+					thumbnailView.layoutMode = .horizontal
+				default:
+					break
 			}
 
 			pageCountLabel.isHidden = thumbnailViewPosition == .none ? true : false
@@ -101,56 +101,59 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}
 	}
 
-	override func renderSpecificView() {
+	private var didSetupView : Bool = false
+
+	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if let source = source, let document = PDFDocument(url: source) {
-			setupToolbar()
+			if !didSetupView {
+				didSetupView  = true
 
-			self.view.backgroundColor = UIColor.gray
-			self.thumbnailViewPosition = .none
+				setupToolbar()
 
-			// Configure thumbnail view
-			thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-			thumbnailView.backgroundColor = UIColor.gray
-			thumbnailView.pdfView = pdfView
-			thumbnailView.isExclusiveTouch = true
+				self.view.backgroundColor = UIColor.gray
+				self.thumbnailViewPosition = .none
 
-			self.view.addSubview(thumbnailView)
+				// Configure thumbnail view
+				thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+				thumbnailView.backgroundColor = UIColor.gray
+				thumbnailView.pdfView = pdfView
+				thumbnailView.isExclusiveTouch = true
 
-			containerView.spacing = UIStackView.spacingUseSystem
-			containerView.isLayoutMarginsRelativeArrangement = true
-			containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: filenameContainerTopMargin,
-																			 leading: 0,
-																			 bottom: 0,
-																			 trailing: 0)
-			containerView.backgroundColor = UIColor.lightGray
-			containerView.translatesAutoresizingMaskIntoConstraints = false
-			containerView.axis = .vertical
-			containerView.distribution = .fill
+				self.view.addSubview(thumbnailView)
 
-			// Configure PDFView instance
-			pdfView.displayDirection = .horizontal
-			pdfView.translatesAutoresizingMaskIntoConstraints = false
-			pdfView.usePageViewController(true, withViewOptions: nil)
-			containerView.addArrangedSubview(pdfView)
+				containerView.spacing = UIStackView.spacingUseSystem
+				containerView.isLayoutMarginsRelativeArrangement = true
+				containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: filenameContainerTopMargin, leading: 0, bottom: 0, trailing: 0)
+				containerView.backgroundColor = UIColor.lightGray
+				containerView.translatesAutoresizingMaskIntoConstraints = false
+				containerView.axis = .vertical
+				containerView.distribution = .fill
 
-			let pageCountContainerView = UIView()
-			pageCountContainerView.backgroundColor = UIColor.gray
-			pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
-			pageCountContainerView.addSubview(pageCountLabel)
+				// Configure PDFView instance
+				pdfView.displayDirection = .horizontal
+				pdfView.translatesAutoresizingMaskIntoConstraints = false
+				pdfView.usePageViewController(true, withViewOptions: nil)
+				containerView.addArrangedSubview(pdfView)
 
-			pageCountLabel._setupPdfInfoLabel()
-			pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
-			pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
-			pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
-			pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
+				let pageCountContainerView = UIView()
+				pageCountContainerView.backgroundColor = UIColor.gray
+				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
+				pageCountContainerView.addSubview(pageCountLabel)
 
-			containerView.addArrangedSubview(pageCountContainerView)
+				pageCountLabel._setupPdfInfoLabel()
+				pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
+				pageCountLabel.centerYAnchor.constraint(equalTo: pageCountContainerView.centerYAnchor).isActive = true
+				pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
+				pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
 
-			self.view.addSubview(containerView)
+				containerView.addArrangedSubview(pageCountContainerView)
 
-			setupConstraints()
+				self.view.addSubview(containerView)
 
-			self.view.layoutIfNeeded()
+				setupConstraints()
+
+				self.view.layoutIfNeeded()
+			}
 
 			pdfView.document = document
 
@@ -160,6 +163,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 			adjustThumbnailsSize()
 
+			completion(true)
+
+		} else {
+			completion(false)
 		}
 	}
 
@@ -206,7 +213,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let alertMessage = NSString(format: "This document has %@ pages".localized as NSString, "\(pdfDocument.pageCount)") as String
-		let alertController = UIAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
+		let alertController = ThemedAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 		alertController.addTextField(configurationHandler: { textField in
@@ -286,43 +293,43 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		thumbnailView.isHidden = false
 
 		switch thumbnailViewPosition {
-		case .left:
-			constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
-			constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
-			constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-			constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: thumbnailViewWidthMultiplier))
+			case .left:
+				constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
+				constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+				constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: thumbnailViewWidthMultiplier))
 
-			constraints.append(containerView.leadingAnchor.constraint(equalTo: thumbnailView.trailingAnchor))
-			constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
-			constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				constraints.append(containerView.leadingAnchor.constraint(equalTo: thumbnailView.trailingAnchor))
+				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
 
-		case .right:
-			constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
-			constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: containerView.trailingAnchor))
-			constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
-			constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-			constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: thumbnailViewWidthMultiplier))
+			case .right:
+				constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
+				constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: containerView.trailingAnchor))
+				constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+				constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: thumbnailViewWidthMultiplier))
 
-			constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
-			constraints.append(containerView.trailingAnchor.constraint(equalTo: thumbnailView.leadingAnchor))
-			constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+				constraints.append(containerView.trailingAnchor.constraint(equalTo: thumbnailView.leadingAnchor))
+				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
 
-		case .bottom:
-			constraints.append(thumbnailView.topAnchor.constraint(equalTo: containerView.bottomAnchor))
-			constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
-			constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
-			constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-			constraints.append(thumbnailView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: thumbnailViewHeightMultiplier))
+			case .bottom:
+				constraints.append(thumbnailView.topAnchor.constraint(equalTo: containerView.bottomAnchor))
+				constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+				constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+				constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				constraints.append(thumbnailView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: thumbnailViewHeightMultiplier))
 
-			constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
-			constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
-			constraints.append(containerView.bottomAnchor.constraint(equalTo: thumbnailView.topAnchor))
+				constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+				constraints.append(containerView.bottomAnchor.constraint(equalTo: thumbnailView.topAnchor))
 
-		case .none:
-			constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
-			constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
-			constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-			thumbnailView.isHidden = true
+			case .none:
+				constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+				constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+				constraints.append(containerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+				thumbnailView.isHidden = true
 		}
 
 		self.activeViewConstraints = constraints
@@ -353,9 +360,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 					self.pdfView.go(to: page)
 				}
 			} else {
-				let alertController = UIAlertController(title: "Invalid Page".localized,
-														message: "The entered page number doesn't exist".localized,
-														preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: "Invalid Page".localized,
+									    message: "The entered page number doesn't exist".localized,
+									    preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 				self.present(alertController, animated: true, completion: nil)
 			}

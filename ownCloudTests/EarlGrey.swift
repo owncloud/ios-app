@@ -1,5 +1,5 @@
 //
-// Copyright 2016 Google Inc.
+// Copyright 2018 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import EarlGrey
 import Foundation
 
 public func GREYAssert(_ expression: @autoclosure () -> Bool, reason: String) {
-  GREYAssert(expression, reason, details: "Expected expression to be true")
+  GREYAssert(expression(), reason, details: "Expected expression to be true")
 }
 
 public func GREYAssertTrue(_ expression: @autoclosure () -> Bool, reason: String) {
@@ -48,15 +48,17 @@ public func GREYAssertNotEqual(_ left: @autoclosure () -> AnyObject?,
 }
 
 public func GREYAssertEqualObjects<T: Equatable>( _ left: @autoclosure () -> T?,
-                                                  _ right: @autoclosure () -> T?, reason: String) {
-  GREYAssert(left() == right(), reason, details: "Expected object of the left term to be equal" +
-    " to the object of the right term")
+                                                  _ right: @autoclosure () -> T?,
+                                                  reason: String) {
+  GREYAssert(left() == right(), reason, details: "Expected object of the left term to be equal " +
+    "to the object of the right term")
 }
 
 public func GREYAssertNotEqualObjects<T: Equatable>( _ left: @autoclosure () -> T?,
-                                      _ right: @autoclosure () -> T?, reason: String) {
-  GREYAssert(left() != right(), reason, details: "Expected object of the left term to not" +
-    " equal the object of the right term")
+                                                     _ right: @autoclosure () -> T?,
+                                                     reason: String) {
+  GREYAssert(left() != right(), reason, details: "Expected object of the left term to not " +
+    "equal the object of the right term")
 }
 
 public func GREYFail(_ reason: String) {
@@ -97,26 +99,34 @@ private func GREYWaitUntilIdle() {
 }
 
 open class EarlGrey: NSObject {
-  open class func select(elementWithMatcher matcher:GREYMatcher,
-                           file: StaticString = #file,
-                           line: UInt = #line) -> GREYElementInteraction {
+  public static func selectElement(with matcher: GREYMatcher,
+                                   file: StaticString = #file,
+                                   line: UInt = #line) -> GREYInteraction {
     return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
-             .selectElement(with: matcher)
+      .selectElement(with: matcher)
+  }
+
+  @available(*, deprecated, renamed: "selectElement(with:)")
+  open class func select(elementWithMatcher matcher:GREYMatcher,
+                         file: StaticString = #file,
+                         line: UInt = #line) -> GREYElementInteraction {
+    return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
+      .selectElement(with: matcher)
   }
 
   open class func setFailureHandler(handler: GREYFailureHandler,
-                                      file: StaticString = #file,
-                                      line: UInt = #line) {
+                                    file: StaticString = #file,
+                                    line: UInt = #line) {
     return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
-             .setFailureHandler(handler)
+      .setFailureHandler(handler)
   }
 
   open class func handle(exception: GREYFrameworkException,
-                           details: String,
-                           file: StaticString = #file,
-                           line: UInt = #line) {
+                         details: String,
+                         file: StaticString = #file,
+                         line: UInt = #line) {
     return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
-             .handle(exception, details: details)
+      .handle(exception, details: details)
   }
 
   @discardableResult open class func rotateDeviceTo(orientation: UIDeviceOrientation,
@@ -124,20 +134,40 @@ open class EarlGrey: NSObject {
                                                     file: StaticString = #file,
                                                     line: UInt = #line)
     -> Bool {
-    return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
-             .rotateDevice(to: orientation,
-                           errorOrNil: errorOrNil)
+      return EarlGreyImpl.invoked(fromFile: file.description, lineNumber: line)
+        .rotateDevice(to: orientation,
+                      errorOrNil: errorOrNil)
   }
 }
 
 extension GREYInteraction {
   @discardableResult public func assert(_ matcher: @autoclosure () -> GREYMatcher) -> Self {
-    return self.assert(with:matcher())
+    return self.__assert(with: matcher())
   }
 
   @discardableResult public func assert(_ matcher: @autoclosure () -> GREYMatcher,
                                         error:UnsafeMutablePointer<NSError?>!) -> Self {
-    return self.assert(with: matcher(), error: error)
+    return self.__assert(with: matcher(), error: error)
+  }
+
+  @available(*, deprecated, renamed: "assert(_:)")
+  @discardableResult public func assert(with matcher: GREYMatcher!) -> Self {
+    return self.__assert(with: matcher)
+  }
+
+  @available(*, deprecated, renamed: "assert(_:error:)")
+  @discardableResult public func assert(with matcher: GREYMatcher!,
+                                        error:UnsafeMutablePointer<NSError?>!) -> Self {
+    return self.__assert(with: matcher, error: error)
+  }
+
+  @discardableResult public func perform(_ action: GREYAction!) -> Self {
+    return self.__perform(action)
+  }
+
+  @discardableResult public func perform(_ action: GREYAction!,
+                                         error:UnsafeMutablePointer<NSError?>!) -> Self {
+    return self.__perform(action, error: error)
   }
 
   @discardableResult public func using(searchAction: GREYAction,
@@ -153,6 +183,6 @@ extension GREYCondition {
 
   open func waitWithTimeout(seconds: CFTimeInterval, pollInterval: CFTimeInterval)
     -> Bool {
-    return self.wait(withTimeout: seconds, pollInterval: pollInterval)
+      return self.wait(withTimeout: seconds, pollInterval: pollInterval)
   }
 }

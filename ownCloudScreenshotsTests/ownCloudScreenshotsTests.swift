@@ -72,6 +72,10 @@ class ScreenshotsTests: XCTestCase {
 		preparePhotos(app: app)
 		prepareQuickAccess(app: app)
 
+		if UIDevice.current.isIpad() {
+			prepareMultipleWindows(app: app)
+		}
+
 		XCTAssert(true, "Screenshots taken")
 	}
 
@@ -117,7 +121,7 @@ class ScreenshotsTests: XCTestCase {
 
 		sleep(5)
 
-		let scrollViewsQuery = app.scrollViews
+		let scrollViewsQuery = app.scrollViews.firstMatch
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
 		scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.swipeLeft()
@@ -137,9 +141,12 @@ class ScreenshotsTests: XCTestCase {
 	func preparePhotos(app: XCUIApplication) {
 		let tablesQuery = XCUIApplication().tables
 
-		tablesQuery.buttons[String(format: "Photos %@", localizedString(key: "Actions"))].tap()
+		tablesQuery.buttons[String(format: "ownCloud Manual.pdf %@", localizedString(key: "Actions"))].tap()
 		snapshot("21_ios_files_actions_demo")
-		app.children(matching: .window).element(boundBy: 0).children(matching: .other).element(boundBy: 2).children(matching: .other).element(boundBy: 0).tap()
+
+		let normalized = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+		let coordinate = normalized.withOffset(CGVector(dx: 44, dy: 44))
+		coordinate.tap()
 
 		tablesQuery.staticTexts["Photos"].tap()
 
@@ -152,6 +159,25 @@ class ScreenshotsTests: XCTestCase {
 	func prepareQuickAccess(app: XCUIApplication) {
 		app.tabBars.buttons[localizedString(key: "Quick Access")].tap()
 		snapshot("40_ios_quick_access_demo")
+	}
+
+	func prepareMultipleWindows(app: XCUIApplication) {
+		XCUIDevice.shared.orientation = .landscapeLeft
+		sleep(2)
+		app.tabBars.buttons[localizedString(key: "Browse")].tap()
+
+		let tablesQuery = XCUIApplication().tables
+		tablesQuery/*@START_MENU_TOKEN@*/.buttons["Photos Actions"]/*[[".cells[\"Photos\"].buttons[\"Photos Actions\"]",".buttons[\"Photos Actions\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		sleep(2)
+		tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Open in a new Window"]/*[[".cells[\"com.owncloud.action.openscene\"].staticTexts[\"Open in a new Window\"]",".staticTexts[\"Open in a new Window\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+
+		sleep(2)
+
+		let tablesQuery2 = XCUIApplication().tables
+		tablesQuery2/*@START_MENU_TOKEN@*/.buttons["Photos Actions"]/*[[".cells[\"Photos\"].buttons[\"Photos Actions\"]",".buttons[\"Photos Actions\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+
+
+		snapshot("23_ios_files_list_multiple_window_landscape")
 	}
 
 	// MARK: - Waiters

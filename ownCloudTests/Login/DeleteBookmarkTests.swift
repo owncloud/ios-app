@@ -17,11 +17,13 @@ class DeleteBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
 	override func tearDown() {
 		super.tearDown()
 		OCMockManager.shared.removeAllMockingBlocks()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
 	/*
@@ -37,19 +39,22 @@ class DeleteBookmarkTests: XCTestCase {
 			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_text(bookmarkName)).perform(grey_swipeFastInDirection(.left))
-			EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text(bookmarkName)).perform(grey_swipeSlowInDirection(.left))
+
+			EarlGrey.selectElement(with: grey_text("Delete".localized)).perform(grey_tap())
+			if !EarlGrey.waitForElementMissing(withMatcher: grey_text("Delete".localized), label: "Wait for deletion", timeout: 2.0) {
+				EarlGrey.selectElement(with: grey_text("Delete".localized)).perform(grey_tap())
+			}
 
 			let isBookmarkDeleted = GREYCondition(name: "Waiting for bookmark removal", block: {
 				var error: NSError?
 
 				//Assert
-				EarlGrey.select(elementWithMatcher: grey_text(bookmarkName)).assert(grey_notVisible(), error: &error)
-				EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
+				EarlGrey.selectElement(with: grey_text(bookmarkName)).assert(grey_notVisible(), error: &error)
+				EarlGrey.selectElement(with: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
 
 				return error == nil
-			}).wait(withTimeout: 2.0, pollInterval: 0.5)
+			}).wait(withTimeout: 10.0, pollInterval: 0.5)
 
 			GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 
@@ -74,19 +79,22 @@ class DeleteBookmarkTests: XCTestCase {
 				EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 				//Actions
-				EarlGrey.select(elementWithMatcher: grey_text(bookmarkName1)).perform(grey_swipeFastInDirection(.left))
-				EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
-				EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
+				EarlGrey.selectElement(with: grey_text(bookmarkName1)).perform(grey_swipeSlowInDirection(.left))
+
+				EarlGrey.selectElement(with: grey_text("Delete".localized)).perform(grey_tap())
+				if !EarlGrey.waitForElementMissing(withMatcher: grey_text("Delete".localized), label: "Wait for deletion", timeout: 2.0) {
+					EarlGrey.selectElement(with: grey_text("Delete".localized)).perform(grey_tap())
+				}
 
 				let isBookmarkDeleted = GREYCondition(name: "Waiting for bookmark removal", block: {
 					var error: NSError?
 
 					//Assert
-					EarlGrey.select(elementWithMatcher: grey_text(bookmarkName1)).assert(grey_notVisible(), error: &error)
-					EarlGrey.select(elementWithMatcher: grey_text(bookmarkName2)).assert(grey_sufficientlyVisible(), error: &error)
+					EarlGrey.selectElement(with: grey_text(bookmarkName1)).assert(grey_notVisible(), error: &error)
+					EarlGrey.selectElement(with: grey_text(bookmarkName2)).assert(grey_sufficientlyVisible(), error: &error)
 
 					return error == nil
-				}).wait(withTimeout: 2.0, pollInterval: 0.5)
+				}).wait(withTimeout: 10.0, pollInterval: 0.5)
 
 				GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 

@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
 	var query : OCQuery
@@ -42,14 +43,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		query.delegate = self
 
 		if query.sortComparator == nil {
-			query.sortComparator = self.sortMethod.comparator()
+			query.sortComparator = self.sortMethod.comparator(direction: sortDirection)
 		}
-
-		core?.start(query)
-
-		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
-			self?.updateQueryProgressSummary()
-		})
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -58,10 +53,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .DisplaySettingsChanged, object: nil)
-
-		queryProgressSummary = nil
-
-		core?.stop(query)
 	}
 
 	// MARK: - Display settings
@@ -72,13 +63,22 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	// MARK: - Sorting
 	var sortBar: SortBar?
 	var sortMethod: SortMethod {
-
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
 		}
 
 		get {
-			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabetically
+			return sort
+		}
+	}
+	var sortDirection: SortDirection {
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
+		}
+
+		get {
+			let sort = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
 			return sort
 		}
 	}
@@ -142,7 +142,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	func updateQueryProgressSummary() {
-		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+		let summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
 		switch query.state {
 			case .stopped:
@@ -184,11 +184,15 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
-		query.sortComparator = sortMethod.comparator()
+		query.sortComparator = sortMethod.comparator(direction: sortDirection)
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
 		self.present(presentViewController, animated: animated, completion: completionHandler)
+	}
+
+	func toggleSelectMode() {
+		tableView.setEditing(!tableView.isEditing, animated: true)
 	}
 
 	// MARK: - Query Delegate
@@ -198,7 +202,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		queryRefreshRateLimiter.runRateLimitedBlock {
-			query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
 				OnMainThread {
 					if query.state.isFinal {
 						OnMainThread {
@@ -228,7 +232,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 							self.messageView?.message(show: false)
 						}
 
+						let indexPath = self.tableView.indexPathForSelectedRow
 						self.tableView.reloadData()
+						self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 					case .targetRemoved:
 						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 						self.tableView.reloadData()
@@ -251,6 +257,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.searchController?.searchBar.applyThemeCollection(collection)
+		tableView.sectionIndexColor = collection.tintColor
 	}
 
 	// MARK: - Events
@@ -273,6 +280,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
+			sortBar?.updateForCurrentTraitCollection()
 
 			tableView.tableHeaderView = sortBar
 		}
@@ -283,11 +291,22 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		core?.start(query)
+
+		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
+			self?.updateQueryProgressSummary()
+		})
+
 		updateQueryProgressSummary()
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+
+		queryStateObservation?.invalidate()
+		queryStateObservation = nil
+
+		core?.stop(query)
 
 		queryProgressSummary = nil
 
@@ -323,11 +342,76 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 			// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 			// Make sure we don't request the thumbnail multiple times in that case.
-			if newItem.displaysDifferent(than: cell?.item) {
+			if newItem.displaysDifferent(than: cell?.item, in: core) {
 				cell?.item = newItem
 			}
 		}
 
 		return cell!
+	}
+
+	// MARK: - Table view delegate
+
+	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+		if sortMethod == .alphabetically {
+			var indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
+			if sortDirection == .descendant {
+				indexTitles.reverse()
+			}
+			if #available(iOS 12.0, *) {
+				if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
+					return indexTitles
+				}
+			} else {
+				if indexTitles.count > 1 {
+					return indexTitles
+				}
+			}
+		}
+
+		return []
+	}
+
+	override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+		let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
+
+		if let firstItem = firstItem {
+			if let itemIndex = self.items.index(of: firstItem) {
+				OnMainThread {
+					tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+				}
+			}
+		}
+
+		return 0
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if let item = itemAt(indexPath: indexPath), UIDevice.current.isIpad() {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+				return self.makeContextMenu(for: indexPath, with: item)
+			})
+		}
+
+		return nil
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, with item: OCItem) -> UIMenu {
+		let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+			self.openItemInWindow(at: indexPath)
+		}
+		return UIMenu(title: item.name ?? "", children: [openWindow])
+	}
+
+	@available(iOS 13.0, *)
+	func openItemInWindow(at indexPath: IndexPath) {
+		if let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
+			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+		}
 	}
 }

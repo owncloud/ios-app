@@ -17,12 +17,25 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class MoveAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.move") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
+	override class var keyCommand : String? { return "V" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
+
+	// MARK: - Extension matching
+	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if forContext.items.filter({return $0.isRoot || (!$0.permissions.contains(.move) && !$0.permissions.contains(.delete))}).count > 0 {
+			return .none
+
+		}
+
+		return .middle
+	}
 
 	// MARK: - Action implementation
 	override func run() {
@@ -61,7 +74,7 @@ class MoveAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "folder")
 		}
 

@@ -26,10 +26,13 @@ class ThemeStyle : NSObject {
 	var darkColor: UIColor
 	var themeStyle: ThemeCollectionStyle
 
+	var darkStyleIdentifier: String?
+
 	var customizedColorsByPath : [String:String]?
 
-	init(identifier idtfr: String, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
+	init(identifier idtfr: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
 		self.identifier = idtfr
+		self.darkStyleIdentifier = darkIdentifier
 		self.localizedName = name
 		self.lightColor = lColor
 		self.darkColor = dColor

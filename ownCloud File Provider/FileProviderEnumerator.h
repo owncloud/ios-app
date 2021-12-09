@@ -22,7 +22,7 @@
 
 @class FileProviderExtension;
 
-@interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator, OCQueryDelegate>
+@interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator, OCQueryDelegate, OCLogTagging>
 {
 	__weak FileProviderExtension *_fileProviderExtension;
 

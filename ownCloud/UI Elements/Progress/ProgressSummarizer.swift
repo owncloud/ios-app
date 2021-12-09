@@ -19,11 +19,20 @@
 import UIKit
 import ownCloudSDK
 
-struct ProgressSummary : Equatable {
+class ProgressSummary : Equatable {
+	private let uuid = UUID()
+
 	var indeterminate : Bool
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+	init(indeterminate: Bool, progress: Double, message: String? = nil, progressCount : Int) {
+		self.indeterminate = indeterminate
+		self.progress = progress
+		self.message = message
+		self.progressCount = progressCount
+	}
 
 	func update(progressView: UIProgressView) {
 		if indeterminate {
@@ -31,6 +40,10 @@ struct ProgressSummary : Equatable {
 		} else {
 			progressView.progress = Float(progress)
 		}
+	}
+
+	static func == (lhs: ProgressSummary, rhs: ProgressSummary) -> Bool {
+		return lhs.uuid == rhs.uuid
 	}
 }
 
@@ -43,7 +56,7 @@ private struct ProgressSummaryNotificationObserver {
 
 class ProgressSummarizer: NSObject {
 	// MARK: - Init & Deinit
-	private var observerContextTarget : Int = 0
+	static private var observerContextTarget : Int = 0
 	private var observerContext : UnsafeMutableRawPointer?
 
 	var trackedProgress : [Progress] = []
@@ -51,7 +64,7 @@ class ProgressSummarizer: NSObject {
 	var trackedProgressByTypeCount : [ OCEventType : Int ] = [ : ]
 
 	override init() {
-		observerContext = UnsafeMutableRawPointer(&observerContextTarget)
+		observerContext = UnsafeMutableRawPointer(&ProgressSummarizer.observerContextTarget)
 
 		super.init()
 	}
@@ -337,7 +350,7 @@ class ProgressSummarizer: NSObject {
 
 	// MARK: - Summary computation
 	func summarize() -> ProgressSummary {
-		var summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
+		let summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
 		var totalUnitCount : Int64 = 0
 		var completedUnitCount : Int64 = 0
 		var completedFraction : Double = 0
@@ -402,7 +415,7 @@ class ProgressSummarizer: NSObject {
 											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
-										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles, .wakeupSyncRecord: break
 									}
 
 									if multiMessage != nil {

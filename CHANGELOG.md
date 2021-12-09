@@ -1,10 +1,90 @@
 # ChangeLog
 
+## Release version 1.3.1 (March 2020)
+
+- Fix: Shortcut - Save Action (#622)
+- Fix: Markup Documents (#617, #618
+- Fix: Offline Usage (#3828)
+- Fix: Available Offline (PR #616)
+- Fix: Permissions (#623)
+
+## Release version 1.3.0 (February 2020)
+
+- Document Scanner on iOS 13 (PR #494)
+- Markup Documents on iOS 13 (#541)
+- Shortcut Support on iOS 13 (#463)
+- New Quick Access Collections (PR #600)
+- Cleaner File List Layout (PR #594)
+- Added Sort Bar in Directory Picker (#590)
+- Fix: Blank File List on UI restoration (#601)
+- Fix: Share Sheet on iPad for log files (#606)
+
+## Release version 1.2.1 (January 2020)
+
+- Fix: Passcode Lock Screen on iOS 13 (#582)
+
+## Release version 1.2.0 (December 2019)
+
+- Multiple Window Support (iPadOS) (#488)
+- Keyboard Commands (iPadOS) (#282)
+- Media Player Improvements (#59, #374)
+- Better File Previews (#481)
+- Arabic Language Support
+- Fix: Sort alphabetically (PR #546)
+- Fix: Share Sheet on iPad (#568)
+- Fix: FileProvider File Type Issue (#557)
+- Fix: FileProvider Offline Browsing (PR #547)
+- Fix: FileProvider Saving from Microsoft Word (PR #574)
+- Fix: Photo Upload (#504)
+
+## Release version 1.1.2 (October 2019)
+
+- Fix for long delays before starting a request on iOS 13.1 (PR #531)
+
+## Release version 1.1.1 (October 2019)
+
+- Dark mode support (PR #489)
+- iOS 13 support (#502)
+- Background media playback fixed (PR #522)
+- Displaying long file name improved (#516)
+- Fixed naming of uploaded edited photos (#520)
+- Fixed crash in File Provider (#502)
+- UI fixes (#511, #502)
+
+## Release version 1.1.0 (September 2019)
+
+- Available Offline Support (#134, #135)
+- Background Sync Support (#386)
+- Background Image Upload (#116)
+- Import Files from Share Sheet (#76)
+- Added "Create Folder" Action in Directory Picker (#443)
+- Added Change Sort Order for all Sort Methods (#470)
+- Added Index Bar in File list (#413)
+- Image Gallery improvements (#322)
+- UI improvements for the Navigation Bar (#477)
+- Added Activity Indicator for deleting Local Copies (#393)
+- Sharing fixes (#439, #415)
+- Fixed min length for searching sharing users (#454)
+
 ## Release version 1.0.4 (August 2019)
 
 - Authentication improvements (PR #459)
 - Fixed background crash (PR #462)
 - Log file improvements (#444)
+
+## TestFlight Build 129 (July 2019)
+
+- Import files from Share Sheet (#76)
+- Create Folder in Directory Picker (#443)
+
+## TestFlight Build 126 (July 2019)
+
+- Native Media Player, with support for streaming (#395)
+- Name Conflict Detection (#377)
+- Activity Indicator for deleting offline copies (#393)
+- Improved Log File (#446)
+- Image Gallery improvement (#322)
+- Error handling for corrupted files (#357)
 
 ## Release version 1.0.3 (July 2019)
 
