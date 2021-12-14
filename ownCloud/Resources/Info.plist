@@ -49,7 +49,7 @@
 			<string>com.owncloud.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>owncloud</string>
+				<string octype="app">owncloud</string>
 			</array>
 		</dict>
 		<dict>
@@ -59,7 +59,7 @@
 			<string>com.owncloud.auth</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>oc</string>
+				<string octype="auth">oc</string>
 			</array>
 		</dict>
 	</array>

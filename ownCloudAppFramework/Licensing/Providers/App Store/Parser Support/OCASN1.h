@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import <Foundation/Foundation.h>
 #import "OCLicenseAppStoreReceipt.h"
 
@@ -39,3 +41,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif /* DISABLE_APPSTORE_LICENSING */

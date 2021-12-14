@@ -16,6 +16,8 @@
  *
  */
 
+#if !DISABLE_APPSTORE_LICENSING
+
 import UIKit
 import ownCloudApp
 import ownCloudAppShared
@@ -134,3 +136,5 @@ class LicenseInAppPurchaseFeatureView: UIView, Themeable {
 		baseViewController?.present(asCard: FrameViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
 	}
 }
+
+#endif

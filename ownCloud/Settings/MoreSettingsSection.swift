@@ -88,54 +88,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
-			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)
-
-			OCExtensionManager.shared.provideExtensions(for: context, completionHandler: { (_, context, licenses) in
-				OnMainThread {
-					let textViewController = TextViewController()
-					let licenseText : NSMutableAttributedString = NSMutableAttributedString()
-
-					textViewController.title = "Acknowledgements".localized
-
-					if licenses != nil {
-						let titleAttributes : [NSAttributedString.Key : Any] = [
-							.font : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize * 1.5)
-						]
-
-						let textAttributes : [NSAttributedString.Key : Any] = [
-							.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)
-						]
-
-					   	// Preamble
-						licenseText.append(NSAttributedString(string: "Acknowledgements".localized + "\n", attributes: titleAttributes))
-						licenseText.append(NSAttributedString(string: "\n" + "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.".localized + "\n\n", attributes: textAttributes))
-
-						for licenseExtensionMatch in licenses! {
-							let extensionObject = licenseExtensionMatch.extension.provideObject(for: context)
-
-							if let licenseDict = extensionObject as? [String : Any],
-							   let licenseTitle = licenseDict["title"] as? String,
-							   let licenseURL = licenseDict["url"] as? URL {
-							   	// Title
-								licenseText.append(NSAttributedString(string: licenseTitle + "\n", attributes: titleAttributes))
-
-								// License text
-								do {
-									var encoding : String.Encoding = .utf8
-									let licenseFileContents = try String(contentsOf: licenseURL, usedEncoding: &encoding)
-
-									licenseText.append(NSAttributedString(string: "\n" + licenseFileContents + "\n\n", attributes: textAttributes))
-								} catch {
-								}
-							}
-						}
-					}
-
-					textViewController.attributedText = licenseText
-
-					row.viewController?.navigationController?.pushViewController(textViewController, animated: true)
-				}
-			})
+			row.viewController?.navigationController?.pushViewController(AcknowledgementsTableViewController(style: .grouped), animated: true)
 		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
 
 		var buildType = "release".localized

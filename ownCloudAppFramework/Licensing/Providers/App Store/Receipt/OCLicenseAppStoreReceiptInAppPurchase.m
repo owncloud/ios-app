@@ -16,6 +16,8 @@
  *
  */
 
+#ifndef DISABLE_APPSTORE_LICENSING
+
 #import "OCLicenseAppStoreReceiptInAppPurchase.h"
 #import "OCASN1.h"
 
@@ -78,3 +80,5 @@
 }
 
 @end
+
+#endif /* DISABLE_APPSTORE_LICENSING */

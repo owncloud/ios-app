@@ -3,7 +3,7 @@ excluded:
     - ownCloudScreenshotsTests
     - external
 
-function_body_length: 100
+#function_body_length: 100
 # warning_threshold: 5
 # line_length:
 #  warning: 300
@@ -33,8 +33,10 @@ disabled_rules:
     - function_body_length
     - implicit_getter
     - computed_accessors_order
-    - unneeded_notification_center_removal
     - function_parameter_count
+    - comment_spacing
+    - unused_closure_parameter
+#   - unneeded_notification_center_removal
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

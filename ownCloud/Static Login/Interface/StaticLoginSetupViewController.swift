@@ -24,12 +24,18 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
 	var bookmark : OCBookmark?
 	var busySection : StaticTableViewSection?
+	var retrySection : StaticTableViewSection?
 
 	private var urlString : String?
 	private var username : String?
 	private var password : String?
 	private var passwordRow : StaticTableViewRow?
 	private var isAuthenticating = false
+	private var retryTimeout : Date?
+	private let retryInterval : TimeInterval = 30
+	private var retries : Int = 0
+	private let numberOfRetries : Int = 3
+	private let busySectionMessageLabel : UILabel = UILabel()
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
@@ -47,7 +53,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.tableView.separatorStyle = .none
+
 		if profile.canConfigureURL {
+			self.urlString = profile.url?.absoluteString
 			self.addSection(urlSection())
 			if OCBookmarkManager.shared.bookmarks.count == 0, profile.isOnboardingEnabled {
 				self.addSection(onboardingSection())
@@ -121,7 +130,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let value = row.value as? String {
 				self?.username = value
 			}
-			}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
+		}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username", borderStyle: .roundedRect))
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, type) in
 			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
@@ -133,7 +142,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if type == .didReturn, let value = row.value as? String, value.count > 0 {
 				self?.startAuthentication(nil)
 			}
-			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
+			}, placeholder: "Password".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password", borderStyle: .roundedRect)
 		if let passwordRow = passwordRow {
 			loginMaskSection.add(row: passwordRow)
 		}
@@ -157,15 +166,30 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		tokenMaskSection.addStaticHeader(title: profile.welcome!, message: profile.promptForTokenAuth)
 
 		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
-			let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: "Cancel")
+			let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue".localized, cancelLabel: "Cancel".localized)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 		} else {
-			let (proceedButton, _) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", proceedItemStyle: .welcome, cancelLabel: nil)
+			let (proceedButton, _) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue".localized, proceedItemStyle: .welcome, cancelLabel: nil)
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		}
 
 		return tokenMaskSection
+	}
+
+	func retrySection(issues: DisplayIssues) -> StaticTableViewSection {
+		let retrySection : StaticTableViewSection = StaticTableViewSection(headerTitle: nil, identifier: "retrySection")
+
+		for issue in issues.displayIssues {
+			if let title = issue.localizedTitle, let localizedDescription = issue.localizedDescription {
+				retrySection.add(row: StaticTableViewRow(message: localizedDescription, title: title))
+			}
+		}
+
+		let (proceedButton, _) = retrySection.addButtonFooter(proceedLabel: "Retry".localized, proceedItemStyle: .welcome, cancelLabel: nil)
+		proceedButton?.addTarget(self, action: #selector(proceedWithLogin), for: .touchUpInside)
+
+		return retrySection
 	}
 
 	func busySection(message: String) -> StaticTableViewSection {
@@ -173,23 +197,22 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 		let containerView : FullWidthHeaderView = FullWidthHeaderView()
 		let centerView : UIView = UIView()
-		let messageLabel : UILabel = UILabel()
 
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 		centerView.translatesAutoresizingMaskIntoConstraints = false
-		messageLabel.translatesAutoresizingMaskIntoConstraints = false
+		busySectionMessageLabel.translatesAutoresizingMaskIntoConstraints = false
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 
 		centerView.addSubview(activityIndicator)
-		centerView.addSubview(messageLabel)
+		centerView.addSubview(busySectionMessageLabel)
 
 		containerView.addSubview(centerView)
 
 		containerView.addThemeApplier({ (_, collection, _) in
-			messageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
+			self.busySectionMessageLabel.applyThemeCollection(collection, itemStyle: .welcomeMessage)
 		})
 
-		messageLabel.text = message
+		busySectionMessageLabel.text = message
 
 		NSLayoutConstraint.activate([
 			activityIndicator.widthAnchor.constraint(equalToConstant: 30),
@@ -198,9 +221,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			activityIndicator.topAnchor.constraint(equalTo: centerView.topAnchor),
 			activityIndicator.bottomAnchor.constraint(equalTo: centerView.bottomAnchor),
 
-			messageLabel.centerYAnchor.constraint(equalTo: centerView.centerYAnchor),
-			messageLabel.leftAnchor.constraint(equalTo: activityIndicator.rightAnchor, constant: 20),
-			messageLabel.rightAnchor.constraint(equalTo: centerView.rightAnchor),
+			busySectionMessageLabel.centerYAnchor.constraint(equalTo: centerView.centerYAnchor),
+			busySectionMessageLabel.leftAnchor.constraint(equalTo: activityIndicator.rightAnchor, constant: 20),
+			busySectionMessageLabel.rightAnchor.constraint(equalTo: centerView.rightAnchor),
 
 			centerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 40),
 			centerView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
@@ -285,11 +308,13 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		}
 	}
 
-	func proceedWithLogin() {
+	@objc func proceedWithLogin() {
 		guard self.bookmark != nil else {
 			let alertController = ThemedAlertController(title: "Missing Profile URL".localized, message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.".localized, profile.name ?? ""), preferredStyle: .alert)
 
-			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { _ in
+				self.popViewController()
+			}))
 
 			self.loginViewController?.present(alertController, animated: true, completion: nil)
 			return
@@ -300,6 +325,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		}
 		if let onboardingSection = self.sectionForIdentifier("onboardingSection") {
 			self.removeSection(onboardingSection)
+		}
+		if let retrySection = self.sectionForIdentifier("retrySection") {
+			self.removeSection(retrySection)
 		}
 
 		if busySection == nil {
@@ -361,7 +389,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 							OCBookmarkManager.shared.addBookmark(bookmark)
 
 							self.loginViewController?.showFirstScreen()
-							//self.pushSuccessViewController()
+							if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false {
+								self.loginViewController?.openBookmark(bookmark)
+							}
 						} else {
 							var issue : OCIssue?
 							let nsError = error as NSError?
@@ -441,27 +471,39 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			var proceed : Bool = true
 
 			if let issue = connectionIssue {
-				proceed = self.show(issue: issue, proceed: { () in
+				if self.retryTimeout == nil {
+					self.retryTimeout = Date().addingTimeInterval(self.retryInterval)
+				}
+				if let retryDate = self.retryTimeout, ((Date() < retryDate) || self.retries <= self.numberOfRetries), issue.issues?.first?.error?.isNetworkConnectionError == true {
+					self.retries += 1
+					proceed = false
 					OnMainThread {
-						if isInitialRequest {
-							self.determineSupportedAuthMethod(false)
-						}
+						Log.warning(String(format: "%@ (%ld)", "Contacting server…".localized, self.retries))
+						self.determineSupportedAuthMethod(false)
 					}
-				}, cancel: { () in
-					OnMainThread {
-						if self.profile.canConfigureURL {
-							if let busySection = self.busySection, busySection.attached {
-								self.removeSection(busySection)
+				} else {
+					proceed = self.show(issue: issue, proceed: { () in
+						OnMainThread {
+							if isInitialRequest {
+								self.determineSupportedAuthMethod(false)
 							}
-							self.addSection(self.urlSection())
-							if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {
-								self.addSection(self.onboardingSection())
-							}
-						} else {
-							self.cancel(nil)
 						}
-					}
-				})
+					}, cancel: { () in
+						OnMainThread {
+							if self.profile.canConfigureURL {
+								if let busySection = self.busySection, busySection.attached {
+									self.removeSection(busySection)
+								}
+								self.addSection(self.urlSection())
+								if OCBookmarkManager.shared.bookmarks.count == 0, self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {
+									self.addSection(self.onboardingSection())
+								}
+							} else {
+								self.cancel(nil)
+							}
+						}
+					})
+				}
 			}
 
 			if proceed {
@@ -540,6 +582,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					if let loginViewController = self.loginViewController, let issue = issue {
 						if let busySection = self.busySection, busySection.attached {
 							self.removeSection(busySection)
+						}
+						self.retrySection = self.retrySection(issues: displayIssues)
+						if let retrySection = self.retrySection, issue.issues?.first?.error?.isNetworkConnectionError == true {
+							self.addSection(retrySection)
 						}
 
 						IssuesCardViewController.present(on: loginViewController, issue: issue, displayIssues: displayIssues, completion: { [weak issue] (response) in

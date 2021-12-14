@@ -64,7 +64,7 @@
 "Edit Login" = "Edit Login";
 "Manage Storage" = "Manage Storage";
 "Access Files" = "Access Files";
-"Logout" = "Logout";
+"Log out" = "Log out";
 
 /* Client */
 "Browse" = "Browse";
@@ -128,11 +128,11 @@
 "'%@' is currently locked" = "'%@' is currently locked";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
 "Really delete '%@'?" = "Really delete '%@'?";
-"Really logout from '%@'?" = "Really logout from '%@'?";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
-"Logout of '%@' failed" = "Logout of '%@' failed";
+"Log out of '%@' failed" = "Log out of '%@' failed";
 "Accounts" = "Accounts";
 
 "Help" = "Help";
@@ -302,7 +302,7 @@
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
 "Include available offline files" = "Include available offline files";
-"Delete Local Copies" = "Delete Local Copies";
+"Delete all Offline Files" = "Delete all Offline Files";
 "Manage" = "Manage";
 "Storage" = "Storage";
 "Proceed" = "Proceed";

@@ -16,6 +16,8 @@
  *
  */
 
+#if !DISABLE_APPSTORE_LICENSING
+
 import UIKit
 import ownCloudApp
 import ownCloudAppShared
@@ -116,6 +118,7 @@ class LicenseOffersViewController: StaticTableViewController {
 			sections.append(subSection)
 		}
 
+		#if !DISABLE_APPSTORE_LICENSING
 		let restoreSection = StaticTableViewSection()
 
 		restoreSection.add(row: StaticTableViewRow(rowWithAction: { (_, _) in
@@ -125,6 +128,7 @@ class LicenseOffersViewController: StaticTableViewController {
 		}, title: "Restore purchases".localized, alignment: .center))
 
 		sections.append(restoreSection)
+		#endif
 
 		// Set sections
 		self.sections = sections
@@ -153,3 +157,5 @@ class LicenseOffersViewController: StaticTableViewController {
 		self.tableView.contentInsetAdjustmentBehavior = .never
 	}
 }
+
+#endif

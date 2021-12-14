@@ -16,6 +16,8 @@
  *
  */
 
+#if !DISABLE_APPSTORE_LICENSING
+
 import UIKit
 import ownCloudApp
 import ownCloudAppShared
@@ -52,5 +54,6 @@ extension OCLicenseManager {
 			})
 		}
 	}
-
 }
+
+#endif

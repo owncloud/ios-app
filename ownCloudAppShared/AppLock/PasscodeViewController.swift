@@ -285,6 +285,14 @@ public class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Themeing
 	public override var preferredStatusBarStyle : UIStatusBarStyle {
+		if VendorServices.shared.isBranded {
+			if #available(iOSApplicationExtension 13.0, *) {
+				return .darkContent
+			} else {
+				return .default
+			}
+		}
+
 		return Theme.shared.activeCollection.statusBarStyle
 	}
 

@@ -54,6 +54,7 @@ public enum StaticTableViewRowActionType {
 
 public enum StaticTableViewRowMessageStyle {
 	case plain
+	case text
 	case warning
 	case alert
 	case confirmation
@@ -195,7 +196,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
-			textColor = themeCollection.tintColor
+			textColor = themeCollection.tableRowColors.labelColor
 			backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 			self?.cell?.textLabel?.textColor = textColor
@@ -296,7 +297,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		if withButtonStyle {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-			let textColor = themeCollection.tintColor
+			let textColor = themeCollection.tableRowColors.labelColor
 
 			self?.cell?.textLabel?.textColor = textColor
 			self?.cell?.detailTextLabel?.textColor = textColor
@@ -402,7 +403,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience public init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = .default, autocorrectionType: UITextAutocorrectionType = .default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = .default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = .editingChanged, clearButtonMode : UITextField.ViewMode = .never ) {
+	convenience public init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = .default, autocorrectionType: UITextAutocorrectionType = .default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = .default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = .editingChanged, clearButtonMode : UITextField.ViewMode = .never, borderStyle:  UITextField.BorderStyle = .none) {
 		self.init()
 
 		if secureTextEntry {
@@ -435,6 +436,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
 		cellTextField.clearButtonMode = clearButtonMode
+		cellTextField.borderStyle = borderStyle
 
 		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: actionEvent)
 
@@ -466,7 +468,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.accessibilityLabel = accessibilityLabel
 	}
 
-	convenience public init(secureTextFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+	convenience public init(secureTextFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged, borderStyle: UITextField.BorderStyle = .none) {
 		self.init(	textFieldWithAction: action,
 				placeholder: placeholderString,
 				value: textValue, secureTextEntry: true,
@@ -478,7 +480,8 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				inputAccessoryView: inputAccessoryView,
 				identifier : identifier,
 				accessibilityLabel: accessibilityLabel,
-				actionEvent: actionEvent)
+				actionEvent: actionEvent,
+				borderStyle: borderStyle)
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
@@ -602,8 +605,13 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			switch style {
 				case .plain:
-					textColor = themeCollection.tintColor
+					textColor = themeCollection.tableRowColors.tintColor
 					tintColor = textColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+				case .text:
+					textColor = themeCollection.tableRowColors.labelColor
+					tintColor = themeCollection.tableRowColors.labelColor
 					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case .confirmation:
@@ -719,6 +727,18 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		self.cell = ThemeTableViewCell(withLabelColorUpdates: false)
+
+		if alignment == .center, let cell = self.cell, let textLabel = cell.textLabel {
+			textLabel.translatesAutoresizingMaskIntoConstraints = false
+
+			NSLayoutConstraint.activate([
+				textLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 0),
+				textLabel.heightAnchor.constraint(equalToConstant: 44.0),
+				textLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 15),
+				textLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -15)
+			])
+		}
+
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.imageView?.image = image
@@ -740,7 +760,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			switch style {
 			case .plain:
-				textColor = themeCollection.tintColor
+				textColor = themeCollection.tableRowColors.labelColor
 				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 			case .plainNonOpaque:
