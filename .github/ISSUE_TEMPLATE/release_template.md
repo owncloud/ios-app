@@ -23,7 +23,7 @@ Xcode version to work with:
 - [ ] [DEV] Update In-App Release Notes (changelog) in ownCloud/Release Notes/ReleaseNotes.plist
 - [ ] [DEV] Changelog: Created a folder for the new version like $majorVersion.$minorVersion.$patchVersion_YYYY-MM-DD
 - [ ] [DEV] Changelog: Moved all changelog files from the unreleased folder to the new version folder
-- [ ] [DEV] Inform Documentation-Team for the upcoming release with new version tag (notify #documentation-internal)
+- [ ] [DEV] Inform Documentation-Team for the upcoming major/minor release with new version tag (notify #documentation-internal)
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
 - [ ] [GIT] Merge branch `release/[major].[minor].[patch]` in master
