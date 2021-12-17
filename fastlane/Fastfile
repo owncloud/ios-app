@@ -288,8 +288,7 @@ platform :ios do
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
       APP_NAME: "ownCloud",
-      URL_SCHEME: "owncloud-app",
-      IPA_NAME: "ownCloud-regular.ipa"
+      URL_SCHEME: "owncloud-app"
     )
   end
 
@@ -313,8 +312,7 @@ platform :ios do
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
       APP_NAME: "ownCloud",
-      URL_SCHEME: "owncloud-emm",
-      IPA_NAME: "ownCloud-emm.ipa"
+      URL_SCHEME: "owncloud-emm"
     )
   end
 
@@ -338,8 +336,7 @@ lane :owncloud_online_build do
     CONFIGURATION: "Release",
     BETA_APP_ICON: false,
     APP_NAME: "ownCloud Online",
-    URL_SCHEME: "owncloud-online",
-    IPA_NAME: "ownCloud-online.ipa"
+    URL_SCHEME: "owncloud-online"
   )
 end
 
@@ -418,8 +415,7 @@ end
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
       BETA_APP_ICON: true,
-      APP_NAME: "ownCloud",
-      IPA_NAME: "ownCloud.ipa"
+      APP_NAME: "ownCloud"
     )
   end
 
