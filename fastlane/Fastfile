@@ -288,7 +288,8 @@ platform :ios do
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
       APP_NAME: "ownCloud",
-      URL_SCHEME: "owncloud-app"
+      URL_SCHEME: "owncloud-app",
+      IPA_NAME: "ownCloud-regular"
     )
   end
 
@@ -312,7 +313,8 @@ platform :ios do
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
       APP_NAME: "ownCloud",
-      URL_SCHEME: "owncloud-emm"
+      URL_SCHEME: "owncloud-emm",
+      IPA_NAME: "ownCloud-emm"
     )
   end
 
@@ -336,7 +338,8 @@ lane :owncloud_online_build do
     CONFIGURATION: "Release",
     BETA_APP_ICON: false,
     APP_NAME: "ownCloud Online",
-    URL_SCHEME: "owncloud-online"
+    URL_SCHEME: "owncloud-online",
+    IPA_NAME: "ownCloud-online"
   )
 end
 
@@ -415,7 +418,8 @@ end
       EXPORT_METHOD: "enterprise",
       CONFIGURATION: "Debug",
       BETA_APP_ICON: true,
-      APP_NAME: "ownCloud"
+      APP_NAME: "ownCloud",
+      IPA_NAME: "ownCloud"
     )
   end
 
@@ -763,9 +767,7 @@ end
       version_key: "APP_SHORT_VERSION"
     )
 
-    if !values[:IPA_NAME].nil?
-      ipaName = values[:IPA_NAME]
-    elsif
+
       time = Time.now
       ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
       if !customAppVersionNumber.nil?
@@ -774,13 +776,17 @@ end
       if !values[:BUILD_NUMBER].nil?
         version += "." + BUILD_NUMBER
       end
-      ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
+
+      if !values[:IPA_NAME].nil?
+        ipaName = values[:IPA_NAME] + "-" + version + "-" + ipaSuffix + ".ipa"
+      elsif
+        ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
+      end
 
       if File.exist?("../" + themePath)
         # Copy the Branding.plist file with additional app and build informtion in the file name
         sh "cp " + "\"../" + themePath + "\" \"../" + themeFolder + appName + "-" + version + "-" + ipaSuffix + ".plist\""
       end
-    end
 
     generate_appicon()
 
