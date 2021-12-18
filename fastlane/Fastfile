@@ -781,7 +781,7 @@ end
       end
 
       if !values[:IPA_NAME].nil?
-        ipaName = values[:IPA_NAME] + "-" + version + "-" + gitbranch + "-" + ipaSuffix + ".ipa"
+        ipaName = values[:IPA_NAME] + "-" + version + "-" + gitbranch.strip + "-" + ipaSuffix + ".ipa"
       elsif
         ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
       end
