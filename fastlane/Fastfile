@@ -518,12 +518,15 @@ end
       commit = sh "git rev-parse --short HEAD"
       sdkcommit = sh "git -C ../ios-sdk/ rev-parse --short HEAD"
 
-      puts "Git Hash: " + commit
+      puts "App Git Hash: " + commit
       puts "SDK Git Hash: " + sdkcommit
       set_info_plist_value(path: themePath, key: "LastGitCommit", value: commit)
       set_info_plist_value(path: themePath, key: "SDKLastGitCommit", value: sdkcommit)
     end
-
+    gitbranch = sh "git rev-parse --abbrev-ref HEAD"
+    sdkgitbranch = sh "git -C ../ios-sdk/ rev-parse --abbrev-ref HEAD"
+    puts "App Git Branch: " + gitbranch
+    puts "SDK Git Branch: " + sdkgitbranch
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
@@ -778,7 +781,7 @@ end
       end
 
       if !values[:IPA_NAME].nil?
-        ipaName = values[:IPA_NAME] + "-" + version + "-" + ipaSuffix + ".ipa"
+        ipaName = values[:IPA_NAME] + "-" + version + "-" + gitbranch + "-" + ipaSuffix + ".ipa"
       elsif
         ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
       end
