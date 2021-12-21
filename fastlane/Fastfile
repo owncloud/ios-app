@@ -481,6 +481,10 @@ end
       end
     end
 
+    gitbranch = sh "git rev-parse --abbrev-ref HEAD"
+    sdkgitbranch = sh "git -C ../ios-sdk/ rev-parse --abbrev-ref HEAD"
+    puts "App Git Branch: " + gitbranch
+    puts "SDK Git Branch: " + sdkgitbranch
     if File.exist?("../" + themePath)
       # Extract from Branding.plist
       tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "build.flags")
@@ -522,11 +526,9 @@ end
       puts "SDK Git Hash: " + sdkcommit
       set_info_plist_value(path: themePath, key: "LastGitCommit", value: commit)
       set_info_plist_value(path: themePath, key: "SDKLastGitCommit", value: sdkcommit)
+      set_info_plist_value(path: themePath, key: "GitBranch", value: gitbranch)
+      set_info_plist_value(path: themePath, key: "SDKGitBranch", value: sdkgitbranch)
     end
-    gitbranch = sh "git rev-parse --abbrev-ref HEAD"
-    sdkgitbranch = sh "git -C ../ios-sdk/ rev-parse --abbrev-ref HEAD"
-    puts "App Git Branch: " + gitbranch
-    puts "SDK Git Branch: " + sdkgitbranch
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
