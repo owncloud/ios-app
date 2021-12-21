@@ -54,6 +54,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 	private var settingsRows: [SettingsRowIndex] = [.settings]
 
+	private var bookmarkChangesObserver : NSObjectProtocol?
+
 	var themeApplierToken : ThemeApplierToken?
 
 	deinit {
@@ -91,6 +93,10 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		}
 
 		retrieveDisplayName()
+
+		bookmarkChangesObserver = NotificationCenter.default.addObserver(forName: .OCBookmarkManagerListChanged, object: nil, queue: OperationQueue.main) { [weak self] (_) in
+			self?.retrieveDisplayName()
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -374,21 +380,17 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 extension StaticLoginSingleAccountServerListViewController {
 
 	func retrieveDisplayName() {
-		guard let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first else { return }
-		let connection = OCConnection(bookmark: bookmark)
+		if let userDisplayName = OCBookmarkManager.shared.bookmarks.first?.displayName {
+			if self.displayName != userDisplayName {
+				OnMainThread {
+					self.displayName = userDisplayName
+					self.headerView = nil
 
-		connection.connect { error, issue in
-			guard error == nil, issue == nil, let displayName = connection.loggedInUser?.displayName else { return }
-			self.displayName = displayName
-			self.headerView = nil
-			OnMainThread {
-				self.tableView.reloadData()
-			}
-			connection.disconnect {
+					self.tableView.reloadData()
+				}
 			}
 		}
 	}
-
 }
 
 extension StaticLoginSingleAccountServerListViewController {
