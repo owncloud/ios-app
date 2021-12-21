@@ -524,8 +524,8 @@ end
 
       puts "App Git Hash: " + commit
       puts "SDK Git Hash: " + sdkcommit
-      set_info_plist_value(path: themePath, key: "LastGitCommit", value: commit)
-      set_info_plist_value(path: themePath, key: "SDKLastGitCommit", value: sdkcommit)
+      set_info_plist_value(path: themePath, key: "GitHash", value: commit)
+      set_info_plist_value(path: themePath, key: "SDKGitHash", value: sdkcommit)
       set_info_plist_value(path: themePath, key: "GitBranch", value: gitbranch)
       set_info_plist_value(path: themePath, key: "SDKGitBranch", value: sdkgitbranch)
     end
