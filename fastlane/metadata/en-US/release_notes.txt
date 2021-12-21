@@ -1,15 +1,3 @@
-• Account List
-There is a fresh new look for the single account overview.
-
-• Biometrical Unlock
-When protecting the app with a pin code, biometrical unlock will be suggested as default.
-
-• Display Name
-If the users display name is available, it will be shown in the account view, instead of the user name.
-
-• Background Location Settings
-Only show background location settings if needed.
-
-• Improvements
-There are a lot of improvements under the hood.
+• Fix: Authentication Improvement
+Fixed an OAuth2 token refresh problem 
 

@@ -1,3 +1,27 @@
+Changelog for ownCloud iOS Client [11.8.1] (2021-12-21)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.8.1 relevant to
+ownCloud admins and users.
+
+[11.8.1]: https://github.com/owncloud/ios-app/compare/milestone/11.8.0...milestone/11.8.1
+
+Summary
+-------
+
+* Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
+
+Details
+-------
+
+* Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
+
+   Adds authentication-oauth2.oidc-fallback-on-client-registration-failure -
+   defaulting to true - to allow the automatic fallback to default client_id / client_secret if
+   OpenID Connect Dynamic Client Registration fails with any error. Furthermore fixed an
+   infinite OAuth2 token refresh loop via SDK update.
+
+   https://github.com/owncloud/ios-app/pull/1068
+
 Changelog for ownCloud iOS Client [11.8.0] (2021-12-01)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.8.0 relevant to
