@@ -2,7 +2,7 @@
 {{- $categoryTags := .config | jsonpath `$[*].categoryTag` | uniq | sort }}
 {{- range $index, $categoryTag := $categoryTags }}
 tag::{{$categoryTag | strings.ToLower }}[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -28,7 +28,7 @@ tag::{{$categoryTag | strings.ToLower }}[]
 |{{- if has $option "defaultValue"}}`{{$option.defaultValue}}`{{end}}
 |{{- if has $option "description"}}{{$option.description}}{{end}}
 {{- if has $option "possibleValues"}}
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
