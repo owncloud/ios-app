@@ -375,7 +375,21 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		showBookmarkUI(attemptLoginOnSuccess: true)
+		var attemptLoginOnSuccess = true
+
+		// Prevent requesting and immediately returning a core for the newly generated bookmark if it is the first one and
+		// the conditions in didUpdateServerList() would lead to a replacement of this view controller. Because then, this would
+		// happen:
+		// - didUpdateServerList() replaces ServerListTableViewController with StaticLoginSingleAccountServerListViewController
+		// - showBookmarkUI(attemptLoginOnSuccess:true) starts a new connection on the replaced ServerListTableViewController, which requests a core from OCCoreManager
+		// - then immediately ClientRootViewController gets deallocated, which returns the core to OCCoreManager
+		// - the unusual *immediate* request + return might lead to an overlap with the next request for a core, so duplicate OCCore and OCConnection instances exist for a moment,
+		//   possibly interfering event and request routing of one another
+		if !VendorServices.shared.isBranded, OCBookmarkManager.shared.bookmarks.count == 0 {
+			attemptLoginOnSuccess = false
+		}
+
+		showBookmarkUI(attemptLoginOnSuccess: attemptLoginOnSuccess)
 	}
 
 	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
@@ -394,13 +408,15 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			_ = target.perform(action, with: self)
 		}
 
-		if attemptLoginOnSuccess {
-			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
-				if success, let bookmark = bookmark, let self = self {
-					self.didUpdateServerList()
-					if let error = autosolveErrorOnSuccess as Error? {
-						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
-					}
+		bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
+			if success, let bookmark = bookmark, let self = self {
+				self.didUpdateServerList()
+
+				if let error = autosolveErrorOnSuccess as Error? {
+					OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+				}
+
+				if attemptLoginOnSuccess {
 					self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				}
 			}
