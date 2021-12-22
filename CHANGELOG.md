@@ -9,6 +9,7 @@ Summary
 -------
 
 * Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
+* Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
 
 Details
 -------
@@ -21,6 +22,13 @@ Details
    infinite OAuth2 token refresh loop via SDK update.
 
    https://github.com/owncloud/ios-app/pull/1068
+
+* Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
+
+   Improved sorting results and localized sorting across query results and database queries,
+   via the SDK's new OCLOCALIZED collation and sort comparator.
+
+   https://github.com/owncloud/ios-app/issues/975
 
 Changelog for ownCloud iOS Client [11.8.0] (2021-12-01)
 =======================================
