@@ -1445,6 +1445,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 			<array>
 				<dict>
 					<key>Title</key>
+					<string>Sorting</string>
+					<key>Subtitle</key>
+					<string>Localized and improved sorting</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Fix: Authentication Improvement</string>
 					<key>Subtitle</key>
 					<string>Fixed an OAuth2 token refresh problem </string>

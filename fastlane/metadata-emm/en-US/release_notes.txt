@@ -1,3 +1,6 @@
+• Sorting
+Localized and improved sorting
+
 • Fix: Authentication Improvement
 Fixed an OAuth2 token refresh problem 
 
