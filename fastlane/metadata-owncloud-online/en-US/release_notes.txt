@@ -1,3 +1,6 @@
 • Fix: Authentication Improvement
 Fixed an OAuth2 token refresh problem 
 
+• Fix: Connection Problem
+Fixed a possible connection problem in the single account view
+

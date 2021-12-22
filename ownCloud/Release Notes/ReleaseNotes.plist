@@ -1453,6 +1453,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>bandage</string>
 				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Connection Problem</string>
+					<key>Subtitle</key>
+					<string>Fixed a possible connection problem in the single account view</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
 			</array>
 		</dict>
 	</array>
