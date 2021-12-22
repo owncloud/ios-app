@@ -22,11 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCBookmark (AppExtensions)
 
-@property(strong,nonatomic,nullable) NSString *displayName;
+@property(readonly,nonatomic,nullable) NSString *displayName; // Returns the user.displayName, using bookmark.userDisplayName - or data from the userInfo dictionary (legacy)
 @property(readonly,strong,nonatomic) NSString *shortName;
 
 @end
-
-extern OCBookmarkUserInfoKey OCBookmarkUserInfoKeyDisplayName;
 
 NS_ASSUME_NONNULL_END

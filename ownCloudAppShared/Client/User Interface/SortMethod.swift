@@ -77,16 +77,17 @@ public enum SortMethod: Int {
 	public func comparator(direction: SortDirection) -> OCSort {
 		var comparator: OCSort
 		var combinedComparator: OCSort?
+		let localizedSortComparator = OCSQLiteCollationLocalized.sortComparator!
 
 		let alphabeticComparator : OCSort = { (left, right) in
 			guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
 				return .orderedSame
 			}
 			if direction == .descendant {
-				return rightName.caseInsensitiveCompare(leftName)
+				return localizedSortComparator(rightName, leftName)
 			}
 
-			return leftName.caseInsensitiveCompare(rightName)
+			return localizedSortComparator(leftName, rightName)
 		}
 
 		let itemTypeComparator : OCSort = { (left, right) in

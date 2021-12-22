@@ -1,6 +1,6 @@
 
 tag::account[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -20,7 +20,7 @@ end::account[]
 
 
 tag::actions[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -33,7 +33,7 @@ tag::actions[]
 |stringArray
 |`[]`
 |List of all allowed actions. If provided, actions not listed here are not allowed.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -117,7 +117,7 @@ tag::actions[]
 |stringArray
 |`[]`
 |List of all disallowed actions. If provided, actions not listed here are allowed.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -202,7 +202,7 @@ end::actions[]
 
 
 tag::app[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -252,7 +252,7 @@ end::app[]
 
 
 tag::authentication[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -265,7 +265,7 @@ tag::authentication[]
 |string
 |`operating-system`
 |Alternative browser session class to use instead of `ASWebAuthenticationSession`. Please also see Compile Time Configuration if you want to use this.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -299,7 +299,7 @@ end::authentication[]
 
 
 tag::bookmarks[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -325,7 +325,7 @@ end::bookmarks[]
 
 
 tag::branding[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -344,7 +344,7 @@ tag::branding[]
 |stringArray
 |
 |List of disabled import methods that can't be used.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -479,7 +479,7 @@ branding.profile-allowed-authentication-methods
 |stringArray
 |
 |The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -609,7 +609,7 @@ end::branding[]
 
 
 tag::browsersession[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -635,7 +635,7 @@ end::browsersession[]
 
 
 tag::build[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -667,7 +667,7 @@ end::build[]
 
 
 tag::connection[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -720,7 +720,7 @@ The following placeholders can be used to make it dynamic:
 |stringArray
 |
 |Allows fine-tuning the behavior of the connection validator by enabling/disabling aspects of it.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -786,7 +786,7 @@ The following placeholders can be used to make it dynamic:
 |stringArray
 |`[]`
 |Active Host simulation extensions.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -814,7 +814,7 @@ end::connection[]
 
 
 tag::diagnostics[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -834,7 +834,7 @@ end::diagnostics[]
 
 
 tag::displaysettings[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -866,7 +866,7 @@ end::displaysettings[]
 
 
 tag::endpoints[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -940,7 +940,7 @@ end::endpoints[]
 
 
 tag::licensing[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -966,7 +966,7 @@ end::licensing[]
 
 
 tag::localization[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -988,7 +988,7 @@ end::localization[]
 
 
 tag::logging[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1001,7 +1001,7 @@ tag::logging[]
 |int
 |`4`
 |Log level
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -1049,7 +1049,7 @@ tag::logging[]
 |stringArray
 |`[writer.stderr writer.file]`
 |List of enabled logging system components.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -1073,7 +1073,7 @@ tag::logging[]
 |string
 |`text`
 |Determines the format that log messages are saved in
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -1143,7 +1143,7 @@ end::logging[]
 
 
 tag::oauth2[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1193,7 +1193,7 @@ end::oauth2[]
 
 
 tag::oidc[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1231,7 +1231,7 @@ end::oidc[]
 
 
 tag::passcode[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1275,7 +1275,7 @@ end::passcode[]
 
 
 tag::policies[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1307,7 +1307,7 @@ end::policies[]
 
 
 tag::privacy[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1327,7 +1327,7 @@ end::privacy[]
 
 
 tag::releasenotes[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1353,7 +1353,7 @@ end::releasenotes[]
 
 
 tag::security[]
-[cols="1,2,3,4a,5",options=header]
+[cols="2,1,1,2a,1",options=header]
 |=== 
 |Key
 |Type
@@ -1366,7 +1366,7 @@ tag::security[]
 |stringArray
 |
 |Array of allowed authentication methods. Nil/Missing for no restrictions.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
@@ -1387,7 +1387,7 @@ tag::security[]
 |stringArray
 |`[com.owncloud.openid-connect com.owncloud.oauth2 com.owncloud.basicauth]`
 |Array of authentication methods in order of preference (most preferred first).
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description

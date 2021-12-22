@@ -1,0 +1,5 @@
+Change: Localized Sort Order
+
+Improved sorting results and localized sorting across query results and database queries, via the SDK's new OCLOCALIZED collation and sort comparator.
+
+https://github.com/owncloud/ios-app/issues/975
