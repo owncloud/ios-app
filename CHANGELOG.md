@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.8.1...master
+
+Summary
+-------
+
+* Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
+
+Details
+-------
+
+* Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
+
+   Fixed bug that prevents changes to PDFs being saved in place.
+
+   https://github.com/owncloud/enterprise/issues/4934
+
 Changelog for ownCloud iOS Client [11.8.1] (2021-12-22)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.8.1 relevant to
