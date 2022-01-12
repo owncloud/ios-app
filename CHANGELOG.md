@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.8.1...master
+
+Summary
+-------
+
+* Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+
+Details
+-------
+
+* Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+
+   Fixed continuous audio playback, which stopped, after two audio files.
+
+   https://github.com/owncloud/enterprise/issues/4924
+
 Changelog for ownCloud iOS Client [11.8.1] (2021-12-22)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.8.1 relevant to
