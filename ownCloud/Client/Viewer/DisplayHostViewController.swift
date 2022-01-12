@@ -359,7 +359,8 @@ extension DisplayHostViewController {
 
 	@objc private func handleMediaPlaybackFinished(notification:Notification) {
 		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) as? MediaDisplayViewController {
+				activeDisplayViewController = displayViewController
 				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
 			}
 		}
