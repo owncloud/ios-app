@@ -8,11 +8,17 @@ ownCloud admins and users.
 Summary
 -------
 
-* Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
 * Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
+* Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
 
 Details
 -------
+
+* Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
+
+   Fixed bug that prevents changes to PDFs being saved in place.
+
+   https://github.com/owncloud/enterprise/issues/4934
 
 * Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
 
@@ -20,12 +26,6 @@ Details
    key/value pair).
 
    https://github.com/owncloud/ios-app/issues/1069
-
-* Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
-
-   Fixed bug that prevents changes to PDFs being saved in place.
-
-   https://github.com/owncloud/enterprise/issues/4934
 
 Changelog for ownCloud iOS Client [11.8.1] (2021-12-22)
 =======================================
