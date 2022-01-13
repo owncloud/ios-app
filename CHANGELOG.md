@@ -8,11 +8,18 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
 * Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
 * Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
 
 Details
 -------
+
+* Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+
+   Fixed continuous audio playback, which stopped, after two audio files.
+
+   https://github.com/owncloud/enterprise/issues/4924
 
 * Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
 
