@@ -1475,6 +1475,33 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.8.2</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Fix: PDF Editing</string>
+					<key>Subtitle</key>
+					<string>Fixed bug that prevents changes to PDFs being saved in place.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Continuous Audio Playback</string>
+					<key>Subtitle</key>
+					<string>Fixed continuous audio playback, which stopped after two audio files.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

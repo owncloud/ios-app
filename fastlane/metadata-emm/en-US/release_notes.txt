@@ -1,9 +1,6 @@
-• Sorting
-Localized and improved sorting
+• Fix: PDF Editing
+Fixed bug that prevents changes to PDFs being saved in place.
 
-• Fix: Authentication Improvement
-Fixed an OAuth2 token refresh problem 
-
-• Fix: Connection Problem
-Fixed a possible connection problem in the single account view
+• Fix: Continuous Audio Playback
+Fixed continuous audio playback, which stopped after two audio files.
 
