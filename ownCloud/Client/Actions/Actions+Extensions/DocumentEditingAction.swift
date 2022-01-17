@@ -82,9 +82,10 @@ class DocumentEditingAction : Action {
 				if let fileURL = files.first?.url, let item = self.context.items.first {
 
 					if QLPreviewController.canPreview(fileURL as QLPreviewItem) {
-
 						let editDocumentViewController = EditDocumentViewController(with: fileURL, item: item, core: self.core)
 						let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
+
+						editDocumentViewController.pdfViewController = hostViewController as? PDFViewerViewController
 						navigationController.modalPresentationStyle = .overFullScreen
 						viewController.present(navigationController, animated: true)
 					} else {

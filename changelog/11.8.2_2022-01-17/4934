@@ -1,0 +1,5 @@
+Bugfix: PDF Editing
+
+Fixed bug that prevents changes to PDFs being saved in place.
+
+https://github.com/owncloud/enterprise/issues/4934

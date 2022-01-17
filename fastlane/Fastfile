@@ -289,7 +289,7 @@ platform :ios do
       BETA_APP_ICON: false,
       APP_NAME: "ownCloud",
       URL_SCHEME: "owncloud-app",
-      IPA_NAME: "ownCloud-regular.ipa"
+      IPA_NAME: "ownCloud-regular"
     )
   end
 
@@ -314,7 +314,7 @@ platform :ios do
       BETA_APP_ICON: false,
       APP_NAME: "ownCloud",
       URL_SCHEME: "owncloud-emm",
-      IPA_NAME: "ownCloud-emm.ipa"
+      IPA_NAME: "ownCloud-emm"
     )
   end
 
@@ -339,7 +339,7 @@ lane :owncloud_online_build do
     BETA_APP_ICON: false,
     APP_NAME: "ownCloud Online",
     URL_SCHEME: "owncloud-online",
-    IPA_NAME: "ownCloud-online.ipa"
+    IPA_NAME: "ownCloud-online"
   )
 end
 
@@ -419,7 +419,7 @@ end
       CONFIGURATION: "Debug",
       BETA_APP_ICON: true,
       APP_NAME: "ownCloud",
-      IPA_NAME: "ownCloud.ipa"
+      IPA_NAME: "ownCloud"
     )
   end
 
@@ -481,6 +481,10 @@ end
       end
     end
 
+    gitbranch = sh "git rev-parse --abbrev-ref HEAD"
+    sdkgitbranch = sh "git -C ../ios-sdk/ rev-parse --abbrev-ref HEAD"
+    puts "App Git Branch: " + gitbranch
+    puts "SDK Git Branch: " + sdkgitbranch
     if File.exist?("../" + themePath)
       # Extract from Branding.plist
       tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "build.flags")
@@ -518,12 +522,13 @@ end
       commit = sh "git rev-parse --short HEAD"
       sdkcommit = sh "git -C ../ios-sdk/ rev-parse --short HEAD"
 
-      puts "Git Hash: " + commit
+      puts "App Git Hash: " + commit
       puts "SDK Git Hash: " + sdkcommit
-      set_info_plist_value(path: themePath, key: "LastGitCommit", value: commit)
-      set_info_plist_value(path: themePath, key: "SDKLastGitCommit", value: sdkcommit)
+      set_info_plist_value(path: themePath, key: "GitHash", value: commit)
+      set_info_plist_value(path: themePath, key: "SDKGitHash", value: sdkcommit)
+      set_info_plist_value(path: themePath, key: "GitBranch", value: gitbranch)
+      set_info_plist_value(path: themePath, key: "SDKGitBranch", value: sdkgitbranch)
     end
-
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
@@ -767,9 +772,7 @@ end
       version_key: "APP_SHORT_VERSION"
     )
 
-    if !values[:IPA_NAME].nil?
-      ipaName = values[:IPA_NAME]
-    elsif
+
       time = Time.now
       ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
       if !customAppVersionNumber.nil?
@@ -778,13 +781,17 @@ end
       if !values[:BUILD_NUMBER].nil?
         version += "." + BUILD_NUMBER
       end
-      ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
+
+      if !values[:IPA_NAME].nil?
+        ipaName = values[:IPA_NAME] + "-" + version + "-" + gitbranch.strip + "-" + ipaSuffix + ".ipa"
+      elsif
+        ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
+      end
 
       if File.exist?("../" + themePath)
         # Copy the Branding.plist file with additional app and build informtion in the file name
         sh "cp " + "\"../" + themePath + "\" \"../" + themeFolder + appName + "-" + version + "-" + ipaSuffix + ".plist\""
       end
-    end
 
     generate_appicon()
 

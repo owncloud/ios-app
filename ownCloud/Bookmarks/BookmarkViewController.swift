@@ -564,7 +564,8 @@ class BookmarkViewController: StaticTableViewController {
 			connection.connect { [weak self] (error, issue) in
 				if let strongSelf = self {
 					if error == nil {
-						bookmark.displayName = connection.loggedInUser?.displayName
+						bookmark.userDisplayName = connection.loggedInUser?.displayName
+
 						connection.disconnect(completionHandler: {
 							switch strongSelf.mode {
 							case .create:
