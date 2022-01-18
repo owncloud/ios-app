@@ -24,3 +24,9 @@ Removes the following from the app:
 - the location description keys from the app's `Info.plist`
 
 Not used by default.
+
+### `DISABLE_APPSTORE_LICENSING`
+
+Removes the following from the app:
+- App Store integration for OCLicense
+- App Store related view controllers and settings section

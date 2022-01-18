@@ -468,7 +468,10 @@ end
 
     appName = "ownCloud"
     appBuildFlags = ""
-    themePath = "ownCloud/Resources/Theming/Branding.plist"
+    appCustomAppScheme = ""
+    appCustomAuthScheme = ""
+    themeFolder = "ownCloud/Resources/Theming/"
+    themePath = themeFolder + "Branding.plist"
     if !values[:APP_NAME].nil?
       appName = values[:APP_NAME]
     elsif File.exist?("../" + themePath)
@@ -479,28 +482,93 @@ end
     end
 
     if File.exist?("../" + themePath)
+      # Extract from Branding.plist
+      tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "build.flags")
+      if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
+        appBuildFlags = tmpAppBuildFlags
+      end
+
+      tmpAppCustomAppScheme = get_info_plist_value(path: themePath, key: "build.custom-app-scheme")
+      if tmpAppCustomAppScheme && !tmpAppCustomAppScheme.empty?
+        appCustomAppScheme = tmpAppCustomAppScheme
+      end
+
+      tmpAuthCustomAuthScheme = get_info_plist_value(path: themePath, key: "build.custom-auth-scheme")
+      if tmpAuthCustomAuthScheme && !tmpAuthCustomAuthScheme.empty?
+        appCustomAuthScheme = tmpAuthCustomAuthScheme
+      end
+
+      # Fallback (legacy key name support)
       tmpAppBuildFlags = get_info_plist_value(path: themePath, key: "app.build-flags")
       if tmpAppBuildFlags && !tmpAppBuildFlags.empty?
         appBuildFlags = tmpAppBuildFlags
       end
+
+      tmpAppCustomAppScheme = get_info_plist_value(path: themePath, key: "app.custom-app-scheme")
+      if tmpAppCustomAppScheme && !tmpAppCustomAppScheme.empty?
+        appCustomAppScheme = tmpAppCustomAppScheme
+      end
+
+      tmpAuthCustomAuthScheme = get_info_plist_value(path: themePath, key: "app.custom-auth-scheme")
+      if tmpAuthCustomAuthScheme && !tmpAuthCustomAuthScheme.empty?
+        appCustomAuthScheme = tmpAuthCustomAuthScheme
+      end
+
+      # Set the Git commit hash for the ios-app and ios-sdk repository into the Branding.plist
+      commit = sh "git rev-parse --short HEAD"
+      sdkcommit = sh "git -C ../ios-sdk/ rev-parse --short HEAD"
+
+      puts "Git Hash: " + commit
+      puts "SDK Git Hash: " + sdkcommit
+      set_info_plist_value(path: themePath, key: "LastGitCommit", value: commit)
+      set_info_plist_value(path: themePath, key: "SDKLastGitCommit", value: sdkcommit)
     end
+
 
     puts "App Name: " + appName
     puts "App Build Flags: " + appBuildFlags
-    
+    puts "Custom App Scheme: " + appCustomAppScheme
+    puts "Custom Auth Scheme: " + appCustomAuthScheme
+
     # Special handling for app build flag DISABLE_BACKGROUND_LOCATION needed:
     # calls to set_info_plist_value before building with xcodebuild
     # strip preprocessor instructions from Info.plist, so that the
     # Location keys they aim to remove stay in place. Working around this
     # by removing anything between "#ifndef DISABLE_BACKGROUND_LOCATION"
-    # and "#endif" via sed 
+    # and "#endif" via sed
     if appBuildFlags.include? "DISABLE_BACKGROUND_LOCATION"
         sh "sed '/#ifndef DISABLE_BACKGROUND_LOCATION/,/#endif/d' ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod"
         sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
     end
 
+	# update_url_schemes can't seem to reach the second URL scheme ("oc") for authentication
+	# so using sed and a XML property instead
+    if !appCustomAppScheme.empty?
+        sh 'sed "s#<string octype=\"app\">owncloud</string>#<string>' + appCustomAppScheme + '</string>#" ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod'
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
+
+    if !appCustomAuthScheme.empty?
+        sh 'sed "s#<string octype=\"auth\">oc</string>#<string>' + appCustomAuthScheme + '</string>#" ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod'
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
+
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
+
+    if File.exist?("../" + themePath)
+        tmpCustomAppVersionNumber = get_info_plist_value(path: themePath, key: "app.version-number")
+        if tmpCustomAppVersionNumber && !tmpCustomAppVersionNumber.empty?
+          customAppVersionNumber = tmpCustomAppVersionNumber
+
+          puts "Set Version Number from Branding.plist: " + customAppVersionNumber
+          set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+          set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+        end
+    end
 
     if !values[:BUILD_NUMBER].nil?
       puts "Set Drone Build Number: " + BUILD_NUMBER
@@ -704,10 +772,18 @@ end
     elsif
       time = Time.now
       ipaSuffix = EXPORT_METHOD + "-" + time.strftime("%Y%m%d-%k%M")
+      if !customAppVersionNumber.nil?
+        version = customAppVersionNumber
+      end
       if !values[:BUILD_NUMBER].nil?
         version += "." + BUILD_NUMBER
       end
       ipaName = appName + "-" + version + "-" + ipaSuffix + ".ipa"
+
+      if File.exist?("../" + themePath)
+        # Copy the Branding.plist file with additional app and build informtion in the file name
+        sh "cp " + "\"../" + themePath + "\" \"../" + themeFolder + appName + "-" + version + "-" + ipaSuffix + ".plist\""
+      end
     end
 
     generate_appicon()

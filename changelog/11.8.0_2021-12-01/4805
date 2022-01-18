@@ -1,0 +1,5 @@
+Change: (Branding) Remove Code via Build Flag
+
+Adds support for disable code via parameters which can be specified via Branding.plist.
+
+https://github.com/owncloud/enterprise/issues/4805

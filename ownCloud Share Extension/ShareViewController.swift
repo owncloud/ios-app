@@ -200,7 +200,7 @@ class ShareViewController: MoreStaticTableViewController {
 									OnMainThread {
 										self.navigationController?.popToViewController(self, animated: false)
 
-										let progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, cancelHandler: {})
+										let progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, progress: nil, cancelHandler: {})
 
 										self.present(progressViewController, animated: false)
 

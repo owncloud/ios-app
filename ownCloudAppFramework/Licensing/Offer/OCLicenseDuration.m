@@ -191,6 +191,7 @@
 
 @end
 
+#ifndef DISABLE_APPSTORE_LICENSING
 
 @implementation SKProductSubscriptionPeriod (OCLicenseDuration)
 
@@ -226,3 +227,5 @@
 }
 
 @end
+
+#endif /* DISABLE_APPSTORE_LICENSING */

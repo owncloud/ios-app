@@ -17,7 +17,10 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#ifndef DISABLE_APPSTORE_LICENSING
 #import <StoreKit/StoreKit.h>
+#endif /* DISABLE_APPSTORE_LICENSING */
 
 typedef NS_ENUM(NSUInteger, OCLicenseDurationUnit)
 {
@@ -48,10 +51,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#ifndef DISABLE_APPSTORE_LICENSING
 @interface SKProductSubscriptionPeriod (OCLicenseDuration)
 
 @property(readonly,nonatomic,nullable) OCLicenseDuration *licenseDuration;
 
 @end
+#endif /* DISABLE_APPSTORE_LICENSING */
 
 NS_ASSUME_NONNULL_END

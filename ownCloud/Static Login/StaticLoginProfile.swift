@@ -119,9 +119,9 @@ class StaticLoginProfile: NSObject {
 		} else if let promptForHelpURL = profileDict[Key.promptForHelpURL.settingsKey.rawValue] as? String {
 			self.promptForHelpURL = promptForHelpURL
 		}
-		if let helpURLButtonString = profileDict[Key.helpURLButtonString.rawValue] as? String {
+		if let helpURLButtonString = profileDict[Key.helpURLButtonString.rawValue] as? String, helpURLButtonString.count > 0 {
 			self.helpURLButtonString = helpURLButtonString
-		} else if let helpURLButtonString = profileDict[Key.helpURLButtonString.settingsKey.rawValue] as? String {
+		} else if let helpURLButtonString = profileDict[Key.helpURLButtonString.settingsKey.rawValue] as? String, helpURLButtonString.count > 0 {
 			self.helpURLButtonString = helpURLButtonString
 		}
 		if let welcome = profileDict[Key.welcome.rawValue] as? String, welcome.count > 0 {

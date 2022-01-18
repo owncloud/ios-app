@@ -380,26 +380,30 @@ class LibraryTableViewController: StaticTableViewController {
 			let section = StaticTableViewSection(headerTitle: "Collection".localized, footerTitle: nil, identifier: "collection-section")
 			self.addSection(section)
 
-			let lastWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())!
-			var recentsQuery = OCQuery(condition: .require([
-				.where(.lastUsed, isGreaterThan: lastWeekDate),
-				.where(.name, isNotEqualTo: "/")
-			]), inputFilter:nil)
+			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, queryCreator: {
+				let lastWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())!
 
-			if let condition = OCQueryCondition.fromSearchTerm(":1w :file") {
-				recentsQuery = OCQuery(condition:condition, inputFilter: nil)
-			}
+				var recentsQuery = OCQuery(condition: .require([
+					.where(.lastUsed, isGreaterThan: lastWeekDate),
+					.where(.name, isNotEqualTo: "/")
+				]), inputFilter:nil)
 
-			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: recentsQuery, actionHandler: nil)
+				if let condition = OCQueryCondition.fromSearchTerm(":1w :file") {
+					recentsQuery = OCQuery(condition:condition, inputFilter: nil)
+				}
 
-			let favoriteQuery = OCQuery(condition: .where(.isFavorite, isEqualTo: true), inputFilter:nil)
-			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: { [weak self] (completion) in
+				return recentsQuery
+			}, actionHandler: nil)
+
+			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, queryCreator: {
+				return OCQuery(condition: .where(.isFavorite, isEqualTo: true), inputFilter:nil)
+			}, actionHandler: { [weak self] (completion) in
 				self?.core?.refreshFavorites(completionHandler: { (_, _) in
 					completion()
 				})
 			})
 
-			addCollectionRow(to: section, title: "Available Offline".localized, image: UIImage(named: "cloud-available-offline")!, query: nil, actionHandler: { [weak self] (completion) in
+			addCollectionRow(to: section, title: "Available Offline".localized, image: UIImage(named: "cloud-available-offline")!, queryCreator: nil, actionHandler: { [weak self] (completion) in
 				if let core = self?.core {
 					let availableOfflineListController = ItemPolicyTableViewController(core: core, policyKind: .availableOffline)
 
@@ -418,22 +422,23 @@ class LibraryTableViewController: StaticTableViewController {
 			]
 
 			for query in queries {
-				let conditions = query.mimeType.map { (mimeType) -> OCQueryCondition in
-					return .where(.mimeType, contains: mimeType)
-				}
+				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, queryCreator: {
+					let conditions = query.mimeType.map { (mimeType) -> OCQueryCondition in
+						return .where(.mimeType, contains: mimeType)
+					}
 
-				let customQuery = OCQuery(condition: .any(of: conditions), inputFilter:nil)
-				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, query: customQuery, actionHandler: nil)
+					return OCQuery(condition: .any(of: conditions), inputFilter:nil)
+				}, actionHandler: nil)
 			}
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage? = nil, themeImageName: String? = nil, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage? = nil, themeImageName: String? = nil, queryCreator: (() -> OCQuery?)?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 
-				if let query = query {
+				if let query = queryCreator?() {
 					let customFileListController = QueryFileListTableViewController(core: core, query: query)
 					customFileListController.title = title
 					customFileListController.pullToRefreshAction = actionHandler

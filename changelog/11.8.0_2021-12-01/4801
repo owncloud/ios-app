@@ -1,0 +1,5 @@
+Change: Licenses Overview
+
+Add a new view controller to present license texts for each component individually.
+
+https://github.com/owncloud/enterprise/issues/4801

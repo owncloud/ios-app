@@ -1,0 +1,5 @@
+Bugfix: (Branding) Retry Section for Login Error
+
+This adds a retry section to the branded login, e.g. if a server url could not be reached.
+
+https://github.com/owncloud/enterprise/issues/4786

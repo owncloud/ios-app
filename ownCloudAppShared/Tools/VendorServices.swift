@@ -68,15 +68,7 @@ public class VendorServices : NSObject {
 	}
 
 	public var appName: String {
-		if let appName = Branding.shared.appName {
-			return appName
-		}
-
-		if let organizationName = Branding.shared.organizationName {
-			return organizationName
-		}
-
-		return OCAppIdentity.shared.appDisplayName ?? "ownCloud"
+		return Branding.shared.appDisplayName
 	}
 
 	public var feedbackMail: String? {
@@ -175,8 +167,8 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.isBetaBuild : false,
-				.showBetaWarning : false,
+				.isBetaBuild : true,
+				.showBetaWarning : true,
 				.enableUIAnimations: true,
 				.enableReviewPrompt: VendorServices.shared.enableReviewPrompt,
 

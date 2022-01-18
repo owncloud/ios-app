@@ -222,13 +222,15 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		updateNoServerMessageVisibility()
 
-		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
-		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+		if hasToolbar {
+			let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
+			settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
-		self.toolbarItems = [
-			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
-			settingsBarButtonItem
-		]
+			self.toolbarItems = [
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+				settingsBarButtonItem
+			]
+		}
 
 		if AppLockManager.shared.passcode == nil && AppLockSettings.shared.isPasscodeEnforced {
 			PasscodeSetupCoordinator(parentViewController: self, action: .setup).start()
@@ -373,7 +375,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		showBookmarkUI()
+		showBookmarkUI(attemptLoginOnSuccess: true)
 	}
 
 	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
@@ -395,6 +397,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		if attemptLoginOnSuccess {
 			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
 				if success, let bookmark = bookmark, let self = self {
+					self.didUpdateServerList()
 					if let error = autosolveErrorOnSuccess as Error? {
 						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
 					}
@@ -454,9 +457,9 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		var destructiveTitle = "Delete".localized
 		var failureTitle = "Deletion of '%@' failed".localized
 		if VendorServices.shared.isBranded {
-			alertTitle = "Really logout from '%@'?".localized
-			destructiveTitle = "Logout".localized
-			failureTitle = "Logout of '%@' failed".localized
+			alertTitle = "Do you want to log out from '%@'?".localized
+			destructiveTitle = "Log out".localized
+			failureTitle = "Log out of '%@' failed".localized
 		}
 
 		let alertController = ThemedAlertController(title: NSString(format: alertTitle as NSString, bookmark.shortName) as String,
@@ -646,6 +649,21 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 	func didUpdateServerList() {
 		// This is a hook for subclasses
+
+		if !VendorServices.shared.isBranded {
+			if OCBookmarkManager.shared.bookmarks.count == 1 {
+				var serverListTableViewController : ServerListTableViewController?
+				if #available(iOS 13.0, *) {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+				} else {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .grouped)
+				}
+
+				guard let serverListTableViewController = serverListTableViewController else { return }
+
+				self.navigationController?.setViewControllers([ serverListTableViewController ], animated: false)
+			}
+		}
 	}
 
 	var clientViewController : ClientRootViewController? {
@@ -734,7 +752,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
-			destructiveTitle = "Logout".localized
+			destructiveTitle = "Log out".localized
 		}
 		let delete = UIAction(title: destructiveTitle, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
 			self.delete(bookmark: bookmark, at: indexPath ) {
@@ -743,6 +761,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 						self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 					}, completion: { (_) in
 						self.ignoreServerListChanges = false
+						self.didUpdateServerList()
 					})
 				}
 			}
@@ -796,7 +815,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		var destructiveTitle = "Delete".localized
 		if VendorServices.shared.isBranded {
-			destructiveTitle = "Logout".localized
+			destructiveTitle = "Log out".localized
 		}
 
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
@@ -808,7 +827,8 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 						}
 					 }, completion: { (_) in
-						 self.ignoreServerListChanges = false
+						self.ignoreServerListChanges = false
+						self.didUpdateServerList()
 					 })
 				 }
 			 }
@@ -990,4 +1010,38 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 
 extension NSNotification.Name {
 	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
+}
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let account = OCClassSettingsIdentifier("account")
+}
+
+extension OCClassSettingsKey {
+	static let accountAutoConnect = OCClassSettingsKey("auto-connect")
+}
+
+extension ServerListTableViewController : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .account
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .account {
+			return [
+				.accountAutoConnect : false
+			]
+		}
+
+		return nil
+	}
+
+	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.accountAutoConnect : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Skip \"Account\" screen / automatically open \"Files\" screen after login",
+				.category	: "Account",
+				.status		: OCClassSettingsKeyStatus.supported
+			]
+		]
+	}
 }

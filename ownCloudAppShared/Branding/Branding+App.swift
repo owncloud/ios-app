@@ -253,14 +253,15 @@ extension Branding {
 
 extension Branding {
 	func generateThemeStyle(from theme: [String : Any], generic: [String : Any]) -> ThemeStyle? {
-		if let identifier = theme["Identifier"] as? String,
-		   let name = theme["Name"] as? String,
-		   let style = theme["ThemeStyle"] as? String,
-		   let themeStyle = ThemeCollectionStyle(rawValue: style),
-		   let colors = theme["Colors"] as? NSDictionary,
+		let style = theme["ThemeStyle"] as? String ?? "contrast"
+		let identifier = theme["Identifier"] as? String ?? "com.owncloud.branding"
+		let name = theme["Name"] as? String ?? "ownCloud-branding-theme"
+
+		if let themeStyle = ThemeCollectionStyle(rawValue: style),
 		   let darkBrandColor = theme["darkBrandColor"] as? String,
-		   let lightBrandColor = theme["lightBrandColor"] as? String,
-		   let styles = theme["Styles"] as? NSDictionary {
+		   let lightBrandColor = theme["lightBrandColor"] as? String {
+			let colors = theme["Colors"] as? NSDictionary
+			let styles = theme["Styles"] as? NSDictionary
 			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles)
 		}
 
@@ -270,8 +271,8 @@ extension Branding {
 	public func setupThemeStyles() -> Bool {
 		var extractedThemeStyles : [ThemeStyle] = []
 
-		if let generic = self.computedValue(forClassSettingsKey: .themeGenericColors) as? [String : Any],
-		   let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
+		if let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
+			let generic = self.computedValue(forClassSettingsKey: .themeGenericColors) as? [String : Any] ?? [:]
 			for themeStyleDefinition in themeStyleDefinitions {
 				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition, generic: generic) {
 					extractedThemeStyles.append(themeStyle)
