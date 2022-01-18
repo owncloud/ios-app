@@ -1,0 +1,5 @@
+Change: Account List
+
+Show a new detailed single account view instead of the server list if only one account is configured.
+
+https://github.com/owncloud/ios-app/issues/1014
