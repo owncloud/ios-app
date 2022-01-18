@@ -203,7 +203,7 @@
          <EnvironmentVariable
             key = "oc:log.enabled-components"
             value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.colored"
@@ -333,6 +333,16 @@
          <EnvironmentVariable
             key = "oc:action.disallowed"
             value = "[com.owncloud.action.copy,com.owncloud.action.move]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:bookmark.prepopulation"
+            value = "string:streaming"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:bookmark.prepopulation"
+            value = "string:split"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable

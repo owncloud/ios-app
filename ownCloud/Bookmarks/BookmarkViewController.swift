@@ -554,77 +554,147 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		guard let bookmark = self.bookmark else { return }
+	  guard let bookmark = self.bookmark else { return }
 
-		if isBookmarkComplete(bookmark: bookmark) {
-			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
+	  if isBookmarkComplete(bookmark: bookmark) {
+		bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
+		let connection = instantiateConnection(for: bookmark)
 
-			let connection = instantiateConnection(for: bookmark)
+		connection.connect { [weak self] (error, issue) in
 
-			connection.connect { [weak self] (error, issue) in
-				if let strongSelf = self {
-					if error == nil {
-						bookmark.displayName = connection.loggedInUser?.displayName
-						connection.disconnect(completionHandler: {
-							switch strongSelf.mode {
-							case .create:
-								// Add bookmark
-								OCBookmarkManager.shared.addBookmark(bookmark)
+		  if let strongSelf = self {
+			if error == nil {
+			  let serverSupportsInfinitePropfind = connection.capabilities?.davPropfindSupportsDepthInfinity
 
-							case .edit:
-								// Update original bookmark
-								self?.originalBookmark?.setValuesFrom(bookmark)
-								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
-								}
-							}
+			  bookmark.displayName = connection.loggedInUser?.displayName
+			  connection.disconnect(completionHandler: {
 
-							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
-							strongSelf.userActionCompletionHandler = nil
+				let done = {
+				  let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+				  strongSelf.userActionCompletionHandler = nil
 
-							OnMainThread {
-								hudCompletion({
-									OnMainThread {
-										userActionCompletionHandler?(bookmark, true)
-									}
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-								})
-							}
-
-						})
-					} else {
-						OnMainThread {
-							hudCompletion({
-								if let issue = issue {
-									self?.bookmark?.authenticationData = nil
-
-									IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
-										switch response {
-											case .cancel:
-												issue?.reject()
-
-											case .approve:
-												issue?.approve()
-												self?.handleContinue()
-
-											case .dismiss: break
+				  OnMainThread {
+					hudCompletion({
+										OnMainThread {
+											userActionCompletionHandler?(bookmark, true)
 										}
-									})
-								} else {
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-								}
-							})
-						}
+										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+					})
+				  }
+				}
+
+				switch strongSelf.mode {
+				case .create:
+				  // Add bookmark
+				  OnMainThread {
+					var prepopulationMethod : BookmarkPrepopulationMethod?
+
+					// Determine prepopulation method
+					if prepopulationMethod == nil, let prepopulationMethodClassSetting = BookmarkViewController.classSetting(forOCClassSettingsKey: .prepopulation) as? String {
+					  prepopulationMethod = BookmarkPrepopulationMethod(rawValue: prepopulationMethodClassSetting)
 					}
+
+					if prepopulationMethod == nil, serverSupportsInfinitePropfind?.boolValue == true {
+					  prepopulationMethod = .streaming
+					}
+
+					if prepopulationMethod == nil {
+					  prepopulationMethod = .doNot
+					}
+
+					// Prepopulation y/n?
+					if let prepopulationMethod = prepopulationMethod, prepopulationMethod != .doNot {
+					  // Perform prepopulation
+					  var progressViewController : ProgressIndicatorViewController?
+					  var prepopulateProgress : Progress?
+					  let prepopulateCompletionHandler = {
+						// Wrap up
+						OCBookmarkManager.shared.addBookmark(bookmark)
+
+						OnMainThread {
+						  progressViewController?.dismiss(animated: true, completion: {
+							done()
+						  })
+						}
+					  }
+
+					  // Perform prepopulation method
+					  switch prepopulationMethod {
+						case .streaming:
+						  prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
+							prepopulateCompletionHandler()
+						  })
+
+						case .split:
+						  prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
+							prepopulateCompletionHandler()
+						  })
+
+						default:
+						  done()
+					  }
+
+					  // Present progress
+					  if let prepopulateProgress = prepopulateProgress {
+
+						progressViewController = ProgressIndicatorViewController(initialTitleLabel: "Preparing account".localized, initialProgressLabel: "Please wait…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
+						  prepopulateProgress.cancel()
+						})
+						progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
+						if let progressViewController = progressViewController {
+						  self?.topMostViewController.present(progressViewController, animated: true, completion: nil)
+						}
+					  }
+
+					} else {
+					  // No prepopulation
+					  done()
+					}
+				  }
+
+				case .edit:
+				  // Update original bookmark
+				  self?.originalBookmark?.setValuesFrom(bookmark)
+				  if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+					Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+				  }
+
+				  done()
 				}
+			  })
+			} else {
+			  OnMainThread {
+				hudCompletion({
+				  if let issue = issue {
+					self?.bookmark?.authenticationData = nil
+
+					IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
+					  switch response {
+						case .cancel:
+						  issue?.reject()
+
+						case .approve:
+						  issue?.approve()
+						  self?.handleContinue()
+
+						case .dismiss: break
+					  }
+					})
+				  } else {
+					strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+				  }
+				})
+			  }
 			}
-		} else {
-			hudCompletion({ [weak self] in
-				if let strongSelf = self {
-					strongSelf.handleContinue()
-				}
-			})
+		  }
 		}
+	  } else {
+		hudCompletion({ [weak self] in
+		  if let strongSelf = self {
+			strongSelf.handleContinue()
+		  }
+		})
+	  }
 	}
 
 	// MARK: - Update section and row composition
@@ -917,6 +987,13 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
 	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
+	static let prepopulation = OCClassSettingsKey("prepopulation")
+}
+
+enum BookmarkPrepopulationMethod : String {
+	case doNot
+	case streaming
+	case split
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
@@ -946,6 +1023,27 @@ extension BookmarkViewController : OCClassSettingsSupport {
 				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
 				.category	: "Bookmarks",
 				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.prepopulation : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported,
+				.possibleValues	: [
+					[
+						OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
+					]
+				]
 			]
 		]
 	}
