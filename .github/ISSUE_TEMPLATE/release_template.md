@@ -26,7 +26,6 @@ Xcode version to work with:
 - [ ] [DEV] Inform Documentation-Team for the upcoming major/minor release with new version tag (notify #documentation-internal)
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
-- [ ] [DOC] Update user manual with the new functionalities
 - [ ] [DOC] Update https://owncloud.com/mobile-apps/#ios version numbers (notify #marketing)
 - [ ] [GIT] Merge branch `release/[major].[minor].[patch]` in master
 - [ ] [GIT] Create tag and sign it `[major].[minor].[patch]`
