@@ -1,0 +1,5 @@
+Bugfix: Continuous Audio Playback
+
+Fixed continuous audio playback, which stopped after two audio files.
+
+https://github.com/owncloud/enterprise/issues/4924

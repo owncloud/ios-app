@@ -1,3 +1,39 @@
+Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.8.2 relevant to
+ownCloud admins and users.
+
+[11.8.2]: https://github.com/owncloud/ios-app/compare/milestone/11.8.1...milestone/11.8.2
+
+Summary
+-------
+
+* Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+* Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
+* Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
+
+Details
+-------
+
+* Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+
+   Fixed continuous audio playback, which stopped after two audio files.
+
+   https://github.com/owncloud/enterprise/issues/4924
+
+* Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
+
+   Fixed bug that prevents changes to PDFs being saved in place.
+
+   https://github.com/owncloud/enterprise/issues/4934
+
+* Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
+
+   Use the corporate color as folder color as default color (can be overridden by the specific
+   key/value pair).
+
+   https://github.com/owncloud/ios-app/issues/1069
+
 Changelog for ownCloud iOS Client [11.8.1] (2021-12-22)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.8.1 relevant to

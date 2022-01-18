@@ -371,35 +371,45 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		case neverUpdate
 	}
 	var updateStrategy : UpdateStrategy = .ask
+	var allowUpdatesUntilLocalModificationPersists : Bool = false
 
 	func shouldRenderItem(item: OCItem, isUpdate: Bool, shouldRender: @escaping (Bool) -> Void) {
 		if isUpdate {
-			switch updateStrategy {
-				case .ask:
-					OnMainThread {
-						let alert = UIAlertController(title: NSString(format: "%@ was updated".localized as NSString, item.name ?? "File".localized) as String, message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
+			if allowUpdatesUntilLocalModificationPersists {
+				if !item.locallyModified {
+					// once the modified file has been uploaded, item.locallyModified will no longer be true,
+					// so any changes after that will again be subject to the regular .updateStrategy procedure
+					allowUpdatesUntilLocalModificationPersists = false
+				}
+				shouldRender(true)
+			} else {
+				switch updateStrategy {
+					case .ask:
+						OnMainThread {
+							let alert = UIAlertController(title: NSString(format: "%@ was updated".localized as NSString, item.name ?? "File".localized) as String, message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
 
-						alert.addAction(UIAlertAction(title: "Show new version".localized, style: .default, handler: { [weak self] (_) in
-							self?.updateStrategy = .ask
-							shouldRender(true)
-						}))
-						alert.addAction(UIAlertAction(title: "Refresh without asking".localized, style: .default, handler: { [weak self] (_) in
-							self?.updateStrategy = .alwaysUpdate
-							shouldRender(true)
-						}))
-						alert.addAction(UIAlertAction(title: "Ignore updates".localized, style: .cancel, handler: { [weak self] (_) in
-							self?.updateStrategy = .neverUpdate
-							shouldRender(false)
-						}))
+							alert.addAction(UIAlertAction(title: "Show new version".localized, style: .default, handler: { [weak self] (_) in
+								self?.updateStrategy = .ask
+								shouldRender(true)
+							}))
+							alert.addAction(UIAlertAction(title: "Refresh without asking".localized, style: .default, handler: { [weak self] (_) in
+								self?.updateStrategy = .alwaysUpdate
+								shouldRender(true)
+							}))
+							alert.addAction(UIAlertAction(title: "Ignore updates".localized, style: .cancel, handler: { [weak self] (_) in
+								self?.updateStrategy = .neverUpdate
+								shouldRender(false)
+							}))
 
-						self.present(alert, animated: true)
-					}
+							self.present(alert, animated: true)
+						}
 
-				case .alwaysUpdate:
-					shouldRender(true)
+					case .alwaysUpdate:
+						shouldRender(true)
 
-				case .neverUpdate:
-					shouldRender(false)
+					case .neverUpdate:
+						shouldRender(false)
+				}
 			}
 		} else {
 			shouldRender(true)
