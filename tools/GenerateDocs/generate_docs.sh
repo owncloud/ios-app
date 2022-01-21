@@ -11,4 +11,4 @@ xcodebuild test \
 -only-testing ownCloudTests/MetadataDocumentationTests/testUpdateConfigurationJSONFromMetadata
 
 # Run gomplate to generate the adoc
-gomplate -f templates/ios_mdm_tables.adoc.tmpl --context config=../../doc/CONFIGURATION.json -o ../../docs/modules/ROOT/pages/ios_mdm_tables.adoc
+gomplate -f templates/ios_mdm_tables.adoc.tmpl --context config=../../doc/CONFIGURATION.json -o ../../doc/antora/pages/ios_mdm_tables.adoc
