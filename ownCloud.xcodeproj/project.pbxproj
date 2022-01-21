@@ -496,6 +496,14 @@
 		DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
+		DCF072D72798558B00E0B01D /* OCCircularImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072D5279850CC00E0B01D /* OCCircularImageView.m */; };
+		DCF072D82798559900E0B01D /* OCCircularImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF072D4279850CC00E0B01D /* OCCircularImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF072DC279857A300E0B01D /* OCCircularContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF072D9279856A700E0B01D /* OCCircularContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF072DD279857C800E0B01D /* OCCircularContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072DA279856A700E0B01D /* OCCircularContentView.m */; };
+		DCF072E02798592100E0B01D /* OCCircularTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF072DE2798592100E0B01D /* OCCircularTextView.h */; };
+		DCF072E12798592100E0B01D /* OCCircularTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072DF2798592100E0B01D /* OCCircularTextView.m */; };
+		DCF072EC27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF072EA27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF072ED27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072EB27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m */; };
 		DCF2DA7A24C82E480026D790 /* FileProviderServiceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA7924C82E480026D790 /* FileProviderServiceSource.m */; };
 		DCF2DA7D24C835BF0026D790 /* OCVault+FPServices.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA7B24C835BF0026D790 /* OCVault+FPServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA7C24C835BF0026D790 /* OCVault+FPServices.m */; };
@@ -504,6 +512,10 @@
 		DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA8424C87A330026D790 /* OCCore+FPServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA8524C87A330026D790 /* OCCore+FPServices.m */; };
+		DCF575EB2796CBDF003BEBBA /* OCAvatar+ViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF575E92796CBDF003BEBBA /* OCAvatar+ViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF575EC2796CBDF003BEBBA /* OCAvatar+ViewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EA2796CBDF003BEBBA /* OCAvatar+ViewProvider.m */; };
+		DCF575EF2796CE38003BEBBA /* OCViewHost.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF575ED2796CE38003BEBBA /* OCViewHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF575F02796CE38003BEBBA /* OCViewHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EE2796CE38003BEBBA /* OCViewHost.m */; };
 		DCFB74BB21AD5C46005796AF /* StaticLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44344321AC031600376B16 /* StaticLoginViewController.swift */; };
 		DCFB74C121AD5C88005796AF /* StaticLoginStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */; };
 		DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */; };
@@ -1460,6 +1472,14 @@
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		DCEC3DE3242F665D0076B43C /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferView.swift; sourceTree = "<group>"; };
+		DCF072D4279850CC00E0B01D /* OCCircularImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCCircularImageView.h; sourceTree = "<group>"; };
+		DCF072D5279850CC00E0B01D /* OCCircularImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCCircularImageView.m; sourceTree = "<group>"; };
+		DCF072D9279856A700E0B01D /* OCCircularContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCCircularContentView.h; sourceTree = "<group>"; };
+		DCF072DA279856A700E0B01D /* OCCircularContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCCircularContentView.m; sourceTree = "<group>"; };
+		DCF072DE2798592100E0B01D /* OCCircularTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCCircularTextView.h; sourceTree = "<group>"; };
+		DCF072DF2798592100E0B01D /* OCCircularTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCCircularTextView.m; sourceTree = "<group>"; };
+		DCF072EA27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCResourceTextPlaceholder+ViewProvider.h"; sourceTree = "<group>"; };
+		DCF072EB27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCResourceTextPlaceholder+ViewProvider.m"; sourceTree = "<group>"; };
 		DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderService.h; sourceTree = "<group>"; };
 		DCF2DA7824C82E480026D790 /* FileProviderServiceSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderServiceSource.h; sourceTree = "<group>"; };
 		DCF2DA7924C82E480026D790 /* FileProviderServiceSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderServiceSource.m; sourceTree = "<group>"; };
@@ -1473,6 +1493,10 @@
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
 		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
 		DCF4F18A2052BA4C00189B9A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		DCF575E92796CBDF003BEBBA /* OCAvatar+ViewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCAvatar+ViewProvider.h"; sourceTree = "<group>"; };
+		DCF575EA2796CBDF003BEBBA /* OCAvatar+ViewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCAvatar+ViewProvider.m"; sourceTree = "<group>"; };
+		DCF575ED2796CE38003BEBBA /* OCViewHost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCViewHost.h; sourceTree = "<group>"; };
+		DCF575EE2796CE38003BEBBA /* OCViewHost.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCViewHost.m; sourceTree = "<group>"; };
 		DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginServerListViewController.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
@@ -2688,6 +2712,8 @@
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DCFEFE2223687637009A142F /* Licensing */,
 				DCC832E5242CB14E00153F8C /* Notifications */,
+				DCF072D02798504E00E0B01D /* Views */,
+				DCF575E52796CBB3003BEBBA /* View Providers */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
 				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
@@ -2998,6 +3024,19 @@
 			path = Offers;
 			sourceTree = "<group>";
 		};
+		DCF072D02798504E00E0B01D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DCF072DA279856A700E0B01D /* OCCircularContentView.m */,
+				DCF072D9279856A700E0B01D /* OCCircularContentView.h */,
+				DCF072D5279850CC00E0B01D /* OCCircularImageView.m */,
+				DCF072D4279850CC00E0B01D /* OCCircularImageView.h */,
+				DCF072DF2798592100E0B01D /* OCCircularTextView.m */,
+				DCF072DE2798592100E0B01D /* OCCircularTextView.h */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		DCF2DA6F24C82C820026D790 /* File Provider Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -3075,6 +3114,19 @@
 				DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		DCF575E52796CBB3003BEBBA /* View Providers */ = {
+			isa = PBXGroup;
+			children = (
+				DCF575EE2796CE38003BEBBA /* OCViewHost.m */,
+				DCF575ED2796CE38003BEBBA /* OCViewHost.h */,
+				DCF575EA2796CBDF003BEBBA /* OCAvatar+ViewProvider.m */,
+				DCF575E92796CBDF003BEBBA /* OCAvatar+ViewProvider.h */,
+				DCF072EB27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m */,
+				DCF072EA27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h */,
+			);
+			path = "View Providers";
 			sourceTree = "<group>";
 		};
 		DCFEFE2223687637009A142F /* Licensing */ = {
@@ -3191,20 +3243,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC7C101124B5FA7700227085 /* OCBookmark+AppExtensions.h in Headers */,
+				DCF072E02798592100E0B01D /* OCCircularTextView.h in Headers */,
 				DCDC20AB2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h in Headers */,
 				DCD8109A23984AF2003B0053 /* OCLicenseDuration.h in Headers */,
 				DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */,
 				DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */,
 				DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */,
+				DCF072DC279857A300E0B01D /* OCCircularContentView.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
 				DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */,
+				DCF072EC27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h in Headers */,
 				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
 				DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */,
+				DCF575EF2796CE38003BEBBA /* OCViewHost.h in Headers */,
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
 				DC24B28725BA2A2E005783E2 /* Branding.h in Headers */,
+				DCF072D82798559900E0B01D /* OCCircularImageView.h in Headers */,
 				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
 				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
+				DCF575EB2796CBDF003BEBBA /* OCAvatar+ViewProvider.h in Headers */,
 				DCC832F3242CC28900153F8C /* NotificationManager.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DCFEFE3D236877B7009A142F /* OCLicenseProduct.h in Headers */,
@@ -4321,8 +4379,10 @@
 			files = (
 				DCFEFE9D2368D7FA009A142F /* OCLicenseObserver.m in Sources */,
 				DC66F39D239659C000CF4812 /* OCASN1.m in Sources */,
+				DCF072ED27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m in Sources */,
 				DCCD778C2604C91B00098573 /* NSDate+ComputedTimes.m in Sources */,
 				DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */,
+				DCF575EC2796CBDF003BEBBA /* OCAvatar+ViewProvider.m in Sources */,
 				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,
 				DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */,
@@ -4340,7 +4400,9 @@
 				DC70398626128B89009F2DC1 /* NSString+ByteCountParser.m in Sources */,
 				DCFEFE3A236877A7009A142F /* OCLicenseFeature.m in Sources */,
 				DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */,
+				DCF072DD279857C800E0B01D /* OCCircularContentView.m in Sources */,
 				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
+				DCF072D72798558B00E0B01D /* OCCircularImageView.m in Sources */,
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
 				DCD71E8027427463001592C6 /* BuildOptions.m in Sources */,
@@ -4350,9 +4412,11 @@
 				DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
 				DCC832F4242CC28F00153F8C /* NotificationManager.m in Sources */,
+				DCF072E12798592100E0B01D /* OCCircularTextView.m in Sources */,
 				DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */,
 				DC66F3AC23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m in Sources */,
 				DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */,
+				DCF575F02796CE38003BEBBA /* OCViewHost.m in Sources */,
 				DCB458EE2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m in Sources */,
 				DC080CF3238C92480044C5D2 /* OCLicenseAppStoreItem.m in Sources */,
 				DCFEFE982368D099009A142F /* OCLicenseEnvironment.m in Sources */,

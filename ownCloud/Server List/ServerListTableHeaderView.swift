@@ -24,8 +24,8 @@ class ServerListTableHeaderView: UIView, Themeable {
 	// MARK: - Constants
 	fileprivate let shadowHeight: CGFloat = 1.0
 	fileprivate let textLabelTopMargin: CGFloat = 10.0
-	fileprivate let textLabelHorizontalMargin: CGFloat = 20.0
-	fileprivate let textLabelHeight: CGFloat = 24.0
+	fileprivate let textLabelHorizontalMargin: CGFloat = 16.0
+	fileprivate let textLabelHeight: CGFloat = 18.0
 
 	// MARK: - Instance variables.
 	var messageThemeApplierToken : ThemeApplierToken?
@@ -38,7 +38,7 @@ class ServerListTableHeaderView: UIView, Themeable {
 
 		textLabel.translatesAutoresizingMaskIntoConstraints = false
 		textLabel.text = "Accounts".localized
-		textLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
+		textLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 
 		self.addSubview(textLabel)
 
@@ -58,10 +58,8 @@ class ServerListTableHeaderView: UIView, Themeable {
 
 			textLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: textLabelTopMargin),
 			textLabel.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: textLabelHorizontalMargin),
-			textLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -textLabelHorizontalMargin),
-			textLabel.heightAnchor.constraint(equalToConstant: textLabelHeight)
-
-			])
+			textLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -textLabelHorizontalMargin)
+		])
 
 		messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
 			self?.backgroundColor = collection.navigationBarColors.backgroundColor

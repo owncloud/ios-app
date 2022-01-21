@@ -34,6 +34,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	let bookmark : OCBookmark
 	weak var core : OCCore?
 	private var coreRequested : Bool = false
+	private var userAvatarUpdated : Bool = false
 	var filesNavigationController : ThemeNavigationController?
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
@@ -129,6 +130,24 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 				case .offline, .unavailable:
 					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
+			}
+
+			if connectionStatus == .online, !userAvatarUpdated, let user = core?.connection.loggedInUser {
+				// Update avatar on every connect
+				userAvatarUpdated = true
+
+				let avatarRequest = OCResourceRequestAvatar(for: user, maximumSize: OCAvatar.defaultSize, scale: 0, waitForConnectivity: true, changeHandler: { [weak self] request, error, ongoing, previousResource, newResource in
+					if !ongoing,
+					   let bookmarkUUID = self?.bookmark.uuid,
+					   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
+					   let newResource = newResource as? OCViewProvider {
+						bookmark.avatar = newResource
+						OCBookmarkManager.shared.updateBookmark(bookmark)
+					}
+				})
+				avatarRequest.lifetime = .singleRun
+
+				core?.vault.resourceManager?.start(avatarRequest)
 			}
 		}
 

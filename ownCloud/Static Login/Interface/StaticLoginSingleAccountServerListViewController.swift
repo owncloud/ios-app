@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 import CoreMedia
 
@@ -128,6 +129,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
+//		tableView.reloadSections(IndexSet(integer: SingleAccountSection.accessFiles.rawValue), with: .none)
+//
 		staticLoginViewController?.navigationController?.setNeedsStatusBarAppearanceUpdate()
 	}
 
@@ -259,12 +262,43 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if SingleAccountSection(rawValue: section) == .accessFiles {
-			if headerView == nil, let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let displayName = self.displayName ?? bookmark.userName {
-				let headerText = String(format: "You are connected as\n%@".localized, displayName)
-				if VendorServices.shared.isBranded {
-					headerView = StaticTableViewSection.buildHeader(title: headerText)
+			if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let displayName = self.displayName ?? bookmark.userName {
+
+				var avatarView : OCViewHost?
+				let avatarSize = CGSize(width: 128, height: 128)
+				let fallbackView = UIImageView(image: UIImage(named: "branding-login-logo"))
+
+				if let avatar = bookmark.avatar {
+					avatarView = OCViewHost(viewProvider: avatar, fallbackSize: avatarSize, fallbackView: fallbackView, viewProviderContext: nil)
 				} else {
-					headerView = StaticTableViewSection.buildHeader(title: headerText, image: UIImage(named: "branding-login-logo"), topSpacing: 10)
+					avatarView = OCViewHost(fallbackView: fallbackView, viewProviderContext: nil)
+				}
+
+				if let avatarView = avatarView {
+					avatarView.translatesAutoresizingMaskIntoConstraints = false
+
+					NSLayoutConstraint.activate([
+						avatarView.widthAnchor.constraint(equalToConstant: avatarSize.width),
+						avatarView.heightAnchor.constraint(equalToConstant:avatarSize.height)
+					])
+				}
+
+				let attributedTitle = NSMutableAttributedString()
+
+				attributedTitle.append(NSAttributedString(string: displayName.appendingFormat("\n"), attributes: [
+					NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)
+				]))
+
+				if let serverName = bookmark.url?.host {
+					attributedTitle.append(NSAttributedString(string: serverName, attributes: [
+						NSAttributedString.Key.font : UIFont.systemFont(ofSize: 18)
+					]))
+				}
+
+				if VendorServices.shared.isBranded {
+					headerView = StaticTableViewSection.buildHeader(attributedTitle: attributedTitle)
+				} else {
+					headerView = StaticTableViewSection.buildHeader(attributedTitle: attributedTitle, imageViewReplacement: avatarView, topSpacing: 40, intermediateSpacing: 20, bottomSpacing: 40)
 				}
 			}
 

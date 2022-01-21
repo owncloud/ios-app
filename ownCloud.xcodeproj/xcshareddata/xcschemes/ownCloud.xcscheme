@@ -201,6 +201,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.level"
+            value = "3"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:log.enabled-components"
             value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
             isEnabled = "YES">

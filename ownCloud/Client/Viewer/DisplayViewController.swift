@@ -618,7 +618,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 					var didUpdate : Bool = false
 
 					if localCopy == nil {
-						iconImageView.setThumbnailImage(using: core, from: newItem, with: iconImageSize, avoidSystemThumbnails: true)
+						iconImageView.setThumbnailImage(using: core, from: newItem, with: iconImageSize)
 					}
 
 					if iconImageView.image == nil {

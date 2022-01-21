@@ -564,35 +564,46 @@ class BookmarkViewController: StaticTableViewController {
 			connection.connect { [weak self] (error, issue) in
 				if let strongSelf = self {
 					if error == nil {
+						let disconnectAndComplete = {
+							connection.disconnect(completionHandler: {
+								switch strongSelf.mode {
+									case .create:
+										// Add bookmark
+										OCBookmarkManager.shared.addBookmark(bookmark)
+
+									case .edit:
+										// Update original bookmark
+										self?.originalBookmark?.setValuesFrom(bookmark)
+										if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+											Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+										}
+								}
+
+								let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+								strongSelf.userActionCompletionHandler = nil
+
+								OnMainThread {
+									hudCompletion({
+										OnMainThread {
+											userActionCompletionHandler?(bookmark, true)
+										}
+										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									})
+								}
+
+							})
+						}
+
 						bookmark.userDisplayName = connection.loggedInUser?.displayName
 
-						connection.disconnect(completionHandler: {
-							switch strongSelf.mode {
-							case .create:
-								// Add bookmark
-								OCBookmarkManager.shared.addBookmark(bookmark)
-
-							case .edit:
-								// Update original bookmark
-								self?.originalBookmark?.setValuesFrom(bookmark)
-								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
-								}
-							}
-
-							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
-							strongSelf.userActionCompletionHandler = nil
-
-							OnMainThread {
-								hudCompletion({
-									OnMainThread {
-										userActionCompletionHandler?(bookmark, true)
-									}
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-								})
-							}
-
-						})
+						if let user = connection.loggedInUser {
+							connection.retrieveAvatar(for: user, existingETag: nil, with: OCAvatar.defaultSize, completionHandler: { error, _, avatar in
+								bookmark.avatar = avatar
+								disconnectAndComplete()
+							})
+						} else {
+							disconnectAndComplete()
+						}
 					} else {
 						OnMainThread {
 							hudCompletion({

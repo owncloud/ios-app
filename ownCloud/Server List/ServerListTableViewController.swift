@@ -74,22 +74,6 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
-	// TODO: Rebuild welcomeOverlayView in code
-	/*
-	override func loadView() {
-	super.loadView()
-
-	welcomeOverlayView = UIView()
-	welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
-
-	welcomeTitleLabel = UILabel()
-	welcomeTitleLabel.font = UIFont.boldSystemFont(ofSize: 34)
-	welcomeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-	welcomeAddServerButton = ThemeButton()
-	}
-	*/
-
 	// MARK: - View controller events
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -120,7 +104,58 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 		}
 
-		self.navigationItem.title = VendorServices.shared.appName
+		let logoImage = UIImage(named: "branding-login-logo")
+		let logoImageView = UIImageView(image: logoImage)
+		logoImageView.contentMode = .scaleAspectFit
+		logoImageView.translatesAutoresizingMaskIntoConstraints = false
+		if let logoImage = logoImage {
+			// Keep aspect ratio + scale logo to 90% of available height
+			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
+		}
+
+		let logoLabel = UILabel()
+		logoLabel.translatesAutoresizingMaskIntoConstraints = false
+		logoLabel.text = VendorServices.shared.appName
+		logoLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+		logoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+		logoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+
+		let logoContainer = UIView()
+		logoContainer.translatesAutoresizingMaskIntoConstraints = false
+		logoContainer.addSubview(logoImageView)
+		logoContainer.addSubview(logoLabel)
+		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
+		logoContainer.setContentHuggingPriority(.required, for: .vertical)
+
+		let logoWrapperView = ThemeView()
+		logoWrapperView.addSubview(logoContainer)
+
+		NSLayoutConstraint.activate([
+			logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+			logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+			logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+			logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+			logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+			logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+
+			logoImageView.leadingAnchor.constraint(equalTo: logoContainer.leadingAnchor),
+			logoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: logoImageView.trailingAnchor, multiplier: 1),
+			logoLabel.trailingAnchor.constraint(equalTo: logoContainer.trailingAnchor),
+
+			logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
+			logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
+			logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
+		])
+
+		logoWrapperView.addThemeApplier({ (_, collection, _) in
+			logoLabel.applyThemeCollection(collection, itemStyle: .logo)
+			if !VendorServices.shared.isBranded {
+				logoImageView.image = logoImageView.image?.tinted(with: collection.navigationBarColors.labelColor)
+			}
+		})
+
+		self.navigationItem.largeTitleDisplayMode = .never
+		self.navigationItem.titleView = logoWrapperView
 
 		if #available(iOS 13, *) { } else {
 			// Log in automatically on iOS 12 (handled by scene restoration in iOS 13+)
@@ -365,7 +400,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			}
 
 			// Add Header View
-			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
+			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 40.0))
 			self.navigationController?.navigationBar.shadowImage = UIImage()
 			self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
 

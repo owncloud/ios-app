@@ -204,11 +204,11 @@ class IssuesCardViewController: StaticTableViewController {
 						textLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: horizontalMargin),
 						textLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -horizontalMargin),
 
-						detailLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: horizontalMargin),
-						detailLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -horizontalMargin),
+						detailLabel!.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: horizontalMargin),
+						detailLabel!.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -horizontalMargin),
 
-						detailLabel.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1),
-						detailLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -verticalMargin)
+						detailLabel!.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1),
+						detailLabel!.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -verticalMargin)
 					])
 				}, accessoryType: (issue.type == .certificate) ? .disclosureIndicator : .none)
 

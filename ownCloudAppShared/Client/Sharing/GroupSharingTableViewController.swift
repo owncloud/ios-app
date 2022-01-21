@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 open class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
@@ -261,13 +262,13 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 							}
 
 							self.navigationController?.pushViewController(editSharingViewController, animated: true)
-						}, title: displayName, subtitle: share.permissionDescription(for: core?.connection.capabilities), image: recipient.user?.avatar, accessoryType: .disclosureIndicator)
+						}, title: displayName, subtitle: share.permissionDescription(for: core?.connection.capabilities), image: nil, accessoryType: .disclosureIndicator)
 
 						shareRow.representedObject = share
 
 						shareRows.append(shareRow)
 					} else {
-						let shareRow = StaticTableViewRow(rowWithAction: nil, title: displayName, subtitle: share.permissionDescription(for: core?.connection.capabilities), image: recipient.user?.avatar, accessoryType: .none)
+						let shareRow = StaticTableViewRow(rowWithAction: nil, title: displayName, subtitle: share.permissionDescription(for: core?.connection.capabilities), image: nil, accessoryType: .none)
 
 						shareRow.representedObject = share
 
@@ -403,10 +404,23 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 					guard let itemPath = self.item.path else { continue }
 					var title = ""
 					var image: UIImage?
+					var leadingAccessoryView : UIView?
 					if recipient.type == .user {
 						guard let displayName = recipient.displayName else { continue }
 						title = displayName
-						image = UIImage(named: "person")
+
+						if let recipientUser = recipient.user {
+							let avatarRequest = OCResourceRequestAvatar(for: recipientUser, maximumSize: OCAvatar.defaultSize, scale: 0, waitForConnectivity: false) { request, error, ongoing, oldResource, newResource in
+								Log.debug("Avatar for \(String(describing: recipient.user?.userName)): ongoing=\(ongoing), resource=\(newResource.debugDescription)")
+							}
+							leadingAccessoryView = OCViewHost(request: avatarRequest, fallbackView: nil, viewProviderContext: nil)
+							leadingAccessoryView?.translatesAutoresizingMaskIntoConstraints = false
+							leadingAccessoryView?.widthAnchor.constraint(equalToConstant: 40).isActive = true
+							leadingAccessoryView?.heightAnchor.constraint(equalToConstant: 30).isActive = true
+							core.vault.resourceManager?.start(avatarRequest)
+						} else {
+							image = UIImage(named: "person")
+						}
 					} else {
 						guard let displayName = recipient.displayName else { continue }
 						let groupTitle = "(Group)".localized
@@ -429,7 +443,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 								let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
 								self.navigationController?.present(navigationController, animated: true, completion: nil)
 							}
-							}, title: title, image: image)
+						}, title: title, image: image, leadingAccessoryView: leadingAccessoryView)
 					)
 				}
 			}

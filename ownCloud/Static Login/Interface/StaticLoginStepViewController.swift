@@ -67,33 +67,44 @@ class FullWidthHeaderView : ThemeView {
 }
 
 extension StaticTableViewSection {
-	static func buildHeader(title: String, message: String? = nil, image: UIImage? = nil, cellSpacing: CGFloat = 20, topSpacing: CGFloat = 30, bottomSpacing: CGFloat = 20, imageWidth: CGFloat = 100) -> UIView {
+	static func buildHeader(title: String? = nil, textStyle: UIFont.TextStyle = .title2, attributedTitle: NSAttributedString? = nil, message: String? = nil, image: UIImage? = nil, imageViewReplacement: UIView? = nil, cellSpacing: CGFloat = 20, topSpacing: CGFloat = 30, intermediateSpacing: CGFloat? = nil, bottomSpacing: CGFloat = 20, imageWidth: CGFloat = 100) -> UIView {
 		let horizontalPadding: CGFloat = 0
 
 		let headerView = FullWidthHeaderView()
 		headerView.translatesAutoresizingMaskIntoConstraints = false
 
-		let imageView = UIImageView()
-		if let image = image {
-			imageView.image = image
-			imageView.translatesAutoresizingMaskIntoConstraints = false
-			imageView.contentMode = .scaleAspectFit
+		var imageView : UIView? = imageViewReplacement
 
+		if let image = image, imageView == nil {
+			let localImageView = UIImageView()
+
+			localImageView.image = image
+			localImageView.translatesAutoresizingMaskIntoConstraints = false
+			localImageView.contentMode = .scaleAspectFit
+
+			imageView = localImageView
+		}
+
+		if let imageView = imageView {
 			headerView.addSubview(imageView)
 
 			NSLayoutConstraint.activate([
 				imageView.centerXAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.centerXAnchor),
-				imageView.widthAnchor.constraint(equalToConstant: imageWidth),
-				imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
 				imageView.topAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.topAnchor, constant: topSpacing)
-		 ])
+			])
 		}
 
 		let titleLabel = UILabel()
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-		titleLabel.text = title
+		if let title = title {
+			titleLabel.text = title
+			titleLabel.font = UIFont.preferredFont(forTextStyle: textStyle)
+		} else if let attributedTitle = attributedTitle {
+			titleLabel.attributedText = attributedTitle
+		}
+
 		titleLabel.textAlignment = .center
 		titleLabel.numberOfLines = 0
 		headerView.addSubview(titleLabel)
@@ -103,15 +114,12 @@ extension StaticTableViewSection {
 				titleLabel.applyThemeCollection(collection, itemStyle: .welcomeTitle)
 			} else {
 				titleLabel.applyThemeCollection(collection, itemStyle: .logo)
-				imageView.image = imageView.image?.tinted(with: collection.navigationBarColors.labelColor)
+				(imageView as? UIImageView)?.image = (imageView as? UIImageView)?.image?.tinted(with: collection.navigationBarColors.labelColor)
 			}
 		})
-		titleLabel.textColor = .red
-
-		titleLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.5, weight: .bold)
 
 		var layoutAnchor = headerView.safeAreaLayoutGuide.topAnchor
-		if image != nil {
+		if let imageView = imageView {
 			layoutAnchor = imageView.bottomAnchor
 		}
 
@@ -120,7 +128,7 @@ extension StaticTableViewSection {
 			titleLabel.rightAnchor.constraint(lessThanOrEqualTo: headerView.safeAreaLayoutGuide.rightAnchor, constant: -horizontalPadding),
 			titleLabel.centerXAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.centerXAnchor),
 
-			titleLabel.topAnchor.constraint(equalTo: layoutAnchor, constant: topSpacing)
+			titleLabel.topAnchor.constraint(equalTo: layoutAnchor, constant: intermediateSpacing ?? topSpacing)
 		])
 
 		if message != nil {

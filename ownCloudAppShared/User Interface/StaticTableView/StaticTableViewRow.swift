@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudApp
 
 public typealias StaticTableViewRowAction = (_ staticRow : StaticTableViewRow, _ sender: Any?) -> Void
 public typealias StaticTableViewRowTextAction = (_ staticRow : StaticTableViewRow, _ sender: Any?, _ type: StaticTableViewRowActionType) -> Void
@@ -123,14 +124,18 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public var additionalAccessoryView : UIView?
 
+	public var leadingAccessoryView : UIView?
+
 	override public init() {
 		type = .row
 		super.init()
 	}
 
-	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, recreatedLabelLayout : ThemeTableViewCell.CellLayouter? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, recreatedLabelLayout cellLayouter: ThemeTableViewCell.CellLayouter? = nil, leadingAccessoryView: UIView? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
+
+		var recreatedLabelLayout : ThemeTableViewCell.CellLayouter? = cellLayouter
 
 		var image = image
 		if image != nil, imageWidth != nil {
@@ -141,6 +146,11 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		var cellStyle = UITableViewCell.CellStyle.default
 		if subtitle != nil {
 			cellStyle = UITableViewCell.CellStyle.subtitle
+		}
+
+		if let leadingAccessoryView = leadingAccessoryView {
+			self.leadingAccessoryView = leadingAccessoryView
+			recreatedLabelLayout = ThemeTableViewCell.customLeadingViewLayout(leadingView: leadingAccessoryView)
 		}
 
 		let themeCell = ThemeTableViewCell(withLabelColorUpdates: true, style: cellStyle, recreatedLabelLayout: recreatedLabelLayout, reuseIdentifier: nil)

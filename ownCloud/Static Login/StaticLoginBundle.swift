@@ -46,11 +46,11 @@ class StaticLoginBundle: NSObject {
 			}
 
 			if let profileDefinitions = branding.profileDefinitions {
-				let profiles = profileDefinitions.map { (profile) -> StaticLoginProfile? in
+				let profiles = profileDefinitions.map { (profile) -> StaticLoginProfile in
 					return StaticLoginProfile(from: profile)
-				} as? [StaticLoginProfile]
+				}
 
-			       bundle.profiles = profiles!
+				bundle.profiles = profiles
 			}
 		}
 

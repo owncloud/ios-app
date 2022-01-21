@@ -203,10 +203,8 @@ open class MoreViewHeader: UIView {
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
+				_ = thumbnail?.request(for: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, withCompletionHandler: { (_, error, _, image) in
+					if error == nil, image != nil, self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
 							self.showsIcon = false
 							self.iconView.image = image

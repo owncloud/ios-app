@@ -55,54 +55,100 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 		}
 	}
 
-	public typealias CellLayouter = (_ cell: ThemeTableViewCell, _ textLabel: UILabel, _ detailLabel : UILabel) -> Void
+	public typealias CellLayouter = (_ cell: ThemeTableViewCell, _ textLabel: UILabel, _ detailLabel : UILabel?) -> Void
 
 	static public var systemLikeLayout : CellLayouter = { (cell, textLabel, detailLabel) in
-		NSLayoutConstraint.activate([
-			textLabel.topAnchor.constraint(equalToSystemSpacingBelow: cell.contentView.topAnchor, multiplier: 1),
+		customLeadingViewLayout(leadingView: cell.contentView)(cell, textLabel, detailLabel)
+	}
 
-			textLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.leadingAnchor, multiplier: 1),
-			textLabel.trailingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.trailingAnchor, multiplier: -1),
+	static func customLeadingViewLayout(leadingView: UIView) -> CellLayouter {
+		let layouter : CellLayouter = { (cell, textLabel, detailLabel) in
+			let includeLeadingView : Bool = (leadingView != cell.contentView)
+			var leadingAnchor : NSLayoutXAxisAnchor = cell.contentView.leadingAnchor
 
-			detailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.leadingAnchor, multiplier: 1),
-			detailLabel.trailingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.trailingAnchor, multiplier: -1),
+			if includeLeadingView {
+				if leadingView.superview == nil {
+					// Add leadingView
+					cell.contentView.addSubview(leadingView)
+				}
 
-			detailLabel.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1),
-			detailLabel.bottomAnchor.constraint(equalToSystemSpacingBelow: cell.contentView.bottomAnchor, multiplier: -1)
-		])
+				leadingAnchor = leadingView.trailingAnchor
+			}
+
+			var constraints = [
+				textLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 1),
+				textLabel.trailingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.trailingAnchor, multiplier: -1)
+			]
+
+			if let detailLabel = detailLabel {
+				constraints += [
+					textLabel.topAnchor.constraint(equalToSystemSpacingBelow: cell.contentView.topAnchor, multiplier: 1),
+
+					detailLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 1),
+					detailLabel.trailingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.trailingAnchor, multiplier: -1),
+
+					detailLabel.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1),
+					detailLabel.bottomAnchor.constraint(equalToSystemSpacingBelow: cell.contentView.bottomAnchor, multiplier: -1)
+				]
+			} else {
+				constraints += [
+					textLabel.topAnchor.constraint(greaterThanOrEqualTo: cell.contentView.topAnchor, constant: 11),
+					textLabel.bottomAnchor.constraint(lessThanOrEqualTo: cell.contentView.bottomAnchor, constant: -11),
+					textLabel.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+				]
+			}
+
+			if includeLeadingView {
+				constraints += [
+					leadingView.leadingAnchor.constraint(equalToSystemSpacingAfter: cell.contentView.leadingAnchor, multiplier: 1),
+					leadingView.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow:cell.contentView.topAnchor, multiplier: 1),
+					leadingView.bottomAnchor.constraint(lessThanOrEqualToSystemSpacingBelow:cell.contentView.bottomAnchor, multiplier: -1),
+					leadingView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+				]
+			}
+
+			NSLayoutConstraint.activate(constraints)
+		}
+
+		return layouter
 	}
 
 	convenience public init(withLabelColorUpdates labelColorUpdates: Bool, style: UITableViewCell.CellStyle = .default, recreatedLabelLayout : CellLayouter? = nil, reuseIdentifier: String? = nil) {
 		self.init(style: style, reuseIdentifier: reuseIdentifier)
 
 		if let recreatedLabelLayout = recreatedLabelLayout {
+			let replacementTextLabel = UILabel()
+			var replacementDetailLabel : UILabel?
+
+			replacementTextLabel.translatesAutoresizingMaskIntoConstraints = false
+			replacementTextLabel.setContentHuggingPriority(.required, for: .vertical)
+			replacementTextLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+			replacementTextLabel.numberOfLines = 0
+			replacementTextLabel.lineBreakMode = .byWordWrapping
+
+			replacementTextLabel.font = (style == .subtitle) ?
+				UIFont.systemFont(ofSize: UIFont.systemFontSize) :
+				UIFont.systemFont(ofSize: UIFont.labelFontSize)
+
+			self.customTextLabels = [ replacementTextLabel ]
+			self.contentView.addSubview(replacementTextLabel)
+
 			if style == .subtitle {
-				let replacementTextLabel = UILabel()
-				let replacementDetailLabel = UILabel()
+				replacementDetailLabel = UILabel()
 
-				replacementTextLabel.translatesAutoresizingMaskIntoConstraints = false
-				replacementTextLabel.setContentHuggingPriority(.required, for: .vertical)
-				replacementTextLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-				replacementTextLabel.numberOfLines = 0
-				replacementTextLabel.lineBreakMode = .byWordWrapping
+				replacementDetailLabel?.translatesAutoresizingMaskIntoConstraints = false
+				replacementDetailLabel?.setContentHuggingPriority(.required, for: .vertical)
+				replacementDetailLabel?.setContentCompressionResistancePriority(.required, for: .vertical)
+				replacementDetailLabel?.numberOfLines = 0
+				replacementDetailLabel?.lineBreakMode = .byWordWrapping
 
-				replacementDetailLabel.translatesAutoresizingMaskIntoConstraints = false
-				replacementDetailLabel.setContentHuggingPriority(.required, for: .vertical)
-				replacementDetailLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-				replacementDetailLabel.numberOfLines = 0
-				replacementDetailLabel.lineBreakMode = .byWordWrapping
+				replacementDetailLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 
-				replacementTextLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
-				replacementDetailLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-
-				self.customTextLabels = [ replacementTextLabel ]
-				self.customDetailTextLabels = [ replacementDetailLabel ]
-
-				self.contentView.addSubview(replacementTextLabel)
-				self.contentView.addSubview(replacementDetailLabel)
-
-				recreatedLabelLayout(self, replacementTextLabel, replacementDetailLabel)
+				self.customDetailTextLabels = [ replacementDetailLabel! ]
+				self.contentView.addSubview(replacementDetailLabel!)
 			}
+
+			recreatedLabelLayout(self, replacementTextLabel, replacementDetailLabel)
 		}
 
 		updateLabelColors = labelColorUpdates
