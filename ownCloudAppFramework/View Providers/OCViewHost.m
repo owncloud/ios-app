@@ -21,6 +21,7 @@
 @interface OCViewHost ()
 {
 	UIView *_hostedView;
+	NSUInteger _requestSeed;
 }
 @end
 
@@ -81,15 +82,29 @@
 	_request = request;
 	_request.delegate = self;
 
+	_requestSeed++;
+
 	[self setActiveViewProviderFromResource:_request.resource];
 }
 
 - (void)resourceRequest:(nonnull OCResourceRequest *)request didChangeWithError:(nullable NSError *)error isOngoing:(BOOL)isOngoing previousResource:(nullable OCResource *)previousResource newResource:(nullable OCResource *)newResource
 {
+	if (request != self->_request)
+	{
+		OCLogDebug(@"Delayed request update received");
+		return;
+	}
+
 	if ((error == nil) && (newResource != nil))
 	{
+		NSUInteger requestSeedOnDelivery = _requestSeed;
+
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[self setActiveViewProviderFromResource:newResource];
+			if ((request == self->_request) || // same request
+			    ((self->_request == nil) && (requestSeedOnDelivery == self->_requestSeed))) // request is no longer ongoing, but no new request has been set in the meantime, either, so this resource can be used
+			{
+				[self setActiveViewProviderFromResource:newResource];
+			}
 		});
 	}
 
