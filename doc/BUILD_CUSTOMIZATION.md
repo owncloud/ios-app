@@ -15,7 +15,7 @@ A space-separated list of flags can be specified in the `Branding.plist` with th
 
 ## Flags
 
-The following options can be used as `build.flags`:
+The following options can be used as `build.flags` / `APP_BUILD_FLAGS`:
 
 ### `DISABLE_BACKGROUND_LOCATION`
 
