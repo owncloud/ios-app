@@ -356,7 +356,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 			options[.presentingViewControllerKey] = self
 
-			let spinner = UIActivityIndicatorView(style: .white)
+			let spinner = UIActivityIndicatorView(style: .medium)
 			if let button = sender as? ThemeButton {
 				button.setTitle("Authenticating…".localized, for: .normal)
 				button.isEnabled = false

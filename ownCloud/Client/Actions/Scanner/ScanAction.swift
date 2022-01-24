@@ -44,11 +44,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 			return .none
 		}
 
-		if #available(iOS 13.0, *) {
-			return .middle
-		} else {
-			return .none
-		}
+		return .middle
 	}
 
 	// MARK: - Action implementation
@@ -76,41 +72,35 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 			return
 		}
 
-		if #available(iOS 13.0, *) {
-			Scanner.scan(on: viewController) { [weak core] (_, _, scan) in
-				if let pageCount = scan?.pageCount, pageCount > 0, let scannedPages = scan?.scannedPages {
-					var filename : String? = scan?.title
+		Scanner.scan(on: viewController) { [weak core] (_, _, scan) in
+			if let pageCount = scan?.pageCount, pageCount > 0, let scannedPages = scan?.scannedPages {
+				var filename : String? = scan?.title
 
-					if filename?.count == 0 {
-						filename = nil
-					}
-
-					let currentDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium) // Use localized date
-								.replacingOccurrences(of: ":", with: "-")  // Remove reserved character (":" not usable under Windows)
-								.replacingOccurrences(of: "/", with: "-")  // Remove reserved character ("/" used to delimit paths on macOS, iOS, Linux, …)
-								.replacingOccurrences(of: "\\", with: "-") // Remove reserved character ("\" used to delimit paths on Windows)
-
-					core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(currentDate).pdf", atPath: itemPath, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
-						guard let suggestedName = suggestedName else { return }
-
-						OnMainThread {
-							let navigationController = ThemeNavigationController(rootViewController: ScanViewController(with: scannedPages, core: core, fileName: suggestedName, targetFolder: targetFolderItem))
-							viewController.present(navigationController, animated: true)
-						}
-					})
+				if filename?.count == 0 {
+					filename = nil
 				}
 
+				let currentDate = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium) // Use localized date
+							.replacingOccurrences(of: ":", with: "-")  // Remove reserved character (":" not usable under Windows)
+							.replacingOccurrences(of: "/", with: "-")  // Remove reserved character ("/" used to delimit paths on macOS, iOS, Linux, …)
+							.replacingOccurrences(of: "\\", with: "-") // Remove reserved character ("\" used to delimit paths on Windows)
+
+				core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(currentDate).pdf", atPath: itemPath, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+					guard let suggestedName = suggestedName else { return }
+
+					OnMainThread {
+						let navigationController = ThemeNavigationController(rootViewController: ScanViewController(with: scannedPages, core: core, fileName: suggestedName, targetFolder: targetFolderItem))
+						viewController.present(navigationController, animated: true)
+					}
+				})
 			}
+
 		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .folderAction {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))
-			}
-//			Theme.shared.add(tvgResourceFor: "application-pdf")
-//			return Theme.shared.image(for: "application-pdf", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+			return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))
 		}
 
 		return nil

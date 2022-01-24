@@ -135,9 +135,7 @@ open class ClientItemCell: ThemeTableViewCell {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateHasMessage(_:)), name: .ClientSyncRecordIDsWithMessagesChanged, object: nil)
 
-		if #available(iOS 13.4, *) {
-			PointerEffect.install(on: self.contentView, effectStyle: .hover)
-		}
+		PointerEffect.install(on: self.contentView, effectStyle: .hover)
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
@@ -198,25 +196,17 @@ open class ClientItemCell: ThemeTableViewCell {
 
 		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
 		moreButton.contentMode = .center
-		if #available(iOS 13.4, *) {
-			moreButton.isPointerInteractionEnabled = true
-		}
+		moreButton.isPointerInteractionEnabled = true
 
-		if #available(iOS 13.4, *) {
-			revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
-			revealButton.isPointerInteractionEnabled = true
-		} else {
-			revealButton.setTitle("→", for: .normal)
-		}
+		revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
+		revealButton.isPointerInteractionEnabled = true
 		revealButton.contentMode = .center
 		revealButton.isHidden = !showRevealButton
 		revealButton.accessibilityLabel = "Reveal in folder".localized
 
 		messageButton.setTitle("⚠️", for: .normal)
 		messageButton.contentMode = .center
-		if #available(iOS 13.4, *) {
-			messageButton.isPointerInteractionEnabled = true
-		}
+		messageButton.isPointerInteractionEnabled = true
 		messageButton.isHidden = true
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)

@@ -157,11 +157,6 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		self.navigationItem.largeTitleDisplayMode = .never
 		self.navigationItem.titleView = logoWrapperView
 
-		if #available(iOS 13, *) { } else {
-			// Log in automatically on iOS 12 (handled by scene restoration in iOS 13+)
-			NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
-		}
-
 		if ReleaseNotesDatasource().shouldShowReleaseNotes {
 			let releaseNotesHostController = ReleaseNotesHostViewController()
 			releaseNotesHostController.modalPresentationStyle = .formSheet
@@ -281,24 +276,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			VendorServices.shared.considerReviewPrompt()
 		}
 
-		if #available(iOS 13, *) {
-			view.window?.windowScene?.userActivity = ServerListTableViewController.showServerListActivity
-		}
-	}
-
-	@objc func considerAutoLogin() -> Bool {
-		if shownFirstTime, UIApplication.shared.applicationState != .background {
-			shownFirstTime = false
-
-			if #available(iOS 13.0, *) { /* this will be handled automatically by scene restoration */ } else {
-				if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-					connect(to: bookmark, lastVisibleItemId: nil, animated: true)
-					return true
-				}
-			}
-		}
-
-		return false
+		view.window?.windowScene?.userActivity = ServerListTableViewController.showServerListActivity
 	}
 
 	func considerBetaWarning() {
@@ -673,10 +651,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 						// Set up custom push transition for presentation
 						let transitionDelegate = PushTransitionDelegate(with: { (toViewController, window) in
 							window.addSubview(toViewController.view)
-
-							if #available(iOS 13, *) {
-								window.windowScene?.userActivity = ServerListTableViewController.showServerListActivity
-							}
+							window.windowScene?.userActivity = ServerListTableViewController.showServerListActivity
 						})
 
 						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
@@ -704,11 +679,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		if !VendorServices.shared.isBranded {
 			if OCBookmarkManager.shared.bookmarks.count == 1 {
 				var serverListTableViewController : ServerListTableViewController?
-				if #available(iOS 13.0, *) {
-					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-				} else {
-					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .grouped)
-				}
+				serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
 
 				guard let serverListTableViewController = serverListTableViewController else { return }
 
@@ -901,11 +872,9 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			}
 		})
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad {
-			let openAccountAction = UITableViewRowAction(style: .normal,
-														 title: "Open in Window".localized,
-														 handler: { (_, indexPath) in
-															self.openAccountInWindow(at: indexPath)
+		if UIDevice.current.isIpad {
+			let openAccountAction = UITableViewRowAction(style: .normal, title: "Open in Window".localized, handler: { (_, indexPath) in
+				self.openAccountInWindow(at: indexPath)
 			})
 			openAccountAction.backgroundColor = .orange
 

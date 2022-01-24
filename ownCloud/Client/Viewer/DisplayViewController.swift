@@ -183,7 +183,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	private var metadataInfoLabel = UILabel()
 	private var showPreviewButton = ThemeButton(type: .custom)
 	private var infoLabel = UILabel()
-	private var connectionActivityView = UIActivityIndicatorView(style: .white)
+	private var connectionActivityView = UIActivityIndicatorView(style: .medium)
 
 	// MARK: - Editing delegate
 
@@ -219,10 +219,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	override func loadView() {
 		super.loadView()
 
-		if #available(iOS 13.4, *) {
-			PointerEffect.install(on: cancelButton, effectStyle: .highlight)
-			PointerEffect.install(on: showPreviewButton, effectStyle: .highlight)
-		}
+		PointerEffect.install(on: cancelButton, effectStyle: .highlight)
+		PointerEffect.install(on: showPreviewButton, effectStyle: .highlight)
 
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
 

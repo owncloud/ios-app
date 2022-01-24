@@ -31,11 +31,7 @@ class StaticLoginStepViewController : StaticTableViewController {
 	}
 
 	init(loginViewController theLoginViewController: StaticLoginViewController) {
-		if #available(iOS 13.0, *) {
-			super.init(style: .insetGrouped)
-		} else {
-			super.init(style: .grouped)
-		}
+		super.init(style: .insetGrouped)
 
 		loginViewController = theLoginViewController
 		self.tableView.backgroundColor = .clear

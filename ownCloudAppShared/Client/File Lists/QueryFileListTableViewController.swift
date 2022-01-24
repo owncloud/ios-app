@@ -377,15 +377,10 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
 		let placeholderString = (searchScope == .global) ? "Search account".localized : "Search folder".localized
 
-		if #available(iOS 13.0, *) {
-			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
-			let attributedString = NSAttributedString(string: placeholderString, attributes: attributedStringColor)
-			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
-			searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.searchBarColors.labelColor
-		} else {
-			// Fallback on earlier versions
-			searchController?.searchBar.placeholder = placeholderString
-		}
+		let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
+		let attributedString = NSAttributedString(string: placeholderString, attributes: attributedStringColor)
+		searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
+		searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.searchBarColors.labelColor
 	}
 
 	open override func viewWillAppear(_ animated: Bool) {

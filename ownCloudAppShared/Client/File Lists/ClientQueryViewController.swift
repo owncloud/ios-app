@@ -527,15 +527,13 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			}
 		}
 
-		if #available(iOS 13, *) {
-			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
-			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
-			let popoverArrowHeight : CGFloat = 13
+		// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
+		// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
+		let popoverArrowHeight : CGFloat = 13
 
-			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
-			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
-			tableViewController.tableView.separatorInset = UIEdgeInsets()
-		}
+		tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+		tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
+		tableViewController.tableView.separatorInset = UIEdgeInsets()
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
@@ -588,12 +586,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				self.updateFooter(text: totalSize)
 			}
 
-			if #available(iOS 13.0, *) {
-				if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
-					// Use parent folder for UI state restoration
-					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
-					view.window?.windowScene?.userActivity = activity.openItemUserActivity
-				}
+			if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+				// Use parent folder for UI state restoration
+				let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
+				view.window?.windowScene?.userActivity = activity.openItemUserActivity
 			}
 		} else {
 			self.updateFooter(text: nil)

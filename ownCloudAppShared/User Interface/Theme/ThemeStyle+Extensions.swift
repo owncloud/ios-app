@@ -93,7 +93,7 @@ extension ThemeStyle {
 	}
 
 	static public var displayName : String {
-		if #available(iOS 13, *), ThemeStyle.followSystemAppearance {
+		if ThemeStyle.followSystemAppearance {
 			return "System".localized
 		}
 
@@ -109,18 +109,16 @@ extension ThemeStyle {
 		let rootView : UIView? = UserInterfaceContext.shared.rootView
 		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
 
-		if #available(iOS 13, *) {
-			if self.followSystemAppearance {
-				if ThemeStyle.userInterfaceStyle() == .dark {
-					if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
-						ThemeStyle.preferredStyle = style
-						applyStyle = style
-					}
-				} else {
-					if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.contrast])?.first {
-						ThemeStyle.preferredStyle = style
-						applyStyle = style
-					}
+		if self.followSystemAppearance {
+			if ThemeStyle.userInterfaceStyle() == .dark {
+				if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
+					ThemeStyle.preferredStyle = style
+					applyStyle = style
+				}
+			} else {
+				if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.contrast])?.first {
+					ThemeStyle.preferredStyle = style
+					applyStyle = style
 				}
 			}
 		}
@@ -128,11 +126,9 @@ extension ThemeStyle {
 		if let applyStyle = applyStyle {
 			let themeCollection = ThemeCollection(with: applyStyle)
 
-			if #available(iOS 13, *) {
-				if let themeWindowSubviews = rootView?.subviews {
-					for view in themeWindowSubviews {
-						view.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
-					}
+			if let themeWindowSubviews = rootView?.subviews {
+				for view in themeWindowSubviews {
+					view.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
 				}
 			}
 

@@ -21,32 +21,40 @@ import MobileCoreServices
 import ownCloudSDK
 import ownCloudAppShared
 
+class OCItemPasteboardValue : NSObject, NSSecureCoding {
+	static var supportsSecureCoding: Bool = true
 
+	var item : OCItem?
+	var bookmarkUUID : String?
 
-struct OCItemPasteboardValue {
-	var item : OCItem
-	var bookmarkUUID : String
-}
+	static func decode(data: Data) -> OCItemPasteboardValue? {
+		if let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: OCItemPasteboardValue.self, from: data) {
+			return value
+		}
 
-extension OCItemPasteboardValue {
-	func encode() -> Data {
-		let data = NSMutableData()
-		let archiver = NSKeyedArchiver(forWritingWith: data)
-		archiver.encode(item, forKey: "item")
-		archiver.encode(bookmarkUUID, forKey: "bookmarkUUID")
-		archiver.finishEncoding()
-		return data as Data
+		return nil
 	}
 
-	init?(data: Data) {
-		let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-		defer {
-			unarchiver.finishDecoding()
-		}
-		guard let item = unarchiver.decodeObject(forKey: "item") as? OCItem else { return nil }
-		guard let bookmarkUUID = unarchiver.decodeObject(forKey: "bookmarkUUID") as? String else { return nil }
+	func encode(with coder: NSCoder) {
+		coder.encode(item, forKey: "item")
+		coder.encode(bookmarkUUID as NSString?, forKey: "bookmarkUUID")
+	}
+
+	init(item: OCItem?, bookmarkUUID: String?) {
+		super.init()
 		self.item = item
 		self.bookmarkUUID = bookmarkUUID
+	}
+
+	required init?(coder: NSCoder) {
+		super.init()
+
+		item = coder.decodeObject(of: OCItem.self, forKey: "item")
+		bookmarkUUID = coder.decodeObject(of: NSString.self, forKey: "bookmarkUUID") as String?
+	}
+
+	var encodedData : Data? {
+		return try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: true)
 	}
 }
 
@@ -176,8 +184,7 @@ class CopyAction : Action {
 
 					// Prepare Items for internal use
 					itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCopyKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
-						let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encode()
-						completionBlock(data, nil)
+						completionBlock(OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encodedData, nil)
 						return nil
 					}
 

@@ -61,7 +61,7 @@ class MigrationActivityCell: ThemeTableViewCell {
 
 	var titleLabel = UILabel()
 	var descriptionLabel = UILabel()
-	var activityView = UIActivityIndicatorView(style: .white)
+	var activityView = UIActivityIndicatorView(style: .medium)
 	var statusImageView = UIImageView()
 	var activityTypeImageView = UIImageView()
 

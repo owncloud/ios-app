@@ -24,9 +24,7 @@ public class ThemedAlertController: UIAlertController, Themeable {
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 
-		if #available(iOSApplicationExtension 13.0, *) {
-			self.overrideUserInterfaceStyle  = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-		}
+		self.overrideUserInterfaceStyle  = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 		view.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
 	}
 
@@ -36,9 +34,7 @@ public class ThemedAlertController: UIAlertController, Themeable {
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		if #available(iOS 13, *) {
-			self.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
-		}
+		self.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		view.tintColor = collection.tableRowColors.labelColor
 	}
 

@@ -103,9 +103,7 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell {
 		self.titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
 		self.countLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.horizontal)
 
-		if #available(iOS 13.4, *) {
-			PointerEffect.install(on: self, effectStyle: .hover)
-		}
+		PointerEffect.install(on: self, effectStyle: .hover)
 	}
 
 	// MARK: - Theme support

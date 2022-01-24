@@ -59,11 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			rootViewController = navigationController
 		} else {
 			if OCBookmarkManager.shared.bookmarks.count == 1 {
-				if #available(iOS 13.0, *) {
-					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-				} else {
-					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .grouped)
-				}
+				serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
 			} else {
 				serverListTableViewController = ServerListTableViewController(style: .plain)
 			}
@@ -124,20 +120,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 
-		if #available(iOS 13.0, *) {
-			if UIDevice.current.isIpad {
-				// iPad & iOS 13+ only
-				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
-				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
-			}
-
-			// iOS 13+ only
-			OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-			OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
-
-			//TODO: Enable in version 1.4 after testing this feature
-			//OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
+		if UIDevice.current.isIpad {
+			// iPad only
+			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 		}
+
+		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
 
 		// Task extensions
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
@@ -157,12 +147,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		//Disable UI Animation for UITesting (screenshots)
 		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
 			UIView.setAnimationsEnabled(enableUIAnimations)
-		}
-
-		// Set background refresh interval
-		guard #available(iOS 13, *) else {
-			UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-			return true
 		}
 
 		// If the app was re-installed, make sure to wipe keychain data. Since iOS 10.3 keychain entries are not deleted if the app is deleted, but since everything else is lost,

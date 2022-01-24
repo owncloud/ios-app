@@ -115,13 +115,12 @@ public extension NSObject {
 			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
 			navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
 			navigationBar.isTranslucent = false
-			if #available(iOS 13, *) {
-				let navigationBarAppearance = collection.navigationBarAppearance
 
-				navigationBar.standardAppearance = navigationBarAppearance
-				navigationBar.compactAppearance = navigationBarAppearance
-				navigationBar.scrollEdgeAppearance = navigationBarAppearance
-			}
+			let navigationBarAppearance = collection.navigationBarAppearance
+
+			navigationBar.standardAppearance = navigationBarAppearance
+			navigationBar.compactAppearance = navigationBarAppearance
+			navigationBar.scrollEdgeAppearance = navigationBarAppearance
 		}
 
 		if let toolbar = self as? UIToolbar {
@@ -156,26 +155,18 @@ public extension NSObject {
 			searchBar.tintColor = collection.searchBarColors.tintColor
 			searchBar.barStyle = collection.barStyle
 
-			if #available(iOS 13, *) {
-				searchBar.searchTextField.textColor = collection.searchBarColors.labelColor
-				// Ensure search bar icon color is correct
-				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
-				searchBar.searchTextField.backgroundColor = collection.searchBarColors.backgroundColor
+			searchBar.searchTextField.textColor = collection.searchBarColors.labelColor
+			// Ensure search bar icon color is correct
+			searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			searchBar.searchTextField.backgroundColor = collection.searchBarColors.backgroundColor
 
-				if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
-					glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-					glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
-				}
-				if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
-					clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-					clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
-				}
-			} else {
-				if let textField = searchBar.subviews.first?.subviews.last as? UITextField, let backgroundview = textField.subviews.first {
-					backgroundview.backgroundColor = collection.searchBarColors.backgroundColor
-					backgroundview.layer.cornerRadius = 10
-					backgroundview.clipsToBounds = true
-				}
+			if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
+				glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+				glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
+			}
+			if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
+				clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+				clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
 			}
 		}
 
@@ -253,9 +244,7 @@ public extension NSObject {
 				}
 			}
 
-			if #available(iOS 13, *) {
-				cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
-			}
+			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		}
 
 		if let progressView = self as? UIProgressView {
@@ -265,22 +254,18 @@ public extension NSObject {
 
 		if let segmentedControl = self as? UISegmentedControl {
 			var tintColor = collection.tintColor
-			   if let navigationTintColor = collection.navigationBarColors.tintColor {
-				   tintColor = navigationTintColor
-			   }
-			if #available(iOS 13, *) {
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : tintColor], for: .normal)
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.backgroundColor!], for: .selected)
-				segmentedControl.selectedSegmentTintColor = tintColor
-			} else {
-				segmentedControl.tintColor = tintColor
+
+			if let navigationTintColor = collection.navigationBarColors.tintColor {
+				tintColor = navigationTintColor
 			}
+
+			segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : tintColor], for: .normal)
+			segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.backgroundColor!], for: .selected)
+			segmentedControl.selectedSegmentTintColor = tintColor
 		}
 
 		if let visualEffectView = self as? UIVisualEffectView {
-			if #available(iOS 13, *) {
-				visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
-			}
+			visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 		}
 	}
 }

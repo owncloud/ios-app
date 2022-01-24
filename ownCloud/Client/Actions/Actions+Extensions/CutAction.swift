@@ -62,7 +62,7 @@ class CutAction : Action {
 			}
 
 			itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
-				let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encode()
+				let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encodedData
 				completionBlock(data, nil)
 				return nil
 			}
@@ -92,11 +92,7 @@ class CutAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "scissors")
-			} else {
-				return UIImage(named: "clipboard")
-			}
+			return UIImage(systemName: "scissors")
 		}
 
 		return nil

@@ -244,9 +244,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
 			selectButton.accessibilityLabel = "Enter multiple selection".localized
-			if #available(iOS 13.4, *) {
-				selectButton.isPointerInteractionEnabled = true
-			}
+			selectButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
@@ -359,15 +357,12 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		tableViewController.sortBarDelegate = self.delegate
 		tableViewController.sortBar = self
 
-		if #available(iOS 13, *) {
-			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
-			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
-			let popoverArrowHeight : CGFloat = 13
-
-			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
-			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
-			tableViewController.tableView.separatorInset = UIEdgeInsets()
-		}
+		// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
+		// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
+		let popoverArrowHeight : CGFloat = 13
+		tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+		tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
+		tableViewController.tableView.separatorInset = UIEdgeInsets()
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender

@@ -82,11 +82,7 @@ class PresentationModeAction: Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreDetailItem {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "tv")
-			} else {
-				return UIImage(named: "ic_pdf_go_to_page")
-			}
+			return UIImage(systemName: "tv")
 		}
 
 		return nil

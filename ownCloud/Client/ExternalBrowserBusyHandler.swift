@@ -31,9 +31,7 @@ class ExternalBrowserBusyHandler: UIViewController, Themeable {
 			}
 
 			viewController.cancelHandler = cancelHandler
-			if #available(iOS 13.0, *) {
-				viewController.isModalInPresentation = true
-			}
+			viewController.isModalInPresentation = true
 
 			hostViewController?.present(viewController, animated: true, completion: nil)
 

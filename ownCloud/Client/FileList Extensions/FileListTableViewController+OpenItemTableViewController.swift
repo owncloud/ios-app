@@ -23,11 +23,9 @@ import ownCloudAppShared
 extension FileListTableViewController : OpenItemHandling {
 	@discardableResult public func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController? {
 		if let core = self.core {
-			if #available(iOS 13.0, *) {
-				if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
-					let activity = OpenItemUserActivity(detailItem: item, detailBookmark: bookmarkContainer.bookmark)
-					view.window?.windowScene?.userActivity = activity.openItemUserActivity
-				}
+			if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: bookmarkContainer.bookmark)
+				view.window?.windowScene?.userActivity = activity.openItemUserActivity
 			}
 
 			switch item.type {

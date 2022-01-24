@@ -49,7 +49,7 @@ open class MoreViewHeader: UIView {
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
-		activityIndicator = UIActivityIndicatorView(style: .white)
+		activityIndicator = UIActivityIndicatorView(style: .medium)
 		self.adaptBackgroundColor = adaptBackgroundColor
 
 		super.init(frame: .zero)
@@ -73,7 +73,7 @@ open class MoreViewHeader: UIView {
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
-		activityIndicator = UIActivityIndicatorView(style: .white)
+		activityIndicator = UIActivityIndicatorView(style: .medium)
 
 		super.init(frame: .zero)
 
@@ -139,9 +139,7 @@ open class MoreViewHeader: UIView {
 			updateFavoriteButtonImage()
 			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
 			self.addSubview(favoriteButton)
-			if #available(iOS 13.4, *) {
-				favoriteButton.isPointerInteractionEnabled = true
-			}
+			favoriteButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
 				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),

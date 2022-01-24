@@ -43,11 +43,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 		copyMultipleBarButtonItem?.accessibilityLabel = "Copy".localized
 		copyMultipleBarButtonItem?.isEnabled = false
 
-		var cutImage = UIImage(named: "clipboard")
-		if #available(iOS 13.0, *) {
-			cutImage = UIImage(systemName: "scissors")
-		}
-		cutMultipleBarButtonItem = UIBarButtonItem(image: cutImage, target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CutAction.identifier!)
+		cutMultipleBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "scissors"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CutAction.identifier!)
 		cutMultipleBarButtonItem?.accessibilityLabel = "Cut".localized
 		cutMultipleBarButtonItem?.isEnabled = false
 
@@ -118,9 +114,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 			removeToolbar()
 			sortBar?.showSelectButton = true
 
-			if #available(iOS 13, *) {
-				self.tableView.overrideUserInterfaceStyle = .unspecified
-			}
+			self.tableView.overrideUserInterfaceStyle = .unspecified
 
 			self.navigationItem.rightBarButtonItems = self.regularRightBarButtons
 			self.navigationItem.leftBarButtonItems = self.regularLeftBarButtons
@@ -178,9 +172,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 
 	@objc public func enterMultiselection() {
 
-		if #available(iOS 13, *) {
-			self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-		}
+		self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 
 		if !self.tableView.isEditing {
 			self.regularLeftBarButtons = self.navigationItem.leftBarButtonItems

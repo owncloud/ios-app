@@ -212,7 +212,7 @@ class IssuesCardViewController: StaticTableViewController {
 					])
 				}, accessoryType: (issue.type == .certificate) ? .disclosureIndicator : .none)
 
-				if #available(iOS 13.0, *), row.cell?.accessoryType == .disclosureIndicator {
+				if row.cell?.accessoryType == .disclosureIndicator {
 					// On iOS 13+, chevrons created via .accessoryType are not using the .tintColor anymore
 					let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
 					(row.cell as? ThemeTableViewCell)?.accessoryView = chevronImageView

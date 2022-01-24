@@ -176,136 +176,134 @@ class StaticLoginProfile: NSObject {
 
 extension Branding : StaticProfileBridge {
 	public static func initializeStaticProfileBridge() {
-		if #available(iOS 13, *) {
-			self.registerOCClassSettingsDefaults([:], metadata: [
-				StaticLoginProfile.Key.identifier.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Identifier",
-					.description 	: "Identifier uniquely identifying the profile.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+		self.registerOCClassSettingsDefaults([:], metadata: [
+			StaticLoginProfile.Key.identifier.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Identifier",
+				.description 	: "Identifier uniquely identifying the profile.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.name.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Name",
-					.description 	: "Name of the profile during setup.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.name.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Name",
+				.description 	: "Name of the profile during setup.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.promptForPasswordAuth.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label 		: "Password prompt",
-					.description	: "Text that is shown when asking the user to enter their password.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.promptForPasswordAuth.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label 		: "Password prompt",
+				.description	: "Text that is shown when asking the user to enter their password.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.promptForTokenAuth.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label 		: "Token authentication prompt",
-					.description	: "Text that is shown to the user before opening the authentication web view (f.ex. for OAuth2, OIDC).",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.promptForTokenAuth.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label 		: "Token authentication prompt",
+				.description	: "Text that is shown to the user before opening the authentication web view (f.ex. for OAuth2, OIDC).",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.promptForURL.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label 		: "URL prompt",
-					.description	: "Text shown above the URL field when setting up an account.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.promptForURL.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label 		: "URL prompt",
+				.description	: "Text shown above the URL field when setting up an account.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.welcome.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label 		: "Welcome Message",
-					.description	: "Welcome message shown during account setup.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.welcome.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label 		: "Welcome Message",
+				.description	: "Welcome message shown during account setup.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.bookmarkName.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Bookmark Name",
-					.description	: "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.bookmarkName.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Bookmark Name",
+				.description	: "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.url.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label		: "URL",
-					.description 	: "The URL of the server targeted by this profile.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.url.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.urlString,
+				.label		: "URL",
+				.description 	: "The URL of the server targeted by this profile.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.helpURL.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label 		: "Onboarding URL",
-					.description	: "Optional URL to onboarding resources.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.helpURL.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.urlString,
+				.label 		: "Onboarding URL",
+				.description	: "Optional URL to onboarding resources.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.promptForHelpURL.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Open onboarding URL message",
-					.description 	: "Message shown in an alert before opening the onboarding URL.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.promptForHelpURL.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Open onboarding URL message",
+				.description 	: "Message shown in an alert before opening the onboarding URL.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.helpURLButtonString.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Onboarding button title",
-					.description 	: "Text used for the onboarding button title",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.helpURLButtonString.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Onboarding button title",
+				.description 	: "Text used for the onboarding button title",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.canConfigureURL.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.label	 	: "Allow URL configuration",
-					.description	: "Indicates if the user can change the server URL for the account.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.canConfigureURL.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.label	 	: "Allow URL configuration",
+				.description	: "Indicates if the user can change the server URL for the account.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.allowedAuthenticationMethods.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.stringArray,
-					.label		: "Allowed authentication methods",
-					.description 	: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.possibleValues : OCConnection.authenticationMethodIdentifierMetadata(),
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				],
+			StaticLoginProfile.Key.allowedAuthenticationMethods.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.stringArray,
+				.label		: "Allowed authentication methods",
+				.description 	: "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.possibleValues : OCConnection.authenticationMethodIdentifierMetadata(),
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			],
 
-				StaticLoginProfile.Key.allowedHosts.settingsKey : [
-					.type 		: OCClassSettingsMetadataType.stringArray,
-					.label 		: "Allowed Hosts",
-					.description	: "Domain names (can also include subdomain name), which are allowed as server url when adding a new account.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding",
-					.subCategory	: "Profile"
-				]
-			])
-		}
+			StaticLoginProfile.Key.allowedHosts.settingsKey : [
+				.type 		: OCClassSettingsMetadataType.stringArray,
+				.label 		: "Allowed Hosts",
+				.description	: "Domain names (can also include subdomain name), which are allowed as server url when adding a new account.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding",
+				.subCategory	: "Profile"
+			]
+		])
 	}
 
 	static public func composeBrandingDict() -> [String : Any]? {

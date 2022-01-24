@@ -76,9 +76,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 			qlPreviewController!.view.addSubview(overlayView!)
 			qlPreviewController!.didMove(toParent: self)
 
-			if #available(iOS 13.0, *) {
-				qlPreviewController?.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-			}
+			qlPreviewController?.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 
 			qlPreviewController!.view.translatesAutoresizingMaskIntoConstraints = false
 
@@ -139,9 +137,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
-		if #available(iOS 13, *) {
-			qlPreviewController?.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
-		}
+		qlPreviewController?.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 	}
 }
 

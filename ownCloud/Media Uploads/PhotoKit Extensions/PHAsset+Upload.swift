@@ -315,7 +315,7 @@ extension PHAsset {
 		requestOptions.version = .current
 		requestOptions.resizeMode = .none
 
-		PHImageManager.default().requestImageData(for: self, options: requestOptions) { (imageData, utiIdentifier, _, info) in
+		PHImageManager.default().requestImageDataAndOrientation(for: self, options: requestOptions) { imageData, utiIdentifier, _, info in
 			outError = info?[PHImageErrorKey] as? Error
 			if let data = imageData, let uti = utiIdentifier {
 				if utisToConvert.contains(uti) {

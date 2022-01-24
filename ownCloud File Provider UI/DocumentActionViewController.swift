@@ -181,11 +181,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	}
 
 	@objc func dismissView() {
-		if #available(iOS 13.0, *) {
-			self.dismiss(animated: true) {
-				self.complete()
-			}
-		} else {
+		self.dismiss(animated: true) {
 			self.complete()
 		}
 	}

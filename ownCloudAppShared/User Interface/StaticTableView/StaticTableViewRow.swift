@@ -169,7 +169,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			themeCell.accessoryView = accessoryView
 		}
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -199,7 +199,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessoryView = accessoryView
 		self.cell?.accessibilityIdentifier = identifier
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -272,7 +272,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			])
 		}
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -293,7 +293,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -345,7 +345,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
 		}
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -380,7 +380,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.detailTextLabel?.numberOfLines = 0
 		}
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -761,7 +761,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		if #available(iOS 13.4, *), let cell = self.cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 

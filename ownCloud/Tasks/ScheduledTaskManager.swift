@@ -145,11 +145,9 @@ class ScheduledTaskManager : NSObject {
 		locationManager.delegate = self
 		#endif
 
-		if #available(iOS 13, *) {
-			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-refresh-task", using: nil) { (task) in
-				if let refreshTask = task as? BGAppRefreshTask {
-					self.handleBackgroundRefresh(task: refreshTask)
-				}
+		BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-refresh-task", using: nil) { (task) in
+			if let refreshTask = task as? BGAppRefreshTask {
+				self.handleBackgroundRefresh(task: refreshTask)
 			}
 		}
 	}
@@ -163,14 +161,14 @@ class ScheduledTaskManager : NSObject {
 				#if !DISABLE_BACKGROUND_LOCATION
 				stopLocationMonitoring()
 				#endif
+
 			case UIApplication.didEnterBackgroundNotification:
 				state = .background
 				#if !DISABLE_BACKGROUND_LOCATION
 				startLocationMonitoringIfAuthorized()
 				#endif
-				if #available(iOS 13, *) {
-					scheduleBackgroundRefreshTask()
-				}
+				scheduleBackgroundRefreshTask()
+
 			default:
 				break
 		}
@@ -279,15 +277,13 @@ class ScheduledTaskManager : NSObject {
 						fetchCompletion?(.noData)
 					}
 
-					if #available(iOS 13, *) {
-						if let activeTask = self.activeRefreshTask as? BGAppRefreshTask {
-							// Schedule the next refresh
-							self.scheduleBackgroundRefreshTask()
+					if let activeTask = self.activeRefreshTask as? BGAppRefreshTask {
+						// Schedule the next refresh
+						self.scheduleBackgroundRefreshTask()
 
-							activeTask.setTaskCompleted(success: true)
+						activeTask.setTaskCompleted(success: true)
 
-							self.activeRefreshTask = nil
-						}
+						self.activeRefreshTask = nil
 					}
 				}
 				Log.debug(tagged: ["TASK_MANAGER"], "All tasks executed")

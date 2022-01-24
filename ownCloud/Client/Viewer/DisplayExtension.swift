@@ -31,7 +31,7 @@ protocol DisplayExtension where Self: DisplayViewController {
 	static var customMatcher: OCExtensionCustomContextMatcher? {get}
 }
 
-extension DisplayExtension where Self: DisplayViewController {
+extension DisplayExtension {
 	static var displayExtension: OCExtension {
 		let rawIdentifier: OCExtensionIdentifier =  OCExtensionIdentifier(rawValue: displayExtensionIdentifier)
 		var locationIdentifiers: [OCExtensionLocationIdentifier] = []

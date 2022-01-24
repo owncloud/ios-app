@@ -51,11 +51,7 @@ class DiagnosticViewController: StaticTableViewController {
 
 		self.navigationItem.title = node.label
 
-		var shareImage = UIImage(named: "open-in")
-		if #available(iOS 13.0, *) {
-			shareImage = UIImage(systemName: "square.and.arrow.up")
-		}
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: shareImage, style: .plain, target: self, action: #selector(self.shareAsMarkdown(_:)))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(self.shareAsMarkdown(_:)))
 		self.navigationItem.rightBarButtonItem?.accessibilityLabel = "Share Diagnostics".localized
 		self.nodes = node.children
 

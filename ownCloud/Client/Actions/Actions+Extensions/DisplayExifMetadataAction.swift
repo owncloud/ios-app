@@ -88,10 +88,7 @@ class DisplayExifMetadataAction : Action {
 				if let item = self.context.items.first, let sourceURL = files.first?.url {
 					let metadataViewController = ImageMetadataViewController(core: core, item: item, url: sourceURL)
 					let navigationController = ThemeNavigationController(rootViewController: metadataViewController)
-					navigationController.modalPresentationStyle = .formSheet
-					if #available(iOS 13, *) {
-						navigationController.modalPresentationStyle = .automatic
-					}
+					navigationController.modalPresentationStyle = .automatic
 					viewController.present(navigationController, animated: true)
 				}
 			}

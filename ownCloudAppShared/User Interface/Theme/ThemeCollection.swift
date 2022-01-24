@@ -228,16 +228,9 @@ public class ThemeCollection : NSObject {
 		// Table view
 		self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", UIColor.white)
 
-		if #available(iOS 13, *) {
-			self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)))
-			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.separator)
-			self.tableSeparatorColor = color
-
-		} else {
-			self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground)
-			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.lightGray)
-			self.tableSeparatorColor = color
-		}
+		self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.systemGroupedBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)))
+		let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.separator)
+		self.tableSeparatorColor = color
 		self.tableSectionHeaderColor = UIColor.gray
 		self.tableSectionFooterColor = UIColor.gray
 
@@ -318,8 +311,8 @@ public class ThemeCollection : NSObject {
 				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3)))
 
 				// Activity
-				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .white)
-				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .white)
+				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .medium)
+				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .medium)
 
 				// Logo fill color
 				let logoColor : UIColor? = UIColor.white
@@ -346,11 +339,7 @@ public class ThemeCollection : NSObject {
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
-				if #available(iOS 13, *) {
-					self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .darkContent)
-				} else {
-					self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .default)
-				}
+				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .darkContent)
 				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
 
@@ -358,8 +347,8 @@ public class ThemeCollection : NSObject {
 				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
 
 				// Activity
-				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .gray)
-				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .gray)
+				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .medium)
+				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .medium)
 
 				// Logo fill color
 				let logoColor : UIColor? = UIColor.lightGray
@@ -400,8 +389,8 @@ public class ThemeCollection : NSObject {
 				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
 
 				// Activity
-				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .gray)
-				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .white)
+				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .medium)
+				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .medium)
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
@@ -447,11 +436,7 @@ class ThemeStyleValueResolver : NSObject {
 			case "lightContent":
 				return .lightContent
 			case "darkContent":
-				if #available(iOS 13.0, *) {
-					return .darkContent
-				} else {
-					return fallback
-				}
+				return .darkContent
 			default:
 				return fallback
 			}
@@ -476,24 +461,10 @@ class ThemeStyleValueResolver : NSObject {
 	func resolveActivityIndicatorViewStyle(for key: String, fallback: UIActivityIndicatorView.Style) -> UIActivityIndicatorView.Style {
 		if let styleValue = styles?.value(forKeyPath: key) as? String {
 			switch styleValue {
-			case "medium":
-				if #available(iOS 13.0, *) {
-					return .medium
-				} else {
-					return fallback
-				}
-			case "large":
-				if #available(iOS 13.0, *) {
-					return .large
-				} else {
-					return fallback
-				}
-			case "whiteLarge":
-				return .whiteLarge
-			case "white":
-				return .white
-			case "gray":
-				return .gray
+			case "medium", "white", "gray":
+				return .medium
+			case "whiteLarge", "large":
+				return .large
 			default:
 				return fallback
 			}

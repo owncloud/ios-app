@@ -151,15 +151,10 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		super.viewDidLayoutSubviews()
 
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
-		if #available(iOS 13.0, *) {
-			let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
-			let attributedString = NSAttributedString(string: "Add email or name".localized, attributes: attributedStringColor)
-			searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
-			searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.searchBarColors.labelColor
-		} else {
-			// Fallback on earlier versions
-			searchController?.searchBar.placeholder = "Add email or name".localized
-		}
+		let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
+		let attributedString = NSAttributedString(string: "Add email or name".localized, attributes: attributedStringColor)
+		searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
+		searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.searchBarColors.labelColor
 	}
 
 	open override func viewDidAppear(_ animated: Bool) {
@@ -521,8 +516,6 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
-		if #available(iOS 13, *) {
-			self.searchController?.searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
-		}
+		self.searchController?.searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 	}
 }

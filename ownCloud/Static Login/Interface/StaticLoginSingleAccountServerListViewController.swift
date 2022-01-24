@@ -165,11 +165,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			bookmarkCell.textLabel?.text = "Access Files".localized
                         bookmarkCell.accessibilityIdentifier = "access-files"
 			bookmarkCell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-			if #available(iOS 13.0, *) {
-				bookmarkCell.imageView?.image = UIImage(systemName: "folder")
-			} else {
-				bookmarkCell.imageView?.image = UIImage(named: "folder")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-			}
+			bookmarkCell.imageView?.image = UIImage(systemName: "folder")
 
 			themeApplierToken = Theme.shared.add(applier: { (_, themeCollection, _) in
 				bookmarkCell.imageView?.tintColor = themeCollection.tableRowColors.labelColor
@@ -185,30 +181,15 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			   switch actionRows[indexPath.row] {
 				   case .editLogin:
 					   bookmarkCell.textLabel?.text = "Edit Login".localized
-
-					   if #available(iOS 13.0, *) {
-						   bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
-					   } else {
-						   bookmarkCell.imageView?.image = UIImage(named: "square.and.pencil")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-					   }
+					   bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
 
 				   case .manageStorage:
 					   bookmarkCell.textLabel?.text = "Manage Storage".localized
-
-					   if #available(iOS 13.0, *) {
-						   bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
-					   } else {
-						   bookmarkCell.imageView?.image = UIImage(named: "arrow.3.trianglepath")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-					   }
+					   bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
 
 				   case .logout:
 					   bookmarkCell.textLabel?.text = "Log out".localized
-
-					   if #available(iOS 13.0, *) {
-						   bookmarkCell.imageView?.image = UIImage(systemName: "power")
-					   } else {
-						   bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-					   }
+					   bookmarkCell.imageView?.image = UIImage(systemName: "power")
 			   }
 
 			   rowCell = bookmarkCell
@@ -220,24 +201,14 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			}
 
 			switch settingsRows[indexPath.row] {
+				case .settings:
 
-			case .settings:
-
-				bookmarkCell.textLabel?.text = "Settings".localized
-				if #available(iOS 13.0, *) {
+					bookmarkCell.textLabel?.text = "Settings".localized
 					bookmarkCell.imageView?.image = UIImage(systemName: "gear")
-				} else {
-					bookmarkCell.imageView?.image = UIImage(named: "gear")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-				}
 
-			case .addAccount:
-				bookmarkCell.textLabel?.text = "Add Account".localized
-				if #available(iOS 13.0, *) {
+				case .addAccount:
+					bookmarkCell.textLabel?.text = "Add Account".localized
 					bookmarkCell.imageView?.image = UIImage(systemName: "plus")
-				} else {
-					bookmarkCell.imageView?.image = UIImage(named: "round-add-button")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
-				}
-
 			}
 
 			rowCell = bookmarkCell

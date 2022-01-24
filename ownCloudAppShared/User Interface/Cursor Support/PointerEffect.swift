@@ -26,11 +26,9 @@ public enum PointerEffectStyle : Int {
 
 public class PointerEffect : NSObject, UIPointerInteractionDelegate {
 	public static func install(on view: UIView, effectStyle: PointerEffectStyle) {
-		if #available(iOS 13.4, *) {
-			let effect = PointerEffect(for: view, effectStyle: effectStyle)
+		let effect = PointerEffect(for: view, effectStyle: effectStyle)
 
-			objc_setAssociatedObject(view, &effect.objcAssociationHandle, effect, .OBJC_ASSOCIATION_RETAIN)
-		}
+		objc_setAssociatedObject(view, &effect.objcAssociationHandle, effect, .OBJC_ASSOCIATION_RETAIN)
 	}
 
 	private var objcAssociationHandle = 1
@@ -40,19 +38,15 @@ public class PointerEffect : NSObject, UIPointerInteractionDelegate {
 		self.effectStyle = effectStyle
 		super.init()
 
-		if #available(iOS 13.4, *) {
-			customPointerInteraction(on: view, pointerInteractionDelegate: self)
-		}
+		customPointerInteraction(on: view, pointerInteractionDelegate: self)
 	}
 
 	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
 	private func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
 		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
 		view.addInteraction(pointerInteraction)
 	}
 
-	@available(iOS 13.4, *)
 	private func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
 		var pointerStyle: UIPointerStyle?
 

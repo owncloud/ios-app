@@ -316,18 +316,10 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 
 		if OCBookmarkManager.shared.bookmarks.count > 1 {
 		//if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
-			if #available(iOS 13.0, *) {
-				serverList = StaticLoginServerListViewController(style: .insetGrouped)
-			} else {
-				serverList = StaticLoginServerListViewController(style: .grouped)
-			}
+			serverList = StaticLoginServerListViewController(style: .insetGrouped)
 			(serverList as? StaticLoginServerListViewController)?.staticLoginViewController = self
 		} else {
-			if #available(iOS 13.0, *) {
-				serverList = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-			} else {
-				serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
-			}
+			serverList = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
 			(serverList as? StaticLoginSingleAccountServerListViewController)?.staticLoginViewController = self
 		}
 

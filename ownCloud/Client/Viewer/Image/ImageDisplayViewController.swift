@@ -31,7 +31,7 @@ class ImageDisplayViewController : DisplayViewController {
 	var scrollView: ImageScrollView?
 
 	var activityIndicatorView: UIActivityIndicatorView = {
-		let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
+		let activityIndicator = UIActivityIndicatorView(style: .medium)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 		return activityIndicator
 	}()

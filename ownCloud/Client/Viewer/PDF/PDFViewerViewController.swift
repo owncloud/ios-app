@@ -187,15 +187,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 
 				self.view.addSubview(containerView)
 
-				if #available(iOS 13, *) {
-					self.view.backgroundColor = self.pdfView.backgroundColor
-					thumbnailView.backgroundColor = self.pdfView.backgroundColor
-					pageCountContainerView.backgroundColor = self.pdfView.backgroundColor
-				} else {
-					self.view.backgroundColor = .gray
-					thumbnailView.backgroundColor = .gray
-					pageCountContainerView.backgroundColor = .gray
-				}
+				self.view.backgroundColor = self.pdfView.backgroundColor
+				thumbnailView.backgroundColor = self.pdfView.backgroundColor
+				pageCountContainerView.backgroundColor = self.pdfView.backgroundColor
 
 				setupConstraints()
 
@@ -230,13 +224,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 			}
 		}
 
-		if #available(iOS 13, *) {
-			let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
-			tapRecognizer.numberOfTapsRequired = 2
-			pdfView.addGestureRecognizer(tapRecognizer)
-			supportsFullScreenMode = true
-		}
-		//pdfView.isUserInteractionEnabled = true
+		let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.toggleFullscreen(_:)))
+		tapRecognizer.numberOfTapsRequired = 2
+		pdfView.addGestureRecognizer(tapRecognizer)
+		supportsFullScreenMode = true
 	}
 
 	@objc func toggleFullscreen(_ sender: UITapGestureRecognizer) {
@@ -251,27 +242,21 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 		super.viewDidLayoutSubviews()
 		pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
 		pdfView.autoScales = true
-		if #available(iOS 13, *) {
-			self.calculateThumbnailSize()
-		}
+		self.calculateThumbnailSize()
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
-		// Crashes on pre-iOS 13
-		if #available(iOS 13, *) {
-			coordinator.animate(alongsideTransition: nil) { (_) in
-				self.calculateThumbnailSize()
-			}
+
+		coordinator.animate(alongsideTransition: nil) { (_) in
+			self.calculateThumbnailSize()
 		}
 	}
 
 	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-		if #available(iOS 13, *) {
-			coordinator.animate(alongsideTransition: nil) { (_) in
-				self.setThumbnailPosition()
-				self.calculateThumbnailSize()
-			}
+		coordinator.animate(alongsideTransition: nil) { (_) in
+			self.setThumbnailPosition()
+			self.calculateThumbnailSize()
 		}
 	}
 
@@ -306,8 +291,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 			if let pageLabel = alertController.textFields?.first?.text {
 				self.selectPage(with: pageLabel)
 			}
-			self.view.endEditing(true)										  
-													  
+			self.view.endEditing(true)
 		}))
 
 		self.present(alertController, animated: true)

@@ -74,10 +74,13 @@ class ImportPasteboardAction : Action {
 			for item in generalPasteboard.itemProviders {
 				// Copy Items Internally
 				item.loadDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCopyKey, completionHandler: { data, error in
-					if let data = data, let object = OCItemPasteboardValue(data: data) {
-							let item = object.item
-							let bookmarkUUID = object.bookmarkUUID
-						guard let name = item.name else { return }
+					if let data = data, let object = OCItemPasteboardValue.decode(data: data) {
+						guard let bookmarkUUID = object.bookmarkUUID,
+						      let item = object.item,
+						      let name = item.name
+						else {
+						      return
+						}
 
 						if core.bookmark.uuid.uuidString == bookmarkUUID {
 							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
@@ -105,20 +108,22 @@ class ImportPasteboardAction : Action {
 
 				// Cut Item Internally
 				item.loadDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, completionHandler: { data, error in
-					if let data = data, let object = OCItemPasteboardValue(data: data) {
-
-							let item = object.item
-							let bookmarkUUID = object.bookmarkUUID
-						guard let name = item.name else { return }
+					if let data = data, let object = OCItemPasteboardValue.decode(data: data) {
+						guard let bookmarkUUID = object.bookmarkUUID,
+						      let item = object.item,
+						      let name = item.name
+						else {
+						      return
+						}
 
 						if core.bookmark.uuid.uuidString == bookmarkUUID {
 							core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
-						  if error != nil {
-							  self.completed(with: error)
-						  } else {
-							generalPasteboard.items = []
-						  }
-					  }
+								if error != nil {
+									self.completed(with: error)
+								} else {
+									generalPasteboard.items = []
+								}
+							}
 						} else {
 							// Move between Accounts
 							guard let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID), let destinationItem = self.context.items.first else {return }
@@ -239,11 +244,7 @@ class ImportPasteboardAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "doc.on.clipboard")
-			} else {
-				return UIImage(named: "clipboard")
-			}
+			return UIImage(systemName: "doc.on.clipboard")
 		}
 
 		return nil

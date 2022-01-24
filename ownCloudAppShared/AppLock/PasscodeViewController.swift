@@ -159,13 +159,11 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
 		updateKeypadButtons()
 
-		if #available(iOS 13.4, *) {
-			for button in keypadButtons! {
-				PointerEffect.install(on: button, effectStyle: .highlight)
-			}
-			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
-			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+		for button in keypadButtons! {
+			PointerEffect.install(on: button, effectStyle: .highlight)
 		}
+		PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+		PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
 	}
 
 	public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -286,11 +284,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 	// MARK: - Themeing
 	public override var preferredStatusBarStyle : UIStatusBarStyle {
 		if VendorServices.shared.isBranded {
-			if #available(iOSApplicationExtension 13.0, *) {
-				return .darkContent
-			} else {
-				return .default
-			}
+			return .darkContent
 		}
 
 		return Theme.shared.activeCollection.statusBarStyle
