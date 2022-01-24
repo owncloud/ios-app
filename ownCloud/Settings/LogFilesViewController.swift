@@ -161,13 +161,13 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-
-		return [
-			UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_, indexPath) in
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		return UISwipeActionsConfiguration(actions: [
+			UIContextualAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_, _, completionHandler) in
 				self?.removeLogRecord(at: indexPath)
+				completionHandler(true)
 			})
-		]
+		])
 	}
 
 	// MARK: - Table view drag & drop support

@@ -200,11 +200,12 @@ open class PublicLinkTableViewController: SharingTableViewController {
 
 	// MARK: TableView Delegate
 
-	open override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		if let share = share(at: indexPath), self.canEdit(share: share) {
-			return [
-				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
+			return UISwipeActionsConfiguration(actions: [
+				UIContextualAction(style: .destructive, title:  "Delete".localized, handler: { (_, _, completionHandler) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
+
 					if UIDevice.current.isIpad {
 						presentationStyle = .alert
 					}
@@ -230,19 +231,23 @@ open class PublicLinkTableViewController: SharingTableViewController {
 					}))
 
 					self.present(alertController, animated: true, completion: nil)
+
+					completionHandler(true)
 				}),
 
-				UITableViewRowAction(style: .normal, title: "Copy".localized, handler: { (_, _) in
+				UIContextualAction(style: .normal, title: "Copy".localized, handler: { (_, _, completionHandler) in
 					if let shareURL = share.url {
 						UIPasteboard.general.url = shareURL
 
 						_ = NotificationHUDViewController(on: self, title: share.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 					}
+
+					completionHandler(true)
 				})
-			]
+			])
 		}
 
-		return []
+		return nil
 	}
 
 	// MARK: Add New Link Share

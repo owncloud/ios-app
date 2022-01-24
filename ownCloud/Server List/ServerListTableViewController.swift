@@ -829,10 +829,10 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		return bookmarkCell
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
 		if self.isEditing {
-			return []
+			return nil
 		}
 
 		var destructiveTitle = "Delete".localized
@@ -840,7 +840,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			destructiveTitle = "Log out".localized
 		}
 
-		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
+		let deleteRowAction = UIContextualAction(style: .destructive, title: destructiveTitle, handler: { (_, _, completionHandler) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self.delete(bookmark: bookmark, at: indexPath ) {
 				 OnMainThread {
@@ -853,41 +853,45 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 						self.didUpdateServerList()
 					 })
 				 }
+				 completionHandler(true)
 			 }
 			}
 		})
 
-		let editRowAction = UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
+		let editRowAction = UIContextualAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, _, completionHandler) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self?.showBookmarkUI(edit: bookmark)
 			}
+			completionHandler(true)
 		})
 		editRowAction.backgroundColor = .blue
 
-		let manageRowAction = UITableViewRowAction(style: .normal,
+		let manageRowAction = UIContextualAction(style: .normal,
 							   title: "Manage".localized,
-							   handler: { [weak self] (_, indexPath) in
+							   handler: { [weak self] (_, _, completionHandler) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self?.showBookmarkInfoUI(bookmark)
 			}
+			completionHandler(true)
 		})
 
 		if UIDevice.current.isIpad {
-			let openAccountAction = UITableViewRowAction(style: .normal, title: "Open in Window".localized, handler: { (_, indexPath) in
+			let openAccountAction = UIContextualAction(style: .normal, title: "Open in Window".localized, handler: { (_, _, completionHandler) in
 				self.openAccountInWindow(at: indexPath)
+				completionHandler(true)
 			})
 			openAccountAction.backgroundColor = .orange
 
 			if VendorServices.shared.canEditAccount {
-				return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+				return UISwipeActionsConfiguration(actions: [deleteRowAction, editRowAction, manageRowAction, openAccountAction])
 			}
-			return [deleteRowAction, manageRowAction, openAccountAction]
+			return UISwipeActionsConfiguration(actions: [deleteRowAction, manageRowAction, openAccountAction])
 		}
 
 		if VendorServices.shared.canEditAccount {
-			return [deleteRowAction, editRowAction, manageRowAction]
+			return UISwipeActionsConfiguration(actions: [deleteRowAction, editRowAction, manageRowAction])
 		}
-		return [deleteRowAction, manageRowAction]
+		return UISwipeActionsConfiguration(actions: [deleteRowAction, manageRowAction])
 	}
 
 	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {

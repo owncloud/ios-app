@@ -314,7 +314,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
 	}
 

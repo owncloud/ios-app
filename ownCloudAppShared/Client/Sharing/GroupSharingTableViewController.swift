@@ -477,10 +477,10 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 
 	// MARK: TableView Delegate
 
-	open override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	open override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		if let shareAtPath = share(at: indexPath), self.canEdit(share: shareAtPath) {
-			return [
-				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
+			return UISwipeActionsConfiguration(actions: [
+				UIContextualAction(style: .destructive, title: "Delete".localized, handler: { (_, _, completionHandler) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
 					if UIDevice.current.isIpad {
 						presentationStyle = .alert
@@ -505,11 +505,13 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 					}))
 
 					self.present(alertController, animated: true, completion: nil)
+
+					completionHandler(true)
 				})
-			]
+			])
 		}
 
-		return []
+		return nil
 	}
 
 	// MARK: Themeing

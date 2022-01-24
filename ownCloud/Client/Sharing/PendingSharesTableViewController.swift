@@ -188,21 +188,23 @@ class PendingSharesTableViewController: StaticTableViewController {
 	}
 
 	// MARK: - TableView Delegate
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let row = self.staticRowForIndexPath(indexPath)
-		guard let share = row.representedObject as? OCShare else { return [] }
+		guard let share = row.representedObject as? OCShare else { return nil }
 
-		let acceptAction = UITableViewRowAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_, _) in
+		let acceptAction = UIContextualAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_, _, completionHandler) in
 			self?.handleDecision(on: share, accept: true)
+			completionHandler(true)
 		})
-		let declineAction = UITableViewRowAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_, _) in
+		let declineAction = UIContextualAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_, _, completionHandler) in
 			self?.handleDecision(on: share, accept: false)
+			completionHandler(true)
 		})
 
 		if share.state != .rejected {
-			return [acceptAction, declineAction]
+			return UISwipeActionsConfiguration(actions: [acceptAction, declineAction])
 		} else {
-			return [acceptAction]
+			return UISwipeActionsConfiguration(actions: [acceptAction])
 		}
 	}
 
