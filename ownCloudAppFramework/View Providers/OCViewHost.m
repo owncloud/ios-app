@@ -95,17 +95,24 @@
 		return;
 	}
 
-	if ((error == nil) && (newResource != nil))
+	if ((error == nil) && ((newResource != nil) || !isOngoing))
 	{
 		NSUInteger requestSeedOnDelivery = _requestSeed;
 
-		dispatch_async(dispatch_get_main_queue(), ^{
+		[self onMainThread:^{
 			if ((request == self->_request) || // same request
 			    ((self->_request == nil) && (requestSeedOnDelivery == self->_requestSeed))) // request is no longer ongoing, but no new request has been set in the meantime, either, so this resource can be used
 			{
-				[self setActiveViewProviderFromResource:newResource];
+				if (newResource != nil)
+				{
+					[self setActiveViewProviderFromResource:newResource];
+				}
+				else
+				{
+					self.activeViewProvider = nil;
+				}
 			}
-		});
+		}];
 	}
 
 	if (!isOngoing)
@@ -173,6 +180,18 @@
 	}
 }
 
+- (void)onMainThread:(dispatch_block_t)block
+{
+	if (NSThread.isMainThread)
+	{
+		block();
+	}
+	else
+	{
+		dispatch_async(dispatch_get_main_queue(), block);
+	}
+}
+
 - (void)updateView
 {
 	id<OCViewProvider> originalViewProvider = _activeViewProvider;
@@ -187,25 +206,32 @@
 		}
 
 		[_activeViewProvider provideViewForSize:size inContext:self.viewProviderContext completion:^(UIView * _Nullable newView) {
-			dispatch_async(dispatch_get_main_queue(), ^{
+			[self onMainThread:^{
 				if (originalViewProvider == self.activeViewProvider) {
 					[self setHostedView:(newView != nil) ? newView : self.fallbackView];
+					// OCLogDebug(@"%p: _activeViewProvider/originalViewProvider: %@, size: %@, newView: %@", self, originalViewProvider, NSStringFromCGSize(size), newView);
 				} else {
-					OCLogWarning(@"_activeViewProvider changed during receipt")
+					OCLogWarning(@"%p: _activeViewProvider changed during receipt (from %@ to %@)", self, originalViewProvider, self.activeViewProvider);
 				}
-			});
+			}];
 		}];
 	}
 	else
 	{
-		dispatch_async(dispatch_get_main_queue(), ^{
+		[self onMainThread:^{
 			if (originalViewProvider == self.activeViewProvider) {
+				 // OCLogDebug(@"%p: _activeViewProvider/originalViewProvider: %@, size: %@, newView: %@", self, originalViewProvider, NSStringFromCGSize(size), self.fallbackView);
 				[self setHostedView:self.fallbackView];
 			} else {
-				OCLogWarning(@"_activeViewProvider changed during receipt")
+				OCLogWarning(@"%p: _activeViewProvider changed during receipt (from %@ to %@)", self, originalViewProvider, self.activeViewProvider);
 			}
-		});
+		}];
 	}
+}
+
+- (void)reloadView
+{
+	[self updateView];
 }
 
 @end

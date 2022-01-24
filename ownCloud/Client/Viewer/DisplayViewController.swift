@@ -177,7 +177,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	// MARK: - Subviews / UI elements
 
-	private var iconImageView = UIImageView()
+	private var iconImageView = ResourceViewHost()
 	private var progressView = UIProgressView(progressViewStyle: .bar)
 	private var cancelButton = ThemeButton(type: .custom)
 	private var metadataInfoLabel = UILabel()
@@ -225,7 +225,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
-		iconImageView.contentMode = .scaleAspectFit
 
 		view.addSubview(iconImageView)
 
@@ -614,16 +613,12 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				updateDisplayTitleAndButtons()
 
 				if let core = self.core {
-					let localCopy = core.localCopy(of: newItem)
 					var didUpdate : Bool = false
 
-					if localCopy == nil {
-						iconImageView.setThumbnailImage(using: core, from: newItem, with: iconImageSize)
-					}
+					let request = OCResourceRequestItemThumbnail.request(for: newItem, maximumSize: iconImageSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
+					iconImageView.request = request
 
-					if iconImageView.image == nil {
-						iconImageView.image = newItem.icon(fitInSize:iconImageSize)
-					}
+					core.vault.resourceManager?.start(request)
 
 					// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
 					if itemDirectURL == nil && !requiresLocalCopyForPreview {

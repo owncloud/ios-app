@@ -25,9 +25,6 @@ typedef void (^FileProviderExtensionThumbnailRequestPerThumbnailCompletionHandle
 typedef void (^FileProviderExtensionThumbnailRequestCompletionHandler)(NSError * _Nullable error);
 
 @interface FileProviderExtensionThumbnailRequest : NSObject <OCLogTagging>
-{
-	BOOL _isDone;
-}
 
 @property(strong) FileProviderExtension *extension;
 
@@ -39,7 +36,7 @@ typedef void (^FileProviderExtensionThumbnailRequestCompletionHandler)(NSError *
 @property(copy) FileProviderExtensionThumbnailRequestPerThumbnailCompletionHandler perThumbnailCompletionHandler;
 @property(copy) FileProviderExtensionThumbnailRequestCompletionHandler completionHandler;
 
-@property(nullable,strong) NSProgress *progress;
+@property(nullable,strong,nonatomic) NSProgress *progress;
 
 - (void)requestNextThumbnail;
 

@@ -100,7 +100,6 @@
 		399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA75925E66DB000B6FF11 /* ClientItemResolvingCell.swift */; };
 		39A243C424BDD9E100F4441F /* StaticLoginBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A243C324BDD9E100F4441F /* StaticLoginBundle.swift */; };
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		39B394492385334D00892E8D /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B394482385334D00892E8D /* ThemeView.swift */; };
 		39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755123D787E400193950 /* DocumentEditingAction.swift */; };
 		39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BE385C23435AFE0062A2FE /* String+Extension.swift */; };
 		39BF674C25E7FE020039663F /* CancelLabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BF674B25E7FE020039663F /* CancelLabelViewController.swift */; };
@@ -270,7 +269,6 @@
 		DC0A359424C0E5C800FB58FC /* GitCommit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85493321831B0B00782BA8 /* GitCommit.swift */; };
 		DC0A359524C0E5F900FB58FC /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */; };
 		DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398FD4502334CF66004B68A1 /* UIView+Extension.swift */; };
-		DC0A359724C0E64500FB58FC /* UIImageView+Thumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */; };
 		DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */; };
 		DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D86218718BA00DAA4CC /* VendorServices.swift */; };
 		DC0A359E24C0EBE500FB58FC /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -332,6 +330,8 @@
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
 		DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
+		DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B394482385334D00892E8D /* ThemeView.swift */; };
+		DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */; };
 		DC66F39C239659C000CF4812 /* OCASN1.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F39A239659C000CF4812 /* OCASN1.h */; };
 		DC66F39D239659C000CF4812 /* OCASN1.m in Sources */ = {isa = PBXBuildFile; fileRef = DC66F39B239659C000CF4812 /* OCASN1.m */; };
 		DC66F3A523965A1400CF4812 /* NSDate+RFC3339.h in Headers */ = {isa = PBXBuildFile; fileRef = DC66F3A323965A1400CF4812 /* NSDate+RFC3339.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -369,6 +369,8 @@
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
+		DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */; };
+		DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA2EDE3279B1789001F04E6 /* ResourceItemIcon.swift */; };
 		DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */; };
 		DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */; };
 		DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35DA624D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift */; };
@@ -512,8 +514,8 @@
 		DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA7524C82C9F0026D790 /* OCFileProviderService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF2DA8424C87A330026D790 /* OCCore+FPServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF2DA8524C87A330026D790 /* OCCore+FPServices.m */; };
-		DCF575EB2796CBDF003BEBBA /* OCAvatar+ViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF575E92796CBDF003BEBBA /* OCAvatar+ViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DCF575EC2796CBDF003BEBBA /* OCAvatar+ViewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EA2796CBDF003BEBBA /* OCAvatar+ViewProvider.m */; };
+		DCF575EB2796CBDF003BEBBA /* OCImage+ViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF575E92796CBDF003BEBBA /* OCImage+ViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCF575EC2796CBDF003BEBBA /* OCImage+ViewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EA2796CBDF003BEBBA /* OCImage+ViewProvider.m */; };
 		DCF575EF2796CE38003BEBBA /* OCViewHost.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF575ED2796CE38003BEBBA /* OCViewHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF575F02796CE38003BEBBA /* OCViewHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EE2796CE38003BEBBA /* OCViewHost.m */; };
 		DCFB74BB21AD5C46005796AF /* StaticLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44344321AC031600376B16 /* StaticLoginViewController.swift */; };
@@ -1307,6 +1309,7 @@
 		DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientActivityCell.swift; sourceTree = "<group>"; };
 		DC63208621FCEE5D007EC0A8 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
+		DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceViewHost.swift; sourceTree = "<group>"; };
 		DC66F39A239659C000CF4812 /* OCASN1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCASN1.h; sourceTree = "<group>"; };
 		DC66F39B239659C000CF4812 /* OCASN1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCASN1.m; sourceTree = "<group>"; };
 		DC66F3A323965A1400CF4812 /* NSDate+RFC3339.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC3339.h"; sourceTree = "<group>"; };
@@ -1354,6 +1357,8 @@
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerAccess.swift; sourceTree = "<group>"; };
 		DC9C1AEB247C76470067895A /* MessageGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupCell.swift; sourceTree = "<group>"; };
+		DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSourceItemIcons.swift; sourceTree = "<group>"; };
+		DCA2EDE3279B1789001F04E6 /* ResourceItemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceItemIcon.swift; sourceTree = "<group>"; };
 		DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticViewController.swift; sourceTree = "<group>"; };
 		DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCSyncRecordActivity+DiagnosticGenerator.swift"; sourceTree = "<group>"; };
 		DCA35DA624D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCFileProviderServiceSession+UploadByFileProvider.swift"; sourceTree = "<group>"; };
@@ -1493,8 +1498,8 @@
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
 		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
 		DCF4F18A2052BA4C00189B9A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		DCF575E92796CBDF003BEBBA /* OCAvatar+ViewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCAvatar+ViewProvider.h"; sourceTree = "<group>"; };
-		DCF575EA2796CBDF003BEBBA /* OCAvatar+ViewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCAvatar+ViewProvider.m"; sourceTree = "<group>"; };
+		DCF575E92796CBDF003BEBBA /* OCImage+ViewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCImage+ViewProvider.h"; sourceTree = "<group>"; };
+		DCF575EA2796CBDF003BEBBA /* OCImage+ViewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCImage+ViewProvider.m"; sourceTree = "<group>"; };
 		DCF575ED2796CE38003BEBBA /* OCViewHost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCViewHost.h; sourceTree = "<group>"; };
 		DCF575EE2796CE38003BEBBA /* OCViewHost.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCViewHost.m; sourceTree = "<group>"; };
 		DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginServerListViewController.swift; sourceTree = "<group>"; };
@@ -1833,6 +1838,7 @@
 		3912208023436E9B0026C290 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				DCA2EDDB279B0E5D001F04E6 /* Resource Sources */,
 				DCE4E43424C199860051722F /* Actions */,
 				DCE4E42D24C1961D0051722F /* File Lists */,
 				399EA6ED25E6544000B6FF11 /* Sharing */,
@@ -2396,7 +2402,6 @@
 			isa = PBXGroup;
 			children = (
 				397E276B23D05A5400117B07 /* ServerListToolCell.swift */,
-				39B394482385334D00892E8D /* ThemeView.swift */,
 				DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */,
 			);
 			path = Theming;
@@ -2537,10 +2542,12 @@
 				39B39446238532DC00892E8D /* ThemeTableViewCell.swift */,
 				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
 				DC0B37962051681600189B9A /* ThemeButton.swift */,
+				39B394482385334D00892E8D /* ThemeView.swift */,
 				39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */,
 				DC243BF92317B446004FBB5C /* ThemeWindow.swift */,
 				DCAB9CC823417243009091B6 /* ThemedAlertController.swift */,
 				3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */,
+				DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2614,6 +2621,15 @@
 				DCD1301A23A25D1A00255779 /* Tools */,
 			);
 			path = Licensing;
+			sourceTree = "<group>";
+		};
+		DCA2EDDB279B0E5D001F04E6 /* Resource Sources */ = {
+			isa = PBXGroup;
+			children = (
+				DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */,
+				DCA2EDE3279B1789001F04E6 /* ResourceItemIcon.swift */,
+			);
+			path = "Resource Sources";
 			sourceTree = "<group>";
 		};
 		DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */ = {
@@ -3121,8 +3137,8 @@
 			children = (
 				DCF575EE2796CE38003BEBBA /* OCViewHost.m */,
 				DCF575ED2796CE38003BEBBA /* OCViewHost.h */,
-				DCF575EA2796CBDF003BEBBA /* OCAvatar+ViewProvider.m */,
-				DCF575E92796CBDF003BEBBA /* OCAvatar+ViewProvider.h */,
+				DCF575EA2796CBDF003BEBBA /* OCImage+ViewProvider.m */,
+				DCF575E92796CBDF003BEBBA /* OCImage+ViewProvider.h */,
 				DCF072EB27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m */,
 				DCF072EA27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h */,
 			);
@@ -3262,7 +3278,7 @@
 				DCF072D82798559900E0B01D /* OCCircularImageView.h in Headers */,
 				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
 				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
-				DCF575EB2796CBDF003BEBBA /* OCAvatar+ViewProvider.h in Headers */,
+				DCF575EB2796CBDF003BEBBA /* OCImage+ViewProvider.h in Headers */,
 				DCC832F3242CC28900153F8C /* NotificationManager.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DCFEFE3D236877B7009A142F /* OCLicenseProduct.h in Headers */,
@@ -4139,7 +4155,6 @@
 				DC3F4522271A23A000ED2383 /* AcknowledgementsTableViewController.swift in Sources */,
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
 				025FC7272478123E009307A7 /* MediaExportSettingsSection.swift in Sources */,
-				39B394492385334D00892E8D /* ThemeView.swift in Sources */,
 				025FC720247810AB009307A7 /* MediaUploadSettingsViewController.swift in Sources */,
 				4CB8ADDE22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift in Sources */,
 				6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */,
@@ -4258,6 +4273,7 @@
 				DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */,
 				DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */,
 				DCB5D60B25FC14B6004C52D9 /* OCIssue+Extension.swift in Sources */,
+				DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
 				DC0A358F24C0E46000FB58FC /* PointerEffect.swift in Sources */,
@@ -4269,10 +4285,10 @@
 				DC0A355424C0E2C200FB58FC /* SortBar.swift in Sources */,
 				DCE4E45924C1F0F70051722F /* ClientQueryViewController.swift in Sources */,
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
+				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
 				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
-				DC0A359724C0E64500FB58FC /* UIImageView+Thumbnails.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
@@ -4288,6 +4304,7 @@
 				DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */,
 				DC0A357824C0E43700FB58FC /* CardPresentationController.swift in Sources */,
 				393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */,
+				DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */,
 				DC0A357324C0E42D00FB58FC /* PushTransitionDelegate.swift in Sources */,
 				DCE4E45424C1EC040051722F /* BreadCrumbTableViewController.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
@@ -4302,6 +4319,7 @@
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
+				DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
@@ -4382,7 +4400,7 @@
 				DCF072ED27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m in Sources */,
 				DCCD778C2604C91B00098573 /* NSDate+ComputedTimes.m in Sources */,
 				DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */,
-				DCF575EC2796CBDF003BEBBA /* OCAvatar+ViewProvider.m in Sources */,
+				DCF575EC2796CBDF003BEBBA /* OCImage+ViewProvider.m in Sources */,
 				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,
 				DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */,

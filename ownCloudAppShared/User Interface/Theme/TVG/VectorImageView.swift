@@ -72,6 +72,8 @@ public class VectorImageView: UIView, Themeable {
 		if let rasterImage = _vectorImage?.image(fitInSize: viewBounds!.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
 			self.layer.contents = rasterImage.cgImage
 			self.layer.contentsGravity = CALayerContentsGravity.resizeAspect
+		} else {
+			self.layer.contents = nil
 		}
 	}
 

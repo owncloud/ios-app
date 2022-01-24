@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithRequest:(OCResourceRequest *)request fallbackView:(nullable UIView *)fallbackView viewProviderContext:(nullable OCViewProviderContext *)viewProviderContext;
 - (instancetype)initWithViewProvider:(id<OCViewProvider>)viewProvider fallbackSize:(CGSize)fallbackSize fallbackView:(nullable UIView *)fallbackView viewProviderContext:(nullable OCViewProviderContext *)viewProviderContext;
 
+- (void)reloadView;
+
 @end
 
 NS_ASSUME_NONNULL_END

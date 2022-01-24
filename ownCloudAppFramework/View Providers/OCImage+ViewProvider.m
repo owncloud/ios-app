@@ -1,5 +1,5 @@
 //
-//  OCAvatar+ViewProvider.m
+//  OCImage+ViewProvider.m
 //  ownCloudApp
 //
 //  Created by Felix Schwarz on 18.01.22.
@@ -16,27 +16,43 @@
  *
  */
 
-#import "OCAvatar+ViewProvider.h"
+#import "OCImage+ViewProvider.h"
 #import "OCCircularImageView.h"
 
-@implementation OCAvatar (ViewProvider)
+@implementation OCImage (ViewProvider)
 
 - (void)provideViewForSize:(CGSize)size inContext:(nullable OCViewProviderContext *)context completion:(void(^)(OCView * _Nullable view))completionHandler
 {
+	BOOL isAvatar = [self isKindOfClass:OCAvatar.class];
+
 	[self requestImageForSize:size scale:0 withCompletionHandler:^(OCImage * _Nullable ocImage, NSError * _Nullable error, CGSize maximumSizeInPoints, UIImage * _Nullable image) {
 		if (image != nil)
 		{
 			dispatch_async(dispatch_get_main_queue(), ^{
-				OCCircularImageView *avatarView = nil;
+				if (isAvatar)
+				{
+					OCCircularImageView *avatarView = nil;
 
-				avatarView = [[OCCircularImageView alloc] initWithImage:image];
-				avatarView.translatesAutoresizingMaskIntoConstraints = NO;
+					avatarView = [[OCCircularImageView alloc] initWithImage:image];
+					avatarView.translatesAutoresizingMaskIntoConstraints = NO;
 
-				completionHandler(avatarView);
+					completionHandler(avatarView);
+				}
+				else
+				{
+					UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+
+					imageView.translatesAutoresizingMaskIntoConstraints = NO;
+					imageView.contentMode = UIViewContentModeScaleAspectFit;
+
+					completionHandler(imageView);
+				}
 			});
 		}
-
-		completionHandler(nil);
+		else
+		{
+			completionHandler(nil);
+		}
 	}];
 }
 

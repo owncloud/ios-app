@@ -36,9 +36,9 @@ open class ShareClientItemCell: ClientItemResolvingCell {
 		didSet {
 			if let share = share {
 				if share.itemType == .collection {
-					self.iconView.image = Theme.shared.image(for: "folder", size: iconSize)
+					self.iconView.activeViewProvider = ResourceItemIcon.folder
 				} else {
-					self.iconView.image = Theme.shared.image(for: "file", size: iconSize)
+					self.iconView.activeViewProvider = ResourceItemIcon.file
 				}
 
 				self.itemResolutionPath = share.itemPath

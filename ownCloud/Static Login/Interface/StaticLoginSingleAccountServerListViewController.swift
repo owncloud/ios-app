@@ -264,14 +264,14 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		if SingleAccountSection(rawValue: section) == .accessFiles {
 			if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmarks.first, let displayName = self.displayName ?? bookmark.userName {
 
-				var avatarView : OCViewHost?
+				var avatarView : ResourceViewHost?
 				let avatarSize = CGSize(width: 128, height: 128)
 				let fallbackView = UIImageView(image: UIImage(named: "branding-login-logo"))
 
 				if let avatar = bookmark.avatar {
-					avatarView = OCViewHost(viewProvider: avatar, fallbackSize: avatarSize, fallbackView: fallbackView, viewProviderContext: nil)
+					avatarView = ResourceViewHost(viewProvider: avatar, fallbackSize: avatarSize, fallbackView: fallbackView, viewProviderContext: nil)
 				} else {
-					avatarView = OCViewHost(fallbackView: fallbackView, viewProviderContext: nil)
+					avatarView = ResourceViewHost(fallbackView: fallbackView, viewProviderContext: nil)
 				}
 
 				if let avatarView = avatarView {

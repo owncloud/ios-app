@@ -109,6 +109,11 @@ class ShareViewController: MoreStaticTableViewController {
 					self.requestedCoreBookmarks.remove(at: index)
 				}
 			}
+
+			if let core = core {
+				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
+			}
+
 			completionHandler(core, error)
 		})
 	}

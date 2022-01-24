@@ -413,7 +413,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 							let avatarRequest = OCResourceRequestAvatar(for: recipientUser, maximumSize: OCAvatar.defaultSize, scale: 0, waitForConnectivity: false) { request, error, ongoing, oldResource, newResource in
 								Log.debug("Avatar for \(String(describing: recipient.user?.userName)): ongoing=\(ongoing), resource=\(newResource.debugDescription)")
 							}
-							leadingAccessoryView = OCViewHost(request: avatarRequest, fallbackView: nil, viewProviderContext: nil)
+							leadingAccessoryView = ResourceViewHost(request: avatarRequest, fallbackView: nil, viewProviderContext: nil)
 							leadingAccessoryView?.translatesAutoresizingMaskIntoConstraints = false
 							leadingAccessoryView?.widthAnchor.constraint(equalToConstant: 40).isActive = true
 							leadingAccessoryView?.heightAnchor.constraint(equalToConstant: 30).isActive = true

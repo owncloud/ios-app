@@ -17,12 +17,11 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class ThemeView: UIView, Themeable {
+open class ThemeView: UIView, Themeable {
 	private var hasRegistered : Bool = false
 
-	init() {
+	public init() {
 		super.init(frame: .zero)
 	}
 
@@ -32,11 +31,11 @@ class ThemeView: UIView, Themeable {
 		}
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func didMoveToSuperview() {
+	override open func didMoveToSuperview() {
 		if self.superview != nil {
 			if !hasRegistered {
 				hasRegistered = true
@@ -47,11 +46,11 @@ class ThemeView: UIView, Themeable {
 
 	private var themeAppliers : [ThemeApplier] = []
 
-	func addThemeApplier(_ applier: @escaping ThemeApplier) {
+	open func addThemeApplier(_ applier: @escaping ThemeApplier) {
 		themeAppliers.append(applier)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		for applier in themeAppliers {
 			applier(theme, collection, event)
 		}

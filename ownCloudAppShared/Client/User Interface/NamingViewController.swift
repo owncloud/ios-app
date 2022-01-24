@@ -34,7 +34,7 @@ open class NamingViewController: UIViewController, Themeable {
 	private var stackView: UIStackView
 
 	private var thumbnailContainer: UIView
-	private var thumbnailImageView: UIImageView
+	private var thumbnailImageView: ResourceViewHost
 
 	private var nameContainer: UIView
 	private var nameTextField: UITextField
@@ -65,8 +65,7 @@ open class NamingViewController: UIViewController, Themeable {
 
 		thumbnailContainer = UIView(frame: .zero)
 
-		thumbnailImageView = UIImageView(frame: .zero)
-		thumbnailImageView.contentMode = .scaleAspectFit
+		thumbnailImageView = ResourceViewHost()
 
 		nameContainer = UIView(frame: .zero)
 		nameTextField = UITextField(frame: .zero)
@@ -114,11 +113,14 @@ open class NamingViewController: UIViewController, Themeable {
 
 		if let item = item, let core = core {
 			nameTextField.text = item.name
-			thumbnailImageView.image = item.icon(fitInSize: thumbnailSize)
-			thumbnailImageView.setThumbnailImage(using: core, from: item, with: thumbnailSize)
+
+			let thumbnailRequest = OCResourceRequestItemThumbnail.request(for: item, maximumSize: thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
+			thumbnailImageView.request = thumbnailRequest
+
+			core.vault.resourceManager?.start(thumbnailRequest)
 		} else {
 			nameTextField.text = defaultName
-			thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
+			thumbnailImageView.activeViewProvider = ResourceItemIcon.folder
 		}
 
 		// Navigation buttons

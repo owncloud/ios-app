@@ -76,7 +76,7 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/AppLockSettings.h>
 
 #import <ownCloudApp/OCViewHost.h>
-#import <ownCloudApp/OCAvatar+ViewProvider.h>
+#import <ownCloudApp/OCImage+ViewProvider.h>
 #import <ownCloudApp/OCResourceTextPlaceholder+ViewProvider.h>
 #import <ownCloudApp/OCCircularContentView.h>
 #import <ownCloudApp/OCCircularImageView.h>

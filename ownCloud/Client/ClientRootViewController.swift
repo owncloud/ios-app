@@ -357,6 +357,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
+				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
+
 				if let localItemId = lastVisibleItemId {
 					self.createFileListStack(for: localItemId)
 				} else {

@@ -27,7 +27,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 	public var titleLabel : UILabel = UILabel()
 	public var detailLabel : UILabel = UILabel()
 	public var logoFallbackView : UIImageView = UIImageView()
-	public var iconView : OCViewHost = OCViewHost(fallbackSize: CGSize(width: ServerListBookmarkCell.iconSideLength, height: ServerListBookmarkCell.iconSideLength))
+	public var iconView : ResourceViewHost = ResourceViewHost(fallbackSize: CGSize(width: ServerListBookmarkCell.iconSideLength, height: ServerListBookmarkCell.iconSideLength))
 	public var infoView : UIView = UIView()
 
 	public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

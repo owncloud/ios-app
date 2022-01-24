@@ -59,11 +59,11 @@ class ItemPolicyCell: ClientItemResolvingCell {
 			if let itemPolicy = itemPolicy {
 				if let itemPath = itemPolicy.path {
 					if itemPath.hasSuffix("/") {
-						self.iconView.image = Theme.shared.image(for: "folder", size: iconSize)
+						self.iconView.activeViewProvider = ResourceItemIcon.folder
 
 						self.itemResolutionPath = itemPath
 					} else {
-						self.iconView.image = Theme.shared.image(for: "file", size: iconSize)
+						self.iconView.activeViewProvider = ResourceItemIcon.file
 
 						if let itemLocalID = itemPolicy.localID {
 							self.itemResolutionLocalID = itemLocalID

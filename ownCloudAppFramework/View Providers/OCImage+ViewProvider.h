@@ -1,5 +1,5 @@
 //
-//  OCAvatar+ViewProvider.h
+//  OCImage+ViewProvider.h
 //  ownCloudApp
 //
 //  Created by Felix Schwarz on 18.01.22.
@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OCAvatar (ViewProvider) <OCViewProvider>
+@interface OCImage (ViewProvider) <OCViewProvider>
 
 @end
 

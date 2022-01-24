@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 extension NSMutableAttributedString {
 	var boldFont:UIFont { return UIFont.preferredFont(forTextStyle: .headline) }
@@ -51,7 +52,7 @@ public protocol ClientItemCellDelegate: class {
 	func hasMessage(for item: OCItem) -> Bool
 }
 
-open class ClientItemCell: ThemeTableViewCell, ItemContainer {
+open class ClientItemCell: ThemeTableViewCell {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -74,8 +75,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 	open var titleLabel : UILabel = UILabel()
 	open var detailLabel : UILabel = UILabel()
-	open var iconView : UIImageView = UIImageView()
-	open var showingIcon : Bool = false
+	open var iconView : ResourceViewHost = ResourceViewHost()
 	open var cloudStatusIconView : UIImageView = UIImageView()
 	open var sharedStatusIconView : UIImageView = UIImageView()
 	open var publicLinkStatusIconView : UIImageView = UIImageView()
@@ -95,7 +95,7 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	open var publicLinkStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 	open var cloudStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 
-	open var activeThumbnailRequestProgress : Progress?
+	open var activeThumbnailRequest : OCResourceRequestItemThumbnail?
 
 	open var hasMessageForItem : Bool = false
 
@@ -347,27 +347,22 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	}
 
 	open func updateWith(_ item: OCItem) {
-		var iconImage : UIImage?
-
 		// Cancel any already active request
-		if activeThumbnailRequestProgress != nil {
-			activeThumbnailRequestProgress?.cancel()
+		if let activeThumbnailRequest = activeThumbnailRequest {
+			core?.vault.resourceManager?.stop(activeThumbnailRequest)
+			self.activeThumbnailRequest = nil
 		}
 
 		// Set has message
 		self.hasMessageForItem = delegate?.hasMessage(for: item) ?? false
 
 		// Set the icon and initiate thumbnail generation
-		iconImage = item.icon(fitInSize: iconSize)
-		self.iconView.image = iconImage
+		let thumbnailRequest = OCResourceRequestItemThumbnail.request(for: item, maximumSize: self.thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
 
-  		if let core = core {
- 			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, itemContainer: self, progressHandler: { [weak self] (progress) in
- 				if self?.activeThumbnailRequestProgress === progress {
- 					self?.activeThumbnailRequestProgress = nil
- 				}
- 			})
- 		}
+		iconView.request = thumbnailRequest
+
+		// Start new thumbnail request
+		core?.vault.resourceManager?.start(thumbnailRequest)
 
 		self.accessoryType = .none
 
@@ -568,10 +563,6 @@ open class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
 		moreButton.tintColor = collection.tableRowColors.secondaryLabelColor
-
-		if showingIcon, let item = item {
-			iconView.image = item.icon(fitInSize: iconSize)
-		}
 
 		if revealHighlight {
 			backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)

@@ -20,13 +20,12 @@ import UIKit
 import ownCloudSDK
 
 open class MoreViewHeader: UIView {
-	private var iconView: UIImageView
+	private var iconView: ResourceViewHost
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
 	private var favoriteButton: UIButton
 	public var activityIndicator : UIActivityIndicatorView
-	private var showsIcon : Bool = true
 
 	public var thumbnailSize = CGSize(width: 60, height: 60)
 	public let favoriteSize = CGSize(width: 44, height: 44)
@@ -45,7 +44,7 @@ open class MoreViewHeader: UIView {
 		self.showFavoriteButton = favorite
 		self.showActivityIndicator = showActivityIndicator
 
-		iconView = UIImageView()
+		iconView = ResourceViewHost()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
 		labelContainerView = UIView()
@@ -69,7 +68,7 @@ open class MoreViewHeader: UIView {
 		self.item = OCItem()
 		self.url = url
 
-		iconView = UIImageView()
+		iconView = ResourceViewHost()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
 		labelContainerView = UIView()
@@ -199,24 +198,10 @@ open class MoreViewHeader: UIView {
 			detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 		}
 
-		self.iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
+		let iconRequest = OCResourceRequestItemThumbnail.request(for: item, maximumSize: thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
+		self.iconView.request = iconRequest
+		core?.vault.resourceManager?.start(iconRequest)
 
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.request(for: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, withCompletionHandler: { (_, error, _, image) in
-					if error == nil, image != nil, self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.showsIcon = false
-							self.iconView.image = image
-						}
-					}
-				})
-			}
-
-			_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
-				displayThumbnail(thumbnail)
-			})
-		}
 		titleLabel.numberOfLines = 0
 	}
 
@@ -266,10 +251,6 @@ extension MoreViewHeader: Themeable {
 
 		if adaptBackgroundColor {
 			backgroundColor = collection.tableBackgroundColor
-		}
-
-		if showsIcon {
-			iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
 		}
 	}
 }
