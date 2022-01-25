@@ -153,12 +153,14 @@ class MediaDisplayViewController : DisplayViewController {
 						// Construct image view overlay for AVPlayerViewController
 						let imageView = UIImageView(image: artworkImage)
 						imageView.translatesAutoresizingMaskIntoConstraints = false
-						imageView.contentMode = .center
+						imageView.contentMode = .scaleAspectFit
 						playerViewController?.contentOverlayView?.addSubview(imageView)
 
 						NSLayoutConstraint.activate([
-							imageView.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
-							imageView.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor)
+							imageView.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
+							imageView.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+							imageView.topAnchor.constraint(equalTo: overlayView.topAnchor),
+							imageView.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
 						])
 
 						// Create MPMediaItemArtwork to be shown in 'now playing' in the lock screen

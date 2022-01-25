@@ -1,15 +1,6 @@
-• Account List
-There is a fresh new look for the single account overview.
+• Fix: PDF Editing
+Fixed bug that prevents changes to PDFs being saved in place.
 
-• Biometrical Unlock
-When protecting the app with a pin code, biometrical unlock will be suggested as default.
-
-• Display Name
-If the users display name is available, it will be shown in the account view, instead of the user name.
-
-• Background Location Settings
-Only show background location settings if needed.
-
-• Improvements
-There are a lot of improvements under the hood.
+• Fix: Continuous Audio Playback
+Fixed continuous audio playback, which stopped after two audio files.
 

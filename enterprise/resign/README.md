@@ -26,7 +26,7 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
 3. Edit the App IDs and assign the App Group created on step 2.
 
-4. Generate the mobile provisioning profiles (App Store or Ad-Hoc) for all 4 App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
+4. Generate the mobile provisioning profiles (App Store, In House or Ad-Hoc) for all 4 App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
 
 ## Certificate
 

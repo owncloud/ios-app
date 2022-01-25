@@ -18,16 +18,18 @@
 
 #import "OCBookmark+AppExtensions.h"
 
+static OCBookmarkUserInfoKey OCBookmarkUserInfoKeyDisplayName = @"OCBookmarkDisplayName";
+
 @implementation OCBookmark (AppExtensions)
 
 - (NSString *)displayName
 {
-	return ((NSString *)self.userInfo[OCBookmarkUserInfoKeyDisplayName]);
-}
+	if (self.userDisplayName != nil)
+	{
+		return (self.userDisplayName);
+	}
 
-- (void)setDisplayName:(NSString *)displayName
-{
-	self.userInfo[OCBookmarkUserInfoKeyDisplayName] = displayName;
+	return ((NSString *)self.userInfo[OCBookmarkUserInfoKeyDisplayName]);
 }
 
 - (NSString *)shortName
@@ -39,11 +41,15 @@
 	else
 	{
 		NSString *userNamePrefix = @"";
-		NSString *displayName = nil, *userName = nil;
+		NSString *userDisplayName = nil, *userName = nil;
 
-		if (((displayName = self.displayName) != nil) && (displayName.length > 0))
+		if (((userDisplayName = self.userDisplayName) != nil) && (userDisplayName.length > 0))
 		{
-			userNamePrefix = [displayName stringByAppendingString:@"@"];
+			userNamePrefix = [userDisplayName stringByAppendingString:@"@"];
+		}
+		else if (((userDisplayName = self.displayName) != nil) && (userDisplayName.length > 0))
+		{
+			userNamePrefix = [userDisplayName stringByAppendingString:@"@"];
 		}
 
 		if ((userNamePrefix.length == 0) && ((userName = self.userName) != nil) && (userName.length > 0))
@@ -67,5 +73,3 @@
 }
 
 @end
-
-OCBookmarkUserInfoKey OCBookmarkUserInfoKeyDisplayName = @"OCBookmarkDisplayName";

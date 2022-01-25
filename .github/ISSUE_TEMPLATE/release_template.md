@@ -18,15 +18,15 @@ Xcode version to work with:
 - [ ] [GIT] Create branch `release/[major].[minor].[patch]` (freeze the code)
 - [ ] [DEV] Update `APP_SHORT_VERSION` `[major].[minor].[patch]` in [ownCloud.xcodeproj/project.pbxproj](https://github.com/owncloud/ios-app/blob/master/ownCloud.xcodeproj/project.pbxproj)
 - [ ] [TRFX] Update translations from transifex branch.
-- [ ] [TRFX] Check for missing translations. Ping @cscherm
+- [ ] [TRFX] Check for missing translations.
 - [ ] [DIS] Update [changelog](https://github.com/owncloud/ios-app/blob/master/CHANGELOG.md)
 - [ ] [DEV] Update In-App Release Notes (changelog) in ownCloud/Release Notes/ReleaseNotes.plist
 - [ ] [DEV] Changelog: Created a folder for the new version like $majorVersion.$minorVersion.$patchVersion_YYYY-MM-DD
 - [ ] [DEV] Changelog: Moved all changelog files from the unreleased folder to the new version folder
+- [ ] [DEV] Inform Documentation-Team for the upcoming major/minor release with new version tag (notify #documentation-internal)
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
-- [ ] [DOC] Update user manual with the new functionalities
-- [ ] [DOC] Update owncloud.org/download version numbers (notify #wordpress)
+- [ ] [DOC] Update https://owncloud.com/mobile-apps/#ios version numbers (notify #marketing)
 - [ ] [GIT] Merge branch `release/[major].[minor].[patch]` in master
 - [ ] [GIT] Create tag and sign it `[major].[minor].[patch]`
 - [ ] [GIT] Add the new release on [GitHub ios-app](https://github.com/owncloud/ios-app/releases)
