@@ -318,7 +318,7 @@ tag::bookmarks[]
 |string
 |
 |Controls prepopulation of the local database with the full item set during account setup.
-[cols="1,2"]
+[cols="1,1"]
 !===
 ! Value
 ! Description
