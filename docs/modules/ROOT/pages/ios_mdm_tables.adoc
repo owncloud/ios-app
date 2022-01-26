@@ -314,6 +314,27 @@ tag::bookmarks[]
 |The default URL for the creation of new bookmarks.
 |supported `candidate`
 
+|bookmark.prepopulation
+|string
+|
+|Controls prepopulation of the local database with the full item set during account setup.
+[cols="1,2"]
+!===
+! Value
+! Description
+! `doNot`
+! No prepopulation. Request the contents of every folder individually.
+
+! `split`
+! Parse the prepopulation metadata after receiving it as a whole.
+
+! `streaming`
+! Parse the prepopulation metadata while receiving it.
+
+!===
+
+|supported `candidate`
+
 |bookmark.url-editable
 |bool
 |`true`

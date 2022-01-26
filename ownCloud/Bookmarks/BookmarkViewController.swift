@@ -554,79 +554,78 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		guard let bookmark = self.bookmark else { return }
+			guard let bookmark = self.bookmark else { return }
 
-		if isBookmarkComplete(bookmark: bookmark) {
-			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
+			if isBookmarkComplete(bookmark: bookmark) {
+				bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
+				let connection = instantiateConnection(for: bookmark)
 
-			let connection = instantiateConnection(for: bookmark)
+				connection.connect { [weak self] (error, issue) in
+					if let strongSelf = self {
+						if error == nil {
+							bookmark.userDisplayName = connection.loggedInUser?.displayName
 
-			connection.connect { [weak self] (error, issue) in
-				if let strongSelf = self {
-					if error == nil {
-						bookmark.userDisplayName = connection.loggedInUser?.displayName
+							connection.disconnect(completionHandler: {
+								switch strongSelf.mode {
+								case .create:
+									// Add bookmark
+									OCBookmarkManager.shared.addBookmark(bookmark)
 
-						connection.disconnect(completionHandler: {
-							switch strongSelf.mode {
-							case .create:
-								// Add bookmark
-								OCBookmarkManager.shared.addBookmark(bookmark)
-
-							case .edit:
-								// Update original bookmark
-								self?.originalBookmark?.setValuesFrom(bookmark)
-								if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-									Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+								case .edit:
+									// Update original bookmark
+									self?.originalBookmark?.setValuesFrom(bookmark)
+									if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+										Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+									}
 								}
-							}
 
-							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
-							strongSelf.userActionCompletionHandler = nil
+								let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+								strongSelf.userActionCompletionHandler = nil
 
+								OnMainThread {
+									hudCompletion({
+										OnMainThread {
+											userActionCompletionHandler?(bookmark, true)
+										}
+										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									})
+								}
+
+							})
+						} else {
 							OnMainThread {
 								hudCompletion({
-									OnMainThread {
-										userActionCompletionHandler?(bookmark, true)
+									if let issue = issue {
+										self?.bookmark?.authenticationData = nil
+
+										IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
+											switch response {
+												case .cancel:
+													issue?.reject()
+
+												case .approve:
+													issue?.approve()
+													self?.handleContinue()
+
+												case .dismiss: break
+											}
+										})
+									} else {
+										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 									}
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								})
 							}
-
-						})
-					} else {
-						OnMainThread {
-							hudCompletion({
-								if let issue = issue {
-									self?.bookmark?.authenticationData = nil
-
-									IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
-										switch response {
-											case .cancel:
-												issue?.reject()
-
-											case .approve:
-												issue?.approve()
-												self?.handleContinue()
-
-											case .dismiss: break
-										}
-									})
-								} else {
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-								}
-							})
 						}
 					}
 				}
+			} else {
+				hudCompletion({ [weak self] in
+					if let strongSelf = self {
+						strongSelf.handleContinue()
+					}
+				})
 			}
-		} else {
-			hudCompletion({ [weak self] in
-				if let strongSelf = self {
-					strongSelf.handleContinue()
-				}
-			})
 		}
-	}
 
 	// MARK: - Update section and row composition
 	func composeSectionsAndRows(animated: Bool = true, completion: (() -> Void)? = nil) {
@@ -918,6 +917,13 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
 	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
+	static let prepopulation = OCClassSettingsKey("prepopulation")
+}
+
+enum BookmarkPrepopulationMethod : String {
+	case doNot
+	case streaming
+	case split
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
@@ -947,6 +953,27 @@ extension BookmarkViewController : OCClassSettingsSupport {
 				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
 				.category	: "Bookmarks",
 				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.prepopulation : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported,
+				.possibleValues	: [
+					[
+						OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
+					]
+				]
 			]
 		]
 	}
