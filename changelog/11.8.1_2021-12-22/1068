@@ -1,0 +1,5 @@
+Change: Fallback on OIDC Dynamic Client Registration
+
+Adds authentication-oauth2.oidc-fallback-on-client-registration-failure - defaulting to true - to allow the automatic fallback to default client_id / client_secret if OpenID Connect Dynamic Client Registration fails with any error. Furthermore fixed an infinite OAuth2 token refresh loop via SDK update.
+
+https://github.com/owncloud/ios-app/pull/1068
