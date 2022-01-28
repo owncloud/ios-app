@@ -98,7 +98,7 @@ platform :ios do
           puts("Creating Screenshots…")
           reset_simulators
           snapshot
-          frameit(white: false, path: './fastlane/screenshots')
+          frameit(white: false, path: './doc/images/')
         end
 
         # Push Release Notes or Screenshot changes to git

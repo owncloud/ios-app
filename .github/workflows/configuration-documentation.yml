@@ -32,4 +32,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Configuration documentation updated
-          file_pattern: doc/CONFIGURATION.json doc/antora/pages/ios_mdm_tables.adoc
+          file_pattern: doc/CONFIGURATION.json doc/configuration.adoc
