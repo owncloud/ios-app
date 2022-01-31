@@ -32,16 +32,6 @@ extension LAContext {
         return nil
 	}
 
-	public func supportsBiometricsAuthentication() -> Bool {
-	 if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-		 switch self.biometryType {
-		 case .faceID, .touchID : return true
-		 case .none: return false
-		 }
-	 }
-	 return false
- }
-
 	public func biometricsAuthenticationImage() -> UIImage? {
 		if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
 			switch self.biometryType {

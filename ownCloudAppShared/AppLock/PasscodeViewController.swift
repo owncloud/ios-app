@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudApp
 import LocalAuthentication
 
 public typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
@@ -117,6 +118,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		didSet {
 			biometricalButton?.isEnabled = biometricalButtonHidden
 			biometricalButton?.isHidden = !biometricalButtonHidden
+			biometricalImageView?.isHidden = !biometricalButtonHidden
 			biometricalImageView?.image = LAContext().biometricsAuthenticationImage()
 		}
 	}
@@ -171,7 +173,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
-		self.biometricalButtonHidden = LAContext().supportsBiometricsAuthentication()
+		self.biometricalButtonHidden = !(!AppLockSettings.shared.biometricalSecurityEnabled || self.cancelButtonHidden)
 		updateKeypadButtons()
 
 		if #available(iOS 13.4, *) {
