@@ -48,12 +48,12 @@ extension LAContext {
 			case .faceID : if #available(iOSApplicationExtension 13.0, *) {
 				return UIImage(systemName: "faceid")
 			} else {
-				return UIImage(named: "biometrical")
+				return UIImage(named: "biometrical-faceid")
 			}
 			case .touchID: if #available(iOSApplicationExtension 13.0, *) {
 				return UIImage(systemName: "touchid")
 			} else {
-				return UIImage(named: "biometrical")
+				return UIImage(named: "biometrical-touchid")
 			}
 			case .none: return nil
 			}
