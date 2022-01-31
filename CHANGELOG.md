@@ -1,3 +1,26 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.8.2...master
+
+Summary
+-------
+
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+
+Details
+-------
+
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+
+   Added biometrical authentication button to provide a fallback for the fileprovider or app, if
+   the automatically biometrical unlock does not work, or the user cancel the biometrical
+   authentication flow.
+
+   https://github.com/owncloud/ios-app/issues/1004
+
 Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.8.2 relevant to
