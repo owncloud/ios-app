@@ -17,8 +17,10 @@
  */
 
 import UIKit
+import LocalAuthentication
 
 public typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
+public typealias PasscodeViewControllerBiometricalHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
 public typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
 
 public class PasscodeViewController: UIViewController, Themeable {
@@ -39,6 +41,8 @@ public class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var keypadButtons: [ThemeRoundedButton]?
 	@IBOutlet private var deleteButton: ThemeButton?
 	@IBOutlet public var cancelButton: ThemeButton?
+	@IBOutlet public var biometricalButton: ThemeButton?
+	@IBOutlet public var biometricalImageView: UIImageView?
 	@IBOutlet public var compactHeightPasscodeTextField: UITextField?
 
 	// MARK: - Properties
@@ -109,6 +113,14 @@ public class PasscodeViewController: UIViewController, Themeable {
 		}
 	}
 
+	var biometricalButtonHidden: Bool = false {
+		didSet {
+			biometricalButton?.isEnabled = biometricalButtonHidden
+			biometricalButton?.isHidden = !biometricalButtonHidden
+			biometricalImageView?.image = LAContext().biometricsAuthenticationImage()
+		}
+	}
+
 	var hasCompactHeight: Bool {
 		if self.traitCollection.verticalSizeClass == .compact {
 			return true
@@ -119,11 +131,13 @@ public class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Handlers
 	public var cancelHandler: PasscodeViewControllerCancelHandler?
+	public var biometricalHandler: PasscodeViewControllerBiometricalHandler?
 	public var completionHandler: PasscodeViewControllerCompletionHandler?
 
 	// MARK: - Init
-	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true, requiredLength: Int) {
+	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, biometricalHandler: PasscodeViewControllerBiometricalHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true, requiredLength: Int) {
 		self.cancelHandler = cancelHandler
+		self.biometricalHandler = biometricalHandler
 		self.completionHandler = completionHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
 		self.cancelButtonHidden = hasCancelButton
@@ -157,6 +171,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
+		self.biometricalButtonHidden = LAContext().supportsBiometricsAuthentication()
 		updateKeypadButtons()
 
 		if #available(iOS 13.4, *) {
@@ -165,6 +180,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			}
 			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
 			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+			PointerEffect.install(on: biometricalButton!, effectStyle: .highlight)
 		}
 	}
 
@@ -283,6 +299,10 @@ public class PasscodeViewController: UIViewController, Themeable {
 		cancelHandler?(self)
 	}
 
+	@IBAction func biometricalAction(_ sender: UIButton) {
+		biometricalHandler?(self)
+	}
+
 	// MARK: - Themeing
 	public override var preferredStatusBarStyle : UIStatusBarStyle {
 		if VendorServices.shared.isBranded {
@@ -310,6 +330,8 @@ public class PasscodeViewController: UIViewController, Themeable {
 		}
 
 		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: .clear))
+
+		biometricalImageView?.tintColor = collection.tintColor
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 	}
