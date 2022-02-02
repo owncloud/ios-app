@@ -535,11 +535,14 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func completeAndDismiss(with hudCompletion: @escaping (((() -> Void)?) -> Void)) {
+		guard let userActionCompletionHandler = self.userActionCompletionHandler else { return }
+
+		self.userActionCompletionHandler = nil
+
 		OnMainThread {
 			hudCompletion({
 				OnMainThread {
-					self.userActionCompletionHandler?(self.bookmark, true)
-					self.userActionCompletionHandler = nil
+					userActionCompletionHandler(self.bookmark, true)
 				}
 				self.presentingViewController?.dismiss(animated: true, completion: nil)
 			})
