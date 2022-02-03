@@ -561,7 +561,9 @@ end
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleDisplayName", value: appName)
     set_info_plist_value(path: "ownCloud/Resources/Info.plist", key: "CFBundleName", value: appName)
 
+    # Check, if Branding.plist file exists and handle custom set values
     if File.exist?("../" + themePath)
+      # Check for custom app version number
         tmpCustomAppVersionNumber = get_info_plist_value(path: themePath, key: "app.version-number")
         if tmpCustomAppVersionNumber && !tmpCustomAppVersionNumber.empty?
           customAppVersionNumber = tmpCustomAppVersionNumber
@@ -572,6 +574,12 @@ end
           set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
           set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
           set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "CFBundleShortVersionString", value: customAppVersionNumber)
+        end
+
+        # Check for custom app group identifier
+        tmpAPP_GROUP_IDENTIFIERS = get_info_plist_value(path: themePath, key: "build.app-group-identifier")
+        if tmpAPP_GROUP_IDENTIFIERS && !tmpAPP_GROUP_IDENTIFIERS.empty?
+          APP_GROUP_IDENTIFIERS = tmpAPP_GROUP_IDENTIFIERS
         end
     end
 
