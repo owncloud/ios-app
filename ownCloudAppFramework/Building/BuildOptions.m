@@ -23,6 +23,7 @@ OCClassSettingsIdentifier OCClassSettingsIdentifierBuildOptions = @"build";
 OCClassSettingsKey	  OCClassSettingsKeyBuildFlags = @"flags";
 OCClassSettingsKey	  OCClassSettingsKeyCustomAppScheme = @"custom-app-scheme";
 OCClassSettingsKey	  OCClassSettingsKeyCustomAuthScheme = @"custom-auth-scheme";
+OCClassSettingsKey	  OCClassSettingsKeyAppGroupIdentifier = @"app-group-identifier";
 
 @implementation BuildOptions
 
@@ -68,6 +69,14 @@ OCClassSettingsKey	  OCClassSettingsKeyCustomAuthScheme = @"custom-auth-scheme";
 		OCClassSettingsKeyCustomAuthScheme : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
 			OCClassSettingsMetadataKeyDescription 	: @"Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
+			OCClassSettingsMetadataKeyCategory	: @"Build",
+		},
+
+		// build.app-group-identifier
+		OCClassSettingsKeyAppGroupIdentifier : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
+			OCClassSettingsMetadataKeyDescription 	: @"Set a custom app group identifier via Branding.plist this parameter. This value will be set by fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Build",
 		},
