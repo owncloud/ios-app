@@ -453,6 +453,7 @@ end
     ENTERPRISE_TEAM = values[:ENTERPRISE_TEAM]
     ENTERPRISE_IDENTITY = values[:ENTERPRISE_IDENTITY]
     APP_GROUP_IDENTIFIERS = values[:APP_GROUP_IDENTIFIERS]
+    OC_APP_GROUP_IDENTIFIERS = values[:APP_GROUP_IDENTIFIERS]
     EXPORT_METHOD = values[:EXPORT_METHOD]
     CONFIGURATION = values[:CONFIGURATION]
     BUILD_NUMBER = values[:BUILD_NUMBER]
@@ -580,6 +581,13 @@ end
         tmpAPP_GROUP_IDENTIFIERS = get_info_plist_value(path: themePath, key: "build.app-group-identifier")
         if tmpAPP_GROUP_IDENTIFIERS && !tmpAPP_GROUP_IDENTIFIERS.empty?
           APP_GROUP_IDENTIFIERS = tmpAPP_GROUP_IDENTIFIERS
+          OC_APP_GROUP_IDENTIFIERS = tmpAPP_GROUP_IDENTIFIERS
+        end
+
+        # Check for custom OC app group identifier
+        tmpOC_APP_GROUP_IDENTIFIERS = get_info_plist_value(path: themePath, key: "build.oc-app-group-identifier")
+        if tmpOC_APP_GROUP_IDENTIFIERS && !tmpOC_APP_GROUP_IDENTIFIERS.empty?
+          OC_APP_GROUP_IDENTIFIERS = tmpOC_APP_GROUP_IDENTIFIERS
         end
     end
 
@@ -691,15 +699,15 @@ end
       identifiers: [ENTERPRISE_TEAM + "." + APP_GROUP_IDENTIFIERS]
 	)
 
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
-    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "OCAppGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider UI/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCAppGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Share Extension/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: OC_APP_GROUP_IDENTIFIERS)
 
     automatic_code_signing(
       path: "ownCloud.xcodeproj",
