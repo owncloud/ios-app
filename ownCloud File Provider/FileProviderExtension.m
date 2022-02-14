@@ -262,7 +262,7 @@
 	NSArray <NSString *> *pathComponents = [url pathComponents];
 
 	// exploit the fact that the path structure has been defined as
-	// <base storage directory>/<item identifier>/<item file name> above
+	// <base storage directory>/[Drives/<drive ID>/]<item identifier>/<item file name> above
 	NSParameterAssert(pathComponents.count > 2);
 
 	// OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
