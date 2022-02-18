@@ -342,10 +342,12 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Check if only account name was changed in edit mode: save and dismiss without re-authentication
-		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark {
-			updateBookmark(bookmark: bookmark)
-			completeAndDismiss(with: hudCompletion)
-			return
+
+		//if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
+		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark, bookmark.authenticationData != nil {
+				updateBookmark(bookmark: bookmark)
+			 completeAndDismiss(with: hudCompletion)
+			 return
 		}
 
 		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {

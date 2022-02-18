@@ -284,7 +284,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 					tableView.deselectRow(at: indexPath, animated: true)
 					switch actionRows[indexPath.row] {
 						case .editLogin:
-							showBookmarkUI(edit: bookmark)
+						showBookmarkUI(edit: bookmark, removeAuthDataFromCopy: false)
 
 						case .manageStorage:
 							showBookmarkInfoUI(bookmark)
