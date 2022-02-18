@@ -195,6 +195,8 @@ public class AppLockManager: NSObject {
 	private var passcodeControllerByWindow : NSMapTable<ThemeWindow, PasscodeViewController> = NSMapTable.weakToStrongObjects()
 	private var applockWindowByWindow : NSMapTable<ThemeWindow, AppLockWindow> = NSMapTable.weakToStrongObjects()
 
+	open var biometricCancelLabel : String?
+
 	open var cancelAction : (() -> Void)?
 	open var successAction : (() -> Void)?
 
@@ -465,7 +467,7 @@ public class AppLockManager: NSObject {
 					}
 				}
 
-				context.localizedCancelTitle = "Enter code".localized
+				context.localizedCancelTitle = biometricCancelLabel ?? "Enter code".localized
 				context.localizedFallbackTitle = ""
 
 				self.biometricalAuthenticationInterfaceShown = true
