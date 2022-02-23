@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>GitBranch</key>
+	<string>feature/fastlane-app-group-identifier
+</string>
+	<key>GitHash</key>
+	<string>0ef59ba
+</string>
+	<key>SDKGitBranch</key>
+	<string>HEAD
+</string>
+	<key>SDKGitHash</key>
+	<string>5ee6fff
+</string>
+	<key>branding.can-add-account</key>
+	<false/>
+	<key>branding.organization-name</key>
+	<string>EIB SmartShare</string>
+	<key>branding.profile-bookmark-name</key>
+	<string>EIB SmartShare</string>
+	<key>branding.profile-url</key>
+	<string>https://demo.owncloud.com/</string>
+	<key>branding.theme-definitions$[0].Colors.Searchbar.backgroundColor</key>
+	<string>#FFFFFF</string>
+	<key>branding.theme-definitions$[0].darkBrandColor</key>
+	<string>#1C2C43</string>
+	<key>branding.theme-definitions$[0].lightBrandColor</key>
+	<string>#ffffff</string>
+</dict>
 </plist>

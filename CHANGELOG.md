@@ -9,6 +9,7 @@ Summary
 -------
 
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
 Details
 -------
@@ -20,6 +21,12 @@ Details
    authentication flow.
 
    https://github.com/owncloud/ios-app/issues/1004
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
+
+   Check if only the account name was changed in edit mode: save and dismiss without
+   re-authentication
+
+   https://github.com/owncloud/ios-app/issues/972
 
 Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
 =======================================
