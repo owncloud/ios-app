@@ -8,11 +8,19 @@ ownCloud admins and users.
 Summary
 -------
 
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
 * Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
 Details
 -------
 
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+
+   Added biometrical authentication button to provide a fallback for the fileprovider or app, if
+   the automatically biometrical unlock does not work, or the user cancel the biometrical
+   authentication flow.
+
+   https://github.com/owncloud/ios-app/issues/1004
 * Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
    Check if only the account name was changed in edit mode: save and dismiss without

@@ -17,11 +17,11 @@
  */
 
 import LocalAuthentication
+import UIKit
 
 extension LAContext {
 
     public func supportedBiometricsAuthenticationName() -> String? {
-
         if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
             switch self.biometryType {
             case .faceID : return "Face ID".localized
@@ -30,5 +30,24 @@ extension LAContext {
             }
         }
         return nil
-    }
+	}
+
+	public func biometricsAuthenticationImage() -> UIImage? {
+		if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+			switch self.biometryType {
+			case .faceID : if #available(iOSApplicationExtension 13.0, *) {
+				return UIImage(systemName: "faceid")
+			} else {
+				return UIImage(named: "biometrical-faceid")
+			}
+			case .touchID: if #available(iOSApplicationExtension 13.0, *) {
+				return UIImage(systemName: "touchid")
+			} else {
+				return UIImage(named: "biometrical-touchid")
+			}
+			case .none: return nil
+			}
+		}
+		return nil
+	}
 }
