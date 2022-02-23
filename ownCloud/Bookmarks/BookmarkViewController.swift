@@ -28,9 +28,11 @@ class BookmarkViewController: StaticTableViewController {
 	// MARK: - UI elements
 	var nameSection : StaticTableViewSection?
 	var nameRow : StaticTableViewRow?
+	var nameChanged = false
 
 	var urlSection : StaticTableViewSection?
 	var urlRow : StaticTableViewRow?
+	var urlChanged = false
 	var certificateRow : StaticTableViewRow?
 
 	var credentialsSection : StaticTableViewSection?
@@ -129,6 +131,7 @@ class BookmarkViewController: StaticTableViewController {
 		// Name section + row
 		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
 			if let textField = sender as? UITextField, action == .changed {
+				self?.nameChanged = true
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
 		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
@@ -140,6 +143,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				var placeholderString = "Name".localized
 				var changedBookmark = false
+				self?.urlChanged = true
 
 				// Disable Continue button if there is no url
 				if textField.text != "" {
@@ -337,6 +341,15 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
 
+		// Check if only account name was changed in edit mode: save and dismiss without re-authentication
+
+		//if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
+		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark, bookmark.authenticationData != nil {
+				updateBookmark(bookmark: bookmark)
+			 completeAndDismiss(with: hudCompletion)
+			 return
+		}
+
 		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {
 			handleContinueURLProbe(hud: hud, hudCompletion: hudCompletion)
 			return
@@ -523,6 +536,21 @@ class BookmarkViewController: StaticTableViewController {
 		}
 	}
 
+	func completeAndDismiss(with hudCompletion: @escaping (((() -> Void)?) -> Void)) {
+		guard let userActionCompletionHandler = self.userActionCompletionHandler else { return }
+
+		self.userActionCompletionHandler = nil
+
+		OnMainThread {
+			hudCompletion({
+				OnMainThread {
+					userActionCompletionHandler(self.bookmark, true)
+				}
+				self.presentingViewController?.dismiss(animated: true, completion: nil)
+			})
+		}
+	}
+
 	// MARK: - User actions
 	@objc func userActionCancel() {
 		let userActionCompletionHandler = self.userActionCompletionHandler
@@ -553,6 +581,13 @@ class BookmarkViewController: StaticTableViewController {
 		save(hudCompletion: hudCompletion)
 	}
 
+	func updateBookmark(bookmark: OCBookmark) {
+		originalBookmark?.setValuesFrom(bookmark)
+		if let originalBookmark = originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+			Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+		}
+	}
+
 	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
 			guard let bookmark = self.bookmark else { return }
 
@@ -573,24 +608,10 @@ class BookmarkViewController: StaticTableViewController {
 
 								case .edit:
 									// Update original bookmark
-									self?.originalBookmark?.setValuesFrom(bookmark)
-									if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-										Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
-									}
+									self?.updateBookmark(bookmark: bookmark)
 								}
 
-								let userActionCompletionHandler = strongSelf.userActionCompletionHandler
-								strongSelf.userActionCompletionHandler = nil
-
-								OnMainThread {
-									hudCompletion({
-										OnMainThread {
-											userActionCompletionHandler?(bookmark, true)
-										}
-										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-									})
-								}
-
+								strongSelf.completeAndDismiss(with: hudCompletion)
 							})
 						} else {
 							OnMainThread {
