@@ -102,7 +102,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
 
-		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+		let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, weak core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
@@ -512,14 +512,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		let tableViewController = BreadCrumbTableViewController()
 		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
 		tableViewController.parentNavigationController = self.navigationController
-		tableViewController.queryPath = (query.queryPath as NSString?)!
+		tableViewController.queryPath = (query.queryLocation?.path as NSString?)!
 		if let shortName = core?.bookmark.shortName {
 			tableViewController.bookmarkShortName = shortName
 		}
 		if breadCrumbsPush {
-			tableViewController.navigationHandler = { [weak self] (path) in
+			tableViewController.navigationHandler = { [weak self] (location) in
 				if let self = self, let core = self.core {
-					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(for: location))
 					queryViewController.breadCrumbsPush = true
 
 					self.navigationController?.pushViewController(queryViewController, animated: true)
@@ -576,7 +576,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 
 		if let rootItem = self.query.rootItem, searchText == nil {
-			if query.queryPath != "/" {
+			if let queryPath = query.queryLocation?.path, queryPath != "/" {
 				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				if self.items.count == 1 {
 					totalSize = String(format: "%@ item | ".localized, "\(self.items.count)") + totalSize
@@ -586,7 +586,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				self.updateFooter(text: totalSize)
 			}
 
-			if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+			if let bookmarkContainer = self.tabBarController as? BookmarkContainer {
 				// Use parent folder for UI state restoration
 				let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
 				view.window?.windowScene?.userActivity = activity.openItemUserActivity
@@ -927,14 +927,14 @@ extension ClientQueryViewController {
 	}
 
 	open func updateTitleView() {
-		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+		let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
 			if #available(iOS 14.0, *) {
 				self.navigationItem.backButtonDisplayMode = .generic
-				let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+				let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 				self.title = lastPathComponent
 			}
 

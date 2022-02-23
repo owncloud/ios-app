@@ -253,10 +253,10 @@ open class PublicLinkTableViewController: SharingTableViewController {
 	// MARK: Add New Link Share
 
 	@objc func addPublicLink() {
-		if let path = item.path, let core = core {
+		if let location = item.location, let core = core {
 
-			func createLink(for itemPath:String, with permissions:OCSharePermissionsMask) {
-				let share = OCShare(publicLinkToPath: itemPath, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
+			func createLink(for itemLocation:OCLocation, with permissions:OCSharePermissionsMask) {
+				let share = OCShare(publicLinkTo: itemLocation, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
 				let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
 				editPublicLinkViewController.createLink = true
 				let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
@@ -298,14 +298,14 @@ open class PublicLinkTableViewController: SharingTableViewController {
 					var deepestShare : OCShare?
 
 					for share in shares {
-						if share.itemPath == path {
+						if share.itemLocation == location {
 							deepestShare = share
 							break
 						} else {
-							if path.hasPrefix(share.itemPath) {
+							if location.isLocated(in: share.itemLocation) {
 								if deepestShare == nil {
 									deepestShare = share
-								} else if let deepestShareItemPath = deepestShare?.itemPath, share.itemPath.count > deepestShareItemPath.count {
+								} else if let deepestShareItemPath = deepestShare?.itemLocation.path, let sharePath = share.itemLocation.path, sharePath.count > deepestShareItemPath.count {
 									deepestShare = share
 								}
 							}
@@ -314,12 +314,12 @@ open class PublicLinkTableViewController: SharingTableViewController {
 
 					if let share = deepestShare {
 						permissions = share.permissions
-						createLink(for: path, with: permissions!)
+						createLink(for: location, with: permissions!)
 					}
 				})
 			} else {
 				permissions = [.create, .read]
-				createLink(for: path, with: permissions!)
+				createLink(for: location, with: permissions!)
 			}
 		}
 	}

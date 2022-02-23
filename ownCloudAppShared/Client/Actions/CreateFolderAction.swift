@@ -52,7 +52,7 @@ open class CreateFolderAction : Action {
 
 		let item = context.items.first
 
-		guard item != nil, let itemPath = item?.path else {
+		guard item != nil, let itemLocation = item?.location else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -61,7 +61,7 @@ open class CreateFolderAction : Action {
 			return
 		}
 
-		core?.suggestUnusedNameBased(on: "New Folder".localized, atPath: itemPath, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
+		core?.suggestUnusedNameBased(on: "New Folder".localized, at: itemLocation, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 			guard let suggestedName = suggestedName else { return }
 
 			OnMainThread {

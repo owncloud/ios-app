@@ -396,7 +396,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 			for recipient in recipients {
 				if !(self.shares.map { $0.recipient?.identifier == recipient.identifier }).contains(true) {
 
-					guard let itemPath = self.item.path else { continue }
+					guard let itemLocation = self.item.location else { continue }
 					var title = ""
 					var image: UIImage?
 					var leadingAccessoryView : UIView?
@@ -426,7 +426,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 					rows.append(
 						StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 							guard let self = self else { return }
-							let share = OCShare(recipient: recipient, path: itemPath, permissions: self.defaultPermissions, expiration: nil)
+							let share = OCShare(recipient: recipient, location: itemLocation, permissions: self.defaultPermissions, expiration: nil)
 
 							OnMainThread {
 								self.searchController?.searchBar.text = ""

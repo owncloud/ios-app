@@ -248,8 +248,8 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	// MARK: - Single item query creation
 	open func query(forItem: OCItem) -> OCQuery? {
-		if let path = forItem.path {
-			return OCQuery(forPath: path)
+		if let location = forItem.location {
+			return OCQuery(for: location)
 		}
 
 		return nil

@@ -146,7 +146,7 @@
 			{
 				OCLogDebug(@"Initial root container scan..");
 
-				OCQuery *query = [OCQuery queryForPath:@"/"];
+				OCQuery *query = [OCQuery queryForLocation:OCLocation.legacyRootLocation];
 				__weak OCCore *weakCore = self.core;
 
 				query.changesAvailableNotificationHandler = ^(OCQuery *query) {
@@ -189,7 +189,7 @@
 				if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
 				{
 					// Root item
-					[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+					[self.core.vault.database retrieveCacheItemsAtLocation:OCLocation.legacyRootLocation itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
 						item = items.firstObject;
 						returnError = error;
 

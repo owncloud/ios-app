@@ -90,7 +90,7 @@ open class GroupSharingEditTableViewController: StaticTableViewController {
 		guard let share = share else { return }
 
 		if let recipient = share.recipient, let permissionMask = permissionMask {
-			let newShare = OCShare(recipient: recipient, path: share.itemPath, permissions: permissionMask, expiration: nil)
+			let newShare = OCShare(recipient: recipient, location: share.itemLocation, permissions: permissionMask, expiration: nil)
 			self.core?.createShare(newShare, options: nil, completionHandler: { (error, _) in
 				if error == nil {
 					OnMainThread {

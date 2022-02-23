@@ -54,8 +54,8 @@ class DuplicateAction : Action {
 		if let core = self.core {
 			OnBackgroundQueue { [weak core] in
 				for item in duplicateItems {
-					if let core = core, let itemName = item.name, let parentItem = item.parentItem(from: core), let parentPath = parentItem.path {
-						core.suggestUnusedNameBased(on: itemName, atPath: parentPath, isDirectory: item.type == .collection, using: item.type == .collection ? .numbered : .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+					if let core = core, let itemName = item.name, let parentItem = item.parentItem(from: core), let parentLocation = parentItem.location {
+						core.suggestUnusedNameBased(on: itemName, at: parentLocation, isDirectory: item.type == .collection, using: item.type == .collection ? .numbered : .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
 							Log.debug("Duplicating \(item.name ?? "(null)") as \(suggestedName ?? "(null)")")
 
 							if let suggestedName = suggestedName, let progress = core.copy(item, to: parentItem, withName: suggestedName, options: nil, resultHandler: { (error, _, item, _) in

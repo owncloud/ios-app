@@ -55,8 +55,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
-		if let core = core, let path = item.path {
-			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self, weak core](error, item, _) in
+		if let core = core, let location = item.location {
+			itemTracker = core.trackItem(at: location, trackingHandler: { [weak self, weak core](error, item, _) in
 				if let item = item, let self = self {
 					var refreshPreview = false
 

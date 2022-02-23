@@ -69,7 +69,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 	@objc func loadItemPolicies() {
 		self.core?.retrievePolicies(ofKind: policyKind, affectingItem: nil, includeInternal: false, completionHandler: { (_, policies) in
 			self.itemPolicies = policies?.sorted(by: { (policy1, policy2) -> Bool in
-				if let path1 = policy1.path, let path2 = policy2.path {
+				if let path1 = policy1.location?.path, let path2 = policy2.location?.path {
 					return path1.compare(path2) == .orderedAscending
 				}
 
@@ -155,7 +155,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 					let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ItemPolicyCell
 					let itemPolicy = itemPolicyAt(indexPath)
 
-					cell?.accessibilityIdentifier = itemPolicy.path ?? itemPolicy.localID
+					cell?.accessibilityIdentifier = itemPolicy.location?.path ?? itemPolicy.localID
 					cell?.core = self.core
 					cell?.itemPolicy = itemPolicy
 					cell?.isMoreButtonPermanentlyHidden = true

@@ -33,21 +33,21 @@ class ItemPolicyCell: ClientItemResolvingCell {
 
 	// MARK: - Item policy item
 	override func titleLabelString(for item: OCItem?) -> NSAttributedString {
-		if (itemResolutionPath as NSString?)?.isRootPath == true {
+		if itemResolutionLocation?.isRoot == true {
 			return NSAttributedString(string: "Root folder".localized)
 		}
 
 		if let item = item {
 			return super.titleLabelString(for: item)
 		} else {
-			return NSAttributedString(string: "\((itemResolutionPath as NSString?)?.lastPathComponent ?? "") \("(no match)".localized)")
+			return NSAttributedString(string: "\((itemResolutionLocation?.path as NSString?)?.lastPathComponent ?? "") \("(no match)".localized)")
 		}
 	}
 
 	override func detailLabelString(for item: OCItem?) -> String {
 		if itemPolicy?.localID != nil, let itemPath = item?.path {
 			return "\("at".localized) \(itemPath)"
-		} else if let itemPolicyPath = itemPolicy?.path as NSString?, itemPolicyPath.length > 0 {
+		} else if let itemPolicyPath = itemPolicy?.location?.path as NSString?, itemPolicyPath.length > 0 {
 			return "\("at".localized) \(itemPolicyPath)"
 		} else {
 			return super.detailLabelString(for: item)
@@ -57,18 +57,18 @@ class ItemPolicyCell: ClientItemResolvingCell {
 	var itemPolicy : OCItemPolicy? {
 		didSet {
 			if let itemPolicy = itemPolicy {
-				if let itemPath = itemPolicy.path {
+				if let itemLocation = itemPolicy.location, let itemPath = itemLocation.path {
 					if itemPath.hasSuffix("/") {
 						self.iconView.activeViewProvider = ResourceItemIcon.folder
 
-						self.itemResolutionPath = itemPath
+						self.itemResolutionLocation = itemLocation
 					} else {
 						self.iconView.activeViewProvider = ResourceItemIcon.file
 
 						if let itemLocalID = itemPolicy.localID {
 							self.itemResolutionLocalID = itemLocalID
 						} else {
-							self.itemResolutionPath = itemPath
+							self.itemResolutionLocation = itemLocation
 						}
 					}
 

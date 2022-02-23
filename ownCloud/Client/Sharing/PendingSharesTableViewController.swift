@@ -110,8 +110,8 @@ class PendingSharesTableViewController: StaticTableViewController {
 					}
 
 					var itemName = share.name
-					if share.itemPath.count > 0 {
-						itemName = (share.itemPath as NSString).lastPathComponent
+					if let itemPath = share.itemLocation.path, itemPath.count > 0 {
+						itemName = (itemPath as NSString).lastPathComponent
 					}
 
 					let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -143,10 +143,10 @@ class PendingSharesTableViewController: StaticTableViewController {
 
 					section.add(row: row)
 
-					if share.itemPath.count > 0 {
+					if let itemPath = share.itemLocation.path, itemPath.count > 0 {
 						if (share.state == .accepted) || (share.accepted == true) {
 							// Item should exist -> track it
-							if let itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
+							if let itemTracker = core?.trackItem(at: share.itemLocation, trackingHandler: { (error, item, isInitial) in
 								if error == nil, isInitial {
 									OnMainThread {
 										row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
@@ -234,8 +234,8 @@ class PendingSharesTableViewController: StaticTableViewController {
 		} else {
 			if share.type == .remote {
 				var itemName = share.name
-				if share.itemPath.count > 0 {
-					itemName = (share.itemPath as NSString).lastPathComponent
+				if let itemPath = share.itemLocation.path, itemPath.count > 0 {
+					itemName = (itemPath as NSString).lastPathComponent
 				}
 
 				let alertController = ThemedAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)

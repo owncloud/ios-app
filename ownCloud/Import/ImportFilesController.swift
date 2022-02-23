@@ -213,7 +213,7 @@ extension ImportFilesController {
 			if let core = core, error == nil {
 				OnMainThread { [weak core] in
 					let waitGroup = DispatchGroup()
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, location: OCLocation.legacyRoot, selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
 						if let targetDirectory = selectedDirectory {
 							for importFile in self.importFiles {
 								let name = importFile.url.lastPathComponent

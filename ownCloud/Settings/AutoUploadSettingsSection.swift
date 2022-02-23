@@ -256,7 +256,7 @@ class AutoUploadSettingsSection: SettingsSection {
 		self.remove(rowWithIdentifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
 
 		if let bookmark = getSelectedBookmark(for: .photo), let path = userDefaults.instantPhotoUploadPath, userDefaults.instantUploadPhotos == true {
-			OCItemTracker(for: bookmark, at: path) { (error, _, pathItem) in
+			OCItemTracker(for: bookmark, at: .legacyRootPath(path)) { (error, _, pathItem) in
 				guard error == nil else { return }
 
 				OnMainThread {
@@ -280,7 +280,7 @@ class AutoUploadSettingsSection: SettingsSection {
 		}
 
 		if let bookmark = getSelectedBookmark(for: .video), let path = userDefaults.instantVideoUploadPath, userDefaults.instantUploadVideos == true {
-			OCItemTracker(for: bookmark, at: path) { (error, _, pathItem) in
+			OCItemTracker(for: bookmark, at: .legacyRootPath(path)) { (error, _, pathItem) in
 				guard error == nil else { return }
 
 				OnMainThread {
@@ -398,7 +398,7 @@ class AutoUploadSettingsSection: SettingsSection {
 											guard let core = core, error == nil else { return }
 
 											OnMainThread {
-												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
+												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, location: .legacyRoot, selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
 													OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 													completion(selectedDirectory)
 												})

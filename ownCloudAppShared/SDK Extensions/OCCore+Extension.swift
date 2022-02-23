@@ -41,7 +41,7 @@ extension OCCore {
 
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
-					return share.itemPath == item.path
+					return share.itemLocation == item.location
 				})
 
 				combinedShares.addObjects(from: sharesWithMe)
@@ -71,8 +71,8 @@ extension OCCore {
 		if let shareQuery = OCShareQuery(scope: scope, item: nil) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
-					return (share.itemPath == item.path) ||
-					       (allowPartialMatch && (item.path?.hasPrefix(share.itemPath) == true))
+					return (share.itemLocation == item.location) ||
+					       (allowPartialMatch && (item.location?.isLocated(in: share.itemLocation) == true))
 				})
 				initialPopulationHandler(shares)
 

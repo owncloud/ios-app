@@ -278,7 +278,7 @@ extension OCItem {
 				repeat {
 					lastParentPath = parentPath
 
-					database?.retrieveCacheItems(atPath: parentPath, itemOnly: true, completionHandler: { (_, error, _, items) in
+					database?.retrieveCacheItems(at: OCLocation(driveID: self.driveID, path: parentPath), itemOnly: true, completionHandler: { (_, error, _, items) in
 						if error == nil, let parentItem = items?.first {
 							parentPath = parentItem.path
 
@@ -315,8 +315,8 @@ extension OCItem {
 			}
 
 			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
-				if parentItem == nil, let parentPath = self.path?.parentPath {
-					parentItem = try? core.cachedItem(atPath: parentPath)
+				if parentItem == nil, let parentLocation = self.location?.parent {
+					parentItem = try? core.cachedItem(at: parentLocation)
 				}
 
 				if completionHandler == nil {

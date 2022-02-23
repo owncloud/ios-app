@@ -89,7 +89,7 @@ class MediaUploadOperation : Operation {
 		// Track the target path
 		importGroup.enter()
 
-		self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (_, item, isInitial) in
+		self.itemTracking = core.trackItem(at: OCLocation.legacyRootPath(path), trackingHandler: { (_, item, isInitial) in
 			let importGroup = importGroupLeaveOnce
 			importGroupLeaveOnce = nil
 
