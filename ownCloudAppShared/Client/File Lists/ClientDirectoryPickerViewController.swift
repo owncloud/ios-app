@@ -83,6 +83,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	public init(core inCore: OCCore, location: OCLocation, selectButtonTitle: String, allowedLocationFilter: ClientDirectoryPickerLocationFilter? = nil, navigationLocationFilter: ClientDirectoryPickerLocationFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
 		let targetDirectoryQuery = OCQuery(for: location)
+		let drive = (location.driveID != nil) ? inCore.drive(withIdentifier: location.driveID!) : nil
 
 		// Sort folders first
 		targetDirectoryQuery.sortComparator = { (leftVal, rightVal) in
@@ -99,7 +100,7 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return .orderedSame
 		}
 
-		super.init(core: inCore, query: targetDirectoryQuery, rootViewController: nil)
+		super.init(core: inCore, drive: drive, query: targetDirectoryQuery, rootViewController: nil)
 
 		self.directoryLocation = location
 

@@ -361,10 +361,17 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				if let localItemId = lastVisibleItemId {
 					self.createFileListStack(for: localItemId)
 				} else {
-					let query = OCQuery(for: .legacyRoot)
-					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
+					let topLevelViewController : UIViewController?
+
+					if core.useDrives {
+						topLevelViewController = ClientSpacesTableViewController(core: core, rootViewController: self)
+					} else {
+						let query = OCQuery(for: .legacyRoot)
+						topLevelViewController = ClientQueryViewController(core: core, drive: nil, query: query, rootViewController: self)
+					}
+
 					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
-					self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+					self.filesNavigationController?.setViewControllers([self.emptyViewController, topLevelViewController!], animated: false)
 				}
 
 				let emptyViewController = self.emptyViewController
@@ -454,7 +461,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
 				OnMainThread {
 					let query = OCQuery(for: .legacyRoot)
-					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
+					let queryViewController = ClientQueryViewController(core: core, drive: nil, query: query, rootViewController: self)
 
 					if error == nil, let item = item, item.isRoot == false {
 						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack

@@ -48,6 +48,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 	private let moreCellIdentifier = "moreCell"
 	private let moreCellAccessibilityIdentifier = "more-results"
+	public var drive : OCDrive?
 
 	open override var activeQuery : OCQuery {
 		if let customSearchQuery = customSearchQuery {
@@ -91,13 +92,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
-		self.init(core: inCore, query: inQuery, rootViewController: nil)
+		self.init(core: inCore, drive: nil, query: inQuery, rootViewController: nil)
 	}
 
-	public init(core inCore: OCCore, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
+	public init(core inCore: OCCore, drive inDrive: OCDrive?, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
 		revealItemLocalID = inItem?.localID
 		breadCrumbsPush = revealItemLocalID != nil
+		drive = inDrive
 
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
@@ -930,7 +932,11 @@ extension ClientQueryViewController {
 		let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
-			self.navigationItem.title = shortName
+			if let drive = drive, let driveName = drive.name {
+				self.navigationItem.title = driveName
+			} else {
+				self.navigationItem.title = shortName
+			}
 		} else {
 			if #available(iOS 14.0, *) {
 				self.navigationItem.backButtonDisplayMode = .generic

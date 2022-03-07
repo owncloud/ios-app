@@ -366,6 +366,7 @@
 		DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEC3DE3242F665D0076B43C /* CoreServices.framework */; };
 		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
 		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
+		DC9A116B27D0338400D90BA4 /* ClientSpacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */; };
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
@@ -1352,6 +1353,7 @@
 		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
 		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
 		DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumeratorObserver.m; sourceTree = "<group>"; };
+		DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSpacesTableViewController.swift; sourceTree = "<group>"; };
 		DC9BFBB220A19AF3007064B5 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-locked.tvg"; path = "img/filetypes-tvg/icon-locked.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
@@ -2929,6 +2931,7 @@
 				DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */,
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
 				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
+				DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */,
 			);
 			path = "File Lists";
 			sourceTree = "<group>";
@@ -4267,6 +4270,7 @@
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */,
+				DC9A116B27D0338400D90BA4 /* ClientSpacesTableViewController.swift in Sources */,
 				DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */,
 				DC0A358224C0E44200FB58FC /* TVGImage.swift in Sources */,
 				DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */,

@@ -457,7 +457,8 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	}
 
 	public func revealViewController(core: OCCore, location: OCLocation, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
-		return ClientQueryViewController(core: core, query: OCQuery(for: location), reveal: item, rootViewController: nil)
+		let drive = (location.driveID != nil) ? core.drive(withIdentifier: location.driveID!) : nil
+		return ClientQueryViewController(core: core, drive: drive, query: OCQuery(for: location), reveal: item, rootViewController: nil)
 	}
 
 	public func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool {
