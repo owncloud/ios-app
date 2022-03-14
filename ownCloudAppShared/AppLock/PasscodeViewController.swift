@@ -175,6 +175,9 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
 		self.biometricalButtonHidden = !(!AppLockSettings.shared.biometricalSecurityEnabled || self.cancelButtonHidden)
 		updateKeypadButtons()
+        if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
+            self.biometricalButton?.accessibilityLabel = biometricalSecurityName
+        }
 
 		if #available(iOS 13.4, *) {
 			for button in keypadButtons! {
