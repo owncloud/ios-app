@@ -1,4 +1,4 @@
-Changelog for ownCloud iOS Client [11.9.0] (2022-03-14)
+Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
 ownCloud admins and users.
