@@ -533,6 +533,33 @@
     "categoryTag" : "bookmarks",
     "classIdentifier" : "bookmark",
     "className" : "ownCloud.BookmarkViewController",
+    "description" : "Controls prepopulation of the local database with the full item set during account setup.",
+    "flatIdentifier" : "bookmark.prepopulation",
+    "key" : "prepopulation",
+    "label" : "bookmark.prepopulation",
+    "possibleValues" : [
+      {
+        "description" : "No prepopulation. Request the contents of every folder individually.",
+        "value" : "doNot"
+      },
+      {
+        "description" : "Parse the prepopulation metadata after receiving it as a whole.",
+        "value" : "split"
+      },
+      {
+        "description" : "Parse the prepopulation metadata while receiving it.",
+        "value" : "streaming"
+      }
+    ],
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Bookmarks",
+    "categoryTag" : "bookmarks",
+    "classIdentifier" : "bookmark",
+    "className" : "ownCloud.BookmarkViewController",
     "defaultValue" : true,
     "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
     "flatIdentifier" : "bookmark.url-editable",

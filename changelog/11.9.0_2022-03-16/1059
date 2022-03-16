@@ -1,0 +1,5 @@
+Change: Webfinger / server location
+
+Allows using webfinger or a lookup table to locate and use an alternative server based on the user name
+
+https://github.com/owncloud/ios-app/pull/1059

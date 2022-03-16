@@ -1,0 +1,5 @@
+Bugfix: Fix WebDAV endpoint URL for media playback after restoration
+
+Fixes a bug where media playback failed with a 404 Not Found error after restoration because the WebDAV endpoint URL was constructed from authentication data rather than OC user endpoint data.
+
+https://github.com/owncloud/ios-app/pull/1093

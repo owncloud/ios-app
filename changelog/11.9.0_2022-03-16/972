@@ -1,0 +1,5 @@
+Change: Rename Account (without re-authentication)
+
+Check if only the account name was changed in edit mode: save and dismiss without re-authentication
+
+https://github.com/owncloud/ios-app/issues/972
