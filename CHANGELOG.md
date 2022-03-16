@@ -8,23 +8,30 @@ ownCloud admins and users.
 Summary
 -------
 
-* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
+* Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
 * Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
-* Change - Webfinger / server location: [#4849](https://github.com/owncloud/enterprise/issues/4849)
+* Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
 * Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
 * Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
 Details
 -------
 
-* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#4924](https://github.com/owncloud/enterprise/issues/4924)
+* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
 
    Fixes a bug where media playback failed with a 404 Not Found error after restoration because the
    WebDAV endpoint URL was constructed from authentication data rather than OC user endpoint
    data.
 
-   https://github.com/owncloud/enterprise/issues/4924
+   https://github.com/owncloud/ios-app/pull/1093
+
+* Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
+
+   Retry requests that failed with a 401 during a token refresh
+
+   https://github.com/owncloud/ios-app/pull/1105
 
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
 
@@ -40,12 +47,12 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1043
 
-* Change - Webfinger / server location: [#4849](https://github.com/owncloud/enterprise/issues/4849)
+* Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
 
    Allows using webfinger or a lookup table to locate and use an alternative server based on the
    user name
 
-   https://github.com/owncloud/enterprise/issues/4849
+   https://github.com/owncloud/ios-app/pull/1059
 
 * Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
 
