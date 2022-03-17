@@ -1,26 +1,3 @@
-Changelog for ownCloud iOS Client [11.9.1] (2022-03-17)
-=======================================
-The following sections list the changes in ownCloud iOS Client 11.9.1 relevant to
-ownCloud admins and users.
-
-[11.9.1]: https://github.com/owncloud/ios-app/compare/milestone/11.9.0...milestone/11.9.1
-
-Summary
--------
-
-* Bugfix - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
-
-Details
--------
-
-* Bugfix - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
-
-   Added support for prepopulation of newly created account bookmarks via infinite PROPFINDs,
-   which speeds up the initial scan. Due to a merge error 11.9.0 did ship with but not actually
-   expose this feature to users.
-
-   https://github.com/owncloud/ios-app/issues/950
-
 Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
