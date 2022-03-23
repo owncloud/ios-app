@@ -1549,6 +1549,23 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.9.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Faster Account Scan</string>
+					<key>Subtitle</key>
+					<string>We improved the time for the initial scan after setting up a new account</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
