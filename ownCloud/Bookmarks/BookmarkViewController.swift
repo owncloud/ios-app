@@ -604,7 +604,11 @@ class BookmarkViewController: StaticTableViewController {
 
 						connection.disconnect(completionHandler: {
 
-							let done = {
+							let done = { (_ doAddBookmark: Bool) in
+								if doAddBookmark {
+									OCBookmarkManager.shared.addBookmark(bookmark)
+								}
+
 								let userActionCompletionHandler = strongSelf.userActionCompletionHandler
 								strongSelf.userActionCompletionHandler = nil
 
@@ -648,7 +652,7 @@ class BookmarkViewController: StaticTableViewController {
 
 												OnMainThread {
 													progressViewController?.dismiss(animated: true, completion: {
-														done()
+														done(false)
 													})
 												}
 											}
@@ -666,7 +670,7 @@ class BookmarkViewController: StaticTableViewController {
 													})
 
 												default:
-													done()
+													done(true)
 											}
 
 											// Present progress
@@ -683,7 +687,7 @@ class BookmarkViewController: StaticTableViewController {
 
 										} else {
 											// No prepopulation
-											done()
+											done(true)
 										}
 									}
 
@@ -694,7 +698,7 @@ class BookmarkViewController: StaticTableViewController {
 										Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
 									}
 
-									done()
+									done(false)
 							}
 						})
 					} else {
