@@ -1,19 +1,37 @@
-Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 =======================================
-The following sections list the changes in ownCloud iOS Client unreleased relevant to
+The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.8.2...master
+[11.9.0]: https://github.com/owncloud/ios-app/compare/milestone/11.8.2...milestone/11.9.0
 
 Summary
 -------
 
+* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
+* Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
-* Change - Set App Group Identifier: [#4918](https://github.com/owncloud/enterprise/issues/4918)
+* Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
+* Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
+* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
 * Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
 Details
 -------
+
+* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
+
+   Fixes a bug where media playback failed with a 404 Not Found error after restoration because the
+   WebDAV endpoint URL was constructed from authentication data rather than OC user endpoint
+   data.
+
+   https://github.com/owncloud/ios-app/pull/1093
+
+* Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
+
+   Retry requests that failed with a 401 during a token refresh
+
+   https://github.com/owncloud/ios-app/pull/1105
 
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
 
@@ -23,13 +41,25 @@ Details
 
    https://github.com/owncloud/ios-app/issues/1004
 
-* Change - Set App Group Identifier: [#4918](https://github.com/owncloud/enterprise/issues/4918)
+* Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
 
-   Set a custom app group identifier via Branding.plist this parameter. This value will be set by
-   fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning
-   script which does not handle setting the app group identifier.
+   Avoids simultaneous polling for changes by FileProvider and app.
 
-   https://github.com/owncloud/enterprise/issues/4918
+   https://github.com/owncloud/ios-app/pull/1043
+
+* Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
+
+   Allows using webfinger or a lookup table to locate and use an alternative server based on the
+   user name
+
+   https://github.com/owncloud/ios-app/pull/1059
+
+* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
+
+   Added support for prepopulation of newly created account bookmarks via infinite PROPFINDs,
+   which speeds up the initial scan
+
+   https://github.com/owncloud/ios-app/issues/950
 
 * Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
