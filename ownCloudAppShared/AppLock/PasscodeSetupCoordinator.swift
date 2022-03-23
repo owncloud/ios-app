@@ -127,6 +127,7 @@ public class PasscodeSetupCoordinator {
 					if self.passcodeFromFirstStep == passcode {
 						// Confirmed passcode matches the original ones -> save and lock the app
 						self.lock(with: passcode)
+						// foo
 						self.showSuggestBiometricalUnlockUI()
 					} else {
 						//Passcode is not the same
@@ -159,7 +160,7 @@ public class PasscodeSetupCoordinator {
 					self.completionHandler?(false)
 				})
 				if AppLockManager.supportedOnDevice {
-					AppLockManager.shared.showLockscreenIfNeeded()
+					AppLockManager.shared.showLockscreenIfNeeded(setupMode: true)
 				}
 			} else {
 				let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
@@ -170,7 +171,7 @@ public class PasscodeSetupCoordinator {
 						self.completionHandler?(false)
 					})
 					if AppLockManager.supportedOnDevice {
-						AppLockManager.shared.showLockscreenIfNeeded()
+						AppLockManager.shared.showLockscreenIfNeeded(setupMode: true)
 					}
 				}))
 
