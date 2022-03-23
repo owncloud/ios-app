@@ -127,7 +127,6 @@ public class PasscodeSetupCoordinator {
 					if self.passcodeFromFirstStep == passcode {
 						// Confirmed passcode matches the original ones -> save and lock the app
 						self.lock(with: passcode)
-						// foo
 						self.showSuggestBiometricalUnlockUI()
 					} else {
 						//Passcode is not the same
