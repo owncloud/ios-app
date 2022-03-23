@@ -1,3 +1,43 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.9.0...master
+
+Summary
+-------
+
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+* Change - Set App Group Identifier: [#4918](https://github.com/owncloud/enterprise/issues/4918)
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
+
+Details
+-------
+
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+
+   Added biometrical authentication button to provide a fallback for the fileprovider or app, if
+   the automatically biometrical unlock does not work, or the user cancel the biometrical
+   authentication flow.
+
+   https://github.com/owncloud/ios-app/issues/1004
+
+* Change - Set App Group Identifier: [#4918](https://github.com/owncloud/enterprise/issues/4918)
+
+   Set a custom app group identifier via Branding.plist this parameter. This value will be set by
+   fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning
+   script which does not handle setting the app group identifier.
+
+   https://github.com/owncloud/enterprise/issues/4918
+
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
+
+   Check if only the account name was changed in edit mode: save and dismiss without
+   re-authentication
+
+   https://github.com/owncloud/ios-app/issues/972
+
 Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
