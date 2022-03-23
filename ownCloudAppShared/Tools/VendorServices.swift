@@ -167,8 +167,8 @@ extension VendorServices : OCClassSettingsSupport {
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
 			return [
-				.isBetaBuild : true,
-				.showBetaWarning : true,
+				.isBetaBuild : false,
+				.showBetaWarning : false,
 				.enableUIAnimations: true,
 				.enableReviewPrompt: VendorServices.shared.enableReviewPrompt,
 
