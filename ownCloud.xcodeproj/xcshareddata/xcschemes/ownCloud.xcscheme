@@ -306,6 +306,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[auth-race-condition]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:server-locator.use"
             value = "string:web-finger"
             isEnabled = "NO">
