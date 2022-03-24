@@ -1,0 +1,5 @@
+Bugfix: Setup Passcode with Biometrical Unlock
+
+Biometrical unlock button no longer appear in setup view and after passcode was successfully setup, show biometrical unlock for permissions dialog.
+
+https://github.com/owncloud/ios-app/pull/1112

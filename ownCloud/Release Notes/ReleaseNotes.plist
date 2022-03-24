@@ -1564,6 +1564,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>wrench</string>
 				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Biometrical Authentication Button</string>
+					<key>Subtitle</key>
+					<string>Improvements when setting up a passcode with biometrical unlock</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
 			</array>
 		</dict>
 	</array>
