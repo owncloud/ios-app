@@ -1,3 +1,26 @@
+Changelog for ownCloud iOS Client [11.9.1] (2022-03-23)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.9.1 relevant to
+ownCloud admins and users.
+
+[11.9.1]: https://github.com/owncloud/ios-app/compare/milestone/11.9.0...milestone/11.9.1
+
+Summary
+-------
+
+* Change - Set App Group Identifier: [#4918](https://github.com/owncloud/enterprise/issues/4918)
+
+Details
+-------
+
+* Change - Set App Group Identifier: [#4918](https://github.com/owncloud/enterprise/issues/4918)
+
+   Set a custom app group identifier via Branding.plist this parameter. This value will be set by
+   fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning
+   script which does not handle setting the app group identifier.
+
+   https://github.com/owncloud/enterprise/issues/4918
+
 Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
