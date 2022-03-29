@@ -1,3 +1,34 @@
+Changelog for ownCloud iOS Client [11.9.1] (2022-03-29)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.9.1 relevant to
+ownCloud admins and users.
+
+[11.9.1]: https://github.com/owncloud/ios-app/compare/milestone/11.9.0...milestone/11.9.1
+
+Summary
+-------
+
+* Bugfix - Setup Passcode with Biometrical Unlock: [#1112](https://github.com/owncloud/ios-app/pull/1112)
+* Change - Set App Group Identifier: [#1099](https://github.com/owncloud/ios-app/pull/1099)
+
+Details
+-------
+
+* Bugfix - Setup Passcode with Biometrical Unlock: [#1112](https://github.com/owncloud/ios-app/pull/1112)
+
+   Biometrical unlock button no longer appear in setup view and after passcode was successfully
+   setup, show biometrical unlock for permissions dialog.
+
+   https://github.com/owncloud/ios-app/pull/1112
+
+* Change - Set App Group Identifier: [#1099](https://github.com/owncloud/ios-app/pull/1099)
+
+   Set a custom app group identifier via Branding.plist this parameter. This value will be set by
+   fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning
+   script which does not handle setting the app group identifier.
+
+   https://github.com/owncloud/ios-app/pull/1099
+
 Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
