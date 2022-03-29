@@ -1,6 +1,6 @@
-• Fix: PDF Editing
-Fixed bug that prevents changes to PDFs being saved in place.
+• Faster Account Scan
+We improved the time for the initial scan after setting up a new account
 
-• Fix: Continuous Audio Playback
-Fixed continuous audio playback, which stopped after two audio files.
+• Biometrical Authentication Button
+Improvements when setting up a passcode with biometrical unlock
 

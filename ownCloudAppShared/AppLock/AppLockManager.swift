@@ -80,6 +80,14 @@ public class AppLockManager: NSObject {
 			self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
 		}
 	}
+	private var biometricalAuthenticationSucceeded: Bool {
+		get {
+			return userDefaults.bool(forKey: "applock-biometrical-authentication-succeeded")
+		}
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-biometrical-authentication-succeeded")
+		}
+	}
 
 	private let maximumPasscodeAttempts: Int = 3
 	private let powBaseDelay: Double = 1.5
@@ -140,13 +148,15 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - Show / Dismiss Passcode View
-	public func showLockscreenIfNeeded(forceShow: Bool = false, context: LAContext = LAContext()) {
-		if self.shouldDisplayLockscreen || forceShow {
+	public func showLockscreenIfNeeded(forceShow: Bool = false, setupMode: Bool = false, context: LAContext = LAContext()) {
+		if self.shouldDisplayLockscreen || forceShow || setupMode {
 			lockscreenOpenForced = forceShow
 			lockscreenOpen = true
 
 			// Show biometrical
-			if !forceShow, !self.shouldDisplayCountdown {
+			if !forceShow, !self.shouldDisplayCountdown, self.biometricalAuthenticationSucceeded {
+				showBiometricalAuthenticationInterface(context: context)
+			} else if setupMode {
 				showBiometricalAuthenticationInterface(context: context)
 			}
 		}
@@ -186,6 +196,8 @@ public class AppLockManager: NSObject {
 
 	private var passcodeControllerByWindow : NSMapTable<ThemeWindow, PasscodeViewController> = NSMapTable.weakToStrongObjects()
 	private var applockWindowByWindow : NSMapTable<ThemeWindow, AppLockWindow> = NSMapTable.weakToStrongObjects()
+
+	open var biometricCancelLabel : String?
 
 	open var cancelAction : (() -> Void)?
 	open var successAction : (() -> Void)?
@@ -282,7 +294,12 @@ public class AppLockManager: NSObject {
 	func passwordViewController() -> PasscodeViewController {
 		var passcodeViewController : PasscodeViewController
 
-		passcodeViewController = PasscodeViewController(completionHandler: { (viewController: PasscodeViewController, passcode: String) in
+		passcodeViewController = PasscodeViewController(biometricalHandler: { (passcodeViewController) in
+			if !self.shouldDisplayCountdown {
+				let context = LAContext()
+				self.showBiometricalAuthenticationInterface(context: context)
+			}
+		}, completionHandler: { (viewController: PasscodeViewController, passcode: String) in
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
 		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)
 
@@ -452,7 +469,7 @@ public class AppLockManager: NSObject {
 					}
 				}
 
-				context.localizedCancelTitle = "Enter code".localized
+				context.localizedCancelTitle = biometricCancelLabel ?? "Enter code".localized
 				context.localizedFallbackTitle = ""
 
 				self.biometricalAuthenticationInterfaceShown = true
@@ -461,6 +478,7 @@ public class AppLockManager: NSObject {
 					self.biometricalAuthenticationInterfaceShown = false
 
 					if success {
+						self.biometricalAuthenticationSucceeded = true
 						// Fill the passcode dots
 						OnMainThread {
 							self.performPasscodeViewControllerUpdates { (passcodeViewController) in
@@ -478,6 +496,7 @@ public class AppLockManager: NSObject {
 							self.attemptUnlock(with: self.passcode)
 						}
 					} else {
+						self.biometricalAuthenticationSucceeded = false
 						if let error = error {
 							switch error {
 								case LAError.biometryLockout:

@@ -722,7 +722,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			}
 
 			if tableView.isEditing {
-				self.showBookmarkUI(edit: bookmark)
+				self.showBookmarkUI(edit: bookmark, removeAuthDataFromCopy: false)
 			} else {
 				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				self.tableView.deselectRow(at: indexPath, animated: true)
@@ -756,7 +756,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			menuItems.append(openWindow)
 		}
 		let edit = UIAction(title: "Edit".localized, image: UIImage(systemName: "gear")) { _ in
-			self.showBookmarkUI(edit: bookmark)
+			self.showBookmarkUI(edit: bookmark, removeAuthDataFromCopy: false)
 		}
 		if VendorServices.shared.canEditAccount {
 			menuItems.append(edit)
@@ -853,7 +853,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		let editRowAction = UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-				self?.showBookmarkUI(edit: bookmark)
+				self?.showBookmarkUI(edit: bookmark, removeAuthDataFromCopy: false)
 			}
 		})
 		editRowAction.backgroundColor = .blue

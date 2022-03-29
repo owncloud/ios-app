@@ -1,0 +1,5 @@
+Bugfix: OAuth token renewal race condition
+
+Retry requests that failed with a 401 during a token refresh
+
+https://github.com/owncloud/ios-app/pull/1105

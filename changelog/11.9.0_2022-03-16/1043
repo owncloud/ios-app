@@ -1,0 +1,5 @@
+Change: Poll for changes efficiency enhancements
+
+Avoids simultaneous polling for changes by FileProvider and app.
+
+https://github.com/owncloud/ios-app/pull/1043

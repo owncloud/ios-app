@@ -203,7 +203,7 @@
          <EnvironmentVariable
             key = "oc:log.enabled-components"
             value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.colored"
@@ -301,6 +301,21 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[web-finger]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[auth-race-condition]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:server-locator.use"
+            value = "string:web-finger"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:connection.allowed-authentication-methods"
             value = "[openid-connect,oauth2]"
             isEnabled = "NO">
@@ -333,6 +348,16 @@
          <EnvironmentVariable
             key = "oc:action.disallowed"
             value = "[com.owncloud.action.copy,com.owncloud.action.move]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:bookmark.prepopulation"
+            value = "string:streaming"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:bookmark.prepopulation"
+            value = "string:split"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable

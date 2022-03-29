@@ -23,6 +23,8 @@ OCClassSettingsIdentifier OCClassSettingsIdentifierBuildOptions = @"build";
 OCClassSettingsKey	  OCClassSettingsKeyBuildFlags = @"flags";
 OCClassSettingsKey	  OCClassSettingsKeyCustomAppScheme = @"custom-app-scheme";
 OCClassSettingsKey	  OCClassSettingsKeyCustomAuthScheme = @"custom-auth-scheme";
+OCClassSettingsKey	  OCClassSettingsKeyAppGroupIdentifier = @"app-group-identifier";
+OCClassSettingsKey	  OCClassSettingsKeyOCAppGroupIdentifier = @"oc-app-group-identifier";
 
 @implementation BuildOptions
 
@@ -68,6 +70,22 @@ OCClassSettingsKey	  OCClassSettingsKeyCustomAuthScheme = @"custom-auth-scheme";
 		OCClassSettingsKeyCustomAuthScheme : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
 			OCClassSettingsMetadataKeyDescription 	: @"Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
+			OCClassSettingsMetadataKeyCategory	: @"Build",
+		},
+
+		// build.app-group-identifier
+		OCClassSettingsKeyAppGroupIdentifier : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
+			OCClassSettingsMetadataKeyDescription 	: @"Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier and updates other, directly signing-relevant parts of the Info.plist. With this value set, fastlane needs the provisioning profiles and certificate with the app group identifier. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
+			OCClassSettingsMetadataKeyCategory	: @"Build",
+		},
+
+		// build.oc-app-group-identifier
+		OCClassSettingsKeyOCAppGroupIdentifier : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
+			OCClassSettingsMetadataKeyDescription 	: @"Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier only. Fastlane does not need the provisioning profile and certificate with the given app group identifer. Needs resigning with the correct provisioning profile and certificate. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Build",
 		},
