@@ -53,7 +53,7 @@ OCClassSettingsKey	  OCClassSettingsKeyOCAppGroupIdentifier = @"oc-app-group-ide
 		// build.flags
 		OCClassSettingsKeyBuildFlags : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
-			OCClassSettingsMetadataKeyDescription 	: @"A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+			OCClassSettingsMetadataKeyDescription 	: @"A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Build",
 		},
@@ -61,7 +61,7 @@ OCClassSettingsKey	  OCClassSettingsKeyOCAppGroupIdentifier = @"oc-app-group-ide
 		// build.custom-app-scheme
 		OCClassSettingsKeyCustomAppScheme : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
-			OCClassSettingsMetadataKeyDescription 	: @"Name of the URL scheme to use for private links. Must be provided in Branding.plist at build time. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+			OCClassSettingsMetadataKeyDescription 	: @"Name of the URL scheme to use for private links. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Build",
 		},
@@ -69,7 +69,7 @@ OCClassSettingsKey	  OCClassSettingsKeyOCAppGroupIdentifier = @"oc-app-group-ide
 		// build.custom-app-scheme
 		OCClassSettingsKeyCustomAuthScheme : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
-			OCClassSettingsMetadataKeyDescription 	: @"Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+			OCClassSettingsMetadataKeyDescription 	: @"Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Build",
 		},
