@@ -204,7 +204,7 @@
 		DC049157258C00C400DEDC27 /* OCFileProviderServiceStandby.m in Sources */ = {isa = PBXBuildFile; fileRef = DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */; };
 		DC04920B258CB06A00DEDC27 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC04920A258CB06A00DEDC27 /* PocketSVG */; };
 		DC0492B1258CC4EE00DEDC27 /* PocketSVG.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */; };
-		DC04FFC827F5B79000F22569 /* DataSourceCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC04FFC727F5B79000F22569 /* DataSourceCollectionViewController.swift */; };
+		DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC04FFC727F5B79000F22569 /* CollectionViewController.swift */; };
 		DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC080CE3238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.m */; };
 		DC080CE6238AE3F40044C5D2 /* OCLicenseAppStoreProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC080CE2238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC080CF0238C8D850044C5D2 /* StoreKit.framework */; };
@@ -1231,7 +1231,7 @@
 		DC049154258C00C400DEDC27 /* OCFileProviderServiceStandby.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceStandby.h; sourceTree = "<group>"; };
 		DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceStandby.m; sourceTree = "<group>"; };
 		DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PocketSVG.LICENSE; sourceTree = "<group>"; };
-		DC04FFC727F5B79000F22569 /* DataSourceCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCollectionViewController.swift; sourceTree = "<group>"; };
+		DC04FFC727F5B79000F22569 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		DC080CE2238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreProvider.h; sourceTree = "<group>"; };
 		DC080CE3238AE3ED0044C5D2 /* OCLicenseAppStoreProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseAppStoreProvider.m; sourceTree = "<group>"; };
 		DC080CE7238BD71F0044C5D2 /* OCLicenseAppStoreItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseAppStoreItem.h; sourceTree = "<group>"; };
@@ -2937,7 +2937,7 @@
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
 				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
 				DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */,
-				DC04FFC727F5B79000F22569 /* DataSourceCollectionViewController.swift */,
+				DC04FFC727F5B79000F22569 /* CollectionViewController.swift */,
 				DCE2F03F27FB857E00E9E136 /* _DataSourceCollectionViewController.swift */,
 			);
 			path = "File Lists";
@@ -4251,7 +4251,7 @@
 			files = (
 				399EA6F625E6544100B6FF11 /* ShareClientItemCell.swift in Sources */,
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
-				DC04FFC827F5B79000F22569 /* DataSourceCollectionViewController.swift in Sources */,
+				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
 				399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
