@@ -364,8 +364,10 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 					let topLevelViewController : UIViewController?
 
 					if core.useDrives {
-//						topLevelViewController = ClientSpacesTableViewController(core: core, rootViewController: self)
-						topLevelViewController = CollectionViewController(core: core, dataSource: core.hierarchicDrivesDataSource, rootViewController: self)
+						topLevelViewController = CollectionViewController(core: core, rootViewController: self, sections: [
+							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource),
+							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource)
+						])
 					} else {
 						let query = OCQuery(for: .legacyRoot)
 						topLevelViewController = ClientQueryViewController(core: core, drive: nil, query: query, rootViewController: self)

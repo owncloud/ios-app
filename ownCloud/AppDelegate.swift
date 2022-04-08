@@ -52,6 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
+		CollectionViewCellProvider.registerStandardImplementations()
+
 		if VendorServices.shared.isBranded {
 			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
 			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
