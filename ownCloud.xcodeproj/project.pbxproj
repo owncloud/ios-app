@@ -104,7 +104,6 @@
 		39BF674C25E7FE020039663F /* CancelLabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BF674B25E7FE020039663F /* CancelLabelViewController.swift */; };
 		39BF67B225E804DF0039663F /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		39BF67B325E804EF0039663F /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
-		39BF67B425E804FB0039663F /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
 		39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755323D8392D00193950 /* EditDocumentViewController.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
@@ -303,12 +302,9 @@
 		DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */ = {isa = PBXBuildFile; fileRef = DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC36885924DC98BF00333600 /* OCFileProviderServiceSession.m in Sources */ = {isa = PBXBuildFile; fileRef = DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */; };
 		DC36885D24DD916800333600 /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
-		DC36885E24DD917400333600 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
 		DC36885F24DD917900333600 /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC36886224DDA9AB00333600 /* ProgressIndicatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC36886024DDA3C300333600 /* ProgressIndicatorViewController.swift */; };
-		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
 		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
-		DC3BE0D92077BC6B002A0AC0 /* openssl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */; };
 		DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */; };
@@ -361,7 +357,6 @@
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
 		DC869A592153B1F60088977E /* OCMockingManager+SwiftTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC869A582153B1F60088977E /* OCMockingManager+SwiftTools.swift */; };
-		DC8EB26C23927FDD009148F9 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
 		DC8EB271239308E5009148F9 /* LicenseOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */; };
 		DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEC3DE3242F665D0076B43C /* CoreServices.framework */; };
 		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
@@ -440,7 +435,6 @@
 		DCE20272249AB50E0015A22A /* OCMessage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */; };
 		DCE28F602433683700879DEC /* ClientSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE28F5F2433683700879DEC /* ClientSessionManager.swift */; };
 		DCE2F03E27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F03D27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift */; };
-		DCE2F04027FB857E00E9E136 /* _DataSourceCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE2F03F27FB857E00E9E136 /* _DataSourceCollectionViewController.swift */; };
 		DCE442CE2387452000940A6D /* LicensingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0856B2293F1FD008CC05C /* LicensingTests.m */; };
 		DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E200B233E477F009D2897 /* OpenItemUserActivity.swift */; };
 		DCE4E43524C1999A0051722F /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
@@ -500,6 +494,8 @@
 		DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
+		DCEAF068280767BC00980B6D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF067280767BC00980B6D /* OpenSSL */; };
+		DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF06C280767CF00980B6D /* OpenSSL */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
 		DCF072D72798558B00E0B01D /* OCCircularImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072D5279850CC00E0B01D /* OCCircularImageView.m */; };
 		DCF072D82798559900E0B01D /* OCCircularImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF072D4279850CC00E0B01D /* OCCircularImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -529,6 +525,7 @@
 		DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */; };
 		DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */; };
 		DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */; };
+		DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */; };
 		DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */; };
 		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
@@ -559,13 +556,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 233BDE9B204FEFE500C06732;
 			remoteInfo = ownCloud;
-		};
-		2347445D2076138000859C93 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DC30949D205749EA00189B9A;
-			remoteInfo = openssl;
 		};
 		239369772076110900BCE21A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -707,13 +697,6 @@
 			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
 			remoteInfo = ownCloudSDK;
 		};
-		DC3BE0CC2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC30949C205749EA00189B9A;
-			remoteInfo = openssl;
-		};
 		DC3BE0CE2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
@@ -741,13 +724,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = DCE93FE221FCA42C000E14F2;
 			remoteInfo = libzip;
-		};
-		DC8EB26D23927FE7009148F9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC30949C205749EA00189B9A;
-			remoteInfo = openssl;
 		};
 		DCB2C058250C1C3F001083CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -896,7 +872,6 @@
 				394A0B0122EEFC2C00603813 /* ownCloudAppShared.framework in Copy Frameworks */,
 				DCC085722293F1FD008CC05C /* ownCloudApp.framework in Copy Frameworks */,
 				DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */,
-				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in Copy Frameworks */,
 				DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -1425,8 +1400,6 @@
 		DCD1300923A191C000255779 /* LicenseOfferButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferButton.swift; sourceTree = "<group>"; };
 		DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+AppStore.swift"; sourceTree = "<group>"; };
 		DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSettingsSection.swift; sourceTree = "<group>"; };
-		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCD71E7C2742745D001592C6 /* BuildOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BuildOptions.h; sourceTree = "<group>"; };
 		DCD71E7D2742745D001592C6 /* BuildOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuildOptions.m; sourceTree = "<group>"; };
 		DCD810922398492C003B0053 /* OCLicenseDuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseDuration.h; sourceTree = "<group>"; };
@@ -1450,7 +1423,6 @@
 		DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCMessage+Extension.swift"; sourceTree = "<group>"; };
 		DCE28F5F2433683700879DEC /* ClientSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSessionManager.swift; sourceTree = "<group>"; };
 		DCE2F03D27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewDiffableDataSource+Tools.swift"; sourceTree = "<group>"; };
-		DCE2F03F27FB857E00E9E136 /* _DataSourceCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _DataSourceCollectionViewController.swift; sourceTree = "<group>"; };
 		DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Action+UserInterface.swift"; sourceTree = "<group>"; };
 		DCE4E44324C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileListTableViewController+OpenItemTableViewController.swift"; sourceTree = "<group>"; };
 		DCE4E44C24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QueryFileListTableViewController+Multiselect.swift"; sourceTree = "<group>"; };
@@ -1516,6 +1488,7 @@
 		DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSection.swift; sourceTree = "<group>"; };
 		DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellProvider.swift; sourceTree = "<group>"; };
 		DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
+		DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellConfiguration.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
 		DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VendorServices+App.swift"; sourceTree = "<group>"; };
@@ -1547,8 +1520,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCEAF068280767BC00980B6D /* OpenSSL in Frameworks */,
 				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
-				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
 				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
 				DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */,
@@ -1593,7 +1566,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39BF67B425E804FB0039663F /* openssl.framework in Frameworks */,
 				39DC7CF425C305E80001E08C /* ownCloudAppShared.framework in Frameworks */,
 				39DC7CE725C305E40001E08C /* ownCloudApp.framework in Frameworks */,
 				39BF67B225E804DF0039663F /* ownCloudUI.framework in Frameworks */,
@@ -1624,7 +1596,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC8EB26C23927FDD009148F9 /* openssl.framework in Frameworks */,
+				DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */,
 				DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */,
 				DCC0857B2293F29F008CC05C /* ownCloudSDK.framework in Frameworks */,
 			);
@@ -1654,7 +1626,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC36885E24DD917400333600 /* openssl.framework in Frameworks */,
 				DC36885D24DD916800333600 /* ownCloudApp.framework in Frameworks */,
 				DC36885F24DD917900333600 /* ownCloudUI.framework in Frameworks */,
 				DCE4E48024C1F58D0051722F /* ownCloudSDK.framework in Frameworks */,
@@ -1689,7 +1660,6 @@
 			isa = PBXGroup;
 			children = (
 				DC9BFBB220A19AF3007064B5 /* doc */,
-				DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */,
 				233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */,
 				233BDE9E204FEFE500C06732 /* ownCloud */,
 				DC7DBA10207F59C500E7337D /* External */,
@@ -1773,14 +1743,6 @@
 				5917244820D3DB1F00809B38 /* Security */,
 			);
 			path = ownCloudTests;
-			sourceTree = "<group>";
-		};
-		2347445A2076138000859C93 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2347445E2076138000859C93 /* openssl.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		2366821521144DCD0045EF72 /* Card Presentation Controller */ = {
@@ -2616,7 +2578,6 @@
 				DC080CF0238C8D850044C5D2 /* StoreKit.framework */,
 				DC2565E8225F5A1900828AA5 /* UserNotifications.framework */,
 				DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */,
-				DCD344A5205BD0C000189B9A /* openssl.framework */,
 				D0D9C062DD1E85A838608B0F /* EarlGrey.framework */,
 				A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */,
 				42866B2892DC9EDC65D844E7 /* Pods_ownCloud_Screenshots_Tests.framework */,
@@ -2943,11 +2904,11 @@
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
 				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
 				DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */,
+				DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */,
 				DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */,
 				DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */,
 				DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */,
 				DC04FFC727F5B79000F22569 /* CollectionViewController.swift */,
-				DCE2F03F27FB857E00E9E136 /* _DataSourceCollectionViewController.swift */,
 			);
 			path = "File Lists";
 			sourceTree = "<group>";
@@ -3349,7 +3310,6 @@
 			);
 			dependencies = (
 				DC63207D21FCA71B007EC0A8 /* PBXTargetDependency */,
-				DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
@@ -3363,6 +3323,7 @@
 			name = ownCloud;
 			packageProductDependencies = (
 				024F3A2024A3AB410083E11E /* CrashReporter */,
+				DCEAF067280767BC00980B6D /* OpenSSL */,
 			);
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
@@ -3508,11 +3469,13 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC8EB26E23927FE7009148F9 /* PBXTargetDependency */,
 				DC774E6722F44F65000B11A1 /* PBXTargetDependency */,
 				DCC0857A2293F296008CC05C /* PBXTargetDependency */,
 			);
 			name = ownCloudApp;
+			packageProductDependencies = (
+				DCEAF06C280767CF00980B6D /* OpenSSL */,
+			);
 			productName = ownCloudApp;
 			productReference = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */;
 			productType = "com.apple.product-type.framework";
@@ -3687,6 +3650,7 @@
 			packageReferences = (
 				024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */,
 				DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */,
+				DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */,
 			);
 			productRefGroup = 233BDE9D204FEFE500C06732 /* Products */;
 			projectDirPath = "";
@@ -3694,10 +3658,6 @@
 				{
 					ProductGroup = DCE93FEF21FCA434000E14F2 /* Products */;
 					ProjectRef = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
-				},
-				{
-					ProductGroup = 2347445A2076138000859C93 /* Products */;
-					ProjectRef = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
 				},
 				{
 					ProductGroup = 239369712076110900BCE21A /* Products */;
@@ -3722,13 +3682,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2347445E2076138000859C93 /* openssl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = openssl.framework;
-			remoteRef = 2347445D2076138000859C93 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		239369782076110900BCE21A /* ownCloudSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -4293,7 +4246,6 @@
 				DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */,
 				DC9A116B27D0338400D90BA4 /* ClientSpacesTableViewController.swift in Sources */,
 				DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */,
-				DCE2F04027FB857E00E9E136 /* _DataSourceCollectionViewController.swift in Sources */,
 				DC0A358224C0E44200FB58FC /* TVGImage.swift in Sources */,
 				DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */,
 				DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */,
@@ -4317,6 +4269,7 @@
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
+				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,
 				DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */,
 				DCE4E43924C19AB20051722F /* MoreStaticTableViewController.swift in Sources */,
@@ -4593,11 +4546,6 @@
 			name = ownCloudSDK;
 			targetProxy = DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */;
 		};
-		DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = openssl;
-			targetProxy = DC3BE0CC2077BC52002A0AC0 /* PBXContainerItemProxy */;
-		};
 		DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ownCloudSDK;
@@ -4617,11 +4565,6 @@
 			isa = PBXTargetDependency;
 			name = libzip;
 			targetProxy = DC774E6622F44F65000B11A1 /* PBXContainerItemProxy */;
-		};
-		DC8EB26E23927FE7009148F9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = openssl;
-			targetProxy = DC8EB26D23927FE7009148F9 /* PBXContainerItemProxy */;
 		};
 		DCB2C059250C1C3F001083CA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5715,6 +5658,14 @@
 				minimumVersion = 2.7.0;
 			};
 		};
+		DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -5742,6 +5693,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
 			productName = PocketSVG;
+		};
+		DCEAF067280767BC00980B6D /* OpenSSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */;
+			productName = OpenSSL;
+		};
+		DCEAF06C280767CF00980B6D /* OpenSSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */;
+			productName = OpenSSL;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

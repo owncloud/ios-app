@@ -22,21 +22,36 @@ import ownCloudSDK
 public extension CollectionViewCellProvider {
 	static func registerStandardImplementations() {
 		// Register cell providers for .drive and .presentable
-		let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, OCDataItemReference> { (cell, indexPath, itemRef) in
+		let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var content = cell.defaultContentConfiguration()
 
-			if let cellConfiguration = itemRef.ocDataItemCellConfiguration {
-				if let itemRecord = try? cellConfiguration.source?.record(forItemRef: itemRef) {
-					if let item = itemRecord?.item {
+			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
+				var itemRecord = cellConfiguration.record
+
+				if itemRecord == nil {
+					if let collectionViewController = cellConfiguration.hostViewController {
+						let (itemRef, _) = collectionViewController.unwrap(collectionItemRef)
+
+						if let retrievedItemRecord = try? cellConfiguration.source?.record(forItemRef: itemRef) {
+							itemRecord = retrievedItemRecord
+						}
+					}
+				}
+
+				if let itemRecord = itemRecord {
+					if let item = itemRecord.item {
 						if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
 							content.text = presentable.title
 							content.secondaryText = presentable.subtitle
+
+//							presentable.requestResource(.coverImage, withOptions: [.core : core], completionHandler: { error, resource in
+//							})
 						}
 					} else {
 						// Request reconfiguration of cell
-						itemRecord?.retrieveItem(completionHandler: { error, itemRecord in
-							if let collectionViewController = cellConfiguration.hostViewController as? CollectionViewController {
-								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([itemRef])
+						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
+							if let collectionViewController = cellConfiguration.hostViewController {
+								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
 							}
 						})
 					}

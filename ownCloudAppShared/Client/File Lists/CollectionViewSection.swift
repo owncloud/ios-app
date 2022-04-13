@@ -62,24 +62,35 @@ public class CollectionViewSection: NSObject {
 		collectionViewController?.updateSource(animatingDifferences: true)
 	}
 
-	func provideReusableCell(for collectionView: UICollectionView, itemRef: OCDataItemReference, indexPath: IndexPath) -> UICollectionViewCell {
-		var cell: UICollectionViewCell?
-
-		if let itemRecord = try? dataSource?.record(forItemRef: itemRef), let itemRecord = itemRecord {
-			var cellProvider = CollectionViewCellProvider.providerFor(itemRecord)
-
-			if cellProvider == nil {
-				cellProvider = CollectionViewCellProvider.providerFor(.presentable)
+	func populate(snapshot: inout NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>) {
+		if let datasourceSnapshot = dataSourceSubscription?.snapshotResettingChangeTracking(true) {
+			if let wrappedItems = collectionViewController?.wrap(references: datasourceSnapshot.items, forSection: identifier) {
+				snapshot.appendItems(wrappedItems, toSection: identifier)
 			}
 
-			if let cellProvider = cellProvider, let dataSource = dataSource {
-				let cellConfiguration = OCDataItemCellConfiguration(source: dataSource)
+			if let updatedItems = datasourceSnapshot.updatedItems, updatedItems.count > 0,
+			   let wrappedUpdatedItems = collectionViewController?.wrap(references: Array(updatedItems), forSection: identifier) {
+				snapshot.reloadItems(wrappedUpdatedItems)
+			}
+		}
+	}
 
-				cellConfiguration.reference = itemRef
-				cellConfiguration.record = itemRecord
-				cellConfiguration.hostViewController = self.collectionViewController
+	func provideReusableCell(for collectionView: UICollectionView, collectionItemRef: CollectionViewController.ItemRef, indexPath: IndexPath) -> UICollectionViewCell {
+		var cell: UICollectionViewCell?
 
-				cell = cellProvider.provideCell(for: collectionView, cellConfiguration: cellConfiguration, itemRecord: itemRecord, itemRef: itemRef, indexPath: indexPath)
+		if let (dataItemRef, _) = collectionViewController?.unwrap(collectionItemRef) {
+			if let itemRecord = try? dataSource?.record(forItemRef: dataItemRef), let itemRecord = itemRecord {
+				var cellProvider = CollectionViewCellProvider.providerFor(itemRecord)
+
+				if cellProvider == nil {
+					cellProvider = CollectionViewCellProvider.providerFor(.presentable)
+				}
+
+				if let cellProvider = cellProvider, let dataSource = dataSource {
+					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController)
+
+					cell = cellProvider.provideCell(for: collectionView, cellConfiguration: cellConfiguration, itemRecord: itemRecord, collectionItemRef: collectionItemRef, indexPath: indexPath)
+				}
 			}
 		}
 

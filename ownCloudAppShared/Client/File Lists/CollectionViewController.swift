@@ -21,16 +21,22 @@ import ownCloudSDK
 
 public class CollectionViewController: UIViewController, UICollectionViewDelegate {
 
-	public weak var core : OCCore?
+	public weak var core: OCCore?
 	public weak var rootViewController: UIViewController?
 
-	public init(core inCore: OCCore, rootViewController inRootViewController: UIViewController, sections inSections: [CollectionViewSection]?) {
+	public var supportsHierarchicContent: Bool
+
+	public init(core inCore: OCCore?, rootViewController inRootViewController: UIViewController?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false) {
+		supportsHierarchicContent = hierarchic
+
 		super.init(nibName: nil, bundle: nil)
 
 		core = inCore
 		rootViewController = inRootViewController
 
-		self.navigationItem.title = inCore.bookmark.shortName
+		if let core = inCore {
+			self.navigationItem.title = core.bookmark.shortName
+		}
 
 		// Add datasources
 		if let addSections = inSections {
@@ -44,7 +50,7 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 	// MARK: - Collection View
 	var collectionView : UICollectionView! = nil
-	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, OCDataItemReference>! = nil
+	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>! = nil
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
@@ -66,11 +72,10 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 	// MARK: - Collection View Datasource
 	func configureDataSource() {
-		collectionViewDataSource = UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, OCDataItemReference>(collectionView: collectionView) { [weak self] (collectionView: UICollectionView, indexPath: IndexPath, itemRef: OCDataItemReference) -> UICollectionViewCell? in
-			// let dataSourceSectionIndex = collectionView.dataSourceSectionIndex(forPresentationSectionIndex: indexPath.section) // not sure if needed
+		collectionViewDataSource = UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>(collectionView: collectionView) { [weak self] (collectionView: UICollectionView, indexPath: IndexPath, collectionItemRef: CollectionViewController.ItemRef) -> UICollectionViewCell? in
 			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 			   let section = self?.sectionsByID[sectionIdentifier] {
-				return section.provideReusableCell(for: collectionView, itemRef: itemRef, indexPath: indexPath)
+				return section.provideReusableCell(for: collectionView, collectionItemRef: collectionItemRef, indexPath: indexPath)
 			}
 
 			return UICollectionViewCell()
@@ -84,7 +89,7 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	var sectionsByID : [CollectionViewSection.SectionIdentifier : CollectionViewSection] = [:]
 
 	// MARK: - Sections
-	func add(sections sectionsToAdd: [CollectionViewSection]) {
+	public func add(sections sectionsToAdd: [CollectionViewSection]) {
 		for section in sectionsToAdd {
 			section.collectionViewController = self
 
@@ -95,7 +100,7 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		updateSource()
 	}
 
-	func remove(sections sectionsToRemove: [CollectionViewSection]) {
+	public func remove(sections sectionsToRemove: [CollectionViewSection]) {
 		for section in sectionsToRemove {
 			section.collectionViewController = nil
 
@@ -113,26 +118,72 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 			return
 		}
 
-		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, OCDataItemReference>()
+		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>()
 
 		for section in sections {
 			snapshot.appendSections([section.identifier])
 
-			if let datasourceSnapshot = section.dataSourceSubscription?.snapshotResettingChangeTracking(true) {
-				snapshot.appendItems(datasourceSnapshot.items, toSection: section.identifier)
-
-				if let updatedItems = datasourceSnapshot.updatedItems, updatedItems.count > 0 {
-					snapshot.reloadItems(Array(updatedItems))
-				}
-			}
+			section.populate(snapshot: &snapshot)
 		}
 
 		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences)
 	}
 
+	// MARK: - Item references
+	public typealias ItemRef = NSObject
+	public class WrappedItem : NSObject {
+		var dataItemReference: OCDataItemReference
+		var sectionIdentifier: CollectionViewSection.SectionIdentifier
+
+		init(reference: OCDataItemReference, forSection: CollectionViewSection.SectionIdentifier) {
+			dataItemReference = reference
+			sectionIdentifier = forSection
+			super.init()
+		}
+
+		public override func isEqual(_ object: Any?) -> Bool {
+			if let otherObj = object as? WrappedItem,
+			   dataItemReference.isEqual(otherObj.dataItemReference),
+			   sectionIdentifier == otherObj.sectionIdentifier {
+				return true
+			}
+
+			return false
+		}
+
+		public override var hash: Int {
+			return dataItemReference.hash ^ sectionIdentifier.hash
+		}
+	}
+
+	public func wrap(references: [OCDataItemReference], forSection: CollectionViewSection.SectionIdentifier) -> [ItemRef] {
+		if supportsHierarchicContent {
+			// wrap references and section ID together into a single object
+			var itemRefs : [ItemRef] = []
+
+			for reference in references {
+				itemRefs.append(WrappedItem(reference: reference, forSection: forSection))
+			}
+
+			return itemRefs
+		}
+
+		// no hierarchic content, so can just use data source references as-is
+		return references
+	}
+
+	public func unwrap(_ collectionItemRef: ItemRef) -> (OCDataItemReference, CollectionViewSection.SectionIdentifier?) {
+		if supportsHierarchicContent, let wrappedItem = collectionItemRef as? WrappedItem {
+			// unwrap bundled item references + section ID
+			return (wrappedItem.dataItemReference, wrappedItem.sectionIdentifier)
+		}
+
+		return (collectionItemRef, nil)
+	}
+
 	// MARK: - Collection View Delegate
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		guard let itemRef = collectionViewDataSource.itemIdentifier(for: indexPath) else {
+		guard let collectionItemRef = collectionViewDataSource.itemIdentifier(for: indexPath) else {
 			collectionView.deselectItem(at: indexPath, animated: true)
 			return
 		}
@@ -140,6 +191,8 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		if let sectionIdentifier = collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 		   let section = sectionsByID[sectionIdentifier],
 		   let dataSource = section.dataSource {
+		   	let (itemRef, _) = unwrap(collectionItemRef)
+
 			dataSource.retrieveItem(forRef: itemRef, reusing: nil, completionHandler: { [weak self] (error, record) in
 				if let drive = record?.item as? OCDrive {
 					if let core = self?.core, let rootViewController = self?.rootViewController {

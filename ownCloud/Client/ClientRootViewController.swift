@@ -364,9 +364,72 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 					let topLevelViewController : UIViewController?
 
 					if core.useDrives {
+						let composedDataSource = OCDataSourceComposition(sources: [
+							core.hierarchicDrivesDataSource,
+							core.projectDrivesDataSource
+						], applyCustomizations: { (composedDataSource) in
+//							composedDataSource.sortComparator = OCDataSourceComposition.itemComparator(withItemRetrieval: false, fromRecordComparator: { record1, record2 in
+//								var presentable1 : OCDataItemPresentable?
+//								var presentable2 : OCDataItemPresentable?
+//
+//								if let item = record1?.item {
+//									presentable1 = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil) as? OCDataItemPresentable
+//								}
+//
+//								if let item = record2?.item {
+//									presentable2 = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil) as? OCDataItemPresentable
+//								}
+//
+//								let title1 = presentable1?.title ?? ""
+//								let title2 = presentable2?.title ?? ""
+//
+//								return title1.localizedCompare(title2)
+//							})
+//
+//							composedDataSource.filter = OCDataSourceComposition.itemFilter(recordFilter: { record in
+//								if let item = record?.item,
+//								   let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil) as? OCDataItemPresentable,
+//								   let startsWithA = presentable.title?.starts(with: "A") {
+//									return startsWithA
+//								}
+//
+//								return false
+//							})
+
+							composedDataSource.setSortComparator(OCDataSourceComposition.itemComparator(withItemRetrieval: false, fromRecordComparator: { record1, record2 in
+								var presentable1 : OCDataItemPresentable?
+								var presentable2 : OCDataItemPresentable?
+
+								if let item = record1?.item {
+									presentable1 = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil) as? OCDataItemPresentable
+								}
+
+								if let item = record2?.item {
+									presentable2 = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil) as? OCDataItemPresentable
+								}
+
+								let title1 = presentable1?.title?.last?.lowercased() ?? ""
+								let title2 = presentable2?.title?.last?.lowercased() ?? ""
+
+								return title1.localizedCompare(title2)
+							}), for: core.projectDrivesDataSource)
+
+//							composedDataSource.setFilter(OCDataSourceComposition.itemFilter(withItemRetrieval: false, fromRecordFilter: { (record) in
+//								if let item = record?.item,
+//								   let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil) as? OCDataItemPresentable,
+//								   let startsWithA = presentable.title?.starts(with: "A") {
+//									return startsWithA
+//								}
+//
+//								return false
+//							}), for: core.projectDrivesDataSource)
+						})
+
 						topLevelViewController = CollectionViewController(core: core, rootViewController: self, sections: [
-							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource),
-							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource)
+							CollectionViewSection(identifier: "composed", dataSource: composedDataSource)
+
+//							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource),
+//							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource)
 						])
 					} else {
 						let query = OCQuery(for: .legacyRoot)

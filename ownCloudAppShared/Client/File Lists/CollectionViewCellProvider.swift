@@ -21,7 +21,7 @@ import ownCloudSDK
 
 public class CollectionViewCellProvider: NSObject {
 	// MARK: - Types
-	public typealias CellProvider = (_ collectionView: UICollectionView, _ cellConfiguration: OCDataItemCellConfiguration?, _ itemRecord: OCDataItemRecord, _ itemRef: OCDataItemReference, _ indexPath: IndexPath) -> UICollectionViewCell
+	public typealias CellProvider = (_ collectionView: UICollectionView, _ cellConfiguration: CollectionViewCellConfiguration?, _ itemRecord: OCDataItemRecord, _ collectionItemRef: CollectionViewController.ItemRef, _ indexPath: IndexPath) -> UICollectionViewCell
 
 	// MARK: - Global registry
 	static var cellProviders : [OCDataItemType:CollectionViewCellProvider] = [:]
@@ -43,18 +43,18 @@ public class CollectionViewCellProvider: NSObject {
 	var provider : CellProvider
 	var dataItemType : OCDataItemType
 
-	public func provideCell(for collectionView: UICollectionView, cellConfiguration: OCDataItemCellConfiguration?, itemRecord: OCDataItemRecord, itemRef: OCDataItemReference, indexPath: IndexPath) -> UICollectionViewCell {
+	public func provideCell(for collectionView: UICollectionView, cellConfiguration: CollectionViewCellConfiguration?, itemRecord: OCDataItemRecord, collectionItemRef: CollectionViewController.ItemRef, indexPath: IndexPath) -> UICollectionViewCell {
 		// Save any existing cell configuration
-		let previousCellConfiguration = itemRef.ocDataItemCellConfiguration
+		let previousCellConfiguration = collectionItemRef.ocCellConfiguration
 
 		// Set cell configuration
-		itemRef.ocDataItemCellConfiguration = cellConfiguration
+		collectionItemRef.ocCellConfiguration = cellConfiguration
 
 		// Ask provider to provide cell
-		let cell = provider(collectionView, cellConfiguration, itemRecord, itemRef, indexPath)
+		let cell = provider(collectionView, cellConfiguration, itemRecord, collectionItemRef, indexPath)
 
 		// Restore previously existing cell configuration
-		itemRef.ocDataItemCellConfiguration = previousCellConfiguration
+		collectionItemRef.ocCellConfiguration = previousCellConfiguration
 
 		return cell
 	}
