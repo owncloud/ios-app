@@ -58,6 +58,10 @@
 "Fetching user information…" = "Fetching user information…";
 "Updating connection…" = "Updating connection…";
 
+"Preparing account" = "Preparing account";
+"Please wait…" = "Please wait…";
+"Skip" = "Skip";
+
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
 "Add account" = "Add account";
@@ -673,6 +677,7 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+"Paste" = "Paste";
 "Play/Pause" = "Play/Pause";
 "Skip Back" = "Skip Back";
 "Skip Ahead" = "Skip Ahead";

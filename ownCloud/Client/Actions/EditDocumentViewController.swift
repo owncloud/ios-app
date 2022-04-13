@@ -31,6 +31,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var modifiedContentsURL: URL?
 	var dismissedViewWithoutSaving: Bool = false
 	var timer: DispatchSourceTimer?
+	var pdfViewController : PDFViewerViewController?
 
 	var source: URL {
 		didSet {
@@ -218,6 +219,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
+				pdfViewController?.allowUpdatesUntilLocalModificationPersists = true
+
 				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)

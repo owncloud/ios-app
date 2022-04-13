@@ -1,9 +1,6 @@
-• Sorting
-Localized and improved sorting
+• Faster Account Scan
+We improved the time for the initial scan after setting up a new account
 
-• Fix: Authentication Improvement
-Fixed an OAuth2 token refresh problem 
-
-• Fix: Connection Problem
-Fixed a possible connection problem in the single account view
+• Biometrical Authentication Button
+Improvements when setting up a passcode with biometrical unlock
 

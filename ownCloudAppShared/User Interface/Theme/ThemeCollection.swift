@@ -374,6 +374,8 @@ public class ThemeCollection : NSObject {
 					defaultSearchBarColor.labelColor = UIColor(hex: 0x000000)
 					defaultSearchBarColor.secondaryLabelColor = UIColor.gray
 					defaultSearchBarColor.backgroundColor = UIColor(hex: 0xF7F7F7)
+					self.tableRowColors.symbolColor = darkColor
+					self.tableRowHighlightColors.symbolColor = darkColor
 				}
 
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", defaultSearchBarColor)

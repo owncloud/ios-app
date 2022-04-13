@@ -1,0 +1,5 @@
+Change: Set App Group Identifier
+
+Set a custom app group identifier via Branding.plist this parameter. This value will be set by fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.
+
+https://github.com/owncloud/ios-app/pull/1099

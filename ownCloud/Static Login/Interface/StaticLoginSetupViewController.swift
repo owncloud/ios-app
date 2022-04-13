@@ -50,6 +50,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	var askForUsernameFirst : Bool {
+		return OCServerLocator.useServerLocatorIdentifier != nil
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -62,7 +66,11 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				self.addSection(onboardingSection())
 			}
 		} else {
-			proceedWithLogin()
+			if askForUsernameFirst {
+				self.addSection(accountEntryMaskSection())
+			} else {
+				proceedWithLogin()
+			}
 		}
 	}
 
@@ -117,20 +125,53 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		return onboardingSection
 	}
 
-	func loginMaskSection() -> StaticTableViewSection {
-		var loginMaskSection : StaticTableViewSection
+	func accountEntryMaskSection() -> StaticTableViewSection {
+		var accountEntryMaskSection : StaticTableViewSection
 
-		loginMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "loginMaskSection")
-		loginMaskSection.addStaticHeader(title: profile.welcome!, message: profile.promptForPasswordAuth)
+		accountEntryMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "accountEntryMaskSection")
+		accountEntryMaskSection.addStaticHeader(title: profile.welcome!, message: "Enter username".localized)
 
-		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, type) in
+		accountEntryMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, type) in
 			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
 				self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
 			}
 			if let value = row.value as? String {
 				self?.username = value
 			}
-		}, placeholder: "Username".localized, keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username", borderStyle: .roundedRect))
+		}, placeholder: "Username".localized, value: username ?? "", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
+
+		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
+			let (proceedButton, cancelButton) = accountEntryMaskSection.addButtonFooter(proceedLabel: "Proceed".localized, proceedItemStyle: .welcome, cancelLabel: "Cancel".localized)
+			proceedButton?.addTarget(self, action: #selector(self.proceedWithLogin), for: .touchUpInside)
+			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		} else {
+			let (proceedButton, _) = accountEntryMaskSection.addButtonFooter(proceedLabel: "Proceed".localized, proceedItemStyle: .welcome, cancelLabel: nil)
+			proceedButton?.addTarget(self, action: #selector(self.proceedWithLogin), for: .touchUpInside)
+		}
+
+		return accountEntryMaskSection
+	}
+
+	func loginMaskSection() -> StaticTableViewSection {
+		var loginMaskSection : StaticTableViewSection
+
+		loginMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "loginMaskSection")
+		loginMaskSection.addStaticHeader(title: profile.welcome!, message: profile.promptForPasswordAuth)
+
+		let userNameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, type) in
+			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
+				self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+			}
+			if let value = row.value as? String {
+				self?.username = value
+			}
+		}, placeholder: "Username".localized, value: self.username ?? "", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username", borderStyle: .roundedRect)
+
+		if let username = self.username, username.count > 0 {
+			userNameRow.enabled = false
+		}
+
+		loginMaskSection.add(row: userNameRow)
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, type) in
 			if type == .didBegin, let cell = row.cell, let indexPath = self?.tableView.indexPath(for: cell) {
@@ -320,6 +361,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			return
 		}
 
+		if let accountEntryMaskSection = self.sectionForIdentifier("accountEntryMaskSection") {
+			self.removeSection(accountEntryMaskSection)
+		}
 		if let urlSection = self.sectionForIdentifier("urlSection") {
 			self.removeSection(urlSection)
 		}
@@ -352,6 +396,8 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier)?.type == .passphrase {
 				options[.usernameKey] = username ?? ""
 				options[.passphraseKey] = password ?? ""
+			} else if askForUsernameFirst, let username = username {
+				options[.usernameKey] = username
 			}
 
 			options[.presentingViewControllerKey] = self
@@ -467,7 +513,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		guard let bookmark = self.bookmark else { return }
 
 		let connection = instantiateConnection(for: bookmark)
-		connection.prepareForSetup(options: nil, completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
+		connection.prepareForSetup(options: ((username != nil) ? [
+			.userName : username!
+		] : nil), completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
 			var proceed : Bool = true
 
 			if let issue = connectionIssue {
@@ -499,7 +547,11 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 									self.addSection(self.onboardingSection())
 								}
 							} else {
-								self.cancel(nil)
+								if self.askForUsernameFirst {
+									self.addSection(self.accountEntryMaskSection())
+								} else {
+									self.cancel(nil)
+								}
 							}
 						}
 					})
@@ -544,6 +596,10 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 						case .token:
 							if self.sectionForIdentifier("tokenMaskSection") == nil {
 								self.addSection(self.tokenMaskSection())
+							}
+
+							if self.username != nil {
+								self.startAuthentication(nil)
 							}
 						}
 

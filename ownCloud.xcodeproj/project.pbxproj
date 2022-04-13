@@ -494,7 +494,6 @@
 		DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
-		DCEAF068280767BC00980B6D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF067280767BC00980B6D /* OpenSSL */; };
 		DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF06C280767CF00980B6D /* OpenSSL */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
 		DCF072D72798558B00E0B01D /* OCCircularImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072D5279850CC00E0B01D /* OCCircularImageView.m */; };
@@ -1520,7 +1519,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCEAF068280767BC00980B6D /* OpenSSL in Frameworks */,
 				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
 				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
@@ -3323,7 +3321,6 @@
 			name = ownCloud;
 			packageProductDependencies = (
 				024F3A2024A3AB410083E11E /* CrashReporter */,
-				DCEAF067280767BC00980B6D /* OpenSSL */,
 			);
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
@@ -4782,8 +4779,8 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.8.1;
-				APP_VERSION = 207;
+				APP_SHORT_VERSION = 11.10.0;
+				APP_VERSION = 214;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4851,8 +4848,8 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.8.1;
-				APP_VERSION = 207;
+				APP_SHORT_VERSION = 11.10.0;
+				APP_VERSION = 214;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4915,8 +4912,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.8.1;
-				APP_VERSION = 207;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -4948,8 +4943,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 11.8.1;
-				APP_VERSION = 207;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -5299,8 +5292,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				APP_SHORT_VERSION = 11.8.1;
-				APP_VERSION = 207;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
@@ -5342,8 +5333,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				APP_SHORT_VERSION = 11.8.1;
-				APP_VERSION = 207;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
@@ -5693,11 +5682,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
 			productName = PocketSVG;
-		};
-		DCEAF067280767BC00980B6D /* OpenSSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */;
-			productName = OpenSSL;
 		};
 		DCEAF06C280767CF00980B6D /* OpenSSL */ = {
 			isa = XCSwiftPackageProductDependency;

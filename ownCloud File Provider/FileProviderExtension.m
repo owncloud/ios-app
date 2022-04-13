@@ -189,17 +189,27 @@
 				if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
 				{
 					// Root item
-					[self.core.vault.database retrieveCacheItemsAtLocation:OCLocation.legacyRootLocation itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
-						item = items.firstObject;
-						returnError = error;
+					OCDatabase *database;
 
+					if (((database = core.vault.database) != nil) && database.isOpened)
+					{
+						[database retrieveCacheItemsAtLocation:OCLocation.legacyRootLocation itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+							item = items.firstObject;
+							returnError = error;
+
+							OCSyncExecDone(itemRetrieval);
+						}];
+					}
+					else
+					{
+						// Database not available
 						OCSyncExecDone(itemRetrieval);
-					}];
+					}
 				}
 				else
 				{
 					// Other item
-					[self.core retrieveItemFromDatabaseForLocalID:(OCLocalID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+					[core retrieveItemFromDatabaseForLocalID:(OCLocalID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 						item = itemFromDatabase;
 						returnError = error;
 
