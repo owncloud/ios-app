@@ -19,20 +19,20 @@
 import UIKit
 import ownCloudSDK
 
-public protocol OpenItemHandling {
+public protocol OpenItemHandling : class {
 	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController?
 }
 
-public protocol MoreItemHandling {
+public protocol MoreItemHandling : class {
 	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
 }
 
-public protocol RevealItemHandling {
+public protocol RevealItemHandling : class {
 	@discardableResult func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool
 	func showReveal(at path: IndexPath) -> Bool
 }
 
-public protocol InlineMessageSupport {
+public protocol InlineMessageSupport : class {
 	func hasInlineMessage(for item: OCItem) -> Bool
 	func showInlineMessageFor(item: OCItem)
 }

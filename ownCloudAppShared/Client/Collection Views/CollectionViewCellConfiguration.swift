@@ -19,10 +19,11 @@
 import UIKit
 import ownCloudSDK
 
-public enum CollectionViewCellStyle : CaseIterable {
+public enum CollectionViewCellStyle {
 	case regular
 	case header
 	case footer
+	case item(actionHandlers: ItemCellActionHandlers)
 }
 
 public class CollectionViewCellConfiguration: NSObject {

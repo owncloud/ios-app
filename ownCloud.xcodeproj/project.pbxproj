@@ -427,6 +427,7 @@
 		DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD810932398492C003B0053 /* OCLicenseDuration.m */; };
 		DCD863FB28115C8700CA6631 /* Down.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DCD863FA28115C8700CA6631 /* Down.LICENSE */; };
 		DCD8640628115FD600CA6631 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCD8640528115FD600CA6631 /* OpenSSL */; };
+		DCD864102811821200CA6631 /* ClientItemViewController+ItemActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD8640F2811821200CA6631 /* ClientItemViewController+ItemActions.swift */; };
 		DCD954DF247D62FA00E184E6 /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
 		DCDBB60A2525305600FAD707 /* NotificationAuthErrorForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1425,6 +1426,7 @@
 		DCD810922398492C003B0053 /* OCLicenseDuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseDuration.h; sourceTree = "<group>"; };
 		DCD810932398492C003B0053 /* OCLicenseDuration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseDuration.m; sourceTree = "<group>"; };
 		DCD863FA28115C8700CA6631 /* Down.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = Down.LICENSE; sourceTree = "<group>"; };
+		DCD8640F2811821200CA6631 /* ClientItemViewController+ItemActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ClientItemViewController+ItemActions.swift"; sourceTree = "<group>"; };
 		DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
 		DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCLicenseManager+Internal.h"; sourceTree = "<group>"; };
 		DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationAuthErrorForwarder.h; sourceTree = "<group>"; };
@@ -2416,6 +2418,7 @@
 				4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */,
 				4C1561EE22232357009C4EF3 /* PhotoSelectionViewCell.swift */,
 				DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */,
+				DCD8640F2811821200CA6631 /* ClientItemViewController+ItemActions.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -4150,6 +4153,7 @@
 				39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */,
+				DCD864102811821200CA6631 /* ClientItemViewController+ItemActions.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				397E276A23D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift in Sources */,
 				DCE20272249AB50E0015A22A /* OCMessage+Extension.swift in Sources */,

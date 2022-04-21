@@ -40,13 +40,19 @@ public protocol InlineMessageSupport {
 }
 */
 
-public protocol ItemListCellDelegate: class {
+public protocol ItemCellDelegate: class {
+	func moreButtonTapped(cell: ItemListCell, item: OCItem)
+	func messageButtonTapped(cell: ItemListCell, item: OCItem)
+	func revealButtonTapped(cell: ItemListCell, item: OCItem)
+}
 
-	func moreButtonTapped(cell: ItemListCell)
-	func messageButtonTapped(cell: ItemListCell)
-	func revealButtonTapped(cell: ItemListCell)
+open class ItemCellActionHandlers {
+	weak var openItemHandler: OpenItemHandling?
+	weak var moreItemHandler: MoreItemHandling?
+	weak var revealItemHandler: RevealItemHandling?
+	weak var inlineMessageHandler: InlineMessageSupport?
 
-	func hasMessage(for item: OCItem) -> Bool
+	weak var delegate: ItemCellDelegate?
 }
 
 open class ItemListCell: UICollectionViewListCell {
@@ -64,9 +70,9 @@ open class ItemListCell: UICollectionViewListCell {
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 
-	open weak var delegate: ItemListCellDelegate? {
+	open weak var actionHandlers: ItemCellActionHandlers? {
 		didSet {
-			isMoreButtonPermanentlyHidden = (delegate as? MoreItemHandling == nil)
+			isMoreButtonPermanentlyHidden = (actionHandlers?.moreItemHandler as? MoreItemHandling == nil)
 		}
 	}
 
@@ -345,7 +351,7 @@ open class ItemListCell: UICollectionViewListCell {
 		}
 
 		// Set has message
-		self.hasMessageForItem = delegate?.hasMessage(for: item) ?? false
+		self.hasMessageForItem = actionHandlers?.inlineMessageHandler?.hasInlineMessage(for: item) ?? false
 
 		// Set the icon and initiate thumbnail generation
 		let thumbnailRequest = OCResourceRequestItemThumbnail.request(for: item, maximumSize: self.thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
@@ -451,7 +457,7 @@ open class ItemListCell: UICollectionViewListCell {
 			OnMainThread { [weak self] in
 				let oldMessageForItem = self?.hasMessageForItem ?? false
 
-				if let item = self?.item, let hasMessage = self?.delegate?.hasMessage(for: item) {
+				if let item = self?.item, let hasMessage = self?.actionHandlers?.inlineMessageHandler?.hasInlineMessage(for: item) {
 					self?.hasMessageForItem = hasMessage
 				} else {
 					self?.hasMessageForItem = false
@@ -616,13 +622,19 @@ open class ItemListCell: UICollectionViewListCell {
 
 	// MARK: - Actions
 	@objc open func moreButtonTapped() {
-		self.delegate?.moreButtonTapped(cell: self)
+		if let item = item {
+			self.actionHandlers?.delegate?.moreButtonTapped(cell: self, item: item)
+		}
 	}
 	@objc open func messageButtonTapped() {
-		self.delegate?.messageButtonTapped(cell: self)
+		if let item = item {
+			self.actionHandlers?.inlineMessageHandler?.showInlineMessageFor(item: item)
+		}
 	}
 	@objc open func revealButtonTapped() {
-		self.delegate?.revealButtonTapped(cell: self)
+		if let item = item {
+			self.actionHandlers?.delegate?.revealButtonTapped(cell: self, item: item)
+		}
 	}
 }
 
@@ -632,7 +644,11 @@ extension ItemListCell {
 			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
 				var itemRecord = cellConfiguration.record
 
-				cell.delegate = cellConfiguration.hostViewController as? ItemListCellDelegate
+				switch cellConfiguration.style {
+					case .item(let actionHandlers): cell.actionHandlers = actionHandlers
+					default: break
+				}
+
 				cell.core = cellConfiguration.core
 
 				if itemRecord == nil {
@@ -648,7 +664,7 @@ extension ItemListCell {
 				if let itemRecord = itemRecord {
 					if let item = itemRecord.item {
 						if let ocItem = item as? OCItem {
-							cell.updateWith(ocItem)
+							cell.item = ocItem
 						}
 					} else {
 						// Request reconfiguration of cell

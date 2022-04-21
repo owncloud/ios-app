@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 public class ClientItemViewController: CollectionViewController {
 
@@ -33,11 +34,15 @@ public class ClientItemViewController: CollectionViewController {
 	private var singleDriveDatasourceSubscription : OCDataSourceSubscription?
 	public var driveAdditionalItemsDataSource : OCDataSourceArray = OCDataSourceArray()
 
+	public var itemActionHandlers : ItemCellActionHandlers
+
 	public init(core inCore: OCCore, drive inDrive: OCDrive?, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
 		drive = inDrive
 		query = inQuery
 
 		var sections : [ CollectionViewSection ] = []
+
+		itemActionHandlers = ItemCellActionHandlers()
 
 		if let queryDatasource = query?.queryResultsDataSource {
 			singleDriveDatasource = OCDataSourceComposition(sources: [inCore.drivesDataSource])
@@ -61,7 +66,7 @@ public class ClientItemViewController: CollectionViewController {
 				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .header)
 			}
 
-			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryDatasource)
+			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryDatasource, cellStyle: .item(actionHandlers: itemActionHandlers))
 
 			if let driveSection = driveSection {
 				sections.append(driveSection)
@@ -73,6 +78,12 @@ public class ClientItemViewController: CollectionViewController {
 		}
 
 		super.init(core: inCore, rootViewController: rootViewController, sections: sections, listAppearance: .plain)
+
+		// Configure item actions handlers
+		itemActionHandlers.inlineMessageHandler = rootViewController as? InlineMessageSupport
+		itemActionHandlers.moreItemHandler = self as? MoreItemHandling
+		itemActionHandlers.openItemHandler = self as? OpenItemHandling
+		itemActionHandlers.delegate = self
 
 		// Subscribe to singleDriveDatasource for changes, to update driveSectionDataSource
 		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] subscription in
@@ -113,12 +124,14 @@ public class ClientItemViewController: CollectionViewController {
 	public override func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
 		if let core = self.core, let rootViewController = self.rootViewController {
 			if let item = record.item as? OCItem, let location = item.location {
-				let query = OCQuery(for: location)
-				let rootFolderViewController = ClientItemViewController(core: core, drive: drive, query: query, rootViewController: rootViewController)
-
 				collectionView.deselectItem(at: indexPath, animated: true)
 
-				self.navigationController?.pushViewController(rootFolderViewController, animated: true)
+				if let openHandler = itemActionHandlers.openItemHandler {
+					openHandler.open(item: item, animated: true, pushViewController: true)
+				} else {
+					let rootFolderViewController = ClientItemViewController(core: core, drive: drive, query: OCQuery(for: location), rootViewController: rootViewController)
+					self.navigationController?.pushViewController(rootFolderViewController, animated: true)
+				}
 
 				return true
 			}
@@ -146,22 +159,39 @@ public class ClientItemViewController: CollectionViewController {
 			core?.vault.resourceManager?.start(descriptionResourceRequest)
 		}
 	}
-}
 
-extension ClientItemViewController: ItemListCellDelegate {
-	public func moreButtonTapped(cell: ItemListCell) {
+	var _actionProgressHandler : ActionProgressHandler?
 
-	}
+	open func makeActionProgressHandler() -> ActionProgressHandler {
+		if _actionProgressHandler == nil {
+			_actionProgressHandler = { [weak self] (progress, publish) in
+				if publish {
+					//!! self?.progressSummarizer?.startTracking(progress: progress)
+				} else {
+					//!! self?.progressSummarizer?.stopTracking(progress: progress)
+				}
+			}
+		}
 
-	public func messageButtonTapped(cell: ItemListCell) {
-
-	}
-
-	public func revealButtonTapped(cell: ItemListCell) {
-
-	}
-
-	public func hasMessage(for item: OCItem) -> Bool {
-		return false
+		return _actionProgressHandler!
 	}
 }
+
+extension ClientItemViewController: ItemCellDelegate {
+	public func moreButtonTapped(cell: ItemListCell, item: OCItem) {
+		guard let core = core, let query = query else {
+			return
+		}
+
+		if let moreItemHandling = self as? MoreItemHandling {
+			moreItemHandling.moreOptions(for: item, at: .moreItem, core: core, query: query, sender: cell)
+		}
+	}
+
+	public func messageButtonTapped(cell: ItemListCell, item: OCItem) {
+	}
+
+	public func revealButtonTapped(cell: ItemListCell, item: OCItem) {
+	}
+}
+
