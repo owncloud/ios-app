@@ -21,6 +21,7 @@ import ownCloudSDK
 
 public class CollectionViewSection: NSObject {
 	public typealias SectionIdentifier = String
+	public typealias CellConfigurationCustomizer = (_ collectionView: UICollectionView, _ cellConfiguration: CollectionViewCellConfiguration, _ itemRecord: OCDataItemRecord, _ collectionItemRef: CollectionViewController.ItemRef, _ indexPath: IndexPath) -> Void
 
 	public var identifier: SectionIdentifier
 
@@ -38,6 +39,9 @@ public class CollectionViewSection: NSObject {
 
 	weak public var collectionViewController : CollectionViewController?
 
+	public var cellStyle : CollectionViewCellStyle //!< Use .cellConfigurationCustomizer for per-cell styling
+	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
+
 	func updateDatasourceSubscription() {
 		if let dataSource = dataSource {
 			dataSourceSubscription = dataSource.subscribe(updateHandler: { [weak self] (subscription) in
@@ -46,8 +50,10 @@ public class CollectionViewSection: NSObject {
 		}
 	}
 
-	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?) {
+	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?, cellStyle : CollectionViewCellStyle = .regular ) {
 		self.identifier = identifier
+		self.cellStyle = cellStyle
+
 		super.init()
 
 		self.dataSource = inDataSource
@@ -87,7 +93,11 @@ public class CollectionViewSection: NSObject {
 				}
 
 				if let cellProvider = cellProvider, let dataSource = dataSource {
-					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController)
+					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle)
+
+					if let cellConfigurationCustomizer = cellConfigurationCustomizer {
+						cellConfigurationCustomizer(collectionView, cellConfiguration, itemRecord, collectionItemRef, indexPath)
+					}
 
 					cell = cellProvider.provideCell(for: collectionView, cellConfiguration: cellConfiguration, itemRecord: itemRecord, collectionItemRef: collectionItemRef, indexPath: indexPath)
 				}

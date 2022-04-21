@@ -44,7 +44,7 @@ public class ResourceSourceItemIcons: OCResourceSource {
 			let resource = ResourceItemIcon(request: request)
 
 			resource.iconName = iconName
-			resource.mimeType = OCResourceMIMEType(rawValue: "image/tvg")
+			resource.mimeType = "image/tvg"
 			resource.quality = .fallback
 
 			resultHandler(nil, resource)

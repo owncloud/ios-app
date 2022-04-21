@@ -26,8 +26,9 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 	public var supportsHierarchicContent: Bool
 
-	public init(core inCore: OCCore?, rootViewController inRootViewController: UIViewController?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false) {
+	public init(core inCore: OCCore?, rootViewController inRootViewController: UIViewController?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false, listAppearance inListAppearance: UICollectionLayoutListConfiguration.Appearance = .insetGrouped) {
 		supportsHierarchicContent = hierarchic
+		listAppearance = inListAppearance
 
 		super.init(nibName: nil, bundle: nil)
 
@@ -52,18 +53,20 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	var collectionView : UICollectionView! = nil
 	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>! = nil
 
+	public var listAppearance : UICollectionLayoutListConfiguration.Appearance
+
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		configureViews()
 		configureDataSource()
 	}
 
-	func createCollectionViewLayout() -> UICollectionViewLayout {
-		let config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+	public func createCollectionViewLayout() -> UICollectionViewLayout {
+		let config = UICollectionLayoutListConfiguration(appearance: listAppearance)
 		return UICollectionViewCompositionalLayout.list(using: config)
 	}
 
-	func configureViews() {
+	public func configureViews() {
 		collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCollectionViewLayout())
 		collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		view.addSubview(collectionView)
@@ -71,7 +74,7 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	}
 
 	// MARK: - Collection View Datasource
-	func configureDataSource() {
+	public func configureDataSource() {
 		collectionViewDataSource = UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>(collectionView: collectionView) { [weak self] (collectionView: UICollectionView, indexPath: IndexPath, collectionItemRef: CollectionViewController.ItemRef) -> UICollectionViewCell? in
 			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 			   let section = self?.sectionsByID[sectionIdentifier] {
@@ -194,17 +197,44 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		   	let (itemRef, _) = unwrap(collectionItemRef)
 
 			dataSource.retrieveItem(forRef: itemRef, reusing: nil, completionHandler: { [weak self] (error, record) in
-				if let drive = record?.item as? OCDrive {
-					if let core = self?.core, let rootViewController = self?.rootViewController {
-						let query = OCQuery(for: drive.rootLocation)
-						let rootFolderViewController = ClientQueryViewController(core: core, drive: drive, query: query, rootViewController: rootViewController)
+				guard let record = record else { return }
 
-						collectionView.deselectItem(at: indexPath, animated: true)
-
-						self?.navigationController?.pushViewController(rootFolderViewController, animated: true)
-					}
-				}
+				_ = self?.handleSelection(of: record, at: indexPath)
 			})
 		}
+	}
+
+	public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
+		if let core = self.core, let rootViewController = self.rootViewController {
+			if let drive = record.item as? OCDrive {
+				let query = OCQuery(for: drive.rootLocation)
+				let rootFolderViewController = ClientItemViewController(core: core, drive: drive, query: query, rootViewController: rootViewController)
+
+				collectionView.deselectItem(at: indexPath, animated: true)
+
+				self.navigationController?.pushViewController(rootFolderViewController, animated: true)
+
+				return true
+			}
+		}
+
+		return false
+	}
+}
+
+public extension CollectionViewController {
+	func relayout(cell: UICollectionViewCell) {
+//		collectionView.setCollectionViewLayout(collectionView.collectionViewLayout, animated: true, completion: nil)
+
+		collectionViewDataSource.apply(collectionViewDataSource.snapshot(), animatingDifferences: true)
+
+//		collectionView.setNeedsLayout()
+//		collectionView.layoutIfNeeded()
+
+//		if let indexPath = collectionView.indexPath(for: cell) {
+//			let invalidationContext = UICollectionViewLayoutInvalidationContext()
+//			invalidationContext.invalidateItems(at: collectionView.indexPathsForVisibleItems)
+//			collectionView.collectionViewLayout.invalidateLayout(with: invalidationContext)
+//		}
 	}
 }

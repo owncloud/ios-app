@@ -1,35 +1,55 @@
 //
-//  ClientItemCell.swift
-//  ownCloud
+//  ItemListCell.swift
+//  ownCloudAppShared
 //
-//  Created by Felix Schwarz on 13.04.18.
-//  Copyright © 2018 ownCloud GmbH. All rights reserved.
+//  Created by Felix Schwarz on 20.04.22.
+//  Copyright © 2022 ownCloud GmbH. All rights reserved.
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2022, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public protocol ClientItemCellDelegate: class {
+/*
+public protocol OpenItemHandling {
+	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController?
+}
 
-	func moreButtonTapped(cell: ClientItemCell)
-	func messageButtonTapped(cell: ClientItemCell)
-	func revealButtonTapped(cell: ClientItemCell)
+public protocol MoreItemHandling {
+	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
+}
+
+public protocol RevealItemHandling {
+	@discardableResult func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool
+	func showReveal(at path: IndexPath) -> Bool
+}
+
+public protocol InlineMessageSupport {
+	func hasInlineMessage(for item: OCItem) -> Bool
+	func showInlineMessageFor(item: OCItem)
+}
+*/
+
+public protocol ItemListCellDelegate: class {
+
+	func moreButtonTapped(cell: ItemListCell)
+	func messageButtonTapped(cell: ItemListCell)
+	func revealButtonTapped(cell: ItemListCell)
 
 	func hasMessage(for item: OCItem) -> Bool
 }
 
-open class ClientItemCell: ThemeTableViewCell {
+open class ItemListCell: UICollectionViewListCell {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -44,7 +64,7 @@ open class ClientItemCell: ThemeTableViewCell {
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 
-	open weak var delegate: ClientItemCellDelegate? {
+	open weak var delegate: ItemListCellDelegate? {
 		didSet {
 			isMoreButtonPermanentlyHidden = (delegate as? MoreItemHandling == nil)
 		}
@@ -98,15 +118,19 @@ open class ClientItemCell: ThemeTableViewCell {
 
 	open weak var core : OCCore?
 
-	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-		super.init(style: style, reuseIdentifier: reuseIdentifier)
+	override init(frame: CGRect) {
+		super.init(frame: frame)
 		prepareViewAndConstraints()
+
+		//!
+		/*
 		self.multipleSelectionBackgroundView = {
 			let blankView = UIView(frame: CGRect.zero)
 			blankView.backgroundColor = UIColor.clear
 			blankView.layer.masksToBounds = true
 			return blankView
 		}()
+		*/
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 
@@ -331,8 +355,6 @@ open class ClientItemCell: ThemeTableViewCell {
 		// Start new thumbnail request
 		core?.vault.resourceManager?.start(thumbnailRequest)
 
-		self.accessoryType = .none
-
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
 			sharedStatusIconViewRightMarginConstraint?.constant = smallSpacing
@@ -514,10 +536,12 @@ open class ClientItemCell: ThemeTableViewCell {
 				Log.debug("Highlighted!")
 			}
 
-			applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection)
+			//!! applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection)
 		}
 	}
 
+	//!!
+	/*
 	override open func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let itemState = ThemeItemState(selected: self.isSelected)
 
@@ -537,6 +561,7 @@ open class ClientItemCell: ThemeTableViewCell {
 			backgroundColor = collection.tableBackgroundColor
 		}
 	}
+	*/
 
 	// MARK: - Editing mode
 	open func setMoreButton(hidden:Bool, animated: Bool = false) {
@@ -579,12 +604,15 @@ open class ClientItemCell: ThemeTableViewCell {
 		}
 	}
 
+	//!!
+	/*
 	override open func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
 		setMoreButton(hidden: editing, animated: animated)
 		setRevealButton(hidden: editing ? true : !showRevealButton, animated: animated)
 	}
+	*/
 
 	// MARK: - Actions
 	@objc open func moreButtonTapped() {
@@ -598,6 +626,44 @@ open class ClientItemCell: ThemeTableViewCell {
 	}
 }
 
-public extension NSNotification.Name {
-	static let ClientSyncRecordIDsWithMessagesChanged = NSNotification.Name(rawValue: "client-sync-record-ids-with-messages-changed")
+extension ItemListCell {
+	static func registerCellProvider() {
+		let itemListCellRegistration = UICollectionView.CellRegistration<ItemListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
+				var itemRecord = cellConfiguration.record
+
+				cell.delegate = cellConfiguration.hostViewController as? ItemListCellDelegate
+				cell.core = cellConfiguration.core
+
+				if itemRecord == nil {
+					if let collectionViewController = cellConfiguration.hostViewController {
+						let (itemRef, _) = collectionViewController.unwrap(collectionItemRef)
+
+						if let retrievedItemRecord = try? cellConfiguration.source?.record(forItemRef: itemRef) {
+							itemRecord = retrievedItemRecord
+						}
+					}
+				}
+
+				if let itemRecord = itemRecord {
+					if let item = itemRecord.item {
+						if let ocItem = item as? OCItem {
+							cell.updateWith(ocItem)
+						}
+					} else {
+						// Request reconfiguration of cell
+						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
+							if let collectionViewController = cellConfiguration.hostViewController {
+								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+							}
+						})
+					}
+				}
+			}
+		}
+
+		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .item, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
+			return collectionView.dequeueConfiguredReusableCell(using: itemListCellRegistration, for: indexPath, item: itemRef)
+		}))
+	}
 }

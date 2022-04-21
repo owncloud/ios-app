@@ -304,6 +304,14 @@
 		DC36885D24DD916800333600 /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DC36885F24DD917900333600 /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC36886224DDA9AB00333600 /* ProgressIndicatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC36886024DDA3C300333600 /* ProgressIndicatorViewController.swift */; };
+		DC3AB1982808C35300789435 /* ClientItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB1972808C35300789435 /* ClientItemViewController.swift */; };
+		DC3AB23E280FFE3400789435 /* ItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB23D280FFE3400789435 /* ItemListCell.swift */; };
+		DC3AB240280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */; };
+		DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB2412810404000789435 /* DriveHeaderCell.swift */; };
+		DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB24328104AA500789435 /* UIFont+Weight.swift */; };
+		DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB2452810602500789435 /* UILabel+Extension.swift */; };
+		DC3AB2482810A10300789435 /* ExpandableResourceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */; };
+		DC3AB24B2810A69600789435 /* OCResourceText+ViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB24A2810A69600789435 /* OCResourceText+ViewProvider.swift */; };
 		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */; };
@@ -417,6 +425,8 @@
 		DCD71E8027427463001592C6 /* BuildOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD71E7D2742745D001592C6 /* BuildOptions.m */; };
 		DCD8109A23984AF2003B0053 /* OCLicenseDuration.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD810922398492C003B0053 /* OCLicenseDuration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD810932398492C003B0053 /* OCLicenseDuration.m */; };
+		DCD863FB28115C8700CA6631 /* Down.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DCD863FA28115C8700CA6631 /* Down.LICENSE */; };
+		DCD8640628115FD600CA6631 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCD8640528115FD600CA6631 /* OpenSSL */; };
 		DCD954DF247D62FA00E184E6 /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
 		DCDBB60A2525305600FAD707 /* NotificationAuthErrorForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -495,6 +505,9 @@
 		DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF06C280767CF00980B6D /* OpenSSL */; };
+		DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEAF0892808254800980B6D /* DriveListCell.swift */; };
+		DCEAF08D28084B3800980B6D /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF08C28084B3800980B6D /* Down */; };
+		DCEAF08F28084B5600980B6D /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF08E28084B5600980B6D /* Down */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
 		DCF072D72798558B00E0B01D /* OCCircularImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF072D5279850CC00E0B01D /* OCCircularImageView.m */; };
 		DCF072D82798559900E0B01D /* OCCircularImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF072D4279850CC00E0B01D /* OCCircularImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1256,6 +1269,14 @@
 		DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceSession.h; sourceTree = "<group>"; };
 		DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceSession.m; sourceTree = "<group>"; };
 		DC36886024DDA3C300333600 /* ProgressIndicatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorViewController.swift; sourceTree = "<group>"; };
+		DC3AB1972808C35300789435 /* ClientItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemViewController.swift; sourceTree = "<group>"; };
+		DC3AB23D280FFE3400789435 /* ItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListCell.swift; sourceTree = "<group>"; };
+		DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+AppendStyled.swift"; sourceTree = "<group>"; };
+		DC3AB2412810404000789435 /* DriveHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveHeaderCell.swift; sourceTree = "<group>"; };
+		DC3AB24328104AA500789435 /* UIFont+Weight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Weight.swift"; sourceTree = "<group>"; };
+		DC3AB2452810602500789435 /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
+		DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableResourceCell.swift; sourceTree = "<group>"; };
+		DC3AB24A2810A69600789435 /* OCResourceText+ViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCResourceText+ViewProvider.swift"; sourceTree = "<group>"; };
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
 		DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientRootViewController.swift; sourceTree = "<group>"; };
 		DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
@@ -1403,6 +1424,7 @@
 		DCD71E7D2742745D001592C6 /* BuildOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuildOptions.m; sourceTree = "<group>"; };
 		DCD810922398492C003B0053 /* OCLicenseDuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseDuration.h; sourceTree = "<group>"; };
 		DCD810932398492C003B0053 /* OCLicenseDuration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseDuration.m; sourceTree = "<group>"; };
+		DCD863FA28115C8700CA6631 /* Down.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = Down.LICENSE; sourceTree = "<group>"; };
 		DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
 		DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCLicenseManager+Internal.h"; sourceTree = "<group>"; };
 		DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationAuthErrorForwarder.h; sourceTree = "<group>"; };
@@ -1456,6 +1478,7 @@
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		DCEAF0892808254800980B6D /* DriveListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveListCell.swift; sourceTree = "<group>"; };
 		DCEC3DE3242F665D0076B43C /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferView.swift; sourceTree = "<group>"; };
 		DCF072D4279850CC00E0B01D /* OCCircularImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCCircularImageView.h; sourceTree = "<group>"; };
@@ -1522,9 +1545,11 @@
 				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
 				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
+				DCD8640628115FD600CA6631 /* OpenSSL in Frameworks */,
 				DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */,
 				DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
 				DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */,
+				DCEAF08D28084B3800980B6D /* Down in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1544,6 +1569,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCEAF08F28084B5600980B6D /* Down in Frameworks */,
 				DC04920B258CB06A00DEDC27 /* PocketSVG in Frameworks */,
 				DCDC0ACF23CD186400DFE36D /* ownCloudApp.framework in Frameworks */,
 				394A0B0A22EEFCF500603813 /* ownCloudSDK.framework in Frameworks */,
@@ -1810,6 +1836,8 @@
 		3912208023436E9B0026C290 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				DCEAF0842808250E00980B6D /* Collection Views */,
+				DC3AB1932808C2DE00789435 /* View Controllers */,
 				DCA2EDDB279B0E5D001F04E6 /* Resource Sources */,
 				DCE4E43424C199860051722F /* Actions */,
 				DCE4E42D24C1961D0051722F /* File Lists */,
@@ -1844,6 +1872,7 @@
 				DCCE54092080175B00067D1D /* TVGs */,
 				DCE4E43824C19A950051722F /* Licensing */,
 				DC0A354F24C0E18800FB58FC /* AppLock */,
+				DC3AB2492810A67F00789435 /* View Providers */,
 				DC0A354C24C0E09300FB58FC /* User Interface */,
 				3912208023436E9B0026C290 /* Client */,
 				DC0A355524C0E2DD00FB58FC /* Foundation Extensions */,
@@ -1853,6 +1882,7 @@
 				395E16FB22F0691F00DE89A1 /* Intent */,
 				DCE4E4C024C255A70051722F /* App Extensions */,
 				394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */,
+				DCD863FA28115C8700CA6631 /* Down.LICENSE */,
 				DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */,
 				394A0AFC22EEFC2C00603813 /* Info.plist */,
 			);
@@ -1910,6 +1940,9 @@
 				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
 				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 				DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */,
+				DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */,
+				DC3AB24328104AA500789435 /* UIFont+Weight.swift */,
+				DC3AB2452810602500789435 /* UILabel+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -2346,6 +2379,22 @@
 				DC3393A122E0A71100DD3DA4 /* ItemPolicyCell.swift */,
 			);
 			path = "Item Policies";
+			sourceTree = "<group>";
+		};
+		DC3AB1932808C2DE00789435 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DC3AB1972808C35300789435 /* ClientItemViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		DC3AB2492810A67F00789435 /* View Providers */ = {
+			isa = PBXGroup;
+			children = (
+				DC3AB24A2810A69600789435 /* OCResourceText+ViewProvider.swift */,
+			);
+			path = "View Providers";
 			sourceTree = "<group>";
 		};
 		DC3BE0DB2077CC13002A0AC0 /* Client */ = {
@@ -2902,11 +2951,6 @@
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
 				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
 				DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */,
-				DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */,
-				DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */,
-				DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */,
-				DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */,
-				DC04FFC727F5B79000F22569 /* CollectionViewController.swift */,
 			);
 			path = "File Lists";
 			sourceTree = "<group>";
@@ -2998,6 +3042,30 @@
 				DCE93FF321FCA434000E14F2 /* libzip.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DCEAF0842808250E00980B6D /* Collection Views */ = {
+			isa = PBXGroup;
+			children = (
+				DCEAF0882808252300980B6D /* Cells */,
+				DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */,
+				DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */,
+				DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */,
+				DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */,
+				DC04FFC727F5B79000F22569 /* CollectionViewController.swift */,
+			);
+			path = "Collection Views";
+			sourceTree = "<group>";
+		};
+		DCEAF0882808252300980B6D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				DCEAF0892808254800980B6D /* DriveListCell.swift */,
+				DC3AB2412810404000789435 /* DriveHeaderCell.swift */,
+				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
+				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		DCEC3DF5242F89B20076B43C /* QuickLook */ = {
@@ -3321,6 +3389,8 @@
 			name = ownCloud;
 			packageProductDependencies = (
 				024F3A2024A3AB410083E11E /* CrashReporter */,
+				DCEAF08C28084B3800980B6D /* Down */,
+				DCD8640528115FD600CA6631 /* OpenSSL */,
 			);
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
@@ -3370,6 +3440,7 @@
 			name = ownCloudAppShared;
 			packageProductDependencies = (
 				DC04920A258CB06A00DEDC27 /* PocketSVG */,
+				DCEAF08E28084B5600980B6D /* Down */,
 			);
 			productName = ownCloudAppShared;
 			productReference = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */;
@@ -3648,6 +3719,7 @@
 				024F3A1F24A3AB410083E11E /* XCRemoteSwiftPackageReference "plcrashreporter" */,
 				DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */,
 				DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */,
+				DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */,
 			);
 			productRefGroup = 233BDE9D204FEFE500C06732 /* Products */;
 			projectDirPath = "";
@@ -3797,6 +3869,7 @@
 				DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */,
 				DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */,
 				DC0492B1258CC4EE00DEDC27 /* PocketSVG.LICENSE in Resources */,
+				DCD863FB28115C8700CA6631 /* Down.LICENSE in Resources */,
 				DCE4E48A24C1FB750051722F /* application.tvg in Resources */,
 				DCE4E49024C1FB750051722F /* folder-shared.tvg in Resources */,
 				DCE4E4A224C1FB750051722F /* x-office-spreadsheet.tvg in Resources */,
@@ -4211,10 +4284,12 @@
 				399EA6F625E6544100B6FF11 /* ShareClientItemCell.swift in Sources */,
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
+				DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
 				399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
+				DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,
 				DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */,
 				DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */,
@@ -4260,18 +4335,22 @@
 				DCE4E45924C1F0F70051722F /* ClientQueryViewController.swift in Sources */,
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
+				DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
 				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
+				DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
 				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,
+				DC3AB24B2810A69600789435 /* OCResourceText+ViewProvider.swift in Sources */,
 				DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */,
 				DCE4E43924C19AB20051722F /* MoreStaticTableViewController.swift in Sources */,
 				DC0A358C24C0E44B00FB58FC /* ThemeWindow.swift in Sources */,
 				DC0A357124C0E42700FB58FC /* StaticTableViewRow.swift in Sources */,
+				DC3AB1982808C35300789435 /* ClientItemViewController.swift in Sources */,
 				DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */,
 				DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
@@ -4290,6 +4369,9 @@
 				399EA72625E6565900B6FF11 /* OCCore+Extension.swift in Sources */,
 				DC0A359424C0E5C800FB58FC /* GitCommit.swift in Sources */,
 				DCE4E44B24C1D3780051722F /* QueryFileListTableViewController.swift in Sources */,
+				DC3AB23E280FFE3400789435 /* ItemListCell.swift in Sources */,
+				DC3AB2482810A10300789435 /* ExpandableResourceCell.swift in Sources */,
+				DC3AB240280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift in Sources */,
 				DC0A357C24C0E43C00FB58FC /* ThemeCollection.swift in Sources */,
 				399EA6F525E6544100B6FF11 /* GroupSharingTableViewController.swift in Sources */,
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
@@ -5655,6 +5737,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/johnxnguyen/Down";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -5683,10 +5773,25 @@
 			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
 			productName = PocketSVG;
 		};
+		DCD8640528115FD600CA6631 /* OpenSSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */;
+			productName = OpenSSL;
+		};
 		DCEAF06C280767CF00980B6D /* OpenSSL */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */;
 			productName = OpenSSL;
+		};
+		DCEAF08C28084B3800980B6D /* Down */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */;
+			productName = Down;
+		};
+		DCEAF08E28084B5600980B6D /* Down */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */;
+			productName = Down;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

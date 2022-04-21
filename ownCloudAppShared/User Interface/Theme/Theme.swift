@@ -64,6 +64,7 @@ public class Theme: NSObject {
 		let sharedInstance = Theme()
 
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.Down", bundleOf: Theme.self, title: "Down", resourceName: "Down", fileExtension: "LICENSE"))
 
 		return sharedInstance
 	}()

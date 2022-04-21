@@ -43,7 +43,18 @@
 					UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
 
 					imageView.translatesAutoresizingMaskIntoConstraints = NO;
-					imageView.contentMode = UIViewContentModeScaleAspectFit;
+
+					// Apply content mode
+					NSNumber *contentMode;
+					if ((contentMode = context.attributes[OCViewProviderContextKeyContentMode]) != nil)
+					{
+						imageView.contentMode = contentMode.integerValue;
+						imageView.clipsToBounds = true;
+					}
+					else
+					{
+						imageView.contentMode = UIViewContentModeScaleAspectFit;
+					}
 
 					completionHandler(imageView);
 				}

@@ -12,6 +12,6 @@ public extension UICollectionViewDiffableDataSource {
 	func requestReconfigurationOfItems(_ items: [ItemIdentifierType], animated: Bool = true) {
 		var snapshot = snapshot()
 		snapshot.reconfigureItems(items)
-		apply(snapshot, animatingDifferences: true)
+		apply(snapshot, animatingDifferences: animated)
 	}
 }
