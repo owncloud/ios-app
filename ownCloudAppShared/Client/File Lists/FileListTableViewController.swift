@@ -32,11 +32,6 @@ public protocol RevealItemHandling : class {
 	func showReveal(at path: IndexPath) -> Bool
 }
 
-public protocol InlineMessageSupport : class {
-	func hasInlineMessage(for item: OCItem) -> Bool
-	func showInlineMessageFor(item: OCItem)
-}
-
 open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	open weak var core : OCCore?
 
@@ -106,7 +101,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	// MARK: - Inline message support
 	open func hasMessage(for item: OCItem) -> Bool {
-		if let inlineMessageSupport = self as? InlineMessageSupport {
+		if let inlineMessageSupport = self as? InlineMessageCenter {
 			return inlineMessageSupport.hasInlineMessage(for: item)
 		}
 
@@ -115,7 +110,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	open func messageButtonTapped(cell: ClientItemCell) {
 		if let item = cell.item {
-			if let inlineMessageSupport = self as? InlineMessageSupport {
+			if let inlineMessageSupport = self as? InlineMessageCenter {
 				inlineMessageSupport.showInlineMessageFor(item: item)
 			}
 		}

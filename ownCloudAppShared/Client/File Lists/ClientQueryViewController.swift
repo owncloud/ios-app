@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 import CoreServices
+import UniformTypeIdentifiers
 
 public typealias ClientActionVieDidAppearHandler = () -> Void
 public typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
@@ -704,21 +705,21 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				// Import Items from outside
 				let typeIdentifiers = item.dragItem.itemProvider.registeredTypeIdentifiers
 				let preferredUTIs = [
-					kUTTypeImage,
-					kUTTypeMovie,
-					kUTTypePDF,
-					kUTTypeText,
-					kUTTypeRTF,
-					kUTTypeHTML,
-					kUTTypePlainText
+					UTType.image,
+					UTType.movie,
+					UTType.pdf,
+					UTType.text,
+					UTType.rtf,
+					UTType.html,
+					UTType.plainText
 				]
 				var useUTI : String?
 				var useIndex : Int = Int.max
 
 				for typeIdentifier in typeIdentifiers {
-					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn.") {
+					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn."), let typeIdentifierUTI = UTType(typeIdentifier) {
 						for preferredUTI in preferredUTIs {
-							let conforms = UTTypeConformsTo(typeIdentifier as CFString, preferredUTI)
+							let conforms = typeIdentifierUTI.conforms(to: preferredUTI)
 
 							// Log.log("\(preferredUTI) vs \(typeIdentifier) -> \(conforms)")
 
@@ -737,7 +738,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 
 				if useUTI == nil {
-					useUTI = kUTTypeData as String
+					useUTI = UTType.data.identifier
 				}
 
 				var fileName: String?
@@ -747,11 +748,11 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 					let fileNameMaxLength = 16
 
-					if useUTI == kUTTypeUTF8PlainText as String {
+					if useUTI == UTType.utf8PlainText.identifier {
 						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
 
-					if useUTI == kUTTypeRTF as String {
+					if useUTI == UTType.rtf.identifier {
 						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
 						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
 					}
@@ -866,15 +867,13 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 		case .file:
 			guard let itemMimeType = item.mimeType else { return nil }
-
-			let mimeTypeCF = itemMimeType as CFString
-			guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
+			guard let itemUTI = UTType(mimeType: itemMimeType)?.identifier else { return nil }
 
 			let itemProvider = NSItemProvider()
 
 			itemProvider.suggestedName = item.name
 
-			itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
+			itemProvider.registerFileRepresentation(forTypeIdentifier: itemUTI, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
 				var progress : Progress?
 
 				guard let core = core else {

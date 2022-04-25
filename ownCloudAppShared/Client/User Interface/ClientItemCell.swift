@@ -186,9 +186,9 @@ open class ClientItemCell: ThemeTableViewCell {
 		messageButton.isPointerInteractionEnabled = true
 		messageButton.isHidden = true
 
-		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
-		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .touchUpInside)
-		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
+		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
+		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .primaryActionTriggered)
+		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .primaryActionTriggered)
 
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .horizontal)

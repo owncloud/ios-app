@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
@@ -40,7 +41,7 @@ class UploadFileAction: UploadBaseAction {
 			return
 		}
 
-		let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
+		let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [UTType.data.identifier], in: .import)
 
 		documentPickerViewController.delegate = self
 		documentPickerViewController.allowsMultipleSelection = true

@@ -40,6 +40,7 @@ public class CollectionViewSection: NSObject {
 	weak public var collectionViewController : CollectionViewController?
 
 	public var cellStyle : CollectionViewCellStyle //!< Use .cellConfigurationCustomizer for per-cell styling
+	public var clientContext: ClientContext?
 	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
 
 	func updateDatasourceSubscription() {
@@ -50,12 +51,13 @@ public class CollectionViewSection: NSObject {
 		}
 	}
 
-	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?, cellStyle : CollectionViewCellStyle = .regular ) {
+	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?, cellStyle : CollectionViewCellStyle = .tableCell, clientContext: ClientContext? = nil ) {
 		self.identifier = identifier
 		self.cellStyle = cellStyle
 
 		super.init()
 
+		self.clientContext = clientContext
 		self.dataSource = inDataSource
 		updateDatasourceSubscription() // dataSource.didSet is not called during initialization
 	}
@@ -93,7 +95,7 @@ public class CollectionViewSection: NSObject {
 				}
 
 				if let cellProvider = cellProvider, let dataSource = dataSource {
-					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle)
+					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController?.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, clientContext: clientContext)
 
 					if let cellConfigurationCustomizer = cellConfigurationCustomizer {
 						cellConfigurationCustomizer(collectionView, cellConfiguration, itemRecord, collectionItemRef, indexPath)

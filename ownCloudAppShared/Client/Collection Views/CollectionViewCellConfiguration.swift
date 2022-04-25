@@ -20,10 +20,10 @@ import UIKit
 import ownCloudSDK
 
 public enum CollectionViewCellStyle {
-	case regular
 	case header
 	case footer
-	case item(actionHandlers: ItemCellActionHandlers)
+	case tableCell
+	case gridCell
 }
 
 public class CollectionViewCellConfiguration: NSObject {
@@ -34,10 +34,11 @@ public class CollectionViewCellConfiguration: NSObject {
 	public var record: OCDataItemRecord?
 
 	public weak var hostViewController: CollectionViewController?
+	public weak var clientContext: ClientContext?
 
 	public var style : CollectionViewCellStyle
 
-	public init(source: OCDataSource? = nil, core: OCCore? = nil, collectionItemRef: CollectionViewController.ItemRef? = nil, record: OCDataItemRecord? = nil, hostViewController: CollectionViewController?, style: CollectionViewCellStyle = .regular) {
+	public init(source: OCDataSource? = nil, core: OCCore? = nil, collectionItemRef: CollectionViewController.ItemRef? = nil, record: OCDataItemRecord? = nil, hostViewController: CollectionViewController?, style: CollectionViewCellStyle = .tableCell, clientContext: ClientContext? = nil) {
 		self.style = style
 
 		super.init()
@@ -47,6 +48,7 @@ public class CollectionViewCellConfiguration: NSObject {
 		self.collectionItemRef = collectionItemRef
 		self.record = record
 		self.hostViewController = hostViewController
+		self.clientContext = clientContext
 	}
 }
 

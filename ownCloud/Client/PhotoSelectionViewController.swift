@@ -22,6 +22,7 @@ import PhotosUI
 import ownCloudApp
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
@@ -32,7 +33,7 @@ private extension UICollectionView {
 
 private extension PHAssetResource {
 	var isRaw: Bool {
-		self.type == .alternatePhoto || self.uniformTypeIdentifier == String(kUTTypeRawImage) || self.uniformTypeIdentifier == AVFileType.dng.rawValue
+		self.type == .alternatePhoto || self.uniformTypeIdentifier == UTType.rawImage.identifier || self.uniformTypeIdentifier == AVFileType.dng.rawValue
 	}
 }
 

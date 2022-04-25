@@ -21,6 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 extension NSErrorDomain {
 	static let ShareViewErrorDomain = "ShareViewErrorDomain"
@@ -305,7 +306,7 @@ class ShareViewController: MoreStaticTableViewController {
 							break
 						}
 
-						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(UTType.item.identifier) {
 							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
 								asyncQueue.async({ (jobDone) in
 									if progressViewController?.cancelled == true {
@@ -325,7 +326,7 @@ class ShareViewController: MoreStaticTableViewController {
 											var tempFileURL : URL?
 
 											if let text = item as? String { // Save plain text content
-												let ext = self.utiToFileExtension(type)
+												let ext = UTType(type)?.preferredFilenameExtension
 												tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
 												data = Data(text.utf8)
 											} else if let url = item as? URL { // Download URL content
@@ -447,13 +448,5 @@ class ShareViewController: MoreStaticTableViewController {
 				}
 			})
 		}
-	}
-}
-
-extension ShareViewController {
-	public func utiToFileExtension(_ utiType: String) -> String? {
-		guard let ext = UTTypeCopyPreferredTagWithClass(utiType as CFString, kUTTagClassFilenameExtension) else { return nil }
-
-		return ext.takeRetainedValue() as String
 	}
 }

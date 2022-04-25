@@ -18,6 +18,7 @@
 
 import UIKit
 import CoreServices
+import UniformTypeIdentifiers
 
 let PasswordManagerAccessErrorDomain : NSErrorDomain = "PasswordManagerAccessErrorDomain"
 
@@ -78,9 +79,9 @@ class PasswordManagerAccess {
 		if let attachments = extensionItem.attachments,
 		   attachments.count > 0,
 
-		   let itemProvider = extensionItem.attachments?.first, itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
+		   let itemProvider = extensionItem.attachments?.first, itemProvider.hasItemConformingToTypeIdentifier(UTType.propertyList.identifier) {
 
-			itemProvider.loadItem(forTypeIdentifier: kUTTypePropertyList as String, options: nil) { (itemDictionary, error) in
+			itemProvider.loadItem(forTypeIdentifier: UTType.propertyList.identifier, options: nil) { (itemDictionary, error) in
 				if error == nil,
 				   let credentialsDict = itemDictionary as? [String:Any],
 				   credentialsDict.count > 0 {

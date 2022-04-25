@@ -18,6 +18,7 @@
 
 import UIKit
 import CoreServices
+import UniformTypeIdentifiers
 
 import ownCloudSDK
 import ownCloudApp
@@ -189,7 +190,7 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 
 		if let logURL = logURL {
 			let itemProvider = NSItemProvider()
-			itemProvider.registerFileRepresentation(forTypeIdentifier: kUTTypeUTF8PlainText as String, fileOptions: [], visibility: .all, loadHandler: { (completionHandler) -> Progress? in
+			itemProvider.registerFileRepresentation(forTypeIdentifier: UTType.utf8PlainText.identifier, fileOptions: [], visibility: .all, loadHandler: { (completionHandler) -> Progress? in
 				completionHandler(logURL, true, nil)
 				return nil
 			})

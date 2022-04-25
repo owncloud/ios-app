@@ -19,15 +19,26 @@
 import UIKit
 import ownCloudSDK
 
-class ExpandableResourceCell: UICollectionViewListCell {
+class ExpandableResourceCell: UICollectionViewListCell, Themeable {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		configure()
 		configureLayout()
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	required init?(coder: NSCoder) {
 		fatalError()
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.contentView.backgroundColor =  collection.tableBackgroundColor
+		expandButton.tintColor = collection.tintColor
 	}
 
 	var resourceView: UIView? {
@@ -45,6 +56,7 @@ class ExpandableResourceCell: UICollectionViewListCell {
 	}
 
 	var expandButton : UIButton = UIButton()
+	var shadowView : ShadowBarView = ShadowBarView()
 
 	var resourceEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
 
@@ -63,6 +75,7 @@ class ExpandableResourceCell: UICollectionViewListCell {
 
 	func configure() {
 		expandButton.translatesAutoresizingMaskIntoConstraints = false
+		shadowView.translatesAutoresizingMaskIntoConstraints = false
 
 		let configuration = UIImage.SymbolConfiguration(pointSize: 32, weight: .regular)
 
@@ -75,6 +88,7 @@ class ExpandableResourceCell: UICollectionViewListCell {
 		}), for: .primaryActionTriggered)
 
 		contentView.addSubview(expandButton)
+		contentView.addSubview(shadowView)
 		contentView.clipsToBounds = true
 
 		collapsedConstraint = contentView.heightAnchor.constraint(lessThanOrEqualToConstant: collapsedHeight).with(priority: .required)
@@ -83,16 +97,21 @@ class ExpandableResourceCell: UICollectionViewListCell {
 	var collapsedConstraint: NSLayoutConstraint?
 
 	func configureLayout() {
-		guard let textView = resourceView else { return }
+		guard let resourceView = resourceView else { return }
 
 		NSLayoutConstraint.activate([
-			textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: resourceEdgeInsets.left),
-			textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -resourceEdgeInsets.right),
-			textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: resourceEdgeInsets.top),
-			textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -resourceEdgeInsets.bottom).with(priority: .defaultHigh),
+			resourceView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: resourceEdgeInsets.left),
+			resourceView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -resourceEdgeInsets.right),
+			resourceView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: resourceEdgeInsets.top),
+			resourceView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -resourceEdgeInsets.bottom).with(priority: .defaultHigh),
 
 			expandButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -resourceEdgeInsets.right),
 			expandButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -resourceEdgeInsets.bottom),
+
+			shadowView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+			shadowView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+			shadowView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+			shadowView.heightAnchor.constraint(equalToConstant: 10),
 
 			separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
 		])
@@ -125,8 +144,10 @@ class ExpandableResourceCell: UICollectionViewListCell {
 		if let height = resourceView?.frame.size.height {
 			if (height + resourceEdgeInsets.top + resourceEdgeInsets.bottom)  > collapsedHeight {
 				expandButton.isHidden = false
+				shadowView.isHidden = false
 			} else {
 				expandButton.isHidden = true
+				shadowView.isHidden = true
 			}
 		}
 	}

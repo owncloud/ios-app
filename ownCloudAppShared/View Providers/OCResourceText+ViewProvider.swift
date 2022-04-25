@@ -20,6 +20,47 @@ import UIKit
 import ownCloudSDK
 import Down
 
+class ThemeableTextView : UITextView, Themeable {
+	init() {
+		registeredThemeable = false
+		super.init(frame: .zero, textContainer: nil)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	private var registeredThemeable : Bool
+
+	func registerThemeable() {
+		if !registeredThemeable {
+			registeredThemeable = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+	}
+
+	override var attributedText: NSAttributedString! {
+		didSet {
+			registerThemeable()
+		}
+	}
+
+	override var text: String! {
+		didSet {
+			registerThemeable()
+		}
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		backgroundColor = collection.tableBackgroundColor
+		textColor = collection.tableRowColors.labelColor
+	}
+}
+
 extension OCResourceText : OCViewProvider {
 	public func provideView(for size: CGSize, in context: OCViewProviderContext?, completion completionHandler: @escaping (UIView?) -> Void) {
 		var attributedText : NSAttributedString?
@@ -41,7 +82,7 @@ extension OCResourceText : OCViewProvider {
 			}
 		}
 
-		let textView = UITextView()
+		let textView = ThemeableTextView()
 
 		textView.translatesAutoresizingMaskIntoConstraints = false
 

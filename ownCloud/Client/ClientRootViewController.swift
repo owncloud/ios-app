@@ -372,9 +372,17 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		}
 	}
 
+	var rootContext : ClientContext?
+
 	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
+				self.rootContext = ClientContext(core: core, rootViewController: self, progressSummarizer: self.progressSummarizer, modifier: { context in
+					context.inlineMessageCenter = self
+					context.openItemHandler = self
+					context.moreItemHandler = self
+				})
+
 				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
 
 				if let localItemId = lastVisibleItemId {
@@ -383,10 +391,10 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 					let topLevelViewController : UIViewController?
 
 					if core.useDrives {
-						let composedDataSource = OCDataSourceComposition(sources: [
-							core.hierarchicDrivesDataSource,
-							core.projectDrivesDataSource
-						], applyCustomizations: { (composedDataSource) in
+//						let composedDataSource = OCDataSourceComposition(sources: [
+//							core.hierarchicDrivesDataSource,
+//							core.projectDrivesDataSource
+//						], applyCustomizations: { (composedDataSource) in
 //							composedDataSource.sortComparator = OCDataSourceComposition.itemComparator(withItemRetrieval: false, fromRecordComparator: { record1, record2 in
 //								var presentable1 : OCDataItemPresentable?
 //								var presentable2 : OCDataItemPresentable?
@@ -442,9 +450,9 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 //
 //								return false
 //							}), for: core.projectDrivesDataSource)
-						})
+//						})
 
-						topLevelViewController = CollectionViewController(core: core, rootViewController: self, sections: [
+						topLevelViewController = CollectionViewController(context: ClientContext(with: self.rootContext, navigationController: self.filesNavigationController), sections: [
 //							CollectionViewSection(identifier: "composed", dataSource: composedDataSource)
 
 							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource),

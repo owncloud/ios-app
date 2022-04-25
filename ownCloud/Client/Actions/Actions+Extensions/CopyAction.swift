@@ -20,6 +20,7 @@ import Foundation
 import MobileCoreServices
 import ownCloudSDK
 import ownCloudAppShared
+import UniformTypeIdentifiers
 
 class OCItemPasteboardValue : NSObject, NSSecureCoding {
 	static var supportsSecureCoding: Bool = true
@@ -192,8 +193,7 @@ class CopyAction : Action {
 					if item.type == .file { // only files can be added to the globale pasteboard
 						guard let itemMimeType = item.mimeType else { return }
 
-						let mimeTypeCF = itemMimeType as CFString
-						guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return }
+						guard let rawUti = UTType(mimeType: itemMimeType)?.identifier else { return }
 
 						itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
 							var progress : Progress?

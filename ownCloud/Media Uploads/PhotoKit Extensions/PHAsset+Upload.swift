@@ -21,6 +21,7 @@ import ownCloudSDK
 import ownCloudAppShared
 import ownCloudApp
 import CoreServices
+import UniformTypeIdentifiers
 
 extension URL {
 	var audioVideoAssetType : AVFileType? {
@@ -79,9 +80,9 @@ extension PHAssetResource {
 		switch uti {
 			case AVFileType.jpg.rawValue:
 				ext = "jpg"
-			case String(kUTTypePNG):
+			case UTType.png.identifier:
 				ext = "png"
-			case String(kUTTypeGIF):
+			case UTType.gif.identifier:
 				ext = "gif"
 			case AVFileType.heic.rawValue:
 				ext = "heic"
@@ -93,9 +94,9 @@ extension PHAssetResource {
 				ext = "mp4"
 			case AVFileType.m4v.rawValue:
 				ext = "m4v"
-			case String(kUTTypeTIFF):
+			case UTType.tiff.identifier:
 				ext = "tiff"
-			case String(kUTTypeRawImage), AVFileType.dng.rawValue:
+			case UTType.rawImage.identifier, AVFileType.dng.rawValue:
 				ext = "dng"
 			default:
 				break

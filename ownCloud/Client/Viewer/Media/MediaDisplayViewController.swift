@@ -22,6 +22,7 @@ import MediaPlayer
 import ownCloudSDK
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 class MediaDisplayViewController : DisplayViewController {
 
@@ -426,7 +427,7 @@ extension MediaDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		if let mimeType = context.location?.identifier?.rawValue {
 
-			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utTypeClass: kUTTypeAudiovisualContent) {
+			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utType: UTType.audiovisualContent) {
 				return OCExtensionPriority.locationMatch
 			}
 		}

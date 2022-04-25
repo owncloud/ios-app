@@ -17,6 +17,7 @@
  */
 
 #import <CoreServices/CoreServices.h>
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 #import "OCItem+FileProviderItem.h"
 #import "NSError+MessageResolution.h"
@@ -156,14 +157,14 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 	return (utiBySuffix);
 }
 
-- (NSString *)typeIdentifier
+- (UTType *)contentType
 {
-	NSString *uti = nil;
+	UTType *uti = nil;
 
 	// Return special UTI type for folders
 	if (self.type == OCItemTypeCollection)
 	{
-		return ((__bridge NSString *)kUTTypeFolder);
+		return (UTTypeFolder);
 	}
 
 	// Workaround for broken MIMEType->UTI conversions
@@ -172,7 +173,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		// Override by MIMEType
 		if (self.mimeType != nil)
 		{
-			uti = OCItem.overriddenUTIByMIMEType[self.mimeType];
+			uti = [UTType typeWithIdentifier:OCItem.overriddenUTIByMIMEType[self.mimeType]];
 
 			OCLogVerbose(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
 		}
@@ -185,7 +186,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		// Override by suffix
 		if ((suffix = self.name.pathExtension.lowercaseString) != nil)
 		{
-			uti = OCItem.overriddenUTIBySuffix[suffix];
+			uti = [UTType typeWithIdentifier:OCItem.overriddenUTIBySuffix[suffix]];
 
 			OCLogVerbose(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
 		}
@@ -196,22 +197,22 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 	{
 		if (self.mimeType != nil)
 		{
-			uti = ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+			uti = [UTType typeWithMIMEType:self.mimeType];
 		}
 		else
 		{
-			uti = (__bridge NSString *)kUTTypeData;
+			uti = UTTypeData;
 		}
 
 		OCLogVerbose(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
 	}
 
 	// Reject "dyn.*" types
-	if ([uti hasPrefix:@"dyn."])
+	if (uti.isDynamic)
 	{
 		// Use generic data UTI instead
 		// Rationale: https://github.com/owncloud/ios-app/issues/747#issuecomment-689797261
-		uti = (__bridge NSString *)kUTTypeData;
+		uti = UTTypeData;
 		OCLogVerbose(@"Rejected dynamic %@ UTI for %@, using %@ instead", self.name, self.mimeType, uti);
 	}
 
@@ -244,7 +245,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		break;
 	}
 
-	return (NSFileProviderItemCapabilitiesAllowsAll);
+	return (NSFileProviderItemCapabilitiesAllowsContentEnumerating); // previously NSFileProviderItemCapabilitiesAllowsAll, but since it shouldn't be used anyway…
 }
 
 - (NSData *)versionIdentifier

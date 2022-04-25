@@ -21,8 +21,6 @@ import ownCloudSDK
 import ownCloudApp
 
 public class ClientItemViewController: CollectionViewController {
-
-	public weak var drive: OCDrive?
 	public var query: OCQuery?
 
 	public var queryItemDataSourceSection : CollectionViewSection?
@@ -34,24 +32,31 @@ public class ClientItemViewController: CollectionViewController {
 	private var singleDriveDatasourceSubscription : OCDataSourceSubscription?
 	public var driveAdditionalItemsDataSource : OCDataSourceArray = OCDataSourceArray()
 
-	public var itemActionHandlers : ItemCellActionHandlers
-
-	public init(core inCore: OCCore, drive inDrive: OCDrive?, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
-		drive = inDrive
+	public init(context inContext: ClientContext?, query inQuery: OCQuery, reveal inItem: OCItem? = nil) {
 		query = inQuery
 
 		var sections : [ CollectionViewSection ] = []
 
-		itemActionHandlers = ItemCellActionHandlers()
+		let itemControllerContext = ClientContext(with: inContext)
+		itemControllerContext.postInitializationModifier = { (owner, context) in
+			if context.openItemHandler == nil {
+				context.openItemHandler = owner as? OpenItemAction
+			}
+			if context.moreItemHandler == nil {
+				context.moreItemHandler = owner as? MoreItemAction
+			}
 
-		if let queryDatasource = query?.queryResultsDataSource {
-			singleDriveDatasource = OCDataSourceComposition(sources: [inCore.drivesDataSource])
+			context.query = (owner as? ClientItemViewController)?.query
+		}
+
+		if let queryDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {
+			singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 
 			if query?.queryLocation?.isRoot == true {
 				// Create data source from one drive
 				singleDriveDatasource?.filter = OCDataSourceComposition.itemFilter(withItemRetrieval: false, fromRecordFilter: { itemRecord in
 					if let drive = itemRecord?.item as? OCDrive {
-						if drive.identifier == inDrive?.identifier {
+						if drive.identifier == itemControllerContext.drive?.identifier {
 							return true
 						}
 					}
@@ -66,7 +71,7 @@ public class ClientItemViewController: CollectionViewController {
 				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .header)
 			}
 
-			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryDatasource, cellStyle: .item(actionHandlers: itemActionHandlers))
+			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryDatasource, clientContext: itemControllerContext)
 
 			if let driveSection = driveSection {
 				sections.append(driveSection)
@@ -77,13 +82,7 @@ public class ClientItemViewController: CollectionViewController {
 			}
 		}
 
-		super.init(core: inCore, rootViewController: rootViewController, sections: sections, listAppearance: .plain)
-
-		// Configure item actions handlers
-		itemActionHandlers.inlineMessageHandler = rootViewController as? InlineMessageSupport
-		itemActionHandlers.moreItemHandler = self as? MoreItemHandling
-		itemActionHandlers.openItemHandler = self as? OpenItemHandling
-		itemActionHandlers.delegate = self
+		super.init(context: itemControllerContext, sections: sections, listAppearance: .plain)
 
 		// Subscribe to singleDriveDatasource for changes, to update driveSectionDataSource
 		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] subscription in
@@ -92,7 +91,7 @@ public class ClientItemViewController: CollectionViewController {
 
 		query?.sortComparator = SortMethod.alphabetically.comparator(direction: .ascendant)
 
-		if let navigationTitle = query?.queryLocation?.isRoot == true ? drive?.name : query?.queryLocation?.lastPathComponent {
+		if let navigationTitle = query?.queryLocation?.isRoot == true ? clientContext?.drive?.name : query?.queryLocation?.lastPathComponent {
 			navigationItem.title = navigationTitle
 		}
 	}
@@ -109,7 +108,7 @@ public class ClientItemViewController: CollectionViewController {
 		super.viewWillAppear(animated)
 
 		if let query = query {
-			core?.start(query)
+			clientContext?.core?.start(query)
 		}
 	}
 
@@ -117,24 +116,27 @@ public class ClientItemViewController: CollectionViewController {
 		super.viewWillDisappear(animated)
 
 		if let query = query {
-			core?.stop(query)
+			clientContext?.core?.stop(query)
 		}
 	}
 
 	public override func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
-		if let core = self.core, let rootViewController = self.rootViewController {
-			if let item = record.item as? OCItem, let location = item.location {
-				collectionView.deselectItem(at: indexPath, animated: true)
+		if let item = record.item as? OCItem, let location = item.location, let clientContext = clientContext {
+			collectionView.deselectItem(at: indexPath, animated: true)
 
-				if let openHandler = itemActionHandlers.openItemHandler {
-					openHandler.open(item: item, animated: true, pushViewController: true)
-				} else {
-					let rootFolderViewController = ClientItemViewController(core: core, drive: drive, query: OCQuery(for: location), rootViewController: rootViewController)
-					self.navigationController?.pushViewController(rootFolderViewController, animated: true)
-				}
-
-				return true
+			if let openHandler = clientContext.openItemHandler {
+				openHandler.open(item: item, context: clientContext, animated: true, pushViewController: true)
+			} else {
+				let rootFolderViewController = ClientItemViewController(context: clientContext, query: OCQuery(for: location))
+				self.navigationController?.pushViewController(rootFolderViewController, animated: true)
 			}
+
+			return true
+		}
+
+		if (record.item as? OCDrive) != nil {
+			// Do not react to taps on the drive header cells (=> or show image in the future)
+			return false
 		}
 
 		return super.handleSelection(of: record, at: indexPath)
@@ -143,7 +145,8 @@ public class ClientItemViewController: CollectionViewController {
 	public func updateAdditionalDriveItems(from subscription: OCDataSourceSubscription) {
 		let snapshot = subscription.snapshotResettingChangeTracking(true)
 
-		if let firstItemRef = snapshot.items.first,
+		if let core = clientContext?.core,
+		   let firstItemRef = snapshot.items.first,
 	  	   let itemRecord = try? subscription.source?.record(forItemRef: firstItemRef),
 		   let drive = itemRecord?.item as? OCDrive,
 		   let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
@@ -156,42 +159,9 @@ public class ClientItemViewController: CollectionViewController {
 				}
 			}
 
-			core?.vault.resourceManager?.start(descriptionResourceRequest)
+			core.vault.resourceManager?.start(descriptionResourceRequest)
 		}
 	}
 
 	var _actionProgressHandler : ActionProgressHandler?
-
-	open func makeActionProgressHandler() -> ActionProgressHandler {
-		if _actionProgressHandler == nil {
-			_actionProgressHandler = { [weak self] (progress, publish) in
-				if publish {
-					//!! self?.progressSummarizer?.startTracking(progress: progress)
-				} else {
-					//!! self?.progressSummarizer?.stopTracking(progress: progress)
-				}
-			}
-		}
-
-		return _actionProgressHandler!
-	}
 }
-
-extension ClientItemViewController: ItemCellDelegate {
-	public func moreButtonTapped(cell: ItemListCell, item: OCItem) {
-		guard let core = core, let query = query else {
-			return
-		}
-
-		if let moreItemHandling = self as? MoreItemHandling {
-			moreItemHandling.moreOptions(for: item, at: .moreItem, core: core, query: query, sender: cell)
-		}
-	}
-
-	public func messageButtonTapped(cell: ItemListCell, item: OCItem) {
-	}
-
-	public func revealButtonTapped(cell: ItemListCell, item: OCItem) {
-	}
-}
-

@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import CoreServices
+import UniformTypeIdentifiers
 
 open class PublicLinkTableViewController: SharingTableViewController {
 
@@ -343,7 +344,7 @@ extension PublicLinkTableViewController: UITableViewDragDelegate {
 
 	public func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		if let share = share(at: indexPath), let url = share.url {
-			let itemProvider = NSItemProvider(item: url as URL as NSSecureCoding, typeIdentifier: kUTTypeURL as String)
+			let itemProvider = NSItemProvider(item: url as URL as NSSecureCoding, typeIdentifier: UTType.url.identifier)
 				let dragItem = UIDragItem(itemProvider: itemProvider)
 
 			return [dragItem]

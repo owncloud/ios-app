@@ -19,17 +19,18 @@
 import UIKit
 import ownCloudSDK
 import CoreServices
+import UniformTypeIdentifiers
 
 extension OCItem {
 
 	public var isPlayable: Bool {
 		guard let mime = self.mimeType else { return false }
 
-		guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mime as CFString, nil) else {
+		guard let uti = UTType(mimeType: mime) else {
 			return false
 		}
 
-		return UTTypeConformsTo(uti.takeUnretainedValue(), kUTTypeAudiovisualContent)
+		return uti.conforms(to: .audiovisualContent)
 	}
 
 	static private let iconNamesByMIMEType : [String:String] = {

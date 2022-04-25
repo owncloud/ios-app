@@ -20,41 +20,6 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-/*
-public protocol OpenItemHandling {
-	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController?
-}
-
-public protocol MoreItemHandling {
-	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
-}
-
-public protocol RevealItemHandling {
-	@discardableResult func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool
-	func showReveal(at path: IndexPath) -> Bool
-}
-
-public protocol InlineMessageSupport {
-	func hasInlineMessage(for item: OCItem) -> Bool
-	func showInlineMessageFor(item: OCItem)
-}
-*/
-
-public protocol ItemCellDelegate: class {
-	func moreButtonTapped(cell: ItemListCell, item: OCItem)
-	func messageButtonTapped(cell: ItemListCell, item: OCItem)
-	func revealButtonTapped(cell: ItemListCell, item: OCItem)
-}
-
-open class ItemCellActionHandlers {
-	weak var openItemHandler: OpenItemHandling?
-	weak var moreItemHandler: MoreItemHandling?
-	weak var revealItemHandler: RevealItemHandling?
-	weak var inlineMessageHandler: InlineMessageSupport?
-
-	weak var delegate: ItemCellDelegate?
-}
-
 open class ItemListCell: UICollectionViewListCell {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
@@ -68,17 +33,17 @@ open class ItemListCell: UICollectionViewListCell {
 	private let revealButtonWidth : CGFloat = 35
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
-	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
+	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60) // when changing size, also update .iconView/fallbackSize
 
-	open weak var actionHandlers: ItemCellActionHandlers? {
+	open weak var clientContext: ClientContext? {
 		didSet {
-			isMoreButtonPermanentlyHidden = (actionHandlers?.moreItemHandler as? MoreItemHandling == nil)
+			isMoreButtonPermanentlyHidden = (clientContext?.moreItemHandler as? MoreItemAction == nil)
 		}
 	}
 
 	open var titleLabel : UILabel = UILabel()
 	open var detailLabel : UILabel = UILabel()
-	open var iconView : ResourceViewHost = ResourceViewHost()
+	open var iconView : ResourceViewHost = ResourceViewHost(fallbackSize: CGSize(width: 60, height: 60)) // when changing size, also update .thumbnailSize
 	open var cloudStatusIconView : UIImageView = UIImageView()
 	open var sharedStatusIconView : UIImageView = UIImageView()
 	open var publicLinkStatusIconView : UIImageView = UIImageView()
@@ -351,7 +316,7 @@ open class ItemListCell: UICollectionViewListCell {
 		}
 
 		// Set has message
-		self.hasMessageForItem = actionHandlers?.inlineMessageHandler?.hasInlineMessage(for: item) ?? false
+		self.hasMessageForItem = clientContext?.inlineMessageCenter?.hasInlineMessage(for: item) ?? false
 
 		// Set the icon and initiate thumbnail generation
 		let thumbnailRequest = OCResourceRequestItemThumbnail.request(for: item, maximumSize: self.thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
@@ -457,7 +422,7 @@ open class ItemListCell: UICollectionViewListCell {
 			OnMainThread { [weak self] in
 				let oldMessageForItem = self?.hasMessageForItem ?? false
 
-				if let item = self?.item, let hasMessage = self?.actionHandlers?.inlineMessageHandler?.hasInlineMessage(for: item) {
+				if let item = self?.item, let hasMessage = self?.clientContext?.inlineMessageCenter?.hasInlineMessage(for: item) {
 					self?.hasMessageForItem = hasMessage
 				} else {
 					self?.hasMessageForItem = false
@@ -622,19 +587,29 @@ open class ItemListCell: UICollectionViewListCell {
 
 	// MARK: - Actions
 	@objc open func moreButtonTapped() {
-		if let item = item {
-			self.actionHandlers?.delegate?.moreButtonTapped(cell: self, item: item)
+		guard let item = item, let clientContext = clientContext else {
+			return
+		}
+
+		if let moreItemHandling = clientContext.moreItemHandler {
+			moreItemHandling.moreOptions(for: item, at: .moreItem, context: clientContext, sender: self)
 		}
 	}
+
 	@objc open func messageButtonTapped() {
-		if let item = item {
-			self.actionHandlers?.inlineMessageHandler?.showInlineMessageFor(item: item)
+		guard let item = item, let clientContext = clientContext else {
+			return
 		}
+
+		clientContext.inlineMessageCenter?.showInlineMessageFor(item: item)
 	}
+
 	@objc open func revealButtonTapped() {
-		if let item = item {
-			self.actionHandlers?.delegate?.revealButtonTapped(cell: self, item: item)
+		guard let item = item, let clientContext = clientContext else {
+			return
 		}
+
+		clientContext.revealItemHandler?.reveal(item: item, context: clientContext, sender: self)
 	}
 }
 
@@ -644,11 +619,7 @@ extension ItemListCell {
 			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
 				var itemRecord = cellConfiguration.record
 
-				switch cellConfiguration.style {
-					case .item(let actionHandlers): cell.actionHandlers = actionHandlers
-					default: break
-				}
-
+				cell.clientContext = cellConfiguration.clientContext
 				cell.core = cellConfiguration.core
 
 				if itemRecord == nil {

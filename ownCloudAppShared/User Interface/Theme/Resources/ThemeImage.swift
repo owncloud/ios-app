@@ -25,7 +25,7 @@ enum ThemeImageType {
 
 typealias ThemeImageRenderer = (_ image: ThemeImage, _ theme : Theme, _ ThemeCollection: ThemeCollection) -> UIImage?
 
-class ThemeImage : Themeable {
+class ThemeImage : NSObject, Themeable {
 	var type : ThemeImageType = .image
 
 	var renderer : ThemeImageRenderer?

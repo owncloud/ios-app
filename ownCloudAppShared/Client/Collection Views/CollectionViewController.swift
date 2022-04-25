@@ -21,21 +21,21 @@ import ownCloudSDK
 
 public class CollectionViewController: UIViewController, UICollectionViewDelegate {
 
-	public weak var core: OCCore?
-	public weak var rootViewController: UIViewController?
+	public var clientContext: ClientContext?
 
 	public var supportsHierarchicContent: Bool
 
-	public init(core inCore: OCCore?, rootViewController inRootViewController: UIViewController?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false, listAppearance inListAppearance: UICollectionLayoutListConfiguration.Appearance = .insetGrouped) {
+	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false, listAppearance inListAppearance: UICollectionLayoutListConfiguration.Appearance = .insetGrouped) {
 		supportsHierarchicContent = hierarchic
 		listAppearance = inListAppearance
 
 		super.init(nibName: nil, bundle: nil)
 
-		core = inCore
-		rootViewController = inRootViewController
+		inContext?.postInitialize(owner: self)
 
-		if let core = inCore {
+		clientContext = inContext
+
+		if let core = clientContext?.core {
 			self.navigationItem.title = core.bookmark.shortName
 		}
 
@@ -205,17 +205,19 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	}
 
 	public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
-		if let core = self.core, let rootViewController = self.rootViewController {
-			if let drive = record.item as? OCDrive {
-				let query = OCQuery(for: drive.rootLocation)
-				let rootFolderViewController = ClientItemViewController(core: core, drive: drive, query: query, rootViewController: rootViewController)
+		if let drive = record.item as? OCDrive {
+			let driveContext = ClientContext(with: clientContext, modifier: { context in
+				context.drive = drive
+			})
+			let query = OCQuery(for: drive.rootLocation)
 
-				collectionView.deselectItem(at: indexPath, animated: true)
+			let rootFolderViewController = ClientItemViewController(context: driveContext, query: query)
 
-				self.navigationController?.pushViewController(rootFolderViewController, animated: true)
+			collectionView.deselectItem(at: indexPath, animated: true)
 
-				return true
-			}
+			self.navigationController?.pushViewController(rootFolderViewController, animated: true)
+
+			return true
 		}
 
 		return false

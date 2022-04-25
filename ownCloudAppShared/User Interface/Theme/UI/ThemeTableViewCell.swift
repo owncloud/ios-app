@@ -185,10 +185,6 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 						textColor = collection.tableRowColors.labelColor
 						backgroundColor = collection.tableRowColors.backgroundColor
 
-					case .text:
-						textColor = collection.tableRowColors.labelColor
-						backgroundColor = collection.tableRowColors.backgroundColor
-
 					case .confirmation:
 						textColor = collection.approvalColors.normal.foreground
 						backgroundColor = collection.approvalColors.normal.background
