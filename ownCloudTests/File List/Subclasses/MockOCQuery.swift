@@ -12,7 +12,7 @@ import ownCloudSDK
 class MockOCQuery: OCQuery {
 
 	convenience init(path: String) {
-		self.init(forPath: path)
+		self.init(for: OCLocation.legacyRootPath(path))
 		let rootItem = OCItem()
 		rootItem.permissions = [.createFile, .createFolder, .delete, .move, .rename, .writable]
 		rootItem.path = "/"
