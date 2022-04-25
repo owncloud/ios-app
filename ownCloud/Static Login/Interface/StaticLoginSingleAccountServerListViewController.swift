@@ -257,12 +257,12 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 				let attributedTitle = NSMutableAttributedString()
 
 				attributedTitle.append(NSAttributedString(string: displayName.appendingFormat("\n"), attributes: [
-					NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)
+					NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .title2, with: .bold)
 				]))
 
 				if let serverName = bookmark.url?.host {
 					attributedTitle.append(NSAttributedString(string: serverName, attributes: [
-						NSAttributedString.Key.font : UIFont.systemFont(ofSize: 18)
+						NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .title3)
 					]))
 				}
 
