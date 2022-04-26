@@ -1,6 +1,6 @@
 //
 //  OCResourceText+ViewProvider.swift
-//  ownCloudAppShared
+//  ownCloud
 //
 //  Created by Felix Schwarz on 20.04.22.
 //  Copyright © 2022 ownCloud GmbH. All rights reserved.
@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import Down
 
 class ThemeableTextView : UITextView, Themeable {
