@@ -43,8 +43,6 @@ class WebViewDisplayViewController: DisplayViewController {
 			if self.webView == nil {
 				let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
 
-				configuration.preferences.javaScriptEnabled = true
-
 				if blockList != nil {
 
 					configuration.userContentController.add(blockList!)

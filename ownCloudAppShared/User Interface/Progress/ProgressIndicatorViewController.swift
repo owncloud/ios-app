@@ -174,7 +174,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 			])
 		} else {
 			constraints.append(contentsOf: [
-				label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
+				label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing)
 			])
 		}
 
