@@ -335,7 +335,7 @@ extension ClientRootViewController {
 
 	@objc func switchTheme(sender: UIKeyCommand) {
 		if let availableStyles = ThemeStyle.availableStyles {
-		let currentIndex = availableStyles.index(of: ThemeStyle.preferredStyle) ?? 0
+			let currentIndex = availableStyles.firstIndex(of: ThemeStyle.preferredStyle) ?? 0
 			var newStyle = ThemeStyle.preferredStyle
 			if currentIndex + 1 < availableStyles.count {
 				newStyle = availableStyles[currentIndex + 1]
@@ -938,7 +938,7 @@ extension QueryFileListTableViewController {
 			let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
 
 			if let firstItem = firstItem {
-				if let itemIndex = self.items.index(of: firstItem) {
+				if let itemIndex = self.items.firstIndex(of: firstItem) {
 					let indexPath = IndexPath(row: itemIndex, section: 0)
 					tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: false)
 					tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)

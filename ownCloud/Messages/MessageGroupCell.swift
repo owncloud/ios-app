@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-protocol MessageGroupCellDelegate : class {
+protocol MessageGroupCellDelegate : AnyObject {
 	func cell(_ cell: MessageGroupCell, showMessagesLike: OCMessage)
 }
 

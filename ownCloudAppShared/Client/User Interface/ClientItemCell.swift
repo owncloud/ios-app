@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public protocol ClientItemCellDelegate: class {
+public protocol ClientItemCellDelegate: AnyObject {
 
 	func moreButtonTapped(cell: ClientItemCell)
 	func messageButtonTapped(cell: ClientItemCell)
@@ -382,16 +382,16 @@ open class ClientItemCell: ThemeTableViewCell {
 
 			if item.type == .file {
 				switch item.cloudStatus {
-				case .cloudOnly:
-					cloudStatusIcon = UIImage(named: "cloud-only")
-					cloudStatusIconAlpha = 1.0
+					case .cloudOnly:
+						cloudStatusIcon = UIImage(named: "cloud-only")
+						cloudStatusIconAlpha = 1.0
 
-				case .localCopy:
-					cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
+					case .localCopy:
+						cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
 
-				case .locallyModified, .localOnly:
-					cloudStatusIcon = UIImage(named: "cloud-local-only")
-					cloudStatusIconAlpha = 1.0
+					case .locallyModified, .localOnly:
+						cloudStatusIcon = UIImage(named: "cloud-local-only")
+						cloudStatusIconAlpha = 1.0
 				}
 			} else {
 				if availableOfflineCoverage == .none {

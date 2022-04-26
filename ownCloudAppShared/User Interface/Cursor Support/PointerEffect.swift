@@ -47,7 +47,7 @@ public class PointerEffect : NSObject, UIPointerInteractionDelegate {
 		view.addInteraction(pointerInteraction)
 	}
 
-	private func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+	public func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
 		var pointerStyle: UIPointerStyle?
 
 		if let interactionView = interaction.view {

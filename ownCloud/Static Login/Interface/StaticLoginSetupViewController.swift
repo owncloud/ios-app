@@ -589,18 +589,19 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 						let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
 						switch authMethodType {
-						case .passphrase:
-							if self.sectionForIdentifier("loginMaskSection") == nil {
-								self.addSection(self.loginMaskSection())
-							}
-						case .token:
-							if self.sectionForIdentifier("tokenMaskSection") == nil {
-								self.addSection(self.tokenMaskSection())
-							}
+							case .passphrase:
+								if self.sectionForIdentifier("loginMaskSection") == nil {
+									self.addSection(self.loginMaskSection())
+								}
 
-							if self.username != nil {
-								self.startAuthentication(nil)
-							}
+							case .token:
+								if self.sectionForIdentifier("tokenMaskSection") == nil {
+									self.addSection(self.tokenMaskSection())
+								}
+
+								if self.username != nil {
+									self.startAuthentication(nil)
+								}
 						}
 
 						if self.profile.isOnboardingEnabled, self.sectionForIdentifier("onboardingSection") == nil {

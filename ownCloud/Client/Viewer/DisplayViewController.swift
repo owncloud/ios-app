@@ -32,7 +32,7 @@ enum DisplayViewState {
 	case previewFailed
 }
 
-protocol DisplayViewEditingDelegate: class {
+protocol DisplayViewEditingDelegate: AnyObject {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 

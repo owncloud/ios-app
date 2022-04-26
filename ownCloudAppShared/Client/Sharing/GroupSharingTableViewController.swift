@@ -460,7 +460,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		}
 	}
 
-	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
+	public func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
 		OnMainThread {
 			if isSearching {
 

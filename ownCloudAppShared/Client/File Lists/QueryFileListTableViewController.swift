@@ -503,7 +503,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
 		let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
 
-		if let firstItem = firstItem, let itemIndex = self.items.index(of: firstItem) {
+		if let firstItem = firstItem, let itemIndex = self.items.firstIndex(of: firstItem) {
 			OnMainThread {
 				let section = tableView.numberOfSections - 1 // in directory picker there could be more than one section, if favorites exists
 				tableView.scrollToRow(at: IndexPath(row: itemIndex, section: section), at: UITableView.ScrollPosition.top, animated: false)

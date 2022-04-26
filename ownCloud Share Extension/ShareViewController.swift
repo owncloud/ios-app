@@ -106,7 +106,7 @@ class ShareViewController: MoreStaticTableViewController {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
 			if error != nil {
 				// Remove only one entry, not all for that bookmark
-				if let index = self.requestedCoreBookmarks.index(of: bookmark) {
+				if let index = self.requestedCoreBookmarks.firstIndex(of: bookmark) {
 					self.requestedCoreBookmarks.remove(at: index)
 				}
 			}
@@ -122,7 +122,7 @@ class ShareViewController: MoreStaticTableViewController {
 	func returnCore(for bookmark: OCBookmark, completionHandler: @escaping () -> Void) {
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
 			// Remove only one entry, not all for that bookmark
-			if let index = self.requestedCoreBookmarks.index(of: bookmark) {
+			if let index = self.requestedCoreBookmarks.firstIndex(of: bookmark) {
 				self.requestedCoreBookmarks.remove(at: index)
 			}
 

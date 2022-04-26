@@ -18,7 +18,7 @@
 
 import UIKit
 
-public protocol CustomStatusBarViewControllerProtocol : class {
+public protocol CustomStatusBarViewControllerProtocol : AnyObject {
 	func statusBarStyle() -> UIStatusBarStyle
 }
 

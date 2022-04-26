@@ -59,11 +59,11 @@ public enum ThemeItemState {
 	}
 }
 
-public protocol ThemeableSectionHeader : class {
+public protocol ThemeableSectionHeader : AnyObject {
 	var sectionHeaderColor : UIColor? { get set }
 }
 
-public protocol ThemeableSectionFooter : class {
+public protocol ThemeableSectionFooter : AnyObject {
 	var sectionFooterColor : UIColor? { get set }
 }
 

@@ -22,7 +22,7 @@ import ownCloudApp
 import ownCloudAppShared
 import PocketSVG
 
-public protocol StateRestorationConnectProtocol : class {
+public protocol StateRestorationConnectProtocol : AnyObject {
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage?)
 }
 
@@ -935,7 +935,7 @@ extension OCBookmarkManager {
 
 	static func unlock(bookmark: OCBookmark) {
 		OCSynchronized(self) {
-			if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+			if let removeIndex = self.lockedBookmarks.firstIndex(of: bookmark) {
 				self.lockedBookmarks.remove(at: removeIndex)
 			}
 		}

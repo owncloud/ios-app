@@ -177,7 +177,7 @@ class ImportPasteboardAction : Action {
 							// Log.log("\(preferredUTI) vs \(typeIdentifier) -> \(conforms)")
 
 							if conforms {
-								if let utiIndex = preferredUTIs.index(of: preferredUTI), utiIndex < useIndex {
+								if let utiIndex = preferredUTIs.firstIndex(of: preferredUTI), utiIndex < useIndex {
 									useUTI = typeIdentifier
 									useIndex = utiIndex
 								}

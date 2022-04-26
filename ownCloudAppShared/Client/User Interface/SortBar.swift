@@ -51,7 +51,7 @@ public enum SearchScope : Int, CaseIterable {
 	}
 }
 
-public protocol SortBarDelegate: class {
+public protocol SortBarDelegate: AnyObject {
 
 	var sortDirection: SortDirection { get set }
 	var sortMethod: SortMethod { get set }
@@ -153,10 +153,10 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortButton?.sizeToFit()
 
 			if let sortSegmentedControl = sortSegmentedControl, sortSegmentedControl.numberOfSegments > 0 {
-				if let oldSementIndex = SortMethod.all.index(of: oldValue) {
+				if let oldSementIndex = SortMethod.all.firstIndex(of: oldValue) {
 					sortSegmentedControl.setTitle(oldValue.localizedName, forSegmentAt: oldSementIndex)
 				}
-				if let segmentIndex = SortMethod.all.index(of: sortMethod) {
+				if let segmentIndex = SortMethod.all.firstIndex(of: sortMethod) {
 					sortSegmentedControl.selectedSegmentIndex = segmentIndex
 					sortSegmentedControl.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
 				}
@@ -322,7 +322,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortSegmentedControl.removeAllSegments()
 			var longestTitleWidth : CGFloat = 0.0
 			for method in SortMethod.all {
-				sortSegmentedControl.insertSegment(withTitle: method.localizedName, at: SortMethod.all.index(of: method)!, animated: false)
+				sortSegmentedControl.insertSegment(withTitle: method.localizedName, at: SortMethod.all.firstIndex(of: method)!, animated: false)
 				let titleWidth = method.localizedName.appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
 				if titleWidth > longestTitleWidth {
 					longestTitleWidth = titleWidth
@@ -335,7 +335,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortSegmentedControl.setWidth(longestTitleWidth, forSegmentAt: currentIndex)
 				currentIndex += 1
 			}
-			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
+			if let segmentIndex = SortMethod.all.firstIndex(of: sortMethod) {
 				sortSegmentedControl.selectedSegmentIndex = segmentIndex
 				sortSegmentedControl.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
 			}

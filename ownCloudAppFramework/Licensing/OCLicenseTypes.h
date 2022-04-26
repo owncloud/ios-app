@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseType)
 	OCLicenseTypeTrial,		//!< Trial
 	OCLicenseTypeSubscription,	//!< Subscription
 	OCLicenseTypePurchase		//!< Regular purchase
-};
+} __attribute__((enum_extensibility(closed)));
 
 typedef NS_ENUM(NSUInteger, OCLicenseAuthorizationStatus)
 {
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseAuthorizationStatus)
 	OCLicenseAuthorizationStatusDenied,		//!< Authorization denied
 	OCLicenseAuthorizationStatusExpired,		//!< Authorization expired, existed at some point in the past
 	OCLicenseAuthorizationStatusGranted		//!< Authorization granted
-};
+} __attribute__((enum_extensibility(closed)));
 
 @class OCLicenseEnvironment;
 @class OCLicenseObserver;

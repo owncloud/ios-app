@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-protocol ClientRootViewControllerAuthenticationDelegate : class {
+protocol ClientRootViewControllerAuthenticationDelegate : AnyObject {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 

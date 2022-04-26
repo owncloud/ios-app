@@ -87,7 +87,7 @@ public class CollectionViewSection: NSObject {
 		var cell: UICollectionViewCell?
 
 		if let (dataItemRef, _) = collectionViewController?.unwrap(collectionItemRef) {
-			if let itemRecord = try? dataSource?.record(forItemRef: dataItemRef), let itemRecord = itemRecord {
+			if let itemRecord = try? dataSource?.record(forItemRef: dataItemRef) {
 				var cellProvider = CollectionViewCellProvider.providerFor(itemRecord)
 
 				if cellProvider == nil {

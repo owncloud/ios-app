@@ -24,20 +24,20 @@ import ownCloudSDK
 // - allow customization for specific purposes through primitive "inheritance"
 // - can be passed around "strongly" while storing OCCore reference "weakly" (structural barrier to accidential retains)
 
-public protocol OpenItemAction : class {
+public protocol OpenItemAction : AnyObject {
 	@discardableResult func open(item: OCItem, context: ClientContext, animated: Bool, pushViewController: Bool) -> UIViewController?
 }
 
-public protocol MoreItemAction : class {
+public protocol MoreItemAction : AnyObject {
 	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool
 }
 
-public protocol RevealItemAction : class {
+public protocol RevealItemAction : AnyObject {
 	@discardableResult func reveal(item: OCItem, context: ClientContext, sender: AnyObject?) -> Bool
 	func showReveal(at path: IndexPath) -> Bool
 }
 
-public protocol InlineMessageCenter : class {
+public protocol InlineMessageCenter : AnyObject {
 	func hasInlineMessage(for item: OCItem) -> Bool
 	func showInlineMessageFor(item: OCItem)
 }

@@ -148,7 +148,7 @@ public class ClientItemViewController: CollectionViewController {
 		if let core = clientContext?.core,
 		   let firstItemRef = snapshot.items.first,
 	  	   let itemRecord = try? subscription.source?.record(forItemRef: firstItemRef),
-		   let drive = itemRecord?.item as? OCDrive,
+		   let drive = itemRecord.item as? OCDrive,
 		   let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
 		   let descriptionResourceRequest = try? driveRepresentation.provideResourceRequest(.coverDescription) {
 			descriptionResourceRequest.lifetime = .singleRun

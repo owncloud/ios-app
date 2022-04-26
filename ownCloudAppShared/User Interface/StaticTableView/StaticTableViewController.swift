@@ -58,7 +58,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	open func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
 		if animated {
 			tableView.performBatchUpdates({
-				if let index = sections.index(of: section) {
+				if let index = sections.firstIndex(of: section) {
 					sections.remove(at: index)
 					tableView.deleteSections(IndexSet(integer: index), with: .fade)
 				}
@@ -66,7 +66,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 				section.viewController = nil
 			})
 		} else {
-			if let sectionIndex = sections.index(of: section) {
+			if let sectionIndex = sections.firstIndex(of: section) {
 				sections.remove(at: sectionIndex)
 
 				section.viewController = nil
@@ -101,13 +101,13 @@ open class StaticTableViewController: UITableViewController, Themeable {
 				var removalIndexes : IndexSet = IndexSet()
 
 				for section in removeSections {
-					if let index : Int = sections.index(of: section) {
+					if let index : Int = sections.firstIndex(of: section) {
 						removalIndexes.insert(index)
 					}
 				}
 
 				for section in removeSections {
-					if let index : Int = sections.index(of: section) {
+					if let index : Int = sections.firstIndex(of: section) {
 						sections.remove(at: index)
 					}
 				}
@@ -120,7 +120,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 			})
 		} else {
 			for section in removeSections {
-				sections.remove(at: sections.index(of: section)!)
+				sections.remove(at: sections.firstIndex(of: section)!)
 				section.viewController = nil
 			}
 
@@ -154,7 +154,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	open func indexForSection(_ inSection: StaticTableViewSection) -> Int? {
-		return sections.index(of: inSection)
+		return sections.firstIndex(of: inSection)
 	}
 
 	// MARK: - View Controller
