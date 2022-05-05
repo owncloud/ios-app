@@ -255,6 +255,38 @@
 	return item;
 }
 
+- (OCItem *)ocItemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)outError
+{
+	id item;
+
+	if ((item = [self itemForIdentifier:identifier error:outError]) != nil)
+	{
+		if ([item isKindOfClass:OCItem.class])
+		{
+			return (item);
+		}
+
+		if ([item isKindOfClass:OCVFSNode.class])
+		{
+			OCVFSNode *vfsNode = (OCVFSNode *)item;
+
+			if (vfsNode.location != nil)
+			{
+				return (vfsNode.locationItem);
+			}
+		}
+	}
+
+	OCLogDebug(@"-ocItemForIdentifier:%@ could not find/return OCItem", identifier);
+
+	if (outError != NULL)
+	{
+		*outError = [[NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier] translatedError];
+	}
+
+	return (nil);
+}
+
 - (NSURL *)URLForItemWithPersistentIdentifier:(NSFileProviderItemIdentifier)identifier
 {
 //	OCItem *item;
@@ -299,14 +331,16 @@
 - (void)providePlaceholderAtURL:(NSURL *)url completionHandler:(void (^)(NSError * _Nullable))completionHandler
 {
 	NSFileProviderItemIdentifier identifier = [self persistentIdentifierForItemAtURL:url];
-	if (!identifier) {
+	if (identifier == nil)
+	{
 		completionHandler([NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNoSuchItem userInfo:nil]);
 		return;
 	}
 
 	NSError *error = nil;
 	NSFileProviderItem fileProviderItem = [self itemForIdentifier:identifier error:&error];
-	if (!fileProviderItem) {
+	if (fileProviderItem == nil)
+	{
 		completionHandler(error);
 		return;
 	}
@@ -488,7 +522,7 @@
 
 	FPLogCmdBegin(@"CreateDir", @"Start of createDirectoryWithName=%@, inParentItemIdentifier=%@", directoryName, parentItemIdentifier);
 
-	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
+	if ((parentItem = [self ocItemForIdentifier:parentItemIdentifier error:&error]) != nil)
 	{
 		// Detect collission with existing items
 		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
@@ -578,8 +612,8 @@
 
 	FPLogCmdBegin(@"Reparent", @"Start of reparentItemWithIdentifier=%@, toParentItemWithIdentifier=%@, newName=%@", itemIdentifier, parentItemIdentifier, newName);
 
-	if (((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil) &&
-	    ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil))
+	if (((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil) &&
+	    ((parentItem = [self ocItemForIdentifier:parentItemIdentifier error:&error]) != nil))
 	{
 		FPLogCmd(@"Moving %@ to %@ as %@", item, parentItem, ((newName != nil) ? newName : item.name));
 
@@ -614,7 +648,7 @@
 
 	FPLogCmdBegin(@"Rename", @"Start of renameItemWithIdentifier=%@, toName=%@", itemIdentifier, itemName);
 
-	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 		FPLogCmd(@"Renaming %@ in %@ to %@", item, item.path.parentPath, itemName);
 
@@ -637,7 +671,7 @@
 
 	FPLogCmdBegin(@"Delete", @"Start of deleteItemWithIdentifier=%@", itemIdentifier);
 
-	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 		FPLogCmd(@"Deleting %@", item);
 
@@ -696,7 +730,7 @@
 			}
 		}
 
-		if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
+		if ((parentItem = [self ocItemForIdentifier:parentItemIdentifier error:&error]) != nil)
 		{
 			// Detect name collissions
 			OCItem *existingItem;
@@ -770,7 +804,7 @@
 
 	FPLogCmdBegin(@"FavoriteRank", @"Start of setFavoriteRank=%@, forItemIdentifier=%@", favoriteRank, itemIdentifier);
 
-	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 //		item.isFavorite = @(favoriteRank != nil); // Stored on server
 
@@ -807,7 +841,7 @@
 
 	FPLogCmdBegin(@"TagData", @"Start of setTagData=%@, forItemIdentifier=%@", tagData, itemIdentifier);
 
-	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 		[item setLocalTagData:tagData]; // Stored in local attributes
 
@@ -843,7 +877,7 @@
 
 	FPLogCmdBegin(@"Trash", @"Start of trashItemWithIdentifier=%@", itemIdentifier);
 
-	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 		FPLogCmd(@"Deleting %@", item);
 

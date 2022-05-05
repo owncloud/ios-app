@@ -16,13 +16,15 @@ It should only be used with dedicated test servers, test data - and test devices
 	- a grid view
 	- the .space folder in the root of spaces is visible (but should not)
 - spaces do not yet show a member count or provide access to a list of members
-- support for sharing is widely untested
+- subscription of spaces can't be turned on/off yet
+- the root of spaces-based accounts is not yet shown as hierarchic sidebar
+- support for sharing is widely untested and/or unavailable in the alpha
 
 ## File Provider
 - the list of spaces doesn't update dynamically
 - the list of spaces may contain spaces of unsupported types
 - not all actions are working correctly, especially in the root folder of spaces
-- OCCores may not be managed correctly under all circumstances
+- OCCores may not be managed correctly under all circumstances, causing undefined behaviour
 
 ## SDK
 - local storage consumed by spaces that are then deleted or inactivated is not reclaimed
