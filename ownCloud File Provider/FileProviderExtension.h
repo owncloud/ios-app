@@ -19,9 +19,10 @@
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
-@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCClassSettingsSupport, OCLogTagging>
+@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCClassSettingsSupport, OCLogTagging, OCVFSCoreDelegate>
 {
 	__weak OCCore *_core;
+	NSUInteger _coreRetainCount;
 	OCBookmark *_bookmark;
 }
 

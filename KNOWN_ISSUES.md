@@ -1,0 +1,28 @@
+#  Known issues in version 12.0 alpha 1
+
+## WARNING
+
+This release of version 12 is an alpha preview release and not yet ready for production or regular use.
+It should only be used with dedicated test servers, test data - and test devices.
+
+## App
+- in the new browsing experience, some features are not yet available:
+	- row actions
+	- context menus
+	- drag and drop
+	- folder actions (like "Create folder")
+	- search
+	- sorting
+	- a grid view
+	- the .space folder in the root of spaces is visible (but should not)
+- spaces do not yet show a member count or provide access to a list of members
+- support for sharing is widely untested
+
+## File Provider
+- the list of spaces doesn't update dynamically
+- the list of spaces may contain spaces of unsupported types
+- not all actions are working correctly, especially in the root folder of spaces
+- OCCores may not be managed correctly under all circumstances
+
+## SDK
+- local storage consumed by spaces that are then deleted or inactivated is not reclaimed

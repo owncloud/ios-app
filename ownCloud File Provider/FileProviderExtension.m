@@ -25,12 +25,15 @@
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
 #import "FileProviderServiceSource.h"
+#import "FileProviderContentEnumerator.h"
 #import <CrashReporter.h>
 
 @interface FileProviderExtension ()
 {
 	NSFileCoordinator *_fileCoordinator;
 	NotificationMessagePresenter *_messagePresenter;
+
+	OCVFSCore *_vfsCore;
 
 	BOOL _skipAuthorizationFailure;
 }
@@ -80,6 +83,61 @@
 //		[self postAlive];
 //	});
 //}
+
+- (OCVFSCore *)vfsCore
+{
+	if (_vfsCore == nil)
+	{
+		_vfsCore = [[OCVFSCore alloc] init];
+		_vfsCore.delegate = self;
+//
+//		[_vfsCore addNodes:@[
+//			[OCVFSNode virtualFolderAtPath:@"/" location:nil],
+//			[OCVFSNode virtualFolderInPath:@"/" withName:@"Hi" location:nil],
+//			[OCVFSNode virtualFolderInPath:@"/" withName:@"Hallo" location:nil],
+//			[OCVFSNode virtualFolderInPath:@"/" withName:@"Hello" location:nil],
+//			[OCVFSNode virtualFolderInPath:@"/Hello/" withName:@"world" location:nil]
+//		]];
+	}
+
+	if (_vfsCore.rootNode == nil)
+	{
+		OCCore *core;
+
+		if ((core = self.core) != nil)
+		{
+			if (core.useDrives)
+			{
+				if (core.drives.count > 0)
+				{
+					NSMutableArray<OCVFSNode *> *nodes = [NSMutableArray new];
+
+					[nodes addObject:[OCVFSNode virtualFolderAtPath:@"/" location:nil]];
+
+					for (OCDrive *drive in core.drives)
+					{
+						OCLocation *driveRootLocation = drive.rootLocation;
+						driveRootLocation.bookmarkUUID = self.bookmark.uuid;
+
+						[nodes addObject:[OCVFSNode virtualFolderAtPath:[@"/" stringByAppendingPathComponent:drive.name].normalizedDirectoryPath location:driveRootLocation]];
+					}
+
+					[_vfsCore addNodes:nodes];
+				}
+			}
+			else
+			{
+				OCLocation *legacyRoot = [[OCLocation alloc] initWithBookmarkUUID:core.bookmark.uuid driveID:nil path:@"/"];
+
+				[_vfsCore addNodes:@[
+					[OCVFSNode virtualFolderAtPath:@"/" location:legacyRoot]
+				]];
+			}
+		}
+	}
+
+	return (_vfsCore);
+}
 
 - (void)setupCrashReporting {
 
@@ -173,65 +231,21 @@
 	__block NSFileProviderItem item = nil;
 	__block NSError *returnError = nil;
 
-	OCSyncExec(itemRetrieval, {
-		// Resolve the given identifier to a record in the model
-		NSError *coreError = nil;
-		OCCore *core = [self coreWithError:&coreError];
-
-		if (core != nil)
-		{
-			if (coreError != nil)
-			{
-				returnError = coreError;
-			}
-			else
-			{
-				if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
-				{
-					// Root item
-					OCDatabase *database;
-
-					if (((database = core.vault.database) != nil) && database.isOpened)
-					{
-						[database retrieveCacheItemsAtLocation:OCLocation.legacyRootLocation itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
-							item = items.firstObject;
-							returnError = error;
-
-							OCSyncExecDone(itemRetrieval);
-						}];
-					}
-					else
-					{
-						// Database not available
-						OCSyncExecDone(itemRetrieval);
-					}
-				}
-				else
-				{
-					// Other item
-					[core retrieveItemFromDatabaseForLocalID:(OCLocalID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-						item = itemFromDatabase;
-						returnError = error;
-
-						OCSyncExecDone(itemRetrieval);
-					}];
-				}
-			}
-		}
-		else
-		{
-			returnError = coreError;
-
-			OCSyncExecDone(itemRetrieval);
-		}
-	});
+	if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
+	{
+		item = (NSFileProviderItem)self.vfsCore.rootNode;
+	}
+	else
+	{
+		item = (NSFileProviderItem)[self.vfsCore itemForIdentifier:(OCVFSItemID)identifier error:&returnError];
+	}
 
 	if ((item == nil) && (returnError == nil))
 	{
 		returnError = [NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier];
 	}
 
-	// OCLogDebug(@"-itemForIdentifier:error: %@ => %@ / %@", identifier, item, returnError);
+	OCLogDebug(@"-itemForIdentifier:error: %@ => %@ / %@", identifier, item, returnError);
 
 	if (outError != NULL)
 	{
@@ -243,13 +257,15 @@
 
 - (NSURL *)URLForItemWithPersistentIdentifier:(NSFileProviderItemIdentifier)identifier
 {
-	OCItem *item;
+//	OCItem *item;
 	NSURL *url = nil;
 
-	if ((item = (OCItem *)[self itemForIdentifier:identifier error:NULL]) != nil)
-	{
-		url = [self.core localURLForItem:item];
-	}
+	url = [self.vfsCore urlForItemIdentifier:(OCVFSItemID)identifier];
+
+//	if ((item = (OCItem *)[self itemForIdentifier:identifier error:NULL]) != nil)
+//	{
+//		url = [self.core localURLForItem:item];
+//	}
 
 	// OCLogDebug(@"-URLForItemWithPersistentIdentifier: %@ => %@", identifier, url);
 
@@ -269,20 +285,15 @@
 - (NSFileProviderItemIdentifier)persistentIdentifierForItemAtURL:(NSURL *)url
 {
 	// resolve the given URL to a persistent identifier using a database
-	NSArray <NSString *> *pathComponents = [url pathComponents];
-
-	// exploit the fact that the path structure has been defined as
-	// <base storage directory>/[Drives/<drive ID>/]<item identifier>/<item file name> above
-	NSParameterAssert(pathComponents.count > 2);
 
 	// OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
 
-	if ([pathComponents.lastObject isEqual:self.bookmark.fpServicesURLComponentName])
+	if ([url.lastPathComponent isEqual:self.bookmark.fpServicesURLComponentName])
 	{
 		return (url.lastPathComponent);
 	}
 
-	return pathComponents[pathComponents.count - 2];
+	return ([self.vfsCore itemIdentifierForURL:url]);
 }
 
 - (void)providePlaceholderAtURL:(NSURL *)url completionHandler:(void (^)(NSError * _Nullable))completionHandler
@@ -913,11 +924,13 @@
 
 	if (![containerItemIdentifier isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier])
 	{
-		FileProviderEnumerator *enumerator = [[FileProviderEnumerator alloc] initWithBookmark:self.bookmark enumeratedItemIdentifier:containerItemIdentifier];
+		return ([[FileProviderContentEnumerator alloc] initWithVFSCore:self.vfsCore containerItemIdentifier:containerItemIdentifier]);
 
-		enumerator.fileProviderExtension = self;
-
-		return (enumerator);
+//		FileProviderEnumerator *enumerator = [[FileProviderEnumerator alloc] initWithBookmark:self.bookmark enumeratedItemIdentifier:containerItemIdentifier];
+//
+//		enumerator.fileProviderExtension = self;
+//
+//		return (enumerator);
 	}
 
 	return (nil);
@@ -1038,6 +1051,21 @@
 - (OCCore *)core
 {
 	return ([self coreWithError:nil]);
+}
+
+- (void)acquireCoreForBookmark:(OCBookmark *)bookmark completionHandler:(void (^)(NSError * _Nullable, OCCore * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCCore *core = [self coreWithError:&error];
+
+	// TODO
+
+	completionHandler(error, core);
+}
+
+- (void)relinquishCoreForBookmark:(OCBookmark *)bookmark completionHandler:(void (^)(NSError * _Nullable))completionHandler
+{
+	// TODO
 }
 
 - (OCCore *)coreWithError:(NSError **)outError

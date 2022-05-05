@@ -33,22 +33,31 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
 - (NSFileProviderItemIdentifier)itemIdentifier
 {
-	if ([self.path isEqual:@"/"])
-	{
-		return (NSFileProviderRootContainerItemIdentifier);
-	}
+//	if ([self.path isEqual:@"/"])
+//	{
+//		return (NSFileProviderRootContainerItemIdentifier);
+//	}
+//
+//	return (self.localID);
 
-	return (self.localID);
+	return ([OCVFSCore composeVFSItemIDForOCItemWithBookmarkUUID:self.customIdentifier1 driveID:self.driveID localID:self.localID]);
 }
 
 - (NSFileProviderItemIdentifier)parentItemIdentifier
 {
-	if ([[self.path stringByDeletingLastPathComponent] isEqualToString:@"/"])
+	if (self.customIdentifier2 != nil)
 	{
-		return (NSFileProviderRootContainerItemIdentifier);
+		return (self.customIdentifier2);
 	}
 
-	return (self.parentLocalID);
+	return ([OCVFSCore composeVFSItemIDForOCItemWithBookmarkUUID:self.customIdentifier1 driveID:self.driveID localID:self.parentLocalID]);
+
+//	if ([[self.path stringByDeletingLastPathComponent] isEqualToString:@"/"])
+//	{
+//		return (NSFileProviderRootContainerItemIdentifier);
+//	}
+//
+//	return (self.parentLocalID);
 }
 
 - (NSString *)filename
@@ -173,9 +182,14 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		// Override by MIMEType
 		if (self.mimeType != nil)
 		{
-			uti = [UTType typeWithIdentifier:OCItem.overriddenUTIByMIMEType[self.mimeType]];
+			NSString *overrideType;
 
-			OCLogVerbose(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+			if ((overrideType = OCItem.overriddenUTIByMIMEType[self.mimeType]) != nil)
+			{
+				uti = [UTType typeWithIdentifier:overrideType];
+
+				OCLogVerbose(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+			}
 		}
 	}
 
@@ -186,9 +200,14 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		// Override by suffix
 		if ((suffix = self.name.pathExtension.lowercaseString) != nil)
 		{
-			uti = [UTType typeWithIdentifier:OCItem.overriddenUTIBySuffix[suffix]];
+			NSString *overrideType;
 
-			OCLogVerbose(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
+			if ((overrideType = OCItem.overriddenUTIBySuffix[suffix]) != nil)
+			{
+				uti = [UTType typeWithIdentifier:overrideType];
+
+				OCLogVerbose(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
+			}
 		}
 	}
 
@@ -199,7 +218,8 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		{
 			uti = [UTType typeWithMIMEType:self.mimeType];
 		}
-		else
+
+		if (uti == nil)
 		{
 			uti = UTTypeData;
 		}
