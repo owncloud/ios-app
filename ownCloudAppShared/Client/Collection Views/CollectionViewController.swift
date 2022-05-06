@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudApp
 import ownCloudSDK
 
 public class CollectionViewController: UIViewController, UICollectionViewDelegate {
@@ -184,10 +185,9 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		return (collectionItemRef, nil)
 	}
 
-	// MARK: - Collection View Delegate
-	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	public func retrieveItem(at indexPath: IndexPath, synchronous: Bool = false, action: @escaping ((_ record: OCDataItemRecord, _ indexPath: IndexPath) -> Void), handleError: ((_ error: Error?) -> Void)? = nil) {
 		guard let collectionItemRef = collectionViewDataSource.itemIdentifier(for: indexPath) else {
-			collectionView.deselectItem(at: indexPath, animated: true)
+			handleError?(nil)
 			return
 		}
 
@@ -196,20 +196,56 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		   let dataSource = section.dataSource {
 		   	let (itemRef, _) = unwrap(collectionItemRef)
 
-			dataSource.retrieveItem(forRef: itemRef, reusing: nil, completionHandler: { [weak self] (error, record) in
-				guard let record = record else { return }
+		   	if synchronous {
+		   		do {
+					let record = try dataSource.record(forItemRef: itemRef)
+					action(record, indexPath)
+				} catch {
+					handleError?(error)
+				}
+			} else {
+				dataSource.retrieveItem(forRef: itemRef, reusing: nil, completionHandler: { (error, record) in
+					guard let record = record else {
+						handleError?(error)
+						return
+					}
 
-				_ = self?.handleSelection(of: record, at: indexPath)
-			})
+					action(record, indexPath)
+				})
+			}
+		} else {
+			handleError?(nil)
 		}
 	}
 
-	public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
+	// MARK: - Collection View Delegate
+	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		retrieveItem(at: indexPath, action: { [weak self] record, indexPath in
+			self?.handleSelection(of: record, at: indexPath)
+		}, handleError: { error in
+			collectionView.deselectItem(at: indexPath, animated: true)
+		})
+	}
+
+	public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		var contextMenuConfiguration : UIContextMenuConfiguration?
+
+		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
+			contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point)
+		}, handleError: { error in
+			collectionView.deselectItem(at: indexPath, animated: true)
+		})
+
+		return contextMenuConfiguration
+	}
+
+	 @discardableResult public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
 		if let drive = record.item as? OCDrive {
 			let driveContext = ClientContext(with: clientContext, modifier: { context in
 				context.drive = drive
 			})
 			let query = OCQuery(for: drive.rootLocation)
+			DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 			let rootFolderViewController = ClientItemViewController(context: driveContext, query: query)
 
@@ -221,6 +257,10 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		}
 
 		return false
+	}
+
+	@discardableResult public func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		return nil
 	}
 }
 

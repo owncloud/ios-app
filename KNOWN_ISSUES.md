@@ -8,17 +8,17 @@ It should only be used with dedicated test servers, test data - and test devices
 ## App
 - in the new browsing experience, some features are not yet available:
 	- row actions
-	- context menus
 	- drag and drop
-	- folder actions (like "Create folder")
 	- search
 	- sorting
 	- a grid view
-	- the .space folder in the root of spaces is visible (but should not)
+	- full themeing support
+	- breadcrumb title
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
 - the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
+- photo/media uploads are broken
 
 ## File Provider
 - the list of spaces doesn't update dynamically

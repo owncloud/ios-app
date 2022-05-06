@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
+import ownCloudApp
 
 extension ClientRootViewController : MoreItemAction {
 	func makeActionProgressHandler() -> ActionProgressHandler {
@@ -57,7 +58,10 @@ extension ClientRootViewController : OpenItemAction {
 			switch item.type {
 				case .collection:
 					if let location = item.location {
-						let queryViewController = ClientItemViewController(context: context, query: OCQuery(for: location))
+						let query = OCQuery(for: location)
+						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
+
+						let queryViewController = ClientItemViewController(context: context, query: query)
 						if pushViewController {
 							context.navigationController?.pushViewController(queryViewController, animated: animated)
 						}
@@ -77,6 +81,46 @@ extension ClientRootViewController : OpenItemAction {
 		}
 
 		return nil
+	}
+}
+
+extension ClientRootViewController : ContextMenuProvider {
+	func composeContextMenuElements(for viewController: UIViewController, item: OCItem, location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> [UIMenuElement]? {
+		guard let core = context.core else {
+			return nil
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: location) // .contextMenuItem)
+		let actionContext = ActionContext(viewController: viewController, core: core, items: [item], location: actionsLocation, sender: sender)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		var actionMenuActions : [UIAction] = []
+		for action in actions {
+			action.progressHandler = makeActionProgressHandler()
+
+			if let menuAction = action.provideUIMenuAction() {
+				actionMenuActions.append(menuAction)
+			}
+		}
+
+		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, location == .contextMenuItem {
+			// Actions menu
+			let actionsMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: actionMenuActions)
+
+			// Share Items
+			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
+			let sharingActionContext = ActionContext(viewController: viewController, core: core, items: [item], location: sharingActionsLocation, sender: sender)
+			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
+			for action in sharingActions {
+				action.progressHandler = makeActionProgressHandler()
+			}
+
+			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
+			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
+
+			return [shareMenu, actionsMenu]
+		}
+
+		return actionMenuActions
 	}
 }
 

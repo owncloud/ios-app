@@ -30,11 +30,17 @@ public protocol OpenItemAction : AnyObject {
 
 public protocol MoreItemAction : AnyObject {
 	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool
+	func makeActionProgressHandler() -> ActionProgressHandler
 }
 
 public protocol RevealItemAction : AnyObject {
 	@discardableResult func reveal(item: OCItem, context: ClientContext, sender: AnyObject?) -> Bool
 	func showReveal(at path: IndexPath) -> Bool
+}
+
+public protocol ContextMenuProvider : AnyObject {
+	@available(iOS 13.0, *)
+	func composeContextMenuElements(for viewController: UIViewController, item: OCItem, location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> [UIMenuElement]?
 }
 
 public protocol InlineMessageCenter : AnyObject {
@@ -61,6 +67,7 @@ public class ClientContext: NSObject {
 	public weak var openItemHandler: OpenItemAction?
 	public weak var moreItemHandler: MoreItemAction?
 	public weak var revealItemHandler: RevealItemAction?
+	public weak var contextMenuProvider: ContextMenuProvider?
 	public weak var inlineMessageCenter: InlineMessageCenter?
 
 	// MARK: - Post Initialization Modifier
@@ -85,6 +92,7 @@ public class ClientContext: NSObject {
 		openItemHandler = inParent?.openItemHandler
 		moreItemHandler = inParent?.moreItemHandler
 		revealItemHandler = inParent?.revealItemHandler
+		contextMenuProvider = inParent?.contextMenuProvider
 		inlineMessageCenter = inParent?.inlineMessageCenter
 
 		modifier?(self)

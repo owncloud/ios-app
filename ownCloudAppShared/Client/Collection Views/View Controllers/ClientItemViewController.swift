@@ -104,6 +104,45 @@ public class ClientItemViewController: CollectionViewController {
 		singleDriveDatasourceSubscription?.terminate()
 	}
 
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+
+		var rightInset : CGFloat = 2
+		var leftInset : CGFloat = 0
+		if self.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+			rightInset = 0
+			leftInset = 2
+		}
+
+		var viewActionButtons : [UIBarButtonItem] = []
+
+		if query?.queryLocation != nil {
+			if clientContext?.moreItemHandler != nil {
+				let folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+				folderActionBarButton.accessibilityIdentifier = "client.folder-action"
+				folderActionBarButton.accessibilityLabel = "Actions".localized
+
+				viewActionButtons.append(folderActionBarButton)
+			}
+
+			let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+			plusBarButton.menu = UIMenu(title: "", children: [
+				UIDeferredMenuElement.uncached({ [weak self] completion in
+					if let self = self, let contextMenuProvider = self.clientContext?.contextMenuProvider, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
+						if let contextMenuElements = contextMenuProvider.composeContextMenuElements(for: self, item: rootItem, location: .folderAction, context: clientContext, sender: nil) {
+							    completion(contextMenuElements)
+						}
+					}
+				})
+			])
+			plusBarButton.accessibilityIdentifier = "client.file-add"
+
+			viewActionButtons.append(plusBarButton)
+		}
+
+		self.navigationItem.rightBarButtonItems = viewActionButtons
+	}
+
 	public override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
@@ -127,7 +166,10 @@ public class ClientItemViewController: CollectionViewController {
 			if let openHandler = clientContext.openItemHandler {
 				openHandler.open(item: item, context: clientContext, animated: true, pushViewController: true)
 			} else {
-				let rootFolderViewController = ClientItemViewController(context: clientContext, query: OCQuery(for: location))
+				let query = OCQuery(for: location)
+				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
+
+				let rootFolderViewController = ClientItemViewController(context: clientContext, query: query)
 				self.navigationController?.pushViewController(rootFolderViewController, animated: true)
 			}
 
@@ -163,5 +205,30 @@ public class ClientItemViewController: CollectionViewController {
 		}
 	}
 
+	@discardableResult public override func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [weak self] _ in
+			guard let item = record.item as? OCItem, let clientContext = self?.clientContext, let self = self else {
+				return nil
+			}
+
+			if let menuItems = clientContext.contextMenuProvider?.composeContextMenuElements(for: self, item: item, location: .contextMenuItem, context: clientContext, sender: nil) {
+				return UIMenu(title: "", children: menuItems)
+			}
+
+			return nil
+		})
+	}
+
 	var _actionProgressHandler : ActionProgressHandler?
+
+	// MARK: - Navigation Bar Actions
+	@objc open func moreBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let rootItem = query?.rootItem else {
+			return
+		}
+
+		if let moreItemHandler = clientContext?.moreItemHandler, let clientContext = clientContext {
+			moreItemHandler.moreOptions(for: rootItem, at: .moreFolder, context: clientContext, sender: sender)
+		}
+	}
 }

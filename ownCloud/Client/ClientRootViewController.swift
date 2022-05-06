@@ -381,6 +381,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 					context.inlineMessageCenter = self
 					context.openItemHandler = self
 					context.moreItemHandler = self
+					context.contextMenuProvider = self
 				})
 
 				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
