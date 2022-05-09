@@ -1,0 +1,5 @@
+Bugfix: Shortcuts Action Delete Path Item
+
+The shortcuts action Delete Path Item did not provided configured accounts.
+
+https://github.com/owncloud/ios-app/issue/1123

@@ -1576,6 +1576,43 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.10.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>UI fixes on iOS 15</string>
+					<key>Subtitle</key>
+					<string>This version fixes some UI problems on iOS 15.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Shortcuts Action</string>
+					<key>Subtitle</key>
+					<string>The shortcuts action Delete Path Item did not provided configured accounts.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Increased Timeout for Copy Action</string>
+					<key>Subtitle</key>
+					<string>Timeout for Copy Action was increased up to 10 minutes.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
