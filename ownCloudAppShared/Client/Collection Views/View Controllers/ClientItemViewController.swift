@@ -47,6 +47,8 @@ public class ClientItemViewController: CollectionViewController {
 			}
 
 			context.query = (owner as? ClientItemViewController)?.query
+
+			context.originatingViewController = owner as? UIViewController
 		}
 
 		if let queryDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {

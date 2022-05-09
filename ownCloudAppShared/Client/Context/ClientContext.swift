@@ -61,6 +61,7 @@ public class ClientContext: NSObject {
 	// MARK: - UI objects
 	public weak var rootViewController: UIViewController?
 	public weak var navigationController: UINavigationController? // Navigation controller to push to
+	public weak var originatingViewController: UIViewController? // Originating view controller for f.ex. actions
 	public weak var progressSummarizer: ProgressSummarizer?
 
 	// MARK: - UI item handling
@@ -75,7 +76,7 @@ public class ClientContext: NSObject {
 	public typealias PostInitializationModifier = (_ owner: Any?, _ context: ClientContext) -> Void
 	public var postInitializationModifier: PostInitializationModifier?
 
-	public init(with inParent: ClientContext? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
+	public init(with inParent: ClientContext? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
 		super.init()
 
 		parent = inParent
@@ -87,6 +88,7 @@ public class ClientContext: NSObject {
 
 		rootViewController = inRootViewController ?? inParent?.rootViewController
 		navigationController = inNavigationController ?? inParent?.navigationController
+		originatingViewController = inOriginatingViewController ?? inParent?.originatingViewController
 		progressSummarizer = inProgressSummarizer ?? inParent?.progressSummarizer
 
 		openItemHandler = inParent?.openItemHandler
