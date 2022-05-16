@@ -1595,7 +1595,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Shortcuts Action</string>
 					<key>Subtitle</key>
-					<string>The shortcuts action Delete Path Item did not provided configured accounts.</string>
+					<string>The shortcuts action Delete Path Item did not provide configured accounts.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
