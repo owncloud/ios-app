@@ -264,4 +264,24 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 	}
+    
+    public override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let sectionColor = Theme.shared.activeCollection.tableSectionHeaderColor else { return }
+        
+        if let label = view as? UILabel {
+            label.textColor = sectionColor
+        } else if let headerView = view as? UITableViewHeaderFooterView {
+            headerView.textLabel?.textColor = sectionColor
+        }
+    }
+    
+    public override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        guard let sectionColor = Theme.shared.activeCollection.tableSectionFooterColor else { return }
+        
+        if let label = view as? UILabel {
+            label.textColor = sectionColor
+        } else if let headerView = view as? UITableViewHeaderFooterView {
+            headerView.textLabel?.textColor = sectionColor
+        }
+    }
 }

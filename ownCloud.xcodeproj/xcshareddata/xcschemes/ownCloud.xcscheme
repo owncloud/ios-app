@@ -311,6 +311,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:host-simulator.active-simulations"
+            value = "[action-timeout-simulator]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:server-locator.use"
             value = "string:web-finger"
             isEnabled = "NO">

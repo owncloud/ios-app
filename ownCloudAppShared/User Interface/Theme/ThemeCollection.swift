@@ -238,7 +238,7 @@ public class ThemeCollection : NSObject {
 			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.lightGray)
 			self.tableSeparatorColor = color
 		}
-		self.tableSectionHeaderColor = UIColor.gray
+        self.tableSectionHeaderColor = UIColor.gray
 		self.tableSectionFooterColor = UIColor.gray
 
 		let rowColor : UIColor? = UIColor.black.withAlphaComponent(0.1)
@@ -374,7 +374,10 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				let tmpDarkBrandColors = self.darkBrandColors
-				tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
+            
+                if VendorServices.shared.isBranded {
+                    tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
+                }
 				if self.tintColor == UIColor(hex: 0xFFFFFF) {
 					tmpDarkBrandColors.secondaryLabelColor = .lightGray
 				}
