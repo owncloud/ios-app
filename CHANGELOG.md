@@ -1,3 +1,54 @@
+Changelog for ownCloud iOS Client [11.10.0] (2022-05-18)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.10.0 relevant to
+ownCloud admins and users.
+
+[11.10.0]: https://github.com/owncloud/ios-app/compare/milestone/11.9.1...milestone/11.10.0
+
+Summary
+-------
+
+* Bugfix - IOS 15 SDK: [#1066](https://github.com/owncloud/ios-app/issues/1066)
+* Bugfix - EMM Shortcuts Licensing: [#1114](https://github.com/owncloud/ios-app/issues/1114)
+* Bugfix - Increased Timeout for Copy Action: [#1119](https://github.com/owncloud/ios-app/issues/1119)
+* Bugfix - Shortcuts Action Delete Path Item: [#1123](https://github.com/owncloud/ios-app/issues/1123)
+* Change - Migration to OpenSSL 1.1.0: [#1116](https://github.com/owncloud/ios-app/pull/1116)
+
+Details
+-------
+
+* Bugfix - IOS 15 SDK: [#1066](https://github.com/owncloud/ios-app/issues/1066)
+
+   After upgrading to iOS 15 SDK some UI fixes were needed.
+
+   https://github.com/owncloud/ios-app/issues/1066
+
+* Bugfix - EMM Shortcuts Licensing: [#1114](https://github.com/owncloud/ios-app/issues/1114)
+
+   If app was build as EMM version, the app shown an licensing error, when running shortcut
+   intents.
+
+   https://github.com/owncloud/ios-app/issues/1114
+
+* Bugfix - Increased Timeout for Copy Action: [#1119](https://github.com/owncloud/ios-app/issues/1119)
+
+   Increased HTTP request timeout for COPY actions from 1 minute to 10 minutes and improved error
+   handling for request timeouts.
+
+   https://github.com/owncloud/ios-app/issues/1119
+
+* Bugfix - Shortcuts Action Delete Path Item: [#1123](https://github.com/owncloud/ios-app/issues/1123)
+
+   The shortcuts action Delete Path Item did not provided configured accounts.
+
+   https://github.com/owncloud/ios-app/issues/1123
+
+* Change - Migration to OpenSSL 1.1.0: [#1116](https://github.com/owncloud/ios-app/pull/1116)
+
+   Migrated code to OpenSSL 1.1.1 API.
+
+   https://github.com/owncloud/ios-app/pull/1116
+
 Changelog for ownCloud iOS Client [11.9.1] (2022-03-29)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.9.1 relevant to
