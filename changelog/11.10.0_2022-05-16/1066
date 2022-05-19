@@ -2,4 +2,4 @@ Bugfix: iOS 15 SDK
 
 After upgrading to iOS 15 SDK some UI fixes were needed.
 
-https://github.com/owncloud/ios-app/issue/1066
+https://github.com/owncloud/ios-app/issues/1066
