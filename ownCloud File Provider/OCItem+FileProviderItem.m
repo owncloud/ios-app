@@ -33,36 +33,21 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
 - (NSFileProviderItemIdentifier)itemIdentifier
 {
-//	if ([self.path isEqual:@"/"])
-//	{
-//		return (NSFileProviderRootContainerItemIdentifier);
-//	}
-//
-//	return (self.localID);
+	OCVFSItemID vfsItemID = self.vfsItemID;
 
-	return ([OCVFSCore composeVFSItemIDForOCItemWithBookmarkUUID:self.customIdentifier1 driveID:self.driveID localID:self.localID]);
+	return ([vfsItemID isEqual:OCVFSItemIDRoot] ? NSFileProviderRootContainerItemIdentifier : vfsItemID);
 }
 
 - (NSFileProviderItemIdentifier)parentItemIdentifier
 {
-	if (self.customIdentifier2 != nil)
-	{
-		return (self.customIdentifier2);
-	}
+	OCVFSItemID vfsParentItemID = self.vfsParentItemID;
 
-	return ([OCVFSCore composeVFSItemIDForOCItemWithBookmarkUUID:self.customIdentifier1 driveID:self.driveID localID:self.parentLocalID]);
-
-//	if ([[self.path stringByDeletingLastPathComponent] isEqualToString:@"/"])
-//	{
-//		return (NSFileProviderRootContainerItemIdentifier);
-//	}
-//
-//	return (self.parentLocalID);
+	return ([vfsParentItemID isEqual:OCVFSItemIDRoot] ? NSFileProviderRootContainerItemIdentifier : vfsParentItemID);
 }
 
 - (NSString *)filename
 {
-	return (self.name);
+	return (self.vfsItemName);
 }
 
 + (NSDictionary<NSString*, NSString*> *)overriddenUTIByMIMEType

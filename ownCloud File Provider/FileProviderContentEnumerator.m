@@ -30,7 +30,39 @@
 
 @implementation FileProviderContentEnumerator
 
-- (instancetype)initWithVFSCore:(OCVFSCore *)vfsCore containerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier;
+#pragma mark - Queues
++ (dispatch_queue_t)dispatchQueue
+{
+	static dispatch_once_t onceToken;
+	static dispatch_queue_t dispatchQueue;
+	dispatch_once(&onceToken, ^{
+		dispatchQueue = dispatch_queue_create("Enumeration queue", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+	});
+
+	return (dispatchQueue);
+}
+
++ (OCAsyncSequentialQueue *)queue
+{
+	static dispatch_once_t onceToken;
+	static OCAsyncSequentialQueue *queue;
+
+	dispatch_once(&onceToken, ^{
+		dispatch_queue_t dispatchQueue = FileProviderContentEnumerator.dispatchQueue;
+
+		queue = [[OCAsyncSequentialQueue alloc] init];
+		queue.executor = ^(OCAsyncSequentialQueueJob  _Nonnull job, dispatch_block_t  _Nonnull completionHandler) {
+			dispatch_async(dispatchQueue, ^{
+				job(completionHandler);
+			});
+		};
+	});
+
+	return (queue);
+}
+
+#pragma mark - Initialization
+- (instancetype)initWithVFSCore:(OCVFSCore *)vfsCore containerItemIdentifier:(OCVFSItemID)containerItemIdentifier;
 {
 	if ((self = [super init]) != nil)
 	{
@@ -40,27 +72,13 @@
 		_enumerationObservers = [NSMutableArray new];
 		_changeObservers = [NSMutableArray new];
 
-		if ([_containerItemIdentifier isEqual:NSFileProviderRootContainerItemIdentifier])
-		{
-			_containerItemIdentifier = _vfsCore.rootNode.itemID;
-		}
-
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_displaySettingsChanged:) name:DisplaySettingsChanged object:nil];
 	}
 
 	return (self);
 }
 
-- (void)invalidate
-{
-	OCLogDebug(@"##### INVALIDATE %@", _containerItemIdentifier);
-
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:DisplaySettingsChanged object:nil];
-
-	self.content.query.delegate = nil;
-	self.content = nil;
-}
-
+#pragma mark - Display settings change tracking
 - (void)_displaySettingsChanged:(NSNotification *)notification
 {
 	OCLogDebug(@"Received display settings update notification (enumerator for %@)", _containerItemIdentifier);
@@ -76,94 +94,242 @@
 	}
 }
 
+#pragma mark - FileProvider API
 - (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer startingAtPage:(NSFileProviderPage)page
 {
-	FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
-
 	OCLogDebug(@"##### Enumerate ITEMS for observer: %@ fromPage: %@", observer, page);
 
-	enumerationObserver.enumerationObserver = observer;
-	enumerationObserver.enumerationStartPage = page;
-	enumerationObserver.didProvideInitialItems = NO;
+	__weak FileProviderContentEnumerator *weakSelf = self;
 
-	@synchronized(self)
-	{
-		[self->_enumerationObservers addObject:enumerationObserver];
-	}
+	[self requestContentWithErrorHandler:^(NSError *error) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[observer finishEnumeratingWithError:error];
+		});
+	} contentConsumer:^(OCVFSContent *content) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[weakSelf provideItemsToEnumerationObserver:observer fromContent:content];
+		});
+	} observerQueuer:^BOOL(dispatch_block_t completionHandler) {
+		FileProviderContentEnumerator *strongSelf = weakSelf;
 
-	[self _startQuery];
-}
+		if (strongSelf == nil) {
+			return(NO);
+		}
 
-//- (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer startingAtPage:(NSFileProviderPage)page
-//{
-//	if ([_containerItemIdentifier isEqual:NSFileProviderRootContainerItemIdentifier])
-//	{
-//		_containerItemIdentifier = _vfsCore.rootNode.itemID;
-//	}
+		FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
+
+		enumerationObserver.enumerationObserver = observer;
+		enumerationObserver.enumerationStartPage = page;
+		enumerationObserver.enumerationCompletionHandler = completionHandler;
+
+		[strongSelf->_enumerationObservers addObject:enumerationObserver];
+
+		return (YES);
+	}];
 //
-//	[_vfsCore provideContentForContainerItemID:_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
-//		if (error != nil)
-//		{
-//			[observer finishEnumeratingWithError:error];
+//	[FileProviderContentEnumerator.queue async:^(dispatch_block_t  _Nonnull completionHandler) {
+//		FileProviderContentEnumerator *strongSelf = weakSelf;
+//
+//		if (strongSelf == nil) {
+//			completionHandler();
+//			return;
 //		}
-//		else
-//		{
-//			self.content = content;
 //
-//			// Send VFS children
-//			if (content.vfsChildNodes.count > 0)
-//			{
-//				[observer didEnumerateItems:content.vfsChildNodes];
-//			}
+//		[strongSelf.vfsCore provideContentForContainerItemID:strongSelf->_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
+//			dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
+//				FileProviderContentEnumerator *strongSelf = weakSelf;
 //
-//			// End enumeration if no query returned
-//			if (content.query == nil)
-//			{
-//				[observer finishEnumeratingUpToPage:nil];
-//			}
-//
-//			// Continue enumeration if query returned
-//			if (content.query != nil)
-//			{
-//				FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
-//
-//				OCLogDebug(@"##### Enumerate ITEMS for observer: %@ fromPage: %@", observer, page);
-//
-//				enumerationObserver.enumerationObserver = observer;
-//				enumerationObserver.enumerationStartPage = page;
-//				enumerationObserver.didProvideInitialItems = NO;
-//
-//				@synchronized(self)
-//				{
-//					[self->_enumerationObservers addObject:enumerationObserver];
+//				if (strongSelf == nil) {
+//					completionHandler();
+//					return;
 //				}
 //
-//				[self _startQuery];
-//			}
-//		}
+//				if (error != nil)
+//				{
+//					[observer finishEnumeratingWithError:error];
+//					completionHandler();
+//				}
+//				else
+//				{
+//					if (content.isSnapshot)
+//					{
+//						// Content is a snapshot, so there's no need to keep the content around - it can be sent now
+//						[strongSelf provideItemsToEnumerationObserver:observer fromContent:content];
+//						completionHandler();
+//					}
+//					else
+//					{
+//						// Content is self-updating, so we can send it
+//						if (strongSelf.content != nil)
+//						{
+//							[strongSelf provideItemsToEnumerationObserver:observer fromContent:self.content];
+//							completionHandler();
+//						}
+//						else
+//						{
+//							FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
+//
+//							enumerationObserver.enumerationObserver = observer;
+//							enumerationObserver.enumerationStartPage = page;
+//							enumerationObserver.didProvideInitialItems = NO;
+//							enumerationObserver.enumerationCompletionHandler = completionHandler;
+//
+//							[strongSelf->_enumerationObservers addObject:enumerationObserver];
+//
+//							strongSelf.content = content;
+//						}
+//					}
+//				}
+//			});
+//		}];
 //	}];
-//}
 
-- (void)_finishAllEnumeratorsWithError:(NSError *)error
+	/* TODO:
+	- inspect the page to determine whether this is an initial or a follow-up request
+
+	If this is an enumerator for a directory, the root container or all directories:
+	- perform a server request to fetch directory contents
+	If this is an enumerator for the active set:
+	- perform a server request to update your local database
+	- fetch the active set from your local database
+
+	- inform the observer about the items returned by the server (possibly multiple times)
+	- inform the observer that you are finished with this page
+	*/
+}
+
+- (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer fromSyncAnchor:(NSFileProviderSyncAnchor)syncAnchor
 {
-	@synchronized(self)
-	{
-		for (FileProviderEnumeratorObserver *observer in _enumerationObservers)
-		{
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[observer.enumerationObserver finishEnumeratingWithError:error];
-			});
-		}
-		[_enumerationObservers removeAllObjects];
+	OCLogDebug(@"##### Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
 
-		for (FileProviderEnumeratorObserver *observer in _changeObservers)
-		{
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[observer.changeObserver finishEnumeratingWithError:error];
-			});
-		}
-		[_changeObservers removeAllObjects];
+	if (syncAnchor != nil)
+	{
+		/** Apple:
+			If the enumeration fails with NSFileProviderErrorSyncAnchorExpired, we will
+			drop all cached data and start the enumeration over starting with sync anchor
+			nil.
+		*/
+		dispatch_async(dispatch_get_main_queue(), ^{
+//			if ([syncAnchor isEqual:[self->_core.latestSyncAnchor syncAnchorData]])
+//			{
+//				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+//				[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
+//			}
+//			else
+			{
+				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+				[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
+			}
+		});
 	}
+	else
+	{
+		/** Apple:
+			"If anchor is nil, then the system is enumerating from scratch: the system wants
+			to receives changes to reconstruct the list of items in this enumeration as if
+			starting from an empty list."
+		*/
+
+		__weak FileProviderContentEnumerator *weakSelf = self;
+
+		[self requestContentWithErrorHandler:^(NSError *error) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[observer finishEnumeratingWithError:error];
+			});
+		} contentConsumer:^(OCVFSContent *content) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[weakSelf provideItemsForChangeObserver:observer fromContent:content];
+			});
+		} observerQueuer:^BOOL(dispatch_block_t completionHandler) {
+			FileProviderContentEnumerator *strongSelf = weakSelf;
+
+			if (strongSelf == nil) {
+				return(NO);
+			}
+
+			FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
+
+			enumerationObserver.changeObserver = observer;
+			enumerationObserver.changesFromSyncAnchor = syncAnchor;
+			enumerationObserver.enumerationCompletionHandler = completionHandler;
+
+			[strongSelf->_changeObservers addObject:enumerationObserver];
+
+			return (YES);
+		}];
+	}
+}
+
+- (void)invalidate
+{
+	OCLogDebug(@"##### INVALIDATE %@", _containerItemIdentifier);
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:DisplaySettingsChanged object:nil];
+
+	self.content.query.delegate = nil;
+	self.content = nil;
+}
+
+#pragma mark - Content retrieval
+- (void)requestContentWithErrorHandler:(void(^)(NSError *))errorHandler contentConsumer:(void(^)(OCVFSContent *))contentConsumer observerQueuer:(BOOL(^)(dispatch_block_t completionHandler))observerQueuer
+{
+	__weak FileProviderContentEnumerator *weakSelf = self;
+
+	[FileProviderContentEnumerator.queue async:^(dispatch_block_t  _Nonnull completionHandler) {
+		FileProviderContentEnumerator *strongSelf = weakSelf;
+
+		if (strongSelf == nil) {
+			completionHandler();
+			return;
+		}
+
+		[strongSelf.vfsCore provideContentForContainerItemID:strongSelf->_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
+			dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
+				FileProviderContentEnumerator *strongSelf = weakSelf;
+
+				if (strongSelf == nil) {
+					completionHandler();
+					return;
+				}
+
+				if (error != nil)
+				{
+					errorHandler(error);
+					completionHandler();
+				}
+				else
+				{
+					if (content.isSnapshot)
+					{
+						// Content is a snapshot, so there's no need to keep the content around - it can be sent now
+						contentConsumer(content);
+						completionHandler();
+					}
+					else
+					{
+						// Content is self-updating, so we can send it
+						if (strongSelf.content != nil)
+						{
+							contentConsumer(strongSelf.content);
+							completionHandler();
+						}
+						else
+						{
+							if (observerQueuer(completionHandler))
+							{
+								strongSelf.content = content;
+							}
+							else
+							{
+								strongSelf.content = content;
+								completionHandler();
+							}
+						}
+					}
+				}
+			});
+		}];
+	}];
 }
 
 - (void)setContent:(OCVFSContent *)content
@@ -173,6 +339,7 @@
 		if (content.query != nil)
 		{
 			[content.core stopQuery:content.query];
+			content.query.delegate = nil;
 		}
 	}
 
@@ -353,184 +520,141 @@
 //			}
 }
 
-- (void)_startQuery
+//- (void)_startQuery
+//{
+//	OCLogDebug(@"##### Starting query..");
+//
+//	OCMeasureEvent(self, @"fp.enumerator", @"Starting enumerator…");
+//
+//	BOOL contentRequested = NO;
+//
+//	@synchronized(self)
+//	{
+//		contentRequested = _contentRequested;
+//
+//		if (_contentRequested == NO)
+//		{
+//			_contentRequested = YES;
+//		}
+//	}
+//
+//	if ((self.content == nil) && !contentRequested)
+//	{
+//		[self.vfsCore provideContentForContainerItemID:_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
+//			if (error != nil)
+//			{
+//				[self _finishAllEnumeratorsWithError:error];
+//			}
+//			else
+//			{
+//				if (content.isSnapshot)
+//				{
+//					// No query that would call us back later, so just send the existing content now
+//					[self sendContent:content];
+//
+//					@synchronized(self)
+//					{
+//						self->_contentRequested = NO;
+//					}
+//				}
+//				else
+//				{
+//					// There will be callbacks from the query, no need to send content now already
+//					self.content = content;
+//				}
+//			}
+//		}];
+//	}
+//	else
+//	{
+//		OCLogDebug(@"Query already running..");
+//		[self sendContent:self.content];
+//	}
+//
+//}
+
+//- (void)sendContent:(OCVFSContent *)content
+//{
+//	if (content != nil)
+//	{
+//		@synchronized(self)
+//		{
+//			if (_enumerationObservers.count!=0)
+//			{
+//				dispatch_async(dispatch_get_main_queue(), ^{
+//					[self provideItemsForEnumerationObserverFromContent:content];
+//				});
+//			}
+//
+//			if (_changeObservers.count!=0)
+//			{
+//				dispatch_async(dispatch_get_main_queue(), ^{
+//					[self provideItemsForChangeObserverFromConten:content];
+//				});
+//			}
+//		}
+//	}
+//}
+
+#pragma mark - Content distribution
+- (BOOL)provideItemsToEnumerationObserver:(id<NSFileProviderEnumerationObserver>)enumerationObserver fromContent:(OCVFSContent *)content
 {
-	OCLogDebug(@"##### Starting query..");
-
-	OCMeasureEvent(self, @"fp.enumerator", @"Starting enumerator…");
-
-	BOOL contentRequested = NO;
-
-	@synchronized(self)
+	if (((content.query.state == OCQueryStateContentsFromCache) || ((content.query.state == OCQueryStateWaitingForServerReply) && (content.query.queryResults.count > 0)) || (content.query.state == OCQueryStateIdle))
+	    || ((content.query == nil) && (content != nil)))
 	{
-		contentRequested = _contentRequested;
+		NSArray <OCItem *> *queryResults = content.query.queryResults;
+		OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuid.UUIDString;
 
-		if (_contentRequested == NO)
+		for (OCItem *item in queryResults)
 		{
-			_contentRequested = YES;
+			item.bookmarkUUID = bookmarkUUIDString;
 		}
-	}
 
-	if ((self.content == nil) && !contentRequested)
-	{
-		[self.vfsCore provideContentForContainerItemID:_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
-			if (error != nil)
+		OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, enumerationObserver, content.query.queryLocation.path, queryResults);
+
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (content.vfsChildNodes.count > 0)
 			{
-				[self _finishAllEnumeratorsWithError:error];
+				[enumerationObserver didEnumerateItems:content.vfsChildNodes];
 			}
-			else
+
+			if (queryResults.count > 0)
 			{
-				self.content = content;
-
-				if (self.content.query == nil)
-				{
-					// No query that would call us back later, so just send the existing content now
-					[self sendExistingContent];
-				}
+				[enumerationObserver didEnumerateItems:queryResults];
 			}
-		}];
+
+			[enumerationObserver finishEnumeratingUpToPage:nil];
+		});
+
+		return (YES);
 	}
-	else
-	{
-		OCLogDebug(@"Query already running..");
-		[self sendExistingContent];
-	}
 
-	/* TODO:
-	- inspect the page to determine whether this is an initial or a follow-up request
-
-	If this is an enumerator for a directory, the root container or all directories:
-	- perform a server request to fetch directory contents
-	If this is an enumerator for the active set:
-	- perform a server request to update your local database
-	- fetch the active set from your local database
-
-	- inform the observer about the items returned by the server (possibly multiple times)
-	- inform the observer that you are finished with this page
-	*/
+	return (NO);
 }
 
-- (void)sendExistingContent
+- (BOOL)provideItemsForChangeObserver:(id<NSFileProviderChangeObserver>)changeObserver fromContent:(OCVFSContent *)content
 {
-	if (self.content != nil)
-	{
-		@synchronized(self)
-		{
-			if (_enumerationObservers.count!=0)
-			{
-				dispatch_async(dispatch_get_main_queue(), ^{
-					[self provideItemsForEnumerationObserver];
-				});
-			}
+	OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, content.query.queryLocation.path, content.query.queryResults);
 
-			if (_changeObservers.count!=0)
-			{
-				dispatch_async(dispatch_get_main_queue(), ^{
-					[self provideItemsForChangeObserver];
-				});
-			}
-		}
+	NSArray <OCItem *> *queryResults = content.query.queryResults;
+	OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuid.UUIDString;
+
+	for (OCItem *item in queryResults)
+	{
+		item.bookmarkUUID = bookmarkUUIDString;
 	}
+
+	NSFileProviderSyncAnchor syncAnchor = [content.core.latestSyncAnchor syncAnchorData];
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[changeObserver didUpdateItems:queryResults];
+		[changeObserver finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
+	});
+
+	return (YES);
 }
 
-- (void)provideItemsForEnumerationObserver
-{
-	if (((_content.query.state == OCQueryStateContentsFromCache) || ((_content.query.state == OCQueryStateWaitingForServerReply) && (_content.query.queryResults.count > 0)) || (_content.query.state == OCQueryStateIdle))
-	    || ((_content.query == nil) && (_content != nil)))
-	{
-		@synchronized(self)
-		{
-			NSMutableArray <FileProviderEnumeratorObserver *> *removeObservers = [NSMutableArray new];
-
-			for (FileProviderEnumeratorObserver *observer in _enumerationObservers)
-			{
-				if (observer.enumerationObserver != nil)
-				{
-					if (!observer.didProvideInitialItems)
-					{
-						NSArray <OCItem *> *queryResults = _content.query.queryResults;
-						OCBookmarkUUIDString bookmarkUUIDString = _content.core.bookmark.uuid.UUIDString;
-
-						for (OCItem *item in queryResults)
-						{
-							item.customIdentifier1 = bookmarkUUIDString;
-							item.customIdentifier2 = _content.containerNode.itemIdentifier;
-						}
-
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, _content.query.queryLocation.path, queryResults);
-
-						observer.didProvideInitialItems = YES;
-
-						if (_content.vfsChildNodes.count > 0)
-						{
-							[observer.enumerationObserver didEnumerateItems:_content.vfsChildNodes];
-						}
-
-						if (queryResults.count > 0)
-						{
-	//							NSUInteger offset = 0, count = queryResults.count;
-	//
-	//							while (offset < count)
-	//							{
-	//								NSUInteger sliceCount = 100;
-	//
-	//								if (offset + sliceCount > count)
-	//								{
-	//									sliceCount = count - offset;
-	//								}
-	//
-	//								NSArray<OCItem *> *partialResults = [queryResults subarrayWithRange:NSMakeRange(offset, sliceCount)];
-	//
-	//								[observer.enumerationObserver didEnumerateItems:partialResults];
-	//
-	//								offset += sliceCount;
-	//							};
-
-							[observer.enumerationObserver didEnumerateItems:queryResults];
-						}
-
-						[observer.enumerationObserver finishEnumeratingUpToPage:nil];
-
-						[removeObservers addObject:observer];
-					}
-				}
-			}
-
-			[_enumerationObservers removeObjectsInArray:removeObservers];
-		}
-	}
-}
-
-- (void)provideItemsForChangeObserver
-{
-	@synchronized(self)
-	{
-		if (_changeObservers.count > 0)
-		{
-			OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, _content.query.queryLocation.path, _content.query.queryResults);
-
-			NSArray <OCItem *> *queryResults = _content.query.queryResults;
-			OCBookmarkUUIDString bookmarkUUIDString = _content.core.bookmark.uuid.UUIDString;
-
-			for (OCItem *item in queryResults)
-			{
-				item.customIdentifier1 = bookmarkUUIDString;
-				item.customIdentifier2 = _content.containerNode.itemIdentifier;
-			}
-
-			NSFileProviderSyncAnchor syncAnchor = [_content.core.latestSyncAnchor syncAnchorData];
-
-			for (FileProviderEnumeratorObserver *observer in _changeObservers)
-			{
-				[observer.changeObserver didUpdateItems:queryResults];
-				[observer.changeObserver finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
-			}
-
-			[_changeObservers removeAllObjects];
-		}
-	}
-}
-
+#pragma mark - OCQuery delegate
 - (void)queryHasChangesAvailable:(OCQuery *)query
 {
 	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
@@ -539,17 +663,29 @@
 	    ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) ||
 	     (query.state == OCQueryStateIdle))
 	{
-		dispatch_async(dispatch_get_main_queue(), ^{
-			@synchronized(self)
-			{
-				if (self->_enumerationObservers.count > 0)
-				{
-					[self provideItemsForEnumerationObserver];
-				}
+		dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
+			// Send content to enumeration observers
+			NSArray<FileProviderEnumeratorObserver *> *enumerationObservers = [self->_enumerationObservers copy];
 
-				if (self->_changeObservers.count > 0)
+			for (FileProviderEnumeratorObserver *observer in enumerationObservers)
+			{
+				if ([self provideItemsToEnumerationObserver:observer.enumerationObserver fromContent:self.content])
 				{
-					[self provideItemsForChangeObserver];
+					[observer completeEnumeration];
+					[self->_enumerationObservers removeObject:observer];
+				}
+			}
+
+
+			// Send content to change observers
+			NSArray<FileProviderEnumeratorObserver *> *changeObservers = [self->_changeObservers copy];
+
+			for (FileProviderEnumeratorObserver *observer in changeObservers)
+			{
+				if ([self provideItemsForChangeObserver:observer.changeObserver fromContent:self.content])
+				{
+					[observer completeEnumeration];
+					[self->_changeObservers removeObject:observer];
 				}
 			}
 		});
@@ -559,64 +695,6 @@
 - (void)query:(OCQuery *)query failedWithError:(NSError *)error
 {
 	OCLogDebug(@"### Query failed with error: %@", error);
-}
-
-- (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer fromSyncAnchor:(NSFileProviderSyncAnchor)syncAnchor
-{
-	OCLogDebug(@"##### Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
-
-	if (syncAnchor != nil)
-	{
-		/** Apple:
-			If the enumeration fails with NSFileProviderErrorSyncAnchorExpired, we will
-			drop all cached data and start the enumeration over starting with sync anchor
-			nil.
-		*/
-		dispatch_async(dispatch_get_main_queue(), ^{
-//			if ([syncAnchor isEqual:[self->_core.latestSyncAnchor syncAnchorData]])
-//			{
-//				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
-//				[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
-//			}
-//			else
-			{
-				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
-				[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
-			}
-		});
-	}
-	else
-	{
-		/** Apple:
-			"If anchor is nil, then the system is enumerating from scratch: the system wants
-			to receives changes to reconstruct the list of items in this enumeration as if
-			starting from an empty list."
-		*/
-
-//		[_vfsCore provideContentForContainerItemID:_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
-//			if (error != nil)
-//			{
-//				[observer finishEnumeratingWithError:error];
-//			}
-//			else
-//			{
-////				[observer didEnumerateItems:content.vfsChildNodes];
-////				[observer finishEnumeratingUpToPage:nil];
-//			}
-//		}];
-
-		FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
-
-		enumerationObserver.changeObserver = observer;
-		enumerationObserver.changesFromSyncAnchor = syncAnchor;
-
-		@synchronized(self)
-		{
-			[_enumerationObservers addObject:enumerationObserver];
-		}
-
-		[self _startQuery];
-	}
 }
 
 //- (void)currentSyncAnchorWithCompletionHandler:(void (^)(NSFileProviderSyncAnchor _Nullable))completionHandler
@@ -652,6 +730,7 @@
 //	return (_measurement);
 //}
 
+#pragma mark - Log tags
 + (NSArray<OCLogTagName> *)logTags
 {
 	return (@[ @"FPEnum" ]);

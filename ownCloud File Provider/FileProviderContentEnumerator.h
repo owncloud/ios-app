@@ -26,16 +26,16 @@ NS_ASSUME_NONNULL_BEGIN
 {
 	NSMutableArray <FileProviderEnumeratorObserver *> *_enumerationObservers;
 	NSMutableArray <FileProviderEnumeratorObserver *> *_changeObservers;
-
-	BOOL _contentRequested;
 }
 
+@property(nonatomic,readonly,class) OCAsyncSequentialQueue *queue;
+
 @property(strong) OCVFSCore *vfsCore;
-@property(strong) OCVFSNodeID containerItemIdentifier;
+@property(strong) OCVFSItemID containerItemIdentifier;
 
 @property(strong,nullable,nonatomic) OCVFSContent *content;
 
-- (instancetype)initWithVFSCore:(OCVFSCore *)vfsCore containerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier;
+- (instancetype)initWithVFSCore:(OCVFSCore *)vfsCore containerItemIdentifier:(OCVFSItemID)containerItemIdentifier;
 
 @end
 

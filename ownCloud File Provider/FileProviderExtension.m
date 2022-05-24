@@ -88,52 +88,7 @@
 {
 	if (_vfsCore == nil)
 	{
-		_vfsCore = [[OCVFSCore alloc] init];
-		_vfsCore.delegate = self;
-//
-//		[_vfsCore addNodes:@[
-//			[OCVFSNode virtualFolderAtPath:@"/" location:nil],
-//			[OCVFSNode virtualFolderInPath:@"/" withName:@"Hi" location:nil],
-//			[OCVFSNode virtualFolderInPath:@"/" withName:@"Hallo" location:nil],
-//			[OCVFSNode virtualFolderInPath:@"/" withName:@"Hello" location:nil],
-//			[OCVFSNode virtualFolderInPath:@"/Hello/" withName:@"world" location:nil]
-//		]];
-	}
-
-	if (_vfsCore.rootNode == nil)
-	{
-		OCCore *core;
-
-		if ((core = self.core) != nil)
-		{
-			if (core.useDrives)
-			{
-				if (core.drives.count > 0)
-				{
-					NSMutableArray<OCVFSNode *> *nodes = [NSMutableArray new];
-
-					[nodes addObject:[OCVFSNode virtualFolderAtPath:@"/" location:nil]];
-
-					for (OCDrive *drive in core.drives)
-					{
-						OCLocation *driveRootLocation = drive.rootLocation;
-						driveRootLocation.bookmarkUUID = self.bookmark.uuid;
-
-						[nodes addObject:[OCVFSNode virtualFolderAtPath:[@"/" stringByAppendingPathComponent:drive.name].normalizedDirectoryPath location:driveRootLocation]];
-					}
-
-					[_vfsCore addNodes:nodes];
-				}
-			}
-			else
-			{
-				OCLocation *legacyRoot = [[OCLocation alloc] initWithBookmarkUUID:core.bookmark.uuid driveID:nil path:@"/"];
-
-				[_vfsCore addNodes:@[
-					[OCVFSNode virtualFolderAtPath:@"/" location:legacyRoot]
-				]];
-			}
-		}
+		_vfsCore = [VFSManager.sharedManager vfsForBookmark:self.bookmark];
 	}
 
 	return (_vfsCore);
@@ -231,7 +186,7 @@
 	__block NSFileProviderItem item = nil;
 	__block NSError *returnError = nil;
 
-	if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
+	if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier] || [identifier isEqual:OCVFSItemIDRoot])
 	{
 		item = (NSFileProviderItem)self.vfsCore.rootNode;
 	}
@@ -326,6 +281,18 @@
 	}
 
 	return ([self.vfsCore itemIdentifierForURL:url]);
+}
+
+- (nullable OCItem *)cachedItemInParent:(OCItem *)parentItem withName:(NSString *)name isDirectory:(BOOL)isDirectory error:(__autoreleasing NSError * _Nullable * _Nullable)outError
+{
+	OCItem *item;
+
+	if ((item = [self.core cachedItemInParent:parentItem withName:name isDirectory:isDirectory error:outError]) != nil)
+	{
+		item.bookmarkUUID = self.core.bookmark.uuid.UUIDString;
+	}
+
+	return (item);
 }
 
 - (void)providePlaceholderAtURL:(NSURL *)url completionHandler:(void (^)(NSError * _Nullable))completionHandler
@@ -531,7 +498,7 @@
 		{
 			OCItem *existingItem;
 
-			if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
+			if ((existingItem = [self cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 			{
 				FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
 				if (@available(iOS 13.3, *))
@@ -564,7 +531,7 @@
 					// Folder already exists on the server
 					OCItem *existingItem;
 
-					if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
+					if ((existingItem = [self cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 					{
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
 						if (@available(iOS 13.3, *))
@@ -735,7 +702,7 @@
 			// Detect name collissions
 			OCItem *existingItem;
 
-			if ((existingItem = [self.core cachedItemInParent:parentItem withName:importFileName isDirectory:NO error:NULL]) != nil)
+			if ((existingItem = [self cachedItemInParent:parentItem withName:importFileName isDirectory:NO error:NULL]) != nil)
 			{
 				// Return collission error
 				FPLogCmd(@"Completed with collission with existingItem=%@ (local)", existingItem);
@@ -958,13 +925,29 @@
 
 	if (![containerItemIdentifier isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier])
 	{
-		return ([[FileProviderContentEnumerator alloc] initWithVFSCore:self.vfsCore containerItemIdentifier:containerItemIdentifier]);
+		if ([containerItemIdentifier isEqual:NSFileProviderRootContainerItemIdentifier])
+		{
+			// Request core to enable continuous checks for new/changed spaces if app is not running in parallel
+			// Also shorten time to core availability when users decide to descend into an actual drive
+			OCCore *core = nil;
+			NSError *coreError = nil;
 
-//		FileProviderEnumerator *enumerator = [[FileProviderEnumerator alloc] initWithBookmark:self.bookmark enumeratedItemIdentifier:containerItemIdentifier];
-//
-//		enumerator.fileProviderExtension = self;
-//
-//		return (enumerator);
+			if ((core = [self coreWithError:&coreError]) == nil)
+			{
+				// Error requesting core
+				if (error != NULL)
+				{
+					*error = coreError;
+				}
+
+				return (nil);
+			}
+
+			// Change identifier to VFS RootItem ID
+			containerItemIdentifier = OCVFSItemIDRoot;
+		}
+
+		return ([[FileProviderContentEnumerator alloc] initWithVFSCore:self.vfsCore containerItemIdentifier:containerItemIdentifier]);
 	}
 
 	return (nil);
@@ -1085,21 +1068,6 @@
 - (OCCore *)core
 {
 	return ([self coreWithError:nil]);
-}
-
-- (void)acquireCoreForBookmark:(OCBookmark *)bookmark completionHandler:(void (^)(NSError * _Nullable, OCCore * _Nullable))completionHandler
-{
-	NSError *error = nil;
-	OCCore *core = [self coreWithError:&error];
-
-	// TODO
-
-	completionHandler(error, core);
-}
-
-- (void)relinquishCoreForBookmark:(OCBookmark *)bookmark completionHandler:(void (^)(NSError * _Nullable))completionHandler
-{
-	// TODO
 }
 
 - (OCCore *)coreWithError:(NSError **)outError

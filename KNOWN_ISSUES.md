@@ -21,6 +21,8 @@ It should only be used with dedicated test servers, test data - and test devices
 - photo/media uploads from the app are broken
 - inactived state of spaces is not yet represented in the UI
 - "Empty folder" not shown for empty folders
+- Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
+- handling of detached drives with user data in them (see OCVault.detachedDrives)
 
 ## File Provider
 - the list of spaces doesn't update dynamically

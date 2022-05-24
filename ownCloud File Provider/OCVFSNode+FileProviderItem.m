@@ -29,24 +29,26 @@
 
 - (NSFileProviderItemIdentifier)itemIdentifier
 {
-	if (self.isRootNode)
+	OCVFSItemID vfsItemID = self.vfsItemID;
+
+	if ([vfsItemID isEqual:OCVFSItemIDRoot])
 	{
 		return (NSFileProviderRootContainerItemIdentifier);
 	}
 
-	return (self.itemID);
+	return (vfsItemID);
 }
 
 - (NSFileProviderItemIdentifier)parentItemIdentifier
 {
-	OCVFSNode *parentNode = self.parentNode;
+	OCVFSItemID vfsParentItemID = self.vfsParentItemID;
 
-	if (parentNode.isRootNode)
+	if ([vfsParentItemID isEqual:OCVFSItemIDRoot])
 	{
 		return (NSFileProviderRootContainerItemIdentifier);
 	}
 
-	return (parentNode.itemID);
+	return (vfsParentItemID);
 }
 
 - (UTType *)contentType
