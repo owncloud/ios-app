@@ -1,4 +1,4 @@
-#  Known issues in version 12.0 alpha 1
+#  Known issues in version 12.0 alpha 2
 
 ## WARNING
 
@@ -25,11 +25,8 @@ It should only be used with dedicated test servers, test data - and test devices
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
 
 ## File Provider
-- the list of spaces doesn't update dynamically
-- the list of spaces may contain spaces of unsupported types
-- not all actions are working correctly, especially in the root folder of spaces
-- OCCores may not be managed correctly under all circumstances, causing undefined behaviour
-- file uploads are broken
+- file uploads are at least partially broken (error 500)
+- dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
 
 ## SDK
 - local storage consumed by spaces that are then deleted or inactivated is not reclaimed

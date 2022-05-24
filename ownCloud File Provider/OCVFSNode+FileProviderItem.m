@@ -65,7 +65,15 @@
 
 		if ((locationItem = self.locationItem) != nil)
 		{
-			return (locationItem.capabilities);
+			NSFileProviderItemCapabilities capabilities = locationItem.capabilities;
+
+			if (locationItem.path.isRootPath)
+			{
+				// Disallow renaming, moving or deletion of root folders
+				capabilities &= ~(NSFileProviderItemCapabilitiesAllowsReparenting|NSFileProviderItemCapabilitiesAllowsRenaming|NSFileProviderItemCapabilitiesAllowsDeleting);
+			}
+
+			return (capabilities);
 		}
 	}
 

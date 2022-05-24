@@ -210,7 +210,7 @@
 	return item;
 }
 
-- (OCItem *)ocItemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)outError
+- (OCItem *)ocItemForIdentifier:(NSFileProviderItemIdentifier)identifier vfsNode:(OCVFSNode **)outNode error:(NSError *__autoreleasing  _Nullable *)outError
 {
 	id item;
 
@@ -224,6 +224,11 @@
 		if ([item isKindOfClass:OCVFSNode.class])
 		{
 			OCVFSNode *vfsNode = (OCVFSNode *)item;
+
+			if (outNode != NULL)
+			{
+				*outNode = vfsNode;
+			}
 
 			if (vfsNode.location != nil)
 			{
@@ -489,7 +494,7 @@
 
 	FPLogCmdBegin(@"CreateDir", @"Start of createDirectoryWithName=%@, inParentItemIdentifier=%@", directoryName, parentItemIdentifier);
 
-	if ((parentItem = [self ocItemForIdentifier:parentItemIdentifier error:&error]) != nil)
+	if ((parentItem = [self ocItemForIdentifier:parentItemIdentifier vfsNode:NULL error:&error]) != nil)
 	{
 		// Detect collission with existing items
 		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
@@ -579,8 +584,8 @@
 
 	FPLogCmdBegin(@"Reparent", @"Start of reparentItemWithIdentifier=%@, toParentItemWithIdentifier=%@, newName=%@", itemIdentifier, parentItemIdentifier, newName);
 
-	if (((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil) &&
-	    ((parentItem = [self ocItemForIdentifier:parentItemIdentifier error:&error]) != nil))
+	if (((item = [self ocItemForIdentifier:itemIdentifier vfsNode:NULL error:&error]) != nil) &&
+	    ((parentItem = [self ocItemForIdentifier:parentItemIdentifier vfsNode:NULL error:&error]) != nil))
 	{
 		FPLogCmd(@"Moving %@ to %@ as %@", item, parentItem, ((newName != nil) ? newName : item.name));
 
@@ -615,7 +620,7 @@
 
 	FPLogCmdBegin(@"Rename", @"Start of renameItemWithIdentifier=%@, toName=%@", itemIdentifier, itemName);
 
-	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier vfsNode:NULL error:&error]) != nil)
 	{
 		FPLogCmd(@"Renaming %@ in %@ to %@", item, item.path.parentPath, itemName);
 
@@ -635,10 +640,20 @@
 {
 	NSError *error = nil;
 	OCItem *item;
+	OCVFSNode *vfsNode = nil;
 
 	FPLogCmdBegin(@"Delete", @"Start of deleteItemWithIdentifier=%@", itemIdentifier);
 
-	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
+	item = [self ocItemForIdentifier:itemIdentifier vfsNode:&vfsNode error:&error];
+
+//	if (vfsNode != nil)
+//	{
+//		FPLogCmd(@"Rejecting deletion of %@", vfsNode);
+//		completionHandler([NSError fileProviderErrorForRejectedDeletionOfItem:]);
+//		return;
+//	}
+
+	if (item != nil)
 	{
 		FPLogCmd(@"Deleting %@", item);
 
@@ -697,7 +712,7 @@
 			}
 		}
 
-		if ((parentItem = [self ocItemForIdentifier:parentItemIdentifier error:&error]) != nil)
+		if ((parentItem = [self ocItemForIdentifier:parentItemIdentifier vfsNode:NULL error:&error]) != nil)
 		{
 			// Detect name collissions
 			OCItem *existingItem;
@@ -771,7 +786,7 @@
 
 	FPLogCmdBegin(@"FavoriteRank", @"Start of setFavoriteRank=%@, forItemIdentifier=%@", favoriteRank, itemIdentifier);
 
-	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier vfsNode:NULL error:&error]) != nil)
 	{
 //		item.isFavorite = @(favoriteRank != nil); // Stored on server
 
@@ -808,7 +823,7 @@
 
 	FPLogCmdBegin(@"TagData", @"Start of setTagData=%@, forItemIdentifier=%@", tagData, itemIdentifier);
 
-	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier vfsNode:NULL error:&error]) != nil)
 	{
 		[item setLocalTagData:tagData]; // Stored in local attributes
 
@@ -844,7 +859,7 @@
 
 	FPLogCmdBegin(@"Trash", @"Start of trashItemWithIdentifier=%@", itemIdentifier);
 
-	if ((item = [self ocItemForIdentifier:itemIdentifier error:&error]) != nil)
+	if ((item = [self ocItemForIdentifier:itemIdentifier vfsNode:NULL error:&error]) != nil)
 	{
 		FPLogCmd(@"Deleting %@", item);
 
