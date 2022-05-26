@@ -74,7 +74,7 @@ public class ClientSpacesTableViewController: StaticTableViewController {
 
 						self?.navigationController?.pushViewController(rootFolderViewController, animated: true)
 					}
-				}, title: drive.name ?? drive.identifier, subtitle: drive.type, accessoryType: .disclosureIndicator))
+				}, title: drive.name ?? drive.identifier, subtitle: drive.type.rawValue, accessoryType: .disclosureIndicator))
 			}
 
 			removeSection(driveRowsSection)

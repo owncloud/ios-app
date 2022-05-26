@@ -165,10 +165,10 @@ class UploadMediaAction: UploadBaseAction {
 	private func presentImageGalleryPicker() {
 
 		func addAssetsToQueue(assets:[PHAsset]) {
-			guard let path = self.context.items.first?.path else { return }
+			guard let targetLocation = self.context.items.first?.location else { return }
 			guard let bookmark = self.core?.bookmark else { return }
 
-			MediaUploadQueue.shared.addUploads(assets, for: bookmark, at: path)
+			MediaUploadQueue.shared.addUploads(assets, for: bookmark, at: targetLocation)
 		}
 
 		if let viewController = self.context.viewController {

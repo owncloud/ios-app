@@ -18,14 +18,12 @@ It should only be used with dedicated test servers, test data - and test devices
 - subscription of spaces can't be turned on/off yet
 - the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
-- photo/media uploads from the app are broken
 - inactived state of spaces is not yet represented in the UI
 - "Empty folder" not shown for empty folders
 - Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
 
 ## File Provider
-- file uploads are at least partially broken (error 500)
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
 
 ## SDK

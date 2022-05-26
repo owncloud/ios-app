@@ -54,8 +54,8 @@ class MediaUploadOperation : Operation {
 				// If item is found and it's not a placeholder, upload was finished
 				if existingItem.isPlaceholder == false {
 					// Now upload is done and the job can be removed completely
-					if let itemPath = existingItem.path {
-						removeUploadJob(with: itemPath)
+					if let itemLocation = existingItem.location {
+						removeUploadJob(with: itemLocation)
 					}
 				}
 				// Otherwise if isPlaceholder property is true, then upload is still ongoing, just skip it here
@@ -69,12 +69,12 @@ class MediaUploadOperation : Operation {
 		}
 
 		// Make sure that we have valid upload path
-		guard let path = mediaUploadJob.targetPath else { return }
+		guard let targetLocation = mediaUploadJob.targetLocation else { return }
 
 		// Make sure that valid PHAsset is existing
 		guard let asset = self.fetchAsset(with: assetId) else {
 			// Otherwise remove the job
-			removeUploadJob(with: path)
+			removeUploadJob(with: targetLocation)
 			return
 		}
 
@@ -89,12 +89,17 @@ class MediaUploadOperation : Operation {
 		// Track the target path
 		importGroup.enter()
 
-		self.itemTracking = core.trackItem(at: OCLocation.legacyRootPath(path), trackingHandler: { (_, item, isInitial) in
+		self.itemTracking = core.trackItem(at: targetLocation, trackingHandler: { (error, item, isInitial) in
 			let importGroup = importGroupLeaveOnce
 			importGroupLeaveOnce = nil
 
 			defer {
 				importGroup?.leave()
+			}
+
+			if let error = error {
+				Log.error("Error resolving media import target location \(targetLocation): \(error)")
+				return
 			}
 
 			if isInitial {
@@ -117,11 +122,11 @@ class MediaUploadOperation : Operation {
 				// Perform asset import
 				if let itemLocalId = self.importAsset(asset: asset, with: core, at: item, uploadCompletion: {
 					// Import successful
-					self.removeUploadJob(with: path)
+					self.removeUploadJob(with: targetLocation)
 				}) {
 					// Update media upload storage object
 					core.bookmark.modifyMediaUploadStorage { (storage) in
-						storage.update(localItemID: itemLocalId, assetId: self.assetId, targetPath: path)
+						storage.update(localItemID: itemLocalId, assetId: self.assetId, targetLocation: targetLocation)
 						return storage
 					}
 				}
@@ -133,9 +138,9 @@ class MediaUploadOperation : Operation {
 
 	// MARK: - Private helpers
 
-	private func removeUploadJob(with targetPath:String) {
+	private func removeUploadJob(with targetLocation: OCLocation) {
 		core?.bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
-			storage.removeJob(with: self.assetId, targetPath: targetPath)
+			storage.removeJob(with: self.assetId, targetLocation: targetLocation)
 			return storage
 		}
 	}
