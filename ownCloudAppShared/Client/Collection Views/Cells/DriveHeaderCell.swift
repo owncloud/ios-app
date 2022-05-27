@@ -6,9 +6,19 @@
 //  Copyright © 2022 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2022, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 
-class DriveHeaderCell: DriveListCell, Themeable {
+class DriveHeaderCell: DriveListCell {
 	let darkBackgroundView = UIView()
 
 	weak var collectionViewController : CollectionViewController?
@@ -40,7 +50,7 @@ class DriveHeaderCell: DriveListCell, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		coverImageResourceView.backgroundColor = collection.lightBrandColor
 
 		titleLabel.textColor = .white

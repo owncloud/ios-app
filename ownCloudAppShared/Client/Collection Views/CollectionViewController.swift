@@ -20,8 +20,7 @@ import UIKit
 import ownCloudApp
 import ownCloudSDK
 
-public class CollectionViewController: UIViewController, UICollectionViewDelegate {
-
+public class CollectionViewController: UIViewController, UICollectionViewDelegate, Themeable {
 	public var clientContext: ClientContext?
 
 	public var supportsHierarchicContent: Bool
@@ -50,6 +49,10 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
 	// MARK: - Collection View
 	var collectionView : UICollectionView! = nil
 	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>! = nil
@@ -60,10 +63,21 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		super.viewDidLoad()
 		configureViews()
 		configureDataSource()
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	public func createCollectionViewLayout() -> UICollectionViewLayout {
-		let config = UICollectionLayoutListConfiguration(appearance: listAppearance)
+		var config = UICollectionLayoutListConfiguration(appearance: listAppearance)
+		switch listAppearance {
+			case .plain:
+				config.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+
+			case .grouped, .insetGrouped:
+				config.backgroundColor = Theme.shared.activeCollection.tableGroupBackgroundColor
+
+			default: break
+		}
 		return UICollectionViewCompositionalLayout.list(using: config)
 	}
 
@@ -261,6 +275,13 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 	@discardableResult public func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 		return nil
+	}
+
+	// MARK: - Themeing
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		if event != .initial {
+			collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: false)
+		}
 	}
 }
 

@@ -132,6 +132,12 @@ public extension NSObject {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
 			tabBar.tintColor = collection.toolbarColors.tintColor
 			tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
+
+			let appearance = UITabBarAppearance()
+			appearance.backgroundColor = collection.toolbarColors.backgroundColor
+
+			tabBar.standardAppearance = appearance
+			tabBar.scrollEdgeAppearance = appearance
 		}
 
 		if let tableView = self as? UITableView {
@@ -243,6 +249,16 @@ public extension NSObject {
 					cell.selectedBackgroundView = nil
 				}
 			}
+
+			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+		}
+
+		if let cell = self as? UICollectionViewListCell {
+			var backgroundConfig = cell.backgroundConfiguration
+			backgroundConfig?.backgroundColor = collection.tableRowColors.backgroundColor
+			cell.backgroundConfiguration = backgroundConfig
+
+			cell.tintColor = collection.lightBrandColor
 
 			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		}

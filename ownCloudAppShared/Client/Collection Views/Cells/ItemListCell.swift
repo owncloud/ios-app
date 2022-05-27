@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-open class ItemListCell: UICollectionViewListCell {
+open class ItemListCell: ThemeableCollectionViewListCell {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -507,17 +507,13 @@ open class ItemListCell: UICollectionViewListCell {
 				Log.debug("Highlighted!")
 			}
 
-			//!! applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection)
+			applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection, state: ThemeItemState(selected: isSelected))
 		}
 	}
 
-	//!!
-	/*
-	override open func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
-		let itemState = ThemeItemState(selected: self.isSelected)
-
-		titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
-		detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
+	open override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
+		titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: state)
+		detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: state)
 
 		sharedStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		publicLinkStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
@@ -527,12 +523,11 @@ open class ItemListCell: UICollectionViewListCell {
 		moreButton.tintColor = collection.tableRowColors.secondaryLabelColor
 
 		if revealHighlight {
-			backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
+			self.backgroundView?.backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
 		} else {
-			backgroundColor = collection.tableBackgroundColor
+			self.backgroundView?.backgroundColor = collection.tableBackgroundColor
 		}
 	}
-	*/
 
 	// MARK: - Editing mode
 	open func setMoreButton(hidden:Bool, animated: Bool = false) {

@@ -198,6 +198,8 @@
 		DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
 		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
+		DC01AF1C28411C0B00903101 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01AF1B28411C0B00903101 /* MessageCell.swift */; };
+		DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */; };
 		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
 		DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */ = {isa = PBXBuildFile; fileRef = DC049154258C00C400DEDC27 /* OCFileProviderServiceStandby.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC049157258C00C400DEDC27 /* OCFileProviderServiceStandby.m in Sources */ = {isa = PBXBuildFile; fileRef = DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */; };
@@ -1224,6 +1226,8 @@
 		DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encoding.m"; sourceTree = "<group>"; };
 		DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encoding.h"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
+		DC01AF1B28411C0B00903101 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableCollectionViewListCell.swift; sourceTree = "<group>"; };
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		DC049154258C00C400DEDC27 /* OCFileProviderServiceStandby.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceStandby.h; sourceTree = "<group>"; };
 		DC049155258C00C400DEDC27 /* OCFileProviderServiceStandby.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceStandby.m; sourceTree = "<group>"; };
@@ -3106,10 +3110,12 @@
 		DCEAF0882808252300980B6D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DCEAF0892808254800980B6D /* DriveListCell.swift */,
+				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
 				DC3AB2412810404000789435 /* DriveHeaderCell.swift */,
-				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
+				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
+				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
+				DC01AF1B28411C0B00903101 /* MessageCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4355,6 +4361,7 @@
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
 				DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */,
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
+				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
 				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
 				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
@@ -4386,6 +4393,7 @@
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
 				DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */,
+				DC01AF1C28411C0B00903101 /* MessageCell.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
 				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,

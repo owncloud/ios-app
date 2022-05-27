@@ -12,14 +12,12 @@ It should only be used with dedicated test servers, test data - and test devices
 	- search
 	- sorting
 	- a grid view
-	- full themeing support
 	- breadcrumb title
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
 - the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
 - inactived state of spaces is not yet represented in the UI
-- "Empty folder" not shown for empty folders
 - Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
 
@@ -28,3 +26,30 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## SDK
 - local storage consumed by spaces that are then deleted or inactivated is not reclaimed
+- pre-population of accounts using infinite PROPFIND
+
+# Evolution roadmap
+- make sync smarter, f.ex.:
+	- a file that is updated locally multiple times only should be uploaded once, not once for every update
+	- a file or folder that is scheduled for upload / creation - and then deleted, should not be uploaded then deleted
+	- a file scheduled for upload in a folder that is then deleted should not be uploaded then deleted
+
+- make sync more resilient
+	- more rigid dependency tracking -> stuck sync actions waiting for a request to return should no longer be possible as a result
+	- allow users to manually reschedule sync actions (=> maybe only after implementing cross-process progress reporting)
+
+- progress reporting sync across processes
+	- app -> FP
+	- FP -> app
+	- possibly use dedicated OC KVS + OCProgress for that
+
+- support for versions
+
+- photo uploads
+	- needs better error reporting / handling
+		- photos vanished from photos between upload request and when it is its turn
+			- report to user, drop silently, retry (how often/long?)?
+		- other errors
+			- report to user, drop silently, retry (how often/long?)?
+
+- more expressive "Empty folder" message display, based on new .message item type

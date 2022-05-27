@@ -32,6 +32,10 @@ public class ClientItemViewController: CollectionViewController {
 	private var singleDriveDatasourceSubscription : OCDataSourceSubscription?
 	public var driveAdditionalItemsDataSource : OCDataSourceArray = OCDataSourceArray()
 
+	public var emptyItemListDataSource : OCDataSourceArray = OCDataSourceArray()
+	public var emptyItemListDecisionSubscription : OCDataSourceSubscription?
+	public var emptyItemListItem : OCDataItemPresentable?
+
 	public init(context inContext: ClientContext?, query inQuery: OCQuery, reveal inItem: OCItem? = nil) {
 		query = inQuery
 
@@ -84,12 +88,24 @@ public class ClientItemViewController: CollectionViewController {
 			}
 		}
 
+		sections.append(CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, clientContext: itemControllerContext))
+
 		super.init(context: itemControllerContext, sections: sections, listAppearance: .plain)
 
 		// Subscribe to singleDriveDatasource for changes, to update driveSectionDataSource
-		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] subscription in
+		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] (subscription) in
 			self?.updateAdditionalDriveItems(from: subscription)
 		}, on: .main, trackDifferences: true, performIntialUpdate: true)
+
+		if let queryDatasource = query?.queryResultsDataSource {
+			emptyItemListItem = OCDataItemPresentable(reference: "_emptyItemList" as NSString, originalDataItemType: nil, version: nil)
+			emptyItemListItem?.title = "Empty folder".localized
+			emptyItemListItem?.childrenDataSourceProvider = nil
+
+			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
+				self?.updateEmptyItemList(from: subscription)
+			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+		}
 
 		query?.sortComparator = SortMethod.alphabetically.comparator(direction: .ascendant)
 
@@ -222,6 +238,23 @@ public class ClientItemViewController: CollectionViewController {
 	}
 
 	var _actionProgressHandler : ActionProgressHandler?
+
+	// MARK: - Empty item list handling
+	func updateEmptyItemList(from subscription: OCDataSourceSubscription) {
+		hasNoItems = subscription.snapshotResettingChangeTracking(true).numberOfItems == 0
+	}
+
+	public var hasNoItems : Bool = false {
+		didSet {
+			if hasNoItems != oldValue {
+				if hasNoItems, let emptyItemListItem = emptyItemListItem {
+					emptyItemListDataSource.setItems([emptyItemListItem], updated: nil)
+				} else {
+					emptyItemListDataSource.setItems(nil, updated: nil)
+				}
+			}
+		}
+	}
 
 	// MARK: - Navigation Bar Actions
 	@objc open func moreBarButtonPressed(_ sender: UIBarButtonItem) {

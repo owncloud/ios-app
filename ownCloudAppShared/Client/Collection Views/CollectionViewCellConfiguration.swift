@@ -24,6 +24,7 @@ public enum CollectionViewCellStyle {
 	case footer
 	case tableCell
 	case gridCell
+	case fillSpace
 }
 
 public class CollectionViewCellConfiguration: NSObject {

@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class DriveListCell: UICollectionViewListCell {
+class DriveListCell: ThemeableCollectionViewListCell {
 	let coverImageResourceView = ResourceViewHost()
 	let spaceFallbackImageView = UIImageView()
 

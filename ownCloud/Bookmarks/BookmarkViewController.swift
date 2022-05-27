@@ -599,6 +599,7 @@ class BookmarkViewController: StaticTableViewController {
 				if let strongSelf = self {
 					if error == nil {
 						let serverSupportsInfinitePropfind = connection.capabilities?.davPropfindSupportsDepthInfinity
+						let isDriveBased = connection.capabilities?.spacesEnabled ?? false
 
 						bookmark.userDisplayName = connection.loggedInUser?.displayName
 
@@ -638,6 +639,11 @@ class BookmarkViewController: StaticTableViewController {
 										}
 
 										if prepopulationMethod == nil {
+											prepopulationMethod = .doNot
+										}
+
+										if isDriveBased.boolValue {
+											// Drive-based accounts do not support prepopulation yet
 											prepopulationMethod = .doNot
 										}
 

@@ -30,8 +30,9 @@ public extension CollectionViewCellProvider {
 	}
 
 	static func registerPresentableCellProvider() {
-		let presentableCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let presentableCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var content = cell.defaultContentConfiguration()
+			var hasDisclosureIndicator : Bool = false
 
 			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
 				var itemRecord = cellConfiguration.record
@@ -78,6 +79,10 @@ public extension CollectionViewCellProvider {
 							if let readmeRequest = readmeRequest {
 								cellConfiguration.core?.vault.resourceManager?.start(readmeRequest)
 							}
+
+							if let datasource = cellConfiguration.source {
+								hasDisclosureIndicator = presentable.hasChildren(using: datasource)
+							}
 						}
 					} else {
 						// Request reconfiguration of cell
@@ -91,7 +96,7 @@ public extension CollectionViewCellProvider {
 			}
 
 			cell.contentConfiguration = content
-			cell.accessories = [ .disclosureIndicator() ]
+			cell.accessories = hasDisclosureIndicator ? [ .disclosureIndicator() ] : [ ]
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .presentable, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
