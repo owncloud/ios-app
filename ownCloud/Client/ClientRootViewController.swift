@@ -379,9 +379,9 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			if let core = self.core {
 				self.rootContext = ClientContext(core: core, rootViewController: self, progressSummarizer: self.progressSummarizer, modifier: { context in
 					context.inlineMessageCenter = self
-					context.openItemHandler = self
 					context.moreItemHandler = self
-					context.contextMenuProvider = self
+					context.viewItemHandler = self
+					context.actionProgressHandlerProvider = self
 				})
 
 				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
@@ -456,8 +456,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 						topLevelViewController = CollectionViewController(context: ClientContext(with: self.rootContext, navigationController: self.filesNavigationController), sections: [
 //							CollectionViewSection(identifier: "composed", dataSource: composedDataSource)
 
-							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource),
-							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource)
+							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellLayout: .list(appearance: .insetGrouped)),
+							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource, cellLayout: .list(appearance: .insetGrouped))
 						])
 					} else {
 						let query = OCQuery(for: .legacyRoot)

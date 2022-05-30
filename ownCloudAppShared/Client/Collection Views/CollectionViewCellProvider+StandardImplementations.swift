@@ -25,6 +25,7 @@ public extension CollectionViewCellProvider {
 		DriveListCell.registerCellProvider()
 		ItemListCell.registerCellProvider()
 		ExpandableResourceCell.registerCellProvider()
+		ActionCell.registerCellProvider()
 
 		registerPresentableCellProvider()
 	}
@@ -102,9 +103,10 @@ public extension CollectionViewCellProvider {
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .presentable, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
 			return collectionView.dequeueConfiguredReusableCell(using: presentableCellRegistration, for: indexPath, item: itemRef)
 		}))
-//
-//		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .item, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-//			return collectionView.dequeueConfiguredReusableCell(using: presentableCellRegistration, for: indexPath, item: itemRef)
-//		}))
+
+		// This registration performs conversion to .presentable where necessary, so it can also be used for other types OCDataItemTypes. Example:
+		// CollectionViewCellProvider.register(CollectionViewCellProvider(for: .item, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
+		// 	return collectionView.dequeueConfiguredReusableCell(using: presentableCellRegistration, for: indexPath, item: itemRef)
+		// }))
 	}
 }

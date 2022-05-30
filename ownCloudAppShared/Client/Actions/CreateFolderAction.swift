@@ -22,7 +22,7 @@ open class CreateFolderAction : Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
 	override open class var category : ActionCategory? { return .normal }
 	override open class var name : String? { return "Create folder".localized }
-	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
+	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override open class var keyCommand : String? { return "N" }
 	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -106,7 +106,7 @@ open class CreateFolderAction : Action {
 	}
 
 	override open class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .toolbar || location == .folderAction || location == .contextMenuItem {
+		if location == .toolbar || location == .folderAction || location == .contextMenuItem || location == .emptyFolder {
 			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}
 

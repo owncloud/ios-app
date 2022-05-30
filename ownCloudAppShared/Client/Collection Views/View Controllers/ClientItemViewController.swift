@@ -20,9 +20,17 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public class ClientItemViewController: CollectionViewController {
+public class ClientItemViewController: CollectionViewController, UISearchControllerDelegate, UISearchResultsUpdating {
+	public enum ContentState : String, CaseIterable {
+		case loading
+
+		case empty
+		case hasContent
+	}
+
 	public var query: OCQuery?
 
+	weak public var queryDataSource : OCDataSource?
 	public var queryItemDataSourceSection : CollectionViewSection?
 
 	public var driveSection : CollectionViewSection?
@@ -36,12 +44,29 @@ public class ClientItemViewController: CollectionViewController {
 	public var emptyItemListDecisionSubscription : OCDataSourceSubscription?
 	public var emptyItemListItem : OCDataItemPresentable?
 
+	private var stateObservation : NSKeyValueObservation?
+
 	public init(context inContext: ClientContext?, query inQuery: OCQuery, reveal inItem: OCItem? = nil) {
 		query = inQuery
 
 		var sections : [ CollectionViewSection ] = []
 
-		let itemControllerContext = ClientContext(with: inContext)
+		let itemControllerContext = ClientContext(with: inContext, modifier: { context in
+			context.permissionHandler = { (context, record, interaction) in
+				switch interaction {
+					case .selection:
+						if record?.type == .drive {
+							// Do not react to taps on the drive header cells (=> or show image in the future)
+							return false
+						}
+
+						return true
+
+					default:
+						return true
+				}
+			}
+		})
 		itemControllerContext.postInitializationModifier = { (owner, context) in
 			if context.openItemHandler == nil {
 				context.openItemHandler = owner as? OpenItemAction
@@ -55,7 +80,8 @@ public class ClientItemViewController: CollectionViewController {
 			context.originatingViewController = owner as? UIViewController
 		}
 
-		if let queryDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {
+		if let queryResultsDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {
+			queryDataSource = queryResultsDatasource
 			singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 
 			if query?.queryLocation?.isRoot == true {
@@ -74,10 +100,10 @@ public class ClientItemViewController: CollectionViewController {
 				driveSectionDataSource = OCDataSourceComposition(sources: [ singleDriveDatasource!, driveAdditionalItemsDataSource ])
 
 				// Create drive section from combined data source
-				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .header)
+				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .header, cellLayout: .list(appearance: .plain))
 			}
 
-			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryDatasource, clientContext: itemControllerContext)
+			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryResultsDatasource, clientContext: itemControllerContext)
 
 			if let driveSection = driveSection {
 				sections.append(driveSection)
@@ -88,9 +114,15 @@ public class ClientItemViewController: CollectionViewController {
 			}
 		}
 
-		sections.append(CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, clientContext: itemControllerContext))
+		let emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, cellLayout: .list(appearance: .insetGrouped), clientContext: itemControllerContext)
+		sections.append(emptySection)
 
-		super.init(context: itemControllerContext, sections: sections, listAppearance: .plain)
+		super.init(context: itemControllerContext, sections: sections)
+
+		// Track query state and recompute content state when it changes
+		stateObservation = queryDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in
+			self?.recomputeContentState()
+		})
 
 		// Subscribe to singleDriveDatasource for changes, to update driveSectionDataSource
 		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] (subscription) in
@@ -99,7 +131,7 @@ public class ClientItemViewController: CollectionViewController {
 
 		if let queryDatasource = query?.queryResultsDataSource {
 			emptyItemListItem = OCDataItemPresentable(reference: "_emptyItemList" as NSString, originalDataItemType: nil, version: nil)
-			emptyItemListItem?.title = "Empty folder".localized
+			emptyItemListItem?.title = "This folder is empty. Fill it with content:".localized
 			emptyItemListItem?.childrenDataSourceProvider = nil
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
@@ -119,6 +151,7 @@ public class ClientItemViewController: CollectionViewController {
 	}
 
 	deinit {
+		stateObservation?.invalidate()
 		singleDriveDatasourceSubscription?.terminate()
 	}
 
@@ -146,8 +179,10 @@ public class ClientItemViewController: CollectionViewController {
 			let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
 			plusBarButton.menu = UIMenu(title: "", children: [
 				UIDeferredMenuElement.uncached({ [weak self] completion in
-					if let self = self, let contextMenuProvider = self.clientContext?.contextMenuProvider, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
-						if let contextMenuElements = contextMenuProvider.composeContextMenuElements(for: self, item: rootItem, location: .folderAction, context: clientContext, sender: nil) {
+					if let self = self, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
+						let contextMenuProvider = rootItem as DataItemContextMenuInteraction
+
+						if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
 							    completion(contextMenuElements)
 						}
 					}
@@ -159,6 +194,17 @@ public class ClientItemViewController: CollectionViewController {
 		}
 
 		self.navigationItem.rightBarButtonItems = viewActionButtons
+
+		// Setup search controller
+//		searchController = UISearchController(searchResultsController: nil)
+//		searchController?.searchResultsUpdater = self
+//		searchController?.obscuresBackgroundDuringPresentation = false
+//		searchController?.hidesNavigationBarDuringPresentation = true
+//		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
+//		searchController?.delegate = self
+//
+//		navigationItem.searchController = searchController
+//		navigationItem.hidesSearchBarWhenScrolling = false
 	}
 
 	public override func viewWillAppear(_ animated: Bool) {
@@ -175,31 +221,6 @@ public class ClientItemViewController: CollectionViewController {
 		if let query = query {
 			clientContext?.core?.stop(query)
 		}
-	}
-
-	public override func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
-		if let item = record.item as? OCItem, let location = item.location, let clientContext = clientContext {
-			collectionView.deselectItem(at: indexPath, animated: true)
-
-			if let openHandler = clientContext.openItemHandler {
-				openHandler.open(item: item, context: clientContext, animated: true, pushViewController: true)
-			} else {
-				let query = OCQuery(for: location)
-				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
-
-				let rootFolderViewController = ClientItemViewController(context: clientContext, query: query)
-				self.navigationController?.pushViewController(rootFolderViewController, animated: true)
-			}
-
-			return true
-		}
-
-		if (record.item as? OCDrive) != nil {
-			// Do not react to taps on the drive header cells (=> or show image in the future)
-			return false
-		}
-
-		return super.handleSelection(of: record, at: indexPath)
 	}
 
 	public func updateAdditionalDriveItems(from subscription: OCDataSourceSubscription) {
@@ -223,35 +244,70 @@ public class ClientItemViewController: CollectionViewController {
 		}
 	}
 
-	@discardableResult public override func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [weak self] _ in
-			guard let item = record.item as? OCItem, let clientContext = self?.clientContext, let self = self else {
-				return nil
-			}
-
-			if let menuItems = clientContext.contextMenuProvider?.composeContextMenuElements(for: self, item: item, location: .contextMenuItem, context: clientContext, sender: nil) {
-				return UIMenu(title: "", children: menuItems)
-			}
-
-			return nil
-		})
-	}
-
 	var _actionProgressHandler : ActionProgressHandler?
 
 	// MARK: - Empty item list handling
-	func updateEmptyItemList(from subscription: OCDataSourceSubscription) {
-		hasNoItems = subscription.snapshotResettingChangeTracking(true).numberOfItems == 0
+	func emptyActions() -> [OCAction]? {
+		guard let context = clientContext, let core = context.core, let item = query?.rootItem else {
+			return nil
+		}
+		let locationIdentifier: OCExtensionLocationIdentifier = .emptyFolder
+		let originatingViewController : UIViewController = context.originatingViewController ?? self
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: locationIdentifier)
+		let actionContext = ActionContext(viewController: originatingViewController, core: core, query: context.query, items: [item], location: actionsLocation, sender: self)
+
+		let emptyFolderActions = Action.sortedApplicableActions(for: actionContext)
+		var actions : [OCAction] = []
+
+		for emptyFolderAction in emptyFolderActions {
+			if let action = emptyFolderAction.provideOCAction() {
+				actions.append(action)
+			}
+		}
+
+		return (actions.count > 0) ? actions : nil
 	}
 
-	public var hasNoItems : Bool = false {
+	func updateEmptyItemList(from subscription: OCDataSourceSubscription) {
+		recomputeContentState()
+	}
+
+	func recomputeContentState() {
+		OnMainThread {
+			switch self.queryDataSource?.state {
+				case .loading:
+					self.contentState = .loading
+
+				case .idle:
+					self.contentState = (self.emptyItemListDecisionSubscription?.snapshotResettingChangeTracking(true).numberOfItems == 0) ? .empty : .hasContent
+
+				default: break
+			}
+		}
+	}
+
+	public var contentState : ContentState = .loading {
 		didSet {
-			if hasNoItems != oldValue {
-				if hasNoItems, let emptyItemListItem = emptyItemListItem {
-					emptyItemListDataSource.setItems([emptyItemListItem], updated: nil)
-				} else {
+			if contentState == oldValue {
+				return
+			}
+
+			switch contentState {
+				case .empty:
+					var emptyItems : [OCDataItem] = [ ]
+
+					if let emptyItemListItem = emptyItemListItem {
+						emptyItems.append(emptyItemListItem)
+					}
+
+					if let emptyActions = emptyActions() {
+						emptyItems.append(contentsOf: emptyActions)
+					}
+
+					emptyItemListDataSource.setItems(emptyItems, updated: nil)
+
+				case .hasContent, .loading:
 					emptyItemListDataSource.setItems(nil, updated: nil)
-				}
 			}
 		}
 	}
@@ -266,4 +322,46 @@ public class ClientItemViewController: CollectionViewController {
 			moreItemHandler.moreOptions(for: rootItem, at: .moreFolder, context: clientContext, sender: sender)
 		}
 	}
+
+	// MARK: - Search
+	open var searchController: UISearchController?
+
+	// MARK: - Search: UISearchResultsUpdating Delegate
+	open func updateSearchResults(for searchController: UISearchController) {
+		let searchText = searchController.searchBar.text ?? ""
+
+//		applySearchFilter(for: (searchText == "") ? nil : searchText, to: query)
+	}
+
+	open func willPresentSearchController(_ searchController: UISearchController) {
+//		self.sortBar?.showSelectButton = false
+	}
+
+	open func willDismissSearchController(_ searchController: UISearchController) {
+//		self.sortBar?.showSelectButton = true
+	}
+
+	open func applySearchFilter(for searchText: String?, to query: OCQuery) {
+ 		if let searchText = searchText {
+			let queryCondition = OCQueryCondition.fromSearchTerm(searchText)
+ 			let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+ 				if let item = item, let queryCondition = queryCondition {
+	 				return queryCondition.fulfilled(by: item)
+				}
+ 				return false
+ 			}
+
+ 			if let filter = query.filter(withIdentifier: "text-search") {
+ 				query.updateFilter(filter, applyChanges: { filterToChange in
+ 					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
+ 				})
+ 			} else {
+ 				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+ 			}
+ 		} else {
+ 			if let filter = query.filter(withIdentifier: "text-search") {
+ 				query.removeFilter(filter)
+ 			}
+ 		}
+ 	}
 }

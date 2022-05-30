@@ -51,13 +51,17 @@ class DisplayHostViewController: UIPageViewController {
 
 	var progressSummarizer : ProgressSummarizer?
 
+	public var clientContext : ClientContext?
+
 	// MARK: - Init & deinit
-	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
+	init(clientContext: ClientContext? = nil, core: OCCore, selectedItem: OCItem, query: OCQuery) {
 		self.core = core
 		self.initialItem = selectedItem
 		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+
+		self.clientContext = clientContext
 
 		if query.state == .stopped {
 			self.core?.start(query)

@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudAppShared
 import ownCloudApp
 
-extension ClientRootViewController : MoreItemAction {
+extension ClientRootViewController : ActionProgressHandlerProvider {
 	func makeActionProgressHandler() -> ActionProgressHandler {
 		return { [weak self] (progress, publish) in
 			if publish {
@@ -31,9 +31,11 @@ extension ClientRootViewController : MoreItemAction {
 			}
 		}
 	}
+}
 
-	func moreOptions(for item: OCItem, at locationIdentifier: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool {
-		guard let sender = sender, let core = context.core else {
+extension ClientRootViewController : MoreItemAction {
+	func moreOptions(for item: OCDataItem, at locationIdentifier: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool {
+		guard let sender = sender, let core = context.core, let item = item as? OCItem else {
 			return false
 		}
 		let originatingViewController : UIViewController = context.originatingViewController ?? self
@@ -48,80 +50,17 @@ extension ClientRootViewController : MoreItemAction {
 	}
 }
 
-extension ClientRootViewController : OpenItemAction {
-	@discardableResult public func open(item: OCItem, context: ClientContext, animated: Bool, pushViewController: Bool) -> UIViewController? {
-		if let core = context.core {
-			if let bookmarkContainer = self.tabBarController as? BookmarkContainer {
-				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: bookmarkContainer.bookmark)
-				view.window?.windowScene?.userActivity = activity.openItemUserActivity
-			}
-
-			switch item.type {
-				case .collection:
-					if let location = item.location {
-						let query = OCQuery(for: location)
-						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
-
-						let queryViewController = ClientItemViewController(context: context, query: query)
-						if pushViewController {
-							context.navigationController?.pushViewController(queryViewController, animated: animated)
-						}
-						return queryViewController
-					}
-
-				case .file:
-					guard let query = context.query else {
-						return nil
-					}
-
-					let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
-					itemViewController.hidesBottomBarWhenPushed = true
-					//!! itemViewController.progressSummarizer = self.progressSummarizer
-					context.navigationController?.pushViewController(itemViewController, animated: animated)
-			}
-		}
-
-		return nil
-	}
-}
-
-extension ClientRootViewController : ContextMenuProvider {
-	func composeContextMenuElements(for viewController: UIViewController, item: OCItem, location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> [UIMenuElement]? {
-		guard let core = context.core else {
+extension ClientRootViewController : ViewItemAction {
+	func provideViewer(for item: OCDataItem, context: ClientContext) -> UIViewController? {
+		guard let item = item as? OCItem, let query = context.query, let core = context.core else {
 			return nil
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: location) // .contextMenuItem)
-		let actionContext = ActionContext(viewController: viewController, core: core, items: [item], location: actionsLocation, sender: sender)
-		let actions = Action.sortedApplicableActions(for: actionContext)
-		var actionMenuActions : [UIAction] = []
-		for action in actions {
-			action.progressHandler = makeActionProgressHandler()
+		let itemViewController = DisplayHostViewController(clientContext: context, core: core, selectedItem: item, query: query)
+		itemViewController.hidesBottomBarWhenPushed = true
+		itemViewController.progressSummarizer = context.progressSummarizer
 
-			if let menuAction = action.provideUIMenuAction() {
-				actionMenuActions.append(menuAction)
-			}
-		}
-
-		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, location == .contextMenuItem {
-			// Actions menu
-			let actionsMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: actionMenuActions)
-
-			// Share Items
-			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
-			let sharingActionContext = ActionContext(viewController: viewController, core: core, items: [item], location: sharingActionsLocation, sender: sender)
-			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
-			for action in sharingActions {
-				action.progressHandler = makeActionProgressHandler()
-			}
-
-			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
-			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
-
-			return [shareMenu, actionsMenu]
-		}
-
-		return actionMenuActions
+		return itemViewController
 	}
 }
 

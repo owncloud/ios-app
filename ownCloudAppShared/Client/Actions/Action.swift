@@ -60,6 +60,7 @@ public extension OCExtensionLocationIdentifier {
 	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreDetailItem") //!< Present in "more" card view for a single item in detail view
 	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
+	static let emptyFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("emptyFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
@@ -473,6 +474,22 @@ open class Action : NSObject {
 		}
 
 		return alertAction
+	}
+
+	open func provideOCAction() -> OCAction? {
+		let icon = self.icon?.paddedTo(width: 36, height: nil)
+		var name = actionExtension.name
+
+		if !isLicensed {
+			name += " " + proLabel
+		}
+
+		let ocAction = OCAction(title: name, icon: icon, action: { _, options, completionHandler in
+			self.perform()
+			completionHandler(nil)
+		})
+
+		return ocAction
 	}
 
 	// MARK: - Action metadata

@@ -323,6 +323,11 @@
 		DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC4331FF2472E1B4002DC0E5 /* OCLicenseEMMProvider.m */; };
 		DC44343E21ABFA5200376B16 /* StaticLoginProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44343D21ABFA5200376B16 /* StaticLoginProfile.swift */; };
+		DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */; };
+		DC46F3CC2844A8EA00038880 /* SortBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3CB2844A8EA00038880 /* SortBarCell.swift */; };
+		DC46F3CE2844A92A00038880 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3CD2844A92A00038880 /* ActionCell.swift */; };
+		DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D0284546F000038880 /* OCItem+Interactions.swift */; };
+		DC46F3D32845583D00038880 /* OCDrive+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */; };
 		DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */; };
 		DC49B55A28365C5F00DAF13B /* OCVault+VFSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */; };
 		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
@@ -1310,6 +1315,11 @@
 		DC44344321AC031600376B16 /* StaticLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginViewController.swift; sourceTree = "<group>"; };
 		DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginStepViewController.swift; sourceTree = "<group>"; };
 		DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginSetupViewController.swift; sourceTree = "<group>"; };
+		DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDataItem+InteractionProtocols.swift"; sourceTree = "<group>"; };
+		DC46F3CB2844A8EA00038880 /* SortBarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBarCell.swift; sourceTree = "<group>"; };
+		DC46F3CD2844A92A00038880 /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
+		DC46F3D0284546F000038880 /* OCItem+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItem+Interactions.swift"; sourceTree = "<group>"; };
+		DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDrive+Interactions.swift"; sourceTree = "<group>"; };
 		DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+VFSManager.h"; sourceTree = "<group>"; };
 		DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+VFSManager.m"; sourceTree = "<group>"; };
 		DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightImageView.swift; sourceTree = "<group>"; };
@@ -1860,6 +1870,7 @@
 		3912208023436E9B0026C290 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				DC46F3CF284546DA00038880 /* Data Item Interactions */,
 				DC82664028168DAA00F91F7D /* Context */,
 				DCEAF0842808250E00980B6D /* Collection Views */,
 				DCA2EDDB279B0E5D001F04E6 /* Resource Sources */,
@@ -2482,6 +2493,16 @@
 				DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */,
 			);
 			path = Interface;
+			sourceTree = "<group>";
+		};
+		DC46F3CF284546DA00038880 /* Data Item Interactions */ = {
+			isa = PBXGroup;
+			children = (
+				DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */,
+				DC46F3D0284546F000038880 /* OCItem+Interactions.swift */,
+				DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */,
+			);
+			path = "Data Item Interactions";
 			sourceTree = "<group>";
 		};
 		DC66F3A723965BE300CF4812 /* Parser Support */ = {
@@ -3116,6 +3137,8 @@
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
 				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
 				DC01AF1B28411C0B00903101 /* MessageCell.swift */,
+				DC46F3CB2844A8EA00038880 /* SortBarCell.swift */,
+				DC46F3CD2844A92A00038880 /* ActionCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4348,6 +4371,7 @@
 				DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,
 				DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */,
+				DC46F3D32845583D00038880 /* OCDrive+Interactions.swift in Sources */,
 				DCE4E43B24C19B4F0051722F /* NSLayoutConstraint+Extension.swift in Sources */,
 				DCE2F03E27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift in Sources */,
 				DC0A355724C0E35B00FB58FC /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
@@ -4371,6 +4395,7 @@
 				DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,
+				DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */,
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */,
 				DC9A116B27D0338400D90BA4 /* ClientSpacesTableViewController.swift in Sources */,
@@ -4423,6 +4448,7 @@
 				DCE4E45424C1EC040051722F /* BreadCrumbTableViewController.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
 				399EA6F725E6544100B6FF11 /* PublicLinkEditTableViewController.swift in Sources */,
+				DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */,
 				DC0A358824C0E44B00FB58FC /* ThemeTableViewCell.swift in Sources */,
 				DC36886224DDA9AB00333600 /* ProgressIndicatorViewController.swift in Sources */,
 				399EA72625E6565900B6FF11 /* OCCore+Extension.swift in Sources */,
@@ -4445,11 +4471,13 @@
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
 				DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
+				DC46F3CC2844A8EA00038880 /* SortBarCell.swift in Sources */,
 				DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */,
 				3912208223436EB80026C290 /* SortMethod.swift in Sources */,
 				DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */,
 				DC0A359524C0E5F900FB58FC /* UIImage+Extension.swift in Sources */,
 				DC66A9F8279F467200792AC8 /* UIKeyCommand+Extension.swift in Sources */,
+				DC46F3CE2844A92A00038880 /* ActionCell.swift in Sources */,
 				DCE4E43724C19A910051722F /* LicenseRequirements.swift in Sources */,
 				DCE4E43A24C19ADC0051722F /* MoreViewHeader.swift in Sources */,
 				399EA74625E6575B00B6FF11 /* NotificationHUDViewController.swift in Sources */,
@@ -5062,6 +5090,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_VERSION = 222;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -5092,6 +5121,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_VERSION = 222;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

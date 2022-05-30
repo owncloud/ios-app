@@ -26,7 +26,7 @@ class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload file".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "+" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -53,7 +53,7 @@ class UploadFileAction: UploadBaseAction {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction {
+		if location == .folderAction || location == .emptyFolder {
 			Theme.shared.add(tvgResourceFor: "text")
 			return Theme.shared.image(for: "text", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}

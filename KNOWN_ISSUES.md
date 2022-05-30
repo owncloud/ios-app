@@ -7,7 +7,6 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## App
 - in the new browsing experience, some features are not yet available:
-	- row actions
 	- drag and drop
 	- search
 	- sorting
@@ -26,7 +25,7 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## SDK
 - local storage consumed by spaces that are then deleted or inactivated is not reclaimed
-- pre-population of accounts using infinite PROPFIND
+- pre-population of accounts using infinite PROPFIND is not supported
 
 # Evolution roadmap
 - make sync smarter, f.ex.:
@@ -42,6 +41,9 @@ It should only be used with dedicated test servers, test data - and test devices
 	- app -> FP
 	- FP -> app
 	- possibly use dedicated OC KVS + OCProgress for that
+
+- empty folders
+	- replace simple "Empty folder" message with message + direct access to actions like "Create folder", "Scan document", "Upload photo", "Take photo", … using action extensions as source
 
 - support for versions
 

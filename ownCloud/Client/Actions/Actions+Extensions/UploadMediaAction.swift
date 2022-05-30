@@ -133,7 +133,7 @@ class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "M" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -196,7 +196,7 @@ class UploadMediaAction: UploadBaseAction {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction {
+		if location == .folderAction || location == .emptyFolder {
 			Theme.shared.add(tvgResourceFor: "image")
 			return Theme.shared.image(for: "image", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}

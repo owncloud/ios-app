@@ -25,9 +25,8 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 	public var supportsHierarchicContent: Bool
 
-	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false, listAppearance inListAppearance: UICollectionLayoutListConfiguration.Appearance = .insetGrouped) {
+	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false) {
 		supportsHierarchicContent = hierarchic
-		listAppearance = inListAppearance
 
 		super.init(nibName: nil, bundle: nil)
 
@@ -57,8 +56,6 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	var collectionView : UICollectionView! = nil
 	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>! = nil
 
-	public var listAppearance : UICollectionLayoutListConfiguration.Appearance
-
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		configureViews()
@@ -68,22 +65,25 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	}
 
 	public func createCollectionViewLayout() -> UICollectionViewLayout {
-		var config = UICollectionLayoutListConfiguration(appearance: listAppearance)
-		switch listAppearance {
-			case .plain:
-				config.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		let configuration = UICollectionViewCompositionalLayoutConfiguration()
 
-			case .grouped, .insetGrouped:
-				config.backgroundColor = Theme.shared.activeCollection.tableGroupBackgroundColor
+		configuration.interSectionSpacing = 0
 
-			default: break
-		}
-		return UICollectionViewCompositionalLayout.list(using: config)
+		return UICollectionViewCompositionalLayout.init(sectionProvider: { sectionIndex, layoutEnvironment in
+			if sectionIndex > 0, sectionIndex < self.sections.count {
+				return self.sections[sectionIndex].provideCollectionLayoutSection(layoutEnvironment: layoutEnvironment)
+			}
+
+			// Fallback to allow compilation - should never be called
+			return CollectionViewSection.CellLayout.list(appearance: .grouped).collectionLayoutSection(layoutEnvironment: layoutEnvironment)
+		}, configuration: configuration)
 	}
 
 	public func configureViews() {
 		collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCollectionViewLayout())
 		collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		collectionView.contentInsetAdjustmentBehavior = .never
+		collectionView.contentInset = .zero
 		view.addSubview(collectionView)
 		collectionView.delegate = self
 	}
@@ -235,7 +235,10 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	// MARK: - Collection View Delegate
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		retrieveItem(at: indexPath, action: { [weak self] record, indexPath in
-			self?.handleSelection(of: record, at: indexPath)
+			// Return early if .selection is not allowed
+			if self?.clientContext?.validate(permission: .selection, for: record) != false {
+				self?.handleSelection(of: record, at: indexPath)
+			}
 		}, handleError: { error in
 			collectionView.deselectItem(at: indexPath, animated: true)
 		})
@@ -245,7 +248,10 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		var contextMenuConfiguration : UIContextMenuConfiguration?
 
 		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
-			contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point)
+			// Return early if .contextMenu is not allowed
+			if self?.clientContext?.validate(permission: .contextMenu, for: record) != false {
+				contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point)
+			}
 		}, handleError: { error in
 			collectionView.deselectItem(at: indexPath, animated: true)
 		})
@@ -253,27 +259,59 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		return contextMenuConfiguration
 	}
 
-	 @discardableResult public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
-		if let drive = record.item as? OCDrive {
-			let driveContext = ClientContext(with: clientContext, modifier: { context in
-				context.drive = drive
-			})
-			let query = OCQuery(for: drive.rootLocation)
-			DisplaySettings.shared.updateQuery(withDisplaySettings: query)
+	// MARK: - Cell action subclassing points
+	@discardableResult public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
+		// Use item's DataItemSelectionInteraction
+		if let selectionInteraction = record.item as? DataItemSelectionInteraction {
+			// Try selection first
+			if selectionInteraction.handleSelection?(in: self, with: clientContext, completion: { [weak self] success in
+				self?.collectionView.deselectItem(at: indexPath, animated: true)
+			}) == true {
+				return true
+			}
 
-			let rootFolderViewController = ClientItemViewController(context: driveContext, query: query)
-
-			collectionView.deselectItem(at: indexPath, animated: true)
-
-			self.navigationController?.pushViewController(rootFolderViewController, animated: true)
-
-			return true
+			// Then try opening
+			if selectionInteraction.openItem?(in: self, with: clientContext, animated: true, pushViewController: true, completion: { [weak self] success in
+				self?.collectionView.deselectItem(at: indexPath, animated: true)
+			}) != nil {
+				return true
+			}
 		}
 
 		return false
 	}
 
 	@discardableResult public func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		// Use context.contextMenuProvider
+		if let item = record.item, let clientContext = clientContext, let contextMenuProvider = clientContext.contextMenuProvider {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [weak self] _ in
+				guard let self = self else {
+					return nil
+				}
+
+				if let menuItems = contextMenuProvider.composeContextMenuElements(for: self, item: item, location: .contextMenuItem, context: clientContext, sender: nil) {
+					return UIMenu(title: "", children: menuItems)
+				}
+
+				return nil
+			})
+		}
+
+		// Use item's DataItemContextMenuInteraction
+		if let contextMenuInteraction = record.item as? DataItemContextMenuInteraction {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [weak self] _ in
+				guard let self = self else {
+					return nil
+				}
+
+				if let menuItems = contextMenuInteraction.composeContextMenuItems(in: self, location: .contextMenuItem, with: self.clientContext) {
+					return UIMenu(title: "", children: menuItems)
+				}
+
+				return nil
+			})
+		}
+
 		return nil
 	}
 
