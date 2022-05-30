@@ -328,6 +328,7 @@
 		DC46F3CE2844A92A00038880 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3CD2844A92A00038880 /* ActionCell.swift */; };
 		DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D0284546F000038880 /* OCItem+Interactions.swift */; };
 		DC46F3D32845583D00038880 /* OCDrive+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */; };
+		DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */; };
 		DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */; };
 		DC49B55A28365C5F00DAF13B /* OCVault+VFSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */; };
 		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
@@ -1320,6 +1321,7 @@
 		DC46F3CD2844A92A00038880 /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		DC46F3D0284546F000038880 /* OCItem+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItem+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDrive+Interactions.swift"; sourceTree = "<group>"; };
+		DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCAction+Interactions.swift"; sourceTree = "<group>"; };
 		DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+VFSManager.h"; sourceTree = "<group>"; };
 		DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+VFSManager.m"; sourceTree = "<group>"; };
 		DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightImageView.swift; sourceTree = "<group>"; };
@@ -2501,6 +2503,7 @@
 				DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */,
 				DC46F3D0284546F000038880 /* OCItem+Interactions.swift */,
 				DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */,
+				DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */,
 			);
 			path = "Data Item Interactions";
 			sourceTree = "<group>";
@@ -4367,6 +4370,7 @@
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
 				399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
+				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
 				DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,

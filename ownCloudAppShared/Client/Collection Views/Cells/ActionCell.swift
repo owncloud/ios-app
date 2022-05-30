@@ -62,11 +62,3 @@ class ActionCell: ThemeableCollectionViewListCell {
 		}))
 	}
 }
-
-extension OCAction : DataItemSelectionInteraction {
-	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) {
-		run(options: nil, completionHandler: { error in
-			completion?(error == nil)
-		})
-	}
-}
