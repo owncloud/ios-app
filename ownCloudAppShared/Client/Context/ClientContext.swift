@@ -61,6 +61,7 @@ public protocol InlineMessageCenter : AnyObject {
 
 public enum ClientItemInteraction {
 	case selection
+	case multiselection
 	case contextMenu
 	case leadingSwipe
 	case trailingSwipe
@@ -142,15 +143,25 @@ public class ClientContext: NSObject {
 		postInitializationModifier = nil
 	}
 
-	public func validate(permission: ClientItemInteraction, for record: OCDataItemRecord) -> Bool {
+	public func hasPermission(for interaction: ClientItemInteraction) -> Bool {
 		if let permissions = permissions {
-			if !permissions.contains(permission) {
+			if !permissions.contains(interaction) {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	public func validate(interaction: ClientItemInteraction, for record: OCDataItemRecord) -> Bool {
+		if let permissions = permissions {
+			if !permissions.contains(interaction) {
 				return false
 			}
 		}
 
 		if let permissionHandler = permissionHandler {
-			return permissionHandler(self, record, permission)
+			return permissionHandler(self, record, interaction)
 		}
 
 		return true

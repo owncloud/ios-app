@@ -106,7 +106,7 @@ open class CreateFolderAction : Action {
 	}
 
 	override open class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .toolbar || location == .folderAction || location == .contextMenuItem || location == .emptyFolder {
+		if location == .multiSelection || location == .folderAction || location == .contextMenuItem || location == .emptyFolder || location == .multiSelection {
 			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}
 

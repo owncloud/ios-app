@@ -156,24 +156,13 @@ class ExpandableResourceCell: UICollectionViewListCell, Themeable {
 extension ExpandableResourceCell {
 	static func registerCellProvider() {
 		let itemListCellRegistration = UICollectionView.CellRegistration<ExpandableResourceCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
-			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
-				if let itemRecord = cellConfiguration.record {
-					if let item = itemRecord.item {
-						if let textResource = item as? OCResource {
-							cell.resource = textResource
-							cell.collectionViewController = cellConfiguration.hostViewController
-							cell.collectionItemRef = collectionItemRef
-						}
-					} else {
-						// Request reconfiguration of cell
-						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
-							if let collectionViewController = cellConfiguration.hostViewController {
-								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
-							}
-						})
-					}
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let textResource = item as? OCResource {
+					cell.resource = textResource
+					cell.collectionViewController = cellConfiguration.hostViewController
+					cell.collectionItemRef = collectionItemRef
 				}
-			}
+			})
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .textResource, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

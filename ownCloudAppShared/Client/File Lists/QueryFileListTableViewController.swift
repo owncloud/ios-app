@@ -292,7 +292,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 		// Setup new action context
 		if let core = self.core {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
 			self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
 		}
 
@@ -354,7 +354,6 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 			sortBar?.searchScope = self.searchScope
-			sortBar?.updateForCurrentTraitCollection()
 			sortBar?.showSelectButton = showSelectButton
 
 			tableView.tableHeaderView = sortBar

@@ -21,20 +21,30 @@ import ownCloudSDK
 
 public class CollectionViewSection: NSObject {
 	public enum CellLayout {
-		case list(appearance: UICollectionLayoutListConfiguration.Appearance)
-		case fullWidth(heightDimension: NSCollectionLayoutDimension, interItemSpacing: NSCollectionLayoutSpacing? = nil, contentInsets: NSDirectionalEdgeInsets = .zero)
+		case list(appearance: UICollectionLayoutListConfiguration.Appearance, headerMode: UICollectionLayoutListConfiguration.HeaderMode? = nil, headerTopPadding : CGFloat? = nil, footerMode: UICollectionLayoutListConfiguration.FooterMode? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
+		case fullWidth(itemHeightDimension: NSCollectionLayoutDimension, groupHeightDimension: NSCollectionLayoutDimension, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
+		case sideways(item: NSCollectionLayoutItem? = nil, groupSize: NSCollectionLayoutSize? = nil, innerInsets : NSDirectionalEdgeInsets? = nil, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil, orthogonalScrollingBehaviour: UICollectionLayoutSectionOrthogonalScrollingBehavior = .continuousGroupLeadingBoundary)
+		case custom(generator: ((_ collectionViewController: CollectionViewController?, _ layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection))
 
 		func collectionLayoutSection(for collectionViewController: CollectionViewController? = nil, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
 			switch self {
 				// List
-				case .list(let listAppearance):
+				case .list(let listAppearance, let headerMode, let headerTopPadding, let footerMode, let contentInsets):
 					var config = UICollectionLayoutListConfiguration(appearance: listAppearance)
 
 					// Appearance
+					if let headerMode = headerMode {
+						config.headerMode = headerMode
+					}
+					if let headerTopPadding = headerTopPadding {
+						config.headerTopPadding = headerTopPadding
+					}
+					if let footerMode = footerMode {
+						config.footerMode = footerMode
+					}
+
 					switch listAppearance {
 						case .plain:
-							config.headerMode = .firstItemInSection
-							config.headerTopPadding = 0
 							config.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 
 						case .grouped, .insetGrouped:
@@ -43,27 +53,24 @@ public class CollectionViewSection: NSObject {
 						default: break
 					}
 
-//					config.headerTopPadding = 0
-//					config.headerMode = .none
-//					config.footerMode = .none
-
 					// Leading and trailing swipe actions
 					if let collectionViewController = collectionViewController {
 						let clientContext = ClientContext(with: collectionViewController.clientContext, modifier: { context in
 							context.originatingViewController = collectionViewController
 						})
 
-						config.leadingSwipeActionsConfigurationProvider = { (_ indexPath: IndexPath) in
+						config.leadingSwipeActionsConfigurationProvider = { [weak collectionViewController] (_ indexPath: IndexPath) in
 							var swipeConfiguration : UISwipeActionsConfiguration?
 
-							collectionViewController.retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath in
+							collectionViewController?.retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath in
 								// Return early if leadingSwipes are not allowed
-								if !clientContext.validate(permission: .leadingSwipe, for: record) {
+								if !clientContext.validate(interaction: .leadingSwipe, for: record) {
 									return
 								}
 
 								// Use context's swipeActionsProvider
 								if let item = record.item,
+								   let collectionViewController = collectionViewController,
 								   let swipeActionsProvider = clientContext.swipeActionsProvider,
 								   (swipeActionsProvider as? NSObject)?.responds(to: #selector(SwipeActionsProvider.provideLeadingSwipeActions(for:item:context:))) == true {
 									swipeConfiguration = swipeActionsProvider.provideLeadingSwipeActions?(for: collectionViewController, item: item, context: clientContext)
@@ -80,17 +87,18 @@ public class CollectionViewSection: NSObject {
 							return swipeConfiguration
 						}
 
-						config.trailingSwipeActionsConfigurationProvider = { (_ indexPath: IndexPath) in
+						config.trailingSwipeActionsConfigurationProvider = { [weak collectionViewController] (_ indexPath: IndexPath) in
 							var swipeConfiguration : UISwipeActionsConfiguration?
 
-							collectionViewController.retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath in
+							collectionViewController?.retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath in
 								// Return early if trailingSwipes are not allowed
-								if !clientContext.validate(permission: .trailingSwipe, for: record) {
+								if !clientContext.validate(interaction: .trailingSwipe, for: record) {
 									return
 								}
 
 								// Use context's swipeActionsProvider
 								if let item = record.item,
+								   let collectionViewController = collectionViewController,
 								   let swipeActionsProvider = clientContext.swipeActionsProvider,
 								   (swipeActionsProvider as? NSObject)?.responds(to: #selector(SwipeActionsProvider.provideTrailingSwipeActions(for:item:context:))) == true {
 									swipeConfiguration = swipeActionsProvider.provideTrailingSwipeActions?(for: collectionViewController, item: item, context: clientContext)
@@ -108,14 +116,49 @@ public class CollectionViewSection: NSObject {
 						}
 					}
 
-					return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+					let layoutSection = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+					if let contentInsets = contentInsets {
+						layoutSection.contentInsets = contentInsets
+					}
+					return layoutSection
 
 				// Full width
-				case .fullWidth(let heightDimension, let interItemSpacing, let contentInsets):
-					let group = NSCollectionLayoutGroup(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: heightDimension))
-					group.interItemSpacing = interItemSpacing
-					group.contentInsets = contentInsets
-					return NSCollectionLayoutSection(group: group)
+				case .fullWidth(let itemHeightDimension, let groupHeightDimension, let edgeSpacing, let contentInsets):
+					let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: itemHeightDimension))
+					if let edgeSpacing = edgeSpacing {
+						item.edgeSpacing = edgeSpacing
+					}
+
+					let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: groupHeightDimension), subitems: [ item ])
+
+					let layoutSection =  NSCollectionLayoutSection(group: group)
+					if let contentInsets = contentInsets {
+						layoutSection.contentInsets = contentInsets
+					}
+					return layoutSection
+
+				case .sideways(let item, let groupSize, let innerInsets, let edgeSpacing, let contentInsets, let orthogonalScrollingBehaviour):
+					let useItem = item ?? NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
+					if let edgeSpacing = edgeSpacing {
+						useItem.edgeSpacing = edgeSpacing
+					}
+
+					let layoutGroupSize = groupSize ?? NSCollectionLayoutSize(widthDimension: .absolute(64), heightDimension: .absolute(64))
+					let group = NSCollectionLayoutGroup.horizontal(layoutSize: layoutGroupSize, subitems: [useItem])
+					if let innerInsets = innerInsets {
+						group.contentInsets = innerInsets
+					}
+
+					let layoutSection = NSCollectionLayoutSection(group: group)
+					layoutSection.orthogonalScrollingBehavior = orthogonalScrollingBehaviour
+					if let contentInsets = contentInsets {
+						layoutSection.contentInsets = contentInsets
+					}
+					return layoutSection
+
+				// Custom
+				case .custom(let generator):
+					return generator(collectionViewController, layoutEnvironment)
 			}
 		}
 	}
@@ -142,6 +185,8 @@ public class CollectionViewSection: NSObject {
 	public var cellStyle : CollectionViewCellStyle //!< Use .cellConfigurationCustomizer for per-cell styling
 	public var clientContext: ClientContext?
 	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
+
+	public var animateDifferences: Bool? //!< If not specified, falls back to collectionViewController.animateDifferences
 
 	public var cellLayout: CellLayout
 
@@ -171,7 +216,7 @@ public class CollectionViewSection: NSObject {
 	}
 
 	func handleListUpdates(from subscription: OCDataSourceSubscription) {
-		collectionViewController?.updateSource(animatingDifferences: true)
+		collectionViewController?.updateSource(animatingDifferences: animateDifferences ?? (collectionViewController?.animateDifferences ?? true))
 	}
 
 	// MARK: - Item provider
@@ -187,18 +232,6 @@ public class CollectionViewSection: NSObject {
 			}
 		}
 	}
-
-//	func provideDataItem(for collectionView: UICollectionView, collectionItemRef: CollectionViewController.ItemRef) -> OCDataItem? {
-//		var dataItem: OCDataItem?
-//
-//		if let (dataItemRef, _) = collectionViewController?.unwrap(collectionItemRef) {
-//			if let itemRecord = try? dataSource?.record(forItemRef: dataItemRef) {
-//				dataItem = itemRecord.item
-//			}
-//		}
-//
-//		return dataItem
-//	}
 
 	// MARK: - Cell provider
 	func provideReusableCell(for collectionView: UICollectionView, collectionItemRef: CollectionViewController.ItemRef, indexPath: IndexPath) -> UICollectionViewCell {

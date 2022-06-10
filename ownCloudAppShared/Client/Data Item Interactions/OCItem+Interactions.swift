@@ -114,7 +114,7 @@ extension OCItem : DataItemContextMenuInteraction {
 				action.progressHandler = context?.actionProgressHandlerProvider?.makeActionProgressHandler()
 			}
 
-			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
+			let sharingItems = sharingActions.compactMap({ action in action.provideUIMenuAction() })
 			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
 
 			return [shareMenu, actionsMenu]

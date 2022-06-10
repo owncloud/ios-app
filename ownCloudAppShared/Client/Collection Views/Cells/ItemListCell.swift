@@ -47,6 +47,8 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	open var cloudStatusIconView : UIImageView = UIImageView()
 	open var sharedStatusIconView : UIImageView = UIImageView()
 	open var publicLinkStatusIconView : UIImageView = UIImageView()
+
+	open var actionViewContainer : UIView = UIView()
 	open var moreButton : UIButton = UIButton()
 	open var messageButton : UIButton = UIButton()
 	open var revealButton : UIButton = UIButton()
@@ -124,18 +126,13 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	}
 
 	func prepareViewAndConstraints() {
-		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
+		// cell.content setup
+		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
-
-		moreButton.translatesAutoresizingMaskIntoConstraints = false
-
-		revealButton.translatesAutoresizingMaskIntoConstraints = false
-
-		messageButton.translatesAutoresizingMaskIntoConstraints = false
 
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
@@ -162,28 +159,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		self.contentView.addSubview(sharedStatusIconView)
 		self.contentView.addSubview(publicLinkStatusIconView)
 		self.contentView.addSubview(cloudStatusIconView)
-		self.contentView.addSubview(moreButton)
-		self.contentView.addSubview(revealButton)
-		self.contentView.addSubview(messageButton)
-
-		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
-		moreButton.contentMode = .center
-		moreButton.isPointerInteractionEnabled = true
-
-		revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
-		revealButton.isPointerInteractionEnabled = true
-		revealButton.contentMode = .center
-		revealButton.isHidden = !showRevealButton
-		revealButton.accessibilityLabel = "Reveal in folder".localized
-
-		messageButton.setTitle("⚠️", for: .normal)
-		messageButton.contentMode = .center
-		messageButton.isPointerInteractionEnabled = true
-		messageButton.isHidden = true
-
-		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
-		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .touchUpInside)
-		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
 
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
@@ -205,9 +180,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
-		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : moreButtonWidth)
-		revealButtonWidthConstraint = revealButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : 0)
-
 		cloudStatusIconViewZeroWidthConstraint = cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
 		sharedStatusIconViewZeroWidthConstraint = sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
 		publicLinkStatusIconViewZeroWidthConstraint = publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
@@ -223,8 +195,8 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
-			titleLabel.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: 0),
-			detailLabel.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: 0),
+			titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
+			detailLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
 
 			cloudStatusIconViewZeroWidthConstraint!,
 			sharedStatusIconViewZeroWidthConstraint!,
@@ -246,25 +218,60 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 
 			cloudStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
 			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
-			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
-
-			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-			moreButtonWidthConstraint!,
-			moreButton.trailingAnchor.constraint(equalTo: revealButton.leadingAnchor),
-
-			revealButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-			revealButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-			revealButtonWidthConstraint!,
-			revealButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-
-			messageButton.leadingAnchor.constraint(equalTo: moreButton.leadingAnchor),
-			messageButton.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor),
-			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
-			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
+			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight)
 		])
 
-		self.accessibilityElements = [titleLabel, detailLabel, moreButton, revealButton]
+		// actionViewContainer setup
+		moreButton.translatesAutoresizingMaskIntoConstraints = false
+		revealButton.translatesAutoresizingMaskIntoConstraints = false
+		messageButton.translatesAutoresizingMaskIntoConstraints = false
+
+		actionViewContainer.addSubview(moreButton)
+		actionViewContainer.addSubview(revealButton)
+		actionViewContainer.addSubview(messageButton)
+
+		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
+		moreButton.contentMode = .center
+		moreButton.isPointerInteractionEnabled = true
+
+		revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
+		revealButton.isPointerInteractionEnabled = true
+		revealButton.contentMode = .center
+		revealButton.isHidden = !showRevealButton
+		revealButton.accessibilityLabel = "Reveal in folder".localized
+
+		messageButton.setTitle("⚠️", for: .normal)
+		messageButton.contentMode = .center
+		messageButton.isPointerInteractionEnabled = true
+		messageButton.isHidden = true
+
+		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .touchUpInside)
+		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
+
+		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : moreButtonWidth)
+		revealButtonWidthConstraint = revealButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : 0)
+
+		NSLayoutConstraint.activate([
+			moreButton.topAnchor.constraint(equalTo: actionViewContainer.topAnchor),
+			moreButton.bottomAnchor.constraint(equalTo: actionViewContainer.bottomAnchor),
+			moreButton.leadingAnchor.constraint(equalTo: actionViewContainer.leadingAnchor),
+			moreButton.trailingAnchor.constraint(equalTo: revealButton.leadingAnchor),
+
+			revealButton.topAnchor.constraint(equalTo: actionViewContainer.topAnchor),
+			revealButton.bottomAnchor.constraint(equalTo: actionViewContainer.bottomAnchor),
+			revealButton.trailingAnchor.constraint(equalTo: actionViewContainer.trailingAnchor),
+
+			moreButtonWidthConstraint!,
+			revealButtonWidthConstraint!,
+
+			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
+			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor),
+			messageButton.leadingAnchor.constraint(equalTo: moreButton.leadingAnchor),
+			messageButton.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor)
+		])
+
+		self.accessibilityElements = [titleLabel, detailLabel, moreButton, revealButton, messageButton]
 	}
 
 	// MARK: - Present item
@@ -475,7 +482,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 				progressView.contentMode = .center
 				progressView.translatesAutoresizingMaskIntoConstraints = false
 
-				self.contentView.addSubview(progressView)
+				actionViewContainer.addSubview(progressView)
 
 				NSLayoutConstraint.activate([
 					progressView.leftAnchor.constraint(equalTo: moreButton.leftAnchor),
@@ -611,37 +618,19 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 extension ItemListCell {
 	static func registerCellProvider() {
 		let itemListCellRegistration = UICollectionView.CellRegistration<ItemListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
-			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
-				var itemRecord = cellConfiguration.record
-
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				cell.clientContext = cellConfiguration.clientContext
 				cell.core = cellConfiguration.core
 
-				if itemRecord == nil {
-					if let collectionViewController = cellConfiguration.hostViewController {
-						let (itemRef, _) = collectionViewController.unwrap(collectionItemRef)
-
-						if let retrievedItemRecord = try? cellConfiguration.source?.record(forItemRef: itemRef) {
-							itemRecord = retrievedItemRecord
-						}
-					}
+				if let ocItem = item as? OCItem {
+					cell.item = ocItem
 				}
 
-				if let itemRecord = itemRecord {
-					if let item = itemRecord.item {
-						if let ocItem = item as? OCItem {
-							cell.item = ocItem
-						}
-					} else {
-						// Request reconfiguration of cell
-						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
-							if let collectionViewController = cellConfiguration.hostViewController {
-								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
-							}
-						})
-					}
-				}
-			}
+				cell.accessories = [
+					.multiselect(),
+					.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: cell.actionViewContainer /* UIButton(configuration: .borderedTinted()) */, placement: .trailing(displayed: .whenNotEditing)))
+				]
+			})
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .item, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

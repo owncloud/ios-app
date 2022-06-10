@@ -61,7 +61,7 @@ public extension OCExtensionLocationIdentifier {
 	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let emptyFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("emptyFolder") //!< Present in "more" options for a whole folder
-	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
+	static let multiSelection: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("multiSelection") //!< Present as action when selecting multiple items
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
@@ -183,10 +183,10 @@ public class ActionContext: OCExtensionContext {
 		guard self.itemStorage.contains(item) else {
 			return
 		}
-		self.itemStorage.removeAll(where: {$0.localID == item.localID})
+		self.itemStorage.removeAll(where: { storedItem in storedItem.localID == item.localID})
 
 		if item.isSharedWithUser {
-			self.cachedSharedItems.removeAll(where: { $0.localID == item.localID })
+			self.cachedSharedItems.removeAll(where: { cachedSharedItem in cachedSharedItem.localID == item.localID })
 		}
 
 		if item.isRoot, rootItems > 0 {
@@ -197,7 +197,7 @@ public class ActionContext: OCExtensionContext {
 			deleteableItems -= 1
 		}
 
-		if item.permissions.contains(.move), deleteableItems > 0 {
+		if item.permissions.contains(.move), moveableItems > 0 {
 			moveableItems -= 1
 		}
 	}
@@ -255,9 +255,9 @@ public class ActionContext: OCExtensionContext {
 
 	private func updateCaches() {
 		cachedSharedItems = itemStorage.sharedWithUser
-		rootItems = itemStorage.filter({ $0.isRoot }).count
-		deleteableItems = itemStorage.filter({$0.permissions.contains(.delete)}).count
-		moveableItems = itemStorage.filter({$0.permissions.contains(.move)}).count
+		rootItems = itemStorage.filter({ item in item.isRoot }).count
+		deleteableItems = itemStorage.filter({ item in item.permissions.contains(.delete)}).count
+		moveableItems = itemStorage.filter({ item in item.permissions.contains(.move)}).count
 	}
 }
 
@@ -476,7 +476,7 @@ open class Action : NSObject {
 		return alertAction
 	}
 
-	open func provideOCAction() -> OCAction? {
+	open func provideOCAction(singleVersion: Bool = false, with additionalCompletionHandler: (() -> Void)? = nil) -> OCAction? {
 		let icon = self.icon?.paddedTo(width: 36, height: nil)
 		var name = actionExtension.name
 
@@ -487,7 +487,14 @@ open class Action : NSObject {
 		let ocAction = OCAction(title: name, icon: icon, action: { _, options, completionHandler in
 			self.perform()
 			completionHandler(nil)
+			additionalCompletionHandler?()
 		})
+
+		ocAction.identifier = actionExtension.identifier.rawValue
+		if singleVersion {
+			ocAction.version = actionExtension.identifier.rawValue
+		}
+		ocAction.type = (actionExtension.category == .destructive) ? .destructive : .regular
 
 		return ocAction
 	}

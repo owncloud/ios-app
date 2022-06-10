@@ -128,40 +128,16 @@ extension DriveListCell {
 			var title : String?
 			var subtitle : String?
 
-			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
-				var itemRecord = cellConfiguration.record
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+					title = presentable.title
+					subtitle = presentable.subtitle
 
-				resourceManager = cellConfiguration.core?.vault.resourceManager
+					resourceManager = cellConfiguration.core?.vault.resourceManager
 
-				if itemRecord == nil {
-					if let collectionViewController = cellConfiguration.hostViewController {
-						let (itemRef, _) = collectionViewController.unwrap(collectionItemRef)
-
-						if let retrievedItemRecord = try? cellConfiguration.source?.record(forItemRef: itemRef) {
-							itemRecord = retrievedItemRecord
-						}
-					}
+					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
 				}
-
-				if let itemRecord = itemRecord {
-					if let item = itemRecord.item {
-						if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-
-							title = presentable.title
-							subtitle = presentable.subtitle
-
-							coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
-						}
-					} else {
-						// Request reconfiguration of cell
-						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
-							if let collectionViewController = cellConfiguration.hostViewController {
-								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
-							}
-						})
-					}
-				}
-			}
+			})
 
 			cell.title = title
 			cell.subtitle = subtitle
@@ -181,42 +157,16 @@ extension DriveListCell {
 			var title : String?
 			var subtitle : String?
 
-			if let cellConfiguration = collectionItemRef.ocCellConfiguration {
-				var itemRecord = cellConfiguration.record
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+					title = presentable.title
+					subtitle = presentable.subtitle
 
-				cell.collectionViewController = cellConfiguration.hostViewController
+					resourceManager = cellConfiguration.core?.vault.resourceManager
 
-				resourceManager = cellConfiguration.core?.vault.resourceManager
-
-				if itemRecord == nil {
-					if let collectionViewController = cellConfiguration.hostViewController {
-						let (itemRef, _) = collectionViewController.unwrap(collectionItemRef)
-
-						if let retrievedItemRecord = try? cellConfiguration.source?.record(forItemRef: itemRef) {
-							itemRecord = retrievedItemRecord
-						}
-					}
+					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
 				}
-
-				if let itemRecord = itemRecord {
-					if let item = itemRecord.item {
-						if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-
-							title = presentable.title
-							subtitle = presentable.subtitle
-
-							coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
-						}
-					} else {
-						// Request reconfiguration of cell
-						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
-							if let collectionViewController = cellConfiguration.hostViewController {
-								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
-							}
-						})
-					}
-				}
-			}
+			})
 
 			cell.title = title
 			cell.subtitle = subtitle

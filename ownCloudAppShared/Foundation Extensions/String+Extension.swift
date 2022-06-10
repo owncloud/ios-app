@@ -61,8 +61,8 @@ extension String {
 			let regex = try NSRegularExpression(pattern: regex)
 			let results = regex.matches(in: self,
 										range: NSRange(self.startIndex..., in: self))
-			return results.map {
-				String(self[Range($0.range, in: self)!])
+			return results.map { result in
+				String(self[Range(result.range, in: self)!])
 			}
 		} catch _ {
 			return []

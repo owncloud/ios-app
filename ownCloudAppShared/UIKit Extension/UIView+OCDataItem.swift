@@ -1,8 +1,8 @@
 //
-//  SortBarCell.swift
+//  UIView+OCDataItem.swift
 //  ownCloudAppShared
 //
-//  Created by Felix Schwarz on 30.05.22.
+//  Created by Felix Schwarz on 31.05.22.
 //  Copyright © 2022 ownCloud GmbH. All rights reserved.
 //
 
@@ -17,7 +17,18 @@
  */
 
 import UIKit
+import ownCloudSDK
 
-class SortBarCell: ThemeableCollectionViewListCell {
+extension UIView : OCDataItem, OCDataItemVersioning {
+	public var dataItemType: OCDataItemType {
+		return .view
+	}
 
+	public var dataItemReference: OCDataItemReference {
+		return NSString(format: "%p", self)
+	}
+
+	public var dataItemVersion: OCDataItemVersion {
+		return NSString(format: "%p", self)
+	}
 }

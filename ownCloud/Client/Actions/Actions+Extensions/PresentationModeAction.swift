@@ -82,7 +82,7 @@ class PresentationModeAction: Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreDetailItem {
-			return UIImage(systemName: "tv")
+			return UIImage(systemName: "tv")?.withRenderingMode(.alwaysTemplate)
 		}
 
 		return nil

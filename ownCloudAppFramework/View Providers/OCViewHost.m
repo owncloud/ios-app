@@ -161,6 +161,8 @@
 {
 	if (newView != _hostedView)
 	{
+		[self willChangeValueForKey:@"contentStatus"];
+
 		[_hostedView removeFromSuperview];
 		_hostedView = newView;
 
@@ -177,6 +179,8 @@
 				[newView.bottomAnchor 	constraintEqualToAnchor:self.bottomAnchor]
 			]];
 		}
+
+		[self didChangeValueForKey:@"contentStatus"];
 	}
 }
 
@@ -232,6 +236,21 @@
 - (void)reloadView
 {
 	[self updateView];
+}
+
+- (OCViewHostContentStatus)contentStatus
+{
+	if (_hostedView == nil)
+	{
+		return (OCViewHostContentStatusNone);
+	}
+
+	if (_hostedView == _fallbackView)
+	{
+		return (OCViewHostContentStatusFallback);
+	}
+
+	return (OCViewHostContentStatusFromResource);
 }
 
 @end

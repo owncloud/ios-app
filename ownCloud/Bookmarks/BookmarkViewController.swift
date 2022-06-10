@@ -40,7 +40,7 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
-	var oAuthInfoView : RoundedInfoView?
+	var tokenInfoView : RoundedInfoView?
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
@@ -239,9 +239,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
-		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
-		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
-		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
+		tokenInfoView = RoundedInfoView(text: "")
 
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
@@ -888,7 +886,15 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		if showOAuthInfoHeader {
-			self.tableView.tableHeaderView = oAuthInfoView
+			var authMethodName = "OAuth2"
+
+			if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier, let localizedAuthMethodName = OCAuthenticationMethod.localizedName(forAuthenticationMethodIdentifier: authenticationMethodIdentifier) {
+				authMethodName = localizedAuthMethodName
+			}
+
+			tokenInfoView?.infoText = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName])
+
+			self.tableView.tableHeaderView = tokenInfoView
 			self.tableView.layoutTableHeaderView()
 		} else {
 			self.tableView.tableHeaderView?.removeFromSuperview()

@@ -51,6 +51,33 @@ public class CollectionViewCellConfiguration: NSObject {
 		self.hostViewController = hostViewController
 		self.clientContext = clientContext
 	}
+
+	public func configureCell(for collectionItemRef: CollectionViewController.ItemRef, with configurer: (_ itemRecord: OCDataItemRecord, _ item: OCDataItem, _ cellConfiguration: CollectionViewCellConfiguration) -> Void) {
+		var itemRecord = record
+
+		if itemRecord == nil {
+			if let collectionViewController = hostViewController {
+				let (itemRef, _) = collectionViewController.unwrap(collectionItemRef)
+
+				if let retrievedItemRecord = try? source?.record(forItemRef: itemRef) {
+					itemRecord = retrievedItemRecord
+				}
+			}
+		}
+
+		if let itemRecord = itemRecord {
+			if let item = itemRecord.item {
+				configurer(itemRecord, item, self)
+			} else {
+				// Request reconfiguration of cell
+				itemRecord.retrieveItem(completionHandler: { error, itemRecord in
+					if let collectionViewController = self.hostViewController {
+						collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+					}
+				})
+			}
+		}
+	}
 }
 
 public extension NSObject {

@@ -20,7 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public class ClientItemViewController: CollectionViewController, UISearchControllerDelegate, UISearchResultsUpdating {
+public class ClientItemViewController: CollectionViewController, SortBarDelegate {
+	// UISearchControllerDelegate, UISearchResultsUpdating {
 	public enum ContentState : String, CaseIterable {
 		case loading
 
@@ -30,8 +31,11 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 
 	public var query: OCQuery?
 
-	weak public var queryDataSource : OCDataSource?
-	public var queryItemDataSourceSection : CollectionViewSection?
+	public var itemsLeadInDataSource : OCDataSourceArray = OCDataSourceArray()
+	public var itemsQueryDataSource : OCDataSource?
+	public var itemsTrailingDataSource : OCDataSourceArray = OCDataSourceArray()
+	public var itemSectionDataSource : OCDataSourceComposition?
+	public var itemSection : CollectionViewSection?
 
 	public var driveSection : CollectionViewSection?
 
@@ -44,7 +48,10 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 	public var emptyItemListDecisionSubscription : OCDataSourceSubscription?
 	public var emptyItemListItem : OCDataItemPresentable?
 
+	public var loadingListItem : OCDataItemPresentable?
+
 	private var stateObservation : NSKeyValueObservation?
+	private var queryRootItemObservation : NSKeyValueObservation?
 
 	public init(context inContext: ClientContext?, query inQuery: OCQuery, reveal inItem: OCItem? = nil) {
 		query = inQuery
@@ -61,6 +68,14 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 						}
 
 						return true
+
+					case .multiselection:
+						if record?.type == .item {
+							// Only allow selection of items
+							return true
+						}
+
+						return false
 
 					default:
 						return true
@@ -81,7 +96,7 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 		}
 
 		if let queryResultsDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {
-			queryDataSource = queryResultsDatasource
+			itemsQueryDataSource = queryResultsDatasource
 			singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 
 			if query?.queryLocation?.isRoot == true {
@@ -103,24 +118,29 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .header, cellLayout: .list(appearance: .plain))
 			}
 
-			queryItemDataSourceSection = CollectionViewSection(identifier: "items", dataSource: queryResultsDatasource, clientContext: itemControllerContext)
+			itemSectionDataSource = OCDataSourceComposition(sources: [itemsLeadInDataSource, queryResultsDatasource, itemsTrailingDataSource])
+			itemSection = CollectionViewSection(identifier: "items", dataSource: itemSectionDataSource, cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemControllerContext)
 
 			if let driveSection = driveSection {
 				sections.append(driveSection)
 			}
 
-			if let queryItemDataSourceSection = queryItemDataSourceSection {
+			if let queryItemDataSourceSection = itemSection {
 				sections.append(queryItemDataSourceSection)
 			}
 		}
 
-		let emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, cellLayout: .list(appearance: .insetGrouped), clientContext: itemControllerContext)
+		let emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
 		sections.append(emptySection)
 
-		super.init(context: itemControllerContext, sections: sections)
+		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true)
 
 		// Track query state and recompute content state when it changes
-		stateObservation = queryDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in
+		stateObservation = itemsQueryDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in
+			self?.recomputeContentState()
+		})
+
+		queryRootItemObservation = query?.observe(\OCQuery.rootItem, options: [], changeHandler: { [weak self] query, change in
 			self?.recomputeContentState()
 		})
 
@@ -133,6 +153,10 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 			emptyItemListItem = OCDataItemPresentable(reference: "_emptyItemList" as NSString, originalDataItemType: nil, version: nil)
 			emptyItemListItem?.title = "This folder is empty. Fill it with content:".localized
 			emptyItemListItem?.childrenDataSourceProvider = nil
+
+			loadingListItem = OCDataItemPresentable(reference: "_loadingListItem" as NSString, originalDataItemType: nil, version: nil)
+			loadingListItem?.title = "Loading…".localized
+			loadingListItem?.childrenDataSourceProvider = nil
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateEmptyItemList(from: subscription)
@@ -152,6 +176,7 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 
 	deinit {
 		stateObservation?.invalidate()
+		queryRootItemObservation?.invalidate()
 		singleDriveDatasourceSubscription?.terminate()
 	}
 
@@ -194,6 +219,21 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 		}
 
 		self.navigationItem.rightBarButtonItems = viewActionButtons
+
+		// Setup sort bar
+		sortBar = SortBar(sortMethod: sortMethod)
+		sortBar?.translatesAutoresizingMaskIntoConstraints = false
+		sortBar?.heightAnchor.constraint(equalToConstant: 40).isActive = true
+		sortBar?.delegate = self
+		sortBar?.sortMethod = self.sortMethod
+		sortBar?.searchScope = self.searchScope
+		sortBar?.showSelectButton = true
+
+		itemsLeadInDataSource.setVersionedItems([ sortBar! ])
+
+		// Setup multiselect
+		collectionView.allowsSelectionDuringEditing = true
+		collectionView.allowsMultipleSelectionDuringEditing = true
 
 		// Setup search controller
 //		searchController = UISearchController(searchResultsController: nil)
@@ -248,7 +288,7 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 
 	// MARK: - Empty item list handling
 	func emptyActions() -> [OCAction]? {
-		guard let context = clientContext, let core = context.core, let item = query?.rootItem else {
+		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem else {
 			return nil
 		}
 		let locationIdentifier: OCExtensionLocationIdentifier = .emptyFolder
@@ -274,7 +314,7 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 
 	func recomputeContentState() {
 		OnMainThread {
-			switch self.queryDataSource?.state {
+			switch self.itemsQueryDataSource?.state {
 				case .loading:
 					self.contentState = .loading
 
@@ -286,11 +326,16 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 		}
 	}
 
+	private var hadRootItem: Bool = false
 	public var contentState : ContentState = .loading {
 		didSet {
-			if contentState == oldValue {
+			let hasRootItem = (query?.rootItem != nil)
+
+			if (contentState == oldValue) && (hadRootItem == hasRootItem) {
 				return
 			}
+
+			hadRootItem = hasRootItem
 
 			switch contentState {
 				case .empty:
@@ -305,9 +350,22 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 					}
 
 					emptyItemListDataSource.setItems(emptyItems, updated: nil)
+					itemsLeadInDataSource.setVersionedItems([ ])
 
-				case .hasContent, .loading:
+				case .loading:
+					var loadingItems : [OCDataItem] = [ ]
+
+					if let loadingListItem = loadingListItem {
+						loadingItems.append(loadingListItem)
+					}
+					emptyItemListDataSource.setItems(loadingItems, updated: nil)
+					itemsLeadInDataSource.setVersionedItems([ ])
+
+				case .hasContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
+					if let sortBar = sortBar {
+						itemsLeadInDataSource.setVersionedItems([ sortBar ])
+					}
 			}
 		}
 	}
@@ -323,12 +381,197 @@ public class ClientItemViewController: CollectionViewController, UISearchControl
 		}
 	}
 
+	// MARK: - Sorting
+	open var sortBar: SortBar?
+	open var sortMethod: SortMethod {
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
+		}
+
+		get {
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabetically
+			return sort
+		}
+	}
+	open var searchScope: SearchScope = .local {
+		didSet {
+//			updateSearchPlaceholder()
+		}
+	}
+	open var sortDirection: SortDirection {
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
+		}
+
+		get {
+			let direction = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
+			return direction
+		}
+	}
+
+	public func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+ 		sortMethod = didUpdateSortMethod
+
+ 		let comparator = sortMethod.comparator(direction: sortDirection)
+
+ 		query?.sortComparator = comparator
+// 		customSearchQuery?.sortComparator = comparator
+//
+//		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
+//	 		updateCustomSearchQuery()
+//		}
+	}
+
+	public func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+	}
+
+	public func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+		self.present(presentViewController, animated: animated, completion: completionHandler)
+	}
+
+	// MARK: - Multiselect
+	public func toggleSelectMode() {
+		if let clientContext = clientContext, clientContext.hasPermission(for: .multiselection) {
+			isMultiSelecting = !isMultiSelecting
+		}
+	}
+
+	var multiSelectionActionContext: ActionContext?
+	var multiSelectionActionsDatasource: OCDataSourceArray?
+
+	public var isMultiSelecting : Bool = false {
+		didSet {
+			if oldValue != isMultiSelecting {
+				collectionView.isEditing = isMultiSelecting
+
+				if isMultiSelecting {
+					// Setup new action context
+					if let core = clientContext?.core {
+						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
+
+						multiSelectionActionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
+					}
+
+					// Setup multi selection action datasource
+					multiSelectionActionsDatasource = OCDataSourceArray()
+					refreshMultiselectActions()
+					showActionsBar(with: multiSelectionActionsDatasource!)
+				} else {
+					closeActionsBar()
+					multiSelectionActionsDatasource = nil
+					multiSelectionActionContext = nil
+				}
+			}
+		}
+	}
+
+	private var noActionsTextItem : OCDataItemPresentable?
+
+	func refreshMultiselectActions() {
+		if let multiSelectionActionContext = multiSelectionActionContext {
+			var actionItems : [OCDataItem & OCDataItemVersioning] = []
+
+			if multiSelectionActionContext.items.count == 0 {
+				if noActionsTextItem == nil {
+					noActionsTextItem = OCDataItemPresentable(reference: "_emptyActionList" as NSString, originalDataItemType: nil, version: nil)
+					noActionsTextItem?.title = "Select one or more items.".localized
+					noActionsTextItem?.childrenDataSourceProvider = nil
+				}
+
+				if let noActionsTextItem = noActionsTextItem {
+					actionItems = [ noActionsTextItem ]
+					OnMainThread {
+						self.actionsBarViewControllerSection?.animateDifferences = true
+					}
+				}
+			} else {
+				let actions = Action.sortedApplicableActions(for: multiSelectionActionContext)
+				let actionCompletionHandler : ActionCompletionHandler = { [weak self] action, error in
+					OnMainThread {
+						self?.isMultiSelecting = false
+					}
+				}
+
+				for action in actions {
+					action.completionHandler = actionCompletionHandler
+					if let ocAction = action.provideOCAction(singleVersion: true) {
+						actionItems.append(ocAction)
+					}
+				}
+			}
+
+			multiSelectionActionsDatasource?.setVersionedItems(actionItems)
+		}
+	}
+
+	public override func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool) -> Bool {
+		if !super.handleMultiSelection(of: record, at: indexPath, isSelected: isSelected),
+		   let multiSelectionActionContext = multiSelectionActionContext {
+
+			retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
+				if record.type == .item, let item = record.item as? OCItem {
+					if isSelected {
+						multiSelectionActionContext.add(item: item)
+					} else {
+						multiSelectionActionContext.remove(item: item)
+					}
+
+					self?.refreshMultiselectActions()
+				}
+			})
+		}
+
+		return true
+	}
+
+	// MARK: - Actions
+	open weak var actionsBarViewControllerSection: CollectionViewSection?
+	open var actionsBarViewController: CollectionViewController? {
+		willSet {
+			if let actionsBarViewController = actionsBarViewController {
+				removeStacked(child: actionsBarViewController)
+			}
+		}
+
+		didSet {
+			if let actionsBarViewController = actionsBarViewController {
+				addStacked(child: actionsBarViewController, position: .bottom)
+			}
+		}
+	}
+
+	func showActionsBar(with datasource: OCDataSource, context: ClientContext? = nil) {
+		if actionsBarViewController == nil {
+			let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(48), heightDimension: .fractionalHeight(1))
+			let item = NSCollectionLayoutItem(layoutSize: itemSize)
+			let actionSection = CollectionViewSection(identifier: "actions", dataSource: datasource, cellStyle: .gridCell, cellLayout: .sideways(item: item, groupSize: itemSize, edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(10), top: .fixed(0), trailing: .fixed(10), bottom: .fixed(0)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0), orthogonalScrollingBehaviour: .continuous), clientContext: clientContext)
+			actionSection.animateDifferences = false
+			let actionsViewController = CollectionViewController(context: context, sections: [
+				actionSection
+			])
+			actionsBarViewControllerSection = actionSection
+
+			actionsViewController.view.translatesAutoresizingMaskIntoConstraints = false
+			actionsViewController.view.heightAnchor.constraint(equalToConstant: 72).isActive = true
+//			actionsViewController.view.widthAnchor.constraint(greaterThanOrEqualToConstant: 256).isActive = true
+			(actionsViewController.view as? UICollectionView)?.showsVerticalScrollIndicator = false
+			(actionsViewController.view as? UICollectionView)?.alwaysBounceVertical = false
+			(actionsViewController.view as? UICollectionView)?.isScrollEnabled = false
+
+			actionsBarViewController = actionsViewController
+		}
+	}
+
+	func closeActionsBar() {
+		actionsBarViewController = nil
+	}
+
 	// MARK: - Search
 	open var searchController: UISearchController?
 
 	// MARK: - Search: UISearchResultsUpdating Delegate
 	open func updateSearchResults(for searchController: UISearchController) {
-		let searchText = searchController.searchBar.text ?? ""
+//		let searchText = searchController.searchBar.text ?? ""
 
 //		applySearchFilter(for: (searchText == "") ? nil : searchText, to: query)
 	}

@@ -28,9 +28,7 @@ open class MoreStaticTableViewController: StaticTableViewController {
 	}
 
 	deinit {
-		themeApplierTokens.forEach({
-			Theme.shared.remove(applierForToken: $0)
-		})
+		themeApplierTokens.forEach({ token in Theme.shared.remove(applierForToken: token) })
 	}
 
 	required public init?(coder aDecoder: NSCoder) {

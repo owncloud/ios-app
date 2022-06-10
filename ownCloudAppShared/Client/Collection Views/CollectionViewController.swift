@@ -24,9 +24,11 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 	public var clientContext: ClientContext?
 
 	public var supportsHierarchicContent: Bool
+	public var usesStackViewRoot: Bool
 
-	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, hierarchic: Bool = false) {
+	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false) {
 		supportsHierarchicContent = hierarchic
+		usesStackViewRoot = useStackViewRoot
 
 		super.init(nibName: nil, bundle: nil)
 
@@ -52,9 +54,99 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		Theme.shared.unregister(client: self)
 	}
 
+	// MARK: - View configuration
+	public func configureViews() {
+		createCollectionView()
+
+		if usesStackViewRoot {
+			createStackView()
+		}
+
+		configureLayout()
+	}
+
+	public func configureLayout() {
+		if usesStackViewRoot, let stackView = stackView {
+			collectionView.translatesAutoresizingMaskIntoConstraints = false
+			stackView.addArrangedSubview(collectionView)
+		} else {
+			collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+			view.addSubview(collectionView)
+		}
+	}
+
+	// MARK: - Stack View
+	public var stackView : UIStackView?
+	public var stackedChildren : [UIViewController] = []
+
+	public func createStackView() {
+		if stackView == nil {
+			stackView = UIStackView(frame: .zero)
+			stackView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+			stackView?.axis = .vertical
+			stackView?.spacing = 0
+			stackView?.distribution = .fill
+		}
+	}
+
+	public enum StackedPosition : CaseIterable {
+		case top
+		case bottom
+	}
+
+	public func addStacked(child viewController: UIViewController, position: StackedPosition, relativeTo: UIView? = nil) {
+		if !usesStackViewRoot {
+			return
+		}
+
+		addChild(viewController)
+
+		switch position {
+			case .top:
+				if let relativeTo = relativeTo, let position = stackView?.arrangedSubviews.firstIndex(of: relativeTo) {
+					stackView?.insertArrangedSubview(viewController.view, at: position)
+				} else {
+					stackView?.insertArrangedSubview(viewController.view, at: 0)
+				}
+
+			case .bottom:
+				if let relativeTo = relativeTo, let position = stackView?.arrangedSubviews.firstIndex(of: relativeTo) {
+					stackView?.insertArrangedSubview(viewController.view, at: position+1)
+				} else {
+					stackView?.addArrangedSubview(viewController.view)
+				}
+		}
+
+		stackedChildren.append(viewController)
+
+		viewController.didMove(toParent: self)
+	}
+
+	public func removeStacked(child viewController: UIViewController) {
+		if !usesStackViewRoot {
+			return
+		}
+
+		viewController.willMove(toParent: nil)
+
+		stackedChildren.removeAll(where: { vc in (vc === viewController) })
+
+		viewController.view.removeFromSuperview()
+		viewController.removeFromParent()
+	}
+
 	// MARK: - Collection View
 	var collectionView : UICollectionView! = nil
 	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>! = nil
+
+	public override func loadView() {
+		if usesStackViewRoot {
+			createStackView()
+			view = stackView
+		} else {
+			super.loadView()
+		}
+	}
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
@@ -69,9 +161,11 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 		configuration.interSectionSpacing = 0
 
-		return UICollectionViewCompositionalLayout.init(sectionProvider: { sectionIndex, layoutEnvironment in
-			if sectionIndex > 0, sectionIndex < self.sections.count {
-				return self.sections[sectionIndex].provideCollectionLayoutSection(layoutEnvironment: layoutEnvironment)
+		return UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, layoutEnvironment in
+			if let self = self {
+				if sectionIndex >= 0, sectionIndex < self.sections.count {
+					return self.sections[sectionIndex].provideCollectionLayoutSection(layoutEnvironment: layoutEnvironment)
+				}
 			}
 
 			// Fallback to allow compilation - should never be called
@@ -79,13 +173,13 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		}, configuration: configuration)
 	}
 
-	public func configureViews() {
-		collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCollectionViewLayout())
-		collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		collectionView.contentInsetAdjustmentBehavior = .never
-		collectionView.contentInset = .zero
-		view.addSubview(collectionView)
-		collectionView.delegate = self
+	public func createCollectionView() {
+		if collectionView == nil {
+			collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCollectionViewLayout())
+			collectionView.contentInsetAdjustmentBehavior = .never
+			collectionView.contentInset = .zero
+			collectionView.delegate = self
+		}
 	}
 
 	// MARK: - Collection View Datasource
@@ -130,6 +224,8 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 		updateSource()
 	}
+
+	public var animateDifferences : Bool = true
 
 	func updateSource(animatingDifferences: Bool = true) {
 		guard let collectionViewDataSource = collectionViewDataSource else {
@@ -232,15 +328,64 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		}
 	}
 
+	public func retrieveItems(at indexPaths: [IndexPath], action: @escaping ((_ recordsByIndexPath: [IndexPath : OCDataItemRecord]) -> Void), handleError: ((_ error: Error?) -> Void)? = nil) {
+		var recordsByIndexPath : [IndexPath : OCDataItemRecord] = [:]
+
+		for indexPath in indexPaths {
+			retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath in
+				recordsByIndexPath[indexPath] = record
+			}, handleError: handleError)
+		}
+
+		action(recordsByIndexPath)
+	}
+
 	// MARK: - Collection View Delegate
+	public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+		var shouldSelect : Bool = false
+		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
+
+		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
+			// Return early if .contextMenu is not allowed
+			if self?.clientContext?.validate(interaction: interaction, for: record) != false {
+				shouldSelect = true
+			}
+		})
+
+		return shouldSelect
+	}
+
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
+
 		retrieveItem(at: indexPath, action: { [weak self] record, indexPath in
 			// Return early if .selection is not allowed
-			if self?.clientContext?.validate(permission: .selection, for: record) != false {
-				self?.handleSelection(of: record, at: indexPath)
+			if self?.clientContext?.validate(interaction: interaction, for: record) != false {
+				if interaction == .multiselection {
+					self?.handleMultiSelection(of: record, at: indexPath, isSelected: true)
+				} else {
+					self?.handleSelection(of: record, at: indexPath)
+				}
 			}
 		}, handleError: { error in
-			collectionView.deselectItem(at: indexPath, animated: true)
+			if interaction == .selection {
+				collectionView.deselectItem(at: indexPath, animated: true)
+			}
+		})
+	}
+
+	public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
+
+		if interaction != .multiselection {
+			return
+		}
+
+		retrieveItem(at: indexPath, action: { [weak self] record, indexPath in
+			// Return early if .selection is not allowed
+			if self?.clientContext?.validate(interaction: interaction, for: record) != false {
+				self?.handleMultiSelection(of: record, at: indexPath, isSelected: false)
+			}
 		})
 	}
 
@@ -249,7 +394,7 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 
 		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
 			// Return early if .contextMenu is not allowed
-			if self?.clientContext?.validate(permission: .contextMenu, for: record) != false {
+			if self?.clientContext?.validate(interaction: .contextMenu, for: record) != false {
 				contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point)
 			}
 		}, handleError: { error in
@@ -278,6 +423,10 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 			}
 		}
 
+		return false
+	}
+
+	@discardableResult public func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool) -> Bool {
 		return false
 	}
 

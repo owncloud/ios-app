@@ -211,7 +211,6 @@
 		DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC080CF0238C8D850044C5D2 /* StoreKit.framework */; };
 		DC080CF2238C8DF70044C5D2 /* OCLicenseAppStoreItem.h in Headers */ = {isa = PBXBuildFile; fileRef = DC080CE7238BD71F0044C5D2 /* OCLicenseAppStoreItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC080CF3238C92480044C5D2 /* OCLicenseAppStoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC080CE8238BD71F0044C5D2 /* OCLicenseAppStoreItem.m */; };
-		DC0A355224C0E2C200FB58FC /* SortMethodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */; };
 		DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED971208095E200A2D984 /* ClientItemCell.swift */; };
 		DC0A355424C0E2C200FB58FC /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
 		DC0A355624C0E33A00FB58FC /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F18A2052BA4C00189B9A /* Log.swift */; };
@@ -324,13 +323,15 @@
 		DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC4331FF2472E1B4002DC0E5 /* OCLicenseEMMProvider.m */; };
 		DC44343E21ABFA5200376B16 /* StaticLoginProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44343D21ABFA5200376B16 /* StaticLoginProfile.swift */; };
 		DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */; };
-		DC46F3CC2844A8EA00038880 /* SortBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3CB2844A8EA00038880 /* SortBarCell.swift */; };
+		DC46F3CC2844A8EA00038880 /* ViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3CB2844A8EA00038880 /* ViewCell.swift */; };
 		DC46F3CE2844A92A00038880 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3CD2844A92A00038880 /* ActionCell.swift */; };
 		DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D0284546F000038880 /* OCItem+Interactions.swift */; };
 		DC46F3D32845583D00038880 /* OCDrive+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */; };
 		DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */; };
+		DC46F3D72845FCFA00038880 /* UIView+OCDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */; };
 		DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */; };
 		DC49B55A28365C5F00DAF13B /* OCVault+VFSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */; };
+		DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */; };
 		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
 		DC4D5A0A247C1398008ADDB6 /* MessageGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4D5A09247C1398008ADDB6 /* MessageGroup.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */; };
@@ -1094,7 +1095,6 @@
 		39DC7CD225C2E1570001E08C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		39DC7CD425C2E1570001E08C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		39DC7D0825C30AAB0001E08C /* ownCloud_File_Provider_UI.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = ownCloud_File_Provider_UI.entitlements; sourceTree = "<group>"; };
-		39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethodTableViewController.swift; sourceTree = "<group>"; };
 		39DF779224EA73B40066E8F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39DF77AD24EA7F0A0066E8F0 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39DF77AE24EA7F0C0066E8F0 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1317,13 +1317,15 @@
 		DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginStepViewController.swift; sourceTree = "<group>"; };
 		DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginSetupViewController.swift; sourceTree = "<group>"; };
 		DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDataItem+InteractionProtocols.swift"; sourceTree = "<group>"; };
-		DC46F3CB2844A8EA00038880 /* SortBarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBarCell.swift; sourceTree = "<group>"; };
+		DC46F3CB2844A8EA00038880 /* ViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCell.swift; sourceTree = "<group>"; };
 		DC46F3CD2844A92A00038880 /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		DC46F3D0284546F000038880 /* OCItem+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItem+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDrive+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCAction+Interactions.swift"; sourceTree = "<group>"; };
+		DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+OCDataItem.swift"; sourceTree = "<group>"; };
 		DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+VFSManager.h"; sourceTree = "<group>"; };
 		DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+VFSManager.m"; sourceTree = "<group>"; };
+		DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableCollectionViewCell.swift; sourceTree = "<group>"; };
 		DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightImageView.swift; sourceTree = "<group>"; };
 		DC4D5A09247C1398008ADDB6 /* MessageGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroup.swift; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
@@ -1979,6 +1981,7 @@
 				DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */,
 				DC3AB24328104AA500789435 /* UIFont+Weight.swift */,
 				DC3AB2452810602500789435 /* UILabel+Extension.swift */,
+				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -3024,7 +3027,6 @@
 				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
 				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
 				3912208123436EB80026C290 /* SortMethod.swift */,
-				39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
 				DCD864112811FC5700CA6631 /* GradientView.swift */,
 			);
@@ -3134,14 +3136,15 @@
 		DCEAF0882808252300980B6D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
+				DC46F3CD2844A92A00038880 /* ActionCell.swift */,
 				DC3AB2412810404000789435 /* DriveHeaderCell.swift */,
 				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
 				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
 				DC01AF1B28411C0B00903101 /* MessageCell.swift */,
-				DC46F3CB2844A8EA00038880 /* SortBarCell.swift */,
-				DC46F3CD2844A92A00038880 /* ActionCell.swift */,
+				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
+				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
+				DC46F3CB2844A8EA00038880 /* ViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4368,6 +4371,7 @@
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
+				DC46F3D72845FCFA00038880 /* UIView+OCDataItem.swift in Sources */,
 				399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
 				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
@@ -4468,14 +4472,14 @@
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
 				DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
+				DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
-				DC0A355224C0E2C200FB58FC /* SortMethodTableViewController.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
 				DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
-				DC46F3CC2844A8EA00038880 /* SortBarCell.swift in Sources */,
+				DC46F3CC2844A8EA00038880 /* ViewCell.swift in Sources */,
 				DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */,
 				3912208223436EB80026C290 /* SortMethod.swift in Sources */,
 				DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */,

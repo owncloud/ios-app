@@ -1,8 +1,8 @@
 //
-//  ThemeableCollectionViewListCell.swift
+//  ThemeableCollectionViewCell.swift
 //  ownCloudAppShared
 //
-//  Created by Felix Schwarz on 27.05.22.
+//  Created by Felix Schwarz on 09.06.22.
 //  Copyright © 2022 ownCloud GmbH. All rights reserved.
 //
 
@@ -18,7 +18,7 @@
 
 import UIKit
 
-open class ThemeableCollectionViewListCell: UICollectionViewListCell, Themeable {
+class ThemeableCollectionViewCell: UICollectionViewCell, Themeable {
 	private var themeRegistered : Bool = false
 	public var updateLabelColors : Bool = true
 

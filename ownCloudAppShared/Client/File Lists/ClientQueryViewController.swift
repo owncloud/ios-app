@@ -392,7 +392,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			// Remove duplicates
 			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
 			let actionContext = ActionContext(viewController: self, core: core, query: query, items: uniqueItems, location: actionsLocation)
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 

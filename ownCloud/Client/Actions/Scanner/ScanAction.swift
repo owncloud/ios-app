@@ -99,7 +99,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .folderAction || location == .emptyFolder {
-			return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))
+			return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))?.withRenderingMode(.alwaysTemplate)
 		}
 
 		return nil

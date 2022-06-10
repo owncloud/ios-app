@@ -116,8 +116,7 @@ extension OCItem {
 			"web": "text/code"
 		]
 
-		mimeTypeToIconMap.keys.forEach {
-			let mimeTypeKey = $0
+		mimeTypeToIconMap.keys.forEach { mimeTypeKey in
 			var mimeType : String? = mimeTypeToIconMap[mimeTypeKey]
 			var referenceMIMEType : String? = mimeType
 

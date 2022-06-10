@@ -26,6 +26,7 @@ public extension CollectionViewCellProvider {
 		ItemListCell.registerCellProvider()
 		ExpandableResourceCell.registerCellProvider()
 		ActionCell.registerCellProvider()
+		ViewCell.registerCellProvider()
 
 		registerPresentableCellProvider()
 	}

@@ -21,10 +21,11 @@ import UIKit
 class DriveHeaderCell: DriveListCell {
 	let darkBackgroundView = UIView()
 
-	weak var collectionViewController : CollectionViewController?
+	var coverObservation : NSKeyValueObservation?
 
 	deinit {
 		Theme.shared.unregister(client: self)
+		coverObservation?.invalidate()
 	}
 
 	override func configure() {
@@ -41,17 +42,24 @@ class DriveHeaderCell: DriveListCell {
 		subtitleLabel.font = UIFont.preferredFont(forTextStyle: .headline, with: .semibold)
 		subtitleLabel.makeLabelWrapText()
 
-		textOuterSpacing = 20
+		textOuterSpacing = 16
 
 		coverImageResourceView.fallbackView = nil
 
 		contentView.insertSubview(darkBackgroundView, belowSubview: titleLabel)
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		coverObservation = coverImageResourceView.observe(\ResourceViewHost.contentStatus, options: [.initial], changeHandler: { [weak self] viewHost, _ in
+			self?.darkBackgroundView.isHidden = (viewHost.contentStatus != .fromResource)
+		})
 	}
 
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		coverImageResourceView.backgroundColor = collection.lightBrandColor
+
+		// Different look (unified with navigation bar, problematic in light mode):
+		// coverImageResourceView.backgroundColor = collection.navigationBarColors.backgroundColor
 
 		titleLabel.textColor = .white
 		subtitleLabel.textColor = .white
