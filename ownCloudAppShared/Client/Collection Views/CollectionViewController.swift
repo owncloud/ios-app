@@ -168,7 +168,8 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 				}
 			}
 
-			// Fallback to allow compilation - should never be called
+			// Fallback - will typically only be called if the CollectionViewController has already been deallocated
+			// (such as when navigating upwards from the originating view controller during a drag & drop operation)
 			return CollectionViewSection.CellLayout.list(appearance: .grouped).collectionLayoutSection(layoutEnvironment: layoutEnvironment)
 		}, configuration: configuration)
 	}
@@ -179,6 +180,8 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 			collectionView.contentInsetAdjustmentBehavior = .never
 			collectionView.contentInset = .zero
 			collectionView.delegate = self
+			collectionView.dragDelegate = self
+			collectionView.dropDelegate = self
 		}
 	}
 
@@ -241,6 +244,14 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		}
 
 		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+	}
+
+	public func section(at index: Int) -> CollectionViewSection? {
+		if (index >= 0) && (index < sections.count) {
+			return sections[index]
+		}
+
+		return nil
 	}
 
 	// MARK: - Item references
@@ -462,6 +473,27 @@ public class CollectionViewController: UIViewController, UICollectionViewDelegat
 		}
 
 		return nil
+	}
+
+	// MARK: - Drag and drop support
+	public func targetedDataItem(for indexPath: IndexPath?, interaction: ClientItemInteraction) -> OCDataItem? {
+		var item : OCDataItem?
+
+		if let destinationIndexPath = indexPath {
+			// Retrieve item at index path if provided
+			retrieveItem(at: destinationIndexPath, synchronous: true, action: { record, indexPath in
+				if self.clientContext?.validate(interaction: interaction, for: record) != false {
+					item = record.item
+				}
+			}, handleError: { error in
+				Log.debug("Error \(String(describing: error)) retrieving item at destinationIndexPath \(String(describing: destinationIndexPath))")
+			})
+		} else {
+			// Return root item if no index path was provided
+			item = clientContext?.rootItem
+		}
+
+		return item
 	}
 
 	// MARK: - Themeing

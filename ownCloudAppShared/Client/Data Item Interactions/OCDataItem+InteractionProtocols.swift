@@ -38,3 +38,18 @@ import ownCloudSDK
 @objc public protocol DataItemContextMenuInteraction: OCDataItem {
 	func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]?
 }
+
+// MARK: - Drag & drop
+public struct LocalDataItem {
+	var bookmarkUUID : UUID
+	var dataItem: OCDataItem
+}
+
+@objc public protocol DataItemDragInteraction: OCDataItem {
+	func provideDragItems(with context: ClientContext?) -> [UIDragItem]?
+}
+
+@objc public protocol DataItemDropInteraction: OCDataItem {
+	@objc optional func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal?
+	func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: (_ didSucceed: Bool) -> Void)
+}

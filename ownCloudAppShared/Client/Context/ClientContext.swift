@@ -65,6 +65,8 @@ public enum ClientItemInteraction {
 	case contextMenu
 	case leadingSwipe
 	case trailingSwipe
+	case drag
+	case acceptDrop
 }
 
 public class ClientContext: NSObject {
@@ -80,7 +82,7 @@ public class ClientContext: NSObject {
 	public weak var query: OCQuery?
 
 	// MARK: - Item
-	public var initialRootItem : OCItem?
+	public var rootItem : OCDataItem?
 
 	// MARK: - UI objects
 	public weak var rootViewController: UIViewController?

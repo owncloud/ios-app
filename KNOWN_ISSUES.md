@@ -7,18 +7,19 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## App
 - in the new browsing experience, some features are not yet available:
-	- drag and drop
+	- drag and drop actions
 	- search
-	- sorting
 	- a grid view
 	- breadcrumb title
+	- item / folder / usage info at the bottom of lists
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
 - the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
-- inactived state of spaces is not yet represented in the UI
+- inactivated state of spaces is not yet represented in the UI
 - Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
+- sync actions that are actually complete are not always cleared from the Status tab until a logout/login
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
@@ -41,9 +42,6 @@ It should only be used with dedicated test servers, test data - and test devices
 	- app -> FP
 	- FP -> app
 	- possibly use dedicated OC KVS + OCProgress for that
-
-- empty folders
-	- replace simple "Empty folder" message with message + direct access to actions like "Create folder", "Scan document", "Upload photo", "Take photo", … using action extensions as source
 
 - support for versions
 

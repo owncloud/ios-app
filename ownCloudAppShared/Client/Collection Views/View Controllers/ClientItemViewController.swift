@@ -47,6 +47,7 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 	public var emptyItemListDataSource : OCDataSourceArray = OCDataSourceArray()
 	public var emptyItemListDecisionSubscription : OCDataSourceSubscription?
 	public var emptyItemListItem : OCDataItemPresentable?
+	public var emptySection: CollectionViewSection?
 
 	public var loadingListItem : OCDataItemPresentable?
 
@@ -130,8 +131,8 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 			}
 		}
 
-		let emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
-		sections.append(emptySection)
+		emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
+		sections.append(emptySection!)
 
 		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true)
 
@@ -141,6 +142,9 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 		})
 
 		queryRootItemObservation = query?.observe(\OCQuery.rootItem, options: [], changeHandler: { [weak self] query, change in
+			OnMainThread(inline: true) {
+				self?.clientContext?.rootItem = query.rootItem
+			}
 			self?.recomputeContentState()
 		})
 
@@ -524,6 +528,28 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 		return true
 	}
 
+	// MARK: - Drag & Drop
+	public override func targetedDataItem(for indexPath: IndexPath?, interaction: ClientItemInteraction) -> OCDataItem? {
+		var dataItem: OCDataItem? = super.targetedDataItem(for: indexPath, interaction: interaction)
+
+		if interaction == .acceptDrop {
+			if let indexPath = indexPath {
+				if let section = section(at: indexPath.section) {
+					if (section == emptySection) || (section == driveSection) || ((dataItem as? OCItem)?.type == .file), clientContext?.hasPermission(for: interaction) == true {
+						// Return root item of view controller if a drop operation targets
+						// - the empty section
+						// - the drive (header) section
+						// - a file
+						// and drops are permitted
+						dataItem = clientContext?.rootItem
+					}
+				}
+			}
+		}
+
+		return dataItem
+	}
+
 	// MARK: - Actions
 	open weak var actionsBarViewControllerSection: CollectionViewSection?
 	open var actionsBarViewController: CollectionViewController? {
@@ -608,3 +634,4 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
  		}
  	}
 }
+
