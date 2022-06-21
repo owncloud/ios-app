@@ -172,6 +172,10 @@ extension DriveListCell {
 			cell.subtitle = subtitle
 
 			cell.coverImageResourceView.request = coverImageRequest
+			cell.isRequestingCoverImage = (coverImageRequest != nil)
+
+			cell.collectionItemRef = collectionItemRef
+			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)

@@ -59,6 +59,20 @@ public protocol InlineMessageCenter : AnyObject {
 	func showInlineMessageFor(item: OCItem)
 }
 
+//extension ClientContext {
+//	public enum DropSessionStage : CaseIterable {
+//		case begin
+//		case updated
+//		case end
+//	}
+//}
+
+@objc public protocol DropTargetsProvider : AnyObject {
+	func canProvideDropTargets(for dropSession: UIDropSession, target view: UIView) -> Bool
+	func provideDropTargets(for dropSession: UIDropSession, target view: UIView) -> [OCDataItem & OCDataItemVersioning]?
+	@objc optional func cleanupDropTargets(for: UIDropSession, target view: UIView)
+}
+
 public enum ClientItemInteraction {
 	case selection
 	case multiselection
@@ -100,8 +114,9 @@ public class ClientContext: NSObject {
 	public weak var contextMenuProvider: ContextMenuProvider?
 	public weak var swipeActionsProvider: SwipeActionsProvider?
 	public weak var inlineMessageCenter: InlineMessageCenter?
+	public weak var dropTargetsProvider: DropTargetsProvider?
 
-	public var permissionHandler : PermissionHandler?
+	public var permissionHandlers : [PermissionHandler]?
 	public var permissions : [ClientItemInteraction]?
 
 	// MARK: - Post Initialization Modifier
@@ -133,9 +148,10 @@ public class ClientContext: NSObject {
 		contextMenuProvider = inParent?.contextMenuProvider
 		swipeActionsProvider = inParent?.swipeActionsProvider
 		inlineMessageCenter = inParent?.inlineMessageCenter
+		dropTargetsProvider = inParent?.dropTargetsProvider
 
 		permissions = inParent?.permissions
-		permissionHandler = inParent?.permissionHandler
+		permissionHandlers = inParent?.permissionHandlers
 
 		modifier?(self)
 	}
@@ -155,6 +171,14 @@ public class ClientContext: NSObject {
 		return true
 	}
 
+	public func add(permissionHandler: @escaping PermissionHandler) {
+		if permissionHandlers == nil {
+			permissionHandlers = []
+		}
+
+		permissionHandlers?.append(permissionHandler)
+	}
+
 	public func validate(interaction: ClientItemInteraction, for record: OCDataItemRecord) -> Bool {
 		if let permissions = permissions {
 			if !permissions.contains(interaction) {
@@ -162,8 +186,17 @@ public class ClientContext: NSObject {
 			}
 		}
 
-		if let permissionHandler = permissionHandler {
-			return permissionHandler(self, record, interaction)
+		if let permissionHandlers = permissionHandlers {
+			var allowed = true
+
+			for permissionHandler in permissionHandlers {
+				if !permissionHandler(self, record, interaction) {
+					allowed = false
+					break
+				}
+			}
+
+			return allowed
 		}
 
 		return true

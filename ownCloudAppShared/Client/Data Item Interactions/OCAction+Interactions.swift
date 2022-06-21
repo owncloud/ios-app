@@ -28,3 +28,19 @@ extension OCAction : DataItemSelectionInteraction {
 		return true
 	}
 }
+
+extension OCAction : DataItemDropInteraction {
+	public func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal? {
+		if session.localDragSession == nil {
+			return nil
+		}
+
+		return UICollectionViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+	}
+
+	public func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (Bool) -> Void) {
+		run(options: nil, completionHandler: { error in
+			handlingCompletion(error == nil)
+		})
+	}
+}

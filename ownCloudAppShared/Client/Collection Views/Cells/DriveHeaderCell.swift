@@ -22,6 +22,14 @@ class DriveHeaderCell: DriveListCell {
 	let darkBackgroundView = UIView()
 
 	var coverObservation : NSKeyValueObservation?
+	var isRequestingCoverImage : Bool = true {
+		didSet {
+			recomputeHeight()
+		}
+	}
+
+	weak var collectionViewController: CollectionViewController?
+	var collectionItemRef: CollectionViewController.ItemRef?
 
 	deinit {
 		Theme.shared.unregister(client: self)
@@ -30,7 +38,7 @@ class DriveHeaderCell: DriveListCell {
 
 	override func configure() {
 		darkBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-		darkBackgroundView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+		darkBackgroundView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
 
 		contentView.clipsToBounds = true
 
@@ -45,6 +53,7 @@ class DriveHeaderCell: DriveListCell {
 		textOuterSpacing = 16
 
 		coverImageResourceView.fallbackView = nil
+		coverImageHeightConstraint = coverImageResourceView.heightAnchor.constraint(greaterThanOrEqualToConstant: 160)
 
 		contentView.insertSubview(darkBackgroundView, belowSubview: titleLabel)
 
@@ -52,7 +61,24 @@ class DriveHeaderCell: DriveListCell {
 
 		coverObservation = coverImageResourceView.observe(\ResourceViewHost.contentStatus, options: [.initial], changeHandler: { [weak self] viewHost, _ in
 			self?.darkBackgroundView.isHidden = (viewHost.contentStatus != .fromResource)
+			self?.recomputeHeight()
 		})
+	}
+
+	func recomputeHeight() {
+		var newHeight : CGFloat = 160
+
+		if !isRequestingCoverImage && (coverImageResourceView.contentStatus == .none) {
+			newHeight = 80
+		}
+
+		if let constantHeight = coverImageHeightConstraint?.constant, constantHeight != newHeight {
+			coverImageHeightConstraint?.constant = newHeight
+
+			if let collectionViewController = collectionViewController, let collectionItemRef = collectionItemRef {
+				collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef], animated: false)
+			}
+		}
 	}
 
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
@@ -66,7 +92,6 @@ class DriveHeaderCell: DriveListCell {
 	}
 
 	override func configureLayout() {
-		coverImageHeightConstraint = coverImageResourceView.heightAnchor.constraint(greaterThanOrEqualToConstant: 160)
 
 		NSLayoutConstraint.activate([
 			coverImageHeightConstraint!,

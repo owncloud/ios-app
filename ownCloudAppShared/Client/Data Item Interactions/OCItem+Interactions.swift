@@ -202,17 +202,32 @@ extension OCItem : DataItemDragInteraction {
 extension OCItem : DataItemDropInteraction {
 	public func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal? {
 		if session.localDragSession != nil {
+			// Prevent drop of items onto themselves - or in their existing location
+			if let dragItems = session.localDragSession?.items, let bookmarkUUID = context?.core?.bookmark.uuid {
+				for dragItem in dragItems {
+					if let localDataItem = dragItem.localObject as? LocalDataItem {
+						if let item = localDataItem.dataItem as? OCItem, localDataItem.bookmarkUUID == bookmarkUUID, item.driveID == driveID, let itemLocation = item.location {
+							if (item.path == path) || (itemLocation.parent.path == path) {
+								return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
+							}
+						}
+					}
+				}
+			}
+
+			// Return drop proposal based on item type
 			if type == .collection {
 				return UICollectionViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
 			} else {
 				return UICollectionViewDropProposal(operation: .move)
 			}
 		} else {
+			// External items from other apps can only be copied into the app
 			return UICollectionViewDropProposal(operation: .copy)
 		}
 	}
 
-	public func performDropOperation(of droppedItems: [UIDragItem], with context: ClientContext?, handlingCompletion: (_ didSucceed: Bool) -> Void) {
+	public func performDropOperation(of droppedItems: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (_ didSucceed: Bool) -> Void) {
 		guard let core = context?.core, type == .collection else {
 			handlingCompletion(false)
 			return

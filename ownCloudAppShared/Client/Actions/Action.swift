@@ -62,6 +62,7 @@ public extension OCExtensionLocationIdentifier {
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let emptyFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("emptyFolder") //!< Present in "more" options for a whole folder
 	static let multiSelection: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("multiSelection") //!< Present as action when selecting multiple items
+	static let dropAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("dropAction") //!< Present action as drop target when items are dragged
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
@@ -476,7 +477,7 @@ open class Action : NSObject {
 		return alertAction
 	}
 
-	open func provideOCAction(singleVersion: Bool = false, with additionalCompletionHandler: (() -> Void)? = nil) -> OCAction? {
+	open func provideOCAction(singleVersion: Bool = false, with additionalCompletionHandler: (() -> Void)? = nil) -> OCAction {
 		let icon = self.icon?.paddedTo(width: 36, height: nil)
 		var name = actionExtension.name
 

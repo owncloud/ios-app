@@ -51,5 +51,5 @@ public struct LocalDataItem {
 
 @objc public protocol DataItemDropInteraction: OCDataItem {
 	@objc optional func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal?
-	func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: (_ didSucceed: Bool) -> Void)
+	func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (_ didSucceed: Bool) -> Void)
 }

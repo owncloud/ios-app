@@ -23,7 +23,7 @@ class DeleteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.delete") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Delete".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .multiSelection, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "\u{08}" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -97,7 +97,7 @@ class DeleteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem || location == .multiSelection {
+		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem || location == .multiSelection || location == .dropAction {
 			return UIImage(named: "trash")?.withRenderingMode(.alwaysTemplate)
 		}
 

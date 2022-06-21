@@ -85,7 +85,8 @@ class ActionCell: ThemeableCollectionViewCell {
 
 		iconView.setContentHuggingPriority(.required, for: .horizontal)
 
-		selectedBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 10))
+		let backgroundConfig = UIBackgroundConfiguration.clear()
+		backgroundConfiguration = backgroundConfig
 	}
 
 	func configureLayout() {
@@ -135,17 +136,28 @@ class ActionCell: ThemeableCollectionViewCell {
 		}
 	}
 
+	override func updateConfiguration(using state: UICellConfigurationState) {
+		let collection = Theme.shared.activeCollection
+		var backgroundConfig = backgroundConfiguration?.updated(for: state)
+
+		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) {
+			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : UIColor(white: 0, alpha: 0.10)
+		} else {
+			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : UIColor(white: 0, alpha: 0.05)
+		}
+
+		backgroundConfig?.cornerRadius = 8
+
+		backgroundConfiguration = backgroundConfig
+	}
+
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
 
 		titleLabel.textColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
 		iconView.tintColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
 
-		backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : UIColor(white: 0, alpha: 0.05)
-		selectedBackgroundView?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : UIColor(white: 0, alpha: 0.10)
-
-		layer.cornerRadius = 8
-		selectedBackgroundView?.layer.cornerRadius = 8
+		setNeedsUpdateConfiguration()
 	}
 }
 

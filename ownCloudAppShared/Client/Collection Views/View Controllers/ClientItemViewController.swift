@@ -20,8 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public class ClientItemViewController: CollectionViewController, SortBarDelegate {
-	// UISearchControllerDelegate, UISearchResultsUpdating {
+open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider {
 	public enum ContentState : String, CaseIterable {
 		case loading
 
@@ -60,7 +59,8 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 		var sections : [ CollectionViewSection ] = []
 
 		let itemControllerContext = ClientContext(with: inContext, modifier: { context in
-			context.permissionHandler = { (context, record, interaction) in
+			// Add permission handler limiting interactions for specific items and scenarios
+			context.add(permissionHandler: { (context, record, interaction) in
 				switch interaction {
 					case .selection:
 						if record?.type == .drive {
@@ -78,10 +78,18 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 
 						return false
 
+					case .drag:
+						// Do not allow drags when in multi-selection mode
+						return (context?.originatingViewController as? ClientItemViewController)?.isMultiSelecting == false
+
+					case .contextMenu:
+						// Do not allow context menus when in multi-selection mode
+						return (context?.originatingViewController as? ClientItemViewController)?.isMultiSelecting == false
+
 					default:
 						return true
 				}
-			}
+			})
 		})
 		itemControllerContext.postInitializationModifier = { (owner, context) in
 			if context.openItemHandler == nil {
@@ -89,6 +97,9 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 			}
 			if context.moreItemHandler == nil {
 				context.moreItemHandler = owner as? MoreItemAction
+			}
+			if context.dropTargetsProvider == nil {
+				context.dropTargetsProvider = owner as? DropTargetsProvider
 			}
 
 			context.query = (owner as? ClientItemViewController)?.query
@@ -174,7 +185,7 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 		}
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -301,13 +312,7 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 		let actionContext = ActionContext(viewController: originatingViewController, core: core, query: context.query, items: [item], location: actionsLocation, sender: self)
 
 		let emptyFolderActions = Action.sortedApplicableActions(for: actionContext)
-		var actions : [OCAction] = []
-
-		for emptyFolderAction in emptyFolderActions {
-			if let action = emptyFolderAction.provideOCAction() {
-				actions.append(action)
-			}
-		}
+		let actions = emptyFolderActions.map({ action in action.provideOCAction() })
 
 		return (actions.count > 0) ? actions : nil
 	}
@@ -498,9 +503,7 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 
 				for action in actions {
 					action.completionHandler = actionCompletionHandler
-					if let ocAction = action.provideOCAction(singleVersion: true) {
-						actionItems.append(ocAction)
-					}
+					actionItems.append(action.provideOCAction(singleVersion: true))
 				}
 			}
 
@@ -550,88 +553,77 @@ public class ClientItemViewController: CollectionViewController, SortBarDelegate
 		return dataItem
 	}
 
-	// MARK: - Actions
-	open weak var actionsBarViewControllerSection: CollectionViewSection?
-	open var actionsBarViewController: CollectionViewController? {
-		willSet {
-			if let actionsBarViewController = actionsBarViewController {
-				removeStacked(child: actionsBarViewController)
+	// MARK: Drop Targets
+	var dropTargetsActionContext: ActionContext?
+
+	public func canProvideDropTargets(for dropSession: UIDropSession, target: UIView) -> Bool {
+		for item in dropSession.items {
+			if item.localObject == nil, item.itemProvider.hasItemConformingToTypeIdentifier("public.folder") {
+				// folders can't be imported from other apps
+				return false
+			} else if let localDataItem = item.localObject as? LocalDataItem,
+				  clientContext?.core?.bookmark.uuid != localDataItem.bookmarkUUID,
+				  (localDataItem.dataItem as? OCItem)?.type == .collection {
+				// folders from other accounts can't be dropped
+				return false
 			}
 		}
 
-		didSet {
-			if let actionsBarViewController = actionsBarViewController {
-				addStacked(child: actionsBarViewController, position: .bottom)
+		if dropSession.localDragSession != nil {
+			if provideDropItems(from: dropSession, target: target).count == 0 {
+				return false
 			}
 		}
+
+		return true
 	}
 
-	func showActionsBar(with datasource: OCDataSource, context: ClientContext? = nil) {
-		if actionsBarViewController == nil {
-			let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(48), heightDimension: .fractionalHeight(1))
-			let item = NSCollectionLayoutItem(layoutSize: itemSize)
-			let actionSection = CollectionViewSection(identifier: "actions", dataSource: datasource, cellStyle: .gridCell, cellLayout: .sideways(item: item, groupSize: itemSize, edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(10), top: .fixed(0), trailing: .fixed(10), bottom: .fixed(0)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0), orthogonalScrollingBehaviour: .continuous), clientContext: clientContext)
-			actionSection.animateDifferences = false
-			let actionsViewController = CollectionViewController(context: context, sections: [
-				actionSection
-			])
-			actionsBarViewControllerSection = actionSection
+	public func provideDropItems(from dropSession: UIDropSession, target view: UIView) -> [OCItem] {
+		var items : [OCItem] = []
+		var allItemsFromSameAccount = true
 
-			actionsViewController.view.translatesAutoresizingMaskIntoConstraints = false
-			actionsViewController.view.heightAnchor.constraint(equalToConstant: 72).isActive = true
-//			actionsViewController.view.widthAnchor.constraint(greaterThanOrEqualToConstant: 256).isActive = true
-			(actionsViewController.view as? UICollectionView)?.showsVerticalScrollIndicator = false
-			(actionsViewController.view as? UICollectionView)?.alwaysBounceVertical = false
-			(actionsViewController.view as? UICollectionView)?.isScrollEnabled = false
-
-			actionsBarViewController = actionsViewController
-		}
-	}
-
-	func closeActionsBar() {
-		actionsBarViewController = nil
-	}
-
-	// MARK: - Search
-	open var searchController: UISearchController?
-
-	// MARK: - Search: UISearchResultsUpdating Delegate
-	open func updateSearchResults(for searchController: UISearchController) {
-//		let searchText = searchController.searchBar.text ?? ""
-
-//		applySearchFilter(for: (searchText == "") ? nil : searchText, to: query)
-	}
-
-	open func willPresentSearchController(_ searchController: UISearchController) {
-//		self.sortBar?.showSelectButton = false
-	}
-
-	open func willDismissSearchController(_ searchController: UISearchController) {
-//		self.sortBar?.showSelectButton = true
-	}
-
-	open func applySearchFilter(for searchText: String?, to query: OCQuery) {
- 		if let searchText = searchText {
-			let queryCondition = OCQueryCondition.fromSearchTerm(searchText)
- 			let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
- 				if let item = item, let queryCondition = queryCondition {
-	 				return queryCondition.fulfilled(by: item)
+		if let bookmarkUUID = clientContext?.core?.bookmark.uuid {
+			for dragItem in dropSession.items {
+				if let localDataItem = dragItem.localObject as? LocalDataItem {
+					if localDataItem.bookmarkUUID != bookmarkUUID {
+						allItemsFromSameAccount = false
+						break
+					} else {
+						if let item = localDataItem.dataItem as? OCItem {
+							items.append(item)
+						}
+					}
+				} else {
+					allItemsFromSameAccount = false
+					break
 				}
- 				return false
- 			}
+			}
+		}
 
- 			if let filter = query.filter(withIdentifier: "text-search") {
- 				query.updateFilter(filter, applyChanges: { filterToChange in
- 					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
- 				})
- 			} else {
- 				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
- 			}
- 		} else {
- 			if let filter = query.filter(withIdentifier: "text-search") {
- 				query.removeFilter(filter)
- 			}
- 		}
- 	}
+		if !allItemsFromSameAccount {
+			items.removeAll()
+		}
+
+		return items
+	}
+
+	public func provideDropTargets(for dropSession: UIDropSession, target view: UIView) -> [OCDataItem & OCDataItemVersioning]? {
+		let items = provideDropItems(from: dropSession, target: view)
+
+		if items.count > 0, let core = clientContext?.core {
+			dropTargetsActionContext = ActionContext(viewController: self, core: core, items: items, location: OCExtensionLocation(ofType: .action, identifier: .dropAction))
+
+			if let dropTargetsActionContext = dropTargetsActionContext {
+				let actions = Action.sortedApplicableActions(for: dropTargetsActionContext)
+
+				return actions.map { action in action.provideOCAction(singleVersion: true) }
+			}
+		}
+
+		return nil
+	}
+
+	public func cleanupDropTargets(for dropSession: UIDropSession, target view: UIView) {
+		dropTargetsActionContext = nil
+	}
 }
-

@@ -7,7 +7,6 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## App
 - in the new browsing experience, some features are not yet available:
-	- drag and drop actions
 	- search
 	- a grid view
 	- breadcrumb title
@@ -20,6 +19,7 @@ It should only be used with dedicated test servers, test data - and test devices
 - Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
 - sync actions that are actually complete are not always cleared from the Status tab until a logout/login
+- dropping an item into its source/origin folder (same view controller) triggers a MOVE that fails
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
