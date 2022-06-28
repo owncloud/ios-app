@@ -183,7 +183,7 @@ extension DriveListCell {
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-			switch cellConfiguration?.style {
+			switch cellConfiguration?.style.type {
 				case .header:
 					return collectionView.dequeueConfiguredReusableCell(using: driveHeaderCellRegistration, for: indexPath, item: itemRef)
 

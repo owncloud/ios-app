@@ -26,15 +26,21 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public var supportsHierarchicContent: Bool
 	public var usesStackViewRoot: Bool
 
-	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false) {
+	var highlightItemReference: OCDataItemReference?
+	var didHighlightItemReference: Bool = false
+
+	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false, highlightItemReference: OCDataItemReference? = nil) {
 		supportsHierarchicContent = hierarchic
 		usesStackViewRoot = useStackViewRoot
+		self.highlightItemReference = highlightItemReference
 
 		super.init(nibName: nil, bundle: nil)
 
 		inContext?.postInitialize(owner: self)
 
-		clientContext = inContext
+		clientContext = ClientContext(with: inContext, modifier: { context in
+			context.originatingViewController = self
+		})
 
 		if let core = clientContext?.core {
 			self.navigationItem.title = core.bookmark.shortName
@@ -240,20 +246,63 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>()
 
 		for section in sections {
-			snapshot.appendSections([section.identifier])
-
-			section.populate(snapshot: &snapshot)
+			if !section.hidden {
+				snapshot.appendSections([section.identifier])
+				section.populate(snapshot: &snapshot)
+			}
 		}
 
 		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences)
 	}
 
-	public func section(at index: Int) -> CollectionViewSection? {
-		if (index >= 0) && (index < sections.count) {
-			return sections[index]
+	public func section(at targetIndex: Int) -> CollectionViewSection? {
+		if (targetIndex >= 0) && (targetIndex < sections.count) {
+			var index : Int = 0
+
+			for section in sections {
+				if !section.hidden {
+					if index == targetIndex {
+						return section
+					}
+
+					index += 1
+				}
+			}
 		}
 
 		return nil
+	}
+
+	public func index(of findSection: CollectionViewSection) -> Int? {
+		var index : Int = 0
+
+		for section in sections {
+			if !section.hidden {
+				if section == findSection {
+					return index
+				}
+
+				index += 1
+			}
+		}
+
+		return nil
+	}
+
+	public func updateSections(with block: (_ sections: [CollectionViewSection]) -> Void, animated: Bool) {
+		block(sections)
+		updateSource(animatingDifferences: animated)
+	}
+
+	public func reload(sections: [CollectionViewSection], animated: Bool) {
+		let reloadSectionIDs = sections.map({ section in return section.identifier })
+
+		if reloadSectionIDs.count > 0 {
+			var snapshot = collectionViewDataSource.snapshot()
+			snapshot.reloadSections(reloadSectionIDs)
+
+			collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+		}
 	}
 
 	// MARK: - Item references
@@ -429,7 +478,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			}
 
 			// Then try opening
-			if selectionInteraction.openItem?(in: self, with: clientContext, animated: true, pushViewController: true, completion: { [weak self] success in
+			if selectionInteraction.openItem?(from: self, with: clientContext, animated: true, pushViewController: true, completion: { [weak self] success in
 				self?.collectionView.deselectItem(at: indexPath, animated: true)
 			}) != nil {
 				return true
@@ -477,6 +526,13 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		return nil
 	}
 
+	// MARK: - Highlighting
+	public func highlight(itemRef: OCDataItemReference, animated: Bool) {
+		if let itemIndexPath = collectionViewDataSource.indexPath(for: itemRef) {
+			collectionView.scrollToItem(at: itemIndexPath, at: .centeredVertically, animated: animated)
+		}
+	}
+
 	// MARK: - Actions Bar
 	open weak var actionsBarViewControllerSection: CollectionViewSection?
 	open var actionsBarViewController: CollectionViewController? {
@@ -497,7 +553,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if actionsBarViewController == nil {
 			let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(48), heightDimension: .fractionalHeight(1))
 			let item = NSCollectionLayoutItem(layoutSize: itemSize)
-			let actionSection = CollectionViewSection(identifier: "actions", dataSource: datasource, cellStyle: .gridCell, cellLayout: .sideways(item: item, groupSize: itemSize, edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(10), top: .fixed(0), trailing: .fixed(10), bottom: .fixed(0)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0), orthogonalScrollingBehaviour: .continuous), clientContext: clientContext)
+			let actionSection = CollectionViewSection(identifier: "actions", dataSource: datasource, cellStyle: .init(with: .gridCell), cellLayout: .sideways(item: item, groupSize: itemSize, edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(10), top: .fixed(0), trailing: .fixed(10), bottom: .fixed(0)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0), orthogonalScrollingBehaviour: .continuous), clientContext: clientContext)
 			actionSection.animateDifferences = false
 			let actionsViewController = CollectionViewController(context: context, sections: [
 				actionSection

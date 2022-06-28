@@ -19,8 +19,9 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import Intents
 
-open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider {
+open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider, SearchViewControllerDelegate, RevealItemAction {
 	public enum ContentState : String, CaseIterable {
 		case loading
 
@@ -49,11 +50,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public var emptySection: CollectionViewSection?
 
 	public var loadingListItem : OCDataItemPresentable?
+	public var emptySearchResultsItem: OCDataItemPresentable?
 
 	private var stateObservation : NSKeyValueObservation?
 	private var queryRootItemObservation : NSKeyValueObservation?
 
-	public init(context inContext: ClientContext?, query inQuery: OCQuery, reveal inItem: OCItem? = nil) {
+	public init(context inContext: ClientContext?, query inQuery: OCQuery, highlightItemReference: OCDataItemReference? = nil) {
 		query = inQuery
 
 		var sections : [ CollectionViewSection ] = []
@@ -98,11 +100,19 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			if context.moreItemHandler == nil {
 				context.moreItemHandler = owner as? MoreItemAction
 			}
+			if context.revealItemHandler == nil {
+				context.revealItemHandler = owner as? RevealItemAction
+			}
 			if context.dropTargetsProvider == nil {
 				context.dropTargetsProvider = owner as? DropTargetsProvider
 			}
 
 			context.query = (owner as? ClientItemViewController)?.query
+			if let sortMethod = (owner as? ClientItemViewController)?.sortMethod,
+			   let sortDirection = (owner as? ClientItemViewController)?.sortDirection {
+				// Set default sort descriptor
+				context.sortDescriptor = SortDescriptor(method: sortMethod, direction: sortDirection)
+			}
 
 			context.originatingViewController = owner as? UIViewController
 		}
@@ -127,7 +137,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				driveSectionDataSource = OCDataSourceComposition(sources: [ singleDriveDatasource!, driveAdditionalItemsDataSource ])
 
 				// Create drive section from combined data source
-				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .header, cellLayout: .list(appearance: .plain))
+				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
 			}
 
 			itemSectionDataSource = OCDataSourceComposition(sources: [itemsLeadInDataSource, queryResultsDatasource, itemsTrailingDataSource])
@@ -142,10 +152,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 		}
 
-		emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .fillSpace, cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
+		emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .init(with: .fillSpace), cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
 		sections.append(emptySection!)
 
-		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true)
+		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true, highlightItemReference: highlightItemReference)
 
 		// Track query state and recompute content state when it changes
 		stateObservation = itemsQueryDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in
@@ -178,7 +188,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}, on: .main, trackDifferences: false, performIntialUpdate: true)
 		}
 
-		query?.sortComparator = SortMethod.alphabetically.comparator(direction: .ascendant)
+		// Initialize sort method
+		handleSortMethodChange()
 
 		if let navigationTitle = query?.queryLocation?.isRoot == true ? clientContext?.drive?.name : query?.queryLocation?.lastPathComponent {
 			navigationItem.title = navigationTitle
@@ -233,6 +244,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			viewActionButtons.append(plusBarButton)
 		}
 
+		// Add search button
+		let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
+		viewActionButtons.append(searchButton)
+
 		self.navigationItem.rightBarButtonItems = viewActionButtons
 
 		// Setup sort bar
@@ -240,8 +255,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.heightAnchor.constraint(equalToConstant: 40).isActive = true
 		sortBar?.delegate = self
-		sortBar?.sortMethod = self.sortMethod
-		sortBar?.searchScope = self.searchScope
+		sortBar?.sortMethod = sortMethod
+		sortBar?.searchScope = searchScope
 		sortBar?.showSelectButton = true
 
 		itemsLeadInDataSource.setVersionedItems([ sortBar! ])
@@ -249,17 +264,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
 		collectionView.allowsMultipleSelectionDuringEditing = true
-
-		// Setup search controller
-//		searchController = UISearchController(searchResultsController: nil)
-//		searchController?.searchResultsUpdater = self
-//		searchController?.obscuresBackgroundDuringPresentation = false
-//		searchController?.hidesNavigationBarDuringPresentation = true
-//		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
-//		searchController?.delegate = self
-//
-//		navigationItem.searchController = searchController
-//		navigationItem.hidesSearchBarWhenScrolling = false
 	}
 
 	public override func viewWillAppear(_ animated: Bool) {
@@ -395,6 +399,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	open var sortMethod: SortMethod {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
+			handleSortMethodChange()
 		}
 
 		get {
@@ -402,11 +407,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			return sort
 		}
 	}
-	open var searchScope: SearchScope = .local {
-		didSet {
-//			updateSearchPlaceholder()
-		}
-	}
+	open var searchScope: SortBarSearchScope = .local // only for SortBarDelegate protocol conformance
 	open var sortDirection: SortDirection {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
@@ -416,6 +417,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			let direction = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
 			return direction
 		}
+	}
+	open func handleSortMethodChange() {
+		let sortDescriptor = SortDescriptor(method: sortMethod, direction: sortDirection)
+
+		clientContext?.sortDescriptor = sortDescriptor
+		query?.sortComparator = sortDescriptor.comparator
 	}
 
 	public func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
@@ -431,7 +438,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 //		}
 	}
 
-	public func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+	public func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
+		 // only for SortBarDelegate protocol conformance
 	}
 
 	public func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
@@ -625,5 +633,97 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	public func cleanupDropTargets(for dropSession: UIDropSession, target view: UIView) {
 		dropTargetsActionContext = nil
+	}
+
+	// MARK: - Reveal
+	public func reveal(item: OCDataItem, context: ClientContext, sender: AnyObject?) -> Bool {
+		if let revealInteraction = item as? DataItemSelectionInteraction {
+			if revealInteraction.revealItem?(from: self, with: clientContext, animated: true, pushViewController: true, completion: nil) != nil {
+				return true
+			}
+		}
+		return false
+	}
+
+	// MARK: - Search
+	open var searchController: UISearchController?
+	var searchViewController: SearchViewController?
+
+	@objc open func startSearch() {
+		if searchViewController == nil {
+			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
+				searchViewController = SearchViewController(with: clientContext, scopes: [
+					// In this folder
+					.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
+
+					// + Folder and subfolders
+					// + This space
+
+					// Account
+					.globalSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized)
+				], delegate: self)
+
+				if let searchViewController = searchViewController {
+					self.addStacked(child: searchViewController, position: .top)
+				}
+			}
+		}
+	}
+
+	func endSearch() {
+		if let searchViewController = searchViewController {
+			self.removeStacked(child: searchViewController)
+		}
+		searchResultsDataSource = nil
+		searchViewController = nil
+	}
+
+	// MARK: - SearchViewControllerDelegate
+	var searchResultsDataSource: OCDataSource? {
+		willSet {
+			if let oldDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsQueryDataSource, oldDataSource != itemsQueryDataSource {
+				itemSectionDataSource?.removeSources([ oldDataSource ])
+				itemSectionDataSource?.setInclude(true, for: itemsQueryDataSource)
+			}
+		}
+
+		didSet {
+			if let newDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsQueryDataSource, newDataSource != itemsQueryDataSource {
+				itemSectionDataSource?.setInclude(false, for: itemsQueryDataSource)
+				itemSectionDataSource?.insertSources([ newDataSource ], after: itemsQueryDataSource)
+			}
+		}
+	}
+
+	private var preSearchCellStyle : CollectionViewCellStyle?
+
+	public func searchBegan(for viewController: SearchViewController) {
+		preSearchCellStyle = itemSection?.cellStyle
+
+		updateSections(with: { sections in
+			self.driveSection?.hidden = true
+		}, animated: true)
+	}
+
+	public func search(for viewController: SearchViewController, withResults resultsDataSource: OCDataSource?, style: CollectionViewCellStyle?) {
+		if searchResultsDataSource != resultsDataSource {
+			searchResultsDataSource = resultsDataSource
+		}
+
+		if let style = style ?? preSearchCellStyle, style != itemSection?.cellStyle {
+			itemSection?.cellStyle = style
+		}
+	}
+
+	public func searchEnded(for viewController: SearchViewController) {
+		updateSections(with: { sections in
+			self.driveSection?.hidden = false
+		}, animated: true)
+
+		if let preSearchCellStyle = preSearchCellStyle {
+			itemSection?.cellStyle = preSearchCellStyle
+		}
+
+		endSearch()
 	}
 }

@@ -28,7 +28,6 @@ public enum SortDirection: Int {
 }
 
 public enum SortMethod: Int {
-
 	case alphabetically = 0
 	case kind = 1
 	case size = 2
@@ -210,5 +209,21 @@ public enum SortMethod: Int {
 		}
 
 		return combinedComparator ?? comparator
+	}
+}
+
+public class SortDescriptor: NSObject {
+	public var method: SortMethod
+	public var direction: SortDirection
+
+	public init(method inMethod: SortMethod, direction inDirection: SortDirection) {
+		method = inMethod
+		direction = inDirection
+
+		super.init()
+	}
+
+	public var comparator: OCSort {
+		return method.comparator(direction: direction)
 	}
 }

@@ -182,17 +182,30 @@ public class CollectionViewSection: NSObject {
 
 	weak public var collectionViewController : CollectionViewController?
 
-	public var cellStyle : CollectionViewCellStyle //!< Use .cellConfigurationCustomizer for per-cell styling
+	private var _cellStyle : CollectionViewCellStyle
+	public var cellStyle : CollectionViewCellStyle { //!< Use .cellConfigurationCustomizer for per-cell styling
+		get {
+			return _cellStyle
+		}
+		set {
+			_cellStyle = newValue
+
+			OnMainThread {
+				self.collectionViewController?.reload(sections: [self], animated: false)
+			}
+		}
+	}
 	public var clientContext: ClientContext?
 	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
 
 	public var animateDifferences: Bool? //!< If not specified, falls back to collectionViewController.animateDifferences
+	public var hidden : Bool = false
 
 	public var cellLayout: CellLayout
 
-	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?, cellStyle : CollectionViewCellStyle = .tableCell, cellLayout: CellLayout = .list(appearance: .plain), clientContext: ClientContext? = nil ) {
+	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?, cellStyle : CollectionViewCellStyle = .init(with:.tableCell), cellLayout: CellLayout = .list(appearance: .plain), clientContext: ClientContext? = nil ) {
 		self.identifier = identifier
-		self.cellStyle = cellStyle
+		_cellStyle = cellStyle
 		self.cellLayout = cellLayout
 
 		super.init()
@@ -222,6 +235,16 @@ public class CollectionViewSection: NSObject {
 	// MARK: - Item provider
 	func populate(snapshot: inout NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>) {
 		if let datasourceSnapshot = dataSourceSubscription?.snapshotResettingChangeTracking(true) {
+			if let collectionViewController = collectionViewController, let highlightItemReference = collectionViewController.highlightItemReference, collectionViewController.didHighlightItemReference == false {
+				if datasourceSnapshot.items.contains(highlightItemReference) {
+					collectionViewController.didHighlightItemReference = true
+
+					OnMainThread(after: 0.1) {
+						collectionViewController.highlight(itemRef: highlightItemReference, animated: true)
+					}
+				}
+			}
+
 			if let wrappedItems = collectionViewController?.wrap(references: datasourceSnapshot.items, forSection: identifier) {
 				snapshot.appendItems(wrappedItems, toSection: identifier)
 			}
@@ -237,7 +260,9 @@ public class CollectionViewSection: NSObject {
 	func provideReusableCell(for collectionView: UICollectionView, collectionItemRef: CollectionViewController.ItemRef, indexPath: IndexPath) -> UICollectionViewCell {
 		var cell: UICollectionViewCell?
 
-		if let (dataItemRef, _) = collectionViewController?.unwrap(collectionItemRef) {
+		if let collectionViewController = collectionViewController {
+			let (dataItemRef, _) = collectionViewController.unwrap(collectionItemRef)
+
 			if let itemRecord = try? dataSource?.record(forItemRef: dataItemRef) {
 				var cellProvider = CollectionViewCellProvider.providerFor(itemRecord)
 
@@ -245,8 +270,10 @@ public class CollectionViewSection: NSObject {
 					cellProvider = CollectionViewCellProvider.providerFor(.presentable)
 				}
 
+				let doHighlight = collectionViewController.highlightItemReference == dataItemRef
+
 				if let cellProvider = cellProvider, let dataSource = dataSource {
-					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController?.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, clientContext: clientContext)
+					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, highlight: doHighlight, clientContext: clientContext)
 
 					if let cellConfigurationCustomizer = cellConfigurationCustomizer {
 						cellConfigurationCustomizer(collectionView, cellConfiguration, itemRecord, collectionItemRef, indexPath)

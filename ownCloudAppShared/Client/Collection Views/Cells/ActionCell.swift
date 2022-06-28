@@ -186,7 +186,7 @@ extension ActionCell {
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .action, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-			switch cellConfiguration?.style {
+			switch cellConfiguration?.style.type {
 				case .gridCell:
 					return collectionView.dequeueConfiguredReusableCell(using: gridActionCellRegistration, for: indexPath, item: itemRef)
 

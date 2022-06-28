@@ -35,7 +35,7 @@ public class SegmentedControl: UISegmentedControl {
 	}
 }
 
-public enum SearchScope : Int, CaseIterable {
+public enum SortBarSearchScope : Int, CaseIterable {
 	case global
 	case local
 
@@ -55,11 +55,11 @@ public protocol SortBarDelegate: AnyObject {
 
 	var sortDirection: SortDirection { get set }
 	var sortMethod: SortMethod { get set }
-	var searchScope: SearchScope { get set }
+	var searchScope: SortBarSearchScope { get set }
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
 
-	func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope)
+	func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 
@@ -75,7 +75,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - Constants
-	let sideButtonsSize: CGSize = CGSize(width: 44.0, height: 44.0)
+	let sideButtonsSize: CGSize = CGSize(width: 40.0, height: 40.0)
 	let leftPadding: CGFloat = 16.0
 	let rightPadding: CGFloat = 20.0
 	let rightSelectButtonPadding: CGFloat = 8.0
@@ -117,7 +117,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			// Woraround for Accessibility: remove all elements, when element is hidden, otherwise the elements are still available for accessibility
 			if oldValue == false {
-				for scope in SearchScope.allCases {
+				for scope in SortBarSearchScope.allCases {
 					searchScopeSegmentedControl?.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
 				}
 				searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
@@ -155,7 +155,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		}
 	}
 
-	public var searchScope : SearchScope {
+	public var searchScope : SortBarSearchScope {
 		didSet {
 			delegate?.searchScope = searchScope
 			searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
@@ -164,7 +164,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 	// MARK: - Init & Deinit
 
-	public init(frame: CGRect = .zero, sortMethod: SortMethod, searchScope: SearchScope = .local) {
+	public init(frame: CGRect = .zero, sortMethod: SortMethod, searchScope: SortBarSearchScope = .local) {
 		selectButton = UIButton()
 		sortButton = UIButton(type: .system)
 		searchScopeSegmentedControl = SegmentedControl()
@@ -292,7 +292,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	// MARK: - Actions
 	@objc private func searchScopeValueChanged() {
 		if let selectedIndex = searchScopeSegmentedControl?.selectedSegmentIndex {
-			self.searchScope = SearchScope(rawValue: selectedIndex)!
+			self.searchScope = SortBarSearchScope(rawValue: selectedIndex)!
 			delegate?.sortBar(self, didUpdateSearchScope: self.searchScope)
 		}
 	}

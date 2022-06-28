@@ -22,7 +22,7 @@ import ownCloudApp
 
 // MARK: - Selection > Open
 extension OCDrive : DataItemSelectionInteraction {
-	public func openItem(in viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
 		let driveContext = ClientContext(with: context, modifier: { context in
 			context.drive = self
 		})

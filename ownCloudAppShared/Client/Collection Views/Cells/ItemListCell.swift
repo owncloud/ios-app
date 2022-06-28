@@ -360,7 +360,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		self.updateLabels(with: item)
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
-		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
+		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : !showMoreButton
 
 		self.moreButton.accessibilityLabel = "Actions".localized
 		self.moreButton.accessibilityIdentifier = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
@@ -499,7 +499,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 			moreButton.isHidden = true
 			messageButton.isHidden = true
 		} else {
-			moreButton.isHidden = hasMessageForItem
+			moreButton.isHidden = hasMessageForItem || !showMoreButton
 			messageButton.isHidden = !hasMessageForItem
 
 			progressView?.removeFromSuperview()
@@ -537,7 +537,15 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	}
 
 	// MARK: - Editing mode
-	open func setMoreButton(hidden:Bool, animated: Bool = false) {
+	var showMoreButton: Bool = true {
+		didSet {
+			if showMoreButton != oldValue {
+				setMoreButton(hidden: !showMoreButton, animated: false)
+			}
+		}
+	}
+
+	open func setMoreButton(hidden: Bool, animated: Bool = false) {
 		if hidden || isMoreButtonPermanentlyHidden {
 			moreButtonWidthConstraint?.constant = 0
 		} else {
@@ -553,10 +561,10 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		}
 	}
 
-	var showRevealButton : Bool = false {
+	var showRevealButton: Bool = false {
 		didSet {
 			if showRevealButton != oldValue {
-				self.setRevealButton(hidden: !showRevealButton, animated: false)
+				setRevealButton(hidden: !showRevealButton, animated: false)
 			}
 		}
 	}
@@ -615,6 +623,33 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	}
 }
 
+public extension CollectionViewCellStyle.StyleOptionKey {
+	static let showRevealButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showRevealButton")
+	static let showMoreButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showMoreButton")
+}
+
+public extension CollectionViewCellStyle {
+	var showRevealButton : Bool {
+		get {
+			return options[.showRevealButton] as? Bool ?? false
+		}
+
+		set {
+			options[.showRevealButton] = newValue
+		}
+	}
+
+	var showMoreButton : Bool {
+		get {
+			return options[.showMoreButton] as? Bool ?? true
+		}
+
+		set {
+			options[.showMoreButton] = newValue
+		}
+	}
+}
+
 extension ItemListCell {
 	static func registerCellProvider() {
 		let itemListCellRegistration = UICollectionView.CellRegistration<ItemListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
@@ -626,15 +661,24 @@ extension ItemListCell {
 					cell.item = ocItem
 				}
 
+				cell.showRevealButton = cellConfiguration.style.showRevealButton
+				cell.showMoreButton = cellConfiguration.style.showMoreButton
+
 				cell.accessories = [
 					.multiselect(),
-					.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: cell.actionViewContainer /* UIButton(configuration: .borderedTinted()) */, placement: .trailing(displayed: .whenNotEditing)))
+					.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: cell.actionViewContainer, placement: .trailing(displayed: .whenNotEditing)))
 				]
 			})
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .item, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-			return collectionView.dequeueConfiguredReusableCell(using: itemListCellRegistration, for: indexPath, item: itemRef)
+			let cell = collectionView.dequeueConfiguredReusableCell(using: itemListCellRegistration, for: indexPath, item: itemRef)
+
+			if cellConfiguration?.highlight == true {
+				cell.isHighlighted = true
+			}
+
+			return cell
 		}))
 	}
 }

@@ -19,12 +19,34 @@
 import UIKit
 import ownCloudSDK
 
-public enum CollectionViewCellStyle {
-	case header
-	case footer
-	case tableCell
-	case gridCell
-	case fillSpace
+open class CollectionViewCellStyle: NSObject {
+	public enum StyleType {
+		case header
+		case footer
+		case tableCell
+		case gridCell
+		case fillSpace
+	}
+
+	public struct StyleOptionKey : Hashable {
+		var rawValue: String
+	}
+
+	public var type: StyleType
+	public var options: [StyleOptionKey : Any] = [:]
+
+	public init(with type: StyleType) {
+		self.type = type
+		super.init()
+	}
+
+	public convenience init(from style: CollectionViewCellStyle, changing: (CollectionViewCellStyle) -> Void) {
+		self.init(with: style.type)
+
+		self.options = style.options
+
+		changing(self)
+	}
 }
 
 public class CollectionViewCellConfiguration: NSObject {
@@ -37,10 +59,13 @@ public class CollectionViewCellConfiguration: NSObject {
 	public weak var hostViewController: CollectionViewController?
 	public weak var clientContext: ClientContext?
 
-	public var style : CollectionViewCellStyle
+	public var style: CollectionViewCellStyle
 
-	public init(source: OCDataSource? = nil, core: OCCore? = nil, collectionItemRef: CollectionViewController.ItemRef? = nil, record: OCDataItemRecord? = nil, hostViewController: CollectionViewController?, style: CollectionViewCellStyle = .tableCell, clientContext: ClientContext? = nil) {
+	public var highlight: Bool = false
+
+	public init(source: OCDataSource? = nil, core: OCCore? = nil, collectionItemRef: CollectionViewController.ItemRef? = nil, record: OCDataItemRecord? = nil, hostViewController: CollectionViewController?, style: CollectionViewCellStyle = .init(with: .tableCell), highlight: Bool = false, clientContext: ClientContext? = nil) {
 		self.style = style
+		self.highlight = highlight
 
 		super.init()
 

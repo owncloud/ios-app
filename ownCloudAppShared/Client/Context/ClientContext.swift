@@ -42,7 +42,6 @@ public protocol ActionProgressHandlerProvider : AnyObject {
 
 public protocol RevealItemAction : AnyObject {
 	@discardableResult func reveal(item: OCDataItem, context: ClientContext, sender: AnyObject?) -> Bool
-	func showReveal(at path: IndexPath) -> Bool
 }
 
 public protocol ContextMenuProvider : AnyObject {
@@ -95,7 +94,7 @@ public class ClientContext: NSObject {
 	public var drive: OCDrive?
 	public weak var query: OCQuery?
 
-	// MARK: - Item
+	// MARK: - Items
 	public var rootItem : OCDataItem?
 
 	// MARK: - UI objects
@@ -116,8 +115,24 @@ public class ClientContext: NSObject {
 	public weak var inlineMessageCenter: InlineMessageCenter?
 	public weak var dropTargetsProvider: DropTargetsProvider?
 
+	// MARK: - Permissions
 	public var permissionHandlers : [PermissionHandler]?
 	public var permissions : [ClientItemInteraction]?
+
+	// MARK: - Display options
+	@objc public dynamic var sortDescriptor: SortDescriptor?
+	/*
+	public var sortMethod : SortMethod? {
+		didSet {
+			notifyObservers(ofChanged: .sortMethod)
+		}
+	}
+	public var sortDirection: SortDirection? {
+		didSet {
+			notifyObservers(ofChanged: .sortDirection)
+		}
+	}
+	*/
 
 	// MARK: - Post Initialization Modifier
 	// allows postponing of a client context passed into another object until the object it is passed into is initialized and can be referenced
@@ -150,6 +165,8 @@ public class ClientContext: NSObject {
 		inlineMessageCenter = inParent?.inlineMessageCenter
 		dropTargetsProvider = inParent?.dropTargetsProvider
 
+		sortDescriptor = inParent?.sortDescriptor
+
 		permissions = inParent?.permissions
 		permissionHandlers = inParent?.permissionHandlers
 
@@ -161,6 +178,47 @@ public class ClientContext: NSObject {
 		postInitializationModifier = nil
 	}
 
+	// MARK: - Change observation
+	// (for properties that aren't KVO-observable)
+	public enum Property : CaseIterable {
+		case sortMethod
+		case sortDirection
+	}
+	public typealias PropertyChangeHandler = (_ context: ClientContext, _ property: Property) -> Void
+	public typealias PropertyObserverUUID = UUID
+	struct PropertyObserver {
+		var properties: [Property]
+		var changeHandler: PropertyChangeHandler
+		var uuid: PropertyObserverUUID
+	}
+	var propertyObservers : [PropertyObserver] = []
+	public func addObserver(for properties: [Property], initial: Bool = false, with handler: @escaping PropertyChangeHandler) -> PropertyObserverUUID {
+		let observer = PropertyObserver(properties: properties, changeHandler: handler, uuid: UUID())
+
+		if initial {
+			for property in properties {
+				observer.changeHandler(self, property)
+			}
+		}
+
+		propertyObservers.append(observer)
+
+		return observer.uuid
+	}
+	public func removeObserver(with uuid: PropertyObserverUUID?) {
+		if let uuid = uuid {
+			propertyObservers.removeAll(where: { observer in (observer.uuid == uuid) })
+		}
+	}
+	public func notifyObservers(ofChanged property: Property) {
+		for observer in propertyObservers {
+			if observer.properties.contains(property) {
+				observer.changeHandler(self, property)
+			}
+		}
+	}
+
+	// MARK: - Permissions
 	public func hasPermission(for interaction: ClientItemInteraction) -> Bool {
 		if let permissions = permissions {
 			if !permissions.contains(interaction) {

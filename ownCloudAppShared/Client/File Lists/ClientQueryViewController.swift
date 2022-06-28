@@ -80,13 +80,13 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		return customSearchQuery?.queryResults?.count ?? 0 > 0
 	}
 
-	open override var searchScope: SearchScope {
+	open override var searchScope: SortBarSearchScope {
  		set {
  			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
  		}
 
  		get {
- 			let scope = SearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SearchScope.local
+ 			let scope = SortBarSearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SortBarSearchScope.local
  			return scope
  		}
  	}
@@ -186,7 +186,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
  		updateCustomSearchQuery()
  	}
 
-	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
  		updateCustomSearchQuery()
  	}
 

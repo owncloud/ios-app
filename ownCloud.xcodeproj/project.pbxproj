@@ -399,6 +399,8 @@
 		DCB458ED2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCB458EE2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */; };
 		DCB459052604AD2A006A02AB /* SearchSegmentationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB459042604AD2A006A02AB /* SearchSegmentationTests.m */; };
+		DCB5D56B2861BEBE004AF425 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB5D56A2861BEBE004AF425 /* SearchViewController.swift */; };
+		DCB5D5A728632C17004AF425 /* SearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB5D5A628632C17004AF425 /* SearchScope.swift */; };
 		DCB5D60B25FC14B6004C52D9 /* OCIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB5D60A25FC14B6004C52D9 /* OCIssue+Extension.swift */; };
 		DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */; };
 		DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */; };
@@ -1413,6 +1415,8 @@
 		DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCQueryCondition+SearchSegmenter.m"; sourceTree = "<group>"; };
 		DCB459042604AD2A006A02AB /* SearchSegmentationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchSegmentationTests.m; sourceTree = "<group>"; };
 		DCB504D7221EF07E007638BE /* status-flash.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "status-flash.tvg"; path = "img/filetypes-tvg/status-flash.tvg"; sourceTree = SOURCE_ROOT; };
+		DCB5D56A2861BEBE004AF425 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		DCB5D5A628632C17004AF425 /* SearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScope.swift; sourceTree = "<group>"; };
 		DCB5D60A25FC14B6004C52D9 /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
 		DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdater.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdaterViewController.swift; sourceTree = "<group>"; };
@@ -1877,6 +1881,7 @@
 				DC46F3CF284546DA00038880 /* Data Item Interactions */,
 				DC82664028168DAA00F91F7D /* Context */,
 				DCEAF0842808250E00980B6D /* Collection Views */,
+				DCB5D5692861BE9A004AF425 /* Search */,
 				DCA2EDDB279B0E5D001F04E6 /* Resource Sources */,
 				DCE4E43424C199860051722F /* Actions */,
 				DCE4E42D24C1961D0051722F /* File Lists */,
@@ -2761,6 +2766,23 @@
 				DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */,
 			);
 			path = templates;
+			sourceTree = "<group>";
+		};
+		DCB5D5692861BE9A004AF425 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				DCB5D56A2861BEBE004AF425 /* SearchViewController.swift */,
+				DCB5D5A828632C1B004AF425 /* Scopes */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		DCB5D5A828632C1B004AF425 /* Scopes */ = {
+			isa = PBXGroup;
+			children = (
+				DCB5D5A628632C17004AF425 /* SearchScope.swift */,
+			);
+			path = Scopes;
 			sourceTree = "<group>";
 		};
 		DCBF0A5E2280393A00465530 /* PDF */ = {
@@ -4426,6 +4448,7 @@
 				DCE4E45124C1E4430051722F /* UIBarButtonItem+Extension.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
 				DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */,
+				DCB5D5A728632C17004AF425 /* SearchScope.swift in Sources */,
 				DC01AF1C28411C0B00903101 /* MessageCell.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
 				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
@@ -4471,6 +4494,7 @@
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
 				DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */,
+				DCB5D56B2861BEBE004AF425 /* SearchViewController.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
 				DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,

@@ -25,7 +25,10 @@ import ownCloudSDK
 	@objc optional func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((_ success: Bool) -> Void)?) -> Bool
 
 	// "Open" the item: suitable when pushing view controllers that should be restorable
-	@objc optional func openItem(in viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController?
+	@objc optional func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController?
+
+	// "Reveal" the item
+	@objc @discardableResult optional func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController?
 }
 
 // MARK: - Swipe Actions

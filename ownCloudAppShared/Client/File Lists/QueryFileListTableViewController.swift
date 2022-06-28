@@ -117,7 +117,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			return sort
 		}
 	}
-	open var searchScope: SearchScope = .local {
+	open var searchScope: SortBarSearchScope = .local {
 		didSet {
 			updateSearchPlaceholder()
 		}
@@ -512,7 +512,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		return 0
 	}
 
-	open func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+	open func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
  	}
 
 	open func toggleSelectMode() {

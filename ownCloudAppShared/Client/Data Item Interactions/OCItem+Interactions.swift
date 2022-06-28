@@ -23,7 +23,7 @@ import UniformTypeIdentifiers
 
 // MARK: - Selection > Open
 extension OCItem : DataItemSelectionInteraction {
-	public func openItem(in viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
 		if let context = context, let core = context.core {
 			let item = self
 
@@ -56,6 +56,32 @@ extension OCItem : DataItemSelectionInteraction {
 
 						return viewController
 					}
+			}
+		}
+
+		completion?(false)
+
+		return nil
+	}
+
+	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController? {
+		if let context = context, let core = context.core {
+			let activity = OpenItemUserActivity(detailItem: self, detailBookmark: core.bookmark)
+			viewController?.view.window?.windowScene?.userActivity = activity.openItemUserActivity
+
+			if let parentLocation = location?.parent {
+				let query = OCQuery(for: parentLocation)
+				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
+
+				let queryViewController = ClientItemViewController(context: context, query: query, highlightItemReference: self.dataItemReference)
+
+				if pushViewController {
+					context.navigationController?.pushViewController(queryViewController, animated: animated)
+				}
+
+				completion?(true)
+
+				return queryViewController
 			}
 		}
 
