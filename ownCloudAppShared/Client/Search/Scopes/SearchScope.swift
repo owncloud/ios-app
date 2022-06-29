@@ -36,7 +36,6 @@ open class SearchScope: NSObject {
 	static public func globalSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
 		let revealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
 			cellStyle.showRevealButton = true
-			cellStyle.showMoreButton = false
 		})
 
 		return CustomQuerySearchScope(with: context, cellStyle: revealCellStyle, localizedName: localizedName)
@@ -57,7 +56,6 @@ open class SearchScope: NSObject {
 }
 
 open class ItemSearchScope : SearchScope {
-	// private var sortMethodPropertyObserver: ClientContext.PropertyObserverUUID?
 	private var sortDescriptorObserver: NSKeyValueObservation?
 
 	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String) {
@@ -66,15 +64,10 @@ open class ItemSearchScope : SearchScope {
 		sortDescriptorObserver = context.observe(\.sortDescriptor, changeHandler: { [weak self] context, change in
 			self?.sortDescriptorChanged(to: context.sortDescriptor)
 		})
-
-//		sortMethodPropertyObserver = context.addObserver(for: [.sortMethod], with: { [weak self] context, property in
-//			self?.sortMethodChanged(to: context.sortMethod)
-//		})
 	}
 
 	deinit {
 		sortDescriptorObserver?.invalidate()
-//		clientContext.removeObserver(with: sortMethodPropertyObserver)
 	}
 
 	open func sortDescriptorChanged(to sortDescriptor: SortDescriptor?) {
@@ -149,15 +142,50 @@ open class QueryModifyingSearchScope : ItemSearchScope {
 }
 
 open class CustomQuerySearchScope : ItemSearchScope {
-	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
- 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
+	private let maxResultCountDefault = 2 // Maximum number of results to return from database (default)
+ 	private var maxResultCount = 2 // Maximum number of results to return from database (flexible)
 
 	public override var isSelected: Bool {
 		didSet {
 			if isSelected {
-				// Modify existing query provided via clientContext
-				results = customQuery?.queryResultsDataSource
+				resultActionSource.setItems([
+					OCAction(title: "Show more results".localized, icon: nil, action: { [weak self] action, options, completion in
+						self?.showMoreResults()
+						completion(nil)
+					})
+				], updated: nil)
+				composeResultsDataSource()
 			}
+		}
+	}
+
+	public var resultActionSource: OCDataSourceArray = OCDataSourceArray()
+
+	var resultsSubscription: OCDataSourceSubscription?
+
+	func composeResultsDataSource() {
+		if let queryResultsSource = customQuery?.queryResultsDataSource {
+			let composedResults = OCDataSourceComposition(sources: [
+				queryResultsSource,
+				resultActionSource
+			])
+
+			let maxResultCount = maxResultCount
+			let resultActionSource = resultActionSource
+
+			resultsSubscription = queryResultsSource.subscribe(updateHandler: { [weak composedResults, weak resultActionSource] (subscription) in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+
+				if let resultActionSource = resultActionSource {
+					OnMainThread {
+						composedResults?.setInclude((snapshot.numberOfItems >= maxResultCount), for: resultActionSource)
+					}
+				}
+			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+
+			results = composedResults
+		} else {
+			results = nil
 		}
 	}
 
@@ -172,7 +200,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
 			if let core = clientContext.core, let newQuery = customQuery {
 				core.start(newQuery)
 
-				results = newQuery.queryResultsDataSource
+				composeResultsDataSource()
 			} else {
 				results = nil
 			}
@@ -205,6 +233,11 @@ open class CustomQuerySearchScope : ItemSearchScope {
  			customQuery = nil
  		}
  	}
+
+	func showMoreResults() {
+		maxResultCount += maxResultCountDefault
+		updateCustomSearchQuery()
+	}
 
  	open override var queryCondition: OCQueryCondition? {
  		didSet {

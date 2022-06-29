@@ -29,8 +29,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	private let smallSpacing : CGFloat = 2
 	private let iconViewWidth : CGFloat = 40
 	private let detailIconViewHeight : CGFloat = 15
-	private let moreButtonWidth : CGFloat = 60
-	private let revealButtonWidth : CGFloat = 35
+	private let accessoryButtonWidth : CGFloat = 35
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60) // when changing size, also update .iconView/fallbackSize
@@ -49,13 +48,14 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	open var publicLinkStatusIconView : UIImageView = UIImageView()
 
 	open var actionViewContainer : UIView = UIView()
+	open var actionAccessory: UICellAccessory?
 	open var moreButton : UIButton = UIButton()
 	open var messageButton : UIButton = UIButton()
-	open var revealButton : UIButton = UIButton()
 	open var progressView : ProgressView?
 
-	open var moreButtonWidthConstraint : NSLayoutConstraint?
-	open var revealButtonWidthConstraint : NSLayoutConstraint?
+	open var revealButtonContainer: UIView = UIView()
+	open var revealButton : UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+	open var revealButtonAccessory: UICellAccessory?
 
 	open var sharedStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
 	open var publicLinkStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
@@ -71,11 +71,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 
 	open var isMoreButtonPermanentlyHidden = false {
 		didSet {
-			if isMoreButtonPermanentlyHidden {
-				moreButtonWidthConstraint?.constant = 0
-			} else {
-				moreButtonWidthConstraint?.constant = showRevealButton ? revealButtonWidth : moreButtonWidth
-			}
+			updateAccessories()
 		}
 	}
 
@@ -94,16 +90,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		prepareViewAndConstraints()
-
-		//!
-		/*
-		self.multipleSelectionBackgroundView = {
-			let blankView = UIView(frame: CGRect.zero)
-			blankView.backgroundColor = UIColor.clear
-			blankView.layer.masksToBounds = true
-			return blankView
-		}()
-		*/
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 
@@ -126,7 +112,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	}
 
 	func prepareViewAndConstraints() {
-
 		// cell.content setup
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -227,8 +212,9 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		messageButton.translatesAutoresizingMaskIntoConstraints = false
 
 		actionViewContainer.addSubview(moreButton)
-		actionViewContainer.addSubview(revealButton)
 		actionViewContainer.addSubview(messageButton)
+
+		revealButtonContainer.addSubview(revealButton)
 
 		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
 		moreButton.contentMode = .center
@@ -237,7 +223,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
 		revealButton.isPointerInteractionEnabled = true
 		revealButton.contentMode = .center
-		revealButton.isHidden = !showRevealButton
 		revealButton.accessibilityLabel = "Reveal in folder".localized
 
 		messageButton.setTitle("⚠️", for: .normal)
@@ -249,21 +234,20 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .touchUpInside)
 		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
 
-		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : moreButtonWidth)
-		revealButtonWidthConstraint = revealButton.widthAnchor.constraint(equalToConstant: showRevealButton ? revealButtonWidth : 0)
-
 		NSLayoutConstraint.activate([
+			revealButton.topAnchor.constraint(equalTo: revealButtonContainer.topAnchor),
+			revealButton.bottomAnchor.constraint(equalTo: revealButtonContainer.bottomAnchor),
+			revealButton.leadingAnchor.constraint(equalTo: revealButtonContainer.leadingAnchor),
+			revealButton.trailingAnchor.constraint(equalTo: revealButtonContainer.trailingAnchor),
+
+			revealButton.widthAnchor.constraint(equalToConstant: accessoryButtonWidth),
+
 			moreButton.topAnchor.constraint(equalTo: actionViewContainer.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: actionViewContainer.bottomAnchor),
 			moreButton.leadingAnchor.constraint(equalTo: actionViewContainer.leadingAnchor),
-			moreButton.trailingAnchor.constraint(equalTo: revealButton.leadingAnchor),
+			moreButton.trailingAnchor.constraint(equalTo: actionViewContainer.trailingAnchor),
 
-			revealButton.topAnchor.constraint(equalTo: actionViewContainer.topAnchor),
-			revealButton.bottomAnchor.constraint(equalTo: actionViewContainer.bottomAnchor),
-			revealButton.trailingAnchor.constraint(equalTo: actionViewContainer.trailingAnchor),
-
-			moreButtonWidthConstraint!,
-			revealButtonWidthConstraint!,
+			moreButton.widthAnchor.constraint(equalToConstant: accessoryButtonWidth),
 
 			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
 			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor),
@@ -271,7 +255,16 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 			messageButton.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor)
 		])
 
+		let backgroundConfig = UIBackgroundConfiguration.listPlainCell()
+		backgroundConfiguration = backgroundConfig
+
 		self.accessibilityElements = [titleLabel, detailLabel, moreButton, revealButton, messageButton]
+
+		actionAccessory = .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: actionViewContainer, placement: .trailing(displayed: .whenNotEditing)))
+
+		revealButtonAccessory = .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: revealButtonContainer, placement: .trailing(displayed: .whenNotEditing)))
+
+		updateAccessories()
 	}
 
 	// MARK: - Present item
@@ -510,12 +503,21 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	// MARK: - Themeing
 	open var revealHighlight : Bool = false {
 		didSet {
-			if revealHighlight {
-				Log.debug("Highlighted!")
-			}
-
-			applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection, state: ThemeItemState(selected: isSelected))
+			setNeedsUpdateConfiguration()
 		}
+	}
+
+	open override func updateConfiguration(using state: UICellConfigurationState) {
+		let collection = Theme.shared.activeCollection
+		var backgroundConfig = backgroundConfiguration?.updated(for: state)
+
+		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) || revealHighlight {
+			backgroundConfig?.backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
+		} else {
+			backgroundConfig?.backgroundColor = collection.tableBackgroundColor
+		}
+
+		backgroundConfiguration = backgroundConfig
 	}
 
 	open override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
@@ -529,71 +531,37 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 
 		moreButton.tintColor = collection.tableRowColors.secondaryLabelColor
 
-		if revealHighlight {
-			self.backgroundView?.backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
-		} else {
-			self.backgroundView?.backgroundColor = collection.tableBackgroundColor
-		}
+		setNeedsUpdateConfiguration()
 	}
 
 	// MARK: - Editing mode
 	var showMoreButton: Bool = true {
 		didSet {
-			if showMoreButton != oldValue {
-				setMoreButton(hidden: !showMoreButton, animated: false)
-			}
-		}
-	}
-
-	open func setMoreButton(hidden: Bool, animated: Bool = false) {
-		if hidden || isMoreButtonPermanentlyHidden {
-			moreButtonWidthConstraint?.constant = 0
-		} else {
-			moreButtonWidthConstraint?.constant = showRevealButton ? revealButtonWidth : moreButtonWidth
-		}
-		moreButton.isHidden = ((item?.isPlaceholder == true) || (progressView != nil)) ? true : hidden
-		if animated {
-			UIView.animate(withDuration: 0.25) {
-				self.contentView.layoutIfNeeded()
-			}
-		} else {
-			self.contentView.layoutIfNeeded()
+			updateAccessories()
 		}
 	}
 
 	var showRevealButton: Bool = false {
 		didSet {
-			if showRevealButton != oldValue {
-				setRevealButton(hidden: !showRevealButton, animated: false)
-			}
+			updateAccessories()
 		}
 	}
 
-	open func setRevealButton(hidden:Bool, animated: Bool = false) {
-		if hidden {
-			revealButtonWidthConstraint?.constant = 0
-		} else {
-			revealButtonWidthConstraint?.constant = revealButtonWidth
-		}
-		revealButton.isHidden = hidden
-		if animated {
-			UIView.animate(withDuration: 0.25) {
-				self.contentView.layoutIfNeeded()
-			}
-		} else {
-			self.contentView.layoutIfNeeded()
-		}
-	}
+	func updateAccessories() {
+		var updatedAccessories : [UICellAccessory] = [
+			.multiselect()
+		]
 
-	//!!
-	/*
-	override open func setEditing(_ editing: Bool, animated: Bool) {
-		super.setEditing(editing, animated: animated)
+		if (showMoreButton || (item?.isPlaceholder == true) || (progressView != nil)) && !isMoreButtonPermanentlyHidden, let actionAccessory = actionAccessory {
+			updatedAccessories.append(actionAccessory)
+		}
 
-		setMoreButton(hidden: editing, animated: animated)
-		setRevealButton(hidden: editing ? true : !showRevealButton, animated: animated)
+		if showRevealButton, let revealButtonAccessory = revealButtonAccessory {
+			updatedAccessories.append(revealButtonAccessory)
+		}
+
+		accessories = updatedAccessories
 	}
-	*/
 
 	// MARK: - Actions
 	@objc open func moreButtonTapped() {
@@ -663,11 +631,6 @@ extension ItemListCell {
 
 				cell.showRevealButton = cellConfiguration.style.showRevealButton
 				cell.showMoreButton = cellConfiguration.style.showMoreButton
-
-				cell.accessories = [
-					.multiselect(),
-					.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: cell.actionViewContainer, placement: .trailing(displayed: .whenNotEditing)))
-				]
 			})
 		}
 
@@ -675,7 +638,7 @@ extension ItemListCell {
 			let cell = collectionView.dequeueConfiguredReusableCell(using: itemListCellRegistration, for: indexPath, item: itemRef)
 
 			if cellConfiguration?.highlight == true {
-				cell.isHighlighted = true
+				cell.revealHighlight = true
 			}
 
 			return cell
