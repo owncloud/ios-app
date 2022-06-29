@@ -142,8 +142,8 @@ open class QueryModifyingSearchScope : ItemSearchScope {
 }
 
 open class CustomQuerySearchScope : ItemSearchScope {
-	private let maxResultCountDefault = 2 // Maximum number of results to return from database (default)
- 	private var maxResultCount = 2 // Maximum number of results to return from database (flexible)
+	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
+ 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
 
 	public override var isSelected: Bool {
 		didSet {
