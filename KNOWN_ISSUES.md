@@ -7,7 +7,6 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## App
 - in the new browsing experience, some features are not yet available:
-	- search
 	- a grid view
 	- breadcrumb title
 	- item / folder / usage info at the bottom of lists
@@ -29,6 +28,20 @@ It should only be used with dedicated test servers, test data - and test devices
 - pre-population of accounts using infinite PROPFIND is not supported
 
 # Evolution roadmap
+- collection views
+	- support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
+
+- location picker replaces folder picker
+	- supports picking
+		- accounts
+		- spaces
+		- folders
+	- returns an OCLocation
+	- allow passing "quick locations" to present on top in a group
+	- track and re-offer last-picked / recent locations (via account's KVS)
+	- quick access to personal and other spaces
+	- integrate favorites as group
+
 - make sync smarter, f.ex.:
 	- a file that is updated locally multiple times only should be uploaded once, not once for every update
 	- a file or folder that is scheduled for upload / creation - and then deleted, should not be uploaded then deleted
