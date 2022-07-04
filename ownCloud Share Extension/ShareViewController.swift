@@ -51,51 +51,44 @@ class ShareViewController: MoreStaticTableViewController {
 		setupNavigationBar()
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
-		if Branding.shared.isImportMethodAllowed(.shareExtension) {
-			// Share extension allowed
-			if !willAppearInitial {
-				willAppearInitial = true
-
-				if AppLockManager.supportedOnDevice {
-					AppLockManager.shared.showLockscreenIfNeeded()
-				}
-
-				if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
-					appexNavigationController.dismissalAction = { [weak self] (_) in
-						self?.returnCores(completion: {
-							Log.debug("Returned all cores (share sheet was closed / dismissed)")
-						})
-					}
-				}
-				setupAccountSelection()
-			}
-		}
-	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-
-		if !Branding.shared.isImportMethodAllowed(.shareExtension) {
-			// Share extension disabled, alert user
-			let alertController = ThemedAlertController(title: "Share Extension disabled".localized, message: "Importing files through the Share Extension is not allowed on this device.".localized, preferredStyle: .alert)
-			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [weak self] _ in
-				self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
-			}))
-			self.navigationController?.present(alertController, animated: true, completion: nil)
-		} else {
-			// Share extension allowed
-			if didAppearInitial {
-				self.returnCores(completion: {
-					Log.debug("Returned all cores (back to server list)")
-				})
-			}
-
-			didAppearInitial = true
-		}
-	}
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if Branding.shared.isImportMethodAllowed(.shareExtension) {
+            // Share extension allowed
+            if !willAppearInitial {
+                willAppearInitial = true
+                
+                if AppLockManager.supportedOnDevice {
+                    AppLockManager.shared.showLockscreenIfNeeded()
+                }
+                
+                if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
+                    appexNavigationController.dismissalAction = { [weak self] (_) in
+                        self?.returnCores(completion: {
+                            Log.debug("Returned all cores (share sheet was closed / dismissed)")
+                        })
+                    }
+                }
+                setupAccountSelection()
+            }
+            
+            if didAppearInitial {
+                self.returnCores(completion: {
+                    Log.debug("Returned all cores (back to server list)")
+                })
+            }
+            
+            didAppearInitial = true
+        } else {
+            // Share extension disabled, alert user
+            let alertController = ThemedAlertController(title: "Share Extension disabled".localized, message: "Importing files through the Share Extension is not allowed on this device.".localized, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [weak self] _ in
+                self?.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+            }))
+            self.navigationController?.present(alertController, animated: true, completion: nil)
+        }
+    }
 
 	private var requestedCoreBookmarks : [OCBookmark] = []
 
