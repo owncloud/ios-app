@@ -42,6 +42,10 @@ It should only be used with dedicated test servers, test data - and test devices
 	- quick access to personal and other spaces
 	- integrate favorites as group
 
+- account list
+	- allow grouping accounts (i.e. Home / Work)
+	- replace simple list with modern CollectionViewController-based UI
+
 - make sync smarter, f.ex.:
 	- a file that is updated locally multiple times only should be uploaded once, not once for every update
 	- a file or folder that is scheduled for upload / creation - and then deleted, should not be uploaded then deleted
