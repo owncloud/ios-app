@@ -55,4 +55,15 @@ public extension UIViewController {
 
 		 return self
 	 }
+    
+    @objc func openURL(_ url: URL) -> Bool {
+        var responder: UIResponder? = self.navigationController
+        while responder != nil {
+            if let application = responder as? UIApplication {
+                return application.perform(#selector(openURL(_:)), with: url) != nil
+            }
+            responder = responder?.next
+        }
+        return true
+    }
 }

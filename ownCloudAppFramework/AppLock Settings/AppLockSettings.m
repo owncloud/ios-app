@@ -54,7 +54,8 @@
 		OCClassSettingsKeyPasscodeEnforced : @(NO),
 		OCClassSettingsKeyRequiredPasscodeDigits : @(4),
 		OCClassSettingsKeyMaximumPasscodeDigits : @(6),
-		OCClassSettingsKeyPasscodeUseBiometricalUnlock : @(NO)
+        OCClassSettingsKeyPasscodeUseBiometricalUnlock : @(NO),
+        OCClassSettingsKeyPasscodeShareSheetUseBiometricalUnlock : @(NO)
 	});
 }
 
@@ -88,13 +89,20 @@
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
 			OCClassSettingsMetadataKeyCategory	: @"Passcode"
 		},
-
-		OCClassSettingsKeyPasscodeUseBiometricalUnlock : @{
-			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
-			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the biometrical unlock will be enabled automatically.",
-			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
-			OCClassSettingsMetadataKeyCategory	: @"Passcode"
-		}
+        
+        OCClassSettingsKeyPasscodeUseBiometricalUnlock : @{
+            OCClassSettingsMetadataKeyType         : OCClassSettingsMetadataTypeBoolean,
+            OCClassSettingsMetadataKeyDescription     : @"Controls wether the biometrical unlock will be enabled automatically.",
+            OCClassSettingsMetadataKeyStatus    : OCClassSettingsKeyStatusAdvanced,
+            OCClassSettingsMetadataKeyCategory    : @"Passcode"
+        },
+        
+        OCClassSettingsKeyPasscodeShareSheetUseBiometricalUnlock : @{
+            OCClassSettingsMetadataKeyType         : OCClassSettingsMetadataTypeBoolean,
+            OCClassSettingsMetadataKeyDescription     : @"Controls wether the biometrical unlock will be used in the share sheet.",
+            OCClassSettingsMetadataKeyStatus    : OCClassSettingsKeyStatusAdvanced,
+            OCClassSettingsMetadataKeyCategory    : @"Passcode"
+        }
 	});
 }
 
@@ -128,19 +136,36 @@
 
 - (BOOL)biometricalSecurityEnabled
 {
-	NSNumber *useBiometricalUnlock;
+    NSNumber *useBiometricalUnlock;
 
-	if ((useBiometricalUnlock = [_userDefaults objectForKey:@"security-settings-use-biometrical"]) != nil)
-	{
-		return (useBiometricalUnlock.boolValue);
-	}
+    if ((useBiometricalUnlock = [_userDefaults objectForKey:@"security-settings-use-biometrical"]) != nil)
+    {
+        return (useBiometricalUnlock.boolValue);
+    }
 
-	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeUseBiometricalUnlock] boolValue]);
+    return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeUseBiometricalUnlock] boolValue]);
 }
 
 - (void)setBiometricalSecurityEnabled:(BOOL)biometricalSecurityEnabled
 {
-	[_userDefaults setBool:biometricalSecurityEnabled forKey:@"security-settings-use-biometrical"];
+    [_userDefaults setBool:biometricalSecurityEnabled forKey:@"security-settings-use-biometrical"];
+}
+
+- (BOOL)biometricalSecurityEnabledinShareSheet
+{
+    NSNumber *useBiometricalUnlock;
+
+    if ((useBiometricalUnlock = [_userDefaults objectForKey:@"security-settings-use-biometrical-share-sheet"]) != nil)
+    {
+        return (useBiometricalUnlock.boolValue);
+    }
+
+    return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeShareSheetUseBiometricalUnlock] boolValue]);
+}
+
+- (void)biometricalSecurityEnabledinShareSheet:(BOOL)biometricalSecurityEnabledinShareSheet
+{
+    [_userDefaults setBool:biometricalSecurityEnabledinShareSheet forKey:@"security-settings-use-biometrical-share-sheet"];
 }
 
 - (BOOL)isPasscodeEnforced
@@ -190,3 +215,4 @@ OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits = @"requiredPasscode
 OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits = @"maximumPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay = @"lockDelay";
 OCClassSettingsKey OCClassSettingsKeyPasscodeUseBiometricalUnlock = @"use-biometrical-unlock";
+OCClassSettingsKey OCClassSettingsKeyPasscodeShareSheetUseBiometricalUnlock = @"use-biometrical-unlock-share-sheet";

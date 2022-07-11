@@ -37,8 +37,16 @@ public class AppLockManager: NSObject {
 
 	// MARK: - State
 	private var lastApplicationBackgroundedDate : Date? {
-		didSet {
-			if let date = lastApplicationBackgroundedDate {
+        get {
+            if let archivedData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainLockedDate) {
+                guard let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSDate.self, from: archivedData) else { return nil }
+                return value as? Date
+            }
+            
+            return nil
+        }
+        set(newValue) {
+			if let date = newValue {
 				let archivedData = try? NSKeyedArchiver.archivedData(withRootObject: date as NSDate, requiringSecureCoding: true)
 				self.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainLockedDate)
 			} else {
@@ -47,12 +55,20 @@ public class AppLockManager: NSObject {
 		}
 	}
 
-	public var unlocked: Bool = false {
-		didSet {
-			let archivedData = try? NSKeyedArchiver.archivedData(withRootObject: unlocked as NSNumber, requiringSecureCoding: true)
-			self.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainUnlocked)
-		}
-	}
+    public var unlocked: Bool {
+        get {
+            if let archivedData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainUnlocked) {
+                guard let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: archivedData)?.boolValue else { return false}
+                return value ?? false
+            }
+            
+            return false
+        }
+        set(newValue) {
+            let archivedData = try? NSKeyedArchiver.archivedData(withRootObject: newValue as NSNumber, requiringSecureCoding: true)
+            self.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainUnlocked)
+        }
+    }
 
 	public static var isPassCodeEnabled : Bool {
 		let defaults = OCAppIdentity.shared.userDefaults
@@ -123,6 +139,13 @@ public class AppLockManager: NSObject {
 
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
+    
+    private var biometricalSecurityEnabled: Bool {
+        if passwordViewHostViewController != nil {
+            return AppLockSettings.shared.biometricalSecurityEnabledinShareSheet
+        }
+        return AppLockSettings.shared.biometricalSecurityEnabled
+    }
 
 	// MARK: - Init
 	public static var shared = AppLockManager()
@@ -159,7 +182,9 @@ public class AppLockManager: NSObject {
 			} else if setupMode {
 				showBiometricalAuthenticationInterface(context: context)
 			}
-		}
+        } else {
+            dismissLockscreen(animated: true)
+        }
 	}
 
 	public func dismissLockscreen(animated:Bool) {
@@ -229,7 +254,7 @@ public class AppLockManager: NSObject {
 					if self.shouldDisplayCountdown {
 						passcodeViewController.keypadButtonsHidden = true
 						updateLockCountdown()
-						passcodeViewController.view.setNeedsLayout()
+                        passcodeViewController.view.setNeedsLayout()
 					}
 				}
 			} else {
@@ -296,8 +321,12 @@ public class AppLockManager: NSObject {
 
 		passcodeViewController = PasscodeViewController(biometricalHandler: { (passcodeViewController) in
 			if !self.shouldDisplayCountdown {
-				let context = LAContext()
-				self.showBiometricalAuthenticationInterface(context: context)
+                if self.passwordViewHostViewController != nil {
+                    let _ = self.passwordViewHostViewController?.openURL(URL(string: "owncloud://")!)
+                } else {
+                    let context = LAContext()
+                    self.showBiometricalAuthenticationInterface(context: context)
+                }
 			}
 		}, completionHandler: { (viewController: PasscodeViewController, passcode: String) in
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
@@ -313,14 +342,19 @@ public class AppLockManager: NSObject {
 
 	// MARK: - App Events
 	@objc func appDidEnterBackground() {
-		lastApplicationBackgroundedDate = Date()
+        if unlocked {
+            lastApplicationBackgroundedDate = Date()
+        } else {
+            lastApplicationBackgroundedDate = nil
+        }
 
 		showLockscreenIfNeeded(forceShow: true)
 	}
 
 	@objc func appWillEnterForeground() {
 		if self.shouldDisplayLockscreen {
-			showLockscreenIfNeeded()
+            dismissLockscreen(animated: false)
+            self.showLockscreenIfNeeded()
 		} else {
 			dismissLockscreen(animated: false)
 		}
@@ -330,11 +364,11 @@ public class AppLockManager: NSObject {
 	func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil, passcodeViewController: PasscodeViewController? = nil) {
 		if testPasscode == self.passcode {
 			unlocked = true
-			lastApplicationBackgroundedDate = nil
 			failedPasscodeAttempts = 0
 			dismissLockscreen(animated: true)
 		} else {
 			unlocked = false
+            lastApplicationBackgroundedDate = nil
 			passcodeViewController?.errorMessage = (customErrorMessage != nil) ? customErrorMessage! : "Incorrect code".localized
 
 			failedPasscodeAttempts += 1
@@ -355,7 +389,7 @@ public class AppLockManager: NSObject {
 		if !AppLockSettings.shared.lockEnabled {
 			return false
 		}
-
+        
 		if unlocked, !self.shouldDisplayCountdown {
 			if let backgroundedDate = lastApplicationBackgroundedDate {
 				if backgroundedDate.timeIntervalSinceNow > 0 {
@@ -456,7 +490,8 @@ public class AppLockManager: NSObject {
 	private var biometricalAuthenticationInterfaceShown : Bool = false
 
 	func showBiometricalAuthenticationInterface(context: LAContext) {
-		if shouldDisplayLockscreen, AppLockSettings.shared.biometricalSecurityEnabled, !biometricalAuthenticationInterfaceShown {
+
+		if shouldDisplayLockscreen, biometricalSecurityEnabled, !biometricalAuthenticationInterfaceShown {
 			var evaluationError: NSError?
 
 			// Check if the device can evaluate the policy.
@@ -517,7 +552,7 @@ public class AppLockManager: NSObject {
 					}
 				}
 			} else {
-				if let error = evaluationError, AppLockSettings.shared.biometricalSecurityEnabled {
+				if let error = evaluationError, biometricalSecurityEnabled {
 					OnMainThread {
 						self.performPasscodeViewControllerUpdates { (passcodeViewController) in
 							passcodeViewController.errorMessage = error.localizedDescription
