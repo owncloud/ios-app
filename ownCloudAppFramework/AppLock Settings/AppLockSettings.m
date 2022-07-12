@@ -55,7 +55,7 @@
 		OCClassSettingsKeyRequiredPasscodeDigits : @(4),
 		OCClassSettingsKeyMaximumPasscodeDigits : @(6),
         OCClassSettingsKeyPasscodeUseBiometricalUnlock : @(NO),
-        OCClassSettingsKeyPasscodeShareSheetUseBiometricalUnlock : @(NO)
+        OCClassSettingsKeyPasscodeShareSheetUseBiometricalUnlock : @(YES)
 	});
 }
 
