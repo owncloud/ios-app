@@ -139,11 +139,8 @@ public class AppLockManager: NSObject {
 
 	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
-    
+
 	private var biometricalSecurityEnabled: Bool {
-		if passwordViewHostViewController != nil {
-			return AppLockSettings.shared.biometricalSecurityEnabledinShareSheet
-		}
 		return AppLockSettings.shared.biometricalSecurityEnabled
 	}
 
@@ -171,7 +168,7 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - Show / Dismiss Passcode View
-	public func showLockscreenIfNeeded(forceShow: Bool = false, setupMode: Bool = false, context: LAContext = LAContext()) {
+	public func showLockscreenIfNeeded(forceShow: Bool = false, setupMode: Bool = false, context: LAContext? = nil) {
 		if self.shouldDisplayLockscreen || forceShow || setupMode {
 			lockscreenOpenForced = forceShow
 			lockscreenOpen = true
@@ -254,7 +251,7 @@ public class AppLockManager: NSObject {
 					if self.shouldDisplayCountdown {
 						passcodeViewController.keypadButtonsHidden = true
 						updateLockCountdown()
-                        passcodeViewController.view.setNeedsLayout()
+						passcodeViewController.view.setNeedsLayout()
 					}
 				}
 			} else {
@@ -321,19 +318,14 @@ public class AppLockManager: NSObject {
 
 		passcodeViewController = PasscodeViewController(biometricalHandler: { (passcodeViewController) in
 			if !self.shouldDisplayCountdown {
-				if self.passwordViewHostViewController != nil {
-					let _ = self.passwordViewHostViewController?.openURL(URL(string: "owncloud://")!)
-				} else {
-					let context = LAContext()
-					self.showBiometricalAuthenticationInterface(context: context)
-				}
+				self.showBiometricalAuthenticationInterface()
 			}
 		}, completionHandler: { (viewController: PasscodeViewController, passcode: String) in
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
 		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)
 
 		passcodeViewController.message = "Enter code".localized
-		passcodeViewController.cancelButtonHidden = false
+		passcodeViewController.cancelButtonAvailable = false
 
 		passcodeViewController.screenBlurringEnabled = lockscreenOpenForced && !self.shouldDisplayLockscreen
 
@@ -389,7 +381,7 @@ public class AppLockManager: NSObject {
 		if !AppLockSettings.shared.lockEnabled {
 			return false
 		}
-        
+
 		if unlocked, !self.shouldDisplayCountdown {
 			if let backgroundedDate = lastApplicationBackgroundedDate {
 				if backgroundedDate.timeIntervalSinceNow > 0 {
@@ -489,9 +481,20 @@ public class AppLockManager: NSObject {
 	// MARK: - Biometrical Unlock
 	private var biometricalAuthenticationInterfaceShown : Bool = false
 
-	func showBiometricalAuthenticationInterface(context: LAContext) {
+	func showBiometricalAuthenticationInterface(context inContext: LAContext? = nil) {
 
 		if shouldDisplayLockscreen, biometricalSecurityEnabled, !biometricalAuthenticationInterfaceShown {
+			// Check if we should perform biometrical authentication - or redirect
+			if let targetURL = AppLockSettings.shared.biometricalAuthenticationRedirectionTargetURL {
+				// Unfortunately, opening the URL closes the share sheet just like invoking
+				// biometric auth - so in those instances where we'd want to use it to work around
+				// that.
+				self.passwordViewHostViewController?.openURL(targetURL)
+				return
+			}
+
+			// Perform biometrical authentication
+			let context = inContext ?? LAContext()
 			var evaluationError: NSError?
 
 			// Check if the device can evaluate the policy.

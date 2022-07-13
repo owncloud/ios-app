@@ -56,7 +56,7 @@ public extension UIViewController {
 		 return self
 	 }
 
-	@objc func openURL(_ url: URL) -> Bool {
+	@objc @discardableResult func openURL(_ url: URL) -> Bool {
 		var responder: UIResponder? = self.navigationController
 		while responder != nil {
 			if let application = responder as? UIApplication {
