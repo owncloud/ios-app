@@ -173,7 +173,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
-		self.biometricalButtonHidden = (!AppLockSettings.shared.biometricalSecurityEnabled || !AppLockSettings.shared.lockEnabled || cancelButtonAvailable) // cancelButtonHidden is true for setup tasks/settings changes only
+		self.biometricalButtonHidden = (!AppLockSettings.shared.biometricalSecurityEnabled || !AppLockSettings.shared.lockEnabled || cancelButtonAvailable) // cancelButtonAvailable is true for setup tasks/settings changes only
 		updateKeypadButtons()
         if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
             self.biometricalButton?.accessibilityLabel = biometricalSecurityName
