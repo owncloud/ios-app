@@ -184,7 +184,14 @@
 
 	if ([shareSheetBiometricalUnlockByApp isKindOfClass:NSDictionary.class])
 	{
-		attributesForApp = OCTypedCast(shareSheetBiometricalUnlockByApp[hostAppID], NSDictionary);
+		if (shareSheetBiometricalUnlockByApp[hostAppID] != nil)
+		{
+			attributesForApp = OCTypedCast(shareSheetBiometricalUnlockByApp[hostAppID], NSDictionary);
+		}
+		else
+		{
+			attributesForApp = OCTypedCast(shareSheetBiometricalUnlockByApp[@"default"], NSDictionary);
+		}
 	}
 
 	return (attributesForApp);
