@@ -285,37 +285,3 @@ public extension NSObject {
 		}
 	}
 }
-
-extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter {
-	public var sectionHeaderColor: UIColor? {
-		get {
-			return self.value(forAnnotatedProperty: "sectionHeaderColor") as? UIColor
-		}
-
-		set {
-			self.setValue(newValue, forAnnotatedProperty: "sectionHeaderColor")
-		}
-	}
-
-	public var sectionFooterColor: UIColor? {
-		get {
-			return self.value(forAnnotatedProperty: "sectionFooterColor") as? UIColor
-		}
-
-		set {
-			self.setValue(newValue, forAnnotatedProperty: "sectionFooterColor")
-		}
-	}
-
-	public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		if let label = view as? UILabel, let sectionHeaderColor = sectionHeaderColor {
-			label.textColor = sectionHeaderColor
-		}
-	}
-
-	public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-		if let label = view as? UILabel, let sectionFooterColor = sectionFooterColor {
-			label.textColor = sectionFooterColor
-		}
-	}
-}

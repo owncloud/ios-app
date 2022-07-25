@@ -50,7 +50,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 		var rows : [StaticTableViewRow] = []
 		let pathCount = pathComp.count
 		var currentViewContollerIndex = 2
-		let contentHeight : CGFloat = rowHeight * CGFloat(pathCount)
+		let contentHeight : CGFloat = rowHeight * CGFloat(pathCount) + 10
 		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 

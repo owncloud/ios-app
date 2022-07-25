@@ -1,0 +1,5 @@
+Bugfix: Increased Timeout for Copy Action
+
+Increased HTTP request timeout for COPY actions from 1 minute to 10 minutes and improved error handling for request timeouts.
+
+https://github.com/owncloud/ios-app/issues/1119
