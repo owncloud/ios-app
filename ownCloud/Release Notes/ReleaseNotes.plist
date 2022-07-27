@@ -1613,6 +1613,23 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.10.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string></string>
+					<key>Subtitle</key>
+					<string></string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
