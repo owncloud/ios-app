@@ -106,10 +106,6 @@ open class CreateFolderAction : Action {
 	}
 
 	override open class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .keyboardShortcut || location == .folderAction || location == .emptyFolder {
-			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 	}
 }

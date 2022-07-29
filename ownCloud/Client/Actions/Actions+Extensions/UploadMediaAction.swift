@@ -196,11 +196,7 @@ class UploadMediaAction: UploadBaseAction {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction || location == .emptyFolder {
-			Theme.shared.add(tvgResourceFor: "image")
-			return Theme.shared.image(for: "image", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		Theme.shared.add(tvgResourceFor: "image")
+		return Theme.shared.image(for: "image", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 	}
 }

@@ -169,11 +169,7 @@ class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem || location == .multiSelection || location == .dropAction {
-			return UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)
 	}
 }
 

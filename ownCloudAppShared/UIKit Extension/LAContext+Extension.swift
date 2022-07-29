@@ -35,16 +35,12 @@ extension LAContext {
 	public func biometricsAuthenticationImage() -> UIImage? {
 		if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
 			switch self.biometryType {
-				case .faceID : if #available(iOSApplicationExtension 13.0, *) {
+				case .faceID:
 					return UIImage(systemName: "faceid")
-				} else {
-					return UIImage(named: "biometrical-faceid")
-				}
-				case .touchID: if #available(iOSApplicationExtension 13.0, *) {
+
+				case .touchID:
 					return UIImage(systemName: "touchid")
-				} else {
-					return UIImage(named: "biometrical-touchid")
-				}
+
 				case .none: return nil
 				@unknown default: return nil
 			}

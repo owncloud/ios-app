@@ -121,10 +121,6 @@ class UnshareAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .multiSelection {
-			return UIImage(named: "trash")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(named: "trash")?.withRenderingMode(.alwaysTemplate)
 	}
 }

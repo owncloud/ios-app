@@ -68,11 +68,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		progressView = UIProgressView(progressViewStyle: .bar)
 		progressView.translatesAutoresizingMaskIntoConstraints = false
 
-		if #available(iOS 13, *) {
-			activityIndicator = UIActivityIndicatorView(style: .large)
-		} else {
-			activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-		}
+		activityIndicator = UIActivityIndicatorView(style: .large)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 		activityIndicator.isHidden = true
 

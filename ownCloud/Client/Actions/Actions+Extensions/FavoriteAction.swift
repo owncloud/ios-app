@@ -55,10 +55,6 @@ class FavoriteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .contextMenuItem {
-			return UIImage(systemName: "star")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(systemName: "star")?.withRenderingMode(.alwaysTemplate)
 	}
 }

@@ -244,10 +244,6 @@ class ImportPasteboardAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(systemName: "doc.on.clipboard")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(systemName: "doc.on.clipboard")?.withRenderingMode(.alwaysTemplate)
 	}
 }

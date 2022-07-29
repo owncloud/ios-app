@@ -143,6 +143,7 @@
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Folder removed";
 "This folder no longer exists on the server." = "This folder no longer exists on the server.";

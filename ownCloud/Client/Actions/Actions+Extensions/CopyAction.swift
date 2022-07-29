@@ -104,11 +104,7 @@ class CopyAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem || location == .multiSelection || location == .dropAction {
-			return UIImage(named: "copy-file")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(named: "copy-file")?.withRenderingMode(.alwaysTemplate)
 	}
 
 	func showDirectoryPicker() {

@@ -231,12 +231,7 @@ class UploadCameraMediaAction: UploadBaseAction, UIImagePickerControllerDelegate
 	// MARK: - Action implementation
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction {
-			let image = UIImage(named: "camera")?.withRenderingMode(.alwaysTemplate)
-			return image
-		}
-
-		return nil
+		return UIImage(named: "camera")?.withRenderingMode(.alwaysTemplate)
 	}
 
 	override func run() {

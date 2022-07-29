@@ -91,10 +91,6 @@ class CutAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem || location == .multiSelection || location == .dropAction {
-			return UIImage(systemName: "scissors")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(systemName: "scissors")?.withRenderingMode(.alwaysTemplate)
 	}
 }
