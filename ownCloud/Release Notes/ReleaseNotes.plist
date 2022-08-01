@@ -1620,9 +1620,9 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 			<array>
 				<dict>
 					<key>Title</key>
-					<string></string>
+					<string>Available Offline Folders</string>
 					<key>Subtitle</key>
-					<string></string>
+					<string>Shows the contents of the available folders when offline.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
