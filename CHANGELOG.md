@@ -1,3 +1,41 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.10.0...master
+
+Summary
+-------
+
+* Bugfix - (Branding) Biometrical Unlock in Share Sheet: [#1129](https://github.com/owncloud/ios-app/pull/1129)
+* Bugfix - Show folder contents from cache when offline: [#1130](https://github.com/owncloud/ios-app/issues/1130)
+* Bugfix - (Branding) Color Issues: [#1132](https://github.com/owncloud/ios-app/pull/1132)
+
+Details
+-------
+
+* Bugfix - (Branding) Biometrical Unlock in Share Sheet: [#1129](https://github.com/owncloud/ios-app/pull/1129)
+
+   Biometrical unlock in the share sheet does not work in some third party apps like Boxer. With new
+   branding parameters it is now possible to disable biometrical unlock in the share sheet or to
+   exclude specific apps.
+
+   https://github.com/owncloud/ios-app/pull/1129
+
+* Bugfix - Show folder contents from cache when offline: [#1130](https://github.com/owncloud/ios-app/issues/1130)
+
+   With this fix the app shows the contents of the available folders when offline.
+
+   https://github.com/owncloud/ios-app/issues/1130
+
+* Bugfix - (Branding) Color Issues: [#1132](https://github.com/owncloud/ios-app/pull/1132)
+
+   Fix some automatic color values, if the branding color is bright by checking the brightness of
+   the color.
+
+   https://github.com/owncloud/ios-app/pull/1132
+
 Changelog for ownCloud iOS Client [11.10.0] (2022-05-18)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.10.0 relevant to
