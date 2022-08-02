@@ -1,0 +1,5 @@
+Bugfix: (Branding) Color Issues
+
+Fix some automatic color values, if the branding color is bright by checking the brightness of the color.
+
+https://github.com/owncloud/ios-app/pull/1132

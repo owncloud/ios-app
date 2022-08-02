@@ -35,6 +35,14 @@ class ShareNavigationController: AppExtensionNavigationController {
 			self.setViewControllers([viewController], animated: false)
 		}
 	}
+
+	override func willMove(toParent parent: UIViewController?) {
+		super.willMove(toParent: parent)
+
+		OCAppIdentity.shared.hostAppBundleIdentifier = parent?.oc_hostAppBundleIdentifier
+
+		Log.debug("Extension Host App Bundle ID: \(OCAppIdentity.shared.hostAppBundleIdentifier ?? "nil")")
+	}
 }
 
 extension UserInterfaceContext : UserInterfaceContextProvider {

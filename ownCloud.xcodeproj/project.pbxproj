@@ -311,6 +311,8 @@
 		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */; };
+		DC3DDF06287E1C0800E5586D /* UIViewController+HostBundleID.m in Sources */ = {isa = PBXBuildFile; fileRef = DC3DDF03287E1AC200E5586D /* UIViewController+HostBundleID.m */; };
+		DC3DDF07287E1C0E00E5586D /* UIViewController+HostBundleID.h in Headers */ = {isa = PBXBuildFile; fileRef = DC3DDF02287E1AC200E5586D /* UIViewController+HostBundleID.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */; };
 		DC3F4522271A23A000ED2383 /* AcknowledgementsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */; };
 		DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1239,6 +1241,8 @@
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
 		DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientRootViewController.swift; sourceTree = "<group>"; };
 		DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
+		DC3DDF02287E1AC200E5586D /* UIViewController+HostBundleID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+HostBundleID.h"; sourceTree = "<group>"; };
+		DC3DDF03287E1AC200E5586D /* UIViewController+HostBundleID.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+HostBundleID.m"; sourceTree = "<group>"; };
 		DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadItemsHUDViewController.swift; sourceTree = "<group>"; };
 		DC3DEC7C22AFFE8E00F3352D /* KVOWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOWaiter.swift; sourceTree = "<group>"; };
 		DC3DEC7F22B03AE700F3352D /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
@@ -2329,6 +2333,15 @@
 			path = Client;
 			sourceTree = "<group>";
 		};
+		DC3DDEFE287E1AA500E5586D /* UIKit Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DC3DDF03287E1AC200E5586D /* UIViewController+HostBundleID.m */,
+				DC3DDF02287E1AC200E5586D /* UIViewController+HostBundleID.h */,
+			);
+			path = "UIKit Extensions";
+			sourceTree = "<group>";
+		};
 		DC422448207CAED60006A2A6 /* Theming */ = {
 			isa = PBXGroup;
 			children = (
@@ -2651,6 +2664,7 @@
 				DCC832E5242CB14E00153F8C /* Notifications */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
 				DC0030BE2350B1CE00BB8570 /* Tools */,
+				DC3DDEFE287E1AA500E5586D /* UIKit Extensions */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
 				DC774E6522F44EA7000B11A1 /* Resources */,
 			);
@@ -3157,6 +3171,7 @@
 				DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */,
 				DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */,
 				DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */,
+				DC3DDF07287E1C0E00E5586D /* UIViewController+HostBundleID.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
 				DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */,
@@ -4292,6 +4307,7 @@
 				DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */,
 				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
+				DC3DDF06287E1C0800E5586D /* UIViewController+HostBundleID.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
 				DCD71E8027427463001592C6 /* BuildOptions.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
@@ -4670,8 +4686,8 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.10.0;
-				APP_VERSION = 217;
+				APP_SHORT_VERSION = 11.10.1;
+				APP_VERSION = 225;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4739,8 +4755,8 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 11.10.0;
-				APP_VERSION = 217;
+				APP_SHORT_VERSION = 11.10.1;
+				APP_VERSION = 225;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

@@ -397,7 +397,16 @@ public class ThemeCollection : NSObject {
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
 
 				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
+                var defaultStatusBarStyle : UIStatusBarStyle = .lightContent
+                if let backgroundColor = self.navigationBarColors.backgroundColor, backgroundColor.isLight() {
+                    if #available(iOSApplicationExtension 13.0, *) {
+                        defaultStatusBarStyle = .darkContent
+                    } else {
+                        defaultStatusBarStyle = .default
+                    }
+                }
+            
+                self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: defaultStatusBarStyle)
 				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
 
@@ -411,10 +420,10 @@ public class ThemeCollection : NSObject {
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
 
-				if lightBrandColor.isEqual(UIColor(hex: 0xFFFFFF)) {
+				if lightBrandColor.isLight() {
 					self.neutralColors.normal.background = self.darkBrandColor
 					self.lightBrandColors.filledColorPairCollection.normal.background = self.darkBrandColor
-				}
+                }
 		}
 
 		self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
