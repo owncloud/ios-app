@@ -182,6 +182,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	private var cancelButton = ThemeButton(type: .custom)
 	private var metadataInfoLabel = UILabel()
 	private var showPreviewButton = ThemeButton(type: .custom)
+	private var primaryUnviewableActionButton = ThemeButton(type: .custom)
 	private var infoLabel = UILabel()
 	private var connectionActivityView = UIActivityIndicatorView(style: .white)
 
@@ -222,6 +223,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		if #available(iOS 13.4, *) {
 			PointerEffect.install(on: cancelButton, effectStyle: .highlight)
 			PointerEffect.install(on: showPreviewButton, effectStyle: .highlight)
+			PointerEffect.install(on: primaryUnviewableActionButton, effectStyle: .highlight)
 		}
 
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -243,14 +245,21 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		cancelButton.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton.setTitle("Cancel".localized, for: .normal)
-		cancelButton.addTarget(self, action: #selector(cancelDownload(sender:)), for: UIControl.Event.touchUpInside)
+		cancelButton.addTarget(self, action: #selector(cancelDownload(sender:)), for: .primaryActionTriggered)
 
 		view.addSubview(cancelButton)
 
 		showPreviewButton.translatesAutoresizingMaskIntoConstraints = false
 		showPreviewButton.setTitle("Open file".localized, for: .normal)
-		showPreviewButton.addTarget(self, action: #selector(downloadItem), for: UIControl.Event.touchUpInside)
+		showPreviewButton.addTarget(self, action: #selector(downloadItem), for: .primaryActionTriggered)
 		view.addSubview(showPreviewButton)
+
+		let title = primaryUnviewableAction?.actionExtension.name ?? ""
+
+		primaryUnviewableActionButton.translatesAutoresizingMaskIntoConstraints = false
+		primaryUnviewableActionButton.setTitle(title, for: .normal)
+		primaryUnviewableActionButton.addTarget(self, action: #selector(primaryUnviewableActionPressed), for: .primaryActionTriggered)
+		view.addSubview(primaryUnviewableActionButton)
 
 		infoLabel.translatesAutoresizingMaskIntoConstraints = false
 		infoLabel.adjustsFontForContentSizeCategory = true
@@ -282,6 +291,9 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 			showPreviewButton.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			showPreviewButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: verticalSpacing),
+
+			primaryUnviewableActionButton.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			primaryUnviewableActionButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: verticalSpacing),
 
 			infoLabel.centerXAnchor.constraint(equalTo: metadataInfoLabel.centerXAnchor),
 			infoLabel.topAnchor.constraint(equalTo: metadataInfoLabel.bottomAnchor, constant: verticalSpacing),
@@ -351,6 +363,10 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 	}
 
+	@objc func primaryUnviewableActionPressed(sender: Any? = nil) {
+		primaryUnviewableAction?.run()
+	}
+
 	@objc func optionsBarButtonPressed(_ sender: UIBarButtonItem) {
 		guard let core = core, let item = item else {
 			return
@@ -362,6 +378,23 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)
 		}
+	}
+
+	var hasPrimaryUnviewableAction : Bool {
+		return primaryUnviewableAction != nil
+	}
+
+	var primaryUnviewableAction : Action? {
+		if let item = item, let core = core {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .unviewableFileType)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: nil)
+
+			let actions = Action.sortedApplicableActions(for: actionContext)
+
+			return actions.first
+		}
+
+		return nil
 	}
 
 	// MARK: - Update control
@@ -492,16 +525,20 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		case .initial:
 			hideProgressIndicators()
 			showPreviewButton.isHidden = true
+			primaryUnviewableActionButton.isHidden = true
 
 		case .online:
 			connectionActivityView.stopAnimating()
 			hideProgressIndicators()
 			showPreviewButton.isHidden = true
+			primaryUnviewableActionButton.isHidden = true
 
 			if let item = self.item, !canPreviewCurrentItem {
 				if self.core?.localCopy(of:item) == nil {
 					showPreviewButton.isHidden = false
 					showPreviewButton.setTitle("Download".localized, for: .normal)
+				} else {
+					primaryUnviewableActionButton.isHidden = !hasPrimaryUnviewableAction
 				}
 			}
 
@@ -515,6 +552,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			progressView.isHidden = true
 			cancelButton.isHidden = true
 			showPreviewButton.isHidden = true
+			primaryUnviewableActionButton.isHidden = true
 			infoLabel.isHidden = false
 			infoLabel.text = "Network unavailable".localized
 
@@ -528,11 +566,13 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			cancelButton.isHidden = false
 			infoLabel.isHidden = true
 			showPreviewButton.isHidden = true
+			primaryUnviewableActionButton.isHidden = true
 
 		case .downloadFinished:
 			cancelButton.isHidden = true
 			progressView.isHidden = true
 			showPreviewButton.isHidden = true
+			primaryUnviewableActionButton.isHidden = true
 
 			if canPreviewCurrentItem {
 				iconImageView.isHidden = true
@@ -540,6 +580,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				metadataInfoLabel.isHidden = true
 				infoLabel.isHidden = true
 				cancelButton.isHidden = true
+			} else {
+				primaryUnviewableActionButton.isHidden = !hasPrimaryUnviewableAction
 			}
 
 		case .previewFailed:
@@ -700,6 +742,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		cancelButton.applyThemeCollection(collection)
 		metadataInfoLabel.applyThemeCollection(collection)
 		showPreviewButton.applyThemeCollection(collection)
+		primaryUnviewableActionButton.applyThemeCollection(collection)
 		infoLabel.applyThemeCollection(collection)
 	}
 
