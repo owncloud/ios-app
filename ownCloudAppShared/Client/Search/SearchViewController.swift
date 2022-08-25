@@ -213,8 +213,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	}
 
 	func sendSearchFieldContentsToActiveScope() {
-		let searchText = searchField.text
-		self.activeScope?.updateForSearchTerm((searchText != "") ? searchText : nil)
+		self.activeScope?.tokenizer?.updateFor(searchField: searchField)
 	}
 
 	// MARK: - End search

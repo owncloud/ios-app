@@ -29,6 +29,8 @@ open class SearchScope: NSObject {
 
 	public var clientContext: ClientContext
 
+	public var tokenizer: SearchTokenizer?
+
 	static public func modifyingQuery(with context: ClientContext, localizedName: String) -> SearchScope {
 		return QueryModifyingSearchScope(with: context, cellStyle: nil, localizedName: localizedName)
 	}
@@ -47,11 +49,12 @@ open class SearchScope: NSObject {
 
 		super.init()
 
+		tokenizer = SearchTokenizer(scope: self, clientContext: context)
+
 		resultsCellStyle = cellStyle
 	}
 
-	open func updateForSearchTerm(_ term: String?) {
-
+	open func updateFor(_ searchElements: [SearchElement]) {
 	}
 }
 
@@ -86,12 +89,19 @@ open class ItemSearchScope : SearchScope {
 
 	open var searchTerm: String?
 
-	open override func updateForSearchTerm(_ term: String?) {
+	open override func updateFor(_ searchElements: [SearchElement]) {
 		if isSelected {
-			searchTerm = term
+			var queryConditions : [OCQueryCondition] = []
 
-			if let searchText = term {
-				queryCondition = OCQueryCondition.fromSearchTerm(searchText)
+			for searchElement in searchElements {
+				if let queryCondition = searchElement.representedObject as? OCQueryCondition {
+					queryConditions.append(queryCondition)
+				}
+			}
+
+			if queryConditions.count > 0 {
+				queryCondition = OCQueryCondition.require(queryConditions)
+				Log.debug("Assembled search: \(queryCondition!.composedSearchTerm)")
 			} else {
 				queryCondition = nil
 			}

@@ -64,3 +64,51 @@
 "keyword_w" = "w"; /* short-form for "week" */
 "keyword_m" = "m"; /* short-form for "month" */
 "keyword_y" = "y"; /* short-form for "year" */
+
+/* Search token labels */
+"No folder" = "No folder";
+"Folder" = "Folder";
+
+"No file" = "No file";
+"File" = "File";
+
+"No image" = "No image";
+"Image" = "Image";
+
+"No video" = "No video";
+"Video" = "Video";
+
+"Before" = "Before";
+"After" = "After";
+
+"Not on" = "Not on";
+"On" = "On";
+"Not" = "Not";
+
+"Before today" = "Before today";
+"Before yesterday" = "Before yesterday";
+">%d days ago" = ">%d days ago";
+"Today" = "Today";
+"Since yesterday" = "Since yesterday";
+"Last %d days" = "Last %d days";
+
+"Before this week" = "Before this week";
+"Before last week" = "Before last week";
+">%d weeks ago" = ">%d weeks ago";
+"This week" = "This week";
+"Since last week" = "Since last week";
+"Last %d weeks" = "Last %d weeks";
+
+"Before this month" = "Before this month";
+"Before last month" = "Before last month";
+"> %d months ago" = "> %d months ago";
+"This month" = "This month";
+"Since last month" = "Since last month";
+"Last %d months" = "Last %d months";
+
+"Before this year" = "Before this year";
+"Before last year" = "Before last year";
+"> %d years ago" = "> %d years ago";
+"This year" = "This year";
+"Since last year" = "Since last year";
+"Last %d years" = "Last %d years";

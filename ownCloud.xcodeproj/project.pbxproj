@@ -287,6 +287,9 @@
 		DC24B29825BA2A34005783E2 /* Branding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24B27225B9DF31005783E2 /* Branding.m */; };
 		DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B2AA25BA316D005783E2 /* Branding+App.swift */; };
 		DC24B31D25BB6FC4005783E2 /* IssuesCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */; };
+		DC24E0EA28B36A81002E4F5B /* OCSearchSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = DC24E0E828B36A81002E4F5B /* OCSearchSegment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC24E0EB28B36A81002E4F5B /* OCSearchSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24E0E928B36A81002E4F5B /* OCSearchSegment.m */; };
+		DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
@@ -344,6 +347,9 @@
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
 		DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
+		DC65590F28A2633C0003D130 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC65590E28A2633C0003D130 /* UITextField+Extension.swift */; };
+		DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC65592D28A644E10003D130 /* SearchTokenizer.swift */; };
+		DC65593228A648680003D130 /* SearchElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC65593128A648680003D130 /* SearchElement.swift */; };
 		DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B394482385334D00892E8D /* ThemeView.swift */; };
 		DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */; };
 		DC66A9F8279F467200792AC8 /* UIKeyCommand+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */; };
@@ -1264,6 +1270,9 @@
 		DC24B27225B9DF31005783E2 /* Branding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Branding.m; sourceTree = "<group>"; };
 		DC24B2AA25BA316D005783E2 /* Branding+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Branding+App.swift"; sourceTree = "<group>"; };
 		DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesCardViewController.swift; sourceTree = "<group>"; };
+		DC24E0E828B36A81002E4F5B /* OCSearchSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSearchSegment.h; sourceTree = "<group>"; };
+		DC24E0E928B36A81002E4F5B /* OCSearchSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSearchSegment.m; sourceTree = "<group>"; };
+		DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCQueryCondition+SearchToken.swift"; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -1342,6 +1351,9 @@
 		DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientActivityCell.swift; sourceTree = "<group>"; };
 		DC63208621FCEE5D007EC0A8 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
+		DC65590E28A2633C0003D130 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
+		DC65592D28A644E10003D130 /* SearchTokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTokenizer.swift; sourceTree = "<group>"; };
+		DC65593128A648680003D130 /* SearchElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchElement.swift; sourceTree = "<group>"; };
 		DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceViewHost.swift; sourceTree = "<group>"; };
 		DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKeyCommand+Extension.swift"; sourceTree = "<group>"; };
 		DC66F39A239659C000CF4812 /* OCASN1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCASN1.h; sourceTree = "<group>"; };
@@ -1985,6 +1997,7 @@
 				DC3AB24328104AA500789435 /* UIFont+Weight.swift */,
 				DC3AB2452810602500789435 /* UILabel+Extension.swift */,
 				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
+				DC65590E28A2633C0003D130 /* UITextField+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -2514,6 +2527,16 @@
 			path = "Data Item Interactions";
 			sourceTree = "<group>";
 		};
+		DC65592C28A644B60003D130 /* Tokenizer */ = {
+			isa = PBXGroup;
+			children = (
+				DC65592D28A644E10003D130 /* SearchTokenizer.swift */,
+				DC65593128A648680003D130 /* SearchElement.swift */,
+				DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */,
+			);
+			path = Tokenizer;
+			sourceTree = "<group>";
+		};
 		DC66F3A723965BE300CF4812 /* Parser Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -2550,6 +2573,8 @@
 				DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */,
 				DC7C100F24B5F81E00227085 /* OCBookmark+AppExtensions.m */,
 				DC7C100E24B5F81E00227085 /* OCBookmark+AppExtensions.h */,
+				DC24E0E928B36A81002E4F5B /* OCSearchSegment.m */,
+				DC24E0E828B36A81002E4F5B /* OCSearchSegment.h */,
 				DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */,
 				DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */,
 			);
@@ -2771,6 +2796,7 @@
 			children = (
 				DCB5D56A2861BEBE004AF425 /* SearchViewController.swift */,
 				DCB5D5A828632C1B004AF425 /* Scopes */,
+				DC65592C28A644B60003D130 /* Tokenizer */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -3414,6 +3440,7 @@
 				DCF072DC279857A300E0B01D /* OCCircularContentView.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
+				DC24E0EA28B36A81002E4F5B /* OCSearchSegment.h in Headers */,
 				DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */,
 				DCF072EC27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h in Headers */,
 				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
@@ -4390,6 +4417,7 @@
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
+				DC65590F28A2633C0003D130 /* UITextField+Extension.swift in Sources */,
 				DC46F3D72845FCFA00038880 /* UIView+OCDataItem.swift in Sources */,
 				399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
@@ -4471,6 +4499,8 @@
 				DC0A357824C0E43700FB58FC /* CardPresentationController.swift in Sources */,
 				393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */,
 				DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */,
+				DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */,
+				DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */,
 				DC0A357324C0E42D00FB58FC /* PushTransitionDelegate.swift in Sources */,
 				DCE4E45424C1EC040051722F /* BreadCrumbTableViewController.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
@@ -4497,6 +4527,7 @@
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
+				DC65593228A648680003D130 /* SearchElement.swift in Sources */,
 				DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
 				DC46F3CC2844A8EA00038880 /* ViewCell.swift in Sources */,
@@ -4576,6 +4607,7 @@
 				DCCD778C2604C91B00098573 /* NSDate+ComputedTimes.m in Sources */,
 				DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */,
 				DCF575EC2796CBDF003BEBBA /* OCImage+ViewProvider.m in Sources */,
+				DC24E0EB28B36A81002E4F5B /* OCSearchSegment.m in Sources */,
 				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,
 				DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */,
