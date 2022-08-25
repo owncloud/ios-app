@@ -292,8 +292,8 @@
 		DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */; };
 		DC24E10428B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10328B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift */; };
 		DC24E10728B7BFD6002E4F5B /* ItemSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */; };
-		DC24E10B28B7C185002E4F5B /* QueryModifyingSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10A28B7C185002E4F5B /* QueryModifyingSearchScope.swift */; };
-		DC24E10D28B7C19F002E4F5B /* CustomQuerySearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10C28B7C19F002E4F5B /* CustomQuerySearchScope.swift */; };
+		DC24E10B28B7C185002E4F5B /* SingleFolderSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */; };
+		DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
@@ -1279,8 +1279,8 @@
 		DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCQueryCondition+SearchToken.swift"; sourceTree = "<group>"; };
 		DC24E10328B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuerySearchTokenizer.swift; sourceTree = "<group>"; };
 		DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchScope.swift; sourceTree = "<group>"; };
-		DC24E10A28B7C185002E4F5B /* QueryModifyingSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryModifyingSearchScope.swift; sourceTree = "<group>"; };
-		DC24E10C28B7C19F002E4F5B /* CustomQuerySearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuerySearchScope.swift; sourceTree = "<group>"; };
+		DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFolderSearchScope.swift; sourceTree = "<group>"; };
+		DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSearchScope.swift; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -2410,8 +2410,8 @@
 			isa = PBXGroup;
 			children = (
 				DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */,
-				DC24E10A28B7C185002E4F5B /* QueryModifyingSearchScope.swift */,
-				DC24E10C28B7C19F002E4F5B /* CustomQuerySearchScope.swift */,
+				DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */,
+				DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */,
 			);
 			path = Scopes;
 			sourceTree = "<group>";
@@ -4565,13 +4565,13 @@
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
-				DC24E10D28B7C19F002E4F5B /* CustomQuerySearchScope.swift in Sources */,
+				DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */,
 				DC65593228A648680003D130 /* SearchElement.swift in Sources */,
 				DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
 				DC46F3CC2844A8EA00038880 /* ViewCell.swift in Sources */,
 				DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */,
-				DC24E10B28B7C185002E4F5B /* QueryModifyingSearchScope.swift in Sources */,
+				DC24E10B28B7C185002E4F5B /* SingleFolderSearchScope.swift in Sources */,
 				3912208223436EB80026C290 /* SortMethod.swift in Sources */,
 				DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */,
 				DC0A359524C0E5F900FB58FC /* UIImage+Extension.swift in Sources */,

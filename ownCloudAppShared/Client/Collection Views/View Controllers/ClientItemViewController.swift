@@ -652,16 +652,23 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	@objc open func startSearch() {
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
-				searchViewController = SearchViewController(with: clientContext, scopes: [
+				var scopes : [SearchScope] = [
 					// In this folder
-					.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
+					.modifyingQuery(with: clientContext, localizedName: "Folder".localized)
 
 					// + Folder and subfolders
-					// + This space
+				]
 
-					// Account
-					.globalSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized)
-				], delegate: self)
+				// Drive
+				if clientContext.core?.useDrives == true {
+					let driveName = clientContext.drive?.name ?? "Drive".localized
+					scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
+				}
+
+				// Account
+				scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized))
+
+				searchViewController = SearchViewController(with: clientContext, scopes: scopes, delegate: self)
 
 				if let searchViewController = searchViewController {
 					self.addStacked(child: searchViewController, position: .top)

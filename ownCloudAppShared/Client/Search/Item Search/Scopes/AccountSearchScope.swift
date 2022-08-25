@@ -1,5 +1,5 @@
 //
-//  CustomQuerySearchScope.swift
+//  AccountSearchScope.swift
 //  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 25.08.22.
@@ -89,6 +89,8 @@ open class CustomQuerySearchScope : ItemSearchScope {
 		}
 	}
 
+	public var queryConditionModifier : ((OCQueryCondition?) -> OCQueryCondition?)?  // MARK: modifier that can modify the query condition before it is passed to create the OCQuery backing the scope. The modification is invisible to the outside. Can be used to add constraints like limit to a drive, etc.
+
 	private var lastSearchTerm : String?
 	private var scrollToTopWithNextRefresh : Bool = false
 
@@ -102,7 +104,14 @@ open class CustomQuerySearchScope : ItemSearchScope {
 			scrollToTopWithNextRefresh = true
 		}
 
- 		if let condition = queryCondition {
+		var condition = queryCondition
+
+		if let queryConditionModifier = queryConditionModifier, let baseCondition = condition {
+			// Apply query condition modifier
+			condition = queryConditionModifier(baseCondition)
+		}
+
+ 		if let condition = condition {
 			if let sortDescriptor = clientContext.sortDescriptor {
 				condition.sortBy = sortDescriptor.method.sortPropertyName
 				condition.sortAscending = sortDescriptor.direction != .ascendant
@@ -129,5 +138,38 @@ open class CustomQuerySearchScope : ItemSearchScope {
 
 	open override func sortDescriptorChanged(to sortDescriptor: SortDescriptor?) {
 		updateCustomSearchQuery()
+	}
+}
+
+// Subclasses
+open class AccountSearchScope : CustomQuerySearchScope {
+	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {
+		var revealCellStyle : CollectionViewCellStyle?
+
+		if let cellStyle = cellStyle {
+			revealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
+				cellStyle.showRevealButton = true
+			})
+		}
+
+		super.init(with: context, cellStyle: revealCellStyle, localizedName: name, icon: icon)
+	}
+}
+
+open class DriveSearchScope : AccountSearchScope {
+	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {
+		super.init(with: context, cellStyle: cellStyle, localizedName: name, icon: icon)
+
+		if context.core?.useDrives == true, let driveID = context.drive?.identifier {
+			let requireDriveCondition = OCQueryCondition.where(.driveID, isEqualTo: driveID)
+
+			queryConditionModifier = { (baseCondition) in
+				if let baseCondition = baseCondition {
+					return .require([ requireDriveCondition, baseCondition ])
+				}
+
+				return nil
+			}
+		}
 	}
 }

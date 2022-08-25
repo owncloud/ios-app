@@ -33,15 +33,15 @@ open class SearchScope: NSObject {
 	public var tokenizer: SearchTokenizer?
 
 	static public func modifyingQuery(with context: ClientContext, localizedName: String) -> SearchScope {
-		return QueryModifyingSearchScope(with: context, cellStyle: nil, localizedName: localizedName)
+		return SingleFolderSearchScope(with: context, cellStyle: nil, localizedName: localizedName, icon: UIImage(systemName: "folder"))
 	}
 
-	static public func globalSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		let revealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
-			cellStyle.showRevealButton = true
-		})
+	static public func driveSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		return DriveSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, icon: UIImage(systemName: "person"))
+	}
 
-		return CustomQuerySearchScope(with: context, cellStyle: revealCellStyle, localizedName: localizedName)
+	static public func accountSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, icon: UIImage(systemName: "square.grid.2x2j"))
 	}
 
 	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {

@@ -1,5 +1,5 @@
 //
-//  QueryModifyingSearchScope.swift
+//  SingleFolderSearchScope.swift
 //  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 25.08.22.
@@ -63,4 +63,8 @@ open class QueryModifyingSearchScope : ItemSearchScope {
 			}
 		}
 	}
+}
+
+// Subclass
+open class SingleFolderSearchScope : QueryModifyingSearchScope {
 }
