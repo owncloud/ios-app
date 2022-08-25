@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudApp
 
+// Base search tokenizer class
 open class SearchTokenizer: NSObject {
 	weak var scope: SearchScope?
 	public var clientContext: ClientContext?
@@ -54,11 +55,12 @@ open class SearchTokenizer: NSObject {
 
 			for searchSegment in searchSegments.reversed() { // Iterate segments in reverse so that replacing a segment doesn't change its position
 				if !searchSegment.hasCursor, let token = shouldTokenize(segment: searchSegment) {
+					// Create token from search segment and insert it position 0 (remember: we're iterating segments in reverse!)
 					assembledTokens.insert(token, at: 0)
 					replace(segment: searchSegment, with: token)
 				} else {
-					let queryCondition = OCQueryCondition.fromSearchTerm(searchSegment.segmentedString)
-					assembledElements.insert(SearchElement(text: searchSegment.segmentedString, representedObject: queryCondition, inputComplete: !searchSegment.hasCursor), at: 0)
+					// Create search term text element and insert it position 0 (remember: we're iterating segments in reverse!)
+					assembledElements.insert(composeTextElement(segment: searchSegment), at: 0)
 				}
 			}
 		}
@@ -73,20 +75,7 @@ open class SearchTokenizer: NSObject {
 		scope?.updateFor(assembledElements)
 	}
 
-	open func shouldTokenize(segment: OCSearchSegment) -> SearchToken? {
-		if let queryCondition = OCQueryCondition.fromSearchTerm(segment.segmentedString) {
-			if let property = queryCondition.property {
-				if (property != .name) || (queryCondition.operator != .propertyContains) {
-					return queryCondition.generateSearchToken(fallbackText: segment.segmentedString, inputComplete: !segment.hasCursor)
-				}
-			} else {
-				return queryCondition.generateSearchToken(fallbackText: segment.segmentedString, inputComplete: !segment.hasCursor)
-			}
-		}
-
-		return nil
-	}
-
+	// MARK: UISearchToken generation
 	open func replace(segment: OCSearchSegment, with searchToken: SearchToken) {
 		var replaceRange = segment.range
 		replaceRange.length += 1 // remove trailing space as well as the spaces accumulate otherwise
@@ -105,5 +94,16 @@ open class SearchTokenizer: NSObject {
 
 		self.scope = scope
 		self.clientContext = clientContext
+	}
+
+	// MARK: - Conversion to token & text element
+	open func shouldTokenize(segment: OCSearchSegment) -> SearchToken? {
+		// No tokenization
+		return nil
+	}
+
+	open func composeTextElement(segment: OCSearchSegment) -> SearchElement {
+		// Conversion of text elements in SearchElements
+		return SearchElement(text: segment.segmentedString, representedObject: nil, inputComplete: !segment.hasCursor)
 	}
 }

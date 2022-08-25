@@ -19,10 +19,10 @@
 import UIKit
 
 open class SearchElement: NSObject {
-	var text: String
-	var inputComplete: Bool
+	open var text: String
+	open var inputComplete: Bool
 
-	var representedObject: AnyObject?
+	open var representedObject: AnyObject?
 
 	required public init(text: String, representedObject: AnyObject? = nil, inputComplete: Bool) {
 		self.text = text
@@ -35,7 +35,7 @@ open class SearchElement: NSObject {
 }
 
 open class SearchToken: SearchElement {
-	var icon: UIImage?
+	open var icon: UIImage?
 
 	required public init(text: String, icon: UIImage?, representedObject: AnyObject?, inputComplete: Bool) {
 		super.init(text: text, representedObject: representedObject, inputComplete: inputComplete)

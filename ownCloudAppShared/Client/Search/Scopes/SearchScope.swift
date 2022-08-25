@@ -21,6 +21,7 @@ import ownCloudSDK
 
 open class SearchScope: NSObject {
 	public var localizedName : String
+	public var icon : UIImage?
 
 	@objc public dynamic var results: OCDataSource?
 	@objc public dynamic var resultsCellStyle: CollectionViewCellStyle?
@@ -43,219 +44,16 @@ open class SearchScope: NSObject {
 		return CustomQuerySearchScope(with: context, cellStyle: revealCellStyle, localizedName: localizedName)
 	}
 
-	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String) {
+	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {
 		clientContext = context
 		localizedName = name
 
 		super.init()
 
-		tokenizer = SearchTokenizer(scope: self, clientContext: context)
-
 		resultsCellStyle = cellStyle
+		self.icon = icon
 	}
 
 	open func updateFor(_ searchElements: [SearchElement]) {
-	}
-}
-
-open class ItemSearchScope : SearchScope {
-	private var sortDescriptorObserver: NSKeyValueObservation?
-
-	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String) {
-		super.init(with: context, cellStyle: cellStyle, localizedName: name)
-
-		sortDescriptorObserver = context.observe(\.sortDescriptor, changeHandler: { [weak self] context, change in
-			self?.sortDescriptorChanged(to: context.sortDescriptor)
-		})
-	}
-
-	deinit {
-		sortDescriptorObserver?.invalidate()
-	}
-
-	open func sortDescriptorChanged(to sortDescriptor: SortDescriptor?) {
-	}
-
-	open var queryCondition: OCQueryCondition?
-
-	open override var isSelected: Bool {
-		didSet {
-			if !isSelected {
-				queryCondition = nil
-				results = nil
-			}
-		}
-	}
-
-	open var searchTerm: String?
-
-	open override func updateFor(_ searchElements: [SearchElement]) {
-		if isSelected {
-			var queryConditions : [OCQueryCondition] = []
-
-			for searchElement in searchElements {
-				if let queryCondition = searchElement.representedObject as? OCQueryCondition {
-					queryConditions.append(queryCondition)
-				}
-			}
-
-			if queryConditions.count > 0 {
-				queryCondition = OCQueryCondition.require(queryConditions)
-				Log.debug("Assembled search: \(queryCondition!.composedSearchTerm)")
-			} else {
-				queryCondition = nil
-			}
-		}
-	}
-}
-
-open class QueryModifyingSearchScope : ItemSearchScope {
-	public override var isSelected: Bool {
-		didSet {
-			if let query = clientContext.query {
-				if isSelected {
-					// Modify existing query provided via clientContext
-					results = query.queryResultsDataSource
-				}
-			}
-		}
-	}
-
-	open override var queryCondition: OCQueryCondition? {
-		didSet {
-			let queryCondition = queryCondition
-
-			if let query = clientContext.query {
-				if queryCondition != nil {
-					let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-						if let item = item, let queryCondition = queryCondition {
-							return queryCondition.fulfilled(by: item)
-						}
-						return false
-					}
-
-					if let filter = query.filter(withIdentifier: "text-search") {
-						query.updateFilter(filter, applyChanges: { filterToChange in
-							(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
-						})
-					} else {
-						query.addFilter(OCQueryFilter(handler: filterHandler), withIdentifier: "text-search")
-					}
-				} else {
-					if let filter = query.filter(withIdentifier: "text-search") {
-						query.removeFilter(filter)
-					}
-				}
-			}
-		}
-	}
-}
-
-open class CustomQuerySearchScope : ItemSearchScope {
-	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
- 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
-
-	public override var isSelected: Bool {
-		didSet {
-			if isSelected {
-				resultActionSource.setItems([
-					OCAction(title: "Show more results".localized, icon: nil, action: { [weak self] action, options, completion in
-						self?.showMoreResults()
-						completion(nil)
-					})
-				], updated: nil)
-				composeResultsDataSource()
-			}
-		}
-	}
-
-	public var resultActionSource: OCDataSourceArray = OCDataSourceArray()
-
-	var resultsSubscription: OCDataSourceSubscription?
-
-	func composeResultsDataSource() {
-		if let queryResultsSource = customQuery?.queryResultsDataSource {
-			let composedResults = OCDataSourceComposition(sources: [
-				queryResultsSource,
-				resultActionSource
-			])
-
-			let maxResultCount = maxResultCount
-			let resultActionSource = resultActionSource
-
-			resultsSubscription = queryResultsSource.subscribe(updateHandler: { [weak composedResults, weak resultActionSource] (subscription) in
-				let snapshot = subscription.snapshotResettingChangeTracking(true)
-
-				if let resultActionSource = resultActionSource {
-					OnMainThread {
-						composedResults?.setInclude((snapshot.numberOfItems >= maxResultCount), for: resultActionSource)
-					}
-				}
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
-
-			results = composedResults
-		} else {
-			results = nil
-		}
-	}
-
-	public var customQuery: OCQuery? {
-		willSet {
-			if let core = clientContext.core, let oldQuery = customQuery {
-				core.stop(oldQuery)
-			}
-		}
-
-		didSet {
-			if let core = clientContext.core, let newQuery = customQuery {
-				core.start(newQuery)
-
-				composeResultsDataSource()
-			} else {
-				results = nil
-			}
-		}
-	}
-
-	private var lastSearchTerm : String?
-	private var scrollToTopWithNextRefresh : Bool = false
-
- 	public func updateCustomSearchQuery() {
-		if lastSearchTerm != searchTerm {
-			// Reset max result count when search text changes
-			maxResultCount = maxResultCountDefault
-			lastSearchTerm = searchTerm
-
-			// Scroll to top when search text changes
-			scrollToTopWithNextRefresh = true
-		}
-
- 		if let condition = queryCondition {
-			if let sortDescriptor = clientContext.sortDescriptor {
-				condition.sortBy = sortDescriptor.method.sortPropertyName
-				condition.sortAscending = sortDescriptor.direction != .ascendant
-			}
-
-			condition.maxResultCount = NSNumber(value: maxResultCount)
-
-			customQuery = OCQuery(condition:condition, inputFilter: nil)
- 		} else {
- 			customQuery = nil
- 		}
- 	}
-
-	func showMoreResults() {
-		maxResultCount += maxResultCountDefault
-		updateCustomSearchQuery()
-	}
-
- 	open override var queryCondition: OCQueryCondition? {
- 		didSet {
- 			updateCustomSearchQuery()
-		}
-	}
-
-	open override func sortDescriptorChanged(to sortDescriptor: SortDescriptor?) {
-		updateCustomSearchQuery()
 	}
 }
