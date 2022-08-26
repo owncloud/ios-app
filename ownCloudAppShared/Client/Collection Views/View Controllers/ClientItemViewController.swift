@@ -661,7 +661,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				// Drive
 				if clientContext.core?.useDrives == true {
-					let driveName = clientContext.drive?.name ?? "Drive".localized
+					let driveName = "Space".localized
 					scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
 				}
 

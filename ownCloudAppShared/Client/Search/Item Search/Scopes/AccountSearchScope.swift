@@ -143,7 +143,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
 
 // Subclasses
 open class AccountSearchScope : CustomQuerySearchScope {
-	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {
+	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
 		var revealCellStyle : CollectionViewCellStyle?
 
 		if let cellStyle = cellStyle {
@@ -152,13 +152,13 @@ open class AccountSearchScope : CustomQuerySearchScope {
 			})
 		}
 
-		super.init(with: context, cellStyle: revealCellStyle, localizedName: name, icon: icon)
+		super.init(with: context, cellStyle: revealCellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 	}
 }
 
 open class DriveSearchScope : AccountSearchScope {
-	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {
-		super.init(with: context, cellStyle: cellStyle, localizedName: name, icon: icon)
+	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
+		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		if context.core?.useDrives == true, let driveID = context.drive?.identifier {
 			let requireDriveCondition = OCQueryCondition.where(.driveID, isEqualTo: driveID)

@@ -105,6 +105,8 @@
 "size" = "size";
 "date" = "date";
 "Search folder" = "Search folder";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";

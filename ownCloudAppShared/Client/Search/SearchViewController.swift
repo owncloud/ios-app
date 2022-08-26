@@ -35,7 +35,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	open var scopes: [SearchScope]? {
 		didSet {
-			updateSegmentsFromScopes()
+			updateChoicesFromScopes()
 		}
 	}
 
@@ -53,9 +53,11 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		}
 
 		didSet {
-			if let activeScope = activeScope, let scopeIndex = scopes?.firstIndex(of: activeScope) {
+			if let activeScope = activeScope, let activeScopeChoice = self.scopePopup?.choices?.first(where: { choice in
+				(choice.representedObject as? NSObject) == activeScope
+			}) {
 				OnMainThread {
-					self.scopeView.selectedSegmentIndex = scopeIndex
+					self.scopePopup?.selectedChoice = activeScopeChoice
 				}
 			}
 
@@ -74,18 +76,34 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 					}
 				})
 
+				searchField.placeholder = activeScope?.localizedPlaceholder
+
 				sendSearchFieldContentsToActiveScope()
 			}
 		}
 	}
 
-	private func updateSegmentsFromScopes() {
-		scopeView.removeAllSegments()
+	private func updateChoicesFromScopes() {
+		var choices : [PopupButtonChoice] = []
 
 		if let scopes = scopes {
 			for scope in scopes {
-				scopeView.insertSegment(withTitle: scope.localizedName, at: scopeView.numberOfSegments, animated: false)
+				choices.append(PopupButtonChoice(with: scope.localizedName, image: scope.icon, representedObject: scope))
 			}
+		}
+
+		let previouslySelectedChoice = scopePopup?.selectedChoice
+
+		scopePopup?.choices = choices
+
+		if let previouslySelectedChoice = previouslySelectedChoice, let previouslyRepresentedObject = previouslySelectedChoice.representedObject as? NSObject, let equalSelectedChoice = choices.first(where: { choice in
+			if let representedObject = choice.representedObject as? NSObject {
+				return representedObject == previouslyRepresentedObject
+			}
+
+			return false
+		}) {
+			scopePopup?.selectedChoice = equalSelectedChoice
 		}
 	}
 
@@ -110,31 +128,57 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	// MARK: - Views
 	var searchField: UISearchTextField = UISearchTextField()
-	var scopeView: UISegmentedControl = UISegmentedControl()
+	var scopePopup: PopupButtonController?
+	var scopeViewController: UIViewController? {
+		willSet {
+			scopeViewController?.willMove(toParent: nil)
+			scopeViewController?.view.removeFromSuperview()
+			scopeViewController?.removeFromParent()
+
+			scopeViewControllerConstraints = nil
+		}
+		didSet {
+			if let scopeViewController = scopeViewController, let scopeViewControllerView = scopeViewController.view {
+				addChild(scopeViewController)
+				view.addSubview(scopeViewControllerView)
+				scopeViewControllerConstraints = [
+					scopeViewControllerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+					scopeViewControllerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+					scopeViewControllerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+					scopeViewControllerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
+				]
+				scopeViewController.didMove(toParent: self)
+			}
+		}
+	}
+	private var scopeViewControllerConstraints : [NSLayoutConstraint]? {
+		willSet {
+			if let scopeViewControllerConstraints = scopeViewControllerConstraints {
+				NSLayoutConstraint.deactivate(scopeViewControllerConstraints)
+			}
+		}
+		didSet {
+			if let scopeViewControllerConstraints = scopeViewControllerConstraints {
+				NSLayoutConstraint.activate(scopeViewControllerConstraints)
+			}
+		}
+	}
 
 	open override func loadView() {
 		let rootView = UIView()
 
-		scopeView.translatesAutoresizingMaskIntoConstraints = false
-		scopeView.addAction(UIAction(handler: { [weak self] action in
-			guard let self = self, let scopes = self.scopes else {
-				return
-			}
+		scopePopup = PopupButtonController(with: [], selectedChoice: nil, choiceHandler: { [weak self] choice in
+			self?.activeScope = choice.representedObject as? SearchScope
+		})
+		// scopePopup?.showTitleInButton = false
 
-			let selectedIndex = self.scopeView.selectedSegmentIndex
-
-			if selectedIndex >= 0, selectedIndex < scopes.count {
-				self.activeScope = scopes[selectedIndex]
-			}
-		}), for: .valueChanged)
-		rootView.addSubview(scopeView)
+		var scopePopupButtonConfiguration = UIButton.Configuration.borderless()
+		scopePopupButtonConfiguration.contentInsets.leading = 0
+		scopePopupButtonConfiguration.contentInsets.trailing = 5
+		scopePopup?.button.configuration = scopePopupButtonConfiguration
 
 		NSLayoutConstraint.activate([
-			scopeView.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: 5),
-			scopeView.leadingAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-			scopeView.trailingAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.trailingAnchor, constant: -10),
-			scopeView.bottomAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.bottomAnchor, constant: -10),
-
+			rootView.heightAnchor.constraint(equalToConstant: 10).with(priority: .defaultHigh), // Shrink to 10 points height if no scopeViewController is set
 			searchField.widthAnchor.constraint(equalToConstant: 10000).with(priority: .defaultHigh) // maximize width of searchField in UINavigationBar
 		])
 
@@ -149,9 +193,13 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		searchField.addTarget(self, action: #selector(searchFieldContentsChanged), for: .editingChanged)
 		searchField.delegate = self
 
+		if let scopesCount = scopes?.count, scopesCount > 1 {
+			searchField.leftView = scopePopup?.button
+		}
+
 		injectIntoNavigationItem()
 
-		updateSegmentsFromScopes()
+		updateChoicesFromScopes()
 
 		delegate?.searchBegan(for: self)
 
@@ -185,7 +233,8 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 			// Overwrite content
 			targetNavigationItem.titleView = searchField
 
-			let cancelToolbarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(endSearch))
+			// Alternative implementation as a standard "Cancel" button, more convention compliant, but needs more space: let cancelToolbarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(endSearch))
+			let cancelToolbarButton = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(endSearch))
 			targetNavigationItem.rightBarButtonItems = [ cancelToolbarButton ]
 			targetNavigationItem.hidesBackButton = true
 

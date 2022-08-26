@@ -25,8 +25,8 @@ import ownCloudApp
 open class ItemSearchScope : SearchScope {
 	private var sortDescriptorObserver: NSKeyValueObservation?
 
-	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, icon: UIImage? = nil) {
-		super.init(with: context, cellStyle: cellStyle, localizedName: name, icon: icon)
+	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
+		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		tokenizer = CustomQuerySearchTokenizer(scope: self, clientContext: context)
 

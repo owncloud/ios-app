@@ -294,6 +294,7 @@
 		DC24E10728B7BFD6002E4F5B /* ItemSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */; };
 		DC24E10B28B7C185002E4F5B /* SingleFolderSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */; };
 		DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */; };
+		DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
@@ -1281,6 +1282,7 @@
 		DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchScope.swift; sourceTree = "<group>"; };
 		DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFolderSearchScope.swift; sourceTree = "<group>"; };
 		DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSearchScope.swift; sourceTree = "<group>"; };
+		DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupButtonController.swift; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -3111,6 +3113,7 @@
 				3912208123436EB80026C290 /* SortMethod.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
 				DCD864112811FC5700CA6631 /* GradientView.swift */,
+				DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -4530,6 +4533,7 @@
 				DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */,
 				DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
+				DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */,
 				DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */,
 				DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */,
 				DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */,
@@ -5056,7 +5060,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 224;
+				APP_VERSION = 228;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5126,7 +5130,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 224;
+				APP_VERSION = 228;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
