@@ -22,7 +22,9 @@ import ownCloudSDK
 // MARK: - ownCloud brand colors
 extension UIColor {
 	static var ownCloudLightColor : UIColor { return UIColor(hex: 0x4E85C8) }
-	static var ownCloudDarkColor : UIColor { return UIColor(hex: 0x041E42) }
+    static var ownCloudDarkColor : UIColor { return UIColor(hex: 0x041E42) }
+    static var ownCloudWebDarkColor : UIColor { return UIColor(hex: 0x292929) }
+    static var ownCloudWebDarkLabelColor : UIColor { return UIColor(hex: 0xDADCDF) }
 }
 
 extension ThemeStyle {
@@ -31,10 +33,14 @@ extension ThemeStyle {
 	}
 
 	static public var ownCloudDark : ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: "Dark".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
+		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: "Dark Blue".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
 	}
-
-	static public var ownCloudClassic : ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "com.owncloud.classic", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Classic".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .contrast))
-	}
+    
+    static public var ownCloudWebDark : ThemeStyle {
+        return (ThemeStyle(styleIdentifier: "com.owncloud.web.dark", darkStyleIdentifier: "com.owncloud.web.dark", localizedName: "Dark Web".localized, lightColor: .ownCloudWebDarkLabelColor, darkColor: .ownCloudWebDarkColor, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor(red: 44, green: 101, blue: 255).hexString()]))
+    }
+    
+    static public var ownCloudClassic : ThemeStyle {
+        return (ThemeStyle(styleIdentifier: "com.owncloud.classic", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Classic".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .contrast))
+    }
 }
