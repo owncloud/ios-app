@@ -495,8 +495,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 extension ClientRootViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tabBar.applyThemeCollection(collection)
-
-		self.toolbar?.applyThemeCollection(Theme.shared.activeCollection)
+		self.toolbar?.applyThemeCollection(collection)
 
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}

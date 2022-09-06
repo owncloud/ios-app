@@ -42,7 +42,7 @@ extension ThemeStyle {
     }
     
     static public var ownCloudDarkBlack : ThemeStyle {
-        return (ThemeStyle(styleIdentifier: "com.owncloud.dark.black", darkStyleIdentifier: "com.owncloud.dark.black", localizedName: "Dark Black".localized, lightColor: .lightGray, darkColor: .black, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor.ownCloudWebDarkFolderColor.hexString()]))
+        return (ThemeStyle(styleIdentifier: "com.owncloud.dark.black", darkStyleIdentifier: "com.owncloud.dark.black", localizedName: "Dark Black".localized, lightColor: .lightGray, darkColor: .black, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor.ownCloudWebDarkFolderColor.hexString(), "Toolbar.tintColor" : UIColor.white.hexString(), "NavigationBar.tintColor" : UIColor(white: 0.888, alpha: 1.0) .hexString()]))
     }
     
     static public var ownCloudClassic : ThemeStyle {
