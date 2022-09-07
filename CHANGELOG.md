@@ -1,3 +1,25 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.10.1...master
+
+Summary
+-------
+
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+
+Details
+-------
+
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+
+   If a video file includes a metadata image, the video file was not visible, because the metadata
+   image was overlaying.
+
+   https://github.com/owncloud/enterprise/issues/5296
+
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
