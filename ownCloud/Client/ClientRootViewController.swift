@@ -196,10 +196,10 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
-				// Set up FP standby
-				if let core = core {
-					self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
-					self.fpServiceStandby?.start()
+				// Start FP standby in 5 seconds regardless of connnection status
+				// (or below: after it's clear that authentication worked)
+				OnBackgroundQueue(async: true, after: 5.0) { [weak self] in
+					self?.startFPServiceStandbyIfNotRunning()
 				}
 
 				// Core is ready
@@ -209,6 +209,13 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				OnMainThread { [weak self] () in
 					self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
 						self?.updateConnectionStatusSummary()
+
+						if let connectionStatus = self?.core?.connectionStatus,
+						   connectionStatus == .online {
+						   	// Start FP service standby after it's clear that authentication worked
+						   	// (or above: after 5 seconds regardless of connnection status)
+							self?.startFPServiceStandbyIfNotRunning()
+						}
 					})
 				}
 			} else {
@@ -222,6 +229,18 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				completionHandler(error)
 			}
 		})
+	}
+
+	func startFPServiceStandbyIfNotRunning() {
+		// Set up FP standby
+		OCSynchronized(self) {
+			if let core = core,
+			   core.state == .starting || core.state == .running,
+			   self.fpServiceStandby == nil {
+				self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
+				self.fpServiceStandby?.start()
+			}
+		}
 	}
 
 	var pushTransition : PushTransitionDelegate?

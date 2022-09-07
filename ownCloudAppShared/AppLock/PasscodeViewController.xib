@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,6 +11,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PasscodeViewController" customModule="ownCloudAppShared" customModuleProvider="target">
             <connections>
                 <outlet property="backgroundBlurView" destination="ZQ4-NE-Hrm" id="GBv-lU-WeS"/>
+                <outlet property="biometricalButton" destination="M8y-Pc-oda" id="VZj-jp-Ioo"/>
+                <outlet property="biometricalImageView" destination="uLV-Sc-Alc" id="JbF-51-aGp"/>
                 <outlet property="cancelButton" destination="g0I-oo-iOZ" id="vc0-3w-JYu"/>
                 <outlet property="compactHeightPasscodeTextField" destination="SOo-MB-t0E" id="BWm-9n-6ao"/>
                 <outlet property="deleteButton" destination="F9C-Vg-uCq" id="Dw1-Fd-gaD"/>
@@ -199,6 +201,21 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="fxw-0Q-s08"/>
                                     </connections>
                                 </button>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="faceid" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="uLV-Sc-Alc">
+                                    <rect key="frame" x="8" y="265.5" width="50" height="38.5"/>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M8y-Pc-oda" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="8" y="255" width="60" height="60"/>
+                                    <accessibility key="accessibilityConfiguration" identifier="number0Button"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="M8y-Pc-oda" secondAttribute="height" multiplier="1:1" id="47x-wi-FWl"/>
+                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="700" id="ZuU-m8-h8R"/>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="vWA-oc-OPO"/>
+                                    </constraints>
+                                    <connections>
+                                        <action selector="biometricalAction:" destination="-1" eventType="touchUpInside" id="eXX-Zz-g0B"/>
+                                    </connections>
+                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9C-Vg-uCq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
                                     <rect key="frame" x="170" y="255" width="60" height="60"/>
                                     <accessibility key="accessibilityConfiguration" identifier="deleteButton"/>
@@ -215,22 +232,29 @@
                                 </button>
                             </subviews>
                             <constraints>
+                                <constraint firstItem="M8y-Pc-oda" firstAttribute="top" secondItem="fMx-64-bYq" secondAttribute="bottom" constant="25" id="0m2-MP-6Yy"/>
                                 <constraint firstItem="qMI-IV-KI3" firstAttribute="top" secondItem="fMx-64-bYq" secondAttribute="top" id="18A-ZW-jWc"/>
                                 <constraint firstItem="hgh-7z-Fto" firstAttribute="top" secondItem="IVZ-la-esK" secondAttribute="top" id="2eX-x7-uSc"/>
+                                <constraint firstItem="TIO-8z-Ags" firstAttribute="leading" secondItem="M8y-Pc-oda" secondAttribute="trailing" constant="17" id="2mW-yz-103"/>
                                 <constraint firstItem="gBp-H8-606" firstAttribute="top" secondItem="85k-O3-nSF" secondAttribute="top" id="3Tp-Ni-Zn9"/>
                                 <constraint firstItem="hgh-7z-Fto" firstAttribute="leading" secondItem="gBp-H8-606" secondAttribute="leading" id="4eO-HV-3x8"/>
                                 <constraint firstItem="85k-O3-nSF" firstAttribute="top" secondItem="C0s-hA-da3" secondAttribute="top" id="6b4-xi-l10"/>
                                 <constraint firstItem="9xg-xz-Tph" firstAttribute="leading" secondItem="VzK-5I-Ct8" secondAttribute="leading" id="8Dd-LE-Tdo"/>
                                 <constraint firstItem="IVZ-la-esK" firstAttribute="leading" secondItem="85k-O3-nSF" secondAttribute="leading" id="8La-7P-NEs"/>
+                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="bottom" secondItem="M8y-Pc-oda" secondAttribute="bottom" constant="-10" id="A2a-6f-VVQ"/>
                                 <constraint firstItem="TIO-8z-Ags" firstAttribute="leading" secondItem="qMI-IV-KI3" secondAttribute="leading" id="LEo-oa-jZZ"/>
                                 <constraint firstItem="48Q-nf-LTg" firstAttribute="leading" secondItem="gBp-H8-606" secondAttribute="leading" id="LFW-Rw-tRv"/>
                                 <constraint firstItem="hgh-7z-Fto" firstAttribute="top" secondItem="gBp-H8-606" secondAttribute="bottom" constant="25" id="MYC-9Y-80h"/>
                                 <constraint firstItem="qMI-IV-KI3" firstAttribute="leading" secondItem="VzK-5I-Ct8" secondAttribute="leading" id="NHk-xt-rZG"/>
+                                <constraint firstItem="M8y-Pc-oda" firstAttribute="width" secondItem="M8y-Pc-oda" secondAttribute="height" multiplier="1:1" id="NYK-8F-LkF"/>
                                 <constraint firstItem="VzK-5I-Ct8" firstAttribute="top" secondItem="85k-O3-nSF" secondAttribute="top" id="WBr-Xg-iqr"/>
+                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="leading" secondItem="M8y-Pc-oda" secondAttribute="leading" id="ZId-Xc-K0a"/>
+                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="trailing" secondItem="M8y-Pc-oda" secondAttribute="trailing" constant="-10" id="aJW-ss-ZVn"/>
                                 <constraint firstItem="fMx-64-bYq" firstAttribute="leading" secondItem="85k-O3-nSF" secondAttribute="leading" id="aZi-2h-OhS"/>
                                 <constraint firstItem="48Q-nf-LTg" firstAttribute="top" secondItem="hgh-7z-Fto" secondAttribute="bottom" constant="25" id="f3A-Aw-sE9"/>
                                 <constraint firstItem="9xg-xz-Tph" firstAttribute="top" secondItem="IVZ-la-esK" secondAttribute="top" id="jZI-GP-nv9"/>
                                 <constraint firstItem="F9C-Vg-uCq" firstAttribute="top" secondItem="TIO-8z-Ags" secondAttribute="top" id="jch-1Y-paT"/>
+                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="top" secondItem="M8y-Pc-oda" secondAttribute="top" constant="10" id="k3L-AD-mU9"/>
                                 <constraint firstItem="85k-O3-nSF" firstAttribute="leading" secondItem="C0s-hA-da3" secondAttribute="leading" id="k8s-77-W6O"/>
                                 <constraint firstAttribute="bottom" secondItem="F9C-Vg-uCq" secondAttribute="bottom" id="nPA-7A-BV0"/>
                                 <constraint firstItem="F9C-Vg-uCq" firstAttribute="top" secondItem="48Q-nf-LTg" secondAttribute="bottom" constant="25" id="nUX-x9-pef"/>
@@ -348,6 +372,9 @@
         <designable name="IVZ-la-esK">
             <size key="intrinsicContentSize" width="60" height="39"/>
         </designable>
+        <designable name="M8y-Pc-oda">
+            <size key="intrinsicContentSize" width="60" height="39"/>
+        </designable>
         <designable name="TIO-8z-Ags">
             <size key="intrinsicContentSize" width="60" height="39"/>
         </designable>
@@ -370,4 +397,7 @@
             <size key="intrinsicContentSize" width="60" height="39"/>
         </designable>
     </designables>
+    <resources>
+        <image name="faceid" catalog="system" width="128" height="115"/>
+    </resources>
 </document>

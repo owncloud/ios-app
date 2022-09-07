@@ -1,3 +1,193 @@
+Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
+ownCloud admins and users.
+
+[11.10.1]: https://github.com/owncloud/ios-app/compare/milestone/11.10.0...milestone/11.10.1
+
+Summary
+-------
+
+* Bugfix - (Branding) Biometrical Unlock in Share Sheet: [#1129](https://github.com/owncloud/ios-app/pull/1129)
+* Bugfix - Show folder contents from cache when offline: [#1130](https://github.com/owncloud/ios-app/issues/1130)
+* Bugfix - (Branding) Color Issues: [#1132](https://github.com/owncloud/ios-app/pull/1132)
+
+Details
+-------
+
+* Bugfix - (Branding) Biometrical Unlock in Share Sheet: [#1129](https://github.com/owncloud/ios-app/pull/1129)
+
+   Biometrical unlock in the share sheet does not work in some third party apps like Boxer. With new
+   branding parameters it is now possible to disable biometrical unlock in the share sheet or to
+   exclude specific apps.
+
+   https://github.com/owncloud/ios-app/pull/1129
+
+* Bugfix - Show folder contents from cache when offline: [#1130](https://github.com/owncloud/ios-app/issues/1130)
+
+   With this fix the app shows the contents of the available folders when offline.
+
+   https://github.com/owncloud/ios-app/issues/1130
+
+* Bugfix - (Branding) Color Issues: [#1132](https://github.com/owncloud/ios-app/pull/1132)
+
+   Fix some automatic color values, if the branding color is bright by checking the brightness of
+   the color.
+
+   https://github.com/owncloud/ios-app/pull/1132
+
+Changelog for ownCloud iOS Client [11.10.0] (2022-05-18)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.10.0 relevant to
+ownCloud admins and users.
+
+[11.10.0]: https://github.com/owncloud/ios-app/compare/milestone/11.9.1...milestone/11.10.0
+
+Summary
+-------
+
+* Bugfix - IOS 15 SDK: [#1066](https://github.com/owncloud/ios-app/issues/1066)
+* Bugfix - EMM Shortcuts Licensing: [#1114](https://github.com/owncloud/ios-app/issues/1114)
+* Bugfix - Increased Timeout for Copy Action: [#1119](https://github.com/owncloud/ios-app/issues/1119)
+* Bugfix - Shortcuts Action Delete Path Item: [#1123](https://github.com/owncloud/ios-app/issues/1123)
+* Change - Migration to OpenSSL 1.1.0: [#1116](https://github.com/owncloud/ios-app/pull/1116)
+
+Details
+-------
+
+* Bugfix - IOS 15 SDK: [#1066](https://github.com/owncloud/ios-app/issues/1066)
+
+   After upgrading to iOS 15 SDK some UI fixes were needed.
+
+   https://github.com/owncloud/ios-app/issues/1066
+
+* Bugfix - EMM Shortcuts Licensing: [#1114](https://github.com/owncloud/ios-app/issues/1114)
+
+   If app was build as EMM version, the app shown an licensing error, when running shortcut
+   intents.
+
+   https://github.com/owncloud/ios-app/issues/1114
+
+* Bugfix - Increased Timeout for Copy Action: [#1119](https://github.com/owncloud/ios-app/issues/1119)
+
+   Increased HTTP request timeout for COPY actions from 1 minute to 10 minutes and improved error
+   handling for request timeouts.
+
+   https://github.com/owncloud/ios-app/issues/1119
+
+* Bugfix - Shortcuts Action Delete Path Item: [#1123](https://github.com/owncloud/ios-app/issues/1123)
+
+   The shortcuts action Delete Path Item did not provided configured accounts.
+
+   https://github.com/owncloud/ios-app/issues/1123
+
+* Change - Migration to OpenSSL 1.1.0: [#1116](https://github.com/owncloud/ios-app/pull/1116)
+
+   Migrated code to OpenSSL 1.1.1 API.
+
+   https://github.com/owncloud/ios-app/pull/1116
+
+Changelog for ownCloud iOS Client [11.9.1] (2022-03-29)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.9.1 relevant to
+ownCloud admins and users.
+
+[11.9.1]: https://github.com/owncloud/ios-app/compare/milestone/11.9.0...milestone/11.9.1
+
+Summary
+-------
+
+* Bugfix - Setup Passcode with Biometrical Unlock: [#1112](https://github.com/owncloud/ios-app/pull/1112)
+* Change - Set App Group Identifier: [#1099](https://github.com/owncloud/ios-app/pull/1099)
+
+Details
+-------
+
+* Bugfix - Setup Passcode with Biometrical Unlock: [#1112](https://github.com/owncloud/ios-app/pull/1112)
+
+   Biometrical unlock button no longer appear in setup view and after passcode was successfully
+   setup, show biometrical unlock for permissions dialog.
+
+   https://github.com/owncloud/ios-app/pull/1112
+
+* Change - Set App Group Identifier: [#1099](https://github.com/owncloud/ios-app/pull/1099)
+
+   Set a custom app group identifier via Branding.plist this parameter. This value will be set by
+   fastlane to all needed Info.plist keys. This is needed, if a customer is using an own resigning
+   script which does not handle setting the app group identifier.
+
+   https://github.com/owncloud/ios-app/pull/1099
+
+Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
+ownCloud admins and users.
+
+[11.9.0]: https://github.com/owncloud/ios-app/compare/milestone/11.8.2...milestone/11.9.0
+
+Summary
+-------
+
+* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
+* Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+* Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
+* Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
+* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
+
+Details
+-------
+
+* Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
+
+   Fixes a bug where media playback failed with a 404 Not Found error after restoration because the
+   WebDAV endpoint URL was constructed from authentication data rather than OC user endpoint
+   data.
+
+   https://github.com/owncloud/ios-app/pull/1093
+
+* Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
+
+   Retry requests that failed with a 401 during a token refresh
+
+   https://github.com/owncloud/ios-app/pull/1105
+
+* Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
+
+   Added biometrical authentication button to provide a fallback for the fileprovider or app, if
+   the automatically biometrical unlock does not work, or the user cancel the biometrical
+   authentication flow.
+
+   https://github.com/owncloud/ios-app/issues/1004
+
+* Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
+
+   Avoids simultaneous polling for changes by FileProvider and app.
+
+   https://github.com/owncloud/ios-app/pull/1043
+
+* Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
+
+   Allows using webfinger or a lookup table to locate and use an alternative server based on the
+   user name
+
+   https://github.com/owncloud/ios-app/pull/1059
+
+* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
+
+   Added support for prepopulation of newly created account bookmarks via infinite PROPFINDs,
+   which speeds up the initial scan
+
+   https://github.com/owncloud/ios-app/issues/950
+
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
+
+   Check if only the account name was changed in edit mode: save and dismiss without
+   re-authentication
+
+   https://github.com/owncloud/ios-app/issues/972
+
 Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.8.2 relevant to

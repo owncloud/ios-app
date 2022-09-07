@@ -1,6 +1,3 @@
-• Fix: PDF Editing
-Fixed bug that prevents changes to PDFs being saved in place.
-
-• Fix: Continuous Audio Playback
-Fixed continuous audio playback, which stopped after two audio files.
+• Available Offline Folders
+Shows the contents of the available folders when offline.
 

@@ -43,6 +43,7 @@ public enum ThemeItemStyle {
 
 	case purchase
 	case welcome
+    case welcomeInformal
 }
 
 public enum ThemeItemState {
@@ -86,9 +87,14 @@ public extension NSObject {
 
 				case .purchase:
 					themeButton.themeColorCollection = collection.purchaseColors
-
-				case .welcome:
-					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
+                
+                case .welcome:
+                    themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
+                
+                case .welcomeInformal:
+                    let fromPair = collection.loginColors.filledColorPairCollection
+                    let normal = ThemeColorPair(foreground: fromPair.normal.foreground.lighter(0.25), background: fromPair.normal.background.lighter(0.25))
+                    themeButton.themeColorCollection = ThemeColorPairCollection(fromPair: normal)
 
 				case .informal:
 					themeButton.themeColorCollection = collection.informalColors.filledColorPairCollection
@@ -125,15 +131,30 @@ public extension NSObject {
 		}
 
 		if let toolbar = self as? UIToolbar {
-			toolbar.barTintColor = collection.toolbarColors.backgroundColor
 			toolbar.tintColor = collection.toolbarColors.tintColor
+            
+            if #available(iOS 15, *) {
+                let appearance = UIToolbarAppearance()
+                appearance.backgroundColor = collection.toolbarColors.backgroundColor
+                UIToolbar.appearance().standardAppearance = appearance
+                UIToolbar.appearance().scrollEdgeAppearance = appearance
+            } else {
+                toolbar.barTintColor = collection.toolbarColors.backgroundColor
+            }
 		}
 
-		if let tabBar = self as? UITabBar {
-			tabBar.barTintColor = collection.toolbarColors.backgroundColor
-			tabBar.tintColor = collection.toolbarColors.tintColor
-			tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
-		}
+        if let tabBar = self as? UITabBar {
+            tabBar.tintColor = collection.toolbarColors.tintColor
+            tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
+            if #available(iOS 15, *) {
+                let appearance = UITabBarAppearance()
+                appearance.backgroundColor = collection.toolbarColors.backgroundColor
+                UITabBar.appearance().standardAppearance = appearance
+                UITabBar.appearance().scrollEdgeAppearance = appearance
+            } else {
+                tabBar.barTintColor = collection.toolbarColors.backgroundColor
+            }
+        }
 
 		if let tableView = self as? UITableView {
 			tableView.backgroundColor = tableView.style == .grouped ? collection.tableGroupBackgroundColor : collection.tableBackgroundColor
@@ -195,6 +216,7 @@ public extension NSObject {
 
 				case .welcomeMessage:
 					normalColor = collection.loginColors.secondaryLabelColor
+                normalColor = collection.loginColors.secondaryLabelColor
 					highlightColor = collection.loginColors.secondaryLabelColor
 
 				case .message, .bigMessage:
@@ -281,40 +303,6 @@ public extension NSObject {
 			if #available(iOS 13, *) {
 				visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 			}
-		}
-	}
-}
-
-extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter {
-	public var sectionHeaderColor: UIColor? {
-		get {
-			return self.value(forAnnotatedProperty: "sectionHeaderColor") as? UIColor
-		}
-
-		set {
-			self.setValue(newValue, forAnnotatedProperty: "sectionHeaderColor")
-		}
-	}
-
-	public var sectionFooterColor: UIColor? {
-		get {
-			return self.value(forAnnotatedProperty: "sectionFooterColor") as? UIColor
-		}
-
-		set {
-			self.setValue(newValue, forAnnotatedProperty: "sectionFooterColor")
-		}
-	}
-
-	public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		if let label = view as? UILabel, let sectionHeaderColor = sectionHeaderColor {
-			label.textColor = sectionHeaderColor
-		}
-	}
-
-	public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-		if let label = view as? UILabel, let sectionFooterColor = sectionFooterColor {
-			label.textColor = sectionFooterColor
 		}
 	}
 }

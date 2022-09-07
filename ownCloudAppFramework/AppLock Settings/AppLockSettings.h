@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(assign,nonatomic) BOOL lockEnabled;
 @property(assign,nonatomic) NSInteger lockDelay;
 @property(assign,nonatomic) BOOL biometricalSecurityEnabled;
+@property(assign,nonatomic) BOOL biometricalSecurityEnabledinShareSheet;
+@property(readonly,nonatomic,nullable) NSURL *biometricalAuthenticationRedirectionTargetURL;
 
 @property(readonly,nonatomic) BOOL isPasscodeEnforced;
 @property(readonly,nonatomic) NSInteger requiredPasscodeDigits;
@@ -46,5 +48,6 @@ extern OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay;
 extern OCClassSettingsKey OCClassSettingsKeyPasscodeUseBiometricalUnlock;
+extern OCClassSettingsKey OCClassSettingsKeyPasscodeShareSheetBiometricalUnlockByApp;
 
 NS_ASSUME_NONNULL_END

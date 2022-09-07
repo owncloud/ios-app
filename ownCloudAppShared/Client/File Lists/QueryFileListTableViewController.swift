@@ -31,6 +31,17 @@ public extension OCQueryState {
 	}
 }
 
+public extension OCCoreConnectionStatus {
+	var isOffline: Bool {
+		switch self {
+			case .offline, .unavailable:
+				return true
+			default:
+				return false
+		}
+	}
+}
+
 public protocol MultiSelectSupport {
 	func setupMultiselection()
 	func enterMultiselection()
@@ -296,31 +307,37 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
 		}
 
- 		switch query.state {
- 			case .contentsFromCache, .idle, .waitingForServerReply:
- 				if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
- 					break
- 				}
+		switch query.state {
+			case .contentsFromCache, .idle, .waitingForServerReply:
+				let latestItemCount = self.items.count
 
- 				if self.items.count == 0 {
- 					if self.searchController?.searchBar.text != "" {
- 						self.messageView?.message(show: true, with: UIEdgeInsets(top: sortBar?.frame.size.height ?? 0, left: 0, bottom: 0, right: 0), imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
- 					} else {
- 						self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
- 					}
- 				} else {
- 					self.messageView?.message(show: false)
- 				}
+				if previousItemCount == 0, latestItemCount == 0, query.state == .waitingForServerReply {
+					break
+				}
 
- 				self.reloadTableData()
+				// Refresh on:
+				if (previousItemCount != latestItemCount) ||	// - item count change
+				   query.state.isFinal ||			// - query state is final (== anything but .waitingForServerReply and .started)
+				   ((query.state == .waitingForServerReply) && (core?.connectionStatus.isOffline == true)) { // - when waiting for a server reply while the connection is offline
+					if latestItemCount == 0 {
+						if self.searchController?.searchBar.text != "" {
+							self.messageView?.message(show: true, with: UIEdgeInsets(top: sortBar?.frame.size.height ?? 0, left: 0, bottom: 0, right: 0), imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+						} else {
+							self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+						}
+					} else {
+						self.messageView?.message(show: false)
+					}
 
- 			case .targetRemoved:
- 				self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
- 				self.reloadTableData()
+					self.reloadTableData()
+				}
+			case .targetRemoved:
+				self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+				self.reloadTableData()
 
- 			default:
- 				self.messageView?.message(show: false)
- 		}
+			default:
+				self.messageView?.message(show: false)
+		}
 	}
 
 	// MARK: - Themeable

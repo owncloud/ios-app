@@ -1502,6 +1502,134 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.9.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Biometrical Authentication Button</string>
+					<key>Subtitle</key>
+					<string>Added a biometrical authentication button to the passcode unlock view. The biomatrical cancel button enables passcode unlock as fallback.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock.shield</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Rename Account</string>
+					<key>Subtitle</key>
+					<string>Renaming an account does no longer need a re-authentication</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>pencil</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Media Playback</string>
+					<key>Subtitle</key>
+					<string>Fixes a bug where media playback failed</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Faster Account Scan</string>
+					<key>Subtitle</key>
+					<string>We improved the time for the initial scan after setting up a new account</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.9.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Faster Account Scan</string>
+					<key>Subtitle</key>
+					<string>We improved the time for the initial scan after setting up a new account</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Biometrical Authentication Button</string>
+					<key>Subtitle</key>
+					<string>Improvements when setting up a passcode with biometrical unlock</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.10.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>UI fixes on iOS 15</string>
+					<key>Subtitle</key>
+					<string>This version fixes some UI problems on iOS 15.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Shortcuts Action</string>
+					<key>Subtitle</key>
+					<string>The shortcuts action Delete Path Item did not provide configured accounts.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Increased Timeout for Copy Action</string>
+					<key>Subtitle</key>
+					<string>Timeout for Copy Action was increased up to 10 minutes.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.10.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Available Offline Folders</string>
+					<key>Subtitle</key>
+					<string>Shows the contents of the available folders when offline.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

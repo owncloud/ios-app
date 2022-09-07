@@ -159,7 +159,7 @@ public class PasscodeSetupCoordinator {
 					self.completionHandler?(false)
 				})
 				if AppLockManager.supportedOnDevice {
-					AppLockManager.shared.showLockscreenIfNeeded()
+					AppLockManager.shared.showLockscreenIfNeeded(setupMode: true)
 				}
 			} else {
 				let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
@@ -170,7 +170,7 @@ public class PasscodeSetupCoordinator {
 						self.completionHandler?(false)
 					})
 					if AppLockManager.supportedOnDevice {
-						AppLockManager.shared.showLockscreenIfNeeded()
+						AppLockManager.shared.showLockscreenIfNeeded(setupMode: true)
 					}
 				}))
 

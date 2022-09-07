@@ -35,9 +35,9 @@ class SortMethodTableViewController: StaticTableViewController {
 		self.tableView.rowHeight = rowHeight
 
 		var rows : [StaticTableViewRow] = []
-		let contentHeight : CGFloat = rowHeight * CGFloat(SortMethod.all.count) - 1
+		let contentHeight : CGFloat = rowHeight * CGFloat(SortMethod.all.count) + 8
 		let contentWidth : CGFloat = maxContentWidth
-		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
+        self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
 		for method in SortMethod.all {
 			let title = method.localizedName
