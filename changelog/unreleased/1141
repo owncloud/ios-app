@@ -1,0 +1,5 @@
+Bugfix: Enabling Markup Mode on iOS 16
+
+Enabling markup mode was broken on iOS 16 because of rearranged navigation bar and toolbar items.
+
+https://github.com/owncloud/ios-app/issues/1141
