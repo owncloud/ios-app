@@ -99,7 +99,7 @@ extension OCItem : DataItemSwipeInteraction {
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
-		let actionContext = ActionContext(viewController: originatingViewController, core: core, items: [self], location: actionsLocation, sender: nil)
+		let actionContext = ActionContext(viewController: originatingViewController, clientContext: context, core: core, items: [self], location: actionsLocation, sender: nil)
 		let actions = Action.sortedApplicableActions(for: actionContext)
 
 		let contextualActions = actions.compactMap({ action in
@@ -118,7 +118,7 @@ extension OCItem : DataItemContextMenuInteraction {
 		}
 		let item = self
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: location) // .contextMenuItem)
-		let actionContext = ActionContext(viewController: viewController, core: core, items: [item], location: actionsLocation, sender: nil)
+		let actionContext = ActionContext(viewController: viewController, clientContext: context, core: core, items: [item], location: actionsLocation, sender: nil)
 		let actions = Action.sortedApplicableActions(for: actionContext)
 		var actionMenuActions : [UIAction] = []
 		for action in actions {
@@ -135,7 +135,7 @@ extension OCItem : DataItemContextMenuInteraction {
 
 			// Share Items
 			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
-			let sharingActionContext = ActionContext(viewController: viewController, core: core, items: [item], location: sharingActionsLocation, sender: nil)
+			let sharingActionContext = ActionContext(viewController: viewController, clientContext: context, core: core, items: [item], location: sharingActionsLocation, sender: nil)
 			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
 			for action in sharingActions {
 				action.progressHandler = context?.actionProgressHandlerProvider?.makeActionProgressHandler()

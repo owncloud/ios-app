@@ -121,6 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(PDFGoToPageAction.actionExtension)
 		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CreateDocumentAction.actionExtension)
 
 		if UIDevice.current.isIpad {
 			// iPad only

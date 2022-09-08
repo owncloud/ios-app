@@ -357,9 +357,13 @@
 "Folder name" = "Folder name";
 "Rename" ="Rename";
 "Create folder" ="Create folder";
+"New document" = "New document";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
 "Open in" = "Open in";
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
 "Copy" = "Copy";
 "Copy here" = "Copy here";
 "Cannot connect to " = "Cannot connect to ";
