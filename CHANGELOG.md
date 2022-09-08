@@ -1,3 +1,25 @@
+Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+=======================================
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/11.10.1...master
+
+Summary
+-------
+
+* Bugfix - Enabling Markup Mode on iOS 16: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+Details
+-------
+
+* Bugfix - Enabling Markup Mode on iOS 16: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+   Enabling markup mode was broken on iOS 16 because of rearranged navigation bar and toolbar
+   items.
+
+   https://github.com/owncloud/ios-app/issues/1141
+
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
