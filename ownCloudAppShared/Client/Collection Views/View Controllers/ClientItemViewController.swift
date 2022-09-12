@@ -465,7 +465,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					// Setup new action context
 					if let core = clientContext?.core {
 						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
-
 						multiSelectionActionContext = ActionContext(viewController: self, clientContext: clientContext, core: core, query: query, items: [OCItem](), location: actionsLocation)
 					}
 
