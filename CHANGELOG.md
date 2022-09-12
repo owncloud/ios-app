@@ -1,4 +1,3 @@
-=======
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
