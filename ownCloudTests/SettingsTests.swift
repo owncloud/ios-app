@@ -181,7 +181,8 @@ class SettingsTests: XCTestCase {
 		EarlGrey.selectElement(with: grey_accessibilityID("theme")).perform(grey_tap())
 
 		//Assert
-		EarlGrey.selectElement(with: grey_text("Dark".localized)).assert(grey_sufficientlyVisible())
+        EarlGrey.selectElement(with: grey_text("Dark Blue".localized)).assert(grey_sufficientlyVisible())
+        EarlGrey.selectElement(with: grey_text("Dark Web".localized)).assert(grey_sufficientlyVisible())
 		EarlGrey.selectElement(with: grey_text("Light".localized)).assert(grey_sufficientlyVisible())
 		EarlGrey.selectElement(with: grey_text("Classic".localized)).assert(grey_sufficientlyVisible())
 

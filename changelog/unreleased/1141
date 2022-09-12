@@ -1,0 +1,5 @@
+Bugfix: Updating Theme
+
+Fixes a bug when a new theme was activated, this causes that the UITabBar and UIToolbar does not updates colours.
+
+https://github.com/owncloud/ios-app/issues/1141
