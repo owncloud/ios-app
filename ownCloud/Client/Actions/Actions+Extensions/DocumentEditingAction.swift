@@ -82,9 +82,10 @@ class DocumentEditingAction : Action {
 				if let fileURL = files.first?.url, let item = self.context.items.first {
 
 					if QLPreviewController.canPreview(fileURL as QLPreviewItem) {
-
 						let editDocumentViewController = EditDocumentViewController(with: fileURL, item: item, core: self.core)
 						let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
+
+						editDocumentViewController.pdfViewController = hostViewController as? PDFViewerViewController
 						navigationController.modalPresentationStyle = .overFullScreen
 						viewController.present(navigationController, animated: true)
 					} else {
@@ -102,10 +103,6 @@ class DocumentEditingAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(systemName: "pencil.tip.crop.circle")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(systemName: "pencil.tip.crop.circle")?.withRenderingMode(.alwaysTemplate)
 	}
 }

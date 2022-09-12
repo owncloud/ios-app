@@ -50,6 +50,6 @@ class LinksAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(named: "link")
+		return UIImage(named: "link")?.withRenderingMode(.alwaysTemplate)
 	}
 }

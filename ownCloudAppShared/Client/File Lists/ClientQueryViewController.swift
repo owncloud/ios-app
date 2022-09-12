@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 import CoreServices
+import UniformTypeIdentifiers
 
 public typealias ClientActionVieDidAppearHandler = () -> Void
 public typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
@@ -48,6 +49,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 	private let ItemDataUTI = "com.owncloud.ios-app.item-data"
 	private let moreCellIdentifier = "moreCell"
 	private let moreCellAccessibilityIdentifier = "more-results"
+	public var drive : OCDrive?
 
 	open override var activeQuery : OCQuery {
 		if let customSearchQuery = customSearchQuery {
@@ -78,31 +80,32 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		return customSearchQuery?.queryResults?.count ?? 0 > 0
 	}
 
-	open override var searchScope: SearchScope {
+	open override var searchScope: SortBarSearchScope {
  		set {
  			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
  		}
 
  		get {
- 			let scope = SearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SearchScope.local
+ 			let scope = SortBarSearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SortBarSearchScope.local
  			return scope
  		}
  	}
 
 	// MARK: - Init & Deinit
 	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
-		self.init(core: inCore, query: inQuery, rootViewController: nil)
+		self.init(core: inCore, drive: nil, query: inQuery, rootViewController: nil)
 	}
 
-	public init(core inCore: OCCore, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
+	public init(core inCore: OCCore, drive inDrive: OCDrive?, query inQuery: OCQuery, reveal inItem: OCItem? = nil, rootViewController: UIViewController?) {
 		clientRootViewController = rootViewController
 		revealItemLocalID = inItem?.localID
 		breadCrumbsPush = revealItemLocalID != nil
+		drive = inDrive
 
 		super.init(core: inCore, query: inQuery)
 		updateTitleView()
 
-		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+		let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, weak core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
@@ -183,7 +186,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
  		updateCustomSearchQuery()
  	}
 
-	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+	open override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
  		updateCustomSearchQuery()
  	}
 
@@ -389,7 +392,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			// Remove duplicates
 			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
 			let actionContext = ActionContext(viewController: self, core: core, query: query, items: uniqueItems, location: actionsLocation)
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 
@@ -512,14 +515,14 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		let tableViewController = BreadCrumbTableViewController()
 		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
 		tableViewController.parentNavigationController = self.navigationController
-		tableViewController.queryPath = (query.queryPath as NSString?)!
+		tableViewController.queryPath = (query.queryLocation?.path as NSString?)!
 		if let shortName = core?.bookmark.shortName {
 			tableViewController.bookmarkShortName = shortName
 		}
 		if breadCrumbsPush {
-			tableViewController.navigationHandler = { [weak self] (path) in
+			tableViewController.navigationHandler = { [weak self] (location) in
 				if let self = self, let core = self.core {
-					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+					let queryViewController = ClientQueryViewController(core: core, query: OCQuery(for: location))
 					queryViewController.breadCrumbsPush = true
 
 					self.navigationController?.pushViewController(queryViewController, animated: true)
@@ -576,7 +579,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		}
 
 		if let rootItem = self.query.rootItem, searchText == nil {
-			if query.queryPath != "/" {
+			if let queryPath = query.queryLocation?.path, queryPath != "/" {
 				var totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				if self.items.count == 1 {
 					totalSize = String(format: "%@ item | ".localized, "\(self.items.count)") + totalSize
@@ -586,7 +589,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 				self.updateFooter(text: totalSize)
 			}
 
-			if  let bookmarkContainer = self.tabBarController as? BookmarkContainer {
+			if let bookmarkContainer = self.tabBarController as? BookmarkContainer {
 				// Use parent folder for UI state restoration
 				let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: bookmarkContainer.bookmark)
 				view.window?.windowScene?.userActivity = activity.openItemUserActivity
@@ -702,26 +705,26 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				// Import Items from outside
 				let typeIdentifiers = item.dragItem.itemProvider.registeredTypeIdentifiers
 				let preferredUTIs = [
-					kUTTypeImage,
-					kUTTypeMovie,
-					kUTTypePDF,
-					kUTTypeText,
-					kUTTypeRTF,
-					kUTTypeHTML,
-					kUTTypePlainText
+					UTType.image,
+					UTType.movie,
+					UTType.pdf,
+					UTType.text,
+					UTType.rtf,
+					UTType.html,
+					UTType.plainText
 				]
 				var useUTI : String?
 				var useIndex : Int = Int.max
 
 				for typeIdentifier in typeIdentifiers {
-					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn.") {
+					if typeIdentifier != ItemDataUTI, !typeIdentifier.hasPrefix("dyn."), let typeIdentifierUTI = UTType(typeIdentifier) {
 						for preferredUTI in preferredUTIs {
-							let conforms = UTTypeConformsTo(typeIdentifier as CFString, preferredUTI)
+							let conforms = typeIdentifierUTI.conforms(to: preferredUTI)
 
 							// Log.log("\(preferredUTI) vs \(typeIdentifier) -> \(conforms)")
 
 							if conforms {
-								if let utiIndex = preferredUTIs.index(of: preferredUTI), utiIndex < useIndex {
+								if let utiIndex = preferredUTIs.firstIndex(of: preferredUTI), utiIndex < useIndex {
 									useUTI = typeIdentifier
 									useIndex = utiIndex
 								}
@@ -735,7 +738,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 
 				if useUTI == nil {
-					useUTI = kUTTypeData as String
+					useUTI = UTType.data.identifier
 				}
 
 				var fileName: String?
@@ -745,11 +748,11 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 					let fileNameMaxLength = 16
 
-					if useUTI == kUTTypeUTF8PlainText as String {
+					if useUTI == UTType.utf8PlainText.identifier {
 						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
 
-					if useUTI == kUTTypeRTF as String {
+					if useUTI == UTType.rtf.identifier {
 						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
 						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
 					}
@@ -864,15 +867,13 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 		case .file:
 			guard let itemMimeType = item.mimeType else { return nil }
-
-			let mimeTypeCF = itemMimeType as CFString
-			guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return nil }
+			guard let itemUTI = UTType(mimeType: itemMimeType)?.identifier else { return nil }
 
 			let itemProvider = NSItemProvider()
 
 			itemProvider.suggestedName = item.name
 
-			itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
+			itemProvider.registerFileRepresentation(forTypeIdentifier: itemUTI, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
 				var progress : Progress?
 
 				guard let core = core else {
@@ -927,14 +928,18 @@ extension ClientQueryViewController {
 	}
 
 	open func updateTitleView() {
-		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+		let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
-			self.navigationItem.title = shortName
+			if let drive = drive, let driveName = drive.name {
+				self.navigationItem.title = driveName
+			} else {
+				self.navigationItem.title = shortName
+			}
 		} else {
 			if #available(iOS 14.0, *) {
 				self.navigationItem.backButtonDisplayMode = .generic
-				let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+				let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 				self.title = lastPathComponent
 			}
 

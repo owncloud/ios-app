@@ -23,7 +23,7 @@ class MoveAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.move") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
@@ -49,7 +49,7 @@ class MoveAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, location: OCLocation.legacyRoot, selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
 			guard let selectedDirectory = selectedDirectory else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return
@@ -77,10 +77,6 @@ class MoveAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "folder")
-		}
-
-		return nil
+		return UIImage(named: "folder")?.withRenderingMode(.alwaysTemplate)
 	}
 }

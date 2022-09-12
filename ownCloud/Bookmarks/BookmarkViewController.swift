@@ -28,9 +28,11 @@ class BookmarkViewController: StaticTableViewController {
 	// MARK: - UI elements
 	var nameSection : StaticTableViewSection?
 	var nameRow : StaticTableViewRow?
+	var nameChanged = false
 
 	var urlSection : StaticTableViewSection?
 	var urlRow : StaticTableViewRow?
+	var urlChanged = false
 	var certificateRow : StaticTableViewRow?
 
 	var credentialsSection : StaticTableViewSection?
@@ -38,7 +40,7 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
-	var oAuthInfoView : RoundedInfoView?
+	var tokenInfoView : RoundedInfoView?
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
@@ -129,6 +131,7 @@ class BookmarkViewController: StaticTableViewController {
 		// Name section + row
 		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
 			if let textField = sender as? UITextField, action == .changed {
+				self?.nameChanged = true
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
 		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
@@ -140,6 +143,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				var placeholderString = "Name".localized
 				var changedBookmark = false
+				self?.urlChanged = true
 
 				// Disable Continue button if there is no url
 				if textField.text != "" {
@@ -235,9 +239,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
-		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
-		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
-		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
+		tokenInfoView = RoundedInfoView(text: "")
 
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
@@ -335,6 +337,15 @@ class BookmarkViewController: StaticTableViewController {
 					completion?()
 				}
 			}
+		}
+
+		// Check if only account name was changed in edit mode: save and dismiss without re-authentication
+
+		//if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
+		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark, bookmark.authenticationData != nil {
+				updateBookmark(bookmark: bookmark)
+			 completeAndDismiss(with: hudCompletion)
+			 return
 		}
 
 		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {
@@ -523,6 +534,21 @@ class BookmarkViewController: StaticTableViewController {
 		}
 	}
 
+	func completeAndDismiss(with hudCompletion: @escaping (((() -> Void)?) -> Void)) {
+		guard let userActionCompletionHandler = self.userActionCompletionHandler else { return }
+
+		self.userActionCompletionHandler = nil
+
+		OnMainThread {
+			hudCompletion({
+				OnMainThread {
+					userActionCompletionHandler(self.bookmark, true)
+				}
+				self.presentingViewController?.dismiss(animated: true, completion: nil)
+			})
+		}
+	}
+
 	// MARK: - User actions
 	@objc func userActionCancel() {
 		let userActionCompletionHandler = self.userActionCompletionHandler
@@ -553,30 +579,33 @@ class BookmarkViewController: StaticTableViewController {
 		save(hudCompletion: hudCompletion)
 	}
 
+	func updateBookmark(bookmark: OCBookmark) {
+		originalBookmark?.setValuesFrom(bookmark)
+		if let originalBookmark = originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+			Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+		}
+	}
+
 	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
 		guard let bookmark = self.bookmark else { return }
 
 		if isBookmarkComplete(bookmark: bookmark) {
 			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
-
 			let connection = instantiateConnection(for: bookmark)
 
 			connection.connect { [weak self] (error, issue) in
 				if let strongSelf = self {
 					if error == nil {
-						let disconnectAndComplete = {
-							connection.disconnect(completionHandler: {
-								switch strongSelf.mode {
-									case .create:
-										// Add bookmark
-										OCBookmarkManager.shared.addBookmark(bookmark)
+						let serverSupportsInfinitePropfind = connection.capabilities?.davPropfindSupportsDepthInfinity
+						let isDriveBased = connection.capabilities?.spacesEnabled ?? false
 
-									case .edit:
-										// Update original bookmark
-										self?.originalBookmark?.setValuesFrom(bookmark)
-										if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-											Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
-										}
+						bookmark.userDisplayName = connection.loggedInUser?.displayName
+
+						connection.disconnect(completionHandler: {
+
+							let done = { (_ doAddBookmark: Bool) in
+								if doAddBookmark {
+									OCBookmarkManager.shared.addBookmark(bookmark)
 								}
 
 								let userActionCompletionHandler = strongSelf.userActionCompletionHandler
@@ -590,20 +619,92 @@ class BookmarkViewController: StaticTableViewController {
 										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 									})
 								}
+							}
 
-							})
-						}
+							switch strongSelf.mode {
+								case .create:
+									// Add bookmark
+									OnMainThread {
+										var prepopulationMethod : BookmarkPrepopulationMethod?
 
-						bookmark.userDisplayName = connection.loggedInUser?.displayName
+										// Determine prepopulation method
+										if prepopulationMethod == nil, let prepopulationMethodClassSetting = BookmarkViewController.classSetting(forOCClassSettingsKey: .prepopulation) as? String {
+											prepopulationMethod = BookmarkPrepopulationMethod(rawValue: prepopulationMethodClassSetting)
+										}
 
-						if let user = connection.loggedInUser {
-							connection.retrieveAvatar(for: user, existingETag: nil, with: OCAvatar.defaultSize, completionHandler: { error, _, avatar in
-								bookmark.avatar = avatar
-								disconnectAndComplete()
-							})
-						} else {
-							disconnectAndComplete()
-						}
+										if prepopulationMethod == nil, serverSupportsInfinitePropfind?.boolValue == true {
+											prepopulationMethod = .streaming
+										}
+
+										if prepopulationMethod == nil {
+											prepopulationMethod = .doNot
+										}
+
+										if isDriveBased.boolValue {
+											// Drive-based accounts do not support prepopulation yet
+											prepopulationMethod = .doNot
+										}
+
+										// Prepopulation y/n?
+										if let prepopulationMethod = prepopulationMethod, prepopulationMethod != .doNot {
+											// Perform prepopulation
+											var progressViewController : ProgressIndicatorViewController?
+											var prepopulateProgress : Progress?
+											let prepopulateCompletionHandler = {
+												// Wrap up
+												OCBookmarkManager.shared.addBookmark(bookmark)
+
+												OnMainThread {
+													progressViewController?.dismiss(animated: true, completion: {
+														done(false)
+													})
+												}
+											}
+
+											// Perform prepopulation method
+											switch prepopulationMethod {
+												case .streaming:
+													prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
+														prepopulateCompletionHandler()
+													})
+
+												case .split:
+													prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
+														prepopulateCompletionHandler()
+													})
+
+												default:
+													done(true)
+											}
+
+											// Present progress
+											if let prepopulateProgress = prepopulateProgress {
+
+												progressViewController = ProgressIndicatorViewController(initialTitleLabel: "Preparing account".localized, initialProgressLabel: "Please wait…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
+													prepopulateProgress.cancel()
+												})
+												progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
+												if let progressViewController = progressViewController {
+													self?.topMostViewController.present(progressViewController, animated: true, completion: nil)
+												}
+											}
+
+										} else {
+											// No prepopulation
+											done(true)
+										}
+									}
+
+								case .edit:
+									// Update original bookmark
+									self?.originalBookmark?.setValuesFrom(bookmark)
+									if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
+										Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
+									}
+
+									done(false)
+							}
+						})
 					} else {
 						OnMainThread {
 							hudCompletion({
@@ -785,7 +886,15 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		if showOAuthInfoHeader {
-			self.tableView.tableHeaderView = oAuthInfoView
+			var authMethodName = "OAuth2"
+
+			if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier, let localizedAuthMethodName = OCAuthenticationMethod.localizedName(forAuthenticationMethodIdentifier: authenticationMethodIdentifier) {
+				authMethodName = localizedAuthMethodName
+			}
+
+			tokenInfoView?.infoText = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName])
+
+			self.tableView.tableHeaderView = tokenInfoView
 			self.tableView.layoutTableHeaderView()
 		} else {
 			self.tableView.tableHeaderView?.removeFromSuperview()
@@ -929,6 +1038,13 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
 	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
+	static let prepopulation = OCClassSettingsKey("prepopulation")
+}
+
+enum BookmarkPrepopulationMethod : String {
+	case doNot
+	case streaming
+	case split
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
@@ -958,6 +1074,27 @@ extension BookmarkViewController : OCClassSettingsSupport {
 				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
 				.category	: "Bookmarks",
 				.status		: OCClassSettingsKeyStatus.supported
+			],
+
+			.prepopulation : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported,
+				.possibleValues	: [
+					[
+						OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
+					]
+				]
 			]
 		]
 	}

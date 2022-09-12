@@ -55,12 +55,15 @@ class AlertView: UIView, Themeable {
 
 	var optionViews : [ThemeButton] = []
 
-	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, contentPadding: CGFloat = 20, options: [AlertOption]) {
+	var textAlignment : NSTextAlignment
+
+	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, contentPadding: CGFloat = 20, textAlignment : NSTextAlignment = .left, options: [AlertOption]) {
 		self.localizedHeader = localizedHeader
 		self.localizedTitle = localizedTitle
 		self.localizedDescription = localizedDescription
 		self.options = options
 		self.contentPadding = contentPadding
+		self.textAlignment = textAlignment
 
 		super.init(frame: .zero)
 
@@ -130,6 +133,10 @@ class AlertView: UIView, Themeable {
 		headerLabel.text = localizedHeader
 		titleLabel.text = localizedTitle
 		descriptionLabel.text = localizedDescription
+
+		headerLabel.textAlignment = textAlignment
+		titleLabel.textAlignment = textAlignment
+		descriptionLabel.textAlignment = textAlignment
 
 		headerLabel.font = .systemFont(ofSize: headerLabelFontSize, weight: .regular)
 		headerLabel.textColor = .gray

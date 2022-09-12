@@ -20,6 +20,7 @@ import Foundation
 import MobileCoreServices
 import ownCloudSDK
 import ownCloudAppShared
+import UniformTypeIdentifiers
 
 class OCItemPasteboardValue : NSObject, NSSecureCoding {
 	static var supportsSecureCoding: Bool = true
@@ -62,7 +63,7 @@ class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "C" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -103,11 +104,7 @@ class CopyAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "copy-file")
-		}
-
-		return nil
+		return UIImage(named: "copy-file")?.withRenderingMode(.alwaysTemplate)
 	}
 
 	func showDirectoryPicker() {
@@ -118,7 +115,7 @@ class CopyAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, location: .legacyRoot, selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
 			if let targetDirectory = selectedDirectory {
 				items.forEach({ (item) in
 
@@ -192,8 +189,7 @@ class CopyAction : Action {
 					if item.type == .file { // only files can be added to the globale pasteboard
 						guard let itemMimeType = item.mimeType else { return }
 
-						let mimeTypeCF = itemMimeType as CFString
-						guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return }
+						guard let rawUti = UTType(mimeType: itemMimeType)?.identifier else { return }
 
 						itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
 							var progress : Progress?

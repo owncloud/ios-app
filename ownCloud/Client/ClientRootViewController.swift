@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-protocol ClientRootViewControllerAuthenticationDelegate : class {
+protocol ClientRootViewControllerAuthenticationDelegate : AnyObject {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
@@ -215,10 +215,10 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
-				// Set up FP standby
-				if let core = core {
-					self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
-					self.fpServiceStandby?.start()
+				// Start FP standby in 5 seconds regardless of connnection status
+				// (or below: after it's clear that authentication worked)
+				OnBackgroundQueue(async: true, after: 5.0) { [weak self] in
+					self?.startFPServiceStandbyIfNotRunning()
 				}
 
 				// Core is ready
@@ -228,6 +228,13 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				OnMainThread { [weak self] () in
 					self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
 						self?.updateConnectionStatusSummary()
+
+						if let connectionStatus = self?.core?.connectionStatus,
+						   connectionStatus == .online {
+						   	// Start FP service standby after it's clear that authentication worked
+						   	// (or above: after 5 seconds regardless of connnection status)
+							self?.startFPServiceStandbyIfNotRunning()
+						}
 					})
 				}
 			} else {
@@ -241,6 +248,18 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				completionHandler(error)
 			}
 		})
+	}
+
+	func startFPServiceStandbyIfNotRunning() {
+		// Set up FP standby
+		OCSynchronized(self) {
+			if let core = core,
+			   core.state == .starting || core.state == .running,
+			   self.fpServiceStandby == nil {
+				self.fpServiceStandby = OCFileProviderServiceStandby(core: core)
+				self.fpServiceStandby?.start()
+			}
+		}
 	}
 
 	var pushTransition : PushTransitionDelegate?
@@ -353,18 +372,37 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		}
 	}
 
+	var rootContext : ClientContext?
+
 	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
+				self.rootContext = ClientContext(core: core, rootViewController: self, progressSummarizer: self.progressSummarizer, modifier: { context in
+					context.inlineMessageCenter = self
+					context.moreItemHandler = self
+					context.viewItemHandler = self
+					context.actionProgressHandlerProvider = self
+				})
+
 				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
 
 				if let localItemId = lastVisibleItemId {
 					self.createFileListStack(for: localItemId)
 				} else {
-					let query = OCQuery(forPath: "/")
-					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
+					let topLevelViewController : UIViewController?
+
+					if core.useDrives {
+						topLevelViewController = CollectionViewController(context: ClientContext(with: self.rootContext, navigationController: self.filesNavigationController), sections: [
+							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellLayout: .list(appearance: .insetGrouped)),
+							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource, cellLayout: .list(appearance: .insetGrouped))
+						])
+					} else {
+						let query = OCQuery(for: .legacyRoot)
+						topLevelViewController = ClientQueryViewController(core: core, drive: nil, query: query, rootViewController: self)
+					}
+
 					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
-					self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+					self.filesNavigationController?.setViewControllers([self.emptyViewController, topLevelViewController!], animated: false)
 				}
 
 				let emptyViewController = self.emptyViewController
@@ -453,8 +491,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			// retrieve the item for the item id
 			core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
 				OnMainThread {
-					let query = OCQuery(forPath: "/")
-					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
+					let query = OCQuery(for: .legacyRoot)
+					let queryViewController = ClientQueryViewController(core: core, drive: nil, query: query, rootViewController: self)
 
 					if error == nil, let item = item, item.isRoot == false {
 						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack

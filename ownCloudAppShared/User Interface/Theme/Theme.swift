@@ -24,23 +24,15 @@ public enum ThemeEvent {
 	case update
 }
 
-public protocol Themeable : class {
+public protocol Themeable : NSObject {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent)
 }
 
 public typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _ event: ThemeEvent) -> Void
 public typealias ThemeApplierToken = Int
 
-final class WeakThemeable {
-	weak var weakClient : Themeable?
-
-	init(_ client: Themeable) {
-		weakClient = client
-	}
-}
-
 public class Theme: NSObject {
-	private var weakClients : [WeakThemeable] = []
+	private var weakClients : NSHashTable = NSHashTable<NSObject>.weakObjects()
 
 	private var appliers : [ThemeApplierToken : ThemeApplier] = [:]
 	private var applierSerial : ThemeApplierToken = 0
@@ -64,6 +56,7 @@ public class Theme: NSObject {
 		let sharedInstance = Theme()
 
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.Down", bundleOf: Theme.self, title: "Down", resourceName: "Down", fileExtension: "LICENSE"))
 
 		return sharedInstance
 	}()
@@ -71,7 +64,7 @@ public class Theme: NSObject {
 	// MARK: - Client register / unregister
 	public func register(client: Themeable, applyImmediately: Bool = true) {
 		OCSynchronized(self) {
-			weakClients.append(WeakThemeable(client))
+			weakClients.add(client)
 		}
 
 		if applyImmediately {
@@ -81,14 +74,7 @@ public class Theme: NSObject {
 
 	public func unregister(client : Themeable) {
 		OCSynchronized(self) {
-			if let clientIndex = weakClients.index(where: { (themable) -> Bool in
-				if themable.weakClient != nil {
-					return themable.weakClient === client
-				}
-				return false
-			}) {
-				weakClients.remove(at: clientIndex)
-			}
+			weakClients.remove(client)
 		}
 	}
 
@@ -103,7 +89,7 @@ public class Theme: NSObject {
 
 	public func add(resource: ThemeResource) {
 		OCSynchronized(self) {
-			weakClients.insert(WeakThemeable(resource), at: 0)
+			weakClients.add(resource)
 
 			if resource.identifier != nil {
 				resourcesByIdentifier[resource.identifier!] = resource
@@ -217,9 +203,9 @@ public class Theme: NSObject {
 	public func applyThemeCollection(_ collection: ThemeCollection) {
 		OCSynchronized(self) {
 			// Apply theme to clients
-			for client in weakClients {
-				if client.weakClient != nil {
-					client.weakClient?.applyThemeCollection(theme: self, collection: collection, event: .update)
+			for client in weakClients.allObjects {
+				if let client = client as? Themeable {
+					client.applyThemeCollection(theme: self, collection: collection, event: .update)
 				}
 			}
 

@@ -20,30 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-extension NSMutableAttributedString {
-	var boldFont:UIFont { return UIFont.preferredFont(forTextStyle: .headline) }
-	var normalFont:UIFont { return UIFont.preferredFont(forTextStyle: .subheadline) }
-
-	func appendBold(_ value:String) -> NSMutableAttributedString {
-		let attributes:[NSAttributedString.Key : Any] = [
-			.font : boldFont
-		]
-
-		self.append(NSAttributedString(string: value, attributes:attributes))
-		return self
-	}
-
-	func appendNormal(_ value:String) -> NSMutableAttributedString {
-		let attributes:[NSAttributedString.Key : Any] = [
-			.font : normalFont
-		]
-
-		self.append(NSAttributedString(string: value, attributes:attributes))
-		return self
-	}
-}
-
-public protocol ClientItemCellDelegate: class {
+public protocol ClientItemCellDelegate: AnyObject {
 
 	func moreButtonTapped(cell: ClientItemCell)
 	func messageButtonTapped(cell: ClientItemCell)
@@ -209,9 +186,9 @@ open class ClientItemCell: ThemeTableViewCell {
 		messageButton.isPointerInteractionEnabled = true
 		messageButton.isHidden = true
 
-		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
-		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .touchUpInside)
-		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
+		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
+		revealButton.addTarget(self, action: #selector(revealButtonTapped), for: .primaryActionTriggered)
+		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .primaryActionTriggered)
 
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
@@ -405,16 +382,16 @@ open class ClientItemCell: ThemeTableViewCell {
 
 			if item.type == .file {
 				switch item.cloudStatus {
-				case .cloudOnly:
-					cloudStatusIcon = UIImage(named: "cloud-only")
-					cloudStatusIconAlpha = 1.0
+					case .cloudOnly:
+						cloudStatusIcon = UIImage(named: "cloud-only")
+						cloudStatusIconAlpha = 1.0
 
-				case .localCopy:
-					cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
+					case .localCopy:
+						cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
 
-				case .locallyModified, .localOnly:
-					cloudStatusIcon = UIImage(named: "cloud-local-only")
-					cloudStatusIconAlpha = 1.0
+					case .locallyModified, .localOnly:
+						cloudStatusIcon = UIImage(named: "cloud-local-only")
+						cloudStatusIconAlpha = 1.0
 				}
 			} else {
 				if availableOfflineCoverage == .none {

@@ -1,9 +1,9 @@
-• Sorting
-Localized and improved sorting
+• UI fixes on iOS 15
+This version fixes some UI problems on iOS 15.
 
-• Fix: Authentication Improvement
-Fixed an OAuth2 token refresh problem 
+• Shortcuts Action
+The shortcuts action Delete Path Item did not provided configured accounts.
 
-• Fix: Connection Problem
-Fixed a possible connection problem in the single account view
+• Increased Timeout for Copy Action
+Timeout for Copy Action was increased up to 10 minutes.
 

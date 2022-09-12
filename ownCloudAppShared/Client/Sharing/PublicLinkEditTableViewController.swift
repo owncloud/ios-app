@@ -649,7 +649,7 @@ open class PublicLinkEditTableViewController: StaticTableViewController {
 		}
 
 		if let permissionMask = permissionMask {
-			let share = OCShare(publicLinkToPath: self.share.itemPath, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
+			let share = OCShare(publicLinkTo: self.share.itemLocation, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
 			self.core.createShare(share, options: nil, completionHandler: { (error, createdShare) in
 				if error == nil {
 					if let shareURL = createdShare?.url {

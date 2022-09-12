@@ -31,28 +31,28 @@ extension OCCertificate {
 
 			switch status {
 
-			case .none:
-				break
-			case .error:
-				color = Theme.shared.activeCollection.errorColor
-				shortDescription = "Error".localized
-				longDescription = "\("Validation Error".localized) \(error.localizedDescription)"
-			case .reject:
-				color = Theme.shared.activeCollection.errorColor
-				shortDescription = "Rejected".localized
-				longDescription = "Certificate was rejected by user.".localized
-			case .promptUser:
-				color = Theme.shared.activeCollection.warningColor
-				shortDescription = "Warning".localized
-				longDescription = "Certificate has issues.\nOpen 'Certificate Details' for more informations.".localized
-			case .passed:
-				color = Theme.shared.activeCollection.successColor
-				shortDescription = "Passed".localized
-				longDescription = "No issues found. Certificate passed validation.".localized
-			case .userAccepted:
-				color = Theme.shared.activeCollection.warningColor
-				shortDescription = "Accepted".localized
-				longDescription = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.".localized
+				case .none:
+					break
+				case .error:
+					color = Theme.shared.activeCollection.errorColor
+					shortDescription = "Error".localized
+					longDescription = "\("Validation Error".localized) \(error.localizedDescription)"
+				case .reject:
+					color = Theme.shared.activeCollection.errorColor
+					shortDescription = "Rejected".localized
+					longDescription = "Certificate was rejected by user.".localized
+				case .promptUser:
+					color = Theme.shared.activeCollection.warningColor
+					shortDescription = "Warning".localized
+					longDescription = "Certificate has issues.\nOpen 'Certificate Details' for more informations.".localized
+				case .passed:
+					color = Theme.shared.activeCollection.successColor
+					shortDescription = "Passed".localized
+					longDescription = "No issues found. Certificate passed validation.".localized
+				case .userAccepted:
+					color = Theme.shared.activeCollection.warningColor
+					shortDescription = "Accepted".localized
+					longDescription = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.".localized
 			}
 			completionHandler(status, shortDescription, longDescription, color, error)
 		})

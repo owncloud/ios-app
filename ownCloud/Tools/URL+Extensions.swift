@@ -86,7 +86,7 @@ extension URL {
 		}
 
 		// Find matching bookmarks
-		let bookmarks = OCBookmarkManager.shared.bookmarks.filter({$0.url?.host == self.host})
+		let bookmarks = OCBookmarkManager.shared.bookmarks.filter({bookmark in bookmark.url?.host == self.host})
 
 		var matchedBookmark: OCBookmark?
 		var foundItem: OCItem?

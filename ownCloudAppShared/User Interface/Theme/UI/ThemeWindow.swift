@@ -49,6 +49,22 @@ public class ThemeWindow : UIWindow {
 		return themeWindows
 	}
 
+	static var frontmostThemeWindow : ThemeWindow? {
+		var themeWindow : ThemeWindow?
+
+		OCSynchronized(self) {
+			let themeWindows = _themeWindows.allObjects
+
+			for checkWindow in themeWindows {
+				if checkWindow.themeWindowInForeground {
+					themeWindow = checkWindow
+				}
+			}
+		}
+
+		return themeWindow
+	}
+
 	// MARK: - Lifecycle
 	override public init(frame: CGRect) {
 		super.init(frame: frame)

@@ -84,7 +84,7 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 
 		self.completionHandler = completion
 
-		OCItemTracker(for: bookmark, at: path) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: .legacyRootPath(path)) { (error, core, item) in
 			if error == nil, let targetItem = item, core != nil {
 				OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
 					core?.delegate = self

@@ -35,7 +35,7 @@ public class SegmentedControl: UISegmentedControl {
 	}
 }
 
-public enum SearchScope : Int, CaseIterable {
+public enum SortBarSearchScope : Int, CaseIterable {
 	case global
 	case local
 
@@ -51,15 +51,15 @@ public enum SearchScope : Int, CaseIterable {
 	}
 }
 
-public protocol SortBarDelegate: class {
+public protocol SortBarDelegate: AnyObject {
 
 	var sortDirection: SortDirection { get set }
 	var sortMethod: SortMethod { get set }
-	var searchScope: SearchScope { get set }
+	var searchScope: SortBarSearchScope { get set }
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
 
-	func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope)
+	func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 
@@ -75,8 +75,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - Constants
-	let sideButtonsSize: CGSize = CGSize(width: 44.0, height: 44.0)
-	let leftPadding: CGFloat = 20.0
+	let sideButtonsSize: CGSize = CGSize(width: 40.0, height: 40.0)
+	let leftPadding: CGFloat = 16.0
 	let rightPadding: CGFloat = 20.0
 	let rightSelectButtonPadding: CGFloat = 8.0
 	let rightSearchScopePadding: CGFloat = 15.0
@@ -85,7 +85,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 	// MARK: - Instance variables.
 
-	public var sortSegmentedControl: SegmentedControl?
 	public var sortButton: UIButton?
 	public var searchScopeSegmentedControl : SegmentedControl?
 	public var selectButton: UIButton?
@@ -118,7 +117,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 			// Woraround for Accessibility: remove all elements, when element is hidden, otherwise the elements are still available for accessibility
 			if oldValue == false {
-				for scope in SearchScope.allCases {
+				for scope in SortBarSearchScope.allCases {
 					searchScopeSegmentedControl?.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
 				}
 				searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
@@ -152,20 +151,11 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
 			sortButton?.sizeToFit()
 
-			if let sortSegmentedControl = sortSegmentedControl, sortSegmentedControl.numberOfSegments > 0 {
-				if let oldSementIndex = SortMethod.all.index(of: oldValue) {
-					sortSegmentedControl.setTitle(oldValue.localizedName, forSegmentAt: oldSementIndex)
-				}
-				if let segmentIndex = SortMethod.all.index(of: sortMethod) {
-					sortSegmentedControl.selectedSegmentIndex = segmentIndex
-					sortSegmentedControl.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
-				}
-			}
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
 		}
 	}
 
-	public var searchScope : SearchScope {
+	public var searchScope : SortBarSearchScope {
 		didSet {
 			delegate?.searchScope = searchScope
 			searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
@@ -174,8 +164,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 	// MARK: - Init & Deinit
 
-	public init(frame: CGRect, sortMethod: SortMethod, searchScope: SearchScope = .local) {
-		sortSegmentedControl = SegmentedControl()
+	public init(frame: CGRect = .zero, sortMethod: SortMethod, searchScope: SortBarSearchScope = .local) {
 		selectButton = UIButton()
 		sortButton = UIButton(type: .system)
 		searchScopeSegmentedControl = SegmentedControl()
@@ -185,48 +174,61 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 		super.init(frame: frame)
 
-		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let searchScopeSegmentedControl = searchScopeSegmentedControl, let selectButton = selectButton {
+		if let sortButton = sortButton, let searchScopeSegmentedControl = searchScopeSegmentedControl, let selectButton = selectButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
-			sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
 			searchScopeSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
-			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
 			searchScopeSegmentedControl.accessibilityIdentifier = "sort-bar.searchScopeSegmentedControl"
 			searchScopeSegmentedControl.accessibilityLabel = "Search scope".localized
 			searchScopeSegmentedControl.isHidden = !self.showSearchScope
 			searchScopeSegmentedControl.addTarget(self, action: #selector(searchScopeValueChanged), for: .valueChanged)
 
-			self.addSubview(sortSegmentedControl)
 			self.addSubview(sortButton)
 			self.addSubview(searchScopeSegmentedControl)
 			self.addSubview(selectButton)
 
 			// Sort segmented control
 			NSLayoutConstraint.activate([
-				sortSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
-				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
-				sortSegmentedControl.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: leftPadding),
-
 				searchScopeSegmentedControl.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightSearchScopePadding),
 				searchScopeSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				searchScopeSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding)
 			])
 
-			sortSegmentedControl.isHidden = true
-			sortSegmentedControl.accessibilityElementsHidden = true
-			sortSegmentedControl.isEnabled = false
-			sortSegmentedControl.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
-
 			// Sort Button
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
 			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
-
 			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
-
 			sortButton.setContentHuggingPriority(.required, for: .horizontal)
+			sortButton.showsMenuAsPrimaryAction = true
+			sortButton.menu = UIMenu(title: "", children: [
+				UIDeferredMenuElement.uncached({ [weak self] completion in
+					var menuItems : [UIMenuElement] = []
+
+					for method in SortMethod.all {
+						let title = method.localizedName
+						var sortDirectionTitle = ""
+
+						if self?.delegate?.sortMethod == method {
+							if self?.delegate?.sortDirection == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
+								sortDirectionTitle = " ↓"
+							} else {
+								sortDirectionTitle = " ↑"
+							}
+						}
+
+						let menuItem = UIAction(title: "\(title)\(sortDirectionTitle)", image: nil, attributes: []) { [weak self] _ in
+							self?.sortMethod = method
+						}
+
+						menuItems.append(menuItem)
+					}
+
+					completion(menuItems)
+				})
+			])
 
 			NSLayoutConstraint.activate([
 				sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
@@ -234,11 +236,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leftPadding),
 				sortButton.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
-
-			sortButton.isHidden = true
-			sortButton.accessibilityElementsHidden = true
-			sortButton.isEnabled = false
-			sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
 
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
@@ -259,7 +256,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
-		updateForCurrentTraitCollection()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -275,71 +271,14 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton?.applyThemeCollection(collection)
 		self.selectButton?.applyThemeCollection(collection)
-		self.sortSegmentedControl?.applyThemeCollection(collection)
 		self.searchScopeSegmentedControl?.applyThemeCollection(collection)
-		self.backgroundColor = collection.navigationBarColors.backgroundColor
-	}
-
-	// MARK: - Sort UI
-
-	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(previousTraitCollection)
-		self.updateForCurrentTraitCollection()
-	}
-
-	public func updateForCurrentTraitCollection() {
-		switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
-		case (.compact, .regular):
-			sortSegmentedControl?.removeAllSegments()
-			sortSegmentedControl?.isHidden = true
-			sortSegmentedControl?.accessibilityElementsHidden = true
-			sortSegmentedControl?.isEnabled = false
-			sortButton?.isHidden = false
-			sortButton?.accessibilityElementsHidden = false
-			sortButton?.isEnabled = true
-		default:
-			updateSortSegmentControl()
-			sortSegmentedControl?.isHidden = false
-			sortSegmentedControl?.accessibilityElementsHidden = false
-			sortSegmentedControl?.isEnabled = true
-			sortButton?.isHidden = true
-			sortButton?.accessibilityElementsHidden = true
-			sortButton?.isEnabled = false
-		}
-
-		UIAccessibility.post(notification: .layoutChanged, argument: nil)
+		self.backgroundColor = collection.tableRowColors.backgroundColor
 	}
 
 	// MARK: - Sort Direction Title
-
 	func updateSortButtonTitle() {
-		let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
-		sortButton?.setTitle(sortDirectionTitle(title), for: .normal)
-	}
-
-	func updateSortSegmentControl() {
-		if let sortSegmentedControl = sortSegmentedControl {
-			sortSegmentedControl.removeAllSegments()
-			var longestTitleWidth : CGFloat = 0.0
-			for method in SortMethod.all {
-				sortSegmentedControl.insertSegment(withTitle: method.localizedName, at: SortMethod.all.index(of: method)!, animated: false)
-				let titleWidth = method.localizedName.appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
-				if titleWidth > longestTitleWidth {
-					longestTitleWidth = titleWidth
-				}
-				longestTitleWidth += 4 // add a padding to the longest title
-			}
-
-			var currentIndex = 0
-			for _ in SortMethod.all {
-				sortSegmentedControl.setWidth(longestTitleWidth, forSegmentAt: currentIndex)
-				currentIndex += 1
-			}
-			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
-				sortSegmentedControl.selectedSegmentIndex = segmentIndex
-				sortSegmentedControl.setTitle(sortDirectionTitle(sortMethod.localizedName), forSegmentAt: segmentIndex)
-			}
-		}
+		let sortButtonTitle = sortDirectionTitle(sortMethod.localizedName)
+		sortButton?.setTitle(sortButtonTitle, for: .normal)
 	}
 
 	func sortDirectionTitle(_ title: String) -> String {
@@ -351,43 +290,9 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - Actions
-	@objc private func presentSortButtonOptions(_ sender : UIButton) {
-		let tableViewController = SortMethodTableViewController()
-		tableViewController.modalPresentationStyle = .popover
-		tableViewController.sortBarDelegate = self.delegate
-		tableViewController.sortBar = self
-
-		// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
-		// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
-		let popoverArrowHeight : CGFloat = 13
-		tableViewController.tableView.contentInsetAdjustmentBehavior = .never
-		tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
-		tableViewController.tableView.separatorInset = UIEdgeInsets()
-
-		let popoverPresentationController = tableViewController.popoverPresentationController
-		popoverPresentationController?.sourceView = sender
-		popoverPresentationController?.delegate = self
-
-		if self.effectiveUserInterfaceLayoutDirection == .rightToLeft {
-			popoverPresentationController?.sourceRect = CGRect(x: 5, y: 0, width: 10, height: sender.frame.size.height)
-		} else {
-			popoverPresentationController?.sourceRect = CGRect(x: sender.frame.size.width - 12, y: 0, width: 10, height: sender.frame.size.height)
-		}
-		popoverPresentationController?.permittedArrowDirections = .up
-
-		delegate?.sortBar(self, presentViewController: tableViewController, animated: true, completionHandler: nil)
-	}
-
-	@objc private func sortSegmentedControllerValueChanged() {
-		if let selectedIndex = sortSegmentedControl?.selectedSegmentIndex {
-			self.sortMethod = SortMethod.all[selectedIndex]
-			delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
-		}
-	}
-
 	@objc private func searchScopeValueChanged() {
 		if let selectedIndex = searchScopeSegmentedControl?.selectedSegmentIndex {
-			self.searchScope = SearchScope(rawValue: selectedIndex)!
+			self.searchScope = SortBarSearchScope(rawValue: selectedIndex)!
 			delegate?.sortBar(self, didUpdateSearchScope: self.searchScope)
 		}
 	}

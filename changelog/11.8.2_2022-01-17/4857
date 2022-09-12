@@ -1,0 +1,5 @@
+Change: (Branding) Corporate Color as Folder Color
+
+Use the corporate color as folder color as default color (can be overridden by the specific key/value pair).
+
+https://github.com/owncloud/ios-app/issues/1069

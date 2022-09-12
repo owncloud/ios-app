@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-protocol MessageGroupCellDelegate : class {
+protocol MessageGroupCellDelegate : AnyObject {
 	func cell(_ cell: MessageGroupCell, showMessagesLike: OCMessage)
 }
 
@@ -133,6 +133,16 @@ class MessageGroupCell: ThemeTableViewCell {
 					setupLayout = true
 				}
 
+				if applyAllLabel == nil {
+					applyAllLabel = UILabel()
+					applyAllLabel?.translatesAutoresizingMaskIntoConstraints = false
+					applyAllLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+					applyAllLabel?.text = "Apply to all".localized
+					applyAllLabel?.lineBreakMode = .byTruncatingTail
+
+					applyAllContainer?.addSubview(applyAllLabel!)
+				}
+
 				if applyAllSwitch == nil {
 					applyAllSwitch = UISwitch()
 					applyAllSwitch?.translatesAutoresizingMaskIntoConstraints = false
@@ -140,15 +150,6 @@ class MessageGroupCell: ThemeTableViewCell {
 					applyAllSwitch?.addTarget(self, action: #selector(applyAllSwitchChanged), for: .primaryActionTriggered)
 
 					applyAllContainer?.addSubview(applyAllSwitch!)
-				}
-
-				if applyAllLabel == nil {
-					applyAllLabel = UILabel()
-					applyAllLabel?.translatesAutoresizingMaskIntoConstraints = false
-					applyAllLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
-					applyAllLabel?.text = "Apply to all".localized
-
-					applyAllContainer?.addSubview(applyAllLabel!)
 				}
 
 				if badgeLabel == nil {

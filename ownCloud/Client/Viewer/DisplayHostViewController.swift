@@ -51,13 +51,17 @@ class DisplayHostViewController: UIPageViewController {
 
 	var progressSummarizer : ProgressSummarizer?
 
+	public var clientContext : ClientContext?
+
 	// MARK: - Init & deinit
-	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
+	init(clientContext: ClientContext? = nil, core: OCCore, selectedItem: OCItem, query: OCQuery) {
 		self.core = core
 		self.initialItem = selectedItem
 		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+
+		self.clientContext = clientContext
 
 		if query.state == .stopped {
 			self.core?.start(query)
@@ -359,24 +363,27 @@ extension DisplayHostViewController {
 
 	@objc private func handleMediaPlaybackFinished(notification:Notification) {
 		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) as? MediaDisplayViewController {
 				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
+				activeDisplayViewController = displayViewController
 			}
 		}
 	}
 
 	@objc private func handlePlayNextMedia(notification:Notification) {
 		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) as? MediaDisplayViewController {
 				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
+				activeDisplayViewController = displayViewController
 			}
 		}
 	}
 
 	@objc private func handlePlayPreviousMedia(notification:Notification) {
 		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .before, includeOnlyMediaItems: true) {
+			if let displayViewController = adjacentViewController(relativeTo: mediaController, .before, includeOnlyMediaItems: true) as? MediaDisplayViewController {
 				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
+				activeDisplayViewController = displayViewController
 			}
 		}
 	}

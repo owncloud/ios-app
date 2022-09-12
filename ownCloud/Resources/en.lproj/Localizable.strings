@@ -48,7 +48,7 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Certificate has issues.\nOpen 'Certificate Details' for more informations.";
 "No issues found. Certificate passed validation." = "No issues found. Certificate passed validation.";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
 
 "Error opening %@" = "Error opening %@";
 
@@ -57,6 +57,10 @@
 
 "Fetching user information…" = "Fetching user information…";
 "Updating connection…" = "Updating connection…";
+
+"Preparing account" = "Preparing account";
+"Please wait…" = "Please wait…";
+"Skip" = "Skip";
 
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
@@ -139,6 +143,7 @@
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Folder removed";
 "This folder no longer exists on the server." = "This folder no longer exists on the server.";
@@ -673,6 +678,7 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+"Paste" = "Paste";
 "Play/Pause" = "Play/Pause";
 "Skip Back" = "Skip Back";
 "Skip Ahead" = "Skip Ahead";

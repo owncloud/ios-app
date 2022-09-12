@@ -180,7 +180,7 @@ class Migration {
 					self.migrationQueue.async {
 						// Check if the passcode is set
 						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode", "is_touch_id"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, _, _, resultSet) in
-							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? String {
+							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict["passcode"] as? String {
 
 								let activityName = "App Passcode".localized
 								self.postAccountMigrationNotification(activity: activityName, state: .initiated, type: .passcode)
@@ -191,7 +191,7 @@ class Migration {
 									AppLockManager.shared.passcode = passcode
 									AppLockSettings.shared.lockEnabled = true
 
-									if let biometricalIdEnabled = dict?["is_touch_id"] as? Bool {
+									if let biometricalIdEnabled = dict["is_touch_id"] as? Bool {
 										AppLockSettings.shared.biometricalSecurityEnabled = biometricalIdEnabled
 									}
 
@@ -453,7 +453,7 @@ class Migration {
 
 			// Track root folder
 			trackItemGroup.enter()
-			OCItemTracker(for: bookmark, at: "/") { (error, core, rootItem) in
+			OCItemTracker(for: bookmark, at: .legacyRootPath("/")) { (error, core, rootItem) in
 				defer {
 					trackItemGroup.leave()
 				}
@@ -461,7 +461,7 @@ class Migration {
 
 				// Track InstantUpload subfolder
 				trackItemGroup.enter()
-				OCItemTracker(for: bookmark, at: Migration.legacyInstantUploadFolder) { (error, core, item) in
+				OCItemTracker(for: bookmark, at: .legacyRootPath(Migration.legacyInstantUploadFolder)) { (error, core, item) in
 					defer {
 						trackItemGroup.leave()
 					}

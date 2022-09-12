@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import CoreServices
 
-public typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
+public typealias ClientDirectoryPickerLocationFilter = (_ location: OCLocation) -> Bool
 public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?, _ needsToDismissViewController: Bool) -> Void
 
 extension NSErrorDomain {
@@ -36,14 +36,14 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	open var selectButton: UIBarButtonItem?
 	private var selectButtonTitle: String?
 	private var cancelBarButton: UIBarButtonItem?
-	open var directoryPath : String?
+	open var directoryLocation : OCLocation?
 
 	open var choiceHandler: ClientDirectoryPickerChoiceHandler?
-	open var allowedPathFilter : ClientDirectoryPickerPathFilter?
-	open var navigationPathFilter : ClientDirectoryPickerPathFilter?
+	open var allowedLocationFilter : ClientDirectoryPickerLocationFilter?
+	open var navigationLocationFilter : ClientDirectoryPickerLocationFilter?
 	private var hasFavorites: Bool = false
 	private var showFavorites: Bool {
-		if directoryPath == "/", hasFavorites == true {
+		if let directoryLocationPath = directoryLocation?.path, directoryLocationPath == "/", hasFavorites == true {
 			return true
 		}
 		return false
@@ -55,38 +55,39 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 	]), inputFilter:nil)
 
 	// MARK: - Init & deinit
-	convenience public init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
-		let folderItemPaths = items.filter({ (item) -> Bool in
+	convenience public init(core inCore: OCCore, location: OCLocation, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+		let folderItemLocations = items.filter({ (item) -> Bool in
 			return item.type == .collection && item.path != nil && !item.isRoot
-		}).map { (item) -> String in
-			return item.path!
+		}).map { (item) -> OCLocation in
+			return item.location!
 		}
-		let itemParentPaths = items.filter({ (item) -> Bool in
-			return item.path?.parentPath != nil
-		}).map { (item) -> String in
-			return item.path!.parentPath
+		let itemParentLocations = items.filter({ (item) -> Bool in
+			return item.location?.parent != nil
+		}).map { (item) -> OCLocation in
+			return item.location!.parent
 		}
 
-		var navigationPathFilter : ClientDirectoryPickerPathFilter?
+		var navigationPathFilter : ClientDirectoryPickerLocationFilter?
 
-		if folderItemPaths.count > 0 {
-			navigationPathFilter = { (targetPath) in
-				return !folderItemPaths.contains(targetPath)
+		if folderItemLocations.count > 0 {
+			navigationPathFilter = { (targetLocation) in
+				return !folderItemLocations.contains(targetLocation)
 			}
 		}
 
-		self.init(core: inCore, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: { (targetPath) in
+		self.init(core: inCore, location: location, selectButtonTitle: selectButtonTitle, allowedLocationFilter: { (targetLocation) in
 			// Disallow all paths as target that are parent of any of the items
-			return !itemParentPaths.contains(targetPath)
-		}, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+			return !itemParentLocations.contains(targetLocation)
+		}, navigationLocationFilter: navigationPathFilter, choiceHandler: choiceHandler)
 	}
 
-	public init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerPathFilter? = nil, navigationPathFilter: ClientDirectoryPickerPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
-		let targetDirectoryQuery = OCQuery(forPath: path)
+	public init(core inCore: OCCore, location: OCLocation, selectButtonTitle: String, allowedLocationFilter: ClientDirectoryPickerLocationFilter? = nil, navigationLocationFilter: ClientDirectoryPickerLocationFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+		let targetDirectoryQuery = OCQuery(for: location)
+		let drive = (location.driveID != nil) ? inCore.drive(withIdentifier: location.driveID!) : nil
 
 		// Sort folders first
-		targetDirectoryQuery.sortComparator = { (left, right) in
-			guard let leftItem  = left as? OCItem, let rightItem = right as? OCItem else {
+		targetDirectoryQuery.sortComparator = { (leftVal, rightVal) in
+			guard let leftItem  = leftVal as? OCItem, let rightItem = rightVal as? OCItem else {
 				return .orderedSame
 			}
 			if leftItem.type == OCItemType.collection && rightItem.type != OCItemType.collection {
@@ -99,15 +100,15 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return .orderedSame
 		}
 
-		super.init(core: inCore, query: targetDirectoryQuery, rootViewController: nil)
+		super.init(core: inCore, drive: drive, query: targetDirectoryQuery, rootViewController: nil)
 
-		self.directoryPath = path
+		self.directoryLocation = location
 
 		self.choiceHandler = choiceHandler
 
 		self.selectButtonTitle = selectButtonTitle
-		self.allowedPathFilter = allowedPathFilter
-		self.navigationPathFilter = navigationPathFilter
+		self.allowedLocationFilter = allowedLocationFilter
+		self.navigationLocationFilter = navigationLocationFilter
 
 		// Force disable sorting options
 		self.shallShowSortBar = true
@@ -136,8 +137,8 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
 		selectButton?.title = selectButtonTitle
 
-		if let allowedPathFilter = allowedPathFilter, let directoryPath = directoryPath {
-			selectButton?.isEnabled = allowedPathFilter(directoryPath)
+		if let allowedLocationFilter = allowedLocationFilter, let directoryLocation = directoryLocation {
+			selectButton?.isEnabled = allowedLocationFilter(directoryLocation)
 		}
 
 		// Cancel button creation
@@ -175,8 +176,8 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		var allowNavigation = item.type == .collection
 
-		if allowNavigation, let navigationPathFilter = navigationPathFilter, let itemPath = item.path {
-			allowNavigation = navigationPathFilter(itemPath)
+		if allowNavigation, let navigationLocationFilter = navigationLocationFilter, let itemLocation = item.location {
+			allowNavigation = navigationLocationFilter(itemLocation)
 		}
 
 		return allowNavigation
@@ -252,11 +253,11 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		if showFavorites, indexPath.section == 0 {
 			selectFavoriteItem()
 		} else {
-			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
+			guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let location = item.location, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
 				return
 			}
 
-			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+			let pickerController = ClientDirectoryPickerViewController(core: core, location: location, selectButtonTitle: selectButtonTitle, allowedLocationFilter: allowedLocationFilter, navigationLocationFilter: navigationLocationFilter, choiceHandler: choiceHandler)
 			pickerController.cancelAction = cancelAction
 			pickerController.breadCrumbsPush = self.breadCrumbsPush
 
@@ -345,11 +346,11 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 
 		customFileListController.didSelectCellAction = { [weak self, customFileListController] (completion) in
-			guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let path = item.path, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
+			guard let favoriteIndexPath = customFileListController.tableView?.indexPathForSelectedRow, let item : OCItem = customFileListController.itemAt(indexPath: favoriteIndexPath), item.type == OCItemType.collection, let core = self?.core, let location = item.location, let selectButtonTitle = self?.selectButtonTitle, let choiceHandler = self?.choiceHandler else {
 				return
 			}
 
-			let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: self?.allowedPathFilter, navigationPathFilter: self?.navigationPathFilter, choiceHandler: choiceHandler)
+			let pickerController = ClientDirectoryPickerViewController(core: core, location: location, selectButtonTitle: selectButtonTitle, allowedLocationFilter: self?.allowedLocationFilter, navigationLocationFilter: self?.navigationLocationFilter, choiceHandler: choiceHandler)
 			pickerController.cancelAction = self?.cancelAction
 
 			self?.navigationController?.pushViewController(pickerController, animated: true)
@@ -366,12 +367,12 @@ open class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 	}
 
-	public override func revealViewController(core: OCCore, path: String, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
+	public override func revealViewController(core: OCCore, location: OCLocation, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
 		guard let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
 			return nil
 		}
 
-		let pickerController = ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+		let pickerController = ClientDirectoryPickerViewController(core: core, location: location, selectButtonTitle: selectButtonTitle, allowedLocationFilter: allowedLocationFilter, navigationLocationFilter: navigationLocationFilter, choiceHandler: choiceHandler)
 
 		pickerController.revealItemLocalID = item.localID
 		pickerController.cancelAction = cancelAction

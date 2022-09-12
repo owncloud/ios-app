@@ -23,13 +23,13 @@ open class ClientItemResolvingCell: ClientItemCell {
 	var itemTracker : OCCoreItemTracking?
 
 	// MARK: - Resolve item from path
-	public var itemResolutionPath : String? {
+	public var itemResolutionLocation : OCLocation? {
 		didSet {
 			self.item = nil
 
-			if let atPath = itemResolutionPath {
+			if let itemLocation = itemResolutionLocation {
 				self.itemResolutionLocalID = nil
-				self.itemTracker = core?.trackItem(atPath: atPath, trackingHandler: { (error, item, isInitial) in
+				self.itemTracker = core?.trackItem(at: itemLocation, trackingHandler: { (error, item, isInitial) in
 					if error == nil, let item = item, isInitial {
 						OnMainThread {
 							self.item = item
@@ -51,7 +51,7 @@ open class ClientItemResolvingCell: ClientItemCell {
 		didSet {
 			if let itemResolutionLocalID = itemResolutionLocalID {
 				self.item = nil
-				self.itemResolutionPath = nil
+				self.itemResolutionLocation = nil
 
 				core?.retrieveItemFromDatabase(forLocalID: itemResolutionLocalID, completionHandler: { (error, _, item) in
 					if let item = item, item.localID == self.itemResolutionLocalID {

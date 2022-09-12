@@ -55,10 +55,7 @@ class DisplayExifMetadataAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "camera-info")?.withRenderingMode(.alwaysTemplate)
-		}
-		return nil
+		return UIImage(named: "camera-info")?.withRenderingMode(.alwaysTemplate)
 	}
 
 	// MARK: - Action implementation

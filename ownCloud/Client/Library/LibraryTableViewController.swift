@@ -305,7 +305,7 @@ class LibraryTableViewController: StaticTableViewController {
 			shareResults.append(contentsOf: queryResults)
 		}
 
-		let uniqueShares = shareResults.unique { $0.itemPath }
+		let uniqueShares = shareResults.unique { $0.itemLocation }
 
 		let sharedWithUserAccepted = uniqueShares.filter({ (share) -> Bool in
 			return ((share.type == .remote) && (share.accepted == true)) ||
@@ -352,8 +352,8 @@ class LibraryTableViewController: StaticTableViewController {
 		})
 
 		OnMainThread {
-			self.updateView(identifier: .sharedWithOthers, with: sharedByUser.unique { $0.itemPath })
-			self.updateView(identifier: .publicLinks, with: sharedByUserLinks.unique { $0.itemPath })
+			self.updateView(identifier: .sharedWithOthers, with: sharedByUser.unique { $0.itemLocation })
+			self.updateView(identifier: .publicLinks, with: sharedByUserLinks.unique { $0.itemLocation })
 		}
 	}
 

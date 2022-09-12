@@ -22,6 +22,7 @@ import MediaPlayer
 import ownCloudSDK
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 class MediaDisplayViewController : DisplayViewController {
 
@@ -153,12 +154,14 @@ class MediaDisplayViewController : DisplayViewController {
 						// Construct image view overlay for AVPlayerViewController
 						let imageView = UIImageView(image: artworkImage)
 						imageView.translatesAutoresizingMaskIntoConstraints = false
-						imageView.contentMode = .center
+						imageView.contentMode = .scaleAspectFit
 						playerViewController?.contentOverlayView?.addSubview(imageView)
 
 						NSLayoutConstraint.activate([
-							imageView.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
-							imageView.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor)
+							imageView.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
+							imageView.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+							imageView.topAnchor.constraint(equalTo: overlayView.topAnchor),
+							imageView.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
 						])
 
 						// Create MPMediaItemArtwork to be shown in 'now playing' in the lock screen
@@ -424,7 +427,7 @@ extension MediaDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		if let mimeType = context.location?.identifier?.rawValue {
 
-			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utTypeClass: kUTTypeAudiovisualContent) {
+			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utType: UTType.audiovisualContent) {
 				return OCExtensionPriority.locationMatch
 			}
 		}

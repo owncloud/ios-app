@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 
 	OCLicenseOfferStateCommitted,	//!< The user has committed to (bought) the offer.
 	OCLicenseOfferStateExpired 	//!< The user has committed to the offer, but it has expired (f.ex. for subscriptions that have ended).
-};
+} __attribute__((enum_extensibility(closed)));
 
 @interface OCLicenseOffer : NSObject
 

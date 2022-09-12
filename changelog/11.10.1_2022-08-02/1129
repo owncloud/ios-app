@@ -1,0 +1,5 @@
+Bugfix: (Branding) Biometrical Unlock in Share Sheet
+
+Biometrical unlock in the share sheet does not work in some third party apps like Boxer. With new branding parameters it is now possible to disable biometrical unlock in the share sheet or to exclude specific apps.
+
+https://github.com/owncloud/ios-app/pull/1129

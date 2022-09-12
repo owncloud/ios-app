@@ -153,6 +153,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	override func prepare(forError error: Error) {
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
+			AppLockManager.shared.biometricCancelLabel = "Cancel".localized
 			AppLockManager.shared.cancelAction = { [weak self] in
 				self?.complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 			}

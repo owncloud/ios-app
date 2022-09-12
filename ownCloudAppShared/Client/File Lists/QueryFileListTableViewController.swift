@@ -117,7 +117,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			return sort
 		}
 	}
-	open var searchScope: SearchScope = .local {
+	open var searchScope: SortBarSearchScope = .local {
 		didSet {
 			updateSearchPlaceholder()
 		}
@@ -292,7 +292,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 
 		// Setup new action context
 		if let core = self.core {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
 			self.actionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
 		}
 
@@ -354,7 +354,6 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 			sortBar?.searchScope = self.searchScope
-			sortBar?.updateForCurrentTraitCollection()
 			sortBar?.showSelectButton = showSelectButton
 
 			tableView.tableHeaderView = sortBar
@@ -456,13 +455,14 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		return cell!
 	}
 
-	public func revealViewController(core: OCCore, path: String, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
-		return ClientQueryViewController(core: core, query: OCQuery(forPath: path), reveal: item, rootViewController: nil)
+	public func revealViewController(core: OCCore, location: OCLocation, item: OCItem, rootViewController: UIViewController?) -> UIViewController? {
+		let drive = (location.driveID != nil) ? core.drive(withIdentifier: location.driveID!) : nil
+		return ClientQueryViewController(core: core, drive: drive, query: OCQuery(for: location), reveal: item, rootViewController: nil)
 	}
 
 	public func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool {
-		if let parentPath = item.path?.parentPath,
-		   let revealQueryViewController = revealViewController(core: core, path: parentPath, item: item, rootViewController: nil) {
+		if let parentLocation = item.location?.parent,
+		   let revealQueryViewController = revealViewController(core: core, location: parentLocation, item: item, rootViewController: nil) {
 
 			self.navigationController?.pushViewController(revealQueryViewController, animated: true)
 
@@ -502,7 +502,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 	override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
 		let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
 
-		if let firstItem = firstItem, let itemIndex = self.items.index(of: firstItem) {
+		if let firstItem = firstItem, let itemIndex = self.items.firstIndex(of: firstItem) {
 			OnMainThread {
 				let section = tableView.numberOfSections - 1 // in directory picker there could be more than one section, if favorites exists
 				tableView.scrollToRow(at: IndexPath(row: itemIndex, section: section), at: UITableView.ScrollPosition.top, animated: false)
@@ -512,7 +512,7 @@ open class QueryFileListTableViewController: FileListTableViewController, SortBa
 		return 0
 	}
 
-	open func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+	open func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
  	}
 
 	open func toggleSelectMode() {

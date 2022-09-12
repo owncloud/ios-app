@@ -121,10 +121,7 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 			var replacementDetailLabel : UILabel?
 
 			replacementTextLabel.translatesAutoresizingMaskIntoConstraints = false
-			replacementTextLabel.setContentHuggingPriority(.required, for: .vertical)
-			replacementTextLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-			replacementTextLabel.numberOfLines = 0
-			replacementTextLabel.lineBreakMode = .byWordWrapping
+			replacementTextLabel.makeLabelWrapText()
 
 			replacementTextLabel.font = (style == .subtitle) ?
 				UIFont.systemFont(ofSize: UIFont.systemFontSize) :
@@ -137,10 +134,7 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 				replacementDetailLabel = UILabel()
 
 				replacementDetailLabel?.translatesAutoresizingMaskIntoConstraints = false
-				replacementDetailLabel?.setContentHuggingPriority(.required, for: .vertical)
-				replacementDetailLabel?.setContentCompressionResistancePriority(.required, for: .vertical)
-				replacementDetailLabel?.numberOfLines = 0
-				replacementDetailLabel?.lineBreakMode = .byWordWrapping
+				replacementDetailLabel?.makeLabelWrapText()
 
 				replacementDetailLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 

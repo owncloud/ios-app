@@ -21,6 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 extension NSErrorDomain {
 	static let ShareViewErrorDomain = "ShareViewErrorDomain"
@@ -105,7 +106,7 @@ class ShareViewController: MoreStaticTableViewController {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
 			if error != nil {
 				// Remove only one entry, not all for that bookmark
-				if let index = self.requestedCoreBookmarks.index(of: bookmark) {
+				if let index = self.requestedCoreBookmarks.firstIndex(of: bookmark) {
 					self.requestedCoreBookmarks.remove(at: index)
 				}
 			}
@@ -121,7 +122,7 @@ class ShareViewController: MoreStaticTableViewController {
 	func returnCore(for bookmark: OCBookmark, completionHandler: @escaping () -> Void) {
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
 			// Remove only one entry, not all for that bookmark
-			if let index = self.requestedCoreBookmarks.index(of: bookmark) {
+			if let index = self.requestedCoreBookmarks.firstIndex(of: bookmark) {
 				self.requestedCoreBookmarks.remove(at: index)
 			}
 
@@ -196,7 +197,7 @@ class ShareViewController: MoreStaticTableViewController {
 		self.requestCore(for: bookmark, completionHandler: { (core, error) in
 			if let core = core, error == nil {
 				OnMainThread {
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory, _) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, location: .legacyRoot, selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak core] (selectedDirectory, _) in
 						if let targetDirectory = selectedDirectory {
 							if let vault = core?.vault {
 								self.fpServiceSession = OCFileProviderServiceSession(vault: vault)
@@ -205,7 +206,7 @@ class ShareViewController: MoreStaticTableViewController {
 									OnMainThread {
 										self.navigationController?.popToViewController(self, animated: false)
 
-										let progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, cancelHandler: {})
+										let progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, progress: nil, cancelHandler: {})
 
 										self.present(progressViewController, animated: false)
 
@@ -305,7 +306,7 @@ class ShareViewController: MoreStaticTableViewController {
 							break
 						}
 
-						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(UTType.item.identifier) {
 							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
 								asyncQueue.async({ (jobDone) in
 									if progressViewController?.cancelled == true {
@@ -325,7 +326,7 @@ class ShareViewController: MoreStaticTableViewController {
 											var tempFileURL : URL?
 
 											if let text = item as? String { // Save plain text content
-												let ext = self.utiToFileExtension(type)
+												let ext = UTType(type)?.preferredFilenameExtension
 												tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
 												data = Data(text.utf8)
 											} else if let url = item as? URL { // Download URL content
@@ -447,13 +448,5 @@ class ShareViewController: MoreStaticTableViewController {
 				}
 			})
 		}
-	}
-}
-
-extension ShareViewController {
-	public func utiToFileExtension(_ utiType: String) -> String? {
-		guard let ext = UTTypeCopyPreferredTagWithClass(utiType as CFString, kUTTagClassFilenameExtension) else { return nil }
-
-		return ext.takeRetainedValue() as String
 	}
 }

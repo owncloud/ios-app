@@ -1,5 +1,5 @@
 //
-//  FullProgressViewController.swift
+//  ProgressIndicatorViewController.swift
 //  ownCloud Share Extension
 //
 //  Created by Felix Schwarz on 07.08.20.
@@ -23,21 +23,76 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 	open var cancelHandler : (() -> Void)?
 
 	open var progressView : UIProgressView
+	open var activityIndicator : UIActivityIndicatorView
 	open var label : UILabel
+	open var titleLabel : UILabel?
 	open var cancelButton : UIButton?
 
-	public init(initialProgressLabel: String?, cancelLabel: String? = nil, cancelHandler: (() -> Void)? = nil) {
+	var progressMessageObservation : NSKeyValueObservation?
+	var progressValueObservation : NSKeyValueObservation?
+	open var progress : Progress? {
+		willSet {
+			progressMessageObservation?.invalidate()
+			progressMessageObservation = nil
+
+			progressValueObservation?.invalidate()
+			progressValueObservation = nil
+		}
+
+		didSet {
+			if progress != nil {
+				progressMessageObservation = progress?.observe(\Progress.localizedDescription, options: NSKeyValueObservingOptions.initial, changeHandler: { [weak self] progress, _ in
+					OnMainThread {
+						self?.label.text = progress.localizedDescription
+					}
+				})
+
+				progressValueObservation = progress?.observe(\Progress.fractionCompleted, options: NSKeyValueObservingOptions.initial, changeHandler: { [weak self] progress, _ in
+					OnMainThread {
+						if progress.isIndeterminate {
+							self?.activityIndicator.isHidden = false
+							self?.progressView.isHidden = true
+							self?.activityIndicator.startAnimating()
+						} else {
+							self?.activityIndicator.stopAnimating()
+							self?.activityIndicator.isHidden = true
+							self?.progressView.isHidden = false
+						}
+					}
+				})
+			}
+		}
+	}
+
+	public init(initialTitleLabel: String? = nil, initialProgressLabel: String?, progress : Progress?, cancelLabel: String? = nil, cancelHandler: (() -> Void)? = nil) {
 		progressView = UIProgressView(progressViewStyle: .bar)
 		progressView.translatesAutoresizingMaskIntoConstraints = false
+
+		activityIndicator = UIActivityIndicatorView(style: .large)
+		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+		activityIndicator.isHidden = true
 
 		label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 
 		super.init(nibName: nil, bundle: nil)
 
+		self.progress = progress
+
+		if let initialTitleLabel = initialTitleLabel {
+			titleLabel = UILabel()
+			titleLabel?.translatesAutoresizingMaskIntoConstraints = false
+			titleLabel?.text = initialTitleLabel
+			titleLabel?.font = .preferredFont(forTextStyle: .title2)
+
+			label.font = .preferredFont(forTextStyle: .subheadline)
+		}
+
 		if let initialProgressLabel = initialProgressLabel {
 			label.text = initialProgressLabel
 		}
+
+		self.cancelHandler = cancelHandler
 
 		if cancelHandler != nil {
 			cancelButton = ThemeButton(type: .system)
@@ -63,14 +118,20 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		centerView.addSubview(progressView)
 		centerView.addSubview(label)
 
+		if let titleLabel = titleLabel {
+			centerView.addSubview(titleLabel)
+		}
+
 		if let cancelButton = cancelButton {
 			centerView.addSubview(cancelButton)
 		}
 
 		rootView.addSubview(centerView)
+		rootView.addSubview(activityIndicator)
 
 		let outerSpacing : CGFloat = 10
-		let labelProgressBarSpacing : CGFloat  = 15
+		let titleLabelSpacing : CGFloat = 5
+		let labelProgressBarSpacing : CGFloat  = 20
 		let cancelProgressBarSpacing : CGFloat  = 40
 		let progressBarWidth : CGFloat  = 280
 
@@ -83,7 +144,6 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 
 			label.centerXAnchor.constraint(equalTo: centerView.centerXAnchor),
 
-			label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
 			progressView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: labelProgressBarSpacing),
 
 			centerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: outerSpacing),
@@ -92,8 +152,27 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 			centerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
 			centerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor),
 
-			centerView.widthAnchor.constraint(equalToConstant: progressBarWidth)
+			centerView.widthAnchor.constraint(equalToConstant: progressBarWidth),
+
+			activityIndicator.centerXAnchor.constraint(equalTo: centerView.centerXAnchor),
+			activityIndicator.bottomAnchor.constraint(equalTo: centerView.topAnchor, constant:-labelProgressBarSpacing),
+			activityIndicator.widthAnchor.constraint(equalToConstant: 20),
+			activityIndicator.heightAnchor.constraint(equalToConstant: 20)
 		]
+
+		if let titleLabel = titleLabel {
+			constraints.append(contentsOf: [
+				titleLabel.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
+				titleLabel.centerXAnchor.constraint(greaterThanOrEqualTo: centerView.centerXAnchor),
+				titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: centerView.leftAnchor),
+				titleLabel.rightAnchor.constraint(lessThanOrEqualTo: centerView.rightAnchor),
+				label.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: titleLabelSpacing)
+			])
+		} else {
+			constraints.append(contentsOf: [
+				label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing)
+			])
+		}
 
 		if let cancelButton = cancelButton {
 			constraints.append(contentsOf: [
@@ -132,8 +211,10 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		self.view.backgroundColor = collection.tableBackgroundColor
 
 		self.progressView.applyThemeCollection(collection)
+		self.titleLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
 		self.label.applyThemeCollection(collection)
 		self.cancelButton?.applyThemeCollection(collection)
+		self.activityIndicator.style = collection.activityIndicatorViewStyle
 	}
 
 	open func update(progress: Float? = nil, text: String? = nil) {

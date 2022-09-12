@@ -17,18 +17,34 @@
  */
 
 import LocalAuthentication
+import UIKit
 
 extension LAContext {
+	public func supportedBiometricsAuthenticationName() -> String? {
+		if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+			switch self.biometryType {
+				case .faceID : return "Face ID".localized
+				case .touchID: return "Touch ID".localized
+				case .none: return nil
+				@unknown default: return nil
+			}
+		}
+		return nil
+	}
 
-    public func supportedBiometricsAuthenticationName() -> String? {
+	public func biometricsAuthenticationImage() -> UIImage? {
+		if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+			switch self.biometryType {
+				case .faceID:
+					return UIImage(systemName: "faceid")
 
-        if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-            switch self.biometryType {
-            case .faceID : return "Face ID".localized
-            case .touchID: return "Touch ID".localized
-            case .none: return nil
-            }
-        }
-        return nil
-    }
+				case .touchID:
+					return UIImage(systemName: "touchid")
+
+				case .none: return nil
+				@unknown default: return nil
+			}
+		}
+		return nil
+	}
 }

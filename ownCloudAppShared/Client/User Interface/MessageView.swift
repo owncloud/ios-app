@@ -220,7 +220,7 @@ open class MessageView: UIView {
 	}
 
 	@objc func keyboardWillShow(notification: Notification) {
-		let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+		let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
 		keyboardHeight = keyboardSize?.height ?? 0
 
 		if self.composeViewBottomConstraint != nil {

@@ -25,7 +25,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.scan") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Scan document".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction, .keyboardShortcut ] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction, .keyboardShortcut, .emptyFolder ] }
 	override class var keyCommand : String? { return "S" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentScanner) }
@@ -62,7 +62,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 			return
 		}
 
-		guard let targetFolderItem = context.items.first, let itemPath = targetFolderItem.path else {
+		guard let targetFolderItem = context.items.first, let itemLocation = targetFolderItem.location else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -85,7 +85,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 							.replacingOccurrences(of: "/", with: "-")  // Remove reserved character ("/" used to delimit paths on macOS, iOS, Linux, …)
 							.replacingOccurrences(of: "\\", with: "-") // Remove reserved character ("\" used to delimit paths on Windows)
 
-				core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(currentDate).pdf", atPath: itemPath, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+				core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(currentDate).pdf", at: itemLocation, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
 					guard let suggestedName = suggestedName else { return }
 
 					OnMainThread {
@@ -94,15 +94,10 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 					}
 				})
 			}
-
 		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction {
-			return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))
-		}
-
-		return nil
+		return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))?.withRenderingMode(.alwaysTemplate)
 	}
 }

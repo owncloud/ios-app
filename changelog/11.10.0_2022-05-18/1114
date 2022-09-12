@@ -1,0 +1,5 @@
+Bugfix: EMM Shortcuts Licensing
+
+If app was build as EMM version, the app shown an licensing error, when running shortcut intents.
+
+https://github.com/owncloud/ios-app/issues/1114

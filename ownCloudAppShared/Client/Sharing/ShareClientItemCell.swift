@@ -24,7 +24,7 @@ open class ShareClientItemCell: ClientItemResolvingCell {
 
 	// MARK: - Share Item
 	open override func titleLabelString(for item: OCItem?) -> NSAttributedString {
-		if let shareItemPath = share?.itemPath {
+		if let shareItemPath = share?.itemLocation.path {
 			return NSMutableAttributedString()
 					.appendBold(shareItemPath)
 		}
@@ -41,7 +41,7 @@ open class ShareClientItemCell: ClientItemResolvingCell {
 					self.iconView.activeViewProvider = ResourceItemIcon.file
 				}
 
-				self.itemResolutionPath = share.itemPath
+				self.itemResolutionLocation = share.itemLocation
 
 				self.updateLabels(with: item)
 			}

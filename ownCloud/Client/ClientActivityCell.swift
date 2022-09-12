@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-protocol ClientActivityCellDelegate : class {
+protocol ClientActivityCellDelegate : AnyObject {
 
 	func showMessage(for activity: OCActivity)
 

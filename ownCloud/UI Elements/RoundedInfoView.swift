@@ -30,7 +30,11 @@ class RoundedInfoView: UIView, Themeable {
 	let font : UIFont = UIFont.systemFont(ofSize: 14)
 
 	// MARK: - Instance Variables
-	var infoText : String = ""
+	var infoText : String = "" {
+		didSet {
+			label.text = infoText
+		}
+	}
 	var messageThemeApplierToken : ThemeApplierToken?
 	var backgroundView = UIView()
 	var label = UILabel()
@@ -64,7 +68,6 @@ class RoundedInfoView: UIView, Themeable {
 		label.textAlignment = .center
 		label.font = font
 		label.numberOfLines = 0
-		label.text = infoText
 		label.translatesAutoresizingMaskIntoConstraints = false
 		self.addSubview(label)
 
@@ -81,7 +84,7 @@ class RoundedInfoView: UIView, Themeable {
 			label.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -verticalLabelPadding),
 			label.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
 			label.heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
-			])
+		])
 	}
 
 	// MARK: - Theme support

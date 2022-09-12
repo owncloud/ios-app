@@ -59,11 +59,11 @@ public enum ThemeItemState {
 	}
 }
 
-public protocol ThemeableSectionHeader : class {
+public protocol ThemeableSectionHeader : AnyObject {
 	var sectionHeaderColor : UIColor? { get set }
 }
 
-public protocol ThemeableSectionFooter : class {
+public protocol ThemeableSectionFooter : AnyObject {
 	var sectionFooterColor : UIColor? { get set }
 }
 
@@ -132,6 +132,12 @@ public extension NSObject {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
 			tabBar.tintColor = collection.toolbarColors.tintColor
 			tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
+
+			let appearance = UITabBarAppearance()
+			appearance.backgroundColor = collection.toolbarColors.backgroundColor
+
+			tabBar.standardAppearance = appearance
+			tabBar.scrollEdgeAppearance = appearance
 		}
 
 		if let tableView = self as? UITableView {
@@ -247,6 +253,16 @@ public extension NSObject {
 			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		}
 
+		if let cell = self as? UICollectionViewListCell {
+			var backgroundConfig = cell.backgroundConfiguration
+			backgroundConfig?.backgroundColor = collection.tableRowColors.backgroundColor
+			cell.backgroundConfiguration = backgroundConfig
+
+			cell.tintColor = collection.lightBrandColor
+
+			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+		}
+
 		if let progressView = self as? UIProgressView {
 			progressView.tintColor = collection.tintColor
 			progressView.trackTintColor = collection.tableSeparatorColor
@@ -266,40 +282,6 @@ public extension NSObject {
 
 		if let visualEffectView = self as? UIVisualEffectView {
 			visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
-		}
-	}
-}
-
-extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter {
-	public var sectionHeaderColor: UIColor? {
-		get {
-			return self.value(forAnnotatedProperty: "sectionHeaderColor") as? UIColor
-		}
-
-		set {
-			self.setValue(newValue, forAnnotatedProperty: "sectionHeaderColor")
-		}
-	}
-
-	public var sectionFooterColor: UIColor? {
-		get {
-			return self.value(forAnnotatedProperty: "sectionFooterColor") as? UIColor
-		}
-
-		set {
-			self.setValue(newValue, forAnnotatedProperty: "sectionFooterColor")
-		}
-	}
-
-	public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		if let label = view as? UILabel, let sectionHeaderColor = sectionHeaderColor {
-			label.textColor = sectionHeaderColor
-		}
-	}
-
-	public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-		if let label = view as? UILabel, let sectionFooterColor = sectionFooterColor {
-			label.textColor = sectionFooterColor
 		}
 	}
 }

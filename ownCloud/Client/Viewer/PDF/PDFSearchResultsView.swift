@@ -40,7 +40,7 @@ class PDFSearchResultsView : UIView {
 	var currentMatch: PDFSelection? {
 		didSet {
 			if let match = currentMatch, let matches = self.matches {
-				if let index = matches.index(of: match), let matchString = match.string {
+				if let index = matches.firstIndex(of: match), let matchString = match.string {
 					currentIndex = index
 					let searchResultsText = "\(matchString) (" + String(format: "%@ of %@".localized, "\(index + 1)", "\(matches.count)") + ")"
 					searchTermButton.setTitle(searchResultsText, for: .normal)

@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-extension ClientQueryViewController : InlineMessageSupport {
+extension ClientQueryViewController : InlineMessageCenter {
 	public func hasInlineMessage(for item: OCItem) -> Bool {
 		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = (clientRootViewController as? ClientRootViewController)?.syncRecordIDsWithMessages else {
 			return false

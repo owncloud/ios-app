@@ -93,10 +93,6 @@ class RenameAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
 	}
 }

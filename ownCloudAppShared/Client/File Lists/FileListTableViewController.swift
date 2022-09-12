@@ -19,22 +19,17 @@
 import UIKit
 import ownCloudSDK
 
-public protocol OpenItemHandling {
+public protocol OpenItemHandling : AnyObject {
 	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool) -> UIViewController?
 }
 
-public protocol MoreItemHandling {
+public protocol MoreItemHandling : AnyObject {
 	@discardableResult func moreOptions(for item: OCItem, at location: OCExtensionLocationIdentifier, core: OCCore, query: OCQuery?, sender: AnyObject?) -> Bool
 }
 
-public protocol RevealItemHandling {
+public protocol RevealItemHandling : AnyObject {
 	@discardableResult func reveal(item: OCItem, core: OCCore, sender: AnyObject?) -> Bool
 	func showReveal(at path: IndexPath) -> Bool
-}
-
-public protocol InlineMessageSupport {
-	func hasInlineMessage(for item: OCItem) -> Bool
-	func showInlineMessageFor(item: OCItem)
 }
 
 open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
@@ -106,7 +101,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	// MARK: - Inline message support
 	open func hasMessage(for item: OCItem) -> Bool {
-		if let inlineMessageSupport = self as? InlineMessageSupport {
+		if let inlineMessageSupport = self as? InlineMessageCenter {
 			return inlineMessageSupport.hasInlineMessage(for: item)
 		}
 
@@ -115,7 +110,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	open func messageButtonTapped(cell: ClientItemCell) {
 		if let item = cell.item {
-			if let inlineMessageSupport = self as? InlineMessageSupport {
+			if let inlineMessageSupport = self as? InlineMessageCenter {
 				inlineMessageSupport.showInlineMessageFor(item: item)
 			}
 		}
@@ -248,8 +243,8 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 
 	// MARK: - Single item query creation
 	open func query(forItem: OCItem) -> OCQuery? {
-		if let path = forItem.path {
-			return OCQuery(forPath: path)
+		if let location = forItem.location {
+			return OCQuery(for: location)
 		}
 
 		return nil

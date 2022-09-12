@@ -22,7 +22,7 @@ open class CreateFolderAction : Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
 	override open class var category : ActionCategory? { return .normal }
 	override open class var name : String? { return "Create folder".localized }
-	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
+	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override open class var keyCommand : String? { return "N" }
 	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -52,7 +52,7 @@ open class CreateFolderAction : Action {
 
 		let item = context.items.first
 
-		guard item != nil, let itemPath = item?.path else {
+		guard item != nil, let itemLocation = item?.location else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -61,7 +61,7 @@ open class CreateFolderAction : Action {
 			return
 		}
 
-		core?.suggestUnusedNameBased(on: "New Folder".localized, atPath: itemPath, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
+		core?.suggestUnusedNameBased(on: "New Folder".localized, at: itemLocation, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 			guard let suggestedName = suggestedName else { return }
 
 			OnMainThread {
@@ -106,10 +106,6 @@ open class CreateFolderAction : Action {
 	}
 
 	override open class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .toolbar || location == .folderAction || location == .contextMenuItem {
-			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
-		}
-
-		return nil
+		return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 	}
 }

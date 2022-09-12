@@ -105,7 +105,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	private var themeApplierToken : ThemeApplierToken?
 
 	public var index : Int? {
-		return section?.rows.index(of: self)
+		return section?.rows.firstIndex(of: self)
 	}
 
 	public var indexPath : IndexPath? {

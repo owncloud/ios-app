@@ -363,7 +363,10 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				let tmpDarkBrandColors = self.darkBrandColors
-				tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
+            
+                if VendorServices.shared.isBranded {
+                    tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
+                }
 				if self.tintColor == UIColor(hex: 0xFFFFFF) {
 					tmpDarkBrandColors.secondaryLabelColor = .lightGray
 				}
@@ -374,6 +377,8 @@ public class ThemeCollection : NSObject {
 					defaultSearchBarColor.labelColor = UIColor(hex: 0x000000)
 					defaultSearchBarColor.secondaryLabelColor = UIColor.gray
 					defaultSearchBarColor.backgroundColor = UIColor(hex: 0xF7F7F7)
+					self.tableRowColors.symbolColor = darkColor
+					self.tableRowHighlightColors.symbolColor = darkColor
 				}
 
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", defaultSearchBarColor)

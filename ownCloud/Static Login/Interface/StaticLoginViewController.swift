@@ -80,7 +80,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 
 	var toolbarShown : Bool = false {
 		didSet {
-			if self.toolbarItems == nil, toolbarShown {
+			if self.toolbarItems == nil, toolbarShown, OCBookmarkManager.shared.bookmarks.count == 0 {
 				let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 				settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
@@ -248,6 +248,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 			firstViewController = self.buildBookmarkSelector()
 		} else if let firstProfile = loginBundle.profiles.first {
 			// Setup flow
+			self.toolbarShown = true
 			if loginBundle.profiles.count > 1 {
 				// Profile setup selector
 				firstViewController = buildProfileSetupSelector(title: firstProfile.welcome!)

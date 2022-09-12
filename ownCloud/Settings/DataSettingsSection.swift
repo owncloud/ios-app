@@ -146,7 +146,7 @@ class DataSettingsSection: SettingsSection {
 		}
 
 		let offsetForTimeInterval : (Int) -> Int = { (timeInterval) in
-			if let offset = timeIntervals.index(of: timeInterval) {
+			if let offset = timeIntervals.firstIndex(of: timeInterval) {
 				return offset
 			}
 

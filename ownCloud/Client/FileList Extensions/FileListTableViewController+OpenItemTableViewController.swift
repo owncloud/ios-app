@@ -30,8 +30,8 @@ extension FileListTableViewController : OpenItemHandling {
 
 			switch item.type {
 				case .collection:
-					if let path = item.path {
-						let clientQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+					if let location = item.location {
+						let clientQueryViewController = ClientQueryViewController(core: core, query: OCQuery(for: location))
 						if pushViewController {
 							self.navigationController?.pushViewController(clientQueryViewController, animated: animated)
 						}

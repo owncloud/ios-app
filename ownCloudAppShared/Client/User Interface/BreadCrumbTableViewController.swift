@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudSDK
 
 open class BreadCrumbTableViewController: StaticTableViewController {
 
@@ -30,7 +31,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 	open var parentNavigationController : UINavigationController?
 	open var queryPath : NSString = ""
 	open var bookmarkShortName : String?
-	open var navigationHandler : ((_ path: String) -> Void)?
+	open var navigationHandler : ((_ location: OCLocation) -> Void)?
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
@@ -49,7 +50,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 		var rows : [StaticTableViewRow] = []
 		let pathCount = pathComp.count
 		var currentViewContollerIndex = 2
-		let contentHeight : CGFloat = rowHeight * CGFloat(pathCount)
+		let contentHeight : CGFloat = rowHeight * CGFloat(pathCount) + 10
 		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
@@ -69,7 +70,7 @@ open class BreadCrumbTableViewController: StaticTableViewController {
 			let aRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 				guard let self = self else { return }
 				if let navigationHandler = self.navigationHandler {
-					navigationHandler(fullPath)
+					navigationHandler(OCLocation.legacyRootPath(fullPath))
 				} else {
 					if stackViewControllers.indices.contains(stackIndex) {
 						self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)

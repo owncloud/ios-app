@@ -21,7 +21,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, OCViewHostContentStatus) {
+	OCViewHostContentStatusNone,
+	OCViewHostContentStatusFallback,
+	OCViewHostContentStatusFromResource
+};
+
 @interface OCViewHost : UIView <OCResourceRequestDelegate>
+
+@property(readonly,nonatomic) OCViewHostContentStatus contentStatus;
 
 @property(strong,nullable,nonatomic) OCViewProviderContext *viewProviderContext;
 

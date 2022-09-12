@@ -64,10 +64,6 @@ class MakeAvailableOfflineAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "available-offline")
-		}
-
-		return nil
+		return UIImage(named: "available-offline")?.withRenderingMode(.alwaysTemplate)
 	}
 }

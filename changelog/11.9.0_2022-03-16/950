@@ -1,0 +1,5 @@
+Change: Infinite PROPFIND support
+
+Added support for prepopulation of newly created account bookmarks via infinite PROPFINDs, which speeds up the initial scan
+
+https://github.com/owncloud/ios-app/issues/950

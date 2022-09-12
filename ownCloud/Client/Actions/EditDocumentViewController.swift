@@ -31,6 +31,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var modifiedContentsURL: URL?
 	var dismissedViewWithoutSaving: Bool = false
 	var timer: DispatchSourceTimer?
+	var pdfViewController : PDFViewerViewController?
 
 	var source: URL {
 		didSet {
@@ -55,8 +56,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
-		if let core = core, let path = item.path {
-			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self, weak core](error, item, _) in
+		if let core = core, let location = item.location {
+			itemTracker = core.trackItem(at: location, trackingHandler: { [weak self, weak core](error, item, _) in
 				if let item = item, let self = self {
 					var refreshPreview = false
 
@@ -124,28 +125,15 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 	@objc func enableEditingMode() {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
-		if #available(iOS 15.0, *) {
-			if self.navigationItem.rightBarButtonItems?.count ?? 0 > 2 {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			} else if UIDevice.current.isIpad, self.navigationItem.rightBarButtonItems?.count ?? 0 == 2 {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			} else {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			}
-		} else if #available(iOS 14.0, *) {
-			if self.navigationItem.rightBarButtonItems?.count ?? 0 > 1 {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?.last else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			} else {
-				guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
-				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-			}
-		} else { // action and target is nil on iOS 13
-			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
-			markupButton.sendActions(for: .touchUpInside)
+		if self.navigationItem.rightBarButtonItems?.count ?? 0 > 2 {
+			guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
+			_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+		} else if UIDevice.current.isIpad, self.navigationItem.rightBarButtonItems?.count ?? 0 == 2 {
+			guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
+			_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+		} else {
+			guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
+			_ = markupButton.target?.perform(markupButton.action, with: markupButton)
 		}
 	}
 
@@ -218,6 +206,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
+				pdfViewController?.allowUpdatesUntilLocalModificationPersists = true
+
 				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
