@@ -23,6 +23,16 @@ import ownCloudSDK
 import ownCloudAppShared
 import CoreServices
 
+extension AVPlayer {
+    var isAudioAvailable: Bool? {
+        return self.currentItem?.asset.tracks.filter({$0.mediaType == .audio}).count != 0
+    }
+
+    var isVideoAvailable: Bool? {
+        return self.currentItem?.asset.tracks.filter({$0.mediaType == .video}).count != 0
+    }
+}
+
 class MediaDisplayViewController : DisplayViewController {
 
 	static let MediaPlaybackFinishedNotification = NSNotification.Name("media_playback.finished")
@@ -144,7 +154,7 @@ class MediaDisplayViewController : DisplayViewController {
 				}
 
 				// Add artwork to the player overlay if corresponding meta data item is available in the asset
-				if let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
+                if !(player?.isVideoAvailable ?? false), let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
 					let imageData = artworkMetadataItem.dataValue,
 					let overlayView = playerViewController?.contentOverlayView {
 

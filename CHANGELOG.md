@@ -8,11 +8,19 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
 * Bugfix - Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
 * Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
 
 Details
 -------
+
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+
+   If a video file includes a metadata image, the video file was not visible, because the metadata
+   image was overlaying.
+
+   https://github.com/owncloud/enterprise/issues/5296
 
 * Bugfix - Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
 
