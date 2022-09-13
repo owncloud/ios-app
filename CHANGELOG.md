@@ -9,6 +9,8 @@ Summary
 -------
 
 * Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+* Bugfix - Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
 
 Details
 -------
@@ -19,6 +21,20 @@ Details
    image was overlaying.
 
    https://github.com/owncloud/enterprise/issues/5296
+
+* Bugfix - Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+   Fixes a bug when a new theme was activated, this causes that the UITabBar and UIToolbar does not
+   updates colours.
+
+   https://github.com/owncloud/ios-app/issues/1141
+
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
+
+   Adds a new dark mode theme which is mostly equal to the web UI dark mode theme. Furthermore it adds
+   a black dark mode theme.
+
+   https://github.com/owncloud/ios-app/issues/1146
 
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
