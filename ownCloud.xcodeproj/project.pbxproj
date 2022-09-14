@@ -274,6 +274,8 @@
 		DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */; };
 		DC0A5C432550C70800E6674B /* class-settings-sdk in Resources */ = {isa = PBXBuildFile; fileRef = DC0A5C422550C70800E6674B /* class-settings-sdk */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
+		DC0CE19228C7DBE3009ABDFB /* OpenInWebAppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */; };
+		DC0CE19D28C89CD9009ABDFB /* CreateDocumentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
@@ -1265,6 +1267,8 @@
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
+		DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInWebAppAction.swift; sourceTree = "<group>"; };
+		DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDocumentAction.swift; sourceTree = "<group>"; };
 		DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmark+Extension.swift"; sourceTree = "<group>"; };
 		DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
@@ -2264,6 +2268,8 @@
 				0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */,
 				025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */,
 				39EF06AF25D6C3FC001E1E19 /* PresentationModeAction.swift */,
+				DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */,
+				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -4331,6 +4337,7 @@
 				396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */,
 				394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */,
 				392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */,
+				DC0CE19228C7DBE3009ABDFB /* OpenInWebAppAction.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
 				0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
@@ -4398,6 +4405,7 @@
 				DCC3701624D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */,
 				39A243C424BDD9E100F4441F /* StaticLoginBundle.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
+				DC0CE19D28C89CD9009ABDFB /* CreateDocumentAction.swift in Sources */,
 				4C51727D22DE04BD001BC97F /* ScheduledTaskExtension.swift in Sources */,
 				025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
