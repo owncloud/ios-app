@@ -1,0 +1,5 @@
+Bugfix: Show folder contents from cache when offline
+
+With this fix the app shows the contents of the available folders when offline.
+
+https://github.com/owncloud/ios-app/issues/1130
