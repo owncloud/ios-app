@@ -19,7 +19,21 @@
 import UIKit
 import ownCloudSDK
 
+extension SearchElement {
+	func isEquivalent(to condition: OCQueryCondition) -> Bool {
+		if let token = self as? SearchToken, let tokenCondition = token.representedObject as? OCQueryCondition {
+			return tokenCondition.isEquivalent(to: condition)
+		}
+
+		return false
+	}
+}
+
 extension OCQueryCondition {
+	func isEquivalent(to condition: OCQueryCondition) -> Bool {
+		return (condition.localizedDescription == localizedDescription) && (condition.symbolName == symbolName)
+	}
+
 	var firstNonLogicalCondition: OCQueryCondition? {
 		switch self.operator {
 			case .negate, .or, .and:

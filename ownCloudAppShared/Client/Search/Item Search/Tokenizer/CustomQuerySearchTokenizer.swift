@@ -21,21 +21,25 @@ import ownCloudApp
 
 open class CustomQuerySearchTokenizer : SearchTokenizer {
 	open override func shouldTokenize(segment: OCSearchSegment) -> SearchToken? {
-		//
+		// Determine if that parsing this segment would result in a non-itemname query condition
 		if let queryCondition = OCQueryCondition.fromSearchTerm(segment.segmentedString) {
 			if let property = queryCondition.property {
 				if (property != .name) || (queryCondition.operator != .propertyContains) {
+					// Non-itemname, property-based query condition -> generate search token
 					return queryCondition.generateSearchToken(fallbackText: segment.segmentedString, inputComplete: !segment.hasCursor)
 				}
 			} else {
+				// Non-itemname, logic-based query condition -> generate search token
 				return queryCondition.generateSearchToken(fallbackText: segment.segmentedString, inputComplete: !segment.hasCursor)
 			}
 		}
 
+		// Do not generate a search token
 		return nil
 	}
 
 	open override func composeTextElement(segment: OCSearchSegment) -> SearchElement {
+		// Compose search element with query condition representation
 		return SearchElement(text: segment.segmentedString, representedObject: OCQueryCondition.fromSearchTerm(segment.segmentedString), inputComplete: !segment.hasCursor)
 	}
 }

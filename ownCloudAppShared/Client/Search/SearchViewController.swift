@@ -19,10 +19,14 @@
 import UIKit
 import ownCloudSDK
 
-public protocol SearchViewControllerDelegate : AnyObject {
+public protocol SearchViewControllerDelegate: AnyObject {
 	func searchBegan(for viewController: SearchViewController)
 	func search(for viewController: SearchViewController, withResults: OCDataSource?, style: CollectionViewCellStyle?)
 	func searchEnded(for viewController: SearchViewController)
+}
+
+public protocol SearchElementUpdating: AnyObject {
+	func updateFor(_ searchElements: [SearchElement])
 }
 
 open class SearchViewController: UIViewController, UITextFieldDelegate, Themeable {
@@ -42,6 +46,8 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	open var activeScope: SearchScope? {
 		willSet {
 			if activeScope != newValue {
+				activeScope?.tokenizer?.searchField = nil
+				activeScope?.searchViewController = nil
 				activeScope?.isSelected = false
 
 				resultsSourceObservation?.invalidate()
@@ -62,7 +68,9 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 			}
 
 			if activeScope != oldValue {
+				activeScope?.tokenizer?.searchField = searchField
 				activeScope?.isSelected = true
+				activeScope?.searchViewController = self
 
 				resultsSourceObservation = activeScope?.observe(\.results, options: .initial, changeHandler: { [weak self] (scope, change) in
 					if let self = self {
@@ -77,6 +85,8 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 				})
 
 				searchField.placeholder = activeScope?.localizedPlaceholder
+
+				scopeViewController = activeScope?.scopeViewController
 
 				sendSearchFieldContentsToActiveScope()
 			}
@@ -167,7 +177,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	open override func loadView() {
 		let rootView = UIView()
 
-		scopePopup = PopupButtonController(with: [], selectedChoice: nil, choiceHandler: { [weak self] choice in
+		scopePopup = PopupButtonController(with: [], selectedChoice: nil, choiceHandler: { [weak self] (choice, _) in
 			self?.activeScope = choice.representedObject as? SearchScope
 		})
 		// scopePopup?.showTitleInButton = false
@@ -273,6 +283,63 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 		delegate?.search(for: self, withResults: nil, style: nil)
 		delegate?.searchEnded(for: self)
+	}
+
+	// MARK: - Restore search
+	public func canRestore(savedSearch: AnyObject) -> Bool {
+		guard let scopes = scopes else {
+			return false
+		}
+
+		let restoreScope: SearchScope? = scopes.first(where: { scope in
+			scope.canRestore(savedSearch: savedSearch)
+		})
+
+		return restoreScope != nil
+	}
+
+	@discardableResult public func restore(savedSearch: AnyObject) -> Bool {
+		guard let scopes = scopes else {
+			return false
+		}
+
+		let restoreScope: SearchScope? = scopes.first(where: { scope in
+			scope.canRestore(savedSearch: savedSearch)
+		})
+
+		if let searchElements = restoreScope?.restore(savedSearch: savedSearch) {
+			setSearchFieldContent(from: searchElements)
+
+			if activeScope != restoreScope {
+				activeScope = restoreScope
+			} else {
+				sendSearchFieldContentsToActiveScope()
+			}
+
+			return true
+		}
+
+		return false
+	}
+
+	public func setSearchFieldContent(from searchElements: [SearchElement]) {
+		var tokens : [UISearchToken] = []
+		var searchTerm : String = ""
+
+		for searchElement in searchElements {
+			if let token = searchElement as? SearchToken {
+				tokens.append(token.uiSearchToken)
+			} else {
+				if searchTerm.count > 0 {
+					searchTerm += searchTerm + " " + searchElement.text
+				} else {
+					searchTerm = searchElement.text
+				}
+			}
+		}
+
+		searchField.tokens = tokens
+		searchField.text = searchTerm
 	}
 
 	// MARK: - Theme support

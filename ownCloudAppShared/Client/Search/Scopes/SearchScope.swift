@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-open class SearchScope: NSObject {
+open class SearchScope: NSObject, SearchElementUpdating {
 	public var localizedName : String
 	public var localizedPlaceholder: String?
 	public var icon : UIImage?
@@ -29,9 +29,11 @@ open class SearchScope: NSObject {
 
 	public var isSelected: Bool = false
 
+	public weak var searchViewController: SearchViewController?
 	public var clientContext: ClientContext
 
-	public var tokenizer: SearchTokenizer?
+	public var tokenizer: SearchTokenizer? // a search tokenizer must be set by subclasses in init()
+	public var scopeViewController: (UIViewController & SearchElementUpdating)?
 
 	static public func modifyingQuery(with context: ClientContext, localizedName: String) -> SearchScope {
 		return SingleFolderSearchScope(with: context, cellStyle: nil, localizedName: localizedName, localizedPlaceholder: "Search folder".localized, icon: UIImage(systemName: "folder"))
@@ -61,5 +63,26 @@ open class SearchScope: NSObject {
 	}
 
 	open func updateFor(_ searchElements: [SearchElement]) {
+	}
+
+	// Save and restore searches
+	open var canSaveSearch: Bool {
+		// subclasses should return true if the scope can save the current search
+		return false
+	}
+
+	open var savedSearch: AnyObject? {
+		// subclasses should return an serializable object that can be used to restore the search if the scope can save the current search
+		return nil
+	}
+
+	open func canRestore(savedSearch: AnyObject) -> Bool {
+		// subclasses should return true if they can restore a saved search from the provided savedSearch object
+		return false
+	}
+
+	open func restore(savedSearch: AnyObject) -> [SearchElement]? {
+		// subclasses should convert the saved search into search elements that can be used to popuplate f.ex. UISearchTextField
+		return nil
 	}
 }

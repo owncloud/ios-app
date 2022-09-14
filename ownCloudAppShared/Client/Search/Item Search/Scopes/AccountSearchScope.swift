@@ -154,14 +154,22 @@ open class AccountSearchScope : CustomQuerySearchScope {
 
 		super.init(with: context, cellStyle: revealCellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 	}
+
+	open override var savedSearchScope: OCSavedSearchScope? {
+		return .account
+	}
 }
 
 open class DriveSearchScope : AccountSearchScope {
+	private var driveID : String?
+
 	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
 		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		if context.core?.useDrives == true, let driveID = context.drive?.identifier {
 			let requireDriveCondition = OCQueryCondition.where(.driveID, isEqualTo: driveID)
+
+			self.driveID = driveID
 
 			queryConditionModifier = { (baseCondition) in
 				if let baseCondition = baseCondition {
@@ -171,5 +179,17 @@ open class DriveSearchScope : AccountSearchScope {
 				return nil
 			}
 		}
+	}
+
+	open override var savedSearchScope: OCSavedSearchScope? {
+		return .drive
+	}
+
+	open override var savedSearch: AnyObject? {
+		if let savedSearch = super.savedSearch as? OCSavedSearch {
+			savedSearch.location = OCLocation(driveID: driveID, path: nil)
+			return savedSearch
+		}
+		return nil
 	}
 }

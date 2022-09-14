@@ -282,9 +282,13 @@ public class CollectionViewSection: NSObject {
 					cell = cellProvider.provideCell(for: collectionView, cellConfiguration: cellConfiguration, itemRecord: itemRecord, collectionItemRef: collectionItemRef, indexPath: indexPath)
 				}
 			}
+
+			if cell == nil {
+				cell = collectionViewController.provideEmptyFallbackCell(for: indexPath, item: collectionItemRef)
+			}
 		}
 
-		return cell ?? UICollectionViewCell()
+		return cell ?? UICollectionViewCell.emptyFallbackCell
 	}
 
 	// MARK: - Section layout

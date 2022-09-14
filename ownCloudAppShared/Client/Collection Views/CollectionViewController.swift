@@ -29,12 +29,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	var highlightItemReference: OCDataItemReference?
 	var didHighlightItemReference: Bool = false
 
+	var emptyCellRegistration: UICollectionView.CellRegistration<UICollectionViewCell, CollectionViewController.ItemRef>?
+
 	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false, highlightItemReference: OCDataItemReference? = nil) {
 		supportsHierarchicContent = hierarchic
 		usesStackViewRoot = useStackViewRoot
 		self.highlightItemReference = highlightItemReference
 
 		super.init(nibName: nil, bundle: nil)
+
+		emptyCellRegistration = UICollectionView.CellRegistration(handler: { cell, indexPath, itemIdentifier in
+		})
 
 		inContext?.postInitialize(owner: self)
 
@@ -201,7 +206,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				return section.provideReusableCell(for: collectionView, collectionItemRef: collectionItemRef, indexPath: indexPath)
 			}
 
-			return UICollectionViewCell()
+			return self?.provideEmptyFallbackCell(for: indexPath, item: collectionItemRef)
 		}
 
 		// initial data
@@ -716,5 +721,26 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 public extension CollectionViewController {
 	func relayout(cell: UICollectionViewCell) {
 		collectionViewDataSource.apply(collectionViewDataSource.snapshot(), animatingDifferences: true)
+	}
+
+	func provideEmptyFallbackCell(for indexPath: IndexPath, item itemRef: CollectionViewController.ItemRef) -> UICollectionViewCell {
+ 		if let emptyCellRegistration = emptyCellRegistration {
+			let reUseIdentifier : CollectionViewController.ItemRef = NSString(string: "_empty_\(String(describing: itemRef))")
+			return collectionView.dequeueConfiguredReusableCell(using: emptyCellRegistration, for: indexPath, item: reUseIdentifier)
+		}
+
+		return UICollectionViewCell.emptyFallbackCell
+	}
+}
+
+public extension UICollectionViewCell {
+	static var emptyFallbackCell: UICollectionViewCell {
+		return CollectionViewFallbackCell()  // If the code reaches this point, an exception will be returned by UICollectionView*
+	}
+}
+
+public class CollectionViewFallbackCell : UICollectionViewCell {
+	public override var reuseIdentifier: String? {
+		return "_emptyFallbackCell"
 	}
 }

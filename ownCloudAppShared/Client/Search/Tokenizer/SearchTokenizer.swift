@@ -24,9 +24,14 @@ open class SearchTokenizer: NSObject {
 	weak var scope: SearchScope?
 	public var clientContext: ClientContext?
 
-	var elements : [SearchElement] = []
-
 	weak var searchField: UISearchTextField?
+
+	public init(scope: SearchScope, clientContext: ClientContext?) {
+		super.init()
+
+		self.scope = scope
+		self.clientContext = clientContext
+	}
 
 	open func updateFor(searchField: UISearchTextField) {
 		let searchText = searchField.text
@@ -42,10 +47,11 @@ open class SearchTokenizer: NSObject {
 			}
 		}
 
-		updateForSearchTerm((searchText != "") ? searchText : nil, cursorOffset: cursorOffset, tokens: searchTokens)
+		parseSearchTerm((searchText != "") ? searchText : nil, cursorOffset: cursorOffset, tokens: searchTokens)
 	}
 
-	open func updateForSearchTerm(_ term: String?, cursorOffset: Int?, tokens: [SearchToken]) {
+	@discardableResult
+	open func parseSearchTerm(_ term: String?, cursorOffset: Int?, tokens: [SearchToken], performUpdates: Bool = true) -> [SearchElement] {
 		var assembledTokens : [SearchToken] = []
 		var assembledElements : [SearchElement] = []
 
@@ -57,7 +63,9 @@ open class SearchTokenizer: NSObject {
 				if !searchSegment.hasCursor, let token = shouldTokenize(segment: searchSegment) {
 					// Create token from search segment and insert it position 0 (remember: we're iterating segments in reverse!)
 					assembledTokens.insert(token, at: 0)
-					replace(segment: searchSegment, with: token)
+					if performUpdates {
+						replace(segment: searchSegment, with: token)
+					}
 				} else {
 					// Create search term text element and insert it position 0 (remember: we're iterating segments in reverse!)
 					assembledElements.insert(composeTextElement(segment: searchSegment), at: 0)
@@ -72,7 +80,74 @@ open class SearchTokenizer: NSObject {
 		assembledElements.insert(contentsOf: assembledTokens, at: 0)
 
 		// Tell scope to update for the provided elements
-		scope?.updateFor(assembledElements)
+		if performUpdates {
+			scope?.updateFor(assembledElements)
+		}
+
+		// Tell scope's scope view controller to update for the provided elements
+		if performUpdates {
+			scope?.scopeViewController?.updateFor(assembledElements)
+		}
+
+		return assembledElements
+	}
+
+	// MARK: Token management
+	open func add(element: SearchElement) {
+		if let token = element as? SearchToken, let searchField = searchField {
+			searchField.insertToken(token.uiSearchToken, at: searchField.tokens.count)
+		}
+
+		setNeedsUpdate()
+	}
+
+	open func remove(elementEquivalentTo queryCondition: OCQueryCondition) {
+		if let searchTokens = searchField?.tokens, let searchField = searchField {
+			var tokenIndex = 0
+			for searchToken in searchTokens {
+				if let representedToken = searchToken.representedObject as? SearchElement, let representedQueryCondition = representedToken.representedObject as? OCQueryCondition {
+					if queryCondition.isEquivalent(to: representedQueryCondition) {
+						searchField.removeToken(at: tokenIndex)
+						break
+					}
+				}
+
+				tokenIndex += 1
+			}
+
+			setNeedsUpdate()
+		}
+	}
+
+	open func remove(element: SearchElement) {
+		if let representedQueryCondition = element.representedObject as? OCQueryCondition {
+			remove(elementEquivalentTo: representedQueryCondition)
+		}
+	}
+
+	// MARK: Efficient updating
+	private var _needsUpdate : Bool = false
+
+	func setNeedsUpdate() {
+		OCSynchronized(self, block: {
+			_needsUpdate = true
+			OnMainThread { [weak self] in
+				self?._updateIfNeeded()
+			}
+		})
+	}
+
+	private func _updateIfNeeded() {
+		var doUpdate : Bool = false
+
+		OCSynchronized(self, block: {
+			doUpdate = _needsUpdate
+			_needsUpdate = false
+		})
+
+		if doUpdate, let searchField = searchField {
+			updateFor(searchField: searchField)
+		}
 	}
 
 	// MARK: UISearchToken generation
@@ -81,19 +156,9 @@ open class SearchTokenizer: NSObject {
 		replaceRange.length += 1 // remove trailing space as well as the spaces accumulate otherwise
 
 		if let replaceRange = searchField?.textRange(from: replaceRange) {
-			let token = UISearchToken(icon: searchToken.icon, text: searchToken.text)
-			token.representedObject = searchToken
-
 			searchField?.replace(replaceRange, withText: "")
-			searchField?.insertToken(token, at: searchField?.tokens.count ?? 0)
+			searchField?.insertToken(searchToken.uiSearchToken, at: searchField?.tokens.count ?? 0)
 		}
-	}
-
-	public init(scope: SearchScope, clientContext: ClientContext?) {
-		super.init()
-
-		self.scope = scope
-		self.clientContext = clientContext
 	}
 
 	// MARK: - Conversion to token & text element

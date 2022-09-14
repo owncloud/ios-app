@@ -67,4 +67,14 @@ open class QueryModifyingSearchScope : ItemSearchScope {
 
 // Subclass
 open class SingleFolderSearchScope : QueryModifyingSearchScope {
+	open override var savedSearchScope: OCSavedSearchScope? {
+		return .folder
+	}
+	open override var savedSearch: AnyObject? {
+		if let savedSearch = super.savedSearch as? OCSavedSearch {
+			savedSearch.location = clientContext.query?.queryLocation
+			return savedSearch
+		}
+		return nil
+	}
 }

@@ -198,6 +198,11 @@
 			TranslateKeyword(@"folder"),
 			TranslateKeyword(@"image"),
 			TranslateKeyword(@"video"),
+			TranslateKeyword(@"audio"),
+			TranslateKeyword(@"document"),
+			TranslateKeyword(@"spreadsheet"),
+			TranslateKeyword(@"presentation"),
+			TranslateKeyword(@"pdf"),
 			TranslateKeyword(@"today"),
 			TranslateKeyword(@"week"),
 			TranslateKeyword(@"month"),
@@ -287,11 +292,34 @@
 			}
 			else if ([keyword isEqual:@"image"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"image/"]] withSymbolName:@"photo" localizedDescription:(negateCondition ? OCLocalized(@"No image") : OCLocalized(@"Image")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition anyOf:@[
+						[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"image/"],
+						[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"image"],
+					]]] withSymbolName:@"photo" localizedDescription:(negateCondition ? OCLocalized(@"No image") : OCLocalized(@"Image")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"video"])
 			{
 				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"video/"]] withSymbolName:@"film" localizedDescription:(negateCondition ? OCLocalized(@"No video") : OCLocalized(@"Video")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"audio"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"audio/"]] withSymbolName:@"waveform" localizedDescription:(negateCondition ? OCLocalized(@"No audio") : OCLocalized(@"Audio")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"document"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"x-office/document"]] withSymbolName:@"doc.text" localizedDescription:(negateCondition ? OCLocalized(@"No document") : OCLocalized(@"Document")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"spreadsheet"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/spreadsheet"]] withSymbolName:@"tablecells" localizedDescription:(negateCondition ? OCLocalized(@"No spreadsheet") : OCLocalized(@"Spreadsheet")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"presentation"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/presentation"]] withSymbolName:@"chart.pie" localizedDescription:(negateCondition ? OCLocalized(@"No presentation") : OCLocalized(@"Presentation")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"pdf"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType isEqualTo:@"application/pdf"]] withSymbolName:@"doc.richtext" localizedDescription:(negateCondition ? OCLocalized(@"No PDF") : OCLocalized(@"PDF")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"today"])
 			{

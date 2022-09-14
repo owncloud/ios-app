@@ -47,3 +47,12 @@ open class SearchToken: SearchElement {
 		fatalError("init(text:representedObject:inputComplete:) has not been implemented")
 	}
 }
+
+extension SearchToken {
+	var uiSearchToken: UISearchToken {
+		let token = UISearchToken(icon: icon, text: text)
+		token.representedObject = self
+
+		return token
+	}
+}

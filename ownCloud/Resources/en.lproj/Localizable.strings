@@ -108,6 +108,8 @@
 "Search space" = "Search space";
 "Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
+"Save search" = "Save search";
+
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 "Reveal in folder" = "Reveal in folder";

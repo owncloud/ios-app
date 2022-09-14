@@ -36,7 +36,7 @@ disabled_rules:
     - function_parameter_count
     - comment_spacing
     - unused_closure_parameter
-#   - unneeded_notification_center_removal
+    - nesting
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

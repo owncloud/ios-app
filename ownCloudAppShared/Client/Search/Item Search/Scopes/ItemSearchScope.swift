@@ -29,6 +29,7 @@ open class ItemSearchScope : SearchScope {
 		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		tokenizer = CustomQuerySearchTokenizer(scope: self, clientContext: context)
+		scopeViewController = ItemSearchSuggestionsViewController(with: self)
 
 		sortDescriptorObserver = context.observe(\.sortDescriptor, changeHandler: { [weak self] context, change in
 			self?.sortDescriptorChanged(to: context.sortDescriptor)
@@ -47,13 +48,12 @@ open class ItemSearchScope : SearchScope {
 	open override var isSelected: Bool {
 		didSet {
 			if !isSelected {
+				// Dump queryCondition and results
 				queryCondition = nil
 				results = nil
 			}
 		}
 	}
-
-	open var searchTerm: String?
 
 	open override func updateFor(_ searchElements: [SearchElement]) {
 		if isSelected {
@@ -72,5 +72,39 @@ open class ItemSearchScope : SearchScope {
 				queryCondition = nil
 			}
 		}
+	}
+
+	open var searchTerm: String? {
+		return queryCondition?.composedSearchTerm
+	}
+
+	// MARK: - Saved search support
+	// - ItemSearchScope specific
+	open var savedSearchScope: OCSavedSearchScope? { return nil }
+
+	// - SearchScope subclassing
+	open override var canSaveSearch: Bool {
+		return (savedSearchScope != nil) && ((searchTerm?.count ?? 0) > 0)
+	}
+	open override var savedSearch: AnyObject? {
+		if canSaveSearch, let savedSearchScope = savedSearchScope, let searchTerm = searchTerm {
+			return OCSavedSearch(scope: savedSearchScope, location: nil, name: nil, searchTerm: searchTerm)
+		}
+
+		return nil
+	}
+	open override func canRestore(savedSearch: AnyObject) -> Bool {
+		if let savedSearch = savedSearch as? OCSavedSearch {
+			return savedSearch.scope == savedSearchScope
+		}
+		return false
+	}
+	open override func restore(savedSearch: AnyObject) -> [SearchElement]? {
+		if let savedSearch = savedSearch as? OCSavedSearch,
+		   let elements = tokenizer?.parseSearchTerm(savedSearch.searchTerm, cursorOffset: nil, tokens: [], performUpdates: false) {
+			return elements
+		}
+
+		return nil
 	}
 }

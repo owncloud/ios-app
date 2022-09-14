@@ -40,11 +40,25 @@ open class PopupButtonChoice : NSObject {
 
 open class PopupButtonController : NSObject {
 	typealias TitleCustomizer = (_ choice: PopupButtonChoice, _ isSelected: Bool) -> String
-	typealias ChoiceHandler = (_ choice: PopupButtonChoice) -> Void
+	typealias SelectionCustomizer = (_ choice: PopupButtonChoice, _ isSelected: Bool) -> Bool
+	typealias ChoiceHandler = (_ choice: PopupButtonChoice, _ wasSelected: Bool) -> Void
+	typealias DynamicChoicesProvider = (_ popupController: PopupButtonController) -> [PopupButtonChoice]
 
 	var button : UIButton
 
-	var choices : [PopupButtonChoice]?
+	private var _choices : [PopupButtonChoice]?
+	var choices : [PopupButtonChoice]? {
+		get {
+			if let choicesProvider = choicesProvider {
+				return choicesProvider(self)
+			}
+			return _choices
+		}
+		set {
+			_choices = newValue
+		}
+	}
+	var choicesProvider: DynamicChoicesProvider?
 	var selectedChoice : PopupButtonChoice? {
 		didSet {
 			_updateTitleFromSelectedChoice()
@@ -63,7 +77,15 @@ open class PopupButtonController : NSObject {
 	}
 
 	var titleCustomizer: TitleCustomizer?
+	var selectionCustomizer: SelectionCustomizer?
 	var choiceHandler: ChoiceHandler?
+
+	var staticTitle: String? {
+		didSet {
+			_updateTitleFromSelectedChoice()
+		}
+	}
+	var adaptButton: Bool = true
 
 	override init() {
 		button = UIButton(type: .system)
@@ -80,21 +102,18 @@ open class PopupButtonController : NSObject {
 		button.showsMenuAsPrimaryAction = true
 	}
 
-	convenience init(with choices: [PopupButtonChoice], selectedChoice: PopupButtonChoice?, titleCustomizer: TitleCustomizer? = nil, dropDown: Bool = false, title: String? = nil, choiceHandler: ChoiceHandler? = nil) {
+	convenience init(with choices: [PopupButtonChoice], selectedChoice: PopupButtonChoice? = nil, selectFirstChoice: Bool = false, dropDown: Bool = false, staticTitle: String? = nil, titleCustomizer: TitleCustomizer? = nil, selectionCustomizer: SelectionCustomizer? = nil, choiceHandler: ChoiceHandler? = nil) {
 		self.init()
 
 		self.choices = choices
-		self.selectedChoice = selectedChoice ?? choices.first
+		self.selectedChoice = selectedChoice ?? (selectFirstChoice ? choices.first : nil)
+
 		self.titleCustomizer = titleCustomizer
+		self.selectionCustomizer = selectionCustomizer
 		self.choiceHandler = choiceHandler
 
+		self.staticTitle = staticTitle
 		self.isDropDown = dropDown
-
-		if let title = title {
-			button.setTitle(title, for: .normal)
-		} else {
-			_updateTitleFromSelectedChoice()
-		}
 
 		button.menu = UIMenu(title: "", children: [
 			UIDeferredMenuElement.uncached({ [weak self] completion in
@@ -105,9 +124,12 @@ open class PopupButtonController : NSObject {
 				}
 
 				for choice in choices {
-					let isSelectedChoice : Bool = (self?.isDropDown == false) ? (self?.selectedChoice == choice) : false
-
+					var isSelectedChoice : Bool = (self?.isDropDown == false) ? (self?.selectedChoice == choice) : false
 					var title = choice.title
+
+					if let selectionCustomizer = self?.selectionCustomizer {
+						isSelectedChoice = selectionCustomizer(choice, isSelectedChoice)
+					}
 
 					if let titleCustomizer = self?.titleCustomizer {
 						title = titleCustomizer(choice, isSelectedChoice)
@@ -115,7 +137,7 @@ open class PopupButtonController : NSObject {
 
 					let menuItem = UIAction(title: title, image: choice.image, attributes: [], state: isSelectedChoice ? .on : .off) { [weak self] _ in
 						self?.selectedChoice = choice
-						self?.choiceHandler?(choice)
+						self?.choiceHandler?(choice, isSelectedChoice)
 					}
 
 					menuItems.append(menuItem)
@@ -124,23 +146,38 @@ open class PopupButtonController : NSObject {
 				completion(menuItems)
 			})
 		])
+
+		_updateTitleFromSelectedChoice()
 	}
 
 	private func _updateTitleFromSelectedChoice() {
-		if let selectedChoice = selectedChoice, !isDropDown {
-			var title : String? = selectedChoice.buttonTitle ?? selectedChoice.title
+		var title = staticTitle
 
-			if let titleCustomizer = titleCustomizer {
-				title = titleCustomizer(selectedChoice, true)
+		if let selectedChoice = selectedChoice, !isDropDown {
+			if staticTitle == nil {
+				title = selectedChoice.buttonTitle ?? selectedChoice.title
+
+				if let titleCustomizer = titleCustomizer {
+					title = titleCustomizer(selectedChoice, true)
+				}
 			}
 
-			let chevronAttachment = NSTextAttachment()
-			chevronAttachment.image = UIImage(named: "chevron-small-light")?.withRenderingMode(.alwaysTemplate)
-			// Alternative using SF Symbols (but too strong IMO): chevronAttachment.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
-			let chevronString = NSAttributedString(attachment: chevronAttachment)
+			if adaptButton {
+				if showImageInButton {
+					button.setImage(selectedChoice.image, for: .normal)
+				}
+				button.accessibilityLabel = selectedChoice.buttonAccessibilityLabel
+			}
+		}
 
-			let attributedTitle = NSMutableAttributedString(string: (title != nil) && showTitleInButton ? " \(title!) " : " ")
+		let chevronAttachment = NSTextAttachment()
+		chevronAttachment.image = UIImage(named: "chevron-small-light")?.withRenderingMode(.alwaysTemplate)
+		// Alternative using SF Symbols (but too strong IMO): chevronAttachment.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+		let chevronString = NSAttributedString(attachment: chevronAttachment)
 
+		let attributedTitle = NSMutableAttributedString(string: (title != nil) && showTitleInButton ? " \(title!) " : " ")
+
+		if adaptButton {
 			if button.effectiveUserInterfaceLayoutDirection == .leftToRight {
 				attributedTitle.append(chevronString)
 			} else {
@@ -148,10 +185,6 @@ open class PopupButtonController : NSObject {
 			}
 
 			button.setAttributedTitle(attributedTitle, for: .normal)
-			if showImageInButton {
-				button.setImage(selectedChoice.image, for: .normal)
-			}
-			button.accessibilityLabel = selectedChoice.buttonAccessibilityLabel
 			button.sizeToFit()
 		}
 	}

@@ -160,7 +160,7 @@ public class TVGImage: NSObject {
 		var image : UIImage?
 
 		if (fitInSize.width <= 0) || (fitInSize.height <= 0) {
-			Log.error("Image can't be rendered at size \(fitInSize)")
+			Log.debug("Image can't be rendered at size \(fitInSize)")
 			return nil
 		}
 

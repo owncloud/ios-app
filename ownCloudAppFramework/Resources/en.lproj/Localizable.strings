@@ -56,6 +56,11 @@
 "keyword_folder" = "folder";
 "keyword_image" = "image";
 "keyword_video" = "video";
+"keyword_audio" = "audio";
+"keyword_document" = "document";
+"keyword_spreadsheet" = "spreadsheet";
+"keyword_presentation" = "presentation";
+"keyword_pdf" = "pdf";
 "keyword_today" = "today";
 "keyword_week" = "week";
 "keyword_month" = "month";
@@ -77,6 +82,21 @@
 
 "No video" = "No video";
 "Video" = "Video";
+
+"No audio" = "No audio";
+"Audio" = "Audio";
+
+"Document" = "Document";
+"No Document" = "No Document";
+
+"Spreadsheet" = "Spreadsheet";
+"No spreadsheet" = "No spreadsheet";
+
+"Presentation" = "Presentation";
+"No presentation" = "No presentation";
+
+"PDF" = "PDF";
+"No PDF" = "No PDF";
 
 "Before" = "Before";
 "After" = "After";
