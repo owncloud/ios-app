@@ -1,5 +1,6 @@
-Bugfix: Enabling Markup Mode on iOS 16
+Bugfix: Enabling Markup Mode on iOS 16, Updating Theme
 
 Enabling markup mode was broken on iOS 16 because of rearranged navigation bar and toolbar items.
+Furthermore when a new theme was choosen, this causes that the UITabBar and UIToolbar does not updates colours.
 
 https://github.com/owncloud/ios-app/issues/1141

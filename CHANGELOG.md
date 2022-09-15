@@ -9,6 +9,9 @@ Summary
 -------
 
 * Bugfix - Enabling Markup Mode on iOS 16: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
 
 Details
 -------
@@ -19,6 +22,27 @@ Details
    items.
 
    https://github.com/owncloud/ios-app/issues/1141
+
+* Bugfix - Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+   Fixes a bug when a new theme was activated, this causes that the UITabBar and UIToolbar does not
+   updates colours.
+
+   https://github.com/owncloud/ios-app/issues/1141
+
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+
+   If a video file includes a metadata image, the video file was not visible, because the metadata
+   image was overlaying.
+
+   https://github.com/owncloud/enterprise/issues/5296
+
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
+
+   Adds a new dark mode theme which is mostly equal to the web UI dark mode theme. Furthermore it adds
+   a black dark mode theme.
+
+   https://github.com/owncloud/ios-app/issues/1146
 
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
