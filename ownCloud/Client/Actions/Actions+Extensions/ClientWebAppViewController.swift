@@ -18,15 +18,20 @@
 
 import UIKit
 import WebKit
+import ownCloudAppShared
 
-class ClientWebAppViewController: UIViewController {
+class ClientWebAppViewController: UIViewController, WKUIDelegate {
 	var urlRequest: URLRequest
 	var webView: WKWebView?
+
+	var shouldSendCloseEvent: Bool = true
 
 	init(with urlRequest: URLRequest) {
 		self.urlRequest = urlRequest
 
 		super.init(nibName: nil, bundle: nil)
+
+		self.isModalInPresentation = true
 	}
 
 	required init?(coder: NSCoder) {
@@ -48,6 +53,7 @@ class ClientWebAppViewController: UIViewController {
 
 		webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
 		webView?.translatesAutoresizingMaskIntoConstraints = false
+		webView?.uiDelegate = self
 
 		rootView.addSubview(webView!)
 
@@ -65,7 +71,18 @@ class ClientWebAppViewController: UIViewController {
 		super.viewDidLoad()
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction(handler: { [weak self] _ in
-			self?.dismiss(animated: true)
+			if self?.shouldSendCloseEvent == true {
+				// Close via window.close(), which is calling dismissSecurely() once done
+				self?.closeWebWindow()
+
+				// Call dismissOnce() after 10 seconds regardless
+				OnMainThread(after: 10) {
+					self?.dismissOnce()
+				}
+			} else {
+				// Close directly
+				self?.closeWebWindow()
+			}
 		}))
 	}
 
@@ -77,7 +94,27 @@ class ClientWebAppViewController: UIViewController {
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 
+		// Drop web view
+		webView?.uiDelegate = nil
 		webView?.removeFromSuperview()
 		webView = nil
+	}
+
+	private var isDismissed = false
+	func dismissOnce() {
+		if !isDismissed {
+			isDismissed = true
+			self.dismiss(animated: true)
+		}
+	}
+
+	// window.close() handling
+	func closeWebWindow() {
+		webView?.evaluateJavaScript("window.close();")
+	}
+
+	// UI delegate
+	func webViewDidClose(_ webView: WKWebView) {
+		dismissOnce()
 	}
 }
