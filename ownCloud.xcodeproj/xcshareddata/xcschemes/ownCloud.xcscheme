@@ -361,6 +361,21 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:action.open-in-web-app-mode"
+            value = "string:default-browser"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:action.open-in-web-app-mode"
+            value = "string:in-app"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:action.open-in-web-app-mode"
+            value = "string:in-app-with-default-browser-option"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:bookmark.prepopulation"
             value = "string:streaming"
             isEnabled = "NO">

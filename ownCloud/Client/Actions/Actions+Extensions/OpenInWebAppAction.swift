@@ -20,7 +20,52 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+public extension OCClassSettingsKey {
+	static let openInWebAppMode = OCClassSettingsKey("open-in-web-app-mode")
+}
+
+enum OpenInWebAppActionMode: String {
+	case defaultBrowser = "default-browser"
+	case inApp = "in-app"
+	case inAppWithDefaultBrowserOption = "in-app-with-default-browser-option"
+}
+
 class OpenInWebAppAction: Action {
+	private static var _classSettingsRegistered: Bool = false
+	override class var actionExtension: ActionExtension {
+		if !_classSettingsRegistered {
+			_classSettingsRegistered = true
+
+			self.registerOCClassSettingsDefaults([
+				.openInWebAppMode : OpenInWebAppActionMode.inApp.rawValue
+			], metadata: [
+				.openInWebAppMode : [
+					.type 		: OCClassSettingsMetadataType.string,
+					.label		: "Open In WebApp mode",
+					.description 	: "Determines how to open a document in a web app.",
+					.status		: OCClassSettingsKeyStatus.advanced,
+					.category	: "Actions",
+					.possibleValues : [
+						[
+							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.defaultBrowser.rawValue,
+							OCClassSettingsMetadataKey.description 	: "Open in default browser app. May require user to sign in."
+						],
+						[
+							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inApp.rawValue,
+							OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser."
+						],
+						[
+							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue,
+							OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in)."
+						]
+					]
+				]
+			])
+		}
+
+		return super.actionExtension
+	}
+
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openinwebapp") }
 	override class var category : ActionCategory? { return .normal }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .contextMenuItem] }
@@ -91,11 +136,62 @@ class OpenInWebAppAction: Action {
 
 	// MARK: - Action implementation
 	override func run() {
+		var openMode : OpenInWebAppActionMode = .inApp
+
+		if let openInWebAppMode = classSetting(forOCClassSettingsKey: .openInWebAppMode) as? String, let configuredOpenMode = OpenInWebAppActionMode(rawValue: openInWebAppMode) {
+			openMode = configuredOpenMode
+		}
+
+		switch openMode {
+			case .defaultBrowser:
+				openInExternalBrowser()
+
+			case .inApp:
+				openInInAppBrowser(withDefaultBrowserOption: false)
+
+			case .inAppWithDefaultBrowserOption:
+				openInInAppBrowser(withDefaultBrowserOption: true)
+		}
+	}
+
+	func openInInAppBrowser(withDefaultBrowserOption defaultBrowserOption: Bool) {
 		guard context.items.count == 1, let item = context.items.first, let core = context.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
+		// Open in in-app browser
+		core.connection.open(inApp: item, with: app, viewMode: nil, completionHandler: { (error, url, method, headers, parameters, urlRequest) in
+			if let urlRequest = urlRequest as? URLRequest {
+				OnMainThread {
+					let webAppViewController = ClientWebAppViewController(with: urlRequest)
+					webAppViewController.navigationItem.title = item.name
+
+					if defaultBrowserOption {
+						webAppViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: nil, image: UIImage(systemName: "safari"), primaryAction: UIAction(handler: { [weak webAppViewController] _ in
+							webAppViewController?.parent?.dismiss(animated: true, completion: {
+								self.openInExternalBrowser()
+							})
+						}), menu: nil)
+					}
+
+					let navigationController = ThemeNavigationController(rootViewController: webAppViewController)
+
+					self.context.viewController?.present(navigationController, animated: true)
+				}
+			}
+
+			self.completed(with: error)
+		})
+	}
+
+	func openInExternalBrowser() {
+		guard context.items.count == 1, let item = context.items.first, let core = context.core else {
+			self.completed(with: NSError(ocError: .insufficientParameters))
+			return
+		}
+
+		// Open in external browser
 		core.connection.open(inWeb: item, with: app) { (error, url) in
 			if let url = url {
 				OnMainThread {
