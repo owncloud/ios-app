@@ -73,6 +73,23 @@ class MediaDisplayViewController : DisplayViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		playerViewController = AVPlayerViewController()
+
+		guard let playerViewController = playerViewController else { return }
+
+		addChild(playerViewController)
+		self.view.addSubview(playerViewController.view)
+		playerViewController.didMove(toParent: self)
+
+		playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+		NSLayoutConstraint.activate([
+			playerViewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+			playerViewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+			playerViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+			playerViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+		])
+
 		NotificationCenter.default.addObserver(self, selector: #selector(handleDidEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAVPlayerItem(notification:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
@@ -131,32 +148,18 @@ class MediaDisplayViewController : DisplayViewController {
 			if player == nil {
 				player = AVPlayer(playerItem: playerItem)
 				player?.allowsExternalPlayback = true
-				playerViewController = AVPlayerViewController()
 				if let playerViewController = self.playerViewController {
 					playerViewController.updatesNowPlayingInfoCenter = false
 
 					if UIApplication.shared.applicationState == .active {
 						playerViewController.player = player
 					}
-
-					addChild(playerViewController)
-					self.view.addSubview(playerViewController.view)
-					playerViewController.didMove(toParent: self)
-
-					playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
-
-					NSLayoutConstraint.activate([
-						playerViewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-						playerViewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-						playerViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-						playerViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-					])
 				}
 
 				// Add artwork to the player overlay if corresponding meta data item is available in the asset
-                if !(player?.isVideoAvailable ?? false), let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
-					let imageData = artworkMetadataItem.dataValue,
-					let overlayView = playerViewController?.contentOverlayView {
+                		if !(player?.isVideoAvailable ?? false), let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
+				   let imageData = artworkMetadataItem.dataValue,
+				   let overlayView = playerViewController?.contentOverlayView {
 
 					if let artworkImage = UIImage(data: imageData) {
 
