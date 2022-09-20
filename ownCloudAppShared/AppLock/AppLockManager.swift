@@ -333,7 +333,7 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - App Events
-	@objc func appDidEnterBackground() {
+	@objc public func appDidEnterBackground() {
 		if unlocked {
 			lastApplicationBackgroundedDate = Date()
 		} else {

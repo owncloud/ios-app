@@ -58,13 +58,14 @@ class ShareViewController: MoreStaticTableViewController {
 			// Share extension allowed
 			if !willAppearInitial {
 				willAppearInitial = true
-
-				if AppLockManager.supportedOnDevice {
-					AppLockManager.shared.showLockscreenIfNeeded()
-				}
+                
+                if AppLockManager.supportedOnDevice {
+                    AppLockManager.shared.showLockscreenIfNeeded()
+                }
 
 				if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
 					appexNavigationController.dismissalAction = { [weak self] (_) in
+                        AppLockManager.shared.appDidEnterBackground()
 						self?.returnCores(completion: {
 							Log.debug("Returned all cores (share sheet was closed / dismissed)")
 						})
@@ -96,6 +97,18 @@ class ShareViewController: MoreStaticTableViewController {
 			didAppearInitial = true
 		}
 	}
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if didAppearInitial {
+            AppLockManager.shared.appDidEnterBackground()
+        }
+    }
+    
+    @objc open override func dismissAnimated() {
+        AppLockManager.shared.appDidEnterBackground()
+        super.dismissAnimated()
+    }
 
 	private var requestedCoreBookmarks : [OCBookmark] = []
 
@@ -146,6 +159,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	@objc private func cancelAction () {
+        AppLockManager.shared.appDidEnterBackground()
 		self.returnCores(completion: {
 			let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
 			self.extensionContext?.cancelRequest(withError: error)
