@@ -9,6 +9,7 @@ Summary
 -------
 
 * Bugfix - Enabling Markup Mode on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
 * Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
 * Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
 
@@ -22,6 +23,12 @@ Details
    does not updates colours.
 
    https://github.com/owncloud/ios-app/issues/1141
+
+* Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
+
+   The passcode lock interval was not taken into use in the share extension.
+
+   https://github.com/owncloud/ios-app/issues/1156
 
 * Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
 
