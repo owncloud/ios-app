@@ -99,7 +99,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewWillDisappear(animated)
         if didAppearInitial {
             AppLockManager.shared.appDidEnterBackground()
         }
