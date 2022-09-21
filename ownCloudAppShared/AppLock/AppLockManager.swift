@@ -174,7 +174,11 @@ public class AppLockManager: NSObject {
 			lockscreenOpen = true
 
             // The following code needs to be executed after a short delay, because in the share sheet the biometrical unlock UI can block adding the PasscodeViewController UI
-            OnMainThread(after: 0.5) {
+            var delay = 0.0
+            if self.passwordViewHostViewController != nil {
+                delay = 0.5
+            }
+            OnMainThread(after: delay) {
                 // Show biometrical
                 if !forceShow, !self.shouldDisplayCountdown, self.biometricalAuthenticationSucceeded {
                     self.showBiometricalAuthenticationInterface(context: context)
