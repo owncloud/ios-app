@@ -173,12 +173,19 @@ public class AppLockManager: NSObject {
 			lockscreenOpenForced = forceShow
 			lockscreenOpen = true
 
-			// Show biometrical
-			if !forceShow, !self.shouldDisplayCountdown, self.biometricalAuthenticationSucceeded {
-				showBiometricalAuthenticationInterface(context: context)
-			} else if setupMode {
-				showBiometricalAuthenticationInterface(context: context)
-			}
+            // The following code needs to be executed after a short delay, because in the share sheet the biometrical unlock UI can block adding the PasscodeViewController UI
+            var delay = 0.0
+            if self.passwordViewHostViewController != nil {
+                delay = 0.5
+            }
+            OnMainThread(after: delay) {
+                // Show biometrical
+                if !forceShow, !self.shouldDisplayCountdown, self.biometricalAuthenticationSucceeded {
+                    self.showBiometricalAuthenticationInterface(context: context)
+                } else if setupMode {
+                    self.showBiometricalAuthenticationInterface(context: context)
+                }
+            }
 		} else {
 			dismissLockscreen(animated: true)
 		}
@@ -333,7 +340,7 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - App Events
-	@objc func appDidEnterBackground() {
+	@objc public func appDidEnterBackground() {
 		if unlocked {
 			lastApplicationBackgroundedDate = Date()
 		} else {

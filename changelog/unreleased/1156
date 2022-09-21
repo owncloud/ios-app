@@ -1,0 +1,5 @@
+Bugfix: Share Extension Passcode Lock Interval
+
+The passcode lock interval was not taken into use in the share extension.
+
+https://github.com/owncloud/ios-app/issues/1156
