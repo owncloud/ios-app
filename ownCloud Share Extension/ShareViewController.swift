@@ -186,6 +186,7 @@ class ShareViewController: MoreStaticTableViewController {
 
 				for (bookmark) in bookmarks {
 					let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
+                        self.didAppearInitial = false
 						self.openDirectoryPicker(for: bookmark, withBackButton: true)
 					}, title: bookmark.shortName, style: .plain, image: UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0)), imageWidth: 25, alignment: .left)
 					actionsRows.append(row)
