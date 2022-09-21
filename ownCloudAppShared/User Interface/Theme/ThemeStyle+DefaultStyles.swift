@@ -38,11 +38,11 @@ extension ThemeStyle {
 	}
     
     static public var ownCloudWebDark : ThemeStyle {
-        return (ThemeStyle(styleIdentifier: "com.owncloud.web.dark", darkStyleIdentifier: "com.owncloud.web.dark", localizedName: "Dark Web".localized, lightColor: .ownCloudWebDarkLabelColor, darkColor: .ownCloudWebDarkColor, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor.ownCloudWebDarkFolderColor.hexString()]))
+        return (ThemeStyle(styleIdentifier: "com.owncloud.web.dark", darkStyleIdentifier: "com.owncloud.web.dark", localizedName: "Dark Web".localized, lightColor: .ownCloudWebDarkLabelColor, darkColor: .ownCloudWebDarkColor, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor.ownCloudWebDarkFolderColor.hexString(), "Fill.neutralColors.normal.foreground" : UIColor.ownCloudWebDarkColor.hexString()]))
     }
     
     static public var ownCloudDarkBlack : ThemeStyle {
-        return (ThemeStyle(styleIdentifier: "com.owncloud.dark.black", darkStyleIdentifier: "com.owncloud.dark.black", localizedName: "Dark Black".localized, lightColor: .lightGray, darkColor: .black, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor.ownCloudWebDarkFolderColor.hexString(), "Toolbar.tintColor" : UIColor.white.hexString(), "NavigationBar.tintColor" : UIColor(white: 0.888, alpha: 1.0) .hexString()]))
+        return (ThemeStyle(styleIdentifier: "com.owncloud.dark.black", darkStyleIdentifier: "com.owncloud.dark.black", localizedName: "Dark Black".localized, lightColor: .lightGray, darkColor: .black, themeStyle: .dark, customColors: ["Icon.folderFillColor" : UIColor.ownCloudWebDarkFolderColor.hexString(), "Toolbar.tintColor" : UIColor.white.hexString(), "NavigationBar.tintColor" : UIColor(white: 0.888, alpha: 1.0) .hexString(), "Fill.neutralColors.normal.foreground" : UIColor.ownCloudWebDarkColor.hexString()]))
     }
     
     static public var ownCloudClassic : ThemeStyle {
