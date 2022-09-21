@@ -249,7 +249,7 @@ class ShareViewController: MoreStaticTableViewController {
 	func showAlert(title: String?, message: String? = nil, error: Error? = nil, decisionHandler: @escaping ((_ continue: Bool) -> Void)) {
 		OnMainThread {
 			let message = message ?? ((error != nil) ? error?.localizedDescription : nil)
-			let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+			let alert = ThemedAlertController(title: title, message: message, preferredStyle: .alert)
 
 			alert.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { (_) in
 				decisionHandler(false)
