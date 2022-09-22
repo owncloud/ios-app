@@ -20,12 +20,20 @@ import UIKit
 import ownCloudSDK
 
 extension UIView : OCDataItem, OCDataItemVersioning {
+	static var viewUUIDKey = "_ocViewUUIDKey"
+
 	public var dataItemType: OCDataItemType {
 		return .view
 	}
 
 	public var dataItemReference: OCDataItemReference {
-		return NSString(format: "%p", self)
+		if let uuid = objc_getAssociatedObject(self, &UIView.viewUUIDKey) as? NSString {
+			return uuid
+		} else {
+			let uuid = UUID().uuidString as NSString
+			objc_setAssociatedObject(self, &UIView.viewUUIDKey, uuid, .OBJC_ASSOCIATION_RETAIN)
+			return uuid
+		}
 	}
 
 	public var dataItemVersion: OCDataItemVersion {

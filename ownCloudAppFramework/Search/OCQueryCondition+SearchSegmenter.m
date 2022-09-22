@@ -429,7 +429,7 @@
 							if (byteCount != nil)
 							{
 								condition = [OCQueryCondition where:OCItemPropertyNameSize isLessThan:byteCount];
-								AddDescription(condition, negateCondition ? @"greaterthan.square" : @"lessthan.square", nil, [NSByteCountFormatter stringFromByteCount:byteCount.longLongValue countStyle:NSByteCountFormatterCountStyleFile]);
+								AddDescription(condition, @"ruler", nil, [(negateCondition ? @"> " : @"< ") stringByAppendingString:[NSByteCountFormatter stringFromByteCount:byteCount.longLongValue countStyle:NSByteCountFormatterCountStyleFile]]);
 							}
 						}
 						else if ([modifierKeyword isEqual:@"greater"])
@@ -439,7 +439,7 @@
 							if (byteCount != nil)
 							{
 								condition = [OCQueryCondition where:OCItemPropertyNameSize isGreaterThan:byteCount];
-								AddDescription(condition, negateCondition ? @"lessthan.square" : @"greaterthan.square", nil, [NSByteCountFormatter stringFromByteCount:byteCount.longLongValue countStyle:NSByteCountFormatterCountStyleFile]);
+								AddDescription(condition, @"ruler", nil, [(negateCondition ? @"< " : @"> ") stringByAppendingString:[NSByteCountFormatter stringFromByteCount:byteCount.longLongValue countStyle:NSByteCountFormatterCountStyleFile]]);
 							}
 						}
 						else if ([modifierKeyword isEqual:@"owner"])

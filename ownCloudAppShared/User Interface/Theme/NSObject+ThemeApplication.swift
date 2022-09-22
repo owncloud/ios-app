@@ -41,6 +41,9 @@ public enum ThemeItemStyle {
 	case bigTitle
 	case bigMessage
 
+	case system(textStyle: UIFont.TextStyle, weight: UIFont.Weight? = nil)
+	case systemSecondary(textStyle: UIFont.TextStyle, weight: UIFont.Weight? = nil)
+
 	case purchase
 	case welcome
 }
@@ -182,7 +185,7 @@ public extension NSObject {
 			let disabledColor : UIColor = collection.tableRowColors.secondaryLabelColor
 
 			switch itemStyle {
-				case .title, .bigTitle:
+				case .title, .bigTitle, .system(textStyle: _, weight: _):
 					normalColor = collection.tableRowColors.labelColor
 					highlightColor = collection.tableRowHighlightColors.labelColor
 
@@ -194,7 +197,7 @@ public extension NSObject {
 					normalColor = collection.loginColors.secondaryLabelColor
 					highlightColor = collection.loginColors.secondaryLabelColor
 
-				case .message, .bigMessage:
+				case .message, .bigMessage, .systemSecondary(textStyle: _, weight: _):
 					normalColor = collection.tableRowColors.secondaryLabelColor
 					highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
 
@@ -213,6 +216,20 @@ public extension NSObject {
 
 				case .bigMessage:
 					label.font = UIFont.systemFont(ofSize: 17)
+
+				case .system(let txtStyle, let txtWeight):
+					if let txtWeight = txtWeight {
+						label.font = UIFont.preferredFont(forTextStyle: txtStyle, with: txtWeight)
+					} else {
+						label.font = UIFont.preferredFont(forTextStyle: txtStyle)
+					}
+
+				case .systemSecondary(let txtStyle, let txtWeight):
+					if let txtWeight = txtWeight {
+						label.font = UIFont.preferredFont(forTextStyle: txtStyle, with: txtWeight)
+					} else {
+						label.font = UIFont.preferredFont(forTextStyle: txtStyle)
+					}
 
 				default:
 				break

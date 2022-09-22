@@ -21,7 +21,7 @@ import ownCloudSDK
 
 public protocol SearchViewControllerDelegate: AnyObject {
 	func searchBegan(for viewController: SearchViewController)
-	func search(for viewController: SearchViewController, withResults: OCDataSource?, style: CollectionViewCellStyle?)
+	func search(for viewController: SearchViewController, content: SearchViewController.Content?)
 	func searchEnded(for viewController: SearchViewController)
 }
 
@@ -74,13 +74,13 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 				resultsSourceObservation = activeScope?.observe(\.results, options: .initial, changeHandler: { [weak self] (scope, change) in
 					if let self = self {
-						self.delegate?.search(for: self, withResults: self.activeScope?.results, style: self.activeScope?.resultsCellStyle)
+						self.updateScopeSearchResults(from: self.activeScope?.results, with: self.activeScope?.resultsCellStyle)
 					}
 				})
 
 				resultsCellStyleObservation = activeScope?.observe(\.resultsCellStyle, changeHandler: { [weak self] (scope, change) in
 					if let self = self {
-						self.delegate?.search(for: self, withResults: self.activeScope?.results, style: self.activeScope?.resultsCellStyle)
+						self.updateScopeSearchResults(from: self.activeScope?.results, with: self.activeScope?.resultsCellStyle)
 					}
 				})
 
@@ -117,15 +117,21 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		}
 	}
 
-	init(with clientContext: ClientContext, scopes: [SearchScope]?, targetNavigationItem: UINavigationItem? = nil, delegate: SearchViewControllerDelegate?) {
+	init(with clientContext: ClientContext, scopes: [SearchScope]?, targetNavigationItem: UINavigationItem? = nil, suggestionContent: Content? = nil, noResultContent: Content? = nil, delegate: SearchViewControllerDelegate?) {
 		self.clientContext = clientContext
 
 		super.init(nibName: nil, bundle: nil)
 
 		self.targetNavigationItem = targetNavigationItem ?? clientContext.originatingViewController?.navigationItem
+
+		self.suggestionContent = suggestionContent
+		self.noResultContent = noResultContent
+
 		self.delegate = delegate
 
 		self.scopes = scopes
+
+		updateCurrentContent()
 	}
 
 	required public init?(coder: NSCoder) {
@@ -269,10 +275,94 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	@objc func searchFieldContentsChanged() {
 		sendSearchFieldContentsToActiveScope()
+		updateCurrentContent()
 	}
 
 	func sendSearchFieldContentsToActiveScope() {
 		self.activeScope?.tokenizer?.updateFor(searchField: searchField)
+	}
+
+	// MARK: - Search results
+	// Content
+	public enum ContentType {
+		case suggestion
+		case noResults
+		case results
+	}
+
+	public struct Content: Equatable {
+		var type: ContentType
+		var source: OCDataSource?
+		var style: CollectionViewCellStyle?
+	}
+
+	open var suggestionContent: Content? {
+		didSet {
+			updateCurrentContent()
+		}
+	}
+	open var noResultContent: Content? {
+		didSet {
+			updateCurrentContent()
+		}
+	}
+	open var resultContent: Content? {
+		didSet {
+			updateCurrentContent()
+		}
+	}
+
+	// Keeping track of scope's results and cell style
+	open var scopeResults: OCDataSource? {
+		willSet {
+			if newValue != scopeResults {
+				scopeResultsSubscription?.terminate()
+				scopeResultsSubscription = nil
+			}
+		}
+
+		didSet {
+			if oldValue != scopeResults {
+				scopeResultsSubscription = scopeResults?.subscribe(updateHandler: { [weak self] (subscription) in
+					self?.scopeResultsItemCount = subscription.snapshotResettingChangeTracking(true).numberOfItems
+				}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}
+		}
+	}
+	var scopeResultsSubscription: OCDataSourceSubscription?
+	var scopeResultsItemCount: UInt = 0 {
+		didSet {
+			updateCurrentContent()
+		}
+	}
+	open var scopeResultsCellStyle: CollectionViewCellStyle?
+
+	open func updateScopeSearchResults(from resultsDataSource: OCDataSource?, with resultsCellStyle: CollectionViewCellStyle?) {
+		scopeResultsCellStyle = resultsCellStyle
+		scopeResults = resultsDataSource
+
+		resultContent = Content(type: .results, source: resultsDataSource, style: resultsCellStyle)
+	}
+
+	// Determine current content
+	func updateCurrentContent() {
+		if searchField.tokens.count == 0, searchField.text?.count == 0 {
+			currentContent = suggestionContent
+		} else {
+			if scopeResultsItemCount == 0 {
+				currentContent = noResultContent
+			} else {
+				currentContent = resultContent
+			}
+		}
+	}
+
+	private var currentContent: Content? {
+		didSet {
+			if oldValue != currentContent {
+				delegate?.search(for: self, content: currentContent)
+			}
+		}
 	}
 
 	// MARK: - End search
@@ -281,7 +371,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 		restoreNavigationItem()
 
-		delegate?.search(for: self, withResults: nil, style: nil)
+		delegate?.search(for: self, content: nil)
 		delegate?.searchEnded(for: self)
 	}
 
