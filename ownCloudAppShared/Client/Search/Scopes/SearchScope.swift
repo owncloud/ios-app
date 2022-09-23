@@ -47,6 +47,14 @@ open class SearchScope: NSObject, SearchElementUpdating {
 		return DriveSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: UIImage(systemName: "square.grid.2x2"))
 	}
 
+	static public func containerSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		var placeholder = "Search tree".localized
+		if let path = context.query?.queryLocation?.lastPathComponent, path.count > 0 {
+			placeholder = "Search from {{folder.name}}".localized(["folder.name" : path])
+		}
+		return ContainerSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: UIImage(systemName: "square.stack.3d.up"))
+	}
+
 	static public func accountSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
 		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: "Search account".localized, icon: UIImage(systemName: "person"))
 	}
@@ -76,13 +84,23 @@ open class SearchScope: NSObject, SearchElementUpdating {
 		return nil
 	}
 
-	open func canRestore(savedSearch: AnyObject) -> Bool {
-		// subclasses should return true if they can restore a saved search from the provided savedSearch object
+	open var canSaveTemplate: Bool {
+		// subclasses should return true if the scope can save the current search as template
 		return false
 	}
 
-	open func restore(savedSearch: AnyObject) -> [SearchElement]? {
-		// subclasses should convert the saved search into search elements that can be used to popuplate f.ex. UISearchTextField
+	open var savedTemplate: AnyObject? {
+		// subclasses should return an serializable object that can be used to restore the search if the scope can save the current search as template
+		return nil
+	}
+
+	open func canRestore(savedTemplate: AnyObject) -> Bool {
+		// subclasses should return true if they can restore a saved template from the provided savedSearch object
+		return false
+	}
+
+	open func restore(savedTemplate: AnyObject) -> [SearchElement]? {
+		// subclasses should convert the saved template into search elements that can be used to popuplate f.ex. UISearchTextField
 		return nil
 	}
 }

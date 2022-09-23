@@ -190,8 +190,10 @@ public class CollectionViewSection: NSObject {
 		set {
 			_cellStyle = newValue
 
-			OnMainThread {
-				self.collectionViewController?.reload(sections: [self], animated: false)
+			if _cellStyle != newValue {
+				OnMainThread {
+					self.collectionViewController?.reload(sections: [self], animated: false)
+				}
 			}
 		}
 	}

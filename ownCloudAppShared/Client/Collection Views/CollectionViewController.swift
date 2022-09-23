@@ -176,8 +176,12 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		return UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, layoutEnvironment in
 			if let self = self {
-				if sectionIndex >= 0, sectionIndex < self.sections.count {
-					return self.sections[sectionIndex].provideCollectionLayoutSection(layoutEnvironment: layoutEnvironment)
+				let visibleSections = self.sections.filter({ section in
+					return !section.hidden
+				})
+
+				if sectionIndex >= 0, sectionIndex < visibleSections.count, visibleSections.count > 0 {
+					return visibleSections[sectionIndex].provideCollectionLayoutSection(layoutEnvironment: layoutEnvironment)
 				}
 			}
 

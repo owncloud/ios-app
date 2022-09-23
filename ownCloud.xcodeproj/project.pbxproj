@@ -342,6 +342,9 @@
 		DC46F3D32845583D00038880 /* OCDrive+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */; };
 		DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */; };
 		DC46F3D72845FCFA00038880 /* UIView+OCDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */; };
+		DC46F68E28DAFCDD008280CA /* RoundCornerBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */; };
+		DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */; };
+		DC46F69228DCB9C6008280CA /* OCSavedSearch+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */; };
 		DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */; };
 		DC49B55A28365C5F00DAF13B /* OCVault+VFSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */; };
 		DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */; };
@@ -574,6 +577,7 @@
 		DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */; };
 		DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */; };
 		DCFE682728D869A400091D2A /* ClientWebAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */; };
+		DCFE682E28D9CEDD00091D2A /* ComposedMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE682D28D9CEDD00091D2A /* ComposedMessageView.swift */; };
 		DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */; };
 		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
@@ -1356,6 +1360,9 @@
 		DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDrive+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCAction+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+OCDataItem.swift"; sourceTree = "<group>"; };
+		DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerBackgroundView.swift; sourceTree = "<group>"; };
+		DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedSearchCell.swift; sourceTree = "<group>"; };
+		DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCSavedSearch+Interactions.swift"; sourceTree = "<group>"; };
 		DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+VFSManager.h"; sourceTree = "<group>"; };
 		DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+VFSManager.m"; sourceTree = "<group>"; };
 		DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1588,6 +1595,7 @@
 		DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
 		DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellConfiguration.swift; sourceTree = "<group>"; };
 		DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientWebAppViewController.swift; sourceTree = "<group>"; };
+		DCFE682D28D9CEDD00091D2A /* ComposedMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedMessageView.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
 		DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VendorServices+App.swift"; sourceTree = "<group>"; };
@@ -2424,7 +2432,6 @@
 				DC24E10228B7BF13002E4F5B /* Tokenizer */,
 				DCCE1BF928CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift */,
 				DC24E10928B7C05E002E4F5B /* Scopes */,
-				DC2A127828D06E9D0088A2B7 /* Saved Searches */,
 			);
 			path = "Item Search";
 			sourceTree = "<group>";
@@ -2484,13 +2491,6 @@
 				DCE4E45524C1ED8D0051722F /* ClientQueryViewController+InlineMessageSupport.swift */,
 			);
 			path = "FileList Extensions";
-			sourceTree = "<group>";
-		};
-		DC2A127828D06E9D0088A2B7 /* Saved Searches */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Saved Searches";
 			sourceTree = "<group>";
 		};
 		DC2A127B28D06EED0088A2B7 /* Saved Searches */ = {
@@ -2609,9 +2609,10 @@
 			isa = PBXGroup;
 			children = (
 				DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */,
-				DC46F3D0284546F000038880 /* OCItem+Interactions.swift */,
-				DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */,
 				DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */,
+				DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */,
+				DC46F3D0284546F000038880 /* OCItem+Interactions.swift */,
+				DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */,
 			);
 			path = "Data Item Interactions";
 			sourceTree = "<group>";
@@ -3154,14 +3155,16 @@
 		DCE4E42F24C1963F0051722F /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
 				394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */,
 				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
-				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
-				3912208123436EB80026C290 /* SortMethod.swift */,
-				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+				DCFE682D28D9CEDD00091D2A /* ComposedMessageView.swift */,
 				DCD864112811FC5700CA6631 /* GradientView.swift */,
+				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
+				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
 				DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */,
+				DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */,
+				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+				3912208123436EB80026C290 /* SortMethod.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -3274,6 +3277,7 @@
 				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
 				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
+				DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */,
 				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
 				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
 				DC46F3CB2844A8EA00038880 /* ViewCell.swift */,
@@ -4529,9 +4533,11 @@
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
 				399EA6F925E6544100B6FF11 /* SharingTableViewController.swift in Sources */,
+				DC46F69228DCB9C6008280CA /* OCSavedSearch+Interactions.swift in Sources */,
 				DCE4E45824C1F0F40051722F /* ClientDirectoryPickerViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
 				DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */,
+				DCFE682E28D9CEDD00091D2A /* ComposedMessageView.swift in Sources */,
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
@@ -4552,6 +4558,7 @@
 				DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */,
 				DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */,
 				DCB5D60B25FC14B6004C52D9 /* OCIssue+Extension.swift in Sources */,
+				DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */,
 				DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
@@ -4572,6 +4579,7 @@
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
+				DC46F68E28DAFCDD008280CA /* RoundCornerBackgroundView.swift in Sources */,
 				DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,

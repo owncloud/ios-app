@@ -19,25 +19,45 @@
 import UIKit
 
 class ViewCell: ThemeableCollectionViewListCell {
+	var hostedView: UIView? {
+		willSet {
+			if hostedView != newValue {
+				hostedView?.removeFromSuperview()
+			}
+		}
+
+		didSet {
+			if let hostedView = hostedView, hostedView != oldValue {
+				hostedView.layoutIfNeeded()
+
+				contentView.addSubview(hostedView)
+
+				NSLayoutConstraint.activate([
+					// Fill cell.contentView
+					// -> these constraints are applied with .defaultHigh priority (not the default of .required) to not trigger
+					//    an unsatisfiable constraints warning in case a cell is re-used and the new view's size conflicts with the
+					//    system's "UIView-Encapsulated-Layout-Height" constraint
+					hostedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).with(priority: .defaultHigh),
+					hostedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).with(priority: .defaultHigh),
+					hostedView.topAnchor.constraint(equalTo: contentView.topAnchor).with(priority: .defaultHigh),
+					hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).with(priority: .defaultHigh),
+
+					// Extend cell seperator to contentView.leadingAnchor
+					separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+				])
+			}
+		}
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		hostedView = nil
+	}
+
 	static func registerCellProvider() {
 		let itemListCellRegistration = UICollectionView.CellRegistration<ViewCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
-				if let view = item as? UIView {
-					let contentView = cell.contentView
-
-					contentView.addSubview(view)
-
-					NSLayoutConstraint.activate([
-						// Fill cell.contentView
-						view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-						view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-						view.topAnchor.constraint(equalTo: contentView.topAnchor),
-						view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-
-						// Extend cell seperator to contentView.leadingAnchor
-						cell.separatorLayoutGuide.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor)
-					])
-				}
+				cell.hostedView = item as? UIView
 			})
 		}
 

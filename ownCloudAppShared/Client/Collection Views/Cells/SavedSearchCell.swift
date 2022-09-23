@@ -1,0 +1,147 @@
+//
+//  SavedSearchCell.swift
+//  ownCloudAppShared
+//
+//  Created by Felix Schwarz on 22.09.22.
+//  Copyright © 2022 ownCloud GmbH. All rights reserved.
+//
+
+/*
+ * Copyright (C) 2022, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+import UIKit
+import ownCloudSDK
+import ownCloudApp
+
+class SavedSearchCell: ThemeableCollectionViewCell {
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		configure()
+		configureLayout()
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError()
+	}
+
+	let iconView = UIImageView()
+	let titleLabel = UILabel()
+
+	var iconInsets : UIEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)
+	var titleInsets : UIEdgeInsets = UIEdgeInsets(top: 5, left: 3, bottom: 5, right: 3)
+
+	var title : String? {
+		didSet {
+			titleLabel.text = title
+		}
+	}
+	var icon : UIImage? {
+		didSet {
+			iconView.image = icon
+		}
+	}
+	var type : OCActionType = .regular {
+		didSet {
+			if superview != nil {
+				applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection, state: .normal)
+			}
+		}
+	}
+
+	func configure() {
+		iconView.translatesAutoresizingMaskIntoConstraints = false
+		titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+		contentView.addSubview(titleLabel)
+		contentView.addSubview(iconView)
+
+		iconView.image = icon
+		iconView.contentMode = .scaleAspectFit
+
+		titleLabel.setContentHuggingPriority(.required, for: .vertical)
+		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+
+		titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+		titleLabel.lineBreakMode = .byWordWrapping
+		titleLabel.numberOfLines = 1
+
+		iconView.setContentHuggingPriority(.required, for: .horizontal)
+
+		let backgroundConfig = UIBackgroundConfiguration.clear()
+		backgroundConfiguration = backgroundConfig
+	}
+
+	func configureLayout() {
+		iconInsets = UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 5)
+		titleInsets = UIEdgeInsets(top: 13, left: 3, bottom: 13, right: 10)
+
+		titleLabel.textAlignment = .left
+
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+		titleLabel.adjustsFontForContentSizeCategory = true
+
+		self.configuredConstraints = [
+			iconView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: iconInsets.left),
+			iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -(iconInsets.right + titleInsets.left)),
+			iconView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: iconInsets.top),
+			iconView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -iconInsets.bottom),
+
+			iconView.widthAnchor.constraint(equalTo: iconView.heightAnchor),
+
+			titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -titleInsets.right),
+			titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: titleInsets.top),
+			titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -titleInsets.bottom)
+		]
+	}
+
+	override func updateConfiguration(using state: UICellConfigurationState) {
+		let collection = Theme.shared.activeCollection
+		var backgroundConfig = backgroundConfiguration?.updated(for: state)
+
+		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) {
+			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : UIColor(white: 0, alpha: 0.10)
+		} else {
+			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : UIColor(white: 0, alpha: 0.05)
+		}
+
+		backgroundConfig?.cornerRadius = 8
+
+		backgroundConfiguration = backgroundConfig
+	}
+
+	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
+		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
+
+		titleLabel.textColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
+		iconView.tintColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
+
+		setNeedsUpdateConfiguration()
+	}
+}
+
+extension SavedSearchCell {
+	static let savedTemplateIcon = UIImage(systemName: "square.dashed.inset.filled")?.withRenderingMode(.alwaysTemplate)
+	static let savedSearchIcon = UIImage(systemName: "gearshape.fill")?.withRenderingMode(.alwaysTemplate)
+
+	static func registerCellProvider() {
+		let savedSearchCellRegistration = UICollectionView.CellRegistration<SavedSearchCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let savedSearch = OCDataRenderer.default.renderItem(item, asType: .savedSearch, error: nil, withOptions: nil) as? OCSavedSearch {
+					cell.title = savedSearch.name
+					cell.icon = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
+				}
+			})
+		}
+
+		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .savedSearch, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
+			return collectionView.dequeueConfiguredReusableCell(using: savedSearchCellRegistration, for: indexPath, item: itemRef)
+		}))
+	}
+}

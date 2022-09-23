@@ -87,20 +87,30 @@ open class ItemSearchScope : SearchScope {
 		return (savedSearchScope != nil) && ((searchTerm?.count ?? 0) > 0)
 	}
 	open override var savedSearch: AnyObject? {
-		if canSaveSearch, let savedSearchScope = savedSearchScope, let searchTerm = searchTerm {
-			return OCSavedSearch(scope: savedSearchScope, location: nil, name: nil, searchTerm: searchTerm)
+		if let savedSearchScope = savedSearchScope, let searchTerm = searchTerm {
+			return OCSavedSearch(scope: savedSearchScope, location: nil, name: nil, isTemplate: false, searchTerm: searchTerm)
 		}
 
 		return nil
 	}
-	open override func canRestore(savedSearch: AnyObject) -> Bool {
-		if let savedSearch = savedSearch as? OCSavedSearch {
+	open override var canSaveTemplate: Bool {
+		return canSaveSearch
+	}
+	open override var savedTemplate: AnyObject? {
+		if let savedTemplate = savedSearch as? OCSavedSearch {
+			savedTemplate.isTemplate = true
+			return savedTemplate
+		}
+		return nil
+	}
+	open override func canRestore(savedTemplate: AnyObject) -> Bool {
+		if let savedSearch = savedTemplate as? OCSavedSearch {
 			return savedSearch.scope == savedSearchScope
 		}
 		return false
 	}
-	open override func restore(savedSearch: AnyObject) -> [SearchElement]? {
-		if let savedSearch = savedSearch as? OCSavedSearch,
+	open override func restore(savedTemplate: AnyObject) -> [SearchElement]? {
+		if let savedSearch = savedTemplate as? OCSavedSearch,
 		   let elements = tokenizer?.parseSearchTerm(savedSearch.searchTerm, cursorOffset: nil, tokens: [], performUpdates: false) {
 			return elements
 		}
