@@ -105,6 +105,8 @@
 "size" = "size";
 "date" = "date";
 "Search folder" = "Search folder";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
 "Search space" = "Search space";
 "Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";

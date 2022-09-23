@@ -29,6 +29,10 @@ public protocol SearchElementUpdating: AnyObject {
 	func updateFor(_ searchElements: [SearchElement])
 }
 
+public protocol SearchViewControllerHost: AnyObject {
+	var searchViewController: SearchViewController? { get }
+}
+
 open class SearchViewController: UIViewController, UITextFieldDelegate, Themeable {
 	private var resultsSourceObservation: NSKeyValueObservation?
 	private var resultsCellStyleObservation: NSKeyValueObservation?
@@ -375,29 +379,29 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		delegate?.searchEnded(for: self)
 	}
 
-	// MARK: - Restore search
-	public func canRestore(savedSearch: AnyObject) -> Bool {
+	// MARK: - Restore template
+	public func canRestore(savedTemplate: AnyObject) -> Bool {
 		guard let scopes = scopes else {
 			return false
 		}
 
 		let restoreScope: SearchScope? = scopes.first(where: { scope in
-			scope.canRestore(savedSearch: savedSearch)
+			scope.canRestore(savedTemplate: savedTemplate)
 		})
 
 		return restoreScope != nil
 	}
 
-	@discardableResult public func restore(savedSearch: AnyObject) -> Bool {
+	@discardableResult public func restore(savedTemplate: AnyObject) -> Bool {
 		guard let scopes = scopes else {
 			return false
 		}
 
 		let restoreScope: SearchScope? = scopes.first(where: { scope in
-			scope.canRestore(savedSearch: savedSearch)
+			scope.canRestore(savedTemplate: savedTemplate)
 		})
 
-		if let searchElements = restoreScope?.restore(savedSearch: savedSearch) {
+		if let searchElements = restoreScope?.restore(savedTemplate: savedTemplate) {
 			setSearchFieldContent(from: searchElements)
 
 			if activeScope != restoreScope {

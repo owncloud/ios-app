@@ -80,6 +80,7 @@ class ActionCell: ThemeableCollectionViewCell {
 //		titleLabel.setContentHuggingPriority(.required, for: .horizontal)
 
 		titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		titleLabel.lineBreakMode = .byWordWrapping
 		titleLabel.numberOfLines = 1
 

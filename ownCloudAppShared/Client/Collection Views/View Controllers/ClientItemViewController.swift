@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import Intents
 
-open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider, SearchViewControllerDelegate, RevealItemAction {
+open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider, SearchViewControllerDelegate, RevealItemAction, SearchViewControllerHost {
 	public enum ContentState : String, CaseIterable {
 		case loading
 
@@ -704,45 +704,86 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	// MARK: - Search
 	open var searchController: UISearchController?
-	var searchViewController: SearchViewController?
+	open var searchViewController: SearchViewController?
 
 	@objc open func startSearch() {
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
 				var scopes : [SearchScope] = [
-					// In this folder
-					.modifyingQuery(with: clientContext, localizedName: "Folder".localized)
+					// - In this folder
+					.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
 
-					// + Folder and subfolders
+					// - Folder and subfolders (tree / container)
+					.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Tree".localized)
 				]
 
-				// Drive
+				// - Drive
 				if clientContext.core?.useDrives == true {
 					let driveName = "Space".localized
 					scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
 				}
 
-				// Account
+				// - Account
 				scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized))
 
-				// Placeholder views
-				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: OCDataSourceArray(), style: emptySection!.cellStyle)
-				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
-
-				// Suggestion view
-				let suggestionsView = ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized)
-
 				// No results
+				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
 				let noResultsView = ComposedMessageView.infoBox(image: UIImage(systemName: "magnifyingglass"), title: "No matches".localized, subtitle: "The search term you entered did not match any item in the selected scope.".localized)
-
-				(suggestionsContent.source as? OCDataSourceArray)?.setVersionedItems([
-					suggestionsView
-				])
 
 				(noResultContent.source as? OCDataSourceArray)?.setVersionedItems([
 					noResultsView
 				])
 
+				// Suggestion view
+				let suggestionsSource = OCDataSourceArray()
+				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: emptySection!.cellStyle)
+
+				if let vault = clientContext.core?.vault {
+					vault.addSavedSearchesObserver(suggestionsSource, withInitial: true) { suggestionsSource, savedSearches, isInitial in
+						guard let suggestionsSource = suggestionsSource as? OCDataSourceArray else {
+							return
+						}
+
+						var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
+
+						// Offer saved search templates
+						if let savedTemplates = vault.savedSearches?.filter({ savedSearch in
+							return savedSearch.isTemplate
+						}), savedTemplates.count > 0 {
+							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
+								.spacing(10),
+								.text("Saved search templates".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
+							])
+							savedSearchTemplatesHeaderView.elementInsets = .zero
+
+							suggestionItems.append(savedSearchTemplatesHeaderView)
+							suggestionItems.append(contentsOf: savedTemplates)
+						}
+
+						// Offer saved searches
+						if let savedSearches = vault.savedSearches?.filter({ savedSearch in
+							return !savedSearch.isTemplate
+						}), savedSearches.count > 0 {
+							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
+								.spacing(10),
+								.text("Smart folders".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
+							])
+							savedSearchTemplatesHeaderView.elementInsets = .zero
+
+							suggestionItems.append(savedSearchTemplatesHeaderView)
+							suggestionItems.append(contentsOf: savedSearches)
+						}
+
+						// Provide "Enter a search term" placeholder if there is no other content available
+						if suggestionItems.count == 0 {
+							suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized) )
+						}
+
+						suggestionsSource.setVersionedItems(suggestionItems)
+					}
+				}
+
+				// Create and install SearchViewController
 				searchViewController = SearchViewController(with: clientContext, scopes: scopes, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
 				if let searchViewController = searchViewController {

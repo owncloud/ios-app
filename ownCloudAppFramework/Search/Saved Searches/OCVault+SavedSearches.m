@@ -34,6 +34,8 @@
 
 - (void)addSavedSearch:(OCSavedSearch *)savedSearch
 {
+	[self willChangeValueForKey:@"savedSearches"];
+
 	[self.keyValueStore updateObjectForKey:OCKeyValueStoreKeySavedSearches usingModifier:^id _Nullable(id  _Nullable existingObject, BOOL * _Nonnull outDidModify) {
 		NSMutableArray<OCSavedSearch *> *savedSearches = OCTypedCast(existingObject, NSMutableArray);
 		if (savedSearches == nil)
@@ -46,10 +48,14 @@
 		*outDidModify = YES;
 		return (savedSearches);
 	}];
+
+	[self didChangeValueForKey:@"savedSearches"];
 }
 
 - (void)deleteSavedSearch:(OCSavedSearch *)savedSearch
 {
+	[self willChangeValueForKey:@"savedSearches"];
+
 	[self.keyValueStore updateObjectForKey:OCKeyValueStoreKeySavedSearches usingModifier:^id _Nullable(id  _Nullable existingObject, BOOL * _Nonnull outDidModify) {
 		NSMutableArray<OCSavedSearch *> *savedSearches = OCTypedCast(existingObject, NSMutableArray);
 		NSUInteger countBefore;
@@ -66,6 +72,8 @@
 
 		return (savedSearches);
 	}];
+
+	[self didChangeValueForKey:@"savedSearches"];
 }
 
 - (void)addSavedSearchesObserver:(id)owner withInitial:(BOOL)initial updateHandler:(void(^)(id owner, NSArray<OCSavedSearch *> * _Nullable savedSearches, BOOL initial))updateHandler

@@ -102,6 +102,23 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	func requestName(title: String, message: String? = nil, placeholder: String? = nil, cancelButtonText: String? = "Cancel".localized, saveButtonText: String? = "Save".localized, completionHandler: @escaping (_ save: Bool, _ name: String?) -> Void) {
+		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: saveButtonText, style: .default, handler: { [weak alert] _ in
+			var text = alert?.textFields?.first?.text
+			if text?.count == 0 { text = nil }
+			completionHandler(true, text)
+		}))
+		alert.addAction(UIAlertAction(title: cancelButtonText, style: .cancel, handler: { _ in
+			completionHandler(false, nil)
+		}))
+		alert.addTextField(configurationHandler: { textField in
+			textField.placeholder = placeholder
+		})
+
+		self.present(alert, animated: true)
+	}
+
 	override func loadView() {
 		// Stack view
 		stackView = UIStackView(frame: .zero)
@@ -117,9 +134,30 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-search":
 						if let savedSearch = scope.savedSearch as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								vault.add(savedSearch)
+								self?.requestName(title: "Name of search", placeholder: savedSearch.name, completionHandler: { save, name in
+									if save {
+										if let name = name {
+											savedSearch.name = name
+										}
+										vault.add(savedSearch)
+									}
+								})
 							}
 						}
+					case "save-template":
+						if let savedSearch = scope.savedTemplate as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
+							OnMainThread {
+								self?.requestName(title: "Name of template", placeholder: savedSearch.name, completionHandler: { save, name in
+									if save {
+										if let name = name {
+											savedSearch.name = name
+										}
+										vault.add(savedSearch)
+									}
+								})
+							}
+						}
+
 					default: break
 				}
 			} else if let savedSearch = choice.representedObject as? OCSavedSearch {
@@ -130,13 +168,20 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			var choices: [PopupButtonChoice] = []
 
 			if (self?.scope as? ItemSearchScope)?.canSaveSearch == true {
-				let saveSearchChoice = PopupButtonChoice(with: "Save search".localized, image: UIImage(systemName: "plus.circle")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-search"))
+				let saveSearchChoice = PopupButtonChoice(with: "Save as smart folder".localized, image: UIImage(systemName: "folder.badge.gearshape")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-search"))
 				choices.append(saveSearchChoice)
+			}
+
+			if (self?.scope as? ItemSearchScope)?.canSaveTemplate == true {
+				let saveTemplateChoice = PopupButtonChoice(with: "Save template".localized, image: UIImage(systemName: "plus.square.dashed")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-template"))
+				choices.append(saveTemplateChoice)
 			}
 
 			if let vault = self?.scope?.clientContext.core?.vault, let savedSearches = vault.savedSearches {
 				for savedSearch in savedSearches {
-					choices.append(PopupButtonChoice(with: savedSearch.name, image: UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysTemplate), representedObject: savedSearch))
+					if savedSearch.isTemplate {
+						choices.append(PopupButtonChoice(with: savedSearch.name, image: UIImage(systemName: "square.dashed.inset.filled")?.withRenderingMode(.alwaysTemplate), representedObject: savedSearch))
+					}
 				}
 			}
 
@@ -257,7 +302,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 	}
 
 	func restore(savedSearch: OCSavedSearch) {
-		scope?.searchViewController?.restore(savedSearch: savedSearch)
+		scope?.searchViewController?.restore(savedTemplate: savedSearch)
 	}
 
 	func updateFor(_ searchElements: [SearchElement]) {

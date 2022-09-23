@@ -91,6 +91,8 @@ open class CustomQuerySearchScope : ItemSearchScope {
 
 	public var queryConditionModifier : ((OCQueryCondition?) -> OCQueryCondition?)?  // MARK: modifier that can modify the query condition before it is passed to create the OCQuery backing the scope. The modification is invisible to the outside. Can be used to add constraints like limit to a drive, etc.
 
+	public var additionalRequirementCondition: OCQueryCondition? // MARK: Adds a required additional condition to the baseCondition
+
 	private var lastSearchTerm : String?
 	private var scrollToTopWithNextRefresh : Bool = false
 
@@ -105,6 +107,11 @@ open class CustomQuerySearchScope : ItemSearchScope {
 		}
 
 		var condition = queryCondition
+
+		if let additionalRequirementCondition = additionalRequirementCondition, let baseCondition = condition {
+			// Add additional requirement condition
+			condition = .require([additionalRequirementCondition, baseCondition])
+		}
 
 		if let queryConditionModifier = queryConditionModifier, let baseCondition = condition {
 			// Apply query condition modifier
@@ -167,17 +174,8 @@ open class DriveSearchScope : AccountSearchScope {
 		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		if context.core?.useDrives == true, let driveID = context.drive?.identifier {
-			let requireDriveCondition = OCQueryCondition.where(.driveID, isEqualTo: driveID)
-
 			self.driveID = driveID
-
-			queryConditionModifier = { (baseCondition) in
-				if let baseCondition = baseCondition {
-					return .require([ requireDriveCondition, baseCondition ])
-				}
-
-				return nil
-			}
+			additionalRequirementCondition = .where(.driveID, isEqualTo: driveID)
 		}
 	}
 
@@ -192,4 +190,40 @@ open class DriveSearchScope : AccountSearchScope {
 		}
 		return nil
 	}
+}
+
+open class ContainerSearchScope: AccountSearchScope {
+	private var location : OCLocation?
+
+	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
+		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
+
+		if context.core?.useDrives == true, let queryLocation = context.query?.queryLocation, let path = queryLocation.path {
+			self.location = queryLocation
+
+			if context.core?.useDrives == true, let driveID = queryLocation.driveID {
+				additionalRequirementCondition = .require([
+					.where(.driveID, isEqualTo: driveID),
+					.where(.path, startsWith: path)
+				])
+			} else {
+				additionalRequirementCondition = .require([
+					.where(.path, startsWith: path)
+				])
+			}
+		}
+	}
+
+	open override var savedSearchScope: OCSavedSearchScope? {
+		return .container
+	}
+
+	open override var savedSearch: AnyObject? {
+		if let savedSearch = super.savedSearch as? OCSavedSearch {
+			savedSearch.location = location
+			return savedSearch
+		}
+		return nil
+	}
+
 }
