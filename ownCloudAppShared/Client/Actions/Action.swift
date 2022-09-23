@@ -524,11 +524,11 @@ open class Action : NSObject {
 
 }
 
-extension OCClassSettingsIdentifier {
+public extension OCClassSettingsIdentifier {
 	static let action = OCClassSettingsIdentifier("action")
 }
 
-extension OCClassSettingsKey {
+public extension OCClassSettingsKey {
 	static let allowedActions = OCClassSettingsKey("allowed")
 	static let disallowedActions = OCClassSettingsKey("disallowed")
 }
