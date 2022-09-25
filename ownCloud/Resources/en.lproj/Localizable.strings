@@ -775,6 +775,12 @@
 "Preparing…" = "Preparing…";
 "Save here" = "Save here";
 
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
 /* Disallowed Import Methods */
 /* - Share Extension */
 "Share Extension disabled" = "Share Extension disabled";

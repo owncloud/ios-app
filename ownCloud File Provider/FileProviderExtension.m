@@ -475,6 +475,12 @@
 	NSError *error = nil;
 	OCItem *parentItem;
 
+	if (!OCFileProviderSettings.browseable)
+	{
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"File Provider access has been disabled by the administrator. Please use the app to create new folders.")) translatedError]);
+		return;
+	}
+
 	FPLogCmdBegin(@"CreateDir", @"Start of createDirectoryWithName=%@, inParentItemIdentifier=%@", directoryName, parentItemIdentifier);
 
 	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
@@ -646,6 +652,12 @@
 {
 	NSError *error = nil;
 	BOOL stopAccess = NO;
+
+	if (!OCFileProviderSettings.browseable)
+	{
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"File Provider access has been disabled by the administrator. Please use the share extension to import files.")) translatedError]);
+		return;
+	}
 
 	if (![Branding.sharedBranding isImportMethodAllowed:BrandingFileImportMethodFileProvider])
 	{
@@ -871,6 +883,16 @@
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
+	if (!OCFileProviderSettings.browseable)
+	{
+		if (error != NULL)
+		{
+			*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+		}
+
+		return (nil);
+	}
+
 	if (AppLockSettings.sharedAppLockSettings.lockEnabled)
 	{
 		NSData *lockedDateData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"lockedDate"];
