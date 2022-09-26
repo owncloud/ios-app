@@ -8,7 +8,8 @@ ownCloud admins and users.
 Summary
 -------
 
-* Bugfix - Enabling Markup Mode on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
+* Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
 * Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
 * Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
 * Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
@@ -16,11 +17,18 @@ Summary
 Details
 -------
 
-* Bugfix - Enabling Markup Mode on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
+
+   Respect files.privateLinks capability and do not offer to create private links when
+   privateLinks are not supported.
+
+   https://github.com/owncloud/ios-app/issues/1138
+
+* Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
 
    Enabling markup mode was broken on iOS 16 because of rearranged navigation bar and toolbar
-   items. Furthermore when a new theme was choosen, this causes that the UITabBar and UIToolbar
-   does not updates colours.
+   items. Video player controls were not showing on iOS 16. Furthermore when a new theme was
+   chosen, this causes that the UITabBar and UIToolbar does not updates colours.
 
    https://github.com/owncloud/ios-app/issues/1141
 
