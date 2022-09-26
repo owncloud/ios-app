@@ -1,0 +1,5 @@
+Bugfix: Respect privateLinks capability
+
+Respect files.privateLinks capability and do not offer to create private links when privateLinks are not supported.
+
+https://github.com/owncloud/ios-app/issues/1138
