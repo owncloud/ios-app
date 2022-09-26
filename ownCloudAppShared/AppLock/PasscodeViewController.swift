@@ -338,7 +338,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 
 		biometricalImageView?.tintColor = collection.tintColor
 
-		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
+		cancelButton?.applyThemeCollection(collection, itemStyle: .neutral)
 	}
 }
 

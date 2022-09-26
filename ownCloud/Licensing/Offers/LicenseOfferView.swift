@@ -240,7 +240,7 @@ class LicenseOfferView: UIView, Themeable {
 			OnMainThread {
 				guard let self = self else { return }
 
-				let alertController = UIAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
 
 				let nsError = error as NSError
 				if nsError.domain == OCLicenseAppStoreProviderErrorDomain, nsError.code == OCLicenseAppStoreProviderError.purchasesNotAllowedForVPPCopies.rawValue {
