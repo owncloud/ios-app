@@ -123,6 +123,12 @@
 
 "Show more results" = "Show more results";
 
+/* Saved searches */
+"Saved search views" = "Saved search views";
+"Saved search templates" = "Saved search templates";
+"Save as search view" = "Save as search view";
+"Save as search template" = "Save as search template";
+
 /* Search scope */
 "Search scope" = "Search scope";
 "Toggle Search Scope" = "Toggle Search Scope";
