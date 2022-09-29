@@ -350,7 +350,14 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	// Determine current content
 	func updateCurrentContent() {
-		if searchField.tokens.count == 0, searchField.text?.count == 0 {
+		var searchFieldText = searchField.text ?? ""
+
+		if searchFieldText.count > 0 {
+			let charSet = CharacterSet.whitespacesAndNewlines
+			searchFieldText = searchFieldText.trimmingCharacters(in: charSet)
+		}
+
+   		if searchField.tokens.count == 0, searchFieldText.count == 0 {
 			currentContent = suggestionContent
 		} else {
 			if scopeResultsItemCount == 0 {

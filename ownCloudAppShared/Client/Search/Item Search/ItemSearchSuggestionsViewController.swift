@@ -177,14 +177,6 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 				choices.append(saveTemplateChoice)
 			}
 
-			if let vault = self?.scope?.clientContext.core?.vault, let savedSearches = vault.savedSearches {
-				for savedSearch in savedSearches {
-					if savedSearch.isTemplate {
-						choices.append(PopupButtonChoice(with: savedSearch.name, image: UIImage(systemName: "square.dashed.inset.filled")?.withRenderingMode(.alwaysTemplate), representedObject: savedSearch))
-					}
-				}
-			}
-
 			return choices
 		}
 
@@ -307,6 +299,13 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 
 	func updateFor(_ searchElements: [SearchElement]) {
 		self.searchElements = searchElements
+
+		// Hide saved search popup button
+		var showSavedSearchButton : Bool = false
+		if let searchScope = scope as? ItemSearchScope, searchScope.canSaveSearch || searchScope.canSaveTemplate {
+			showSavedSearchButton = true
+		}
+		savedSearchPopup?.button.isHidden = !showSavedSearchButton
 
 		for category in categories {
 			var categoryHasMatch: Bool = false
