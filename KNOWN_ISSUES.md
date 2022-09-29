@@ -14,7 +14,7 @@ It should only be used with dedicated test servers, test data - and test devices
 - subscription of spaces can't be turned on/off yet
 - the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
-- inactivated state of spaces is not yet represented in the UI
+- inactivated state of spaces is not yet represented in the UI (inactivated spaces are currently hidden instead)
 - Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
 - sync actions that are actually complete are not always cleared from the Status tab until a logout/login
@@ -24,7 +24,6 @@ It should only be used with dedicated test servers, test data - and test devices
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
 
 ## SDK
-- local storage consumed by spaces that are then deleted or inactivated is not reclaimed
 - pre-population of accounts using infinite PROPFIND is not supported
 
 # Evolution roadmap
