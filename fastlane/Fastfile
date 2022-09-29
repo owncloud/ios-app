@@ -357,7 +357,7 @@ end
       ENTERPRISE_SHARE_EXTENSION_PROFILE: "Adhoc ownCloud iOS App Share Extension",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
       ENTERPRISE_TEAM: "4AP2STM4H5",
-      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+      ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH",
       APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
       EXPORT_METHOD: "ad-hoc",
       CONFIGURATION: "Release",
