@@ -134,7 +134,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-search":
 						if let savedSearch = scope.savedSearch as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of search", placeholder: savedSearch.name, completionHandler: { save, name in
+								self?.requestName(title: "Name of view".localized, placeholder: "Search view".localized, completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name
@@ -147,7 +147,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-template":
 						if let savedSearch = scope.savedTemplate as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of template", placeholder: savedSearch.name, completionHandler: { save, name in
+								self?.requestName(title: "Name of template".localized, placeholder: "Search template".localized, completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name

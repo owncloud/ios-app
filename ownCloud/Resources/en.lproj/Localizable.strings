@@ -129,6 +129,11 @@
 "Save as search view" = "Save as search view";
 "Save as search template" = "Save as search template";
 
+"Name of view" = "Name of view";
+"Search view" = "Search view";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+
 /* Search scope */
 "Search scope" = "Search scope";
 "Toggle Search Scope" = "Toggle Search Scope";

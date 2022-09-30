@@ -353,6 +353,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		var searchFieldText = searchField.text ?? ""
 
 		if searchFieldText.count > 0 {
+			// Strip white space and new lines (if pasted) to determine effective length of search term
 			let charSet = CharacterSet.whitespacesAndNewlines
 			searchFieldText = searchFieldText.trimmingCharacters(in: charSet)
 		}

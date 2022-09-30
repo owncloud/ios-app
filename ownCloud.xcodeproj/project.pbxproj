@@ -400,6 +400,10 @@
 		DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEC3DE3242F665D0076B43C /* CoreServices.framework */; };
 		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
 		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
+		DC99154C28E636A500DA0AB8 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC99154B28E636A500DA0AB8 /* SegmentView.swift */; };
+		DC99154E28E6371500DA0AB8 /* SegmentViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC99154D28E6371500DA0AB8 /* SegmentViewItem.swift */; };
+		DC99155028E63D8300DA0AB8 /* SegmentViewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC99154F28E63D8300DA0AB8 /* SegmentViewItemView.swift */; };
+		DC99155228E63ECD00DA0AB8 /* UIView+EmbedAndLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC99155128E63ECD00DA0AB8 /* UIView+EmbedAndLayout.swift */; };
 		DC9A116B27D0338400D90BA4 /* ClientSpacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */; };
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
@@ -1425,6 +1429,10 @@
 		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
 		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
 		DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumeratorObserver.m; sourceTree = "<group>"; };
+		DC99154B28E636A500DA0AB8 /* SegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
+		DC99154D28E6371500DA0AB8 /* SegmentViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentViewItem.swift; sourceTree = "<group>"; };
+		DC99154F28E63D8300DA0AB8 /* SegmentViewItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentViewItemView.swift; sourceTree = "<group>"; };
+		DC99155128E63ECD00DA0AB8 /* UIView+EmbedAndLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+EmbedAndLayout.swift"; sourceTree = "<group>"; };
 		DC9A116A27D0338400D90BA4 /* ClientSpacesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSpacesTableViewController.swift; sourceTree = "<group>"; };
 		DC9BFBB220A19AF3007064B5 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-locked.tvg"; path = "img/filetypes-tvg/icon-locked.tvg"; sourceTree = SOURCE_ROOT; };
@@ -2318,6 +2326,7 @@
 				DC0A354D24C0E15100FB58FC /* Progress */,
 				DC297959226E4C9200E01BC7 /* Push Presentation Controller */,
 				DC0A354E24C0E15900FB58FC /* StaticTableView */,
+				DC99154A28E6364700DA0AB8 /* SegmentView */,
 				DCE4E43224C197480051722F /* User Activities */,
 			);
 			path = "User Interface";
@@ -2805,6 +2814,17 @@
 				DCD1301A23A25D1A00255779 /* Tools */,
 			);
 			path = Licensing;
+			sourceTree = "<group>";
+		};
+		DC99154A28E6364700DA0AB8 /* SegmentView */ = {
+			isa = PBXGroup;
+			children = (
+				DC99154B28E636A500DA0AB8 /* SegmentView.swift */,
+				DC99154D28E6371500DA0AB8 /* SegmentViewItem.swift */,
+				DC99154F28E63D8300DA0AB8 /* SegmentViewItemView.swift */,
+				DC99155128E63ECD00DA0AB8 /* UIView+EmbedAndLayout.swift */,
+			);
+			path = SegmentView;
 			sourceTree = "<group>";
 		};
 		DCA2EDDB279B0E5D001F04E6 /* Resource Sources */ = {
@@ -4508,6 +4528,7 @@
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
 				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
+				DC99155028E63D8300DA0AB8 /* SegmentViewItemView.swift in Sources */,
 				DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,
 				DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */,
@@ -4567,10 +4588,13 @@
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
+				DC99155228E63ECD00DA0AB8 /* UIView+EmbedAndLayout.swift in Sources */,
 				DC46F68E28DAFCDD008280CA /* RoundCornerBackgroundView.swift in Sources */,
 				DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
+				DC99154C28E636A500DA0AB8 /* SegmentView.swift in Sources */,
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,
+				DC99154E28E6371500DA0AB8 /* SegmentViewItem.swift in Sources */,
 				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,
 				DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */,
