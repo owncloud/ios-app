@@ -121,9 +121,9 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 		var backgroundConfig = backgroundConfiguration?.updated(for: state)
 
 		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) {
-			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : UIColor(white: 0, alpha: 0.10)
+			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : collection.tableRowButtonColors.filledColorPairCollection.highlighted.background
 		} else {
-			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : UIColor(white: 0, alpha: 0.05)
+			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : collection.tableRowButtonColors.filledColorPairCollection.normal.background
 		}
 
 		backgroundConfig?.cornerRadius = 8
@@ -170,7 +170,7 @@ extension OCSavedSearch {
 				if let symbolName = condition.symbolName {
 					icon = UIImage(systemName: symbolName)?.withRenderingMode(.alwaysTemplate)
 				}
-				item = SegmentViewItem(with: icon, title: condition.localizedDescription, style: .label, titleTextStyle: .caption1)
+				item = SegmentViewItem(with: icon, title: condition.localizedDescription, style: .token, titleTextStyle: .caption1)
 				item?.cornerStyle = .round(points: 3)
 			}
 

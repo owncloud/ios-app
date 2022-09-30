@@ -81,17 +81,6 @@ public class SegmentViewItemView: ThemeView {
 			return nil
 		})
 
-		switch item.style {
-			case .plain:
-				backgroundColor = .clear
-
-			case .label:
-				backgroundColor = UIColor(white: 0.0, alpha: 0.1)
-
-			case .filled:
-				backgroundColor = UIColor(white: 0.0, alpha: 0.1)
-		}
-
 		switch item.cornerStyle {
 			case .none, .sharp:
 				layer.cornerRadius = 0
@@ -104,7 +93,16 @@ public class SegmentViewItemView: ThemeView {
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
-		iconView?.tintColor = collection.tableRowColors.symbolColor
-		titleView?.textColor = collection.tableRowColors.secondaryLabelColor
+		switch item.style {
+			case .plain, .label:
+				iconView?.tintColor = collection.tableRowColors.symbolColor
+				titleView?.textColor = collection.tableRowColors.secondaryLabelColor
+				backgroundColor = .clear
+
+			case .token:
+				iconView?.tintColor = collection.tokenColors.normal.foreground
+				titleView?.textColor = collection.tokenColors.normal.foreground
+				backgroundColor = collection.tokenColors.normal.background
+		}
 	}
 }

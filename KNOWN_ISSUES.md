@@ -29,6 +29,8 @@ It should only be used with dedicated test servers, test data - and test devices
 # Evolution roadmap
 - collection views
 	- support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
+	- ItemListCell: replace manual composition of info line below name with SegmentView
+		- allows to show different content there, f.ex. Space and Folder in search
 
 - location picker replaces folder picker
 	- supports picking

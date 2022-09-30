@@ -447,5 +447,6 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	// MARK: - Theme support
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.navigationBarColors.backgroundColor
+		searchField.applyThemeCollection(collection)
 	}
 }
