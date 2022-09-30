@@ -765,7 +765,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						}), savedSearches.count > 0 {
 							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
 								.spacing(10),
-								.text("Smart folders".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
+								.text("Saved search views".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
 							])
 							savedSearchTemplatesHeaderView.elementInsets = .zero
 

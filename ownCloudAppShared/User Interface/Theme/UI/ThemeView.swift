@@ -38,6 +38,8 @@ open class ThemeView: UIView, Themeable {
 	override open func didMoveToSuperview() {
 		if self.superview != nil {
 			if !hasRegistered {
+				setupSubviews()
+
 				hasRegistered = true
 				Theme.shared.register(client: self, applyImmediately: true)
 			}
@@ -45,6 +47,10 @@ open class ThemeView: UIView, Themeable {
 	}
 
 	private var themeAppliers : [ThemeApplier] = []
+
+	open func setupSubviews() {
+		// Override point for subclasses
+	}
 
 	open func addThemeApplier(_ applier: @escaping ThemeApplier) {
 		themeAppliers.append(applier)

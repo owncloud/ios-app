@@ -19,6 +19,24 @@
 import UIKit
 
 public class GradientView : UIView {
+	public enum Direction {
+		case vertical
+		case horizontal
+
+		var startPoint: CGPoint {
+			switch self {
+				case .vertical: return CGPoint(x: 0.5, y: 0.0)
+				case .horizontal: return CGPoint(x: 0.0, y: 0.5)
+			}
+		}
+		var endPoint: CGPoint {
+			switch self {
+				case .vertical: return CGPoint(x: 0.5, y: 1.0)
+				case .horizontal: return CGPoint(x: 1.0, y: 0.5)
+			}
+		}
+	}
+
 	public var colors: [CGColor] {
 		didSet {
 			gradientLayer?.colors = colors
@@ -32,7 +50,7 @@ public class GradientView : UIView {
 
 	var gradientLayer : CAGradientLayer?
 
-	public init(with colors: [CGColor], locations: [NSNumber]) {
+	public init(with colors: [CGColor], locations: [NSNumber], direction: Direction = .vertical) {
 		self.colors = colors
 		self.locations = locations
 
@@ -43,6 +61,8 @@ public class GradientView : UIView {
 		gradientLayer = CAGradientLayer()
 		gradientLayer?.colors = colors
 		gradientLayer?.locations = locations
+		gradientLayer?.startPoint = direction.startPoint
+		gradientLayer?.endPoint = direction.endPoint
 	}
 
 	required public init?(coder: NSCoder) {

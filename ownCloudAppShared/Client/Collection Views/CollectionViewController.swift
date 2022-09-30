@@ -719,6 +719,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if event != .initial {
 			collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: false)
 		}
+
+		collectionView.backgroundColor = collection.tableBackgroundColor
 	}
 }
 

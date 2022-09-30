@@ -116,6 +116,8 @@ public class ThemeCollection : NSObject {
 
 	@objc public var purchaseColors : ThemeColorPairCollection
 
+	@objc public var tokenColors: ThemeColorPairCollection
+
 	// MARK: - Label colors
 	@objc public var informativeColor: UIColor
 	@objc public var successColor: UIColor
@@ -132,6 +134,7 @@ public class ThemeCollection : NSObject {
 	@objc public var tableSeparatorColor : UIColor?
 	@objc public var tableRowColors : ThemeColorCollection
 	@objc public var tableRowHighlightColors : ThemeColorCollection
+	@objc public var tableRowButtonColors : ThemeColorCollection
 	@objc public var tableRowBorderColor : UIColor?
 
 	// MARK: - Bars
@@ -223,6 +226,8 @@ public class ThemeCollection : NSObject {
 		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale
 		self.destructiveColors = colors.resolveThemeColorPairCollection("Fill.destructiveColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red)))
 
+		self.tokenColors = colors.resolveThemeColorPairCollection("Fill.tokenColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColor, background: UIColor(white: 0, alpha: 0.1))))
+
 		self.tintColor = colors.resolveColor("tintColor", self.lightBrandColor)
 
 		// Table view
@@ -260,6 +265,15 @@ public class ThemeCollection : NSObject {
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		))
 
+		self.tableRowButtonColors = colors.resolveThemeColorCollection("Table.tableRowButtonColors", ThemeColorCollection(
+			backgroundColor: tableGroupBackgroundColor,
+			tintColor: nil,
+			labelColor: defaultTableRowLabelColor,
+			secondaryLabelColor: UIColor(hex: 0x475770),
+			symbolColor: UIColor(hex: 0x475770),
+			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: defaultTableRowLabelColor, background: tableGroupBackgroundColor))
+		))
+
 		self.favoriteEnabledColor = UIColor(hex: 0xFFCC00)
 		self.favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
 
@@ -276,6 +290,8 @@ public class ThemeCollection : NSObject {
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
 				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
 				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
+
+				self.tokenColors = colors.resolveThemeColorPairCollection("Fill.tokenColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColor, background: UIColor(white: 1, alpha: 0.1))))
 
 				// Table view
 				self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", navigationBarColors.backgroundColor!.darker(0.1))
@@ -300,6 +316,15 @@ public class ThemeCollection : NSObject {
 					secondaryLabelColor: UIColor.white,
 					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
+				))
+
+				self.tableRowButtonColors = colors.resolveThemeColorCollection("Table.tableRowButtonColors", ThemeColorCollection(
+					backgroundColor: tableGroupBackgroundColor,
+					tintColor: navigationBarColors.tintColor,
+					labelColor: navigationBarColors.labelColor,
+					secondaryLabelColor: navigationBarColors.secondaryLabelColor,
+					symbolColor: lightColor,
+					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightColor, background: tableGroupBackgroundColor))
 				))
 
 				// Bar styles
@@ -363,10 +388,10 @@ public class ThemeCollection : NSObject {
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
 				let tmpDarkBrandColors = self.darkBrandColors
-            
-                if VendorServices.shared.isBranded {
-                    tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
-                }
+
+				if VendorServices.shared.isBranded {
+					tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
+				}
 				if self.tintColor == UIColor(hex: 0xFFFFFF) {
 					tmpDarkBrandColors.secondaryLabelColor = .lightGray
 				}

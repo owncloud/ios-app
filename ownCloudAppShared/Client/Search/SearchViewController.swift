@@ -350,7 +350,15 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	// Determine current content
 	func updateCurrentContent() {
-		if searchField.tokens.count == 0, searchField.text?.count == 0 {
+		var searchFieldText = searchField.text ?? ""
+
+		if searchFieldText.count > 0 {
+			// Strip white space and new lines (if pasted) to determine effective length of search term
+			let charSet = CharacterSet.whitespacesAndNewlines
+			searchFieldText = searchFieldText.trimmingCharacters(in: charSet)
+		}
+
+   		if searchField.tokens.count == 0, searchFieldText.count == 0 {
 			currentContent = suggestionContent
 		} else {
 			if scopeResultsItemCount == 0 {
@@ -439,5 +447,6 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	// MARK: - Theme support
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.navigationBarColors.backgroundColor
+		searchField.applyThemeCollection(collection)
 	}
 }
