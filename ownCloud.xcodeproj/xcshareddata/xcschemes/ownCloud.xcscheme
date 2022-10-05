@@ -246,6 +246,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.replace-newline"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:log.maximum-message-size"
             value = "100000"
             isEnabled = "NO">
