@@ -393,6 +393,8 @@
 "%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
 "Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
 
+"Processing on server" = "Processing on server";
+
 "Preparing…" = "Preparing…";
 
 "No actions available" = "No actions available";

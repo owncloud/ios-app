@@ -302,6 +302,10 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 				size = "Pending".localized
 			}
 
+			if item.state == .serverSideProcessing {
+				size = "Processing on server".localized
+			}
+
 			return size + " - " + item.lastModifiedLocalized
 		}
 
@@ -351,6 +355,12 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		self.updateCloudStatusIcon(with: item)
 
 		self.updateLabels(with: item)
+
+		if item.state == .serverSideProcessing {
+			self.contentView.alpha = 0.5
+		} else {
+			self.contentView.alpha = 1.0
+		}
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : !showMoreButton
