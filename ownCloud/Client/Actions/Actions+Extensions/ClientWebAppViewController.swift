@@ -70,7 +70,7 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction(handler: { [weak self] _ in
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, image: UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate), primaryAction: UIAction(handler: { [weak self] _ in
 			if self?.shouldSendCloseEvent == true {
 				// Close via window.close(), which is calling dismissSecurely() once done
 				self?.closeWebWindow()
