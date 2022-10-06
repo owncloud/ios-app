@@ -136,8 +136,8 @@ public extension NSObject {
             if #available(iOS 15, *) {
                 let appearance = UIToolbarAppearance()
                 appearance.backgroundColor = collection.toolbarColors.backgroundColor
-                UIToolbar.appearance().standardAppearance = appearance
-                UIToolbar.appearance().scrollEdgeAppearance = appearance
+                toolbar.standardAppearance = appearance
+                toolbar.scrollEdgeAppearance = appearance
             } else {
                 toolbar.barTintColor = collection.toolbarColors.backgroundColor
             }
@@ -149,8 +149,8 @@ public extension NSObject {
             if #available(iOS 15, *) {
                 let appearance = UITabBarAppearance()
                 appearance.backgroundColor = collection.toolbarColors.backgroundColor
-                UITabBar.appearance().standardAppearance = appearance
-                UITabBar.appearance().scrollEdgeAppearance = appearance
+                tabBar.standardAppearance = appearance
+                tabBar.scrollEdgeAppearance = appearance
             } else {
                 tabBar.barTintColor = collection.toolbarColors.backgroundColor
             }

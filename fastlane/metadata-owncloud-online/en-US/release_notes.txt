@@ -1,3 +1,15 @@
-• Available Offline Folders
-Shows the contents of the available folders when offline.
+• New Dark Mode Themes
+Two new dark mode themes are available.
+
+• iOS 16: Markup Mode
+Markup mode was not enabled automatically on iOS 16.
+
+• iOS 16: Video Player
+Video player controls were not showing on iOS 16.
+
+• Video Player
+Metadata image could overlay the video player canvas.
+
+• Passcode Interval
+The passcode lock interval was not taken into use in the share extension.
 

@@ -1,3 +1,57 @@
+Changelog for ownCloud iOS Client [11.11.0] (2022-09-26)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.11.0 relevant to
+ownCloud admins and users.
+
+[11.11.0]: https://github.com/owncloud/ios-app/compare/milestone/11.10.1...milestone/11.11.0
+
+Summary
+-------
+
+* Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
+* Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
+
+Details
+-------
+
+* Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
+
+   Respect files.privateLinks capability and do not offer to create private links when
+   privateLinks are not supported.
+
+   https://github.com/owncloud/ios-app/issues/1138
+
+* Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+   Enabling markup mode was broken on iOS 16 because of rearranged navigation bar and toolbar
+   items. Video player controls were not showing on iOS 16. Furthermore when a new theme was
+   chosen, this causes that the UITabBar and UIToolbar does not updates colours.
+
+   https://github.com/owncloud/ios-app/issues/1141
+
+* Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
+
+   The passcode lock interval was not taken into use in the share extension.
+
+   https://github.com/owncloud/ios-app/issues/1156
+
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+
+   If a video file includes a metadata image, the video file was not visible, because the metadata
+   image was overlaying.
+
+   https://github.com/owncloud/enterprise/issues/5296
+
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
+
+   Adds a new dark mode theme which is mostly equal to the web UI dark mode theme. Furthermore it adds
+   a black dark mode theme.
+
+   https://github.com/owncloud/ios-app/issues/1146
+
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
