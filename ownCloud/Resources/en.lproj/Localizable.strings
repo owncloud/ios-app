@@ -376,13 +376,9 @@
 "Folder name" = "Folder name";
 "Rename" ="Rename";
 "Create folder" ="Create folder";
-"New document" = "New document";
-"Pick a name" = "Pick a name";
-"Pick a document type to create:" = "Pick a document type to create:";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
 "Open in" = "Open in";
-"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
 "Copy" = "Copy";
 "Copy here" = "Copy here";
 "Cannot connect to " = "Cannot connect to ";
@@ -410,6 +406,15 @@
 "Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
 "Enable" = "Enable";
 "Exit Full Screen" = "Exit Full Screen";
+
+/* App Provider */
+"New document" = "New document";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";

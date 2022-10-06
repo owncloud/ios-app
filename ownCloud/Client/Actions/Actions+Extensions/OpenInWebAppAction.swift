@@ -155,13 +155,32 @@ class OpenInWebAppAction: Action {
 	}
 
 	func openInInAppBrowser(withDefaultBrowserOption defaultBrowserOption: Bool) {
-		guard context.items.count == 1, let item = context.items.first, let core = context.core else {
+		guard context.items.count == 1, let item = context.items.first, let core = context.core, let viewController = context.viewController else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
 		// Open in in-app browser
 		core.connection.open(inApp: item, with: app, viewMode: nil, completionHandler: { (error, url, method, headers, parameters, urlRequest) in
+			if let error = error {
+				OnMainThread {
+					let appName = self.app?.name ?? "app"
+					let itemName = item.name ?? "item"
+
+					let alertController = ThemedAlertController(
+						with: "Error opening {{itemName}} in {{appName}}".localized(["itemName" : itemName, "appName" : appName]),
+						message: error.localizedDescription,
+						okLabel: "OK".localized,
+						action: nil)
+
+					viewController.present(alertController, animated: true)
+
+					self.completed(with: error)
+				}
+
+				return
+			}
+
 			if let urlRequest = urlRequest as? URLRequest {
 				OnMainThread {
 					let webAppViewController = ClientWebAppViewController(with: urlRequest)
