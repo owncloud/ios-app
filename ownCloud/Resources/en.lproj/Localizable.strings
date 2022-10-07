@@ -110,6 +110,7 @@
 "Search space" = "Search space";
 "Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
+"Enter a search term" = "Enter a search term";
 
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
