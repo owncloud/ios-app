@@ -60,6 +60,22 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "${PROJECT_DIR}/../../ownCloudAppFramework/Resources/en.lproj/Localizable.strings"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "${PROJECT_DIR}/../../ownCloudAppFramework/Resources/de.lproj/Localizable.strings"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "${PROJECT_DIR}/../../ownCloud File Provider/en.lproj/Localizable.strings"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "${PROJECT_DIR}/../../ownCloud File Provider/de.lproj/Localizable.strings"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "${PROJECT_DIR}/../../ios-sdk/ownCloudSDK/Resources/en.lproj/Localizable.strings"
             isEnabled = "YES">
          </CommandLineArgument>
