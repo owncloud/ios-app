@@ -247,7 +247,20 @@ public extension NSObject {
 			}
 		}
 
-		if let textField = self as? UITextField {
+		if let searchTextField = self as? UISearchTextField {
+			searchTextField.tintColor = collection.searchBarColors.tintColor
+			searchTextField.textColor = collection.searchBarColors.labelColor
+			searchTextField.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+
+			if let glassIconView = searchTextField.leftView as? UIImageView {
+				glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+				glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
+			}
+			if let clearButton = searchTextField.value(forKey: "clearButton") as? UIButton {
+				clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+				clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
+			}
+		} else if let textField = self as? UITextField {
 			textField.textColor = collection.tableRowColors.labelColor
 		}
 
