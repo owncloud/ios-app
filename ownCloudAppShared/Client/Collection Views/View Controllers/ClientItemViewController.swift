@@ -57,6 +57,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	private var stateObservation : NSKeyValueObservation?
 	private var queryRootItemObservation : NSKeyValueObservation?
 
+	var navigationTitleLabel: UILabel = UILabel()
+
 	public init(context inContext: ClientContext?, query inQuery: OCQuery, highlightItemReference: OCDataItemReference? = nil) {
 		query = inQuery
 
@@ -169,6 +171,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		queryRootItemObservation = query?.observe(\OCQuery.rootItem, options: [], changeHandler: { [weak self] query, change in
 			OnMainThread(inline: true) {
 				self?.clientContext?.rootItem = query.rootItem
+				self?.updateNavigationTitleFromContext()
+				self?.refreshEmptyActions()
 			}
 			self?.recomputeContentState()
 		})
@@ -207,9 +211,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Initialize sort method
 		handleSortMethodChange()
 
-		if let navigationTitle = query?.queryLocation?.isRoot == true ? clientContext?.drive?.name : query?.queryLocation?.lastPathComponent {
-			navigationItem.title = navigationTitle
-		}
+		// Initialize navigation title
+		navigationTitleLabel.font = UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)
+		navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
+		navigationItem.titleView = navigationTitleLabel
+
+		updateNavigationTitleFromContext()
 	}
 
 	required public init?(coder: NSCoder) {
@@ -395,17 +402,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			switch contentState {
 				case .empty:
-					var emptyItems : [OCDataItem] = [ ]
-
-					if let emptyItemListItem = emptyItemListItem {
-						emptyItems.append(emptyItemListItem)
-					}
-
-					if let emptyActions = emptyActions() {
-						emptyItems.append(contentsOf: emptyActions)
-					}
-
-					emptyItemListDataSource.setItems(emptyItems, updated: nil)
+					refreshEmptyActions()
 					itemsLeadInDataSource.setVersionedItems([ ])
 
 				case .loading:
@@ -897,5 +894,46 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		endSearch()
 
 		recomputeContentState()
+	}
+
+	// MARK: - Empty actions
+	func refreshEmptyActions() {
+		guard contentState == .empty else { return }
+
+		var emptyItems : [OCDataItem] = [ ]
+
+		if let emptyItemListItem = emptyItemListItem {
+			emptyItems.append(emptyItemListItem)
+		}
+
+		if let emptyActions = emptyActions() {
+			emptyItems.append(contentsOf: emptyActions)
+		}
+
+		emptyItemListDataSource.setItems(emptyItems, updated: nil)
+	}
+
+	// MARK: - Navigation title
+	var navigationTitle: String? {
+		get {
+			return navigationTitleLabel.text
+		}
+
+		set {
+			navigationTitleLabel.text = newValue
+			navigationItem.title = newValue
+		}
+	}
+
+	func updateNavigationTitleFromContext() {
+		if let navigationTitle = query?.queryLocation?.isRoot == true ? self.clientContext?.drive?.name : ((self.clientContext?.rootItem as? OCItem)?.name ?? self.query?.queryLocation?.lastPathComponent) {
+			self.navigationTitle = navigationTitle
+		}
+	}
+
+	// MARK: - Themeing
+	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+		navigationTitleLabel.textColor = collection.navigationBarColors.labelColor
 	}
 }
