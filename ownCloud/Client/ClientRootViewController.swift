@@ -160,7 +160,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
+	private func windDown() {
 		connectionStatusObservation = nil
 
 		if let statusSummary = connectionStatusSummary {
@@ -190,6 +190,10 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			self.fpServiceStandby?.stop()
 			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 		}
+	}
+
+	deinit {
+		windDown()
 	}
 
 	// MARK: - Startup
@@ -395,7 +399,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
 
-				if let localItemId = lastVisibleItemId {
+				if let localItemId = lastVisibleItemId,
+				   !core.useDrives { // Do not restore for spaces for now (different view hierarchy)
 					self.createFileListStack(for: localItemId)
 				} else {
 					let topLevelViewController : UIViewController?
