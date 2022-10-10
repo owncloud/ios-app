@@ -75,10 +75,14 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
-	deinit {
+	private func winddown() {
 		Theme.shared.unregister(client: self)
 		self.shouldPauseDisplaySleep = false
 		self.core = nil
+	}
+
+	deinit {
+		winddown()
 	}
 
 	@objc func handleActivityNotification(_ notification: Notification) {

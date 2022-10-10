@@ -38,7 +38,7 @@ open class PopupButtonChoice : NSObject {
 	}
 }
 
-open class PopupButtonController : NSObject {
+open class PopupButtonController : NSObject, Themeable {
 	typealias TitleCustomizer = (_ choice: PopupButtonChoice, _ isSelected: Bool) -> String
 	typealias SelectionCustomizer = (_ choice: PopupButtonChoice, _ isSelected: Bool) -> Bool
 	typealias ChoiceHandler = (_ choice: PopupButtonChoice, _ wasSelected: Bool) -> Void
@@ -148,6 +148,8 @@ open class PopupButtonController : NSObject {
 		])
 
 		_updateTitleFromSelectedChoice()
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	private func _updateTitleFromSelectedChoice() {
@@ -187,5 +189,9 @@ open class PopupButtonController : NSObject {
 			button.setAttributedTitle(attributedTitle, for: .normal)
 			button.sizeToFit()
 		}
+	}
+
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		button.applyThemeCollection(collection)
 	}
 }
