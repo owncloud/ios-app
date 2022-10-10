@@ -927,7 +927,7 @@ extension ClientQueryViewController {
 		updateTitleView()
 	}
 
-	open func updateTitleView() {
+	public func updateTitleView() {
 		let lastPathComponent = (query.queryLocation?.path as NSString?)!.lastPathComponent
 
 		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {

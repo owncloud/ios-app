@@ -135,7 +135,7 @@ extension QueryFileListTableViewController : MultiSelectSupport {
 		updateActions()
 	}
 
-	open func populateToolbar() {
+	public func populateToolbar() {
 		self.populateToolbar(with: [
 			openMultipleBarButtonItem!,
 			flexibleSpaceBarButton,

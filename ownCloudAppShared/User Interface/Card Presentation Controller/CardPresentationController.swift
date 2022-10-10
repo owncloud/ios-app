@@ -417,7 +417,7 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 
 // MARK: - Convenience addition to UIViewController
 extension UIViewController {
-	open func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
+	public func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
 		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self, withHandle: withHandle, dismissable: dismissable)
 
 		viewController.transitioningDelegate = animator // .transitioningDelegate is only weak!
