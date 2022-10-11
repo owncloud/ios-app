@@ -381,6 +381,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:extensions.disallowed"
+            value = "[org.owncloud.ql_preview,org.owncloud.webview]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:bookmark.prepopulation"
             value = "string:streaming"
             isEnabled = "NO">

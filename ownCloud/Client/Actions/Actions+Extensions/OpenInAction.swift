@@ -23,7 +23,7 @@ class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .unviewableFileType] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 

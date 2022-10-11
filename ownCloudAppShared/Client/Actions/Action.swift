@@ -67,6 +67,7 @@ public extension OCExtensionLocationIdentifier {
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
 	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
+	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
 }
 
 public class ActionExtension: OCExtension {
