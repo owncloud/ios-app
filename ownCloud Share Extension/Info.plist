@@ -46,6 +46,8 @@
 	<string>group.com.owncloud.ios-app</string>
 	<key>OCAppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
+	<key>OCAppComponentIdentifier</key>
+	<string>shareExtension</string>
 	<key>OCHasFileProvider</key>
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>

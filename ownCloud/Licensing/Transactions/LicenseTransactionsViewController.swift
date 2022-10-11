@@ -40,7 +40,7 @@ class LicenseTransactionsViewController: StaticTableViewController {
 	func fetchTransactions() {
 		OCLicenseManager.shared.retrieveAllTransactions(completionHandler: { (error, transactionsByProvider) in
 			if let error = error {
-				let alert = UIAlertController(title: "Error fetching transactions".localized, message: error.localizedDescription, preferredStyle: .alert)
+				let alert = ThemedAlertController(title: "Error fetching transactions".localized, message: error.localizedDescription, preferredStyle: .alert)
 
 				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 

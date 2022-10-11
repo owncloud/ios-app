@@ -637,7 +637,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			   self.activeClientRootViewController == nil { // Make sure we don't present this ClientRootViewController while still presenting another
 				if let fromViewController = self.pushFromViewController ?? self.navigationController {
 				   	if let error = error {
-						let alert = UIAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+						let alert = ThemedAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
 						alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
 						fromViewController.present(alert, animated: true)

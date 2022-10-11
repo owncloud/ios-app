@@ -29,6 +29,11 @@ open class PublicLinkTableViewController: SharingTableViewController {
 		return false
 	}
 
+	var privateLinkSharingEnabled : Bool {
+		if let core = core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == true, core.connection.capabilities?.supportsPrivateLinks == true, item.isShareable { return true }
+		return false
+	}
+
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -41,7 +46,9 @@ open class PublicLinkTableViewController: SharingTableViewController {
 		}
 
 		addHeaderView()
-		addPrivateLinkSection()
+		if privateLinkSharingEnabled {
+			addPrivateLinkSection()
+		}
 
 		if publicLinkSharingEnabled {
 			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))

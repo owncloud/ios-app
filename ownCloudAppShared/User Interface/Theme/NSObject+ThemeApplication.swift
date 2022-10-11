@@ -46,6 +46,7 @@ public enum ThemeItemStyle {
 
 	case purchase
 	case welcome
+    	case welcomeInformal
 }
 
 public enum ThemeItemState {
@@ -93,6 +94,11 @@ public extension NSObject {
 				case .welcome:
 					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
 
+				case .welcomeInformal:
+					let fromPair = collection.loginColors.filledColorPairCollection
+					let normal = ThemeColorPair(foreground: fromPair.normal.foreground.lighter(0.25), background: fromPair.normal.background.lighter(0.25))
+					themeButton.themeColorCollection = ThemeColorPairCollection(fromPair: normal)
+
 				case .informal:
 					themeButton.themeColorCollection = collection.informalColors.filledColorPairCollection
 
@@ -127,6 +133,11 @@ public extension NSObject {
 		}
 
 		if let toolbar = self as? UIToolbar {
+			let appearance = UIToolbarAppearance()
+			appearance.backgroundColor = collection.toolbarColors.backgroundColor
+			toolbar.standardAppearance = appearance
+			toolbar.scrollEdgeAppearance = appearance
+
 			toolbar.barTintColor = collection.toolbarColors.backgroundColor
 			toolbar.tintColor = collection.toolbarColors.tintColor
 		}

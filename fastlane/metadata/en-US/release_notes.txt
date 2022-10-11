@@ -1,9 +1,15 @@
-• UI fixes on iOS 15
-This version fixes some UI problems on iOS 15.
+• New Dark Mode Themes
+Two new dark mode themes are available.
 
-• Shortcuts Action
-The shortcuts action Delete Path Item did not provided configured accounts.
+• iOS 16: Markup Mode
+Markup mode was not enabled automatically on iOS 16.
 
-• Increased Timeout for Copy Action
-Timeout for Copy Action was increased up to 10 minutes.
+• iOS 16: Video Player
+Video player controls were not showing on iOS 16.
+
+• Video Player
+Metadata image could overlay the video player canvas.
+
+• Passcode Interval
+The passcode lock interval was not taken into use in the share extension.
 

@@ -383,7 +383,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				switch updateStrategy {
 					case .ask:
 						OnMainThread {
-							let alert = UIAlertController(title: String(format: "%@ was updated".localized, item.name ?? "File".localized), message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
+							let alert = ThemedAlertController(title: NSString(format: "%@ was updated".localized as NSString, item.name ?? "File".localized) as String, message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
 
 							alert.addAction(UIAlertAction(title: "Show new version".localized, style: .default, handler: { [weak self] (_) in
 								self?.updateStrategy = .ask

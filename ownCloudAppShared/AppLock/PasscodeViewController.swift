@@ -107,18 +107,18 @@ public class PasscodeViewController: UIViewController, Themeable {
 		}
 	}
 
-	var cancelButtonHidden: Bool {
+	var cancelButtonAvailable: Bool {
 		didSet {
-			cancelButton?.isEnabled = cancelButtonHidden
-			cancelButton?.isHidden = !cancelButtonHidden
+			cancelButton?.isEnabled = cancelButtonAvailable
+			cancelButton?.isHidden = !cancelButtonAvailable
 		}
 	}
 
 	var biometricalButtonHidden: Bool = false {
 		didSet {
-			biometricalButton?.isEnabled = biometricalButtonHidden
-			biometricalButton?.isHidden = !biometricalButtonHidden
-			biometricalImageView?.isHidden = !biometricalButtonHidden
+			biometricalButton?.isEnabled = !biometricalButtonHidden
+			biometricalButton?.isHidden = biometricalButtonHidden
+			biometricalImageView?.isHidden = biometricalButtonHidden
 			biometricalImageView?.image = LAContext().biometricsAuthenticationImage()
 		}
 	}
@@ -142,7 +142,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.biometricalHandler = biometricalHandler
 		self.completionHandler = completionHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
-		self.cancelButtonHidden = hasCancelButton
+		self.cancelButtonAvailable = hasCancelButton
 		self.keypadButtonsHidden = false
 		self.screenBlurringEnabled = false
 		self.passcodeLength = requiredLength
@@ -167,13 +167,13 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.errorMessage = { self.errorMessage }()
 		self.timeoutMessage = { self.timeoutMessage }()
 
-		self.cancelButtonHidden = { self.cancelButtonHidden }()
+		self.cancelButtonAvailable = { self.cancelButtonAvailable }()
 		self.keypadButtonsEnabled = { self.keypadButtonsEnabled }()
 		self.keypadButtonsHidden = { self.keypadButtonsHidden }()
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
-		self.biometricalButtonHidden = !((!AppLockSettings.shared.biometricalSecurityEnabled || !AppLockSettings.shared.lockEnabled) || self.cancelButtonHidden)
+		self.biometricalButtonHidden = (!AppLockSettings.shared.biometricalSecurityEnabled || !AppLockSettings.shared.lockEnabled || cancelButtonAvailable) // cancelButtonAvailable is true for setup tasks/settings changes only
 		updateKeypadButtons()
         if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
             self.biometricalButton?.accessibilityLabel = biometricalSecurityName
@@ -336,7 +336,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 
 		biometricalImageView?.tintColor = collection.tintColor
 
-		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
+		cancelButton?.applyThemeCollection(collection, itemStyle: .neutral)
 	}
 }
 

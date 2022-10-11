@@ -118,7 +118,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		onboardingSection = StaticTableViewSection(headerTitle: nil, identifier: "onboardingSection")
 		if let message = profile.promptForHelpURL, let title = profile.helpURLButtonString {
-			let (proceedButton, _) = onboardingSection.addButtonFooter(message: message, messageItemStyle: .welcomeMessage, proceedLabel: title, proceedItemStyle: .informal, cancelLabel: nil)
+			let (proceedButton, _) = onboardingSection.addButtonFooter(message: message, messageItemStyle: .welcomeMessage, proceedLabel: title, proceedItemStyle: .welcomeInformal, cancelLabel: nil)
 				proceedButton?.addTarget(self, action: #selector(self.helpAction), for: .touchUpInside)
 		}
 
