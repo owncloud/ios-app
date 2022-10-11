@@ -45,6 +45,7 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCFileProviderService.h>
 #import <ownCloudApp/OCFileProviderServiceSession.h>
 #import <ownCloudApp/OCFileProviderServiceStandby.h>
+#import <ownCloudApp/OCFileProviderSettings.h>
 
 #import <ownCloudApp/OCLicenseTypes.h>
 #import <ownCloudApp/OCLicenseManager.h>

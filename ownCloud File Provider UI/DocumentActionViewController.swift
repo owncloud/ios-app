@@ -61,6 +61,16 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		}
 	}
 
+	func prepareNavigationController() {
+		if themeNavigationController == nil {
+			themeNavigationController = ThemeNavigationController()
+			if let themeNavigationController = themeNavigationController {
+				view.addSubview(themeNavigationController.view)
+				addChild(themeNavigationController)
+			}
+		}
+	}
+
 	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
 
 		guard let identifier = itemIdentifiers.first else {
@@ -71,11 +81,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		let collection = Theme.shared.activeCollection
 		self.view.backgroundColor = collection.toolbarColors.backgroundColor
 
-		themeNavigationController = ThemeNavigationController()
-		if let themeNavigationController = themeNavigationController {
-			view.addSubview(themeNavigationController.view)
-			addChild(themeNavigationController)
-		}
+		prepareNavigationController()
 
 		showCancelLabel(with: "Connecting…".localized)
 
@@ -151,6 +157,12 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	}
 
 	override func prepare(forError error: Error) {
+		if !OCFileProviderSettings.browseable {
+			prepareNavigationController()
+			showCancelLabel(with: "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.".localized)
+			return
+		}
+
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
 			AppLockManager.shared.biometricCancelLabel = "Cancel".localized
@@ -163,6 +175,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 			AppLockManager.shared.showLockscreenIfNeeded()
 		} else {
+			prepareNavigationController()
 			showCancelLabel(with: "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized)
 		}
 	}
