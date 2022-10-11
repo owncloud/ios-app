@@ -547,6 +547,12 @@ end
         sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
     end
 
+    # Special handling for app build flag DISABLE_PLAIN_HTTP (see above why this is needed)
+    if appBuildFlags.include? "DISABLE_PLAIN_HTTP"
+        sh "sed '/#ifndef DISABLE_PLAIN_HTTP/,/#endif/d' ../ownCloud/Resources/Info.plist >../ownCloud/Resources/Info.plist.mod"
+        sh "mv ../ownCloud/Resources/Info.plist.mod ../ownCloud/Resources/Info.plist"
+    end
+
 	# update_url_schemes can't seem to reach the second URL scheme ("oc") for authentication
 	# so using sed and a XML property instead
     if !appCustomAppScheme.empty?

@@ -75,11 +75,13 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
+	#ifndef DISABLE_PLAIN_HTTP
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	#endif
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This permission is needed for uploading media files to your server.</string>
 	<key>NSCameraUsageDescription</key>
