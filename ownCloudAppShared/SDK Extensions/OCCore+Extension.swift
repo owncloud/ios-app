@@ -51,15 +51,17 @@ extension OCCore {
 			start(shareQuery)
 		}
 
-		if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
-			dispatchGroup.enter()
+		if connection.capabilities?.federatedSharingSupported == true {
+			if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
+				dispatchGroup.enter()
 
-			shareQuery.initialPopulationHandler = { [weak self] query in
-				combinedShares.addObjects(from: query.queryResults)
-				dispatchGroup.leave()
-				self?.stop(query)
+				shareQuery.initialPopulationHandler = { [weak self] query in
+					combinedShares.addObjects(from: query.queryResults)
+					dispatchGroup.leave()
+					self?.stop(query)
+				}
+				start(shareQuery)
 			}
-			start(shareQuery)
 		}
 
 		dispatchGroup.notify(queue: .main, execute: {

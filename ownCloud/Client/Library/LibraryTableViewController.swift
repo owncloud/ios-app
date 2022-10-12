@@ -139,36 +139,38 @@ class LibraryTableViewController: StaticTableViewController {
 			start(query: shareQueryWithUser)
 		}
 
-		// Accepted cloud shares
-		shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil)
+		if core?.connection.capabilities?.federatedSharingSupported == true {
+			// Accepted cloud shares
+			shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil)
 
-		if let shareQueryAcceptedCloudShares = shareQueryAcceptedCloudShares {
-			shareQueryAcceptedCloudShares.refreshInterval = 60
+			if let shareQueryAcceptedCloudShares = shareQueryAcceptedCloudShares {
+				shareQueryAcceptedCloudShares.refreshInterval = 60
 
-			shareQueryAcceptedCloudShares.initialPopulationHandler = { [weak self] (_) in
-				self?.updateSharedWithYouResult()
-				self?.updatePendingSharesResult()
-			}
-			shareQueryAcceptedCloudShares.changesAvailableNotificationHandler = shareQueryAcceptedCloudShares.initialPopulationHandler
-
-			start(query: shareQueryAcceptedCloudShares)
-		}
-
-		// Pending cloud shares
-		shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
-
-		if let shareQueryPendingCloudShares = shareQueryPendingCloudShares {
-			shareQueryPendingCloudShares.refreshInterval = 60
-
-			shareQueryPendingCloudShares.initialPopulationHandler = { [weak self] (query) in
-				if let library = self {
-					library.pendingCloudSharesCounter = query.queryResults.count
+				shareQueryAcceptedCloudShares.initialPopulationHandler = { [weak self] (_) in
+					self?.updateSharedWithYouResult()
 					self?.updatePendingSharesResult()
 				}
-			}
-			shareQueryPendingCloudShares.changesAvailableNotificationHandler = shareQueryPendingCloudShares.initialPopulationHandler
+				shareQueryAcceptedCloudShares.changesAvailableNotificationHandler = shareQueryAcceptedCloudShares.initialPopulationHandler
 
-			start(query: shareQueryPendingCloudShares)
+				start(query: shareQueryAcceptedCloudShares)
+			}
+
+			// Pending cloud shares
+			shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
+
+			if let shareQueryPendingCloudShares = shareQueryPendingCloudShares {
+				shareQueryPendingCloudShares.refreshInterval = 60
+
+				shareQueryPendingCloudShares.initialPopulationHandler = { [weak self] (query) in
+					if let library = self {
+						library.pendingCloudSharesCounter = query.queryResults.count
+						self?.updatePendingSharesResult()
+					}
+				}
+				shareQueryPendingCloudShares.changesAvailableNotificationHandler = shareQueryPendingCloudShares.initialPopulationHandler
+
+				start(query: shareQueryPendingCloudShares)
+			}
 		}
 
 		// Shared by user

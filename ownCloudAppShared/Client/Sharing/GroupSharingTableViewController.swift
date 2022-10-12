@@ -188,7 +188,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 						progressView.startAnimating()
 
 						row.cell?.accessoryView = progressView
-						self.core?.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
+						self.core?.delete(share, completionHandler: { [weak self] (error) in
 							guard let self = self else { return }
 							OnMainThread {
 								if error == nil {

@@ -278,12 +278,14 @@ open class PublicLinkTableViewController: SharingTableViewController {
 				var acceptedCloudShares : [OCShare]?
 				var sharedWithMeShares : [OCShare]?
 
-				dispatchGroup.enter()
+				if core.connection.capabilities?.federatedSharingSupported == true {
+					dispatchGroup.enter()
 
-				core.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
-					acceptedCloudShares = shares
-					dispatchGroup.leave()
-				}, allowPartialMatch: true)
+					core.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
+						acceptedCloudShares = shares
+						dispatchGroup.leave()
+					}, allowPartialMatch: true)
+				}
 
 				dispatchGroup.enter()
 
