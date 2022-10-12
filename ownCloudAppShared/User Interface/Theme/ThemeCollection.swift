@@ -419,7 +419,7 @@ public class ThemeCollection : NSObject {
                         defaultStatusBarStyle = .default
                     }
                 }
-            
+
                 self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: defaultStatusBarStyle)
 				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
 				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)

@@ -71,13 +71,16 @@ class ServerListTableHeaderView: UIView, Themeable {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
+	private func windDown() {
 		Theme.shared.unregister(client: self)
 
 		if messageThemeApplierToken != nil {
 			Theme.shared.remove(applierForToken: messageThemeApplierToken)
-			messageThemeApplierToken = nil
 		}
+	}
+
+	deinit {
+		windDown()
 	}
 
 	// MARK: - Theme support

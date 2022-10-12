@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2020, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2020, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import ownCloudSDK
@@ -59,14 +59,14 @@ class ShareViewController: MoreStaticTableViewController {
 			// Share extension allowed
 			if !willAppearInitial {
 				willAppearInitial = true
-                
-                if AppLockManager.supportedOnDevice {
-                    AppLockManager.shared.showLockscreenIfNeeded()
-                }
+
+				if AppLockManager.supportedOnDevice {
+					AppLockManager.shared.showLockscreenIfNeeded()
+				}
 
 				if let appexNavigationController = self.navigationController as? AppExtensionNavigationController {
 					appexNavigationController.dismissalAction = { [weak self] (_) in
-                        AppLockManager.shared.appDidEnterBackground()
+						AppLockManager.shared.appDidEnterBackground()
 						self?.returnCores(completion: {
 							Log.debug("Returned all cores (share sheet was closed / dismissed)")
 						})
@@ -98,18 +98,18 @@ class ShareViewController: MoreStaticTableViewController {
 			didAppearInitial = true
 		}
 	}
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if didAppearInitial {
-            AppLockManager.shared.appDidEnterBackground()
-        }
-    }
-    
-    @objc open override func dismissAnimated() {
-        AppLockManager.shared.appDidEnterBackground()
-        super.dismissAnimated()
-    }
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		if didAppearInitial {
+			AppLockManager.shared.appDidEnterBackground()
+		}
+	}
+
+	@objc open override func dismissAnimated() {
+		AppLockManager.shared.appDidEnterBackground()
+		super.dismissAnimated()
+	}
 
 	private var requestedCoreBookmarks : [OCBookmark] = []
 
@@ -165,7 +165,7 @@ class ShareViewController: MoreStaticTableViewController {
 	}
 
 	@objc private func cancelAction () {
-        AppLockManager.shared.appDidEnterBackground()
+		AppLockManager.shared.appDidEnterBackground()
 		self.returnCores(completion: {
 			let error = NSError(domain: NSErrorDomain.ShareViewErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
 			self.extensionContext?.cancelRequest(withError: error)
@@ -192,7 +192,7 @@ class ShareViewController: MoreStaticTableViewController {
 
 				for (bookmark) in bookmarks {
 					let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-                        self.didAppearInitial = false
+						self.didAppearInitial = false
 						self.openDirectoryPicker(for: bookmark, withBackButton: true)
 					}, title: bookmark.shortName, style: .plain, image: UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0)), imageWidth: 25, alignment: .left)
 					actionsRows.append(row)

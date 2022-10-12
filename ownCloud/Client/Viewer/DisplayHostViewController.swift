@@ -92,7 +92,7 @@ class DisplayHostViewController: UIPageViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
+	private func windDown() {
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
@@ -106,6 +106,10 @@ class DisplayHostViewController: UIPageViewController {
 		}
 
 		Theme.shared.unregister(client: self)
+	}
+
+	deinit {
+		windDown()
 	}
 
 	// MARK: - ViewController lifecycle
