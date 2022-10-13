@@ -147,7 +147,7 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
+	private func windDown() {
 		customSearchQuery = nil
 
 		queryStateObservation = nil
@@ -157,6 +157,10 @@ open class ClientQueryViewController: QueryFileListTableViewController, UIDropIn
 			Theme.shared.remove(applierForToken: titleButtonThemeApplierToken)
 			titleButtonThemeApplierToken = nil
 		}
+	}
+
+	deinit {
+		windDown()
 	}
 
 	open override func registerCellClasses() {
@@ -741,18 +745,19 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					useUTI = UTType.data.identifier
 				}
 
+				let finalUTI = useUTI ?? UTType.data.identifier
 				var fileName: String?
 
-				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
+				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: finalUTI) { (url, _ error) in
 					guard let url = url else { return }
 
 					let fileNameMaxLength = 16
 
-					if useUTI == UTType.utf8PlainText.identifier {
+					if finalUTI == UTType.utf8PlainText.identifier {
 						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
 
-					if useUTI == UTType.rtf.identifier {
+					if finalUTI == UTType.rtf.identifier {
 						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
 						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
 					}

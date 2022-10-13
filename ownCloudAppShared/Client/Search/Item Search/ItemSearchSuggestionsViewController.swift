@@ -237,8 +237,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 
 			for queryCondition in category.options {
 				if let localizedDescription = queryCondition.localizedDescription {
-					let image : UIImage? = (queryCondition.symbolName != nil) ? UIImage(systemName: queryCondition.symbolName!)?.withRenderingMode(.alwaysTemplate) : nil
-					let choice = PopupButtonChoice(with: localizedDescription, image: image, representedObject: queryCondition)
+					let choice = PopupButtonChoice(with: localizedDescription, image: OCSymbol.icon(forSymbolName: queryCondition.symbolName), representedObject: queryCondition)
 					choices.append(choice)
 				}
 			}

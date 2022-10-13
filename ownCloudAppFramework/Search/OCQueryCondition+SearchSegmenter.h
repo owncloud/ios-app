@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCQueryCondition (SearchSegmentDescription)
 
-@property(strong,nonatomic,nullable) NSString *symbolName; 		//!< Optional, name of symbol to use
+@property(strong,nonatomic,nullable) OCSymbolName symbolName; 		//!< Optional, name of symbol to use
 @property(strong,nonatomic,nullable) NSString *localizedDescription; 	//!< Optional, localized description
 @property(strong,nonatomic,nullable) NSString *searchSegment;		//!< Optional, search segment from which this condition was created
 

@@ -166,11 +166,7 @@ extension OCSavedSearch {
 				item = SegmentViewItem(with: nil, title: condition.searchSegment, style: .plain, titleTextStyle: .footnote)
 				item?.insets = .zero
 			} else {
-				var icon: UIImage?
-				if let symbolName = condition.symbolName {
-					icon = UIImage(systemName: symbolName)?.withRenderingMode(.alwaysTemplate)
-				}
-				item = SegmentViewItem(with: icon, title: condition.localizedDescription, style: .token, titleTextStyle: .caption1)
+				item = SegmentViewItem(with: OCSymbol.icon(forSymbolName: condition.symbolName), title: condition.localizedDescription, style: .token, titleTextStyle: .caption1)
 				item?.cornerStyle = .round(points: 3)
 			}
 

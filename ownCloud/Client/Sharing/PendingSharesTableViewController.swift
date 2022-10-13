@@ -101,7 +101,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 
 				if let displayName = ownerName {
 					var itemImageType = "file"
-					if share.itemType == .collection {
+					if share.itemType == .folder {
 						itemImageType = "folder"
 					}
 					var footer = String(format: "Shared by %@".localized, displayName)
@@ -160,10 +160,13 @@ class PendingSharesTableViewController: StaticTableViewController {
 							var iconName : String?
 
 							switch share.itemType {
-								case .collection:
+								case .folder:
 									iconName = "folder"
 
 								case .file:
+									iconName = "file"
+
+								default:
 									iconName = "file"
 							}
 

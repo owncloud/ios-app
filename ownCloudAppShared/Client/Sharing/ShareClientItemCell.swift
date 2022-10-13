@@ -35,7 +35,7 @@ open class ShareClientItemCell: ClientItemResolvingCell {
 	public var share : OCShare? {
 		didSet {
 			if let share = share {
-				if share.itemType == .collection {
+				if share.itemType == .folder {
 					self.iconView.activeViewProvider = ResourceItemIcon.folder
 				} else {
 					self.iconView.activeViewProvider = ResourceItemIcon.file

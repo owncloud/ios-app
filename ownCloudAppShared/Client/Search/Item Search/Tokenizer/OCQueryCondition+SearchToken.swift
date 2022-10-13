@@ -69,13 +69,7 @@ extension OCQueryCondition {
 	func generateSearchToken(fallbackText: String, inputComplete: Bool) -> SearchToken? {
 		// Use existing description and symbol
 		if let firstDescriptiveCondition = firstDescriptiveCondition, let localizedDescription = firstDescriptiveCondition.localizedDescription {
-			var icon : UIImage?
-
-			if let symbolName = firstDescriptiveCondition.symbolName {
-				icon = UIImage(systemName: symbolName)
-			}
-
-			return SearchToken(text: localizedDescription, icon: icon, representedObject: self, inputComplete: inputComplete)
+			return SearchToken(text: localizedDescription, icon: OCSymbol.icon(forSymbolName: firstDescriptiveCondition.symbolName), representedObject: self, inputComplete: inputComplete)
 		}
 
 		// Try to determine a useful icon and description

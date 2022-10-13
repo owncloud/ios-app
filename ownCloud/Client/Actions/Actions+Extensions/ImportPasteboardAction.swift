@@ -194,18 +194,19 @@ class ImportPasteboardAction : Action {
 					useUTI = UTType.data.identifier
 				}
 
+				let finalUTI = useUTI ?? UTType.data.identifier
 				var fileName: String?
 
-				item.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
+				item.loadFileRepresentation(forTypeIdentifier: finalUTI) { (url, _ error) in
 					guard let url = url else { return }
 
 					let fileNameMaxLength = 16
 
-					if useUTI == UTType.utf8PlainText.identifier {
+					if finalUTI == UTType.utf8PlainText.identifier {
 						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
 
-					if useUTI == UTType.rtf.identifier {
+					if finalUTI == UTType.rtf.identifier {
 						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
 						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
 					}
