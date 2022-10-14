@@ -129,14 +129,14 @@ public class SegmentView: ThemeView {
 				case .none: break
 
 				case .clipTail:
-					constraintSet.lastTrailingConstraint?.priority = .defaultHigh
+					constraintSet.lastTrailingOrBottomConstraint?.priority = .defaultHigh
 
 				case .truncateHead:
-					constraintSet.firstLeadingConstraint?.priority = .defaultHigh
+					constraintSet.firstLeadingOrTopConstraint?.priority = .defaultHigh
 					maskView = self.composeMaskView(leading: true)
 
 				case .truncateTail:
-					constraintSet.lastTrailingConstraint?.priority = .defaultHigh
+					constraintSet.lastTrailingOrBottomConstraint?.priority = .defaultHigh
 					maskView = self.composeMaskView(leading: false)
 			}
 

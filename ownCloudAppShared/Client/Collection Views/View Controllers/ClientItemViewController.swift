@@ -229,10 +229,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			footerFolderStatisticsLabel?.textAlignment = .center
 			footerFolderStatisticsLabel?.setContentHuggingPriority(.required, for: .vertical)
 			footerFolderStatisticsLabel?.setContentCompressionResistancePriority(.required, for: .vertical)
+			footerFolderStatisticsLabel?.numberOfLines = 0
 			footerFolderStatisticsLabel?.text = "-"
 
 			footerItem?.embed(toFillWith: footerFolderStatisticsLabel!, insets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-
+			footerItem?.separatorLayoutGuideCustomizer = SeparatorLayoutGuideCustomizer(with: { viewCell, view in
+				return [ viewCell.separatorLayoutGuide.leadingAnchor.constraint(equalTo: viewCell.contentView.trailingAnchor) ]
+			})
 			footerItem?.layoutIfNeeded()
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
@@ -308,6 +311,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		   let drive = itemRecord.item as? OCDrive,
 		   let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
 		   let descriptionResourceRequest = try? driveRepresentation.provideResourceRequest(.coverDescription) {
+			driveQuota = drive.quota
+
 			descriptionResourceRequest.lifetime = .singleRun
 			descriptionResourceRequest.changeHandler = { [weak self] (request, error, isOngoing, previousResource, newResource) in
 				// Log.debug("REQ_Readme request: \(String(describing: request)) | error: \(String(describing: error)) | isOngoing: \(isOngoing) | newResource: \(String(describing: newResource))")
@@ -1001,6 +1006,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	func updateStatisticsFooter() {
 		var folderStatisticsText: String = ""
+		var quotaInfoText: String = ""
 
 		if let folderStatistics = folderStatistics {
 			folderStatisticsText = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)".localized([
@@ -1011,9 +1017,21 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			])
 		}
 
+		if let driveQuota = driveQuota, let remainingBytes = driveQuota.remaining {
+			quotaInfoText = "{{remaining}} available".localized([
+				"remaining" : ByteCountFormatter.string(fromByteCount: remainingBytes.int64Value, countStyle: .file)
+			])
+
+			if folderStatisticsText.count > 0 {
+				folderStatisticsText += "\n" + quotaInfoText
+			} else {
+				folderStatisticsText = quotaInfoText
+			}
+		}
+
 		OnMainThread {
-			if let folderStatisticsItem = self.footerFolderStatisticsLabel {
-				folderStatisticsItem.text = folderStatisticsText
+			if let footerFolderStatisticsLabel = self.footerFolderStatisticsLabel {
+				footerFolderStatisticsLabel.text = folderStatisticsText
 			}
 		}
 	}

@@ -102,13 +102,17 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		super.init(coder: aDecoder)
 	}
 
-	deinit {
+	private func tearDown() {
 		NotificationCenter.default.removeObserver(self, name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 
 		NotificationCenter.default.removeObserver(self, name: .ClientSyncRecordIDsWithMessagesChanged, object: nil)
 
 		self.localID = nil
 		self.core = nil
+	}
+
+	deinit {
+		tearDown()
 	}
 
 	func prepareViewAndConstraints() {
@@ -203,7 +207,9 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 
 			cloudStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
 			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
-			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight)
+			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+
+			separatorLayoutGuide.leadingAnchor.constraint(equalTo: iconView.leadingAnchor)
 		])
 
 		// actionViewContainer setup
