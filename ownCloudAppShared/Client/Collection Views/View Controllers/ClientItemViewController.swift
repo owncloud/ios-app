@@ -26,6 +26,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		case loading
 
 		case empty
+		case removed
 		case hasContent
 
 		case searchNonItemContent
@@ -33,33 +34,38 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	public var query: OCQuery?
 
-	public var itemsLeadInDataSource : OCDataSourceArray = OCDataSourceArray()
-	public var itemsQueryDataSource : OCDataSource?
-	public var itemsTrailingDataSource : OCDataSourceArray = OCDataSourceArray()
-	public var itemSectionDataSource : OCDataSourceComposition?
-	public var itemSection : CollectionViewSection?
+	public var itemsLeadInDataSource: OCDataSourceArray = OCDataSourceArray()
+	public var itemsQueryDataSource: OCDataSource?
+	public var itemsTrailingDataSource: OCDataSourceArray = OCDataSourceArray()
+	public var itemSectionDataSource: OCDataSourceComposition?
+	public var itemSection: CollectionViewSection?
 
-	public var driveSection : CollectionViewSection?
+	public var driveSection: CollectionViewSection?
 
-	public var driveSectionDataSource : OCDataSourceComposition?
-	public var singleDriveDatasource : OCDataSourceComposition?
-	private var singleDriveDatasourceSubscription : OCDataSourceSubscription?
-	public var driveAdditionalItemsDataSource : OCDataSourceArray = OCDataSourceArray()
+	public var driveSectionDataSource: OCDataSourceComposition?
+	public var singleDriveDatasource: OCDataSourceComposition?
+	private var singleDriveDatasourceSubscription: OCDataSourceSubscription?
+	public var driveAdditionalItemsDataSource: OCDataSourceArray = OCDataSourceArray()
 
-	public var emptyItemListDataSource : OCDataSourceArray = OCDataSourceArray()
-	public var emptyItemListDecisionSubscription : OCDataSourceSubscription?
-	public var emptyItemListItem : ComposedMessageView?
+	public var emptyItemListDataSource: OCDataSourceArray = OCDataSourceArray()
+	public var emptyItemListDecisionSubscription: OCDataSourceSubscription?
+	public var emptyItemListItem: ComposedMessageView?
 	public var emptySectionDataSource: OCDataSourceComposition?
 	public var emptySection: CollectionViewSection?
 
-	public var loadingListItem : ComposedMessageView?
+	public var loadingListItem: ComposedMessageView?
+	public var folderRemovedListItem: ComposedMessageView?
+	public var footerItem: UIView?
+	public var footerFolderStatisticsLabel: UILabel?
 
-	private var stateObservation : NSKeyValueObservation?
-	private var queryRootItemObservation : NSKeyValueObservation?
+	private var stateObservation: NSKeyValueObservation?
+	private var queryStateObservation: NSKeyValueObservation?
+	private var queryRootItemObservation: NSKeyValueObservation?
 
 	var navigationTitleLabel: UILabel = UILabel()
 
 	public init(context inContext: ClientContext?, query inQuery: OCQuery, highlightItemReference: OCDataItemReference? = nil) {
+		inQuery.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
 
 		var sections : [ CollectionViewSection ] = []
@@ -168,6 +174,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			self?.recomputeContentState()
 		})
 
+		queryStateObservation = query?.observe(\OCQuery.state, options: [], changeHandler: { [weak self] query, change in
+			self?.recomputeContentState()
+		})
+
 		queryRootItemObservation = query?.observe(\OCQuery.rootItem, options: [], changeHandler: { [weak self] query, change in
 			OnMainThread(inline: true) {
 				self?.clientContext?.rootItem = query.rootItem
@@ -184,9 +194,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		if let queryDatasource = query?.queryResultsDataSource {
 			emptyItemListItem = ComposedMessageView(elements: [
-				.image(UIImage(systemName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.image(OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
 				.text("No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
-				.spacing(25),
+				.spacing(5),
 				.text("This folder is empty. Fill it with content:".localized, style: .systemSecondary(textStyle: .body), alignment: .centered)
 			])
 
@@ -202,6 +212,28 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				.spacing(25),
 				.text("Loading…".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
 			])
+
+			folderRemovedListItem = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "nosign")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.text("Folder removed".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+				.spacing(5),
+				.text("This folder no longer exists on the server.".localized, style: .systemSecondary(textStyle: .body), alignment: .centered)
+			])
+
+			footerItem = UIView()
+			footerItem?.translatesAutoresizingMaskIntoConstraints = false
+
+			footerFolderStatisticsLabel = UILabel()
+			footerFolderStatisticsLabel?.translatesAutoresizingMaskIntoConstraints = false
+			footerFolderStatisticsLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+			footerFolderStatisticsLabel?.textAlignment = .center
+			footerFolderStatisticsLabel?.setContentHuggingPriority(.required, for: .vertical)
+			footerFolderStatisticsLabel?.setContentCompressionResistancePriority(.required, for: .vertical)
+			footerFolderStatisticsLabel?.text = "-"
+
+			footerItem?.embed(toFillWith: footerFolderStatisticsLabel!, insets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+
+			footerItem?.layoutIfNeeded()
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateEmptyItemList(from: subscription)
@@ -226,52 +258,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	deinit {
 		stateObservation?.invalidate()
 		queryRootItemObservation?.invalidate()
+		queryStateObservation?.invalidate()
 		singleDriveDatasourceSubscription?.terminate()
 	}
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
-		var rightInset : CGFloat = 2
-		var leftInset : CGFloat = 0
-		if self.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
-			rightInset = 0
-			leftInset = 2
-		}
-
-		var viewActionButtons : [UIBarButtonItem] = []
-
-		if query?.queryLocation != nil {
-			if clientContext?.moreItemHandler != nil {
-				let folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
-				folderActionBarButton.accessibilityIdentifier = "client.folder-action"
-				folderActionBarButton.accessibilityLabel = "Actions".localized
-
-				viewActionButtons.append(folderActionBarButton)
-			}
-
-			let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
-			plusBarButton.menu = UIMenu(title: "", children: [
-				UIDeferredMenuElement.uncached({ [weak self] completion in
-					if let self = self, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
-						let contextMenuProvider = rootItem as DataItemContextMenuInteraction
-
-						if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
-							    completion(contextMenuElements)
-						}
-					}
-				})
-			])
-			plusBarButton.accessibilityIdentifier = "client.file-add"
-
-			viewActionButtons.append(plusBarButton)
-		}
-
-		// Add search button
-		let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
-		viewActionButtons.append(searchButton)
-
-		self.navigationItem.rightBarButtonItems = viewActionButtons
+		// Add navigation bar button items
+		updateNavigationBarButtonItems()
 
 		// Setup sort bar
 		sortBar = SortBar(sortMethod: sortMethod)
@@ -367,16 +362,18 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						self.contentState = .loading
 
 					case .idle:
-						let numberOfItems = self.emptyItemListDecisionSubscription?.snapshotResettingChangeTracking(true).numberOfItems
+						let snapshot = self.emptyItemListDecisionSubscription?.snapshotResettingChangeTracking(true)
+						let numberOfItems = snapshot?.numberOfItems
 
-						if let numberOfItems = numberOfItems, numberOfItems > 0 {
+						if self.query?.state == .targetRemoved {
+							self.contentState = .removed
+						} else if let numberOfItems = numberOfItems, numberOfItems > 0 {
 							self.contentState = .hasContent
+							self.folderStatistics = snapshot?.specialItems?[.folderStatistics] as? OCStatistic
+						} else if (numberOfItems == nil) || (self.query?.rootItem == nil) {
+							self.contentState = .loading
 						} else {
-							if (numberOfItems == nil) || (self.query?.rootItem == nil) {
-								self.contentState = .loading
-							} else {
-								self.contentState = .empty
-							}
+							self.contentState = .empty
 						}
 
 					default: break
@@ -386,6 +383,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	}
 
 	private var hadRootItem: Bool = false
+	private var hadSearchActive: Bool?
 	public var contentState : ContentState = .loading {
 		didSet {
 			let hasRootItem = (query?.rootItem != nil)
@@ -393,17 +391,20 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			var itemSectionHiddenNew = false
 			let emptySectionHidden = emptySection?.hidden
 			var emptySectionHiddenNew = false
+			let changeFromOrToRemoved = ((contentState == .removed) || (oldValue == .removed)) && (oldValue != contentState)
 
-			if (contentState == oldValue) && (hadRootItem == hasRootItem) {
+			if (contentState == oldValue) && (hadRootItem == hasRootItem) && (hadSearchActive == searchActive) {
 				return
 			}
 
 			hadRootItem = hasRootItem
+			hadSearchActive = searchActive
 
 			switch contentState {
 				case .empty:
 					refreshEmptyActions()
 					itemsLeadInDataSource.setVersionedItems([ ])
+					itemsTrailingDataSource.setVersionedItems([ ])
 
 				case .loading:
 					var loadingItems : [OCDataItem] = [ ]
@@ -413,6 +414,17 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					}
 					emptyItemListDataSource.setItems(loadingItems, updated: nil)
 					itemsLeadInDataSource.setVersionedItems([ ])
+					itemsTrailingDataSource.setVersionedItems([ ])
+
+				case .removed:
+					var folderRemovedItems : [OCDataItem] = [ ]
+
+					if let folderRemovedListItem = folderRemovedListItem {
+						folderRemovedItems.append(folderRemovedListItem)
+					}
+					emptyItemListDataSource.setItems(folderRemovedItems, updated: nil)
+					itemsLeadInDataSource.setVersionedItems([ ])
+					itemsTrailingDataSource.setVersionedItems([ ])
 
 				case .hasContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
@@ -420,12 +432,25 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						itemsLeadInDataSource.setVersionedItems([ sortBar ])
 					}
 
+					if searchActive == true {
+						itemsTrailingDataSource.setVersionedItems([ ])
+					} else {
+						if let footerItem = footerItem {
+							itemsTrailingDataSource.setVersionedItems([ footerItem ])
+						}
+					}
+
 					emptySectionHiddenNew = true
 
 				case .searchNonItemContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
 					itemsLeadInDataSource.setVersionedItems([ ])
+					itemsTrailingDataSource.setVersionedItems([ ])
 					itemSectionHiddenNew = true
+			}
+
+			if changeFromOrToRemoved {
+				updateNavigationBarButtonItems()
 			}
 
 			if (itemSectionHidden != itemSectionHiddenNew) || (emptySectionHidden != emptySectionHiddenNew) {
@@ -437,7 +462,54 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 	}
 
-	// MARK: - Navigation Bar Actions
+	// MARK: - Navigation Bar
+	open func updateNavigationBarButtonItems() {
+		var rightInset : CGFloat = 2
+		var leftInset : CGFloat = 0
+		if self.view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+			rightInset = 0
+			leftInset = 2
+		}
+
+		var viewActionButtons : [UIBarButtonItem] = []
+
+		if contentState != .removed {
+			if query?.queryLocation != nil {
+				// More menu for folder
+				if clientContext?.moreItemHandler != nil {
+					let folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+					folderActionBarButton.accessibilityIdentifier = "client.folder-action"
+					folderActionBarButton.accessibilityLabel = "Actions".localized
+
+					viewActionButtons.append(folderActionBarButton)
+				}
+
+				// Plus button for folder
+				let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+				plusBarButton.menu = UIMenu(title: "", children: [
+					UIDeferredMenuElement.uncached({ [weak self] completion in
+						if let self = self, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
+							let contextMenuProvider = rootItem as DataItemContextMenuInteraction
+
+							if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
+								    completion(contextMenuElements)
+							}
+						}
+					})
+				])
+				plusBarButton.accessibilityIdentifier = "client.file-add"
+
+				viewActionButtons.append(plusBarButton)
+			}
+
+			// Add search button
+			let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
+			viewActionButtons.append(searchButton)
+		}
+
+		self.navigationItem.rightBarButtonItems = viewActionButtons
+	}
+
 	@objc open func moreBarButtonPressed(_ sender: UIBarButtonItem) {
 		guard let rootItem = query?.rootItem else {
 			return
@@ -445,6 +517,24 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		if let moreItemHandler = clientContext?.moreItemHandler, let clientContext = clientContext {
 			moreItemHandler.moreOptions(for: rootItem, at: .moreFolder, context: clientContext, sender: sender)
+		}
+	}
+
+	// MARK: - Navigation title
+	var navigationTitle: String? {
+		get {
+			return navigationTitleLabel.text
+		}
+
+		set {
+			navigationTitleLabel.text = newValue
+			navigationItem.title = newValue
+		}
+	}
+
+	func updateNavigationTitleFromContext() {
+		if let navigationTitle = query?.queryLocation?.isRoot == true ? self.clientContext?.drive?.name : ((self.clientContext?.rootItem as? OCItem)?.name ?? self.query?.queryLocation?.lastPathComponent) {
+			self.navigationTitle = navigationTitle
 		}
 	}
 
@@ -896,6 +986,38 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		recomputeContentState()
 	}
 
+	// MARK: - Statistics
+	var folderStatistics: OCStatistic? {
+		didSet {
+			self.updateStatisticsFooter()
+		}
+	}
+
+	var driveQuota: GAQuota? {
+		didSet {
+			self.updateStatisticsFooter()
+		}
+	}
+
+	func updateStatisticsFooter() {
+		var folderStatisticsText: String = ""
+
+		if let folderStatistics = folderStatistics {
+			folderStatisticsText = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)".localized([
+				"itemCount" : NumberFormatter.localizedString(from: NSNumber(value: folderStatistics.itemCount?.intValue ?? 0), number: .decimal),
+				"fileCount" : NumberFormatter.localizedString(from: NSNumber(value: folderStatistics.fileCount?.intValue ?? 0), number: .decimal),
+				"folderCount" : NumberFormatter.localizedString(from: NSNumber(value: folderStatistics.folderCount?.intValue ?? 0), number: .decimal),
+				"totalSize" : folderStatistics.localizedSize ?? "-"
+			])
+		}
+
+		OnMainThread {
+			if let folderStatisticsItem = self.footerFolderStatisticsLabel {
+				folderStatisticsItem.text = folderStatisticsText
+			}
+		}
+	}
+
 	// MARK: - Empty actions
 	func refreshEmptyActions() {
 		guard contentState == .empty else { return }
@@ -913,27 +1035,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		emptyItemListDataSource.setItems(emptyItems, updated: nil)
 	}
 
-	// MARK: - Navigation title
-	var navigationTitle: String? {
-		get {
-			return navigationTitleLabel.text
-		}
-
-		set {
-			navigationTitleLabel.text = newValue
-			navigationItem.title = newValue
-		}
-	}
-
-	func updateNavigationTitleFromContext() {
-		if let navigationTitle = query?.queryLocation?.isRoot == true ? self.clientContext?.drive?.name : ((self.clientContext?.rootItem as? OCItem)?.name ?? self.query?.queryLocation?.lastPathComponent) {
-			self.navigationTitle = navigationTitle
-		}
-	}
-
 	// MARK: - Themeing
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		navigationTitleLabel.textColor = collection.navigationBarColors.labelColor
+		footerFolderStatisticsLabel?.textColor = collection.tableRowColors.secondaryLabelColor
 	}
 }

@@ -121,6 +121,8 @@
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+
 "Show more results" = "Show more results";
 
 /* Saved searches */
