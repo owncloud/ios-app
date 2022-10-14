@@ -19,8 +19,14 @@
 import UIKit
 
 class ViewCell: ThemeableCollectionViewListCell {
+	private var _previousSeparatorLayoutGuideConstraints: [NSLayoutConstraint]?
 	var hostedView: UIView? {
 		willSet {
+			if let previousSperatorLayoutGuideConstraints = _previousSeparatorLayoutGuideConstraints {
+				NSLayoutConstraint.deactivate(previousSperatorLayoutGuideConstraints)
+				_previousSeparatorLayoutGuideConstraints = nil
+			}
+
 			if hostedView != newValue {
 				hostedView?.removeFromSuperview()
 			}
@@ -40,17 +46,23 @@ class ViewCell: ThemeableCollectionViewListCell {
 					hostedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).with(priority: .defaultHigh),
 					hostedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).with(priority: .defaultHigh),
 					hostedView.topAnchor.constraint(equalTo: contentView.topAnchor).with(priority: .defaultHigh),
-					hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).with(priority: .defaultHigh),
+					hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).with(priority: .defaultHigh)
 				]
+				var layoutGuideConstraints: [NSLayoutConstraint]?
 
 				if let customizer = hostedView.separatorLayoutGuideCustomizer {
 					// Use custom constraints
-					constraints += customizer.customizer(self, hostedView)
+					layoutGuideConstraints = customizer.customizer(self, hostedView)
 				} else {
-					constraints += [
+					layoutGuideConstraints = [
 						// Extend cell seperator to contentView.leadingAnchor
 						separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
 					]
+				}
+
+				if let layoutGuideConstraints = layoutGuideConstraints {
+					_previousSeparatorLayoutGuideConstraints = layoutGuideConstraints
+					constraints += layoutGuideConstraints
 				}
 
 				NSLayoutConstraint.activate(constraints)

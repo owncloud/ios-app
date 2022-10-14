@@ -13,9 +13,7 @@ It should only be used with dedicated test servers, test data - and test devices
 - subscription of spaces can't be turned on/off yet
 - the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
-- Copy & Paste allows copying a folder into a subfolder of its own / itself, leading to an infinite cycle
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
-- dropping an item into its source/origin folder (same view controller) triggers a MOVE that fails
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
