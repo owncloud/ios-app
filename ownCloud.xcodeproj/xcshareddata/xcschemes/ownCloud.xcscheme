@@ -381,6 +381,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:action.excludedSystemActivities"
+            value = "[com.apple.UIKit.activity.CopyToPasteboard]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:extensions.disallowed"
             value = "[org.owncloud.ql_preview,org.owncloud.webview]"
             isEnabled = "NO">

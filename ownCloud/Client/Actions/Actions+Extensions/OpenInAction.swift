@@ -93,8 +93,11 @@ class OpenInAction: Action {
 				// Store reference to temporary export root URL for later deletion
 				self.temporaryExportURL = temporaryExportFolderURL
 
+				// Obey to excluded activity types
+				let excludedActivityTypes : [UIActivity.ActivityType]? = Action.classSetting(forOCClassSettingsKey: .excludedSystemActivities) as? [UIActivity.ActivityType]
+
 				// UIDocumentInteractionController can only be used with a single file
-				if exportURLs.count == 1 {
+				if exportURLs.count == 1, excludedActivityTypes == nil || excludedActivityTypes?.count == 0 {
 					if let fileURL = exportURLs.first {
 						// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
 						self.interactionControllerDispatchGroup = DispatchGroup()
@@ -138,6 +141,12 @@ class OpenInAction: Action {
 				} else {
 					// Handle multiple files with a fallback solution
 					let activityController = UIActivityViewController(activityItems: exportURLs, applicationActivities: nil)
+
+					if let excludedActivityTypes = excludedActivityTypes {
+						// Apply excluded activity types
+						activityController.excludedActivityTypes = excludedActivityTypes
+					}
+
 					activityController.completionWithItemsHandler = { (_, _, _, _) in
 						// Remove temporary export root URL with contents
 						try? FileManager.default.removeItem(at: temporaryExportFolderURL)
