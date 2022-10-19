@@ -72,16 +72,23 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, image: UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate), primaryAction: UIAction(handler: { [weak self] _ in
 			if self?.shouldSendCloseEvent == true {
-				// Close via window.close(), which is calling dismissSecurely() once done
-				self?.closeWebWindow()
+				if let strongSelf = self {
+					// Close via window.close(), which is calling dismissSecurely() once done
+					strongSelf.closeWebWindow()
 
-				// Call dismissOnce() after 10 seconds regardless
-				OnMainThread(after: 10) {
-					self?.dismissOnce()
+					// Call dismissOnce()
+					strongSelf.dismissOnce({
+						// Dispose after 10 seconds automatically (or earlier if web view signals close event)
+						OnMainThread(after: 10) {
+							strongSelf.disposeWebViewOnce()
+						}
+					})
 				}
 			} else {
 				// Close directly
-				self?.closeWebWindow()
+				self?.dismissOnce({ [weak self] in
+					self?.disposeWebViewOnce()
+				})
 			}
 		}))
 	}
@@ -101,10 +108,21 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 	}
 
 	private var isDismissed = false
-	func dismissOnce() {
+	func dismissOnce(_ completion: (() -> Void)? = nil) {
 		if !isDismissed {
 			isDismissed = true
-			self.dismiss(animated: true)
+			self.dismiss(animated: true, completion: completion)
+		} else {
+			completion?()
+		}
+	}
+
+	private var hasDisposedWebView = false
+	func disposeWebViewOnce() {
+		if !hasDisposedWebView {
+			hasDisposedWebView = true
+			webView?.removeFromSuperview()
+			webView = nil
 		}
 	}
 
@@ -115,6 +133,8 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 
 	// UI delegate
 	func webViewDidClose(_ webView: WKWebView) {
-		dismissOnce()
+		dismissOnce({ [weak self] in
+			self?.disposeWebViewOnce()
+		})
 	}
 }
