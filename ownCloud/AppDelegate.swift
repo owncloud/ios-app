@@ -129,7 +129,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+        OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+        OCExtensionManager.shared.addExtension(TextEditingAction.actionExtension)
 
 		// Task extensions
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
