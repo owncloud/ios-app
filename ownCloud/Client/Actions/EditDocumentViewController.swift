@@ -126,18 +126,19 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	@objc func enableEditingMode() {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
         if #available(iOS 16.0, *) {
-            if self.navigationItem.rightBarButtonItems?.count ?? 0 > 3 {
-                guard let markupButton = self.navigationItem.rightBarButtonItems?[0] else { return }
-                _ = markupButton.target?.perform(markupButton.action, with: markupButton)
-            } else if self.navigationItem.rightBarButtonItems?.count ?? 0 == 3 {
-                guard let markupButton = self.navigationItem.rightBarButtonItems?[0] else { return }
-                _ = markupButton.target?.perform(markupButton.action, with: markupButton)
-            } else if self.toolbarItems?.count ?? 0 > 4 {
-                guard let markupButton = self.toolbarItems?[4] else { return }
-                _ = markupButton.target?.perform(markupButton.action, with: markupButton)
-            } else if self.toolbarItems?.count ?? 0 > 1, self.toolbarItems?.count ?? 0 < 4 {
-                guard let markupButton = self.toolbarItems?[2] else { return }
-                _ = markupButton.target?.perform(markupButton.action, with: markupButton)
+            if UIDevice().isIpad {
+                if self.toolbarItems?.count ?? 0 > 0 {
+                    guard let markupButton = self.navigationItem.rightBarButtonItems?[0] else { return }
+                    _ = markupButton.target?.perform(markupButton.action, with: markupButton)
+                }
+            } else {
+                if self.toolbarItems?.count ?? 0 > 4 {
+                    guard let markupButton = self.toolbarItems?[4] else { return }
+                    _ = markupButton.target?.perform(markupButton.action, with: markupButton)
+                } else if self.toolbarItems?.count ?? 0 > 1, self.toolbarItems?.count ?? 0 < 4 {
+                    guard let markupButton = self.toolbarItems?[2] else { return }
+                    _ = markupButton.target?.perform(markupButton.action, with: markupButton)
+                }
             }
         } else if #available(iOS 15.0, *) {
 			if self.navigationItem.rightBarButtonItems?.count ?? 0 > 2 {
