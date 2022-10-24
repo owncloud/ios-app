@@ -127,7 +127,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
         if #available(iOS 16.0, *) {
             if UIDevice().isIpad {
-                if self.toolbarItems?.count ?? 0 > 0 {
+                if self.navigationItem.rightBarButtonItems?.count ?? 0 > 0 {
                     guard let markupButton = self.navigationItem.rightBarButtonItems?[0] else { return }
                     _ = markupButton.target?.perform(markupButton.action, with: markupButton)
                 }
