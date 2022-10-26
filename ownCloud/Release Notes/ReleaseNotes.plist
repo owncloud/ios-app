@@ -1687,6 +1687,23 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.11.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>iOS 16: Markup Mode</string>
+					<key>Subtitle</key>
+					<string>Markup mode was not enabled automatically on iOS 16.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
