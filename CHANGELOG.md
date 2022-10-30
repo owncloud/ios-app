@@ -1,3 +1,24 @@
+Changelog for ownCloud iOS Client [11.11.1] (2022-10-30)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.11.1 relevant to
+ownCloud admins and users.
+
+[11.11.1]: https://github.com/owncloud/ios-app/compare/milestone/11.11.0...milestone/11.11.1
+
+Summary
+-------
+
+* Bugfix - Enabling Markup Mode: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+Details
+-------
+
+* Bugfix - Enabling Markup Mode: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+   Enabling markup mode crashed on iOS 16.
+
+   https://github.com/owncloud/ios-app/issues/1141
+
 Changelog for ownCloud iOS Client [11.11.0] (2022-09-26)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.11.0 relevant to
