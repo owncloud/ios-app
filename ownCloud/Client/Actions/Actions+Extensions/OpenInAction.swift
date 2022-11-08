@@ -140,7 +140,19 @@ class OpenInAction: Action {
 					}
 				} else {
 					// Handle multiple files with a fallback solution
-					let activityController = UIActivityViewController(activityItems: exportURLs, applicationActivities: nil)
+					var activityItems : [Any] = []
+
+					if let excludedActivityTypes = excludedActivityTypes {
+						// Wrap in OpenInActivityItem to technically block particular activity types
+						// that are ignored when passed, like f.ex. "Save to Files"
+						for exportURL in exportURLs {
+							activityItems.append(OpenInActivityItem(wrapping: exportURL, excludedActivityTypes: excludedActivityTypes))
+						}
+					} else {
+						activityItems = exportURLs
+					}
+
+					let activityController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
 
 					if let excludedActivityTypes = excludedActivityTypes {
 						// Apply excluded activity types
@@ -203,3 +215,31 @@ extension OpenInAction : UIDocumentInteractionControllerDelegate {
 		self.interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
 	}
 }
+
+class OpenInActivityItem : NSObject, UIActivityItemSource {
+	var wrappedItem: Any
+	var excludedActivities: [UIActivity.ActivityType]?
+
+	init(wrapping: Any, excludedActivityTypes: [UIActivity.ActivityType]?) {
+		self.wrappedItem = wrapping
+		self.excludedActivities = excludedActivityTypes
+		super.init()
+	}
+
+	func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+		return wrappedItem
+	}
+
+	func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+		// Useful to determine the activityType string for an undocumented activity
+		// Log.debug("Activity type: \(activityType?.rawValue ?? "-")")
+
+		if let excludedActivities = excludedActivities, let activityType = activityType, excludedActivities.contains(activityType) {
+			// Block excluded activity type
+			return nil
+		}
+
+		return wrappedItem
+	}
+}
+
