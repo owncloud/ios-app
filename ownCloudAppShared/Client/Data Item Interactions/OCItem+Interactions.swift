@@ -36,24 +36,19 @@ extension OCItem : DataItemSelectionInteraction {
 						let query = OCQuery(for: location)
 						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
-						let queryViewController = ClientItemViewController(context: context, query: query)
-						if pushViewController {
-							context.navigationController?.pushViewController(queryViewController, animated: animated)
+						if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
+							return ClientItemViewController(context: context, query: query)
+						}, push: pushViewController, animated: animated) {
+							completion?(true)
+							return queryViewController
 						}
-
-						completion?(true)
-
-						return queryViewController
 					}
 
 				case .file:
-					if let viewController = context.viewItemHandler?.provideViewer(for: self, context: context) {
-						if pushViewController {
-							context.navigationController?.pushViewController(viewController, animated: animated)
-						}
-
+					if let viewController = context.pushViewControllerToNavigation(context: context, provider: { context in
+						return context.viewItemHandler?.provideViewer(for: self, context: context)
+					}, push: pushViewController, animated: animated) {
 						completion?(true)
-
 						return viewController
 					}
 			}
@@ -73,15 +68,12 @@ extension OCItem : DataItemSelectionInteraction {
 				let query = OCQuery(for: parentLocation)
 				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
-				let queryViewController = ClientItemViewController(context: context, query: query, highlightItemReference: self.dataItemReference)
-
-				if pushViewController {
-					context.navigationController?.pushViewController(queryViewController, animated: animated)
+				if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
+					return ClientItemViewController(context: context, query: query, highlightItemReference: self.dataItemReference)
+				}, push: pushViewController, animated: animated) {
+					completion?(true)
+					return queryViewController
 				}
-
-				completion?(true)
-
-				return queryViewController
 			}
 		}
 

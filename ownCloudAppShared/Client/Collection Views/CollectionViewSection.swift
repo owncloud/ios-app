@@ -203,6 +203,22 @@ public class CollectionViewSection: NSObject {
 	public var animateDifferences: Bool? //!< If not specified, falls back to collectionViewController.animateDifferences
 	public var hidden : Bool = false
 
+	private var _hideIfEmptyDataSourceSubscription: OCDataSourceSubscription?
+	public var hideIfEmptyDataSource: OCDataSource? {
+		willSet {
+			_hideIfEmptyDataSourceSubscription = nil
+		}
+		didSet {
+			_hideIfEmptyDataSourceSubscription = hideIfEmptyDataSource?.subscribe(updateHandler: { [weak self] subscription in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+
+				OnMainThread { [weak self] in
+					self?.hidden = snapshot.numberOfItems > 0
+				}
+			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+		}
+	}
+
 	public var cellLayout: CellLayout
 
 	public init(identifier: SectionIdentifier, dataSource inDataSource: OCDataSource?, cellStyle : CollectionViewCellStyle = .init(with:.tableCell), cellLayout: CellLayout = .list(appearance: .plain), clientContext: ClientContext? = nil ) {

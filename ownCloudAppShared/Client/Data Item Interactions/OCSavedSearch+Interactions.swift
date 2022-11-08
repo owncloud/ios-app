@@ -88,13 +88,14 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 					context.query = query
 				})
 
-				let queryViewController = ClientItemViewController(context: resultsContext, query: query)
-				queryViewController.navigationItem.title = name
-
-				context.navigationController?.pushViewController(queryViewController, animated: true)
-
-				completion?(true)
-				return true
+				if context.pushViewControllerToNavigation(context: resultsContext, provider: { context in
+					let viewController = ClientItemViewController(context: resultsContext, query: query)
+					viewController.navigationItem.title = name
+					return viewController
+				}, push: true, animated: true) != nil {
+					completion?(true)
+					return true
+				}
 			}
 		}
 

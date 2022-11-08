@@ -58,13 +58,9 @@ public protocol InlineMessageCenter : AnyObject {
 	func showInlineMessageFor(item: OCItem)
 }
 
-//extension ClientContext {
-//	public enum DropSessionStage : CaseIterable {
-//		case begin
-//		case updated
-//		case end
-//	}
-//}
+public protocol ViewControllerPusher: AnyObject {
+	func pushViewController(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController?
+}
 
 @objc public protocol DropTargetsProvider : AnyObject {
 	func canProvideDropTargets(for dropSession: UIDropSession, target view: UIView) -> Bool
@@ -114,6 +110,7 @@ public class ClientContext: NSObject {
 	public weak var swipeActionsProvider: SwipeActionsProvider?
 	public weak var inlineMessageCenter: InlineMessageCenter?
 	public weak var dropTargetsProvider: DropTargetsProvider?
+	public weak var viewControllerPusher: ViewControllerPusher?
 
 	// MARK: - Permissions
 	public var permissionHandlers : [PermissionHandler]?
@@ -164,6 +161,7 @@ public class ClientContext: NSObject {
 		swipeActionsProvider = inParent?.swipeActionsProvider
 		inlineMessageCenter = inParent?.inlineMessageCenter
 		dropTargetsProvider = inParent?.dropTargetsProvider
+		viewControllerPusher = inParent?.viewControllerPusher
 
 		sortDescriptor = inParent?.sortDescriptor
 
@@ -258,5 +256,27 @@ public class ClientContext: NSObject {
 		}
 
 		return true
+	}
+}
+
+extension ClientContext {
+	public var canPushViewControllerToNavigation: Bool {
+		return viewControllerPusher != nil || navigationController != nil
+	}
+
+	public func pushViewControllerToNavigation(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController? {
+		var viewController: UIViewController?
+
+		if let viewControllerPusher = viewControllerPusher {
+			viewController = viewControllerPusher.pushViewController(context: context, provider: provider, push: push, animated: animated)
+		} else if let navigationController = navigationController {
+			viewController = provider(self)
+
+			if push, let viewController = viewController {
+				navigationController.pushViewController(viewController, animated: animated)
+			}
+		}
+
+		return viewController
 	}
 }

@@ -29,11 +29,9 @@ extension OCDrive : DataItemSelectionInteraction {
 		let query = OCQuery(for: self.rootLocation)
 		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
-		let rootFolderViewController = ClientItemViewController(context: driveContext, query: query)
-
-		if pushViewController {
-			viewController?.navigationController?.pushViewController(rootFolderViewController, animated: animated)
-		}
+		let rootFolderViewController = context?.pushViewControllerToNavigation(context: driveContext, provider: { context in
+			return ClientItemViewController(context: context, query: query)
+		}, push: pushViewController, animated: animated)
 
 		completion?(true)
 
