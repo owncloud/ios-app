@@ -27,19 +27,39 @@ public extension UIView {
 		var lastTrailingOrBottomConstraint: NSLayoutConstraint?
 	}
 
-	@discardableResult func embedHorizontally(views: [UIView], insets: NSDirectionalEdgeInsets, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
+	struct AnchorSet {
+		var leadingAnchor: NSLayoutXAxisAnchor
+		var trailingAnchor: NSLayoutXAxisAnchor
+
+		var topAnchor: NSLayoutYAxisAnchor
+		var bottomAnchor: NSLayoutYAxisAnchor
+
+		var centerXAnchor: NSLayoutXAxisAnchor
+		var centerYAnchor: NSLayoutYAxisAnchor
+	}
+
+	var defaultAnchorSet : AnchorSet {
+		return AnchorSet(leadingAnchor: leadingAnchor, trailingAnchor: trailingAnchor, topAnchor: topAnchor, bottomAnchor: bottomAnchor, centerXAnchor: centerXAnchor, centerYAnchor: centerYAnchor)
+	}
+
+	var safeAreaAnchorSet : AnchorSet {
+		return AnchorSet(leadingAnchor: safeAreaLayoutGuide.leadingAnchor, trailingAnchor: safeAreaLayoutGuide.trailingAnchor, topAnchor: safeAreaLayoutGuide.topAnchor, bottomAnchor: safeAreaLayoutGuide.bottomAnchor, centerXAnchor: safeAreaLayoutGuide.centerXAnchor, centerYAnchor: safeAreaLayoutGuide.centerYAnchor)
+	}
+
+	@discardableResult func embedHorizontally(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
 		var viewIdx : Int = 0
 		var previousView: UIView?
 		var embedConstraints: [NSLayoutConstraint] = []
 
 		var constraintSet: ConstraintSet = ConstraintSet()
+		let anchorSet = enclosingAnchors ?? defaultAnchorSet
 
 		for view in views {
 			var leadingConstraint: NSLayoutConstraint?
 
 			// Create leading constraint
 			if viewIdx == 0 {
-				leadingConstraint = view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.leading)
+				leadingConstraint = view.leadingAnchor.constraint(equalTo: anchorSet.leadingAnchor, constant: insets.leading)
 				constraintSet.firstLeadingOrTopConstraint = leadingConstraint
 			} else if let previousView = previousView {
 				let spacing : CGFloat = spacingProvider?(previousView, view) ?? 0
@@ -54,14 +74,14 @@ public extension UIView {
 
 			// - vertical position + insets
 			embedConstraints.append(contentsOf: [
-				view.centerYAnchor.constraint(equalTo: centerYAnchor),
-				view.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets.top),
-				view.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets.bottom)
+				view.centerYAnchor.constraint(equalTo: anchorSet.centerYAnchor),
+				view.topAnchor.constraint(greaterThanOrEqualTo: anchorSet.topAnchor, constant: insets.top),
+				view.bottomAnchor.constraint(lessThanOrEqualTo: anchorSet.bottomAnchor, constant: -insets.bottom)
 			])
 
 			// - trailing
 			if viewIdx == (views.count-1) {
-				let trailingConstraint = view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.trailing)
+				let trailingConstraint = view.trailingAnchor.constraint(equalTo: anchorSet.trailingAnchor, constant: -insets.trailing)
 				constraintSet.lastTrailingOrBottomConstraint = trailingConstraint
 				embedConstraints.append(trailingConstraint)
 			}
@@ -84,19 +104,20 @@ public extension UIView {
 		return constraintSet
 	}
 
-	@discardableResult func embedVertically(views: [UIView], insets: NSDirectionalEdgeInsets, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
+	@discardableResult func embedVertically(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
 		var viewIdx : Int = 0
 		var previousView: UIView?
 		var embedConstraints: [NSLayoutConstraint] = []
 
 		var constraintSet: ConstraintSet = ConstraintSet()
+		let anchorSet = enclosingAnchors ?? defaultAnchorSet
 
 		for view in views {
 			var topConstraint: NSLayoutConstraint?
 
 			// Create top constraint
 			if viewIdx == 0 {
-				topConstraint = view.topAnchor.constraint(equalTo: topAnchor, constant: insets.top)
+				topConstraint = view.topAnchor.constraint(equalTo: anchorSet.topAnchor, constant: insets.top)
 				constraintSet.firstLeadingOrTopConstraint = topConstraint
 			} else if let previousView = previousView {
 				let spacing : CGFloat = spacingProvider?(previousView, view) ?? 0
@@ -111,14 +132,14 @@ public extension UIView {
 
 			// - horizontal position + insets
 			embedConstraints.append(contentsOf: [
-				view.centerXAnchor.constraint(equalTo: centerXAnchor),
-				view.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: insets.leading),
-				view.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -insets.trailing)
+				view.centerXAnchor.constraint(equalTo: anchorSet.centerXAnchor),
+				view.leadingAnchor.constraint(greaterThanOrEqualTo: anchorSet.leadingAnchor, constant: insets.leading),
+				view.trailingAnchor.constraint(lessThanOrEqualTo: anchorSet.trailingAnchor, constant: -insets.trailing)
 			])
 
 			// - bottom
 			if viewIdx == (views.count-1) {
-				let bottomConstraint = view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
+				let bottomConstraint = view.bottomAnchor.constraint(equalTo: anchorSet.bottomAnchor, constant: -insets.bottom)
 				constraintSet.lastTrailingOrBottomConstraint = bottomConstraint
 				embedConstraints.append(bottomConstraint)
 			}
@@ -141,16 +162,23 @@ public extension UIView {
 		return constraintSet
 	}
 
-	func embed(toFillWith view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
+	@discardableResult func embed(toFillWith view: UIView, insets: NSDirectionalEdgeInsets = .zero, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
 		view.translatesAutoresizingMaskIntoConstraints = false
 
 		addSubview(view)
 
-		NSLayoutConstraint.activate([
-			view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.leading),
-			view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.trailing),
-			view.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
-			view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
-		])
+		var constraints : [NSLayoutConstraint]
+		let anchorSet = enclosingAnchors ?? defaultAnchorSet
+
+		constraints = [
+			view.leadingAnchor.constraint(equalTo: anchorSet.leadingAnchor, constant: insets.leading),
+			view.trailingAnchor.constraint(equalTo: anchorSet.trailingAnchor, constant: -insets.trailing),
+			view.topAnchor.constraint(equalTo: anchorSet.topAnchor, constant: insets.top),
+			view.bottomAnchor.constraint(equalTo: anchorSet.bottomAnchor, constant: -insets.bottom)
+		]
+
+		NSLayoutConstraint.activate(constraints)
+
+		return constraints
 	}
 }

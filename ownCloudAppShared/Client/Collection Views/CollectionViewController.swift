@@ -153,11 +153,13 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	var collectionViewDataSource: UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>! = nil
 
 	public override func loadView() {
+		super.loadView()
+
 		if usesStackViewRoot {
 			createStackView()
-			view = stackView
-		} else {
-			super.loadView()
+			if let stackView = stackView {
+				view.embed(toFillWith: stackView, enclosingAnchors: view.safeAreaAnchorSet)
+			}
 		}
 	}
 
@@ -213,6 +215,20 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			return self?.provideEmptyFallbackCell(for: indexPath, item: collectionItemRef)
 		}
 
+		if supportsHierarchicContent {
+			collectionViewDataSource.sectionSnapshotHandlers.snapshotForExpandingParent = { [weak self] (parentItemRef, sectionSnapshot) in
+				if let (_, sectionIdentifier) = self?.unwrap(parentItemRef) {
+					if let sectionIdentifier = sectionIdentifier,
+					   let collectionView = self?.collectionView,
+					   let section = self?.sectionsByID[sectionIdentifier] {
+						return section.provideHierarchicContent(for: collectionView, parentItemRef: parentItemRef, existingSectionSnapshot: sectionSnapshot)
+					}
+				}
+
+				return sectionSnapshot
+			}
+		}
+
 		// initial data
 		updateSource(animatingDifferences: false)
 	}
@@ -253,15 +269,38 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>()
+		var updatedItems : [CollectionViewController.ItemRef] = []
 
 		for section in sections {
 			if !section.hidden {
 				snapshot.appendSections([section.identifier])
-				section.populate(snapshot: &snapshot)
+				if !supportsHierarchicContent {
+					section.populate(snapshot: &snapshot)
+				}
 			}
 		}
 
-		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences && !supportsHierarchicContent)
+
+		if supportsHierarchicContent {
+			for section in sections {
+				if !section.hidden {
+					let (sectionSnapshot, sectionUpdatedItems) = section.composeSectionSnapshot(from: collectionViewDataSource.snapshot(for: section.identifier))
+
+					collectionViewDataSource.apply(sectionSnapshot, to: section.identifier, animatingDifferences: false)
+
+					if let sectionUpdatedItems = sectionUpdatedItems {
+						updatedItems.append(contentsOf: sectionUpdatedItems)
+					}
+				}
+			}
+
+			if updatedItems.count > 0 {
+				var snapshot = collectionViewDataSource.snapshot()
+				snapshot.reconfigureItems(updatedItems)
+				collectionViewDataSource.apply(snapshot, animatingDifferences: false)
+			}
+		}
 	}
 
 	public func section(at targetIndex: Int) -> CollectionViewSection? {
@@ -374,7 +413,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		if let sectionIdentifier = collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 		   let section = sectionsByID[sectionIdentifier],
-		   let dataSource = section.dataSource {
+		   let dataSource = section.contentDataSource {
 		   	let (itemRef, _) = unwrap(collectionItemRef)
 
 		   	if synchronous {
@@ -409,6 +448,22 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		action(recordsByIndexPath)
+	}
+
+	// MARK: - Expand / Collapse
+	public func expandCollapse(_ collectionViewItemRef: CollectionViewController.ItemRef) {
+		let (_, sectionID) = unwrap(collectionViewItemRef)
+
+		if let sectionID = sectionID {
+			var snap = collectionViewDataSource.snapshot(for: sectionID)
+    			let hasChildren = true // snap2.items.count > 0
+			if snap.isExpanded(collectionViewItemRef) {
+				snap.collapse([collectionViewItemRef])
+			} else {
+			    snap.expand([collectionViewItemRef])
+			}
+			collectionViewDataSource.apply(snap, to: sectionID)
+		}
 	}
 
 	// MARK: - Collection View Delegate
@@ -481,20 +536,28 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if let selectionInteraction = record.item as? DataItemSelectionInteraction {
 			// Try selection first
 			if selectionInteraction.handleSelection?(in: self, with: clientContext, completion: { [weak self] success in
-				self?.collectionView.deselectItem(at: indexPath, animated: true)
+				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection) == true {
+					self?.collectionView.deselectItem(at: indexPath, animated: true)
+				}
 			}) == true {
 				return true
 			}
 
 			// Then try opening
 			if selectionInteraction.openItem?(from: self, with: clientContext, animated: true, pushViewController: true, completion: { [weak self] success in
-				self?.collectionView.deselectItem(at: indexPath, animated: true)
+				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection) == true {
+					self?.collectionView.deselectItem(at: indexPath, animated: true)
+				}
 			}) != nil {
 				return true
 			}
 		}
 
 		return false
+	}
+
+	public func shouldDeselect(record: OCDataItemRecord, at indexPath: IndexPath, afterInteraction: ClientItemInteraction) -> Bool {
+		return true
 	}
 
 	@discardableResult public func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool) -> Bool {

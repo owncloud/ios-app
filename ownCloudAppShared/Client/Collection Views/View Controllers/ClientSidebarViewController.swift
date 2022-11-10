@@ -18,6 +18,6 @@
 
 import UIKit
 
-class ClientSidebarViewController: CollectionSidebarViewController {
+public class ClientSidebarViewController: CollectionSidebarViewController {
 
 }

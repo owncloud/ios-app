@@ -168,13 +168,24 @@ public class CollectionViewSection: NSObject {
 
 	public var identifier: SectionIdentifier
 
+	public var contentDataSource: OCDataSource? {
+		return combinedChildrenDataSource ?? dataSource
+	}
+
 	public var dataSource: OCDataSource? {
 		willSet {
 			dataSourceSubscription?.terminate()
 			dataSourceSubscription = nil
+
+			if let dataSource = dataSource {
+				combinedChildrenDataSource?.removeSources([dataSource])
+			}
 		}
 
 		didSet {
+			if let dataSource = dataSource {
+				combinedChildrenDataSource?.addSources([dataSource])
+			}
 			updateDatasourceSubscription()
 		}
 	}
@@ -269,9 +280,44 @@ public class CollectionViewSection: NSObject {
 
 			if let updatedItems = datasourceSnapshot.updatedItems, updatedItems.count > 0,
 			   let wrappedUpdatedItems = collectionViewController?.wrap(references: Array(updatedItems), forSection: identifier) {
-				snapshot.reloadItems(wrappedUpdatedItems)
+				snapshot.reconfigureItems(wrappedUpdatedItems)
 			}
 		}
+	}
+
+	func composeSectionSnapshot(from existingSnapshot: NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>) -> (NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>, [CollectionViewController.ItemRef]?) {
+		var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>()
+		var wrappedUpdatedItems : [CollectionViewController.ItemRef]?
+
+		if let datasourceSnapshot = dataSourceSubscription?.snapshotResettingChangeTracking(true) {
+			if let collectionViewController = collectionViewController, let highlightItemReference = collectionViewController.highlightItemReference, collectionViewController.didHighlightItemReference == false {
+				if datasourceSnapshot.items.contains(highlightItemReference) {
+					collectionViewController.didHighlightItemReference = true
+
+					OnMainThread(after: 0.1) {
+						collectionViewController.highlight(itemRef: highlightItemReference, animated: true)
+					}
+				}
+			}
+
+			if let wrappedItems = collectionViewController?.wrap(references: datasourceSnapshot.items, forSection: identifier) {
+				sectionSnapshot.append(wrappedItems)
+
+				for wrappedItem in wrappedItems {
+					if existingSnapshot.contains(wrappedItem) {
+						if existingSnapshot.isExpanded(wrappedItem) {
+							sectionSnapshot.expand([wrappedItem])
+						}
+					}
+				}
+			}
+
+			if let updatedItems = datasourceSnapshot.updatedItems, updatedItems.count > 0 {
+				wrappedUpdatedItems = collectionViewController?.wrap(references: Array(updatedItems), forSection: identifier)
+			}
+		}
+
+		return (sectionSnapshot, wrappedUpdatedItems)
 	}
 
 	// MARK: - Cell provider
@@ -281,7 +327,13 @@ public class CollectionViewSection: NSObject {
 		if let collectionViewController = collectionViewController {
 			let (dataItemRef, _) = collectionViewController.unwrap(collectionItemRef)
 
-			if let itemRecord = try? dataSource?.record(forItemRef: dataItemRef) {
+			var itemRecord = try? contentDataSource?.record(forItemRef: dataItemRef)
+
+			// if itemRecord == nil, collectionViewController.supportsHierarchicContent == true {
+			// 	itemRecord = try? combinedChildrenDataSource?.record(forItemRef: dataItemRef)
+			// }
+
+			if let itemRecord = itemRecord {
 				var cellProvider = CollectionViewCellProvider.providerFor(itemRecord)
 
 				if cellProvider == nil {
@@ -290,7 +342,7 @@ public class CollectionViewSection: NSObject {
 
 				let doHighlight = collectionViewController.highlightItemReference == dataItemRef
 
-				if let cellProvider = cellProvider, let dataSource = dataSource {
+				if let cellProvider = cellProvider, let dataSource = contentDataSource {
 					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, highlight: doHighlight, clientContext: clientContext)
 
 					if let cellConfigurationCustomizer = cellConfigurationCustomizer {
@@ -307,6 +359,162 @@ public class CollectionViewSection: NSObject {
 		}
 
 		return cell ?? UICollectionViewCell.emptyFallbackCell
+	}
+
+	// MARK: - Hierarchic content provider and child data source tracking
+	public var combinedChildrenDataSource : OCDataSourceComposition?
+	private var dataSourcesByParentItemRef : [OCDataItemReference : OCDataSource] = [:]
+	private var dataSourceSubscriptionsByParentItemRef : [OCDataItemReference : OCDataSourceSubscription] = [:]
+
+	func provideHierarchicContent(for collectionView: UICollectionView, parentItemRef: CollectionViewController.ItemRef, existingSectionSnapshot: NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>?) -> NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef> {
+
+		if let collectionViewController = collectionViewController, let dataSource = contentDataSource {
+			let (parentDataItemRef, _) = collectionViewController.unwrap(parentItemRef)
+
+			if let itemRecord = try? dataSource.record(forItemRef: parentDataItemRef) {
+				if itemRecord.hasChildren {
+					var childrenDataSource : OCDataSource? = dataSourcesByParentItemRef[parentDataItemRef]
+					var childrenDataSourceSubscription : OCDataSourceSubscription?
+
+					if childrenDataSource == nil {
+						childrenDataSource = itemRecord.item?.dataSourceForChildren?(using: dataSource)
+
+						if let childrenDataSource = childrenDataSource {
+							let subscription = childrenDataSource.subscribe(updateHandler: { [weak self, weak collectionViewController] subscription in
+								// Handle updates
+								if let self = self, let collectionViewController = collectionViewController {
+									// Determine updated items
+									let dataSourceSnapshot = subscription.snapshotResettingChangeTracking(true)
+									let updatedItems = dataSourceSnapshot.updatedItems
+									let removedItems: Set<OCDataItemReference>? = dataSourceSnapshot.removedItems
+
+									// Insert added items without replacing
+									if let addedItems = dataSourceSnapshot.addedItems, addedItems.count > 0 {
+										let allItems = dataSourceSnapshot.items
+										var itemsToAdd = Set(addedItems)
+
+										var sectionSnapshot = collectionViewController.collectionViewDataSource.snapshot(for: self.identifier)
+
+										while itemsToAdd.count > 0 {
+											let lastItemsToAddCount = itemsToAdd.count
+
+											for itemToAdd in addedItems {
+												if itemsToAdd.contains(itemToAdd) {
+													if let idx = allItems.firstIndex(of: itemToAdd) {
+														if let wrappedItemToAdd = collectionViewController.wrap(references: [ itemToAdd ], forSection: self.identifier).first {
+															if idx == 0 {
+																// Item at position 0
+																if allItems.count > 1 {
+																	// Try to insert item before the item that comes after it
+																	if let wrappedItemAfter = collectionViewController.wrap(references: [allItems[1]], forSection: self.identifier).first, sectionSnapshot.contains(wrappedItemAfter) {
+																		sectionSnapshot.insert([ wrappedItemToAdd ], before: wrappedItemAfter)
+																		itemsToAdd.remove(itemToAdd)
+																	}
+																} else {
+																	// Only one item. Append as subitem of parent item.
+																	sectionSnapshot.append([wrappedItemToAdd], to: parentItemRef)
+																	itemsToAdd.remove(itemToAdd)
+																}
+															} else {
+																// Item not at position 0
+																// Try to insert item after the item before it
+																if let wrappedItemBefore = collectionViewController.wrap(references: [allItems[idx-1]], forSection: self.identifier).first,
+																	   sectionSnapshot.contains(wrappedItemBefore) {
+																	sectionSnapshot.insert([ wrappedItemToAdd ], after: wrappedItemBefore)
+																	itemsToAdd.remove(itemToAdd)
+																}
+															}
+														} else {
+															// itemToAdd can't be wrapped
+															Log.error("itemToAdd \(itemToAdd) can't be wrapped. This should never happen.")
+															itemsToAdd.remove(itemToAdd) // avoid infinite loop
+														}
+													} else {
+														// itemToAdd is not part of allItems (?!)
+														Log.error("itemToAdd \(itemToAdd) not part of datasource, not adding. This should never happen.")
+														itemsToAdd.remove(itemToAdd) // avoid infinite loop
+													}
+												}
+											}
+
+											if lastItemsToAddCount == itemsToAdd.count {
+												// Couldn't insert any item, quit loop
+												Log.warning("Could not insert items \(itemsToAdd). Quitting loop without inserting.")
+											}
+										}
+
+										collectionViewController.collectionViewDataSource.apply(sectionSnapshot, to: self.identifier)
+
+										/*
+										// Replace section content if new items were added
+
+										// Compile replacement content
+										let replacementContent = self.provideHierarchicContent(for: collectionView, parentItemRef: parentItemRef, existingSectionSnapshot: nil)
+
+										// Retrieve section snapshot and use replacementContent to replace the item's child items
+										var sectionSnapshot = collectionViewController.collectionViewDataSource.snapshot(for: self.identifier)
+										sectionSnapshot.replace(childrenOf: parentItemRef, using: replacementContent)
+
+										// Apply replacementContent change
+										collectionViewController.collectionViewDataSource.apply(sectionSnapshot, to: self.identifier)
+
+										// removedItems already "applied", if any
+										removedItems = nil
+										*/
+									}
+
+									// Compile data source snapshot to notify collection view of updated items
+									if updatedItems != nil || removedItems != nil {
+										// Get snapshot of complete source
+										var snapshot = collectionViewController.collectionViewDataSource.snapshot()
+
+										// Tell snapshot that updatedItems were reconfigured
+										if let updatedItems = updatedItems {
+											let wrappedUpdatedItems = collectionViewController.wrap(references: Array(updatedItems), forSection: self.identifier)
+											snapshot.reconfigureItems(wrappedUpdatedItems)
+										}
+
+										// Tell snapshot that removedItems were removed
+										if let removedItems = removedItems {
+											let wrappedRemovedItems = collectionViewController.wrap(references: Array(removedItems), forSection: self.identifier)
+											snapshot.deleteItems(wrappedRemovedItems)
+										}
+
+										// Apply changes and animate them
+										collectionViewController.collectionViewDataSource.apply(snapshot, animatingDifferences: true)
+									}
+								}
+							}, on: .main, trackDifferences: true, performIntialUpdate: false)
+
+							childrenDataSourceSubscription = subscription
+
+							dataSourcesByParentItemRef[parentDataItemRef] = childrenDataSource
+							dataSourceSubscriptionsByParentItemRef[parentDataItemRef] = childrenDataSourceSubscription
+							if combinedChildrenDataSource == nil, let rootDataSource = self.dataSource {
+								combinedChildrenDataSource = OCDataSourceComposition(sources: [rootDataSource, childrenDataSource])
+							} else {
+								combinedChildrenDataSource?.addSources([childrenDataSource])
+							}
+						}
+					} else {
+						childrenDataSourceSubscription = dataSourceSubscriptionsByParentItemRef[parentDataItemRef]
+					}
+
+					if let childrenDataSourceSubscription = childrenDataSourceSubscription {
+						let childrenDataSourceSnapshot = childrenDataSourceSubscription.snapshotResettingChangeTracking(true)
+
+						var childSnapshot = NSDiffableDataSourceSectionSnapshot<OCDataItemReference>()
+
+						let wrappedItems = collectionViewController.wrap(references: childrenDataSourceSnapshot.items, forSection: identifier)
+						childSnapshot.append(wrappedItems)
+
+						return childSnapshot
+					}
+				}
+			}
+		}
+
+		return existingSectionSnapshot ?? NSDiffableDataSourceSectionSnapshot()
 	}
 
 	// MARK: - Section layout

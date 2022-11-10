@@ -26,6 +26,7 @@ open class CollectionViewCellStyle: NSObject {
 		case tableCell
 		case gridCell
 		case fillSpace
+		case sideBar
 	}
 
 	public struct StyleOptionKey : Hashable {

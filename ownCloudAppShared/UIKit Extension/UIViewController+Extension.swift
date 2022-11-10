@@ -16,6 +16,8 @@
  *
  */
 
+#warning("Evaluate removal of file")
+
 import UIKit
 
 public protocol ToolAndTabBarToggling : UITabBarController {

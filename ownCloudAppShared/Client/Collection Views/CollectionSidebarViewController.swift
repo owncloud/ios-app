@@ -42,11 +42,30 @@ open class CollectionSidebarViewController: CollectionViewController {
 			sidebarContext = inContext
 		}
 
-		super.init(context: sidebarContext, sections: sections, highlightItemReference: highlightItemReference)
+		super.init(context: sidebarContext, sections: sections, useStackViewRoot: false, hierarchic: true, highlightItemReference: highlightItemReference)
 	}
 
 	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	public override func configureLayout() {
+		collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+		if usesStackViewRoot, let stackView = stackView {
+			stackView.addArrangedSubview(collectionView)
+		} else if let collectionView = collectionView {
+			view.embed(toFillWith: collectionView, enclosingAnchors: view.safeAreaAnchorSet)
+		}
+	}
+
+	public override func shouldDeselect(record: OCDataItemRecord, at indexPath: IndexPath, afterInteraction: ClientItemInteraction) -> Bool {
+		return false
+	}
+
+	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+		view.backgroundColor = collection.tableGroupBackgroundColor
 	}
 }
 

@@ -182,10 +182,32 @@ extension DriveListCell {
 			}
 		}
 
+		let driveSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			var title : String?
+			// var subtitle : String?
+
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+					title = presentable.title
+					// subtitle = presentable.subtitle
+				}
+			})
+
+			var content = cell.defaultContentConfiguration()
+
+			content.text = title
+			content.image = UIImage(systemName: "square.grid.2x2")
+
+			cell.contentConfiguration = content
+		}
+
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
 			switch cellConfiguration?.style.type {
 				case .header:
 					return collectionView.dequeueConfiguredReusableCell(using: driveHeaderCellRegistration, for: indexPath, item: itemRef)
+
+				case .sideBar:
+					return collectionView.dequeueConfiguredReusableCell(using: driveSideBarCellRegistration, for: indexPath, item: itemRef)
 
 				default:
 					return collectionView.dequeueConfiguredReusableCell(using: driveListCellRegistration, for: indexPath, item: itemRef)
