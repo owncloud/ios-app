@@ -594,6 +594,10 @@ extension Action : OCClassSettingsSupport {
 						[
 							OCClassSettingsMetadataKey.description : "Markup as PDF",
 							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.markupAsPDF.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Save to Files",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType(rawValue: "com.apple.DocumentManagerUICore.SaveToFiles").rawValue
 						]
 					]
 				]
