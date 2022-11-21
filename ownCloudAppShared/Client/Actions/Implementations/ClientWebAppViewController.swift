@@ -1,6 +1,6 @@
 //
 //  ClientWebAppViewController.swift
-//  ownCloud
+//  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 19.09.22.
 //  Copyright © 2022 ownCloud GmbH. All rights reserved.
@@ -18,15 +18,14 @@
 
 import UIKit
 import WebKit
-import ownCloudAppShared
 
-class ClientWebAppViewController: UIViewController, WKUIDelegate {
-	var urlRequest: URLRequest
-	var webView: WKWebView?
+open class ClientWebAppViewController: UIViewController, WKUIDelegate {
+	public var urlRequest: URLRequest
+	public var webView: WKWebView?
 
-	var shouldSendCloseEvent: Bool = true
+	public var shouldSendCloseEvent: Bool = true
 
-	init(with urlRequest: URLRequest) {
+	public init(with urlRequest: URLRequest) {
 		self.urlRequest = urlRequest
 
 		super.init(nibName: nil, bundle: nil)
@@ -34,11 +33,11 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		self.isModalInPresentation = true
 	}
 
-	required init?(coder: NSCoder) {
+	public required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	var webViewConfiguration: WKWebViewConfiguration {
+	public var webViewConfiguration: WKWebViewConfiguration {
 		let configuration = WKWebViewConfiguration()
 		let webSiteDataStore = WKWebsiteDataStore.nonPersistent()
 
@@ -48,7 +47,7 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		return configuration
 	}
 
-	override func loadView() {
+	override public func loadView() {
 		let rootView = UIView()
 
 		webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
@@ -67,7 +66,7 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		view = rootView
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, image: UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate), primaryAction: UIAction(handler: { [weak self] _ in
@@ -93,12 +92,12 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		}))
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		webView?.load(urlRequest)
 	}
 
-	override func viewDidDisappear(_ animated: Bool) {
+	override public func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 
 		// Drop web view
@@ -108,7 +107,7 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 	}
 
 	private var isDismissed = false
-	func dismissOnce(_ completion: (() -> Void)? = nil) {
+	public func dismissOnce(_ completion: (() -> Void)? = nil) {
 		if !isDismissed {
 			isDismissed = true
 			self.dismiss(animated: true, completion: completion)
@@ -127,12 +126,12 @@ class ClientWebAppViewController: UIViewController, WKUIDelegate {
 	}
 
 	// window.close() handling
-	func closeWebWindow() {
+	public func closeWebWindow() {
 		webView?.evaluateJavaScript("window.close();")
 	}
 
 	// UI delegate
-	func webViewDidClose(_ webView: WKWebView) {
+	public func webViewDidClose(_ webView: WKWebView) {
 		dismissOnce({ [weak self] in
 			self?.disposeWebViewOnce()
 		})

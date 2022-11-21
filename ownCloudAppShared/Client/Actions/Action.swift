@@ -1,6 +1,6 @@
 //
 //  Action.swift
-//  ownCloud
+//  ownCloudAppShared
 //
 //  Created by Pablo Carrascal on 30/10/2018.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.

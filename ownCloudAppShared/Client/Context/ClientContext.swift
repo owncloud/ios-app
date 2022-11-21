@@ -83,8 +83,20 @@ public class ClientContext: NSObject {
 
 	public weak var parent: ClientContext?
 
+	// MARK: - Account Connection
+	public weak var accountConnection: AccountConnection?
+
 	// MARK: - Core
-	public weak var core: OCCore?
+	private weak var _core: OCCore?
+	public weak var core: OCCore? {
+		get {
+			return _core ?? parent?.core ?? accountConnection?.core
+		}
+
+		set {
+			_core = newValue
+		}
+	}
 
 	// MARK: - Drive
 	public var drive: OCDrive?
@@ -136,11 +148,12 @@ public class ClientContext: NSObject {
 	public typealias PostInitializationModifier = (_ owner: Any?, _ context: ClientContext) -> Void
 	public var postInitializationModifier: PostInitializationModifier?
 
-	public init(with inParent: ClientContext? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
+	public init(with inParent: ClientContext? = nil, accountConnection inAccountConnection: AccountConnection? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
 		super.init()
 
 		parent = inParent
 
+		accountConnection = inAccountConnection ?? inParent?.accountConnection
 		core = inCore ?? inParent?.core
 
 		drive = inDrive ?? inParent?.drive
@@ -270,7 +283,7 @@ extension ClientContext {
 		if let viewControllerPusher = viewControllerPusher {
 			viewController = viewControllerPusher.pushViewController(context: context, provider: provider, push: push, animated: animated)
 		} else if let navigationController = navigationController {
-			viewController = provider(self)
+			viewController = provider(context ?? self)
 
 			if push, let viewController = viewController {
 				navigationController.pushViewController(viewController, animated: animated)

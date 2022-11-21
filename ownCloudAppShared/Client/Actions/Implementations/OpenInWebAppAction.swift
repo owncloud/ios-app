@@ -1,6 +1,6 @@
 //
 //  OpenInWebAppAction.swift
-//  ownCloud
+//  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 06.09.22.
 //  Copyright © 2022 ownCloud GmbH. All rights reserved.
@@ -18,21 +18,20 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
 public extension OCClassSettingsKey {
 	static let openInWebAppMode = OCClassSettingsKey("open-in-web-app-mode")
 }
 
-enum OpenInWebAppActionMode: String {
+public enum OpenInWebAppActionMode: String {
 	case defaultBrowser = "default-browser"
 	case inApp = "in-app"
 	case inAppWithDefaultBrowserOption = "in-app-with-default-browser-option"
 }
 
-class OpenInWebAppAction: Action {
+public class OpenInWebAppAction: Action {
 	private static var _classSettingsRegistered: Bool = false
-	override class var actionExtension: ActionExtension {
+	override public class var actionExtension: ActionExtension {
 		if !_classSettingsRegistered {
 			_classSettingsRegistered = true
 
@@ -66,9 +65,9 @@ class OpenInWebAppAction: Action {
 		return super.actionExtension
 	}
 
-	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openinwebapp") }
-	override class var category : ActionCategory? { return .normal }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .contextMenuItem] }
+	override public class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openinwebapp") }
+	override public class var category : ActionCategory? { return .normal }
+	override public class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .contextMenuItem] }
 
 	class open func createActionExtension(for app: OCAppProviderApp, core: OCCore) -> ActionExtension {
 		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
@@ -132,10 +131,10 @@ class OpenInWebAppAction: Action {
 		return .nearFirst
 	}
 
-	var app : OCAppProviderApp?
+	public var app : OCAppProviderApp?
 
 	// MARK: - Action implementation
-	override func run() {
+	override public func run() {
 		var openMode : OpenInWebAppActionMode = .inApp
 
 		if let openInWebAppMode = classSetting(forOCClassSettingsKey: .openInWebAppMode) as? String, let configuredOpenMode = OpenInWebAppActionMode(rawValue: openInWebAppMode) {
@@ -211,10 +210,13 @@ class OpenInWebAppAction: Action {
 		}
 
 		// Open in external browser
-		core.connection.open(inWeb: item, with: app) { (error, url) in
+		core.connection.open(inWeb: item, with: app) { (inError, url) in
+			var error = inError
+
 			if let url = url {
-				OnMainThread {
-					UIApplication.shared.open(url)
+				if !OCAuthenticationBrowserSessionCustomScheme.open(url) {  // calls UIApplication.shared.open where available. That API can't be called directly from extension-ready frameworks
+					// openURL not available -> return an error
+					error = NSError(ocError: .internal)
 				}
 			}
 
@@ -222,7 +224,7 @@ class OpenInWebAppAction: Action {
 		}
 	}
 
-	override var position: ActionPosition {
+	override public var position: ActionPosition {
 		if let app = app {
 			return type(of: self).applicablePosition(forContext: context, app: app)
 		}
@@ -230,7 +232,7 @@ class OpenInWebAppAction: Action {
 		return .none
 	}
 
-	override var icon: UIImage? {
+	override public var icon: UIImage? {
 		if let remoteIcon = (app?.iconResourceRequest?.resource as? OCResourceImage)?.image?.image {
 			return remoteIcon
 		}
@@ -238,7 +240,7 @@ class OpenInWebAppAction: Action {
 		return super.icon
 	}
 
-	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+	override public class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		return UIImage(systemName: "globe")?.withRenderingMode(.alwaysTemplate)
 	}
 }

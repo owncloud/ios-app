@@ -21,6 +21,9 @@ import ownCloudSDK
 
 // MARK: - Selection
 @objc public protocol DataItemSelectionInteraction: OCDataItem {
+	// Allow selection
+	@objc optional func allowSelection(in viewController: UIViewController?, with context: ClientContext?) -> Bool
+
 	// Handle selection: suitable for f.ex. actions
 	@objc optional func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((_ success: Bool) -> Void)?) -> Bool
 

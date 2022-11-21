@@ -23,11 +23,11 @@ open class CollectionSidebarViewController: CollectionViewController {
 	open var originalContext: ClientContext
 	open var sidebarContext: ClientContext
 
-	public typealias ViewControllerNavigationPusher = (_ viewController: UIViewController, _ animated: Bool) -> Void
+	public typealias ViewControllerNavigationPusher = (_ sideBarViewController: CollectionSidebarViewController, _ viewController: UIViewController, _ animated: Bool) -> Void
 
 	open var navigationPusher: ViewControllerNavigationPusher?
 
-	public init(context inContext: ClientContext, sections: [CollectionViewSection], navigationPusher: ViewControllerNavigationPusher? = nil, highlightItemReference: OCDataItemReference? = nil) {
+	public init(context inContext: ClientContext, sections: [CollectionViewSection]?, navigationPusher: ViewControllerNavigationPusher? = nil, highlightItemReference: OCDataItemReference? = nil) {
 		originalContext = inContext
 
 		if let navigationPusher = navigationPusher {
@@ -59,7 +59,7 @@ open class CollectionSidebarViewController: CollectionViewController {
 		}
 	}
 
-	public override func shouldDeselect(record: OCDataItemRecord, at indexPath: IndexPath, afterInteraction: ClientItemInteraction) -> Bool {
+	public override func shouldDeselect(record: OCDataItemRecord, at indexPath: IndexPath, afterInteraction: ClientItemInteraction, clientContext: ClientContext) -> Bool {
 		return false
 	}
 
@@ -91,7 +91,7 @@ extension CollectionSidebarViewController: ViewControllerPusher {
 				// Push view controller
 				if let navigationPusher = navigationPusher {
 					// Use pusher
-					navigationPusher(viewController, animated)
+					navigationPusher(self, viewController, animated)
 				} else {
 					// Use navigation controller
 					if let navigationController = effectiveContext.navigationController {

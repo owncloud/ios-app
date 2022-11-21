@@ -26,6 +26,7 @@ public extension CollectionViewCellProvider {
 		ItemListCell.registerCellProvider()
 		ExpandableResourceCell.registerCellProvider()
 		ActionCell.registerCellProvider()
+		AccountControllerCell.registerCellProvider()
 		SavedSearchCell.registerCellProvider()
 		ViewCell.registerCellProvider()
 
@@ -102,8 +103,50 @@ public extension CollectionViewCellProvider {
 			cell.accessories = hasDisclosureIndicator ? [ .disclosureIndicator() ] : [ ]
 		}
 
+		let presentableSidebarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			var title: String?
+			var image: UIImage?
+			var hasChildren: Bool = false
+
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+					title = presentable.title
+					image = presentable.image
+					if let source = cellConfiguration.source {
+						hasChildren = presentable.hasChildren(using: source)
+					}
+				}
+			})
+
+			var content = cell.defaultContentConfiguration()
+
+			content.text = title
+			if let image = image {
+				content.image = image
+			}
+
+			cell.contentConfiguration = content
+
+			if hasChildren {
+				let headerDisclosureOption = UICellAccessory.OutlineDisclosureOptions(style: .header)
+				// let hostViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+
+				cell.accessories = [.outlineDisclosure(options: headerDisclosureOption)] /* , actionHandler: { [weak hostViewController] in
+					hostViewController?.expandCollapse(collectionItemRef)
+				})]*/
+			} else {
+				cell.accessories = []
+			}
+		}
+
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .presentable, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-			return collectionView.dequeueConfiguredReusableCell(using: presentableCellRegistration, for: indexPath, item: itemRef)
+			switch cellConfiguration?.style.type {
+				case .sideBar:
+					return collectionView.dequeueConfiguredReusableCell(using: presentableSidebarCellRegistration, for: indexPath, item: itemRef)
+
+				default:
+					return collectionView.dequeueConfiguredReusableCell(using: presentableCellRegistration, for: indexPath, item: itemRef)
+			}
 		}))
 
 		// This registration performs conversion to .presentable where necessary, so it can also be used for other types OCDataItemTypes. Example:

@@ -51,8 +51,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
 			}
-			window?.rootViewController = navigationController
-			window?.addSubview((navigationController!.view)!)
+			// navigationController = ThemeNavigationController()
+			let appRootViewController = AppRootViewController(with: ClientContext())
+			// navigationController?.viewControllers = [ appRootViewController ]
+
+			// ThemeNavigationController(rootViewController: AppRootViewController(with: ClientContext( )))
+			// window?.rootViewController = navigationController
+			// window?.addSubview((navigationController!.view)!)
+
+			window?.rootViewController = appRootViewController
+			window?.addSubview(appRootViewController.view)
 			window?.makeKeyAndVisible()
 		}
 

@@ -19,11 +19,11 @@
 import UIKit
 import ownCloudSDK
 
-class MessageGroup: NSObject {
-	var identifier : OCMessageCategoryIdentifier?
+public class MessageGroup: NSObject {
+	public var identifier : OCMessageCategoryIdentifier?
 
 	private var _groupTitle : String?
-	var groupTitle : String? {
+	public var groupTitle : String? {
 		get {
 			// Derive group title
 			if let identifier = identifier, let issueTemplate = OCMessageTemplate(forIdentifier: OCMessageTemplateIdentifier(rawValue: identifier.rawValue)) {
@@ -37,9 +37,9 @@ class MessageGroup: NSObject {
 		}
 	}
 
-	var messages : [OCMessage] = []
+	public var messages : [OCMessage] = []
 
-	init(with message: OCMessage) {
+	public init(with message: OCMessage) {
 		identifier = message.categoryIdentifier
 		messages = [message]
 	}

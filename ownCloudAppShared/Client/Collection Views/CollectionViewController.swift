@@ -163,7 +163,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 		configureViews()
 		configureDataSource()
@@ -171,7 +171,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	public func createCollectionViewLayout() -> UICollectionViewLayout {
+	open func createCollectionViewLayout() -> UICollectionViewLayout {
 		let configuration = UICollectionViewCompositionalLayoutConfiguration()
 
 		configuration.interSectionSpacing = 0
@@ -193,7 +193,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}, configuration: configuration)
 	}
 
-	public func createCollectionView() {
+	open func createCollectionView() {
 		if collectionView == nil {
 			collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCollectionViewLayout())
 			collectionView.contentInsetAdjustmentBehavior = .never
@@ -205,7 +205,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	// MARK: - Collection View Datasource
-	public func configureDataSource() {
+	open func configureDataSource() {
 		collectionViewDataSource = UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>(collectionView: collectionView) { [weak self] (collectionView: UICollectionView, indexPath: IndexPath, collectionItemRef: CollectionViewController.ItemRef) -> UICollectionViewCell? in
 			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 			   let section = self?.sectionsByID[sectionIdentifier] {
@@ -216,6 +216,24 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		if supportsHierarchicContent {
+			collectionViewDataSource.sectionSnapshotHandlers.willExpandItem = { [weak self] (parentItemRef) in
+				if let (_, sectionIdentifier) = self?.unwrap(parentItemRef) {
+					if let sectionIdentifier = sectionIdentifier,
+					   let section = self?.sectionsByID[sectionIdentifier] {
+						section.expandedItemRefs.append(parentItemRef)
+					}
+				}
+			}
+			collectionViewDataSource.sectionSnapshotHandlers.willCollapseItem = { [weak self] (parentItemRef) in
+				if let (_, sectionIdentifier) = self?.unwrap(parentItemRef) {
+					if let sectionIdentifier = sectionIdentifier,
+					   let section = self?.sectionsByID[sectionIdentifier] {
+					   	if let idx = section.expandedItemRefs.firstIndex(of: parentItemRef) {
+							section.expandedItemRefs.remove(at: idx)
+						}
+					}
+				}
+			}
 			collectionViewDataSource.sectionSnapshotHandlers.snapshotForExpandingParent = { [weak self] (parentItemRef, sectionSnapshot) in
 				if let (_, sectionIdentifier) = self?.unwrap(parentItemRef) {
 					if let sectionIdentifier = sectionIdentifier,
@@ -233,35 +251,87 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		updateSource(animatingDifferences: false)
 	}
 
-	var sections : [CollectionViewSection] = []
-	var sectionsByID : [CollectionViewSection.SectionIdentifier : CollectionViewSection] = [:]
-
 	// MARK: - Sections
-	public func add(sections sectionsToAdd: [CollectionViewSection]) {
-		for section in sectionsToAdd {
-			section.collectionViewController = self
+	var sections: [CollectionViewSection] = []
+	var sectionsByID: [CollectionViewSection.SectionIdentifier : CollectionViewSection] = [:]
 
+	private func associate(section: CollectionViewSection) {
+		section.collectionViewController = self
+		sectionsByID[section.identifier] = section
+	}
+
+	private func disassociate(section: CollectionViewSection) {
+		section.collectionViewController = nil
+		sectionsByID[section.identifier] = nil
+	}
+
+	open func add(sections sectionsToAdd: [CollectionViewSection]) {
+		for section in sectionsToAdd {
+			associate(section: section)
 			sections.append(section)
-			sectionsByID[section.identifier] = section
 		}
 
 		updateSource()
 	}
 
-	public func remove(sections sectionsToRemove: [CollectionViewSection]) {
+	open func remove(sections sectionsToRemove: [CollectionViewSection]) {
 		for section in sectionsToRemove {
-			section.collectionViewController = nil
+			disassociate(section: section)
 
 			if let sectionIdx = sections.firstIndex(of: section) {
 				sections.remove(at: sectionIdx)
-				sectionsByID[section.identifier] = nil
 			}
 		}
 
 		updateSource()
 	}
 
-	public var animateDifferences : Bool = true
+	// MARK: - Sections Datasource
+	private var _sectionsSubscription: OCDataSourceSubscription?
+	open var sectionsDataSource: OCDataSource? {
+		willSet {
+			_sectionsSubscription?.terminate()
+			_sectionsSubscription = nil
+		}
+
+		didSet {
+			_sectionsSubscription = sectionsDataSource?.subscribe(updateHandler: { [weak self] (subscription) in
+				self?.updateSections(from: subscription.snapshotResettingChangeTracking(true))
+			}, on: .main, trackDifferences: true, performIntialUpdate: true)
+		}
+	}
+
+	private func updateSections(from snapshot: OCDataSourceSnapshot) {
+		var newSections: [CollectionViewSection] = []
+
+		if let addedItems = snapshot.addedItems {
+			for itemRef in addedItems {
+				if let itemRecord = try? sectionsDataSource?.record(forItemRef: itemRef), let section = itemRecord.item as? CollectionViewSection {
+					associate(section: section)
+				}
+			}
+		}
+
+		if let removedItems = snapshot.removedItems {
+			for itemRef in removedItems {
+				if let itemRecord = try? sectionsDataSource?.record(forItemRef: itemRef), let section = itemRecord.item as? CollectionViewSection {
+					disassociate(section: section)
+				}
+			}
+		}
+
+		for itemRef in snapshot.items {
+			if let itemRecord = try? sectionsDataSource?.record(forItemRef: itemRef), let section = itemRecord.item as? CollectionViewSection {
+				newSections.append(section)
+			}
+		}
+
+		sections = newSections
+
+		updateSource()
+	}
+
+	open var animateDifferences : Bool = true
 
 	func updateSource(animatingDifferences: Bool = true) {
 		guard let collectionViewDataSource = collectionViewDataSource else {
@@ -269,6 +339,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>()
+		var snapshotsBySection = [CollectionViewSection.SectionIdentifier : NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>]()
 		var updatedItems : [CollectionViewController.ItemRef] = []
 
 		for section in sections {
@@ -276,6 +347,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				snapshot.appendSections([section.identifier])
 				if !supportsHierarchicContent {
 					section.populate(snapshot: &snapshot)
+				} else {
+					snapshotsBySection[section.identifier] = collectionViewDataSource.snapshot(for: section.identifier)
 				}
 			}
 		}
@@ -285,7 +358,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if supportsHierarchicContent {
 			for section in sections {
 				if !section.hidden {
-					let (sectionSnapshot, sectionUpdatedItems) = section.composeSectionSnapshot(from: collectionViewDataSource.snapshot(for: section.identifier))
+					let (sectionSnapshot, sectionUpdatedItems) = section.composeSectionSnapshot(from: snapshotsBySection[section.identifier])
 
 					collectionViewDataSource.apply(sectionSnapshot, to: section.identifier, animatingDifferences: false)
 
@@ -303,7 +376,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
-	public func section(at targetIndex: Int) -> CollectionViewSection? {
+	open func section(at targetIndex: Int) -> CollectionViewSection? {
 		if (targetIndex >= 0) && (targetIndex < sections.count) {
 			var index : Int = 0
 
@@ -321,7 +394,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		return nil
 	}
 
-	public func index(of findSection: CollectionViewSection) -> Int? {
+	open func index(of findSection: CollectionViewSection) -> Int? {
 		var index : Int = 0
 
 		for section in sections {
@@ -405,7 +478,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		return (collectionItemRef, nil)
 	}
 
-	public func retrieveItem(at indexPath: IndexPath, synchronous: Bool = false, action: @escaping ((_ record: OCDataItemRecord, _ indexPath: IndexPath) -> Void), handleError: ((_ error: Error?) -> Void)? = nil) {
+	public func retrieveItem(at indexPath: IndexPath, synchronous: Bool = false, action: @escaping ((_ record: OCDataItemRecord, _ indexPath: IndexPath, _ section: CollectionViewSection) -> Void), handleError: ((_ error: Error?) -> Void)? = nil) {
 		guard let collectionItemRef = collectionViewDataSource.itemIdentifier(for: indexPath) else {
 			handleError?(nil)
 			return
@@ -419,7 +492,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		   	if synchronous {
 		   		do {
 					let record = try dataSource.record(forItemRef: itemRef)
-					action(record, indexPath)
+					action(record, indexPath, section)
 				} catch {
 					handleError?(error)
 				}
@@ -430,7 +503,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 						return
 					}
 
-					action(record, indexPath)
+					action(record, indexPath, section)
 				})
 			}
 		} else {
@@ -442,7 +515,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		var recordsByIndexPath : [IndexPath : OCDataItemRecord] = [:]
 
 		for indexPath in indexPaths {
-			retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath in
+			retrieveItem(at: indexPath, synchronous: true, action: { record, indexPath, _ in
 				recordsByIndexPath[indexPath] = record
 			}, handleError: handleError)
 		}
@@ -456,7 +529,6 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		if let sectionID = sectionID {
 			var snap = collectionViewDataSource.snapshot(for: sectionID)
-    			let hasChildren = true // snap2.items.count > 0
 			if snap.isExpanded(collectionViewItemRef) {
 				snap.collapse([collectionViewItemRef])
 			} else {
@@ -471,10 +543,15 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		var shouldSelect : Bool = false
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
 
-		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
+		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath, section in
 			// Return early if .contextMenu is not allowed
-			if self?.clientContext?.validate(interaction: interaction, for: record) != false {
+			let clientContext = section.clientContext ?? self?.clientContext
+
+			if clientContext?.validate(interaction: interaction, for: record) != false {
 				shouldSelect = true
+				if let clientContext, let self {
+					shouldSelect = self.allowSelection(of: record, at: indexPath, clientContext: clientContext)
+				}
 			}
 		})
 
@@ -484,13 +561,15 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
 
-		retrieveItem(at: indexPath, action: { [weak self] record, indexPath in
+		retrieveItem(at: indexPath, action: { [weak self] record, indexPath, section in
 			// Return early if .selection is not allowed
-			if self?.clientContext?.validate(interaction: interaction, for: record) != false {
+			let clientContext = section.clientContext ?? self?.clientContext
+
+			if clientContext?.validate(interaction: interaction, for: record) != false, let clientContext {
 				if interaction == .multiselection {
-					self?.handleMultiSelection(of: record, at: indexPath, isSelected: true)
+					self?.handleMultiSelection(of: record, at: indexPath, isSelected: true, clientContext: clientContext)
 				} else {
-					self?.handleSelection(of: record, at: indexPath)
+					self?.handleSelection(of: record, at: indexPath, clientContext: clientContext)
 				}
 			}
 		}, handleError: { error in
@@ -507,10 +586,12 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			return
 		}
 
-		retrieveItem(at: indexPath, action: { [weak self] record, indexPath in
+		retrieveItem(at: indexPath, action: { [weak self] record, indexPath, section in
 			// Return early if .selection is not allowed
-			if self?.clientContext?.validate(interaction: interaction, for: record) != false {
-				self?.handleMultiSelection(of: record, at: indexPath, isSelected: false)
+			let clientContext = section.clientContext ?? self?.clientContext
+
+			if clientContext?.validate(interaction: interaction, for: record) != false, let clientContext {
+				self?.handleMultiSelection(of: record, at: indexPath, isSelected: false, clientContext: clientContext)
 			}
 		})
 	}
@@ -518,10 +599,12 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
 		var contextMenuConfiguration : UIContextMenuConfiguration?
 
-		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
+		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath, section in
 			// Return early if .contextMenu is not allowed
-			if self?.clientContext?.validate(interaction: .contextMenu, for: record) != false {
-				contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point)
+			let clientContext = section.clientContext ?? self?.clientContext
+
+			if clientContext?.validate(interaction: .contextMenu, for: record) != false, let clientContext {
+				contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point, clientContext: clientContext)
 			}
 		}, handleError: { error in
 			collectionView.deselectItem(at: indexPath, animated: true)
@@ -531,12 +614,22 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	// MARK: - Cell action subclassing points
-	@discardableResult public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath) -> Bool {
+	@discardableResult public func allowSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
+		if let selectionInteraction = record.item as? DataItemSelectionInteraction {
+			if selectionInteraction.allowSelection?(in: self, with: clientContext) == false {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	@discardableResult public func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
 		// Use item's DataItemSelectionInteraction
 		if let selectionInteraction = record.item as? DataItemSelectionInteraction {
 			// Try selection first
 			if selectionInteraction.handleSelection?(in: self, with: clientContext, completion: { [weak self] success in
-				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection) == true {
+				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection, clientContext: clientContext) == true {
 					self?.collectionView.deselectItem(at: indexPath, animated: true)
 				}
 			}) == true {
@@ -545,7 +638,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 			// Then try opening
 			if selectionInteraction.openItem?(from: self, with: clientContext, animated: true, pushViewController: true, completion: { [weak self] success in
-				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection) == true {
+				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection, clientContext: clientContext) == true {
 					self?.collectionView.deselectItem(at: indexPath, animated: true)
 				}
 			}) != nil {
@@ -556,17 +649,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		return false
 	}
 
-	public func shouldDeselect(record: OCDataItemRecord, at indexPath: IndexPath, afterInteraction: ClientItemInteraction) -> Bool {
+	public func shouldDeselect(record: OCDataItemRecord, at indexPath: IndexPath, afterInteraction: ClientItemInteraction, clientContext: ClientContext) -> Bool {
 		return true
 	}
 
-	@discardableResult public func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool) -> Bool {
+	@discardableResult public func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool, clientContext: ClientContext) -> Bool {
 		return false
 	}
 
-	@discardableResult public func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+	@discardableResult public func provideContextMenuConfiguration(for record: OCDataItemRecord, at indexPath: IndexPath, point: CGPoint, clientContext: ClientContext) -> UIContextMenuConfiguration? {
 		// Use context.contextMenuProvider
-		if let item = record.item, let clientContext = clientContext, let contextMenuProvider = clientContext.contextMenuProvider {
+		if let item = record.item, let contextMenuProvider = clientContext.contextMenuProvider {
 			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [weak self] _ in
 				guard let self = self else {
 					return nil
@@ -652,8 +745,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		if let destinationIndexPath = indexPath {
 			// Retrieve item at index path if provided
-			retrieveItem(at: destinationIndexPath, synchronous: true, action: { record, indexPath in
-				if self.clientContext?.validate(interaction: interaction, for: record) != false {
+			retrieveItem(at: destinationIndexPath, synchronous: true, action: { record, indexPath, section in
+				let clientContext = section.clientContext ?? self.clientContext
+
+				if clientContext?.validate(interaction: interaction, for: record) != false {
 					item = record.item
 				}
 			}, handleError: { error in

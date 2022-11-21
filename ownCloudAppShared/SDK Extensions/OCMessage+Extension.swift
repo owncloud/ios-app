@@ -18,9 +18,9 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
+import ownCloudApp
 
-extension OCMessage {
+public extension OCMessage {
 	func showInApp() {
 		NotificationCenter.default.post(name: .NotificationMessagePresenterShowMessage, object: self)
 	}

@@ -16,16 +16,18 @@
  *
  */
 
+#warning("Evaluate removal of file")
+
 import UIKit
 import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-protocol ClientRootViewControllerAuthenticationDelegate : AnyObject {
+protocol AccountAuthenticationErrorHandlingDelegate : AnyObject {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTabBarToggling, UINavigationControllerDelegate {
+class ClientRootViewController: UIViewController, BookmarkContainer, UINavigationControllerDelegate {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -49,7 +51,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 	var notificationPresenter : NotificationMessagePresenter?
 	var cardMessagePresenter : CardIssueMessagePresenter?
 
-	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
+	weak var authDelegate : AccountAuthenticationErrorHandlingDelegate?
 
 	var skipAuthorizationFailure : Bool = false
 
@@ -106,7 +108,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			}
 		}
 
-		self.delegate = self
+		tabsController.delegate = self
 	}
 
 	public var allowProgressBarAutoCollapse : Bool = false {
@@ -196,6 +198,96 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		windDown()
 	}
 
+	// MARK: - Logo header view
+	func buildNavigationLogoView() -> ThemeView {
+		let logoImage = UIImage(named: "branding-login-logo")
+		let logoImageView = UIImageView(image: logoImage)
+		logoImageView.contentMode = .scaleAspectFit
+		logoImageView.translatesAutoresizingMaskIntoConstraints = false
+		if let logoImage = logoImage {
+			// Keep aspect ratio + scale logo to 90% of available height
+			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
+		}
+
+		let logoLabel = UILabel()
+		logoLabel.translatesAutoresizingMaskIntoConstraints = false
+		logoLabel.text = VendorServices.shared.appName
+		logoLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+		logoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+		logoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+
+		let logoContainer = UIView()
+		logoContainer.translatesAutoresizingMaskIntoConstraints = false
+		logoContainer.addSubview(logoImageView)
+		logoContainer.addSubview(logoLabel)
+		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
+		logoContainer.setContentHuggingPriority(.required, for: .vertical)
+
+		let logoWrapperView = ThemeView()
+		logoWrapperView.addSubview(logoContainer)
+
+		NSLayoutConstraint.activate([
+			logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+			logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+			logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+			logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+			logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+			logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+
+			logoImageView.leadingAnchor.constraint(equalTo: logoContainer.leadingAnchor),
+			logoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: logoImageView.trailingAnchor, multiplier: 1),
+			logoLabel.trailingAnchor.constraint(equalTo: logoContainer.trailingAnchor),
+
+			logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
+			logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
+			logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
+		])
+
+		logoWrapperView.addThemeApplier({ (_, collection, _) in
+			logoLabel.applyThemeCollection(collection, itemStyle: .logo)
+			if !VendorServices.shared.isBranded {
+				logoImageView.image = logoImageView.image?.tinted(with: collection.navigationBarColors.labelColor)
+			}
+		})
+
+		return logoWrapperView
+	}
+
+	// MARK: - Content View Controller handling
+	private var contentViewControllerConstraints : [NSLayoutConstraint]? {
+		willSet {
+			if let contentViewControllerConstraints = contentViewControllerConstraints {
+				NSLayoutConstraint.deactivate(contentViewControllerConstraints)
+			}
+		}
+		didSet {
+			if let contentViewControllerConstraints = contentViewControllerConstraints {
+				NSLayoutConstraint.activate(contentViewControllerConstraints)
+			}
+		}
+	}
+	var contentViewController: UIViewController? {
+		willSet {
+			contentViewController?.willMove(toParent: nil)
+			contentViewController?.view.removeFromSuperview()
+			contentViewController?.removeFromParent()
+
+			contentViewControllerConstraints = nil
+		}
+		didSet {
+			if let contentViewController = contentViewController, let contentViewControllerView = contentViewController.view {
+				addChild(contentViewController)
+				view.addSubview(contentViewControllerView)
+				contentViewControllerView.translatesAutoresizingMaskIntoConstraints = false
+				contentViewControllerConstraints = view.embed(toFillWith: contentViewController.view, enclosingAnchors: view.defaultAnchorSet)
+				contentViewController.didMove(toParent: self)
+			}
+		}
+	}
+
+	// MARK: - Tab View Controller
+	var tabsController: ClientTabBarController = ClientTabBarController()
+
 	// MARK: - Startup
 	func afterCoreStart(_ lastVisibleItemId: String?, busyHandler: OCCoreBusyStatusHandler? = nil, completionHandler: @escaping ((_ error: Error?) -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
@@ -283,7 +375,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 		self.navigationController?.setNavigationBarHidden(true, animated: true)
 
-		self.tabBar.isTranslucent = false
+		tabsController.tabBar.isTranslucent = false
 
 		// Add tab bar icons
 		Theme.shared.add(tvgResourceFor: "folder")
@@ -313,28 +405,14 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 		progressBar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-		progressBarBottomConstraint = progressBar?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -1 * self.tabBar.bounds.height)
+		progressBarBottomConstraint = progressBar?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -1 * tabsController.tabBar.bounds.height)
 		progressBarBottomConstraint?.isActive = true
-
-		toolbar = UIToolbar(frame: .zero)
-		toolbar?.translatesAutoresizingMaskIntoConstraints = false
-		toolbar?.insetsLayoutMarginsFromSafeArea = true
-		toolbar?.isTranslucent = false
-
-		self.view.addSubview(toolbar!)
-
-		toolbar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-		toolbar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-		toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
-		toolbar?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-
-		toolbar?.isHidden = true
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let filesNavigationController = filesNavigationController,
 		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
-			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
+			tabsController.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
 		}
 	}
 
@@ -375,7 +453,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		if hideProgressBar {
 			self.progressBarBottomConstraint?.constant = 0
 		} else {
-			self.progressBarBottomConstraint?.constant = -1 * self.tabBar.bounds.height
+			self.progressBarBottomConstraint?.constant = -1 * tabsController.tabBar.bounds.height
 		}
 
 		if animate {
@@ -387,9 +465,28 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	var rootContext : ClientContext?
 
+	func buildFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?) -> (OCDataSource, OCDataItemPresentable) {
+		let folderItem = OCDataItemPresentable(reference: "_folder_\(UUID().uuidString)" as NSString, originalDataItemType: .presentable, version: "1" as NSString)
+		folderItem.title = title
+		folderItem.image = icon
+
+		folderItem.hasChildrenProvider = { (dataSource, item) in
+			return true
+		}
+
+		folderItem.childrenDataSourceProvider = { (parentItemDataSource, parentItem) in
+			return contentsDataSource
+		}
+
+		let titleSource = OCDataSourceArray()
+		titleSource.setVersionedItems([ folderItem ])
+
+		return (titleSource, folderItem)
+	}
+
 	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
-			if let core = self.core {
+			if let core = self.core, self.view != nil {
 				self.rootContext = ClientContext(core: core, rootViewController: self, progressSummarizer: self.progressSummarizer, modifier: { context in
 					context.inlineMessageCenter = self
 					context.moreItemHandler = self
@@ -403,20 +500,74 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 				   !core.useDrives { // Do not restore for spaces for now (different view hierarchy)
 					self.createFileListStack(for: localItemId)
 				} else {
-					let topLevelViewController : UIViewController?
+					var topLevelViewController : UIViewController?
+
+					let navigationContext = ClientContext(with: self.rootContext, navigationController: self.filesNavigationController)
 
 					if core.useDrives {
-						topLevelViewController = CollectionViewController(context: ClientContext(with: self.rootContext, navigationController: self.filesNavigationController), sections: [
-							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellLayout: .list(appearance: .insetGrouped)),
-							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource, cellLayout: .list(appearance: .insetGrouped))
+						let splitViewController = UISplitViewController(style: .doubleColumn)
+						splitViewController.displayModeButtonVisibility = .always
+
+						let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: UIImage(systemName: "square.grid.2x2"))
+
+						let combinedDS = OCDataSourceComposition(sources: [
+							core.hierarchicDrivesDataSource,
+							spacesDataSource
 						])
+
+						let accountController = AccountController(bookmark: core.bookmark, context: navigationContext, configuration: .defaultConfiguration)
+						let accountControllerDS = OCDataSourceArray()
+						accountControllerDS.setVersionedItems([accountController])
+
+						let accountFlatDS = OCDataSourceComposition(sources: [accountControllerDS, combinedDS])
+
+						let leftSidebarViewController = ClientSidebarViewController(context: navigationContext, sections: [
+							CollectionViewSection(identifier: "top", dataSource: accountFlatDS, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), expandedItems: [ spacesFolderItem.dataItemReference ])
+//							CollectionViewSection(identifier: "top", dataSource: accountDS, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar, headerMode: .firstItemInSection))
+//							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar)),
+//							CollectionViewSection(identifier: "projects", dataSource: self.wrap(dataSource: core.projectDrivesDataSource, withHeader: "Spaces".localized), cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar, headerMode: .firstItemInSection))
+						], navigationPusher: { [weak self, weak splitViewController] _, viewController, animated in
+							// self?.filesNavigationController?.setViewControllers([ viewController ], animated: animated)
+							if let self = self, let filesNavigationController = self.filesNavigationController {
+								filesNavigationController.setViewControllers([viewController], animated: false)
+								splitViewController?.showDetailViewController(filesNavigationController, sender: self)
+							}
+						})
+
+						leftSidebarViewController.navigationItem.largeTitleDisplayMode = .never
+						leftSidebarViewController.navigationItem.titleView = self.buildNavigationLogoView()
+
+//						leftSidebarViewController.navigationItem.title = OCAppIdentity.shared.appDisplayName
+//						leftSidebarViewController.navigationItem.largeTitleDisplayMode = .automatic
+
+						let leftNavigationController = ThemeNavigationController(rootViewController: leftSidebarViewController)
+						// leftNavigationController.navigationBar.prefersLargeTitles = true
+
+						splitViewController.preferredDisplayMode = .oneBesideSecondary
+
+						splitViewController.setViewController(leftNavigationController, for: .primary)
+						splitViewController.setViewController(self.filesNavigationController!, for: .secondary)
+
+//						if let activityNavigationController = self.activityNavigationController, let libraryNavigationController = self.libraryNavigationController {
+//							self.tabsController.viewControllers = [ splitViewController, libraryNavigationController, activityNavigationController ]
+//						}
+
+						self.contentViewController = splitViewController
+
+//						self.tabBar.isHidden = true
+
+//						topLevelViewController = CollectionViewController(context: navigationContext, sections: [
+//							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellLayout: .list(appearance: .insetGrouped)),
+//							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource, cellLayout: .list(appearance: .insetGrouped))
+//						])
 					} else {
-						let query = OCQuery(for: .legacyRoot)
-						topLevelViewController = ClientQueryViewController(core: core, drive: nil, query: query, rootViewController: self)
+						topLevelViewController = ClientItemViewController(context: navigationContext, query: OCQuery(for: .legacyRoot))
 					}
 
 					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
-					self.filesNavigationController?.setViewControllers([self.emptyViewController, topLevelViewController!], animated: false)
+					if let topLevelViewController = topLevelViewController {
+						self.filesNavigationController?.setViewControllers([self.emptyViewController, topLevelViewController], animated: false)
+					}
 				}
 
 				let emptyViewController = self.emptyViewController
@@ -543,6 +694,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		return nil
 	}
 
+	// MARK: - App Provider updates
 	var appProviderActionExtensions : [OCExtension]? {
 		willSet {
 			if let extensions = appProviderActionExtensions {
@@ -602,7 +754,7 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 extension ClientRootViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tabBar.applyThemeCollection(collection)
+		tabsController.tabBar.applyThemeCollection(collection)
 		self.toolbar?.applyThemeCollection(collection)
 
 		self.view.backgroundColor = collection.tableBackgroundColor

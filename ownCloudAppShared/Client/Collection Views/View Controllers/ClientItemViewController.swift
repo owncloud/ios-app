@@ -667,11 +667,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 	}
 
-	public override func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool) -> Bool {
-		if !super.handleMultiSelection(of: record, at: indexPath, isSelected: isSelected),
+	public override func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool, clientContext: ClientContext) -> Bool {
+		if !super.handleMultiSelection(of: record, at: indexPath, isSelected: isSelected, clientContext: clientContext),
 		   let multiSelectionActionContext = multiSelectionActionContext {
 
-			retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath in
+			retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath, _ in
 				if record.type == .item, let item = record.item as? OCItem {
 					if isSelected {
 						multiSelectionActionContext.add(item: item)

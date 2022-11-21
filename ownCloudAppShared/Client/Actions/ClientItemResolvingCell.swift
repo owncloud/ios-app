@@ -1,6 +1,6 @@
 //
 //  ClientItemResolvingCell.swift
-//  ownCloud
+//  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 18.07.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.

@@ -16,6 +16,8 @@
  *
  */
 
+#warning("Evaluate removal of file")
+
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
