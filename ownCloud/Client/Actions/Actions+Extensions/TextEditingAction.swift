@@ -27,12 +27,13 @@ class TextEditingAction : Action {
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
-	class var supportedMimeTypes : [String] { return ["text", "text/xml"] }
+	class var supportedMimeTypes : [String] { return ["text", "text/xml", "application/x-php", "application/octet-stream"] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if let core = forContext.core, forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file && ($0.permissions.contains(.writable) || $0.parentItem(from: core)? .permissions.contains(.createFile) == true)}) {
 			if let item = forContext.items.first, let mimeType = item.mimeType {
+                print("--> mimeType \(mimeType)")
 				if supportedMimeTypes.filter({
 					if mimeType.contains($0) {
 						return true
@@ -88,6 +89,6 @@ class TextEditingAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "pencil.tip.crop.circle")?.withRenderingMode(.alwaysTemplate)
+		return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
 	}
 }

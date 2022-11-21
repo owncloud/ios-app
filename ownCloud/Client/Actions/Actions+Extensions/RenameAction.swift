@@ -93,6 +93,6 @@ class RenameAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
+		return UIImage(systemName: "character.textbox")?.withRenderingMode(.alwaysTemplate)
 	}
 }

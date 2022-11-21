@@ -53,6 +53,8 @@
 		392DDAE624C8923B009E5406 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392DDB1324CF024C009E5406 /* ImportFilesController.swift */; };
 		393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
+		39454731292A2E7600C7C3B0 /* MarkdownViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39454730292A2E7600C7C3B0 /* MarkdownViewController.swift */; };
+		39454733292B7AAA00C7C3B0 /* WebViewPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39454732292B7AAA00C7C3B0 /* WebViewPreviewViewController.swift */; };
 		3949F6A224E6781600EC99A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		394A0AED22EEE32C00603813 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138222E79C6700089423 /* IntentHandler.swift */; };
 		394A0AFD22EEFC2C00603813 /* ownCloudAppShared.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -986,6 +988,8 @@
 		392DDB1324CF024C009E5406 /* ImportFilesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
 		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
 		3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccountIntentHandler.swift; sourceTree = "<group>"; };
+		39454730292A2E7600C7C3B0 /* MarkdownViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownViewController.swift; sourceTree = "<group>"; };
+		39454732292B7AAA00C7C3B0 /* WebViewPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewPreviewViewController.swift; sourceTree = "<group>"; };
 		394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadCrumbTableViewController.swift; sourceTree = "<group>"; };
 		394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudAppShared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudAppShared.h; sourceTree = "<group>"; };
@@ -2819,6 +2823,7 @@
 		DCBF0A602280395F00465530 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
+				39454732292B7AAA00C7C3B0 /* WebViewPreviewViewController.swift */,
 				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
 			);
 			path = WebView;
@@ -3179,6 +3184,7 @@
 		DCEC3DF5242F89B20076B43C /* QuickLook */ = {
 			isa = PBXGroup;
 			children = (
+				39454730292A2E7600C7C3B0 /* MarkdownViewController.swift */,
 				4C9BFA2223158C3F0059CA3E /* PreviewViewController.swift */,
 			);
 			path = QuickLook;
@@ -4201,6 +4207,7 @@
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
 				4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */,
 				391C79AE24E187C400CB6333 /* LegacyCredentials.swift in Sources */,
+				39454731292A2E7600C7C3B0 /* MarkdownViewController.swift in Sources */,
 				DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */,
 				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
@@ -4333,6 +4340,7 @@
 				DCE4E44424C1A3E30051722F /* FileListTableViewController+OpenItemTableViewController.swift in Sources */,
 				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
 				DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */,
+				39454733292B7AAA00C7C3B0 /* WebViewPreviewViewController.swift in Sources */,
 				DCE4E44D24C1D48B0051722F /* QueryFileListTableViewController+Multiselect.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
 				DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */,

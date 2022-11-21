@@ -82,4 +82,14 @@ extension String {
 
 		return ceil(boundingBox.width)
 	}
+    
+    @available(iOS 15, *)
+    public func toMarkdown() -> AttributedString {
+        do {
+            return try AttributedString(markdown: self, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))
+        } catch {
+            print("Error parsing Markdown for string \(self): \(error)")
+            return AttributedString(self)
+        }
+    }
 }
