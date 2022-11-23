@@ -171,11 +171,11 @@ open class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(revealButton)
 		self.contentView.addSubview(messageButton)
 
-		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
+		moreButton.setImage(OCSymbol.icon(forSymbolName: "more-dots"), for: .normal)
 		moreButton.contentMode = .center
 		moreButton.isPointerInteractionEnabled = true
 
-		revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
+		revealButton.setImage(OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), for: .normal)
 		revealButton.isPointerInteractionEnabled = true
 		revealButton.contentMode = .center
 		revealButton.isHidden = !showRevealButton

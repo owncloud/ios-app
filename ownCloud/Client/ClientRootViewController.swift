@@ -521,7 +521,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 
 						let accountFlatDS = OCDataSourceComposition(sources: [accountControllerDS, combinedDS])
 
-						let leftSidebarViewController = ClientSidebarViewController(context: navigationContext, sections: [
+						let leftSidebarViewController = CollectionSidebarViewController(context: navigationContext, sections: [
 							CollectionViewSection(identifier: "top", dataSource: accountFlatDS, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), expandedItems: [ spacesFolderItem.dataItemReference ])
 //							CollectionViewSection(identifier: "top", dataSource: accountDS, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar, headerMode: .firstItemInSection))
 //							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar)),

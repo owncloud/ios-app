@@ -191,16 +191,16 @@ extension DriveListCell {
 				if let drive = item as? OCDrive, let specialType = drive.specialType {
 					switch specialType {
 						case .personal:
-							icon = UIImage(systemName: "person")
+							icon = OCSymbol.icon(forSymbolName: "person")
 
 						case .shares:
-							icon = UIImage(systemName: "arrowshape.turn.up.left")
+							icon = OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")
 
 						case .space:
-							icon = UIImage(systemName: "square.grid.2x2")
+							icon = OCSymbol.icon(forSymbolName: "square.grid.2x2")
 
 						default:
-							icon = UIImage(systemName: "square.grid.2x2")
+							icon = OCSymbol.icon(forSymbolName: "square.grid.2x2")
 					}
 				}
 

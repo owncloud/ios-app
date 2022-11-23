@@ -254,7 +254,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 			targetNavigationItem.titleView = searchField
 
 			// Alternative implementation as a standard "Cancel" button, more convention compliant, but needs more space: let cancelToolbarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(endSearch))
-			let cancelToolbarButton = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(endSearch))
+			let cancelToolbarButton = UIBarButtonItem(image: OCSymbol.icon(forSymbolName: "xmark"), style: .done, target: self, action: #selector(endSearch))
 			targetNavigationItem.rightBarButtonItems = [ cancelToolbarButton ]
 			targetNavigationItem.hidesBackButton = true
 

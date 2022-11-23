@@ -168,12 +168,12 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			var choices: [PopupButtonChoice] = []
 
 			if (self?.scope as? ItemSearchScope)?.canSaveSearch == true {
-				let saveSearchChoice = PopupButtonChoice(with: "Save as search view".localized, image: UIImage(systemName: "folder.badge.gearshape")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-search"))
+				let saveSearchChoice = PopupButtonChoice(with: "Save as search view".localized, image: OCSymbol.icon(forSymbolName: "folder.badge.gearshape"), representedObject: NSString("save-search"))
 				choices.append(saveSearchChoice)
 			}
 
 			if (self?.scope as? ItemSearchScope)?.canSaveTemplate == true {
-				let saveTemplateChoice = PopupButtonChoice(with: "Save as search template".localized, image: UIImage(systemName: "plus.square.dashed")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-template"))
+				let saveTemplateChoice = PopupButtonChoice(with: "Save as search template".localized, image: OCSymbol.icon(forSymbolName: "plus.square.dashed"), representedObject: NSString("save-template"))
 				choices.append(saveTemplateChoice)
 			}
 
@@ -181,7 +181,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		}
 
 		var buttonConfiguration = UIButton.Configuration.plain().updated(for: savedSearchPopup!.button)
-		buttonConfiguration.image = UIImage(systemName: "ellipsis.circle")?.withRenderingMode(.alwaysTemplate)
+		buttonConfiguration.image = OCSymbol.icon(forSymbolName: "ellipsis.circle")
 		buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
 		buttonConfiguration.attributedTitle = nil
 		savedSearchPopup?.adaptButton = false

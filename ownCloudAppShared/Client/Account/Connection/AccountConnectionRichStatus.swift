@@ -36,8 +36,9 @@ public class AccountConnectionRichStatus: NSObject {
 	public var status: AccountConnection.Status?
 
 	public var interaction: Interaction?
+	public var interactionLabel: String?
 
-	init(kind: Kind, icon: UIImage? = nil, text: String? = nil, progress: Progress? = nil, progressSummary: ProgressSummary? = nil, status: AccountConnection.Status? = nil, interaction: Interaction? = nil) {
+	init(kind: Kind, icon: UIImage? = nil, text: String? = nil, progress: Progress? = nil, progressSummary: ProgressSummary? = nil, status: AccountConnection.Status? = nil, interaction: Interaction? = nil, interactionLabel: String? = nil) {
 		self.kind = kind
 		self.icon = icon
 		self.text = text

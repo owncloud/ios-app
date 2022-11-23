@@ -1030,6 +1030,37 @@ class BookmarkViewController: StaticTableViewController {
 	}
 }
 
+// MARK: - Convenience for presentation
+extension BookmarkViewController {
+	static func showBookmarkUI(on hostViewController: UIViewController, edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
+		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
+		bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
+			if success, let bookmark = bookmark {
+				if let error = autosolveErrorOnSuccess as Error? {
+					OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+				}
+
+				if attemptLoginOnSuccess {
+					AccountConnectionPool.shared.connection(for: bookmark)?.connect()
+				}
+			}
+		}
+
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
+		navigationController.modalPresentationStyle = .overFullScreen
+
+		hostViewController.present(navigationController, animated: true, completion: {
+			OnMainThread {
+				if performContinue {
+					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+					bookmarkViewController.handleContinue()
+				}
+			}
+		})
+	}
+
+}
+
 // MARK: - OCClassSettings support
 extension OCClassSettingsIdentifier {
 	static let bookmark = OCClassSettingsIdentifier("bookmark")

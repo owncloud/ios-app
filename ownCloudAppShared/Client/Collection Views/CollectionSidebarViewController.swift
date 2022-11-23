@@ -35,6 +35,7 @@ open class CollectionSidebarViewController: CollectionViewController {
 
 			sidebarContext.postInitializationModifier = { (owner, context) in
 				context.viewControllerPusher = owner as? ViewControllerPusher
+				context.navigationRevocationHandler = owner as? NavigationRevocationHandler
 			}
 
 			self.navigationPusher = navigationPusher

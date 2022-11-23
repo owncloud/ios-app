@@ -50,8 +50,11 @@ open class AppRootViewController: UIViewController {
 		})
 
 		// Build sidebar
-		sidebarViewController = AppSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
+		sidebarViewController = ClientSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
+		sidebarViewController?.addToolbarItems()
+
 		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
+		leftNavigationController?.setToolbarHidden(false, animated: false)
 
 		// Build split view controller
 		let splitViewController = UISplitViewController(style: .doubleColumn)
@@ -74,7 +77,7 @@ open class AppRootViewController: UIViewController {
 	var contentSplitViewController: UISplitViewController?
 
 	var leftNavigationController: ThemeNavigationController?
-	var sidebarViewController: AppSidebarViewController?
+	var sidebarViewController: ClientSidebarViewController?
 	var contentNavigationController : ThemeNavigationController?
 
 	// MARK: - Content View Controller handling
@@ -110,11 +113,51 @@ open class AppRootViewController: UIViewController {
 	}
 }
 
+extension ClientSidebarViewController {
+	// MARK: - Add toolbar items
+	func addToolbarItems(addAccount: Bool = true, settings addSettings: Bool = true) {
+		var toolbarItems: [UIBarButtonItem] = []
+
+		if addAccount {
+			let addAccountBarButtonItem = UIBarButtonItem(systemItem: .add, primaryAction: UIAction(handler: { [weak self] action in
+				self?.addBookmark()
+			}))
+
+			toolbarItems.append(addAccountBarButtonItem)
+		}
+
+		if addSettings {
+			let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
+			settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+
+			toolbarItems.append(contentsOf: [
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+				settingsBarButtonItem
+			])
+		}
+
+		self.toolbarItems = toolbarItems
+	}
+
+	// MARK: - Open settings
+	@IBAction func settings() {
+		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+		self.present(ThemeNavigationController(rootViewController: viewController), animated: true)
+	}
+
+	// MARK: - Add account
+	func addBookmark() {
+		BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+	}
+}
+
+// MARK: - Branding
 public extension AppRootViewController {
 	static func addIcons() {
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
-		Theme.shared.add(tvgResourceFor: "folder")
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+		Theme.shared.add(tvgResourceFor: "icon-available-offline")
 		Theme.shared.add(tvgResourceFor: "status-flash")
+		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+
+		OCItem.registerIcons()
 	}
 }

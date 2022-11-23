@@ -66,6 +66,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		disconnectButton.addAction(UIAction(handler: { [weak self] _ in
 			self?.accountController?.disconnect(completion: nil)
 		}), for: .primaryActionTriggered)
+		disconnectButton.isHidden = true
 
 		contentView.addSubview(titleLabel)
 		contentView.addSubview(detailLabel)
@@ -123,6 +124,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		configureLayout()
 	}
 
+	deinit {
+		if observingStatusChangeNotifications {
+			NotificationCenter.default.removeObserver(self, name: AccountConnection.StatusChangedNotification, object: nil)
+		}
+	}
+
 	required init?(coder: NSCoder) {
 		fatalError()
 	}
@@ -146,21 +153,21 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 	var showDisconnectButtonObserver: NSKeyValueObservation?
 	var richStatusObserver: NSKeyValueObservation?
+	var observingStatusChangeNotifications: Bool = false
 
 	weak var accountController: AccountController? {
 		willSet {
+			if observingStatusChangeNotifications {
+				NotificationCenter.default.removeObserver(self, name: AccountConnection.StatusChangedNotification, object: nil)
+				observingStatusChangeNotifications = false
+			}
+
 			showDisconnectButtonObserver?.invalidate()
 			showDisconnectButtonObserver = nil
 
 			richStatusObserver?.invalidate()
 			richStatusObserver = nil
 
-			OnMainThread { [weak self] in
-				if self?.accountController == nil {
-					self?.disconnectButton.isHidden = true
-					self?.updateStatus(iconFor: nil)
-				}
-			}
 		}
 		didSet {
 			if let accountController = accountController {
@@ -185,7 +192,16 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 						}
 					}
 				})
+
+				observingStatusChangeNotifications = true
+				NotificationCenter.default.addObserver(forName: AccountConnection.StatusChangedNotification, object: accountController.connection, queue: .main, using: { [weak self] (notification) in
+					if let self = self, let connection = notification.object as? AccountConnection, connection === self.accountController?.connection {
+						self.updateStatus(iconFor: connection.status)
+					}
+				})
 			}
+
+			self.updateStatus(iconFor: accountController?.connection?.status)
 		}
 	}
 
@@ -194,8 +210,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 		if let status = status {
 			switch status {
-				case .offline: break
-					// color = .systemGray
+				case .noCore: break
+
+				case .offline:
+					color = .systemGray
 
 				case .connecting, .coreAvailable:
 					color = .systemYellow
@@ -217,10 +235,16 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 			statusIconView.preferredSymbolConfiguration = symbolConfig
 			statusIconView.contentMode = .scaleAspectFit
-			statusIconView.image = UIImage(systemName: "circlebadge.fill")
+			statusIconView.image = OCSymbol.icon(forSymbolName: "circlebadge.fill")
 		} else {
 			statusIconView.image = nil
 		}
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		disconnectButton.isHidden = true
+		updateStatus(iconFor: nil)
 	}
 
 	func updateStatus(from richStatus: AccountConnectionRichStatus?) {
@@ -228,7 +252,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			updateStatus(iconFor: richStatus.status)
 		}
 
-		if let richStatus, let richStatusText = richStatus.text, richStatus.status != .offline {
+		if let richStatus, let richStatusText = richStatus.text, richStatus.status != .offline, richStatus.status != .noCore {
 			detailLabel.text = richStatusText
 		} else {
 			detailLabel.text = detail

@@ -226,7 +226,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		moreButton.contentMode = .center
 		moreButton.isPointerInteractionEnabled = true
 
-		revealButton.setImage(UIImage(systemName: "arrow.right.circle.fill"), for: .normal)
+		revealButton.setImage(OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), for: .normal)
 		revealButton.isPointerInteractionEnabled = true
 		revealButton.contentMode = .center
 		revealButton.accessibilityLabel = "Reveal in folder".localized

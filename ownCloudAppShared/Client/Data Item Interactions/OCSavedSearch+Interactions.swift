@@ -89,8 +89,9 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 				})
 
 				if context.pushViewControllerToNavigation(context: resultsContext, provider: { context in
-					let viewController = ClientItemViewController(context: resultsContext, query: query)
-					viewController.navigationItem.title = name
+					let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true)
+					viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Search view".localized) + ")"
+					viewController.revoke(in: context, when: .connectionClosed)
 					return viewController
 				}, push: true, animated: true) != nil {
 					completion?(true)
@@ -114,7 +115,7 @@ extension OCSavedSearch: DataItemSwipeInteraction {
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
-		deleteAction.image = UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate)
+		deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
 
 		return UISwipeActionsConfiguration(actions: [ deleteAction ])
 	}
@@ -130,7 +131,7 @@ extension OCSavedSearch: DataItemContextMenuInteraction {
 			self?.delete(in: context)
 		})
 		deleteAction.title = "Delete".localized
-		deleteAction.image = UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate)
+		deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
 		deleteAction.attributes = .destructive
 
 		return [ deleteAction ]

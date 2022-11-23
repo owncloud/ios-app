@@ -41,7 +41,9 @@ open class CollectionViewCellStyle: NSObject {
 		super.init()
 	}
 
-	public convenience init(from style: CollectionViewCellStyle, changing: (CollectionViewCellStyle) -> Void) {
+	public typealias Modifier = (CollectionViewCellStyle) -> Void
+
+	public convenience init(from style: CollectionViewCellStyle, changing: Modifier) {
 		self.init(with: style.type)
 
 		self.options = style.options

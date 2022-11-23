@@ -26,12 +26,14 @@ public extension OCDataItemType {
 
 public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, AccountConnectionStatusObserver {
 	public struct Configuration {
+		var showSavedSearches: Bool
+
 		public static var defaultConfiguration: Configuration {
 			return Configuration()
 		}
 
 		public init() {
-
+			showSavedSearches = true
 		}
 	}
 
@@ -74,18 +76,30 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	var consumer: AccountConnectionConsumer
 
 	// MARK: - Connect & Disconnect
-	typealias CompletionHandler = (_ error: Error?) -> Void
+	public typealias CompletionHandler = (_ error: Error?) -> Void
 
-	func connect(completion: CompletionHandler?) {
-		connection?.connect(consumer: consumer, completion: completion)
+	public func connect(completion: CompletionHandler?) {
+		if let bookmark = connection?.bookmark,
+		   !OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: clientContext.rootViewController) {
+			connection?.connect(consumer: consumer, completion: completion)
+		}
 	}
 
-	func disconnect(completion: CompletionHandler?) {
+	public func disconnect(completion: CompletionHandler?) {
 		connection?.disconnect(consumer: consumer, completion: completion)
 	}
 
 	// MARK: - Status handling
 	public func account(connection: AccountConnection, changedStatusTo status: AccountConnection.Status, initial: Bool) {
+		if let vault = connection.core?.vault {
+			// Create savedSearchesDataSource if wanted
+			if configuration.showSavedSearches, savedSearchesDataSource == nil {
+				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: nil)
+			}
+		} else {
+			savedSearchesDataSource = nil
+		}
+
 		if status == .coreAvailable || status == .online {
 			// Begin to show account items
 			showAccountItems = true
@@ -94,6 +108,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Do not show account items
 			showAccountItems = false
 			showDisconnectButton = false
+		}
+
+		if status == .noCore, !initial {
+			// Send connection closed navigation event
+			NavigationRevocationEvent.connectionClosed(bookmarkUUID: connection.bookmark.uuid).send()
 		}
 	}
 
@@ -112,27 +131,39 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 	@objc dynamic var showDisconnectButton: Bool = false
 
+	var savedSearchesDataSource: OCDataSourceKVO?
+
 	func composeItemsDataSource() {
 		if let core = connection?.core {
+			var sources : [OCDataSource] = []
+
 			if core.useDrives {
-				let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: UIImage(systemName: "square.grid.2x2"))
+				let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"))
 
 				if let accountControllerSection = accountControllerSection,
 				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [ spacesFolderItem.dataItemReference ], forSection: accountControllerSection.identifier) {
 					accountControllerSection.expandedItemRefs = expandedItemRefs
 				}
 
-				itemsDataSource.sources = [
+				sources = [
 					core.hierarchicDrivesDataSource,
 					spacesDataSource
 				]
 			} else {
 				let accountRootLocation = OCLocation.legacyRoot
 
-				itemsDataSource.sources = [
+				sources = [
 					OCDataSourceArray(items: [accountRootLocation])
 				]
 			}
+
+			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
+				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Search views".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"))
+
+				sources.append(savedSearchesFolderDataSource)
+			}
+
+			itemsDataSource.sources = sources
 		}
 	}
 

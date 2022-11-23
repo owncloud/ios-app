@@ -134,8 +134,10 @@
 
 "Name of view" = "Name of view";
 "Search view" = "Search view";
+"Search views" = "Search views";
 "Name of template" = "Name of template";
 "Search template" = "Search template";
+"Search templates" = "Search templates";
 
 /* Search scope */
 "Search scope" = "Search scope";

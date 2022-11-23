@@ -22,6 +22,7 @@ import ownCloudSDK
 
 open class AccountConnection: NSObject {
 	public enum Status: String {
+		case noCore
 		case offline
 		case connecting
 		case coreAvailable
@@ -31,12 +32,14 @@ open class AccountConnection: NSObject {
 		case authenticationError
 	}
 
+	public static let StatusChangedNotification = NSNotification.Name("AccountConnectionStatusChanged")
+
 	open var bookmark: OCBookmark
 	open weak var core: OCCore?
 
 	var consumers: [AccountConnectionConsumer] = []
 
-	public dynamic var status: Status = .offline {
+	public dynamic var status: Status = .noCore {
 		didSet {
 			Log.debug("Account connection status: \(status.rawValue)")
 
@@ -53,6 +56,8 @@ open class AccountConnection: NSObject {
 				self.enumerateConsumers { consumer in
 					consumer.statusObserver?.account(connection: self, changedStatusTo: newStatus, initial: false)
 				}
+
+				NotificationCenter.default.post(name: AccountConnection.StatusChangedNotification, object: self)
 			}
 		}
 	}
@@ -154,7 +159,7 @@ open class AccountConnection: NSObject {
 		}
 	}
 
-	public func connect(consumer: AccountConnectionConsumer, completion: CompletionHandler?) {
+	public func connect(consumer: AccountConnectionConsumer? = nil, completion: CompletionHandler? = nil) {
 		queue(completion: completion) { (connection, jobDone) in
 			guard connection.core == nil else {
 				// Already has a core - nothing to do
@@ -251,7 +256,7 @@ open class AccountConnection: NSObject {
 		}
 	}
 
-	public func disconnect(consumer: AccountConnectionConsumer, completion: CompletionHandler?) {
+	public func disconnect(consumer: AccountConnectionConsumer? = nil, completion: CompletionHandler? = nil) {
 		queue(completion: completion) { (connection, jobDone) in
 			guard connection.core != nil else {
 				// Has no core - nothing to do
@@ -274,9 +279,9 @@ open class AccountConnection: NSObject {
 
 			// Return core
 			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: {
-				connection.status = .offline
 				connection.richStatus = nil
 				connection.core = nil
+				connection.status = .noCore
 
 				OnMainThread {
 					completion?(nil)

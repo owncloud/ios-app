@@ -59,7 +59,7 @@ public class AppLockManager: NSObject {
 		get {
 			if let archivedData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainUnlocked) {
 				guard let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: archivedData)?.boolValue else { return false}
-				return value ?? false
+				return value
 			}
 
 			return false

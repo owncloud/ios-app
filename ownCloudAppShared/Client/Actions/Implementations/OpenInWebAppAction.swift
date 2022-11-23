@@ -186,7 +186,7 @@ public class OpenInWebAppAction: Action {
 					webAppViewController.navigationItem.title = item.name
 
 					if defaultBrowserOption {
-						webAppViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: nil, image: UIImage(systemName: "safari"), primaryAction: UIAction(handler: { [weak webAppViewController] _ in
+						webAppViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: nil, image: OCSymbol.icon(forSymbolName: "safari"), primaryAction: UIAction(handler: { [weak webAppViewController] _ in
 							webAppViewController?.parent?.dismiss(animated: true, completion: {
 								self.openInExternalBrowser()
 							})
@@ -241,6 +241,6 @@ public class OpenInWebAppAction: Action {
 	}
 
 	override public class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "globe")?.withRenderingMode(.alwaysTemplate)
+		return OCSymbol.icon(forSymbolName: "globe")
 	}
 }

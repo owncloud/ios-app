@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 import WebKit
 
 open class ClientWebAppViewController: UIViewController, WKUIDelegate {
@@ -69,7 +70,7 @@ open class ClientWebAppViewController: UIViewController, WKUIDelegate {
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, image: UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate), primaryAction: UIAction(handler: { [weak self] _ in
+		navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil, image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), primaryAction: UIAction(handler: { [weak self] _ in
 			if self?.shouldSendCloseEvent == true {
 				if let strongSelf = self {
 					// Close via window.close(), which is calling dismissSecurely() once done

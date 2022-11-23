@@ -907,63 +907,6 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 	}
 }
 
-extension OCBookmarkManager {
-	static private let lastConnectedBookmarkUUIDDefaultsKey = "last-connected-bookmark-uuid"
-
-	// MARK: - Defaults Keys
-	static var lastBookmarkSelectedForConnection : OCBookmark? {
-		get {
-			if let bookmarkUUIDString = OCAppIdentity.shared.userDefaults?.string(forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey), let bookmarkUUID = UUID(uuidString: bookmarkUUIDString) {
-				return OCBookmarkManager.shared.bookmark(for: bookmarkUUID)
-			}
-
-			return nil
-		}
-
-		set {
-			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
-		}
-	}
-
-	static var lockedBookmarks : [OCBookmark] = []
-
-	static func lock(bookmark: OCBookmark) {
-		OCSynchronized(self) {
-			self.lockedBookmarks.append(bookmark)
-		}
-	}
-
-	static func unlock(bookmark: OCBookmark) {
-		OCSynchronized(self) {
-			if let removeIndex = self.lockedBookmarks.firstIndex(of: bookmark) {
-				self.lockedBookmarks.remove(at: removeIndex)
-			}
-		}
-	}
-
-	static func isLocked(bookmark: OCBookmark, presentAlertOn viewController: UIViewController? = nil, completion: ((_ isLocked: Bool) -> Void)? = nil) -> Bool {
-		if self.lockedBookmarks.contains(bookmark) {
-			if viewController != nil {
-				let alertController = ThemedAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
-									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
-									preferredStyle: .alert)
-
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
-					completion?(true)
-				}))
-
-				viewController?.present(alertController, animated: true, completion: nil)
-			}
-
-			return true
-		}
-
-		completion?(false)
-
-		return false
-	}
-}
-
 extension ServerListTableViewController : AccountAuthenticationErrorHandlingDelegate {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?) {
 		clientViewController.closeClient(completion: { [weak self] in

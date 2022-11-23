@@ -32,7 +32,15 @@ extension OCLocation : DataItemSelectionInteraction {
 		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 		let locationViewController = context?.pushViewControllerToNavigation(context: driveContext, provider: { context in
-			return ClientItemViewController(context: context, query: query)
+			let viewController = ClientItemViewController(context: context, query: query)
+
+			viewController.revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
+
+			if let presentable = OCDataRenderer.default.renderItem(self, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+				viewController.navigationTitle = presentable.title
+			}
+
+			return viewController
 		}, push: pushViewController, animated: animated)
 
 		completion?(true)

@@ -62,6 +62,10 @@ public protocol ViewControllerPusher: AnyObject {
 	func pushViewController(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController?
 }
 
+public protocol NavigationRevocationHandler: AnyObject {
+	func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController)
+}
+
 @objc public protocol DropTargetsProvider : AnyObject {
 	func canProvideDropTargets(for dropSession: UIDropSession, target view: UIView) -> Bool
 	func provideDropTargets(for dropSession: UIDropSession, target view: UIView) -> [OCDataItem & OCDataItemVersioning]?
@@ -123,6 +127,7 @@ public class ClientContext: NSObject {
 	public weak var inlineMessageCenter: InlineMessageCenter?
 	public weak var dropTargetsProvider: DropTargetsProvider?
 	public weak var viewControllerPusher: ViewControllerPusher?
+	public weak var navigationRevocationHandler: NavigationRevocationHandler?
 
 	// MARK: - Permissions
 	public var permissionHandlers : [PermissionHandler]?
@@ -175,6 +180,7 @@ public class ClientContext: NSObject {
 		inlineMessageCenter = inParent?.inlineMessageCenter
 		dropTargetsProvider = inParent?.dropTargetsProvider
 		viewControllerPusher = inParent?.viewControllerPusher
+		navigationRevocationHandler = inParent?.navigationRevocationHandler
 
 		sortDescriptor = inParent?.sortDescriptor
 

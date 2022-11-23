@@ -64,7 +64,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	var navigationTitleLabel: UILabel = UILabel()
 
-	public init(context inContext: ClientContext?, query inQuery: OCQuery, highlightItemReference: OCDataItemReference? = nil) {
+	public init(context inContext: ClientContext?, query inQuery: OCQuery, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
 		inQuery.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
 
@@ -129,13 +129,14 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		if let queryResultsDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {
 			itemsQueryDataSource = queryResultsDatasource
-			singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 
-			if query?.queryLocation?.isRoot == true {
+			if query?.queryLocation?.isRoot == true, core.useDrives {
 				// Create data source from one drive
+				singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 				singleDriveDatasource?.filter = OCDataSourceComposition.itemFilter(withItemRetrieval: false, fromRecordFilter: { itemRecord in
 					if let drive = itemRecord?.item as? OCDrive {
-						if drive.identifier == itemControllerContext.drive?.identifier {
+						if drive.identifier == itemControllerContext.drive?.identifier,
+						   drive.specialType == .space { // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
 							return true
 						}
 					}
@@ -151,7 +152,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 
 			itemSectionDataSource = OCDataSourceComposition(sources: [itemsLeadInDataSource, queryResultsDatasource, itemsTrailingDataSource])
-			itemSection = CollectionViewSection(identifier: "items", dataSource: itemSectionDataSource, cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemControllerContext)
+			let itemSectionCellStyle = CollectionViewCellStyle(from: .init(with: .tableCell), changing: { cellStyle in
+				if showRevealButtonForItems {
+					cellStyle.showRevealButton = true
+				}
+			})
+
+			itemSection = CollectionViewSection(identifier: "items", dataSource: itemSectionDataSource, cellStyle: itemSectionCellStyle, cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemControllerContext)
 
 			if let driveSection = driveSection {
 				sections.append(driveSection)
@@ -505,11 +512,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				plusBarButton.accessibilityIdentifier = "client.file-add"
 
 				viewActionButtons.append(plusBarButton)
-			}
 
-			// Add search button
-			let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
-			viewActionButtons.append(searchButton)
+				// Add search button
+				let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
+				viewActionButtons.append(searchButton)
+			}
 		}
 
 		self.navigationItem.rightBarButtonItems = viewActionButtons
@@ -540,6 +547,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	func updateNavigationTitleFromContext() {
 		if let navigationTitle = query?.queryLocation?.isRoot == true ? self.clientContext?.drive?.name : ((self.clientContext?.rootItem as? OCItem)?.name ?? self.query?.queryLocation?.lastPathComponent) {
 			self.navigationTitle = navigationTitle
+		} else {
+			self.navigationTitle = navigationItem.title
 		}
 	}
 
@@ -819,7 +828,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
-				let noResultsView = ComposedMessageView.infoBox(image: UIImage(systemName: "magnifyingglass"), title: "No matches".localized, subtitle: "The search term you entered did not match any item in the selected scope.".localized)
+				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: "No matches".localized, subtitle: "The search term you entered did not match any item in the selected scope.".localized)
 
 				(noResultContent.source as? OCDataSourceArray)?.setVersionedItems([
 					noResultsView

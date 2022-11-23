@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 public enum ThemeItemStyle {
 	case defaultForItem
@@ -185,7 +186,7 @@ public extension NSObject {
 				glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
 			}
 			if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
-				clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+				clearButton.setImage(OCSymbol.icon(forSymbolName: "xmark.circle.fill"), for: .normal)
 				clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
 			}
 		}
@@ -268,7 +269,7 @@ public extension NSObject {
 				glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
 			}
 			if let clearButton = searchTextField.value(forKey: "clearButton") as? UIButton {
-				clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+				clearButton.setImage(OCSymbol.icon(forSymbolName: "xmark.circle.fill"), for: .normal)
 				clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
 			}
 		} else if let textField = self as? UITextField {

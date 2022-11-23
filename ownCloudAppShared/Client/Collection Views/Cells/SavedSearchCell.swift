@@ -179,23 +179,52 @@ extension OCSavedSearch {
 	}
 }
 
+extension OCSavedSearch {
+	var displayName: String {
+		return (isNameUserDefined && name.count > 0) ? name : (isTemplate ? "Search template".localized : "Search view".localized)
+	}
+
+	var sideBarDisplayName: String {
+		return (isNameUserDefined && name.count > 0) ? name : searchTerm
+	}
+}
+
 extension SavedSearchCell {
-	static let savedTemplateIcon = UIImage(systemName: "square.dashed.inset.filled")?.withRenderingMode(.alwaysTemplate)
-	static let savedSearchIcon = UIImage(systemName: "gearshape.fill")?.withRenderingMode(.alwaysTemplate)
+	static let savedTemplateIcon = OCSymbol.icon(forSymbolName: "square.dashed.inset.filled")
+	static let savedSearchIcon = OCSymbol.icon(forSymbolName: "gearshape.fill")
 
 	static func registerCellProvider() {
 		let savedSearchCellRegistration = UICollectionView.CellRegistration<SavedSearchCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let savedSearch = OCDataRenderer.default.renderItem(item, asType: .savedSearch, error: nil, withOptions: nil) as? OCSavedSearch {
-					cell.title = (savedSearch.isNameUserDefined && savedSearch.name.count > 0) ? savedSearch.name : (savedSearch.isTemplate ? "Search template".localized : "Search view".localized)
+					cell.title = savedSearch.displayName
 					cell.icon = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
 					cell.items = savedSearch.segmentViewItemsForDisplay
 				}
 			})
 		}
 
+		let savedSearchSidebarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			var content = cell.defaultContentConfiguration()
+
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let savedSearch = OCDataRenderer.default.renderItem(item, asType: .savedSearch, error: nil, withOptions: nil) as? OCSavedSearch {
+					content.text = savedSearch.sideBarDisplayName
+					content.image = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
+				}
+			})
+
+			cell.contentConfiguration = content
+		}
+
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .savedSearch, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-			return collectionView.dequeueConfiguredReusableCell(using: savedSearchCellRegistration, for: indexPath, item: itemRef)
+			switch cellConfiguration?.style.type {
+				case .sideBar:
+					return collectionView.dequeueConfiguredReusableCell(using: savedSearchSidebarCellRegistration, for: indexPath, item: itemRef)
+
+				default:
+					return collectionView.dequeueConfiguredReusableCell(using: savedSearchCellRegistration, for: indexPath, item: itemRef)
+			}
 		}))
 	}
 }
