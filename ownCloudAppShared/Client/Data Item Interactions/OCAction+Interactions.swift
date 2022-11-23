@@ -21,7 +21,18 @@ import ownCloudSDK
 
 extension OCAction : DataItemSelectionInteraction {
 	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
-		run(options: nil, completionHandler: { error in
+		guard (self as? CollectionSidebarAction) == nil else {
+			// Use openItem() for CollectionSidebarAction
+			return false
+		}
+
+		var options: [OCActionRunOptionKey:Any] = [:]
+
+		if let context {
+			options[.clientContext] = context
+		}
+
+		run(options: options, completionHandler: { error in
 			completion?(error == nil)
 		})
 
@@ -31,6 +42,10 @@ extension OCAction : DataItemSelectionInteraction {
 
 extension OCAction : DataItemDropInteraction {
 	public func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal? {
+		if supportsDrop == false {
+			return nil
+		}
+
 		if session.localDragSession == nil {
 			return nil
 		}
@@ -39,7 +54,13 @@ extension OCAction : DataItemDropInteraction {
 	}
 
 	public func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (Bool) -> Void) {
-		run(options: nil, completionHandler: { error in
+		var options: [OCActionRunOptionKey:Any] = [:]
+
+		if let context {
+			options[.clientContext] = context
+		}
+
+		run(options: options, completionHandler: { error in
 			handlingCompletion(error == nil)
 		})
 	}

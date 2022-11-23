@@ -20,21 +20,22 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public protocol AccountConnectionCoreErrorHandler: NSObject {
+public protocol AccountConnectionCoreErrorHandler: AnyObject {
 	func account(connnection: AccountConnection, handleError: Error?, issue: OCIssue?) -> Bool //!< Return true if you handled the error/issue - otherwise false to allow propagation to the next consumer
 }
 
-public protocol AccountConnectionStatusObserver: NSObject {
+public protocol AccountConnectionStatusObserver: AnyObject {
 	func account(connection: AccountConnection, changedStatusTo: AccountConnection.Status, initial: Bool)
 	// func account(connection: AccountConnection, changedConnectionStatusTo: OCCoreConnectionStatus?)
 }
 
-public protocol AccountConnectionProgressUpdates: NSObject {
+public protocol AccountConnectionProgressUpdates: AnyObject {
 	func account(connection: AccountConnection, progressSummary: ProgressSummary, autoCollapse: Bool)
 }
 
-public protocol AccountConnectionMessageUpdates: NSObject {
-	func handleMessagesUpdates(messages: [OCMessage]?, groups : [MessageGroup]?)
+@objc public protocol AccountConnectionMessageUpdates: AnyObject {
+	@objc optional func handleMessageCountChanged(to count: Int)
+	@objc optional func handleMessagesUpdates(messages: [OCMessage]?, groups : [MessageGroup]?)
 }
 
 public class AccountConnectionConsumer: NSObject {
@@ -53,7 +54,7 @@ public class AccountConnectionConsumer: NSObject {
 	open weak var progressUpdateHandler: AccountConnectionProgressUpdates?
 	open weak var messageUpdateHandler: AccountConnectionMessageUpdates?
 
-	init(owner: AnyObject? = nil, messagePresenter: OCMessagePresenter? = nil, progressSummarizerNotificationHandler: ProgressSummarizerNotificationBlock? = nil, busyHandler: OCCoreBusyStatusHandler? = nil, coreErrorHandler: AccountConnectionCoreErrorHandler? = nil, statusObserver: AccountConnectionStatusObserver? = nil, progressUpdateHandler: AccountConnectionProgressUpdates? = nil, messageUpdateHandler: AccountConnectionMessageUpdates? = nil) {
+	public init(owner: AnyObject? = nil, messagePresenter: OCMessagePresenter? = nil, progressSummarizerNotificationHandler: ProgressSummarizerNotificationBlock? = nil, busyHandler: OCCoreBusyStatusHandler? = nil, coreErrorHandler: AccountConnectionCoreErrorHandler? = nil, statusObserver: AccountConnectionStatusObserver? = nil, progressUpdateHandler: AccountConnectionProgressUpdates? = nil, messageUpdateHandler: AccountConnectionMessageUpdates? = nil) {
 		self.owner = owner
 		self.messagePresenter = messagePresenter
 		self.progressSummarizerNotificationHandler = progressSummarizerNotificationHandler

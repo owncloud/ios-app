@@ -28,6 +28,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		self.controllerConfiguration = controllerConfiguration
 
 		super.init(context: inContext, sections: nil, navigationPusher: { sideBarViewController, viewController, animated in
+			// Push new view controller to detail view controller
 			if let contentNavigationController = inContext.navigationController {
 				contentNavigationController.setViewControllers([viewController], animated: false)
 				sideBarViewController.splitViewController?.showDetailViewController(contentNavigationController, sender: sideBarViewController)
@@ -61,10 +62,6 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		sectionsDataSource = accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.titleView = self.buildNavigationLogoView()
-
-//		selectionChangeObservation = collectionView.observe(\.indexPathsForSelectedItems, changeHandler: { [weak self] view, change in
-//			Log.debug("New selection: \(self?.collectionView.indexPathsForSelectedItems)")
-//		})
 	}
 
 	// MARK: - NavigationRevocationHandler
@@ -72,6 +69,36 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		_ = sidebarContext.pushViewControllerToNavigation(context: sidebarContext, provider: { context in
 			return UIViewController()
 		}, push: true, animated: false)
+	}
+
+	// MARK: - Selected Bookmark
+	private var focusedBookmarkNavigationRevocationAction: NavigationRevocationAction?
+
+	@objc public dynamic var focusedBookmark: OCBookmark? {
+		didSet {
+			Log.debug("New focusedBookmark:: \(focusedBookmark?.displayName ?? "-")")
+		}
+	}
+
+	public override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		super.collectionView(collectionView, didSelectItemAt: indexPath)
+
+		var newFocusedBookmark: OCBookmark?
+
+		if let accountControllerSection = self.sectionOfCurrentSelection as? AccountControllerSection {
+			newFocusedBookmark = accountControllerSection.accountController.connection?.bookmark
+
+			if let newFocusedBookmarkUUID = newFocusedBookmark?.uuid {
+				focusedBookmarkNavigationRevocationAction = NavigationRevocationAction(triggeredBy: [.connectionClosed(bookmarkUUID: newFocusedBookmarkUUID)], action: { [weak self] event, action in
+					if self?.focusedBookmark?.uuid == newFocusedBookmarkUUID {
+						self?.focusedBookmark = nil
+					}
+				})
+				focusedBookmarkNavigationRevocationAction?.register(globally: true)
+			}
+		}
+
+		focusedBookmark = newFocusedBookmark
 	}
 }
 

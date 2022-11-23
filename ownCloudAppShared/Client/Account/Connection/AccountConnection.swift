@@ -75,9 +75,11 @@ open class AccountConnection: NSObject {
 		super.init()
 
 		setupProgressSummarizer()
+		setupMessageSelector()
 	}
 
 	deinit {
+		shutdownMessageSelector()
 		shutdownProgressSummarizer()
 	}
 
@@ -214,17 +216,6 @@ open class AccountConnection: NSObject {
 						}
 					}
 
-					// Setup message selector
-					if let core = core {
-						let bookmarkUUID = core.bookmark.uuid
-
-						self.messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
-							return (message.bookmarkUUID == bookmarkUUID) && !message.resolved
-						}, provideGroupedSelection: true, provideSyncRecordIDs: true, handler: { [weak self] (messages, groups, syncRecordIDs) in
-							self?.updateMessageSelectionWith(messages: messages, groups: groups, syncRecordIDs: syncRecordIDs)
-						})
-					}
-
 					// Connected
 					connection.status = .coreAvailable
 
@@ -326,9 +317,6 @@ open class AccountConnection: NSObject {
 			}
 		}
 	}
-
-	// MARK: -
-	var notificationPresenter : NotificationMessagePresenter?
 
 	// MARK: - Progress Summarizer
 	var progressSummarizer : ProgressSummarizer
@@ -514,13 +502,35 @@ open class AccountConnection: NSObject {
 	}
 
 	// MARK: - Inline Message Center
-	var messageSelector : MessageSelector?
+	public var messageSelector : MessageSelector?
+	@objc public dynamic var messageCount: Int = 0
+
+	func setupMessageSelector() {
+		// Setup message selector
+		let bookmarkUUID = bookmark.uuid
+
+		messageSelector = MessageSelector(from: .global, filter: { (message) in
+			return (message.bookmarkUUID == bookmarkUUID) && !message.resolved
+		}, provideGroupedSelection: true, provideSyncRecordIDs: true, handler: { [weak self] (messages, groups, syncRecordIDs) in
+			self?.updateMessageSelectionWith(messages: messages, groups: groups, syncRecordIDs: syncRecordIDs)
+			OnMainThread {
+				self?.messageCount = messages?.count ?? 0
+			}
+		})
+	}
+
+	func shutdownMessageSelector() {
+		messageSelector = nil
+	}
 
 	func updateMessageSelectionWith(messages: [OCMessage]?, groups : [MessageGroup]?, syncRecordIDs : Set<OCSyncRecordID>?) {
 		OnMainThread {
-			self.enumerateConsumers { consumer in
-				consumer.messageUpdateHandler?.handleMessagesUpdates(messages: messages, groups: groups)
-			}
+			let messageCount = messages?.count ?? 0
+
+			self.enumerateConsumers(with: { consumer in
+				consumer.messageUpdateHandler?.handleMessageCountChanged?(to: messageCount)
+				consumer.messageUpdateHandler?.handleMessagesUpdates?(messages: messages, groups: groups)
+			})
 
 			if syncRecordIDs != self.syncRecordIDsWithMessages {
 				self.syncRecordIDsWithMessages = syncRecordIDs

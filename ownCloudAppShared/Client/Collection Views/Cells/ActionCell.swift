@@ -186,10 +186,36 @@ extension ActionCell {
 			})
 		}
 
+		let actionSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			var content = cell.defaultContentConfiguration()
+
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let action = item as? OCAction {
+					content.text = action.title
+					content.image = action.icon
+				}
+
+				if let sidebarAction = item as? CollectionSidebarAction {
+					if let badgeCount = sidebarAction.badgeCount {
+						cell.accessories = [
+							UICellAccessory.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: RoundedLabel(text: "\(badgeCount)", style: .token), placement: .trailing()))
+						]
+					} else {
+						cell.accessories = []
+					}
+				}
+			})
+
+			cell.contentConfiguration = content
+		}
+
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .action, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
 			switch cellConfiguration?.style.type {
 				case .gridCell:
 					return collectionView.dequeueConfiguredReusableCell(using: gridActionCellRegistration, for: indexPath, item: itemRef)
+
+				case .sideBar:
+					return collectionView.dequeueConfiguredReusableCell(using: actionSideBarCellRegistration, for: indexPath, item: itemRef)
 
 				default:
 					return collectionView.dequeueConfiguredReusableCell(using: wideActionCellRegistration, for: indexPath, item: itemRef)

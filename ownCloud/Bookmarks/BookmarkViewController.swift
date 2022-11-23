@@ -1033,7 +1033,16 @@ class BookmarkViewController: StaticTableViewController {
 // MARK: - Convenience for presentation
 extension BookmarkViewController {
 	static func showBookmarkUI(on hostViewController: UIViewController, edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
-		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
+		var editBookmark = bookmark
+
+		if let bookmark {
+			// Retrieve latest version of bookmark from OCBookmarkManager
+			if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuid.uuidString) {
+				editBookmark = latestStoredBookmarkVersion
+			}
+		}
+
+		let bookmarkViewController : BookmarkViewController = BookmarkViewController(editBookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
 			if success, let bookmark = bookmark {
 				if let error = autosolveErrorOnSuccess as Error? {
@@ -1047,7 +1056,7 @@ extension BookmarkViewController {
 		}
 
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
-		navigationController.modalPresentationStyle = .overFullScreen
+		navigationController.isModalInPresentation = true
 
 		hostViewController.present(navigationController, animated: true, completion: {
 			OnMainThread {
@@ -1058,7 +1067,6 @@ extension BookmarkViewController {
 			}
 		})
 	}
-
 }
 
 // MARK: - OCClassSettings support

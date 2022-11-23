@@ -18,18 +18,18 @@
 
 import UIKit
 
-class RoundedLabel: UIView {
+public class RoundedLabel: UIView {
 
-	struct Style {
-		var textColor : UIColor
-		var backgroundColor : UIColor
+	public struct Style {
+		public var textColor : UIColor
+		public var backgroundColor : UIColor
 
-		var horizontalPadding : CGFloat
-		var verticalPadding : CGFloat
-		var cornerRadius : CGFloat
+		public var horizontalPadding : CGFloat
+		public var verticalPadding : CGFloat
+		public var cornerRadius : CGFloat
 
-		static var token = Style(textColor: .white, backgroundColor: .red, horizontalPadding: 5, verticalPadding: 2, cornerRadius: 5)
-		static var round = Style(textColor: .white, backgroundColor: .red, horizontalPadding: 10, verticalPadding: 5, cornerRadius: -1)
+		static public var token = Style(textColor: .white, backgroundColor: .red, horizontalPadding: 5, verticalPadding: 2, cornerRadius: 5)
+		static public var round = Style(textColor: .white, backgroundColor: .red, horizontalPadding: 10, verticalPadding: 5, cornerRadius: -1)
 	}
 
 	// MARK: - Constants
@@ -58,12 +58,12 @@ class RoundedLabel: UIView {
 
 	// MARK: - Init & Deinit
 
-	init() {
+	public init() {
 		super.init(frame: CGRect.zero)
 		styleView()
 	}
 
-	init(text: String = "", style: Style = .token) {
+	public init(text: String = "", style: Style = .token) {
 		super.init(frame: CGRect.zero)
 
 		labelText = text
@@ -77,7 +77,7 @@ class RoundedLabel: UIView {
 		styleView()
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 

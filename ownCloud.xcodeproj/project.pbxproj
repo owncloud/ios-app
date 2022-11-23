@@ -68,7 +68,6 @@
 		3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */; };
 		3968C882239C54AD00AC28AC /* ReleaseNotesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C87A239C54AC00AC28AC /* ReleaseNotesTableViewController.swift */; };
 		3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3968C87B239C54AC00AC28AC /* ReleaseNotes.plist */; };
-		396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
 		396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396C82FA2319AFDD00938262 /* CollaborateAction.swift */; };
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754F22327A33500119FCB /* OpenSceneAction.swift */; };
@@ -451,6 +450,9 @@
 		DCB6B200292CF2FE00D27573 /* NavigationRevocationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B1FF292CF2FE00D27573 /* NavigationRevocationAction.swift */; };
 		DCB6B203292D45AD00D27573 /* NavigationRevocationTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B202292D45AD00D27573 /* NavigationRevocationTrigger.swift */; };
 		DCB6B205292D859B00D27573 /* UIViewController+NavigationRevocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B204292D859B00D27573 /* UIViewController+NavigationRevocation.swift */; };
+		DCB6B206292E1D8400D27573 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
+		DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */; };
+		DCB6B20C292E428000D27573 /* AccountController+SpecialItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+SpecialItems.swift */; };
 		DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */; };
 		DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */; };
 		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
@@ -1518,6 +1520,8 @@
 		DCB6B201292D3D2D00D27573 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DCB6B202292D45AD00D27573 /* NavigationRevocationTrigger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRevocationTrigger.swift; sourceTree = "<group>"; };
 		DCB6B204292D859B00D27573 /* UIViewController+NavigationRevocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationRevocation.swift"; sourceTree = "<group>"; };
+		DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSidebarAction.swift; sourceTree = "<group>"; };
+		DCB6B20B292E428000D27573 /* AccountController+SpecialItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountController+SpecialItems.swift"; sourceTree = "<group>"; };
 		DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdater.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdaterViewController.swift; sourceTree = "<group>"; };
 		DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+AppExtension.swift"; sourceTree = "<group>"; };
@@ -2079,26 +2083,26 @@
 		399725DF233DF37300FC3B94 /* UIKit Extension */ = {
 			isa = PBXGroup;
 			children = (
-				DCE2F03D27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift */,
 				392CFEB62705831700631D2B /* LAContext+Extension.swift */,
-				399EA73925E656A900B6FF11 /* UITableView+Extension.swift */,
 				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
+				DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */,
 				DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */,
 				4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */,
 				39104E0A223991C8002FC02F /* UIButton+Extension.swift */,
+				DCE2F03D27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift */,
 				239F1318205A693A0029F186 /* UIColor+Extension.swift */,
 				23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */,
+				DC3AB24328104AA500789435 /* UIFont+Weight.swift */,
 				DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */,
 				4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */,
-				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
-				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
-				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 				DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */,
-				DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */,
-				DC3AB24328104AA500789435 /* UIFont+Weight.swift */,
 				DC3AB2452810602500789435 /* UILabel+Extension.swift */,
-				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
+				399EA73925E656A900B6FF11 /* UITableView+Extension.swift */,
+				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
 				DC65590E28A2633C0003D130 /* UITextField+Extension.swift */,
+				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
+				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
+				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -3021,6 +3025,7 @@
 				DC6C0A4829239E560045FF2A /* AppRootViewController.swift */,
 				DCB6B1EA292B7C2400D27573 /* AppRootViewController+ItemActions.swift */,
 				DCB6B1F4292CC46B00D27573 /* AccountController+ItemActions.swift */,
+				DCB6B20B292E428000D27573 /* AccountController+SpecialItems.swift */,
 			);
 			path = "App Controllers";
 			sourceTree = "<group>";
@@ -3324,6 +3329,7 @@
 				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
 				DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */,
 				DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */,
+				396BE4C92289500E00B254A9 /* RoundedLabel.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
 				3912208123436EB80026C290 /* SortMethod.swift */,
 			);
@@ -3426,6 +3432,7 @@
 				DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */,
 				DC04FFC727F5B79000F22569 /* CollectionViewController.swift */,
 				DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */,
+				DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */,
 				DC3AB1932808C2DE00789435 /* View Controllers */,
 			);
 			path = "Collection Views";
@@ -3516,7 +3523,6 @@
 				6EA78B8E2179B55400A5216A /* ImageScrollView.swift */,
 				3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */,
 				3998F5D422411EDF00B66713 /* BorderedLabel.swift */,
-				396BE4C92289500E00B254A9 /* RoundedLabel.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -4510,7 +4516,6 @@
 				DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
-				396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */,
 				394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */,
 				392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
@@ -4542,6 +4547,7 @@
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DCB6B1EB292B7C2400D27573 /* AppRootViewController+ItemActions.swift in Sources */,
 				DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */,
+				DCB6B20C292E428000D27573 /* AccountController+SpecialItems.swift in Sources */,
 				DCD864102811821200CA6631 /* ClientRootViewController+ItemActions.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				397E276A23D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift in Sources */,
@@ -4691,6 +4697,7 @@
 				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
 				DC62F567292504060095BB5D /* AccountConnection.swift in Sources */,
+				DCB6B206292E1D8400D27573 /* RoundedLabel.swift in Sources */,
 				DC99155028E63D8300DA0AB8 /* SegmentViewItemView.swift in Sources */,
 				DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */,
 				DC0A356C24C0E42200FB58FC /* AppLockWindow.swift in Sources */,
@@ -4784,6 +4791,7 @@
 				DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */,
 				DC6C0A542923FFF30045FF2A /* AccountControllerSection.swift in Sources */,
 				DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */,
+				DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
 				DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */,
 				DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */,
@@ -5321,7 +5329,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 239;
+				APP_VERSION = 240;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5391,7 +5399,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 239;
+				APP_VERSION = 240;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

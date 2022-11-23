@@ -584,7 +584,7 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 			return
 		}
 
-		let clientRootViewController = ClientSessionManager.shared.startSession(for: bookmark)!
+		let clientRootViewController =  ClientRootViewController(bookmark: bookmark)
 
 		let bookmarkRow = self.tableView.cellForRow(at: indexPath) as? ServerListBookmarkCell
 		let activityIndicator = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)

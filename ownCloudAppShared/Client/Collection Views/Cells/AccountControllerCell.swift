@@ -153,6 +153,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 	var showDisconnectButtonObserver: NSKeyValueObservation?
 	var richStatusObserver: NSKeyValueObservation?
+	var messageCountObserver: NSKeyValueObservation?
 	var observingStatusChangeNotifications: Bool = false
 
 	weak var accountController: AccountController? {
@@ -164,6 +165,9 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 			showDisconnectButtonObserver?.invalidate()
 			showDisconnectButtonObserver = nil
+
+			messageCountObserver?.invalidate()
+			messageCountObserver = nil
 
 			richStatusObserver?.invalidate()
 			richStatusObserver = nil
@@ -189,6 +193,16 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 					OnMainThread { [weak self] in
 						if let self = self, accountConnection == self.accountController?.connection {
 							self.updateStatus(from: richStatus)
+						}
+					}
+				})
+
+				messageCountObserver = accountController.connection?.observe(\.messageCount, options: .initial, changeHandler: { [weak self] (accountConnection, change) in
+					let messageCount = accountConnection.messageCount
+
+					OnMainThread { [weak self] in
+						if let self = self {
+							self.updateMessageBadge(count: messageCount)
 						}
 					}
 				})
@@ -241,12 +255,6 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		}
 	}
 
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		disconnectButton.isHidden = true
-		updateStatus(iconFor: nil)
-	}
-
 	func updateStatus(from richStatus: AccountConnectionRichStatus?) {
 		if let richStatus {
 			updateStatus(iconFor: richStatus.status)
@@ -257,6 +265,39 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			detailLabel.text = detail
 		}
+	}
+
+	// MARK: - Message Badge
+	private var badgeLabel : RoundedLabel?
+
+	func updateMessageBadge(count: Int) {
+		if count > 0 {
+			if badgeLabel == nil {
+				badgeLabel = RoundedLabel(text: "", style: .token)
+				badgeLabel?.translatesAutoresizingMaskIntoConstraints = false
+
+				if let badgeLabel = badgeLabel {
+					contentView.addSubview(badgeLabel)
+
+					NSLayoutConstraint.activate([
+						badgeLabel.trailingAnchor.constraint(equalTo: iconView.trailingAnchor),
+						badgeLabel.topAnchor.constraint(equalTo: iconView.topAnchor)
+					])
+				}
+			}
+
+			badgeLabel?.labelText = "\(count)"
+		} else {
+			badgeLabel?.removeFromSuperview()
+			badgeLabel = nil
+		}
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		disconnectButton.isHidden = true
+		badgeLabel?.removeFromSuperview()
+		updateStatus(iconFor: nil)
 	}
 
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

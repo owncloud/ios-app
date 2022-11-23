@@ -20,13 +20,18 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
+public protocol AccountControllerSpecialItems: AccountController {
+	func updateSpecialItems(dataSource: OCDataSourceArray)
+}
+
 public extension OCDataItemType {
 	static let accountController = OCDataItemType(rawValue: "accountController")
 }
 
-public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, AccountConnectionStatusObserver {
+public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, AccountConnectionStatusObserver, AccountConnectionMessageUpdates {
 	public struct Configuration {
 		var showSavedSearches: Bool
+		var showActivity: Bool
 
 		public static var defaultConfiguration: Configuration {
 			return Configuration()
@@ -34,7 +39,16 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		public init() {
 			showSavedSearches = true
+			showActivity = true
 		}
+	}
+
+	public enum SpecialItem: String {
+		case accountRoot
+		case spacesFolder
+		case savedSearchesFolder
+		case quickAccessFolder
+		case activity
 	}
 
 	open var clientContext: ClientContext
@@ -62,6 +76,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		consumer.owner = self
 		consumer.statusObserver = self
+		consumer.messageUpdateHandler = self
 
 		connection = accountConnection
 		connection?.add(consumer: consumer)
@@ -133,12 +148,17 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 	var savedSearchesDataSource: OCDataSourceKVO?
 
+	open var specialItems: [SpecialItem : OCDataItem] = [:]
+	open var specialItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
+
 	func composeItemsDataSource() {
 		if let core = connection?.core {
 			var sources : [OCDataSource] = []
 
 			if core.useDrives {
 				let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"))
+
+				specialItems[.savedSearchesFolder] = spacesFolderItem
 
 				if let accountControllerSection = accountControllerSection,
 				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [ spacesFolderItem.dataItemReference ], forSection: accountControllerSection.identifier) {
@@ -152,6 +172,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			} else {
 				let accountRootLocation = OCLocation.legacyRoot
 
+				specialItems[.accountRoot] = accountRootLocation
+
 				sources = [
 					OCDataSourceArray(items: [accountRootLocation])
 				]
@@ -160,7 +182,15 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
 				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Search views".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"))
 
+				specialItems[.savedSearchesFolder] = savedSearchesFolderItem
+
 				sources.append(savedSearchesFolderDataSource)
+			}
+
+			if let specialItemsSupport = self as? AccountControllerSpecialItems {
+				specialItemsSupport.updateSpecialItems(dataSource: specialItemsDataSource)
+
+				sources.append(specialItemsDataSource)
 			}
 
 			itemsDataSource.sources = sources
@@ -207,7 +237,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	// MARK: - OCDataItem & OCDataItemVersioning
 	open var dataItemType: OCDataItemType = .accountController
 	open var dataItemReference: OCDataItemReference = NSString(string: NSUUID().uuidString)
-	open var dataItemVersion: OCDataItemVersion = NSNumber(0)
+	open var dataItemVersion: OCDataItemVersion {
+		let bookmark = self.connection?.bookmark
+		return "\(bookmark?.shortName ?? "")-#_#-\(bookmark?.displayName ?? "")" as NSObject
+	}
 }
 
 extension AccountController: DataItemSelectionInteraction {

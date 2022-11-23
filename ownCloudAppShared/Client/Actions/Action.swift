@@ -500,6 +500,7 @@ open class Action : NSObject {
 		ocAction.identifier = actionExtension.identifier.rawValue
 		if singleVersion {
 			ocAction.version = actionExtension.identifier.rawValue
+			ocAction.supportsDrop = true
 		}
 		ocAction.type = (actionExtension.category == .destructive) ? .destructive : .regular
 

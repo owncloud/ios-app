@@ -64,6 +64,14 @@ open class CollectionSidebarViewController: CollectionViewController {
 		return false
 	}
 
+	public var sectionOfCurrentSelection: CollectionViewSection? {
+		if let selectedItemIndexPaths = self.collectionView.indexPathsForSelectedItems, let selectedIndexPath = selectedItemIndexPaths.first {
+			return self.section(at: selectedIndexPath.section)
+		}
+
+		return nil
+	}
+
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		view.backgroundColor = collection.tableGroupBackgroundColor
