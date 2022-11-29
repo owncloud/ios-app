@@ -27,7 +27,7 @@ class TextEditingAction : Action {
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
-	class var supportedMimeTypes : [String] { return ["text", "text/xml", "application/x-php", "application/octet-stream"] }
+	class var supportedMimeTypes : [String] { return ["text", "text/xml", "application/x-php", "application/octet-stream", "application/javascript"] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

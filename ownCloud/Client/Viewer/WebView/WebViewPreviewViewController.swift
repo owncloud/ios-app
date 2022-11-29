@@ -25,20 +25,12 @@ class WebViewPreviewViewController: UIViewController, WKNavigationDelegate {
     var html: String = ""
     var mimeType: String = ""
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        insertCSSString(into: webView) // 1
-    }
-
-    func insertCSSString(into webView: WKWebView) {
-        let cssString = "body { font-family: -apple-system; font-size: 50px; }"
-        let jsString = "var style = document.createElement('style'); style.innerHTML = '\(cssString)'; document.head.appendChild(style);"
-        webView.evaluateJavaScript(jsString, completionHandler: nil)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         renderItem { state in
+            let printButton = UIBarButtonItem(image: UIImage(systemName: "printer"), style: .plain, target: self, action: #selector(self.printWebView))
+            self.navigationItem.rightBarButtonItem = printButton
         }
     }
 
@@ -82,4 +74,31 @@ class WebViewPreviewViewController: UIViewController, WKNavigationDelegate {
         completion(true)
     }
     
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        insertCSSString(into: webView)
+    }
+
+    func insertCSSString(into webView: WKWebView) {
+        let cssString = "body { font-family: -apple-system; font-size: 50px; }"
+        let jsString = "var style = document.createElement('style'); style.innerHTML = '\(cssString)'; document.head.appendChild(style);"
+        webView.evaluateJavaScript(jsString, completionHandler: nil)
+    }
+    
+    @objc func printWebView() {
+        guard let webView = webView else { return }
+
+        let printInfo = UIPrintInfo(dictionary:nil)
+        printInfo.outputType = UIPrintInfo.OutputType.general
+
+        let printController = UIPrintInteractionController.shared
+        printController.printInfo = printInfo
+        
+        let renderer: UIPrintPageRenderer = UIPrintPageRenderer()
+        webView.viewPrintFormatter().printPageRenderer?.headerHeight = 30.0
+        webView.viewPrintFormatter().printPageRenderer?.footerHeight = 30.0
+        renderer.addPrintFormatter(webView.viewPrintFormatter(), startingAtPageAt: 0)
+        printController.printPageRenderer = renderer
+
+        printController.present(from: self.view.frame, in: self.view, animated: true, completionHandler: nil)
+    }
 }
