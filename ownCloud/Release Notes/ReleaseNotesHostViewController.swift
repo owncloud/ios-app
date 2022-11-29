@@ -166,7 +166,7 @@ extension ReleaseNotesHostViewController : Themeable {
 
 class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
-	var shouldShowReleaseNotes: Bool {
+	static var shouldShowReleaseNotes: Bool {
 		if VendorServices.shared.isBranded {
 			return false
 		} else if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
@@ -204,7 +204,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 		return false
 	}
 
-	func releaseNotes(for version: String) -> [[String:Any]]? {
+	static func releaseNotes(for version: String) -> [[String:Any]]? {
 		if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist") {
 			if let releaseNotesValues = NSDictionary(contentsOfFile: path), let versionsValues = releaseNotesValues["Versions"] as? NSArray {
 
@@ -223,9 +223,13 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 		return nil
 	}
 
-	func image(for key: String) -> UIImage? {
+	static func image(for key: String) -> UIImage? {
 		let homeSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .thin)
 		return UIImage(systemName: key, withConfiguration: homeSymbolConfiguration)?.withRenderingMode(.alwaysTemplate)
+	}
+
+	static func updateLastSeenAppVersion() {
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 	}
 }
 

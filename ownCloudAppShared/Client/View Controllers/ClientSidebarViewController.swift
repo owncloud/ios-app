@@ -56,19 +56,34 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 			return nil
 		}, updater: nil, destroyer: { _, bookmarkItemRef, accountController in
 			// Safely disconnect account controller if currently connected
+			if let accountController = accountController as? AccountController {
+				accountController.destroy() // needs to be called since AccountController keeps a reference to itself otherwise
+			}
 		}, queue: .main)
 
 		// Set up Collection View
 		sectionsDataSource = accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.titleView = self.buildNavigationLogoView()
+
+		// Add 10pt space at the top so that the first section's account doesn't "stick" to the top
+		collectionView.contentInset.top += 10
+	}
+
+	deinit {
+		accountsControllerSectionSource?.source = nil // Clear all AccountController instances from the controller and make OCDataSourceMapped call the destroyer
 	}
 
 	// MARK: - NavigationRevocationHandler
 	public func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController) {
-		_ = sidebarContext.pushViewControllerToNavigation(context: sidebarContext, provider: { context in
-			return UIViewController()
+		_ = sidebarContext.pushViewControllerToNavigation(context: sidebarContext, provider: { [weak self] context in
+			return self?.provideDefaultViewController()
 		}, push: true, animated: false)
+	}
+
+	// MARK: - Default view (shown if nothing is selected in sidebar)
+	public func provideDefaultViewController() -> UIViewController {
+		return ClientDefaultViewController()
 	}
 
 	// MARK: - Selected Bookmark

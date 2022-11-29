@@ -206,6 +206,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 	// MARK: - Collection View Datasource
 	open func configureDataSource() {
+		dataSourceWorkQueue.executor = { (job, completionHandler) in
+			job(completionHandler)
+		}
+
 		collectionViewDataSource = UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>(collectionView: collectionView) { [weak self] (collectionView: UICollectionView, indexPath: IndexPath, collectionItemRef: CollectionViewController.ItemRef) -> UICollectionViewCell? in
 			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 			   let section = self?.sectionsByID[sectionIdentifier] {
@@ -220,7 +224,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				if let (_, sectionIdentifier) = self?.unwrap(parentItemRef) {
 					if let sectionIdentifier = sectionIdentifier,
 					   let section = self?.sectionsByID[sectionIdentifier] {
-						section.expandedItemRefs.append(parentItemRef)
+					   	section.addExpanded(item: parentItemRef)
 					}
 				}
 			}
@@ -228,9 +232,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				if let (_, sectionIdentifier) = self?.unwrap(parentItemRef) {
 					if let sectionIdentifier = sectionIdentifier,
 					   let section = self?.sectionsByID[sectionIdentifier] {
-					   	if let idx = section.expandedItemRefs.firstIndex(of: parentItemRef) {
-							section.expandedItemRefs.remove(at: idx)
-						}
+					   	section.removeExpanded(item: parentItemRef)
 					}
 				}
 			}
@@ -249,6 +251,16 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		// initial data
 		updateSource(animatingDifferences: false)
+	}
+
+	private var dataSourceWorkQueue = OCAsyncSequentialQueue()
+
+	func performDataSourceUpdate(with block: @escaping (_ updateDone: @escaping () -> Void) -> Void) {
+		// Usage of a queue that performs immediately (unless busy) is needed as requesting an update during an update
+		// will raise an exception "Deadlock detected: calling this method on the main queue with outstanding async updates is not permitted and will deadlock. Please always submit updates either always on the main queue or always off the main queue" - even though the updates have been performed from the same (main) queue always
+		dataSourceWorkQueue.async({ updateDone in
+			block(updateDone)
+		})
 	}
 
 	// MARK: - Sections
@@ -334,6 +346,13 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	open var animateDifferences : Bool = true
 
 	func updateSource(animatingDifferences: Bool = true) {
+		performDataSourceUpdate { updateDone in
+			self._updateSource(animatingDifferences: animatingDifferences)
+			updateDone()
+		}
+	}
+
+	func _updateSource(animatingDifferences: Bool = true) {
 		guard let collectionViewDataSource = collectionViewDataSource else {
 			return
 		}
@@ -374,9 +393,14 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				collectionViewDataSource.apply(snapshot, animatingDifferences: false)
 			}
 		}
+
+		// Notify view controller of content updates
+		setContentDidUpdate()
 	}
 
-	open func section(at targetIndex: Int) -> CollectionViewSection? {
+	open func section(at inTargetIndex: Int) -> CollectionViewSection? {
+		let targetIndex = collectionView.dataSourceSectionIndex(forPresentationSectionIndex: inTargetIndex)
+
 		if (targetIndex >= 0) && (targetIndex < sections.count) {
 			var index : Int = 0
 
@@ -419,10 +443,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		let reloadSectionIDs = sections.map({ section in return section.identifier })
 
 		if reloadSectionIDs.count > 0 {
-			var snapshot = collectionViewDataSource.snapshot()
-			snapshot.reloadSections(reloadSectionIDs)
+			performDataSourceUpdate { updateDone in
+				var snapshot = self.collectionViewDataSource.snapshot()
+				snapshot.reloadSections(reloadSectionIDs)
 
-			collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+				self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+
+				// Notify view controller of content updates
+				self.setContentDidUpdate()
+
+				updateDone()
+			}
 		}
 	}
 
@@ -523,19 +554,82 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		action(recordsByIndexPath)
 	}
 
-	// MARK: - Expand / Collapse
-	public func expandCollapse(_ collectionViewItemRef: CollectionViewController.ItemRef) {
-		let (_, sectionID) = unwrap(collectionViewItemRef)
+	public func retrieveIndexPaths(for items: [CollectionViewController.ItemRef]) -> [IndexPath] {
+		var indexPaths: [IndexPath] = []
 
-		if let sectionID = sectionID {
-			var snap = collectionViewDataSource.snapshot(for: sectionID)
-			if snap.isExpanded(collectionViewItemRef) {
-				snap.collapse([collectionViewItemRef])
-			} else {
-			    snap.expand([collectionViewItemRef])
+		for item in items {
+			if let indexPath = collectionViewDataSource.indexPath(for: item) {
+				indexPaths.append(indexPath)
 			}
-			collectionViewDataSource.apply(snap, to: sectionID)
 		}
+
+		return indexPaths
+	}
+
+	// MARK: - Expand / Collapse
+//	public func expandCollapse(_ collectionViewItemRef: CollectionViewController.ItemRef) {
+//		let (_, sectionID) = unwrap(collectionViewItemRef)
+//
+//		if let sectionID = sectionID {
+//			var snap = collectionViewDataSource.snapshot(for: sectionID)
+//			if snap.isExpanded(collectionViewItemRef) {
+//				snap.collapse([collectionViewItemRef])
+//			} else {
+//			    snap.expand([collectionViewItemRef])
+//			}
+//			collectionViewDataSource.apply(snap, to: sectionID)
+//		}
+//	}
+
+	// MARK: - Actions
+	var actions: [CollectionViewAction] = []
+	public func addActions(_ addedActions: [CollectionViewAction]) {
+		self.actions.append(contentsOf: addedActions)
+
+		OnMainThread {
+			self.runActions()
+		}
+	}
+
+	private func runActions() {
+		var remainingActions: [CollectionViewAction] = []
+
+		for action in self.actions {
+			if !action.apply(on: self, completion: nil) {
+				remainingActions.append(action)
+			}
+		}
+
+		self.actions = remainingActions
+	}
+
+	// MARK: - Content update
+	private var contentDidUpdate: Bool = false
+	public func setContentDidUpdate() {
+		contentDidUpdate = true
+		OnMainThread {
+			if self.contentDidUpdate {
+				self.contentDidUpdate = false
+				self.handleContentUpdate()
+			}
+		}
+	}
+
+	private func handleContentUpdate() {
+		runActions()
+	}
+
+	// MARK: - Selection
+	public func select(item: CollectionViewController.ItemRef, withTimeout: TimeInterval? = 0) {
+
+	}
+
+	func performSelection(of item: CollectionViewController.ItemRef, animated: Bool, scrollPosition: UICollectionView.ScrollPosition = .centeredVertically) -> Bool {
+		if let indexPath = collectionViewDataSource.indexPath(for: item) {
+			collectionView.selectItem(at: indexPath, animated: animated, scrollPosition: scrollPosition)
+		}
+
+		return false
 	}
 
 	// MARK: - Collection View Delegate
@@ -616,7 +710,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	// MARK: - Cell action subclassing points
 	@discardableResult public func allowSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
 		if let selectionInteraction = record.item as? DataItemSelectionInteraction {
-			if selectionInteraction.allowSelection?(in: self, with: clientContext) == false {
+			if selectionInteraction.allowSelection?(in: self, section: section(at: indexPath.section), with: clientContext) == false {
 				return false
 			}
 		}
@@ -884,7 +978,14 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 public extension CollectionViewController {
 	func relayout(cell: UICollectionViewCell) {
-		collectionViewDataSource.apply(collectionViewDataSource.snapshot(), animatingDifferences: true)
+		performDataSourceUpdate { updateDone in
+			self.collectionViewDataSource.apply(self.collectionViewDataSource.snapshot(), animatingDifferences: true)
+
+			// Notify view controller of content updates
+			self.setContentDidUpdate()
+
+			updateDone()
+		}
 	}
 
 	func provideEmptyFallbackCell(for indexPath: IndexPath, item itemRef: CollectionViewController.ItemRef) -> UICollectionViewCell {

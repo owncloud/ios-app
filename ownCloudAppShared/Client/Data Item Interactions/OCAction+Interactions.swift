@@ -38,6 +38,10 @@ extension OCAction : DataItemSelectionInteraction {
 
 		return true
 	}
+
+	public func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool {
+		return selectable
+	}
 }
 
 extension OCAction : DataItemDropInteraction {

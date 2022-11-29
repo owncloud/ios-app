@@ -181,4 +181,47 @@ public extension UIView {
 
 		return constraints
 	}
+
+	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil,  maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
+		view.translatesAutoresizingMaskIntoConstraints = false
+
+		addSubview(view)
+
+		var constraints: [NSLayoutConstraint]
+		let anchorSet = enclosingAnchors ?? defaultAnchorSet
+
+		constraints = [
+			view.leadingAnchor.constraint(greaterThanOrEqualTo: anchorSet.leadingAnchor, constant: insets.leading),
+			view.trailingAnchor.constraint(lessThanOrEqualTo: anchorSet.trailingAnchor, constant: -insets.trailing),
+			view.topAnchor.constraint(greaterThanOrEqualTo: anchorSet.topAnchor, constant: insets.top),
+			view.bottomAnchor.constraint(lessThanOrEqualTo: anchorSet.bottomAnchor, constant: -insets.bottom),
+			view.centerXAnchor.constraint(equalTo: anchorSet.centerXAnchor),
+			view.centerYAnchor.constraint(equalTo: anchorSet.centerYAnchor)
+		]
+
+		if let fixedSize {
+			constraints += [
+				view.widthAnchor.constraint(equalToConstant: fixedSize.width).with(priority: .defaultHigh),
+				view.heightAnchor.constraint(equalToConstant: fixedSize.height).with(priority: .defaultHigh)
+			]
+		}
+
+		if let minimumSize {
+			constraints += [
+				view.widthAnchor.constraint(greaterThanOrEqualToConstant: minimumSize.width),
+				view.heightAnchor.constraint(greaterThanOrEqualToConstant: minimumSize.height)
+			]
+		}
+
+		if let maximumSize {
+			constraints += [
+				view.widthAnchor.constraint(lessThanOrEqualToConstant: maximumSize.width),
+				view.heightAnchor.constraint(lessThanOrEqualToConstant: maximumSize.height)
+			]
+		}
+
+		NSLayoutConstraint.activate(constraints)
+
+		return constraints
+	}
 }

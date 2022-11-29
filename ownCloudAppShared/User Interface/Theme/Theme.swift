@@ -129,7 +129,7 @@ public class Theme: NSObject {
 		return image
 	}
 
-	public func tvgImage(for identifier: String) -> TVGImage? {
+	public func tvgImage(for identifier: String, autoregisterIfMissing: Bool = true) -> TVGImage? {
 		var image : TVGImage?
 
 		OCSynchronized(self) {
@@ -140,6 +140,11 @@ public class Theme: NSObject {
 					}
 				}
 			}
+		}
+
+		if image == nil, autoregisterIfMissing {
+			Theme.shared.add(tvgResourceFor: identifier)
+			return tvgImage(for: identifier, autoregisterIfMissing: false)
 		}
 
 		return image

@@ -134,7 +134,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-search":
 						if let savedSearch = scope.savedSearch as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of view".localized, placeholder: "Search view".localized, completionHandler: { save, name in
+								self?.requestName(title: "Name of saved search".localized, placeholder: "Saved search".localized, completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name
@@ -168,7 +168,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			var choices: [PopupButtonChoice] = []
 
 			if (self?.scope as? ItemSearchScope)?.canSaveSearch == true {
-				let saveSearchChoice = PopupButtonChoice(with: "Save as search view".localized, image: OCSymbol.icon(forSymbolName: "folder.badge.gearshape"), representedObject: NSString("save-search"))
+				let saveSearchChoice = PopupButtonChoice(with: "Save search".localized, image: OCSymbol.icon(forSymbolName: "folder.badge.gearshape"), representedObject: NSString("save-search"))
 				choices.append(saveSearchChoice)
 			}
 

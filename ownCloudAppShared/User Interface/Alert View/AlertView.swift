@@ -18,17 +18,16 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class AlertOption : NSObject {
-	typealias ChoiceHandler = (_: AlertView, _: AlertOption) -> Void
+open class AlertOption : NSObject {
+	public typealias ChoiceHandler = (_: AlertView, _: AlertOption) -> Void
 
-	var label : String
-	var handler : ChoiceHandler
-	var type : OCIssueChoiceType
-	var accessibilityIdentifier : String?
+	public var label : String
+	public var handler : ChoiceHandler
+	public var type : OCIssueChoiceType
+	public var accessibilityIdentifier : String?
 
-	init(label: String, type: OCIssueChoiceType, accessibilityIdentifier : String? = nil, handler: @escaping ChoiceHandler) {
+	public init(label: String, type: OCIssueChoiceType, accessibilityIdentifier : String? = nil, handler: @escaping ChoiceHandler) {
 		self.label = label
 		self.type = type
 		self.handler = handler
@@ -38,26 +37,26 @@ class AlertOption : NSObject {
 	}
 }
 
-class AlertView: UIView, Themeable {
-	var localizedHeader : String?
+open class AlertView: UIView, Themeable {
+	public var localizedHeader : String?
 
-	var localizedTitle : String
-	var localizedDescription : String
+	public var localizedTitle : String
+	public var localizedDescription : String
 
-	var options : [AlertOption]
+	public var options : [AlertOption]
 
-	var headerLabel : UILabel = UILabel()
-	var headerContainer : UIView = UIView()
+	public var headerLabel : UILabel = UILabel()
+	public var headerContainer : UIView = UIView()
 
-	var titleLabel : UILabel = UILabel()
-	var descriptionLabel : UILabel = UILabel()
-	var optionStackView : UIStackView?
+	public var titleLabel : UILabel = UILabel()
+	public var descriptionLabel : UILabel = UILabel()
+	public var optionStackView : UIStackView?
 
-	var optionViews : [ThemeButton] = []
+	public var optionViews : [ThemeButton] = []
 
-	var textAlignment : NSTextAlignment
+	public var textAlignment : NSTextAlignment
 
-	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, contentPadding: CGFloat = 20, textAlignment : NSTextAlignment = .left, options: [AlertOption]) {
+	public init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, contentPadding: CGFloat = 20, textAlignment : NSTextAlignment = .left, options: [AlertOption]) {
 		self.localizedHeader = localizedHeader
 		self.localizedTitle = localizedTitle
 		self.localizedDescription = localizedDescription
@@ -72,7 +71,7 @@ class AlertView: UIView, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -80,7 +79,7 @@ class AlertView: UIView, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	func createOptionViews() {
+	public func createOptionViews() {
 		var optionIdx : Int = 0
 
 		for option in options {
@@ -102,13 +101,13 @@ class AlertView: UIView, Themeable {
 		}
 	}
 
-	@objc func optionSelected(sender: ThemeButton) {
+	@objc public func optionSelected(sender: ThemeButton) {
 		let option = options[sender.tag]
 
 		self.selectOption(option: option)
 	}
 
-	func selectOption(option: AlertOption) {
+	public func selectOption(option: AlertOption) {
 		option.handler(self, option)
 	}
 
@@ -122,7 +121,7 @@ class AlertView: UIView, Themeable {
 	private let titleLabelFontSize : CGFloat = 17
 	private let descriptionLabelFontSize : CGFloat = 14
 
-	func prepareViewAndConstraints() {
+	public func prepareViewAndConstraints() {
 		headerLabel.numberOfLines = 1
 		headerLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.numberOfLines = 0
@@ -226,7 +225,7 @@ class AlertView: UIView, Themeable {
 		}
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.headerLabel.applyThemeCollection(collection)
 		self.titleLabel.applyThemeCollection(collection)
 		self.descriptionLabel.applyThemeCollection(collection)

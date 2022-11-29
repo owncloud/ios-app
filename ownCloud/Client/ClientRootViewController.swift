@@ -23,10 +23,6 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-protocol AccountAuthenticationErrorHandlingDelegate : AnyObject {
-	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
-}
-
 class ClientRootViewController: UIViewController, BookmarkContainer, UINavigationControllerDelegate {
 
 	// MARK: - Constants
@@ -51,7 +47,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 	var notificationPresenter : NotificationMessagePresenter?
 	var cardMessagePresenter : CardIssueMessagePresenter?
 
-	weak var authDelegate : AccountAuthenticationErrorHandlingDelegate?
+	weak var authDelegate : AccountAuthenticationHandlerBookmarkEditingHandler?
 
 	var skipAuthorizationFailure : Bool = false
 
@@ -958,7 +954,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				var notifyAuthDelegate = true
 
 				if let bookmark = self?.bookmark {
-					let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+					let updater = AccountAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
 
 					if updater.canUpdateInline, let self = self {
 						notifyAuthDelegate = false

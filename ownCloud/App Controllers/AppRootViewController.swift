@@ -37,48 +37,6 @@ open class AppRootViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override open func viewDidLoad() {
-		super.viewDidLoad()
-
-		// Add icons
-		AppRootViewController.addIcons()
-
-		// Create content navigation controller ("right" side of split view)
-		contentNavigationController = ThemeNavigationController()
-		contentNavigationController?.navigationBar.isTranslucent = false
-
-		rootContext = ClientContext(with: clientContext, rootViewController: self, navigationController: contentNavigationController, modifier: { context in
-			context.viewItemHandler = self
-			context.moreItemHandler = self
-		})
-
-		// Build sidebar
-		sidebarViewController = ClientSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
-		sidebarViewController?.addToolbarItems()
-
-		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
-		leftNavigationController?.setToolbarHidden(false, animated: false)
-
-		focusedBookmarkObservation = sidebarViewController?.observe(\.focusedBookmark, changeHandler: { [weak self] sidebarViewController, change in
-			self?.focusedBookmark = self?.sidebarViewController?.focusedBookmark
-		})
-
-		// Build split view controller
-		let splitViewController = UISplitViewController(style: .doubleColumn)
-		splitViewController.displayModeButtonVisibility = .always
-		splitViewController.preferredDisplayMode = .oneBesideSecondary
-
-		splitViewController.setViewController(leftNavigationController, for: .primary)
-		splitViewController.setViewController(contentNavigationController, for: .secondary)
-
-		splitViewController.view.translatesAutoresizingMaskIntoConstraints = false
-
-		contentSplitViewController = splitViewController
-
-		// Make split view controller the content
-		contentViewController = splitViewController
-	}
-
 	// MARK: - View Controllers
 	var rootContext: ClientContext?
 	var contentSplitViewController: UISplitViewController?
@@ -159,6 +117,55 @@ open class AppRootViewController: UIViewController {
 	}
 
 	// MARK: - View Controller Events
+	override open func viewDidLoad() {
+		super.viewDidLoad()
+
+		// Add icons
+		AppRootViewController.addIcons()
+
+		// Create content navigation controller ("right" side of split view)
+		let defaultViewController = ClientDefaultViewController()
+
+		contentNavigationController = ThemeNavigationController(rootViewController: defaultViewController)
+		contentNavigationController?.style = .splitViewContent
+		// contentNavigationController?.navigationBar.isTranslucent = false
+
+		rootContext = ClientContext(with: clientContext, rootViewController: self, navigationController: contentNavigationController, alertQueue: alertQueue, modifier: { context in
+			context.viewItemHandler = self
+			context.moreItemHandler = self
+			context.bookmarkEditingHandler = self
+		})
+
+		// Build sidebar
+		sidebarViewController = ClientSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
+		sidebarViewController?.addToolbarItems()
+
+		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
+		leftNavigationController?.setToolbarHidden(false, animated: false)
+
+		focusedBookmarkObservation = sidebarViewController?.observe(\.focusedBookmark, changeHandler: { [weak self] sidebarViewController, change in
+			self?.focusedBookmark = self?.sidebarViewController?.focusedBookmark
+		})
+
+		// Build split view controller
+		let splitViewController = UISplitViewController(style: .doubleColumn)
+		splitViewController.displayModeButtonVisibility = .always
+		splitViewController.preferredDisplayMode = .oneBesideSecondary
+
+		splitViewController.setViewController(leftNavigationController, for: .primary)
+		splitViewController.setViewController(contentNavigationController, for: .secondary)
+
+		splitViewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+		contentSplitViewController = splitViewController
+
+		// Make split view controller the content
+		contentViewController = splitViewController
+
+		// Setup app icon badge message count
+		setupAppIconBadgeMessageCount()
+	}
+
 	var shownFirstTime = true
 
 	open override func viewDidAppear(_ animated: Bool) {
@@ -172,13 +179,10 @@ open class AppRootViewController: UIViewController {
 			PasscodeSetupCoordinator(parentViewController: self, action: .upgrade).start()
 		}
 
-		if VendorServices.shared.showBetaWarning, shownFirstTime {
-			considerBetaWarning()
-		}
+		// Release Notes, Beta warning, Review prompts…
+		considerLaunchPopups()
 
-		if !shownFirstTime {
-			VendorServices.shared.considerReviewPrompt()
-		}
+		shownFirstTime = false
 	}
 
 	open override func viewDidDisappear(_ animated: Bool) {
@@ -187,8 +191,54 @@ open class AppRootViewController: UIViewController {
 		ClientSessionManager.shared.remove(delegate: self)
 	}
 
+	// MARK: - App Badge: Message Counts
+	var messageCountSelector: MessageSelector?
+
+	func setupAppIconBadgeMessageCount() {
+		messageCountSelector = MessageSelector(filter: nil, handler: { (messages, _, _) in
+			var unresolvedMessagesCount = 0
+
+			if let messages = messages {
+				for message in messages {
+					if !message.resolved {
+						unresolvedMessagesCount += 1
+					}
+				}
+			}
+
+			OnMainThread {
+				if !ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+					NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
+						if granted {
+							OnMainThread {
+								UIApplication.shared.applicationIconBadgeNumber = unresolvedMessagesCount
+							}
+						}
+					}
+				}
+			}
+		})
+	}
+
+	// MARK: - Launch popups
+	func considerLaunchPopups() {
+		var shownPopup = false
+
+		if VendorServices.shared.showBetaWarning, shownFirstTime, !shownPopup {
+			shownPopup = considerLaunchPopupBetaWarning()
+		}
+
+		if shownFirstTime, !shownPopup {
+			shownPopup = considerLaunchPopupReleaseNotes()
+		}
+
+		if !shownFirstTime {
+			VendorServices.shared.considerReviewPrompt()
+		}
+	}
+
 	// MARK: - Beta warning
-	func considerBetaWarning() {
+	func considerLaunchPopupBetaWarning() -> Bool {
 		let lastBetaWarningCommit = OCAppIdentity.shared.userDefaults?.string(forKey: "LastBetaWarningCommit")
 
 		Log.log("Show beta warning: \(String(describing: VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
@@ -203,10 +253,39 @@ open class AppRootViewController: UIViewController {
 			}
 
 			self.present(betaAlert, animated: true, completion: nil)
+
+			return true
 		}
+
+		return false
+	}
+
+	// MARK: - Release notes
+	func considerLaunchPopupReleaseNotes() -> Bool {
+		defer {
+			ReleaseNotesDatasource.updateLastSeenAppVersion()
+		}
+
+		if ReleaseNotesDatasource.shouldShowReleaseNotes {
+			let releaseNotesHostController = ReleaseNotesHostViewController()
+			releaseNotesHostController.modalPresentationStyle = .formSheet
+			self.present(releaseNotesHostController, animated: true, completion: nil)
+
+			return true
+		}
+
+		return false
 	}
 }
 
+// MARK: - Authentication: bookmark editing
+extension AppRootViewController: AccountAuthenticationHandlerBookmarkEditingHandler {
+	public func handleAuthError(for viewController: UIViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?) {
+		BookmarkViewController.showBookmarkUI(on: viewController, edit: editBookmark, performContinue: true, attemptLoginOnSuccess: true, removeAuthDataFromCopy: true)
+	}
+}
+
+// MARK: - Message presentation
 extension AppRootViewController : ClientSessionManagerDelegate {
 	var selectedAccountConnection: AccountController? {
 		if let accountControllerSection = self.sidebarViewController?.sectionOfCurrentSelection as? AccountControllerSection {
@@ -278,6 +357,7 @@ extension AppRootViewController : ClientSessionManagerDelegate {
 	}
 }
 
+// MARK: - Sidebar toolbar
 extension ClientSidebarViewController {
 	// MARK: - Add toolbar items
 	func addToolbarItems(addAccount: Bool = true, settings addSettings: Bool = true) {

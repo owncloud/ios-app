@@ -43,6 +43,10 @@ public class AccountConnectionPool: NSObject {
 			} else {
 				connection = AccountConnection(bookmark: bookmark)
 				connectionsByBookmarkUUID[bookmarkUUID] = connection
+
+				if let connection {
+					connection.add(consumer: AccountConnectionAuthErrorConsumer(for: connection))
+				}
 			}
 		}
 

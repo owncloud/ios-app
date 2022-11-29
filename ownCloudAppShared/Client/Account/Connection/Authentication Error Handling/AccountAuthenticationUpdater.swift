@@ -1,5 +1,5 @@
 //
-//  ClientAuthenticationUpdater.swift
+//  AccountAuthenticationUpdater.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 25.04.20.
@@ -18,20 +18,19 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class ClientAuthenticationUpdater: NSObject {
+public class AccountAuthenticationUpdater: NSObject {
 	var bookmark : OCBookmark
 	var preferredAuthenticationMethodIdentifiers: [OCAuthenticationMethodIdentifier]?
 
-	init(with inBookmark: OCBookmark, preferredAuthenticationMethods authMethodIDs: [OCAuthenticationMethodIdentifier]?) {
+	public init(with inBookmark: OCBookmark, preferredAuthenticationMethods authMethodIDs: [OCAuthenticationMethodIdentifier]?) {
 		bookmark = inBookmark
 		preferredAuthenticationMethodIdentifiers = authMethodIDs
 
 		super.init()
 	}
 
-	var authenticationMethodIdentifier : OCAuthenticationMethodIdentifier? {
+	open var authenticationMethodIdentifier : OCAuthenticationMethodIdentifier? {
 		if let methods = preferredAuthenticationMethodIdentifiers, methods.count > 0,
 		   let existingAuthMethod = bookmark.authenticationMethodIdentifier,
 		   !methods.contains(existingAuthMethod) {
@@ -49,11 +48,11 @@ class ClientAuthenticationUpdater: NSObject {
 		return false
 	}
 
-	var canUpdateInline : Bool {
+	open var canUpdateInline : Bool {
 		return (isTokenBased || (!isTokenBased && (bookmark.userName != nil))) && (preferredAuthenticationMethodIdentifiers != nil) && ((preferredAuthenticationMethodIdentifiers?.count ?? 0) > 0)
 	}
 
-	func updateAuthenticationData(on viewController: UIViewController, completion: ((Error?) -> Void)? = nil) {
+	open func updateAuthenticationData(on viewController: UIViewController, completion: ((Error?) -> Void)? = nil) {
 		if let url = bookmark.url, let authenticationMethodID = self.authenticationMethodIdentifier, self.canUpdateInline {
 			let tempBookmark = OCBookmark(for: url)
 			let tempConnection = OCConnection(bookmark: tempBookmark)
@@ -84,7 +83,7 @@ class ClientAuthenticationUpdater: NSObject {
 					}
 				}
 			} else {
-				let updateViewcontroller = ClientAuthenticationUpdaterViewController(passwordHeaderText: bookmark.shortName, passwordValidationHandler: { (password, errorHandler) in
+				let updateViewController = AccountAuthenticationUpdaterPasswordPromptViewController(passwordHeaderText: bookmark.shortName, passwordValidationHandler: { (password, errorHandler) in
 					// Password Validation + Update
 					if let userName = self.bookmark.userName {
 						var options : [OCAuthenticationMethodKey : Any] = [:]
@@ -109,7 +108,7 @@ class ClientAuthenticationUpdater: NSObject {
 					}
 				})
 
-				viewController.present(asCard: ThemeNavigationController(rootViewController: updateViewcontroller), animated: true, completion: nil)
+				viewController.present(asCard: ThemeNavigationController(rootViewController: updateViewController), animated: true, completion: nil)
 			}
 		} else {
 			completion?(NSError(ocError: .internal))

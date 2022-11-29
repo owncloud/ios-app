@@ -104,20 +104,12 @@ class DriveListCell: ThemeableCollectionViewListCell {
 		])
 	}
 
-//	func updateWith(item: OCDataItem?, cellConfiguration: CollectionViewCellConfiguration?) {
-//		var coverImageRequest : OCResourceRequest?
-//
-//		if let item = item,
-//		   let cellConfiguration = cellConfiguration,
-//		   let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-//			title = presentable.title
-//			subtitle = presentable.subtitle
-//
-//			if let resourceManager = cellConfiguration.core?.vault.resourceManager {
-//				coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
-//			}
-//		}
-//	}
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		coverImageResourceView.activeViewProvider = nil
+		title = ""
+		subtitle = ""
+	}
 }
 
 extension DriveListCell {
@@ -152,6 +144,37 @@ extension DriveListCell {
 		}
 
 		let driveHeaderCellRegistration = UICollectionView.CellRegistration<DriveHeaderCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+			var coverImageRequest : OCResourceRequest?
+			var resourceManager : OCResourceManager?
+			var title : String?
+			var subtitle : String?
+
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+					title = presentable.title
+					subtitle = presentable.subtitle
+
+					resourceManager = cellConfiguration.core?.vault.resourceManager
+
+					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
+				}
+			})
+
+			cell.title = title
+			cell.subtitle = subtitle
+
+			cell.coverImageResourceView.request = coverImageRequest
+			cell.isRequestingCoverImage = (coverImageRequest != nil)
+
+			cell.collectionItemRef = collectionItemRef
+			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+
+			if let coverImageRequest = coverImageRequest {
+				resourceManager?.start(coverImageRequest)
+			}
+		}
+
+		let driveGridCellRegistration = UICollectionView.CellRegistration<DriveGridCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var coverImageRequest : OCResourceRequest?
 			var resourceManager : OCResourceManager?
 			var title : String?
@@ -224,6 +247,9 @@ extension DriveListCell {
 
 				case .sideBar:
 					return collectionView.dequeueConfiguredReusableCell(using: driveSideBarCellRegistration, for: indexPath, item: itemRef)
+
+				case .gridCell:
+					return collectionView.dequeueConfiguredReusableCell(using: driveGridCellRegistration, for: indexPath, item: itemRef)
 
 				default:
 					return collectionView.dequeueConfiguredReusableCell(using: driveListCellRegistration, for: indexPath, item: itemRef)

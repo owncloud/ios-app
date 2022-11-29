@@ -31,6 +31,8 @@ class DriveHeaderCell: DriveListCell {
 	weak var collectionViewController: CollectionViewController?
 	var collectionItemRef: CollectionViewController.ItemRef?
 
+	var coverImageHeightConstraint : NSLayoutConstraint?
+
 	deinit {
 		Theme.shared.unregister(client: self)
 		coverObservation?.invalidate()
@@ -53,7 +55,9 @@ class DriveHeaderCell: DriveListCell {
 		textOuterSpacing = 16
 
 		coverImageResourceView.fallbackView = nil
-		coverImageHeightConstraint = coverImageResourceView.heightAnchor.constraint(greaterThanOrEqualToConstant: 160)
+		if let suggestedCellHeight {
+			coverImageHeightConstraint = coverImageResourceView.heightAnchor.constraint(greaterThanOrEqualToConstant: suggestedCellHeight)
+		}
 
 		contentView.insertSubview(darkBackgroundView, belowSubview: titleLabel)
 
@@ -65,18 +69,25 @@ class DriveHeaderCell: DriveListCell {
 		})
 	}
 
-	func recomputeHeight() {
+	var suggestedCellHeight: CGFloat? {
 		var newHeight : CGFloat = 160
 
 		if !isRequestingCoverImage && (coverImageResourceView.contentStatus == .none) {
 			newHeight = 80
 		}
 
-		if let constantHeight = coverImageHeightConstraint?.constant, constantHeight != newHeight {
+		return newHeight
+	}
+
+	func recomputeHeight() {
+		if let newHeight = suggestedCellHeight, let constantHeight = coverImageHeightConstraint?.constant, constantHeight != newHeight {
 			coverImageHeightConstraint?.constant = newHeight
 
 			if let collectionViewController = collectionViewController, let collectionItemRef = collectionItemRef {
-				collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef], animated: false)
+				collectionViewController.performDataSourceUpdate(with: { updateDone in
+					collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef], animated: false)
+					updateDone()
+				})
 			}
 		}
 	}
@@ -92,10 +103,7 @@ class DriveHeaderCell: DriveListCell {
 	}
 
 	override func configureLayout() {
-
-		NSLayoutConstraint.activate([
-			coverImageHeightConstraint!,
-
+		var constraints = [
 			coverImageResourceView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
 			coverImageResourceView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 			coverImageResourceView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -115,12 +123,12 @@ class DriveHeaderCell: DriveListCell {
 			darkBackgroundView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 			darkBackgroundView.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -textOuterSpacing),
 			darkBackgroundView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-		])
-	}
+		]
 
-	var coverImageHeightConstraint : NSLayoutConstraint?
+		if let coverImageHeightConstraint {
+			constraints.append(coverImageHeightConstraint)
+		}
 
-	@objc func growHeight() {
-		coverImageHeightConstraint?.constant += 64
+		NSLayoutConstraint.activate(constraints)
 	}
 }

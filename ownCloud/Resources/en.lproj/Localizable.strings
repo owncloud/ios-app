@@ -127,14 +127,14 @@
 "Show more results" = "Show more results";
 
 /* Saved searches */
-"Saved search views" = "Saved search views";
+"Saved searches" = "Saved searches";
 "Saved search templates" = "Saved search templates";
-"Save as search view" = "Save as search view";
+"Save search" = "Save search";
 "Save as search template" = "Save as search template";
 
-"Name of view" = "Name of view";
-"Search view" = "Search view";
-"Search views" = "Search views";
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
 "Name of template" = "Name of template";
 "Search template" = "Search template";
 "Search templates" = "Search templates";
@@ -415,6 +415,8 @@
 "Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
 "Enable" = "Enable";
 "Exit Full Screen" = "Exit Full Screen";
+
+"Select one or more items." = "Select one or more items.";
 
 /* App Provider */
 "New document" = "New document";

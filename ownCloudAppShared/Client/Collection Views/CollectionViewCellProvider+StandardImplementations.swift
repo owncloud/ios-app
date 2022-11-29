@@ -92,7 +92,10 @@ public extension CollectionViewCellProvider {
 						// Request reconfiguration of cell
 						itemRecord.retrieveItem(completionHandler: { error, itemRecord in
 							if let collectionViewController = cellConfiguration.hostViewController {
-								collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+								collectionViewController.performDataSourceUpdate(with: { updateDone in
+									collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+									updateDone()
+								})
 							}
 						})
 					}

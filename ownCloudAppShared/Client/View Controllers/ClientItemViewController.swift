@@ -614,6 +614,26 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	var multiSelectionActionContext: ActionContext?
 	var multiSelectionActionsDatasource: OCDataSourceArray?
 
+	var multiSelectionLeftNavigationItem: UIBarButtonItem?
+	var multiSelectionLeftNavigationItems: [UIBarButtonItem]?
+	var multiSelectionToggleSelectionBarButtonItem: UIBarButtonItem? {
+		willSet {
+			if multiSelectionToggleSelectionBarButtonItem == nil {
+				multiSelectionLeftNavigationItem = navigationItem.leftBarButtonItem
+				multiSelectionLeftNavigationItems = navigationItem.leftBarButtonItems
+			}
+		}
+
+		didSet {
+			if multiSelectionToggleSelectionBarButtonItem == nil {
+				navigationItem.leftBarButtonItem = multiSelectionLeftNavigationItem
+				navigationItem.leftBarButtonItems = multiSelectionLeftNavigationItems
+			} else {
+				navigationItem.leftBarButtonItem = multiSelectionToggleSelectionBarButtonItem
+			}
+		}
+	}
+
 	public var isMultiSelecting : Bool = false {
 		didSet {
 			if oldValue != isMultiSelecting {
@@ -626,12 +646,19 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						multiSelectionActionContext = ActionContext(viewController: self, clientContext: clientContext, core: core, query: query, items: [OCItem](), location: actionsLocation)
 					}
 
+					// Setup select all / deselect all in navigation item
+					multiSelectionToggleSelectionBarButtonItem = UIBarButtonItem(title: "Select All".localized, primaryAction: UIAction(handler: { [weak self] action in
+						self?.selectDeselectAll()
+					}))
+
 					// Setup multi selection action datasource
 					multiSelectionActionsDatasource = OCDataSourceArray()
 					refreshMultiselectActions()
 					showActionsBar(with: multiSelectionActionsDatasource!)
 				} else {
+					// Restore navigation item
 					closeActionsBar()
+					multiSelectionToggleSelectionBarButtonItem = nil
 					multiSelectionActionsDatasource = nil
 					multiSelectionActionContext = nil
 				}
@@ -658,6 +685,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						self.actionsBarViewControllerSection?.animateDifferences = true
 					}
 				}
+
+				multiSelectionToggleSelectionBarButtonItem?.title = "Select All".localized
 			} else {
 				let actions = Action.sortedApplicableActions(for: multiSelectionActionContext)
 				let actionCompletionHandler : ActionCompletionHandler = { [weak self] action, error in
@@ -670,6 +699,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					action.completionHandler = actionCompletionHandler
 					actionItems.append(action.provideOCAction(singleVersion: true))
 				}
+
+				multiSelectionToggleSelectionBarButtonItem?.title = "Deselect All".localized
 			}
 
 			multiSelectionActionsDatasource?.setVersionedItems(actionItems)
@@ -679,7 +710,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public override func handleMultiSelection(of record: OCDataItemRecord, at indexPath: IndexPath, isSelected: Bool, clientContext: ClientContext) -> Bool {
 		if !super.handleMultiSelection(of: record, at: indexPath, isSelected: isSelected, clientContext: clientContext),
 		   let multiSelectionActionContext = multiSelectionActionContext {
-
 			retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath, _ in
 				if record.type == .item, let item = record.item as? OCItem {
 					if isSelected {
@@ -694,6 +724,40 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		return true
+	}
+
+	func itemRefs(for items: [OCItem]) -> [ItemRef] {
+		return items.map { item in
+			return item.dataItemReference
+		}
+	}
+
+	private var selectAllSubscription: OCDataSourceSubscription?
+
+	open func selectDeselectAll() {
+		if let selectedItems = multiSelectionActionContext?.items, selectedItems.count > 0 {
+			// Deselect all
+			let selectedIndexPaths = retrieveIndexPaths(for: itemRefs(for: selectedItems))
+
+			for indexPath in selectedIndexPaths {
+				collectionView.deselectItem(at: indexPath, animated: false)
+				self.collectionView(collectionView, didDeselectItemAt: indexPath)
+			}
+		} else {
+			// Select all
+			selectAllSubscription = itemsQueryDataSource?.subscribe(updateHandler: { (subscription) in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+				let selectIndexPaths = self.retrieveIndexPaths(for: snapshot.items)
+
+				for indexPath in selectIndexPaths {
+					self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+					self.collectionView(self.collectionView, didSelectItemAt: indexPath)
+				}
+
+				subscription.terminate()
+				self.selectAllSubscription = nil
+			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+		}
 	}
 
 	// MARK: - Drag & Drop
@@ -866,7 +930,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						}), savedSearches.count > 0 {
 							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
 								.spacing(10),
-								.text("Saved search views".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
+								.text("Saved searches".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
 							])
 							savedSearchTemplatesHeaderView.elementInsets = .zero
 

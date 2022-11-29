@@ -28,6 +28,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		case list(appearance: UICollectionLayoutListConfiguration.Appearance, headerMode: UICollectionLayoutListConfiguration.HeaderMode? = nil, headerTopPadding : CGFloat? = nil, footerMode: UICollectionLayoutListConfiguration.FooterMode? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case fullWidth(itemHeightDimension: NSCollectionLayoutDimension, groupHeightDimension: NSCollectionLayoutDimension, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case sideways(item: NSCollectionLayoutItem? = nil, groupSize: NSCollectionLayoutSize? = nil, innerInsets : NSDirectionalEdgeInsets? = nil, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil, orthogonalScrollingBehaviour: UICollectionLayoutSectionOrthogonalScrollingBehavior = .continuousGroupLeadingBoundary)
+		case grid(itemWidthDimension: NSCollectionLayoutDimension, itemHeightDimension: NSCollectionLayoutDimension, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case custom(generator: ((_ collectionViewController: CollectionViewController?, _ layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection))
 
 		func collectionLayoutSection(for collectionViewController: CollectionViewController? = nil, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
@@ -170,6 +171,32 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					}
 					return layoutSection
 
+				case .grid(let itemWidthDimension, let itemHeightDimension, let contentInsets):
+					let itemSize = NSCollectionLayoutSize(widthDimension: itemWidthDimension, heightDimension: itemHeightDimension)
+					let item = NSCollectionLayoutItem(layoutSize: itemSize)
+					item.contentInsets = contentInsets ?? NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+
+					let group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: itemHeightDimension), subitems: [ item ])
+
+					let section = NSCollectionLayoutSection(group: group)
+					section.contentInsets = contentInsets ?? NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+
+					section.interGroupSpacing = 0
+
+					return section
+//					let itemSize = NSCollectionLayoutSize(widthDimension: itemWidthDimension,
+//									     heightDimension: .fractionalHeight(1.0))
+//					let item = NSCollectionLayoutItem(layoutSize: itemSize)
+//					item.contentInsets = contentInsets ?? NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+//
+//					let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+//									      heightDimension: itemHeightDimension)
+//					let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+//											 subitems: [item])
+//
+//					let section = NSCollectionLayoutSection(group: group)
+//					return section
+
 				// Custom
 				case .custom(let generator):
 					return generator(collectionViewController, layoutEnvironment)
@@ -266,6 +293,24 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	deinit {
 		dataSourceSubscription?.terminate()
+	}
+
+	// MARK: - Expand/Collapse
+	func addExpanded(item: CollectionViewController.ItemRef) {
+		expandedItemRefs.append(item)
+	}
+
+	func removeExpanded(item: CollectionViewController.ItemRef) {
+		if let idx = expandedItemRefs.firstIndex(of: item) {
+			expandedItemRefs.remove(at: idx)
+		}
+
+//		if let (itemRef, _) = collectionViewController?.unwrap(item) {
+//			dataSourcesByParentItemRef[itemRef] = nil
+//
+//			dataSourceSubscriptionsByParentItemRef[itemRef]?.terminate()
+//			dataSourceSubscriptionsByParentItemRef[itemRef] = nil
+//		}
 	}
 
 	// MARK: - Data source handling
@@ -384,6 +429,8 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			}
 		}
 
+		#warning("Consider setting cell state (selection, etc.) here")
+
 		return cell ?? UICollectionViewCell.emptyFallbackCell
 	}
 
@@ -443,6 +490,13 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	}
 
 	func handleUpdate(for subscription: OCDataSourceSubscription, parentItemRef: CollectionViewController.ItemRef?) {
+		collectionViewController?.performDataSourceUpdate { updateDone in
+			self._handleUpdate(for: subscription, parentItemRef: parentItemRef)
+			updateDone()
+		}
+	}
+
+	func _handleUpdate(for subscription: OCDataSourceSubscription, parentItemRef: CollectionViewController.ItemRef?) {
 		// Handle updates
 		if let collectionViewController = collectionViewController,
 		   let collectionViewDataSource = collectionViewController.collectionViewDataSource {
@@ -503,6 +557,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					if lastItemsToAddCount == itemsToAdd.count {
 						// Couldn't insert any item, quit loop
 						Log.warning("Could not insert items \(itemsToAdd). Quitting loop without inserting.")
+						break
 					}
 				}
 
@@ -516,7 +571,14 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 				// Tell snapshot that updatedItems were reconfigured
 				if let updatedItems = updatedItems {
-					let wrappedUpdatedItems = collectionViewController.wrap(references: Array(updatedItems), forSection: self.identifier)
+					var wrappedUpdatedItems = collectionViewController.wrap(references: Array(updatedItems), forSection: self.identifier)
+
+					if collectionViewController.supportsHierarchicContent {
+						wrappedUpdatedItems = wrappedUpdatedItems.filter({ itemRef in
+							return snapshot.indexOfItem(itemRef) != nil
+						})
+					}
+
 					snapshot.reconfigureItems(wrappedUpdatedItems)
 				}
 
@@ -552,6 +614,9 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				// Apply changes and animate them
 				collectionViewDataSource.apply(snapshot, animatingDifferences: true)
 			}
+
+			// Notify view controller of content updates
+			collectionViewController.setContentDidUpdate()
 		}
 	}
 

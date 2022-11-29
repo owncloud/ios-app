@@ -21,7 +21,27 @@ import ownCloudApp
 import ownCloudSDK
 
 open class AccountConnection: NSObject {
-	public enum Status: String {
+	public struct AuthFailure {
+		var bookmark: OCBookmark
+
+		var error: NSError?
+
+		var title: String
+		var message: String?
+
+		var ignoreLabel: String
+		var ignoreStyle: UIAlertAction.Style
+
+		var hasEditOption: Bool
+
+		var failureResolver: ((_ authFailure: AuthFailure, _ context: ClientContext) -> Void)?
+
+		func resolve(context: ClientContext) {
+			failureResolver?(self, context)
+		}
+	}
+
+	public enum Status {
 		case noCore
 		case offline
 		case connecting
@@ -29,7 +49,7 @@ open class AccountConnection: NSObject {
 		case online
 
 		case busy
-		case authenticationError
+		case authenticationError(failure: AuthFailure)
 	}
 
 	public static let StatusChangedNotification = NSNotification.Name("AccountConnectionStatusChanged")
@@ -41,7 +61,7 @@ open class AccountConnection: NSObject {
 
 	public dynamic var status: Status = .noCore {
 		didSet {
-			Log.debug("Account connection status: \(status.rawValue)")
+			Log.debug("Account connection status: \(status)")
 
 			let newStatus = status
 
@@ -466,7 +486,6 @@ open class AccountConnection: NSObject {
 
 				case .offline, .unavailable:
 					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
-					// status = .coreAvailable
 			}
 
 			if connectionStatus == .online {

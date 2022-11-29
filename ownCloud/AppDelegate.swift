@@ -28,8 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	private let delayForLinkResolution = 0.2
 
 	var window: ThemeWindow?
-	var serverListTableViewController: ServerListTableViewController?
-	var staticLoginViewController : StaticLoginViewController?
+//	var serverListTableViewController: ServerListTableViewController?
+//	var staticLoginViewController : StaticLoginViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		var navigationController: UINavigationController?
@@ -54,28 +54,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		CollectionViewCellProvider.registerStandardImplementations()
 
-		if VendorServices.shared.isBranded {
-			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
-			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			rootViewController = navigationController
-		} else {
-			if OCBookmarkManager.shared.bookmarks.count == 1 {
-				serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-			} else {
-				serverListTableViewController = ServerListTableViewController(style: .plain)
-			}
-
-			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
-			rootViewController = navigationController
-		}
+//		if VendorServices.shared.isBranded {
+//			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
+//			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
+//			navigationController?.setNavigationBarHidden(true, animated: false)
+//			rootViewController = navigationController
+//		} else {
+//			if OCBookmarkManager.shared.bookmarks.count == 1 {
+//				serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+//			} else {
+//				serverListTableViewController = ServerListTableViewController(style: .plain)
+//			}
+//
+//			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+//			rootViewController = navigationController
+//		}
 
 		// Only set up window on non-iPad devices and not on macOS 11 (Apple Silicon) which is >= iOS 14
 		if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
 			// do not set the rootViewController for iOS app on Mac
 		} else {
-			window?.rootViewController = rootViewController!
-			window?.makeKeyAndVisible()
+//			window?.rootViewController = rootViewController!
+//			window?.makeKeyAndVisible()
 		}
 
 		ImportFilesController.removeImportDirectory()

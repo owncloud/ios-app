@@ -17,9 +17,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class CardCellBackgroundView : UIView {
+public class CardCellBackgroundView : UIView {
 	init(backgroundColor: UIColor, insets: NSDirectionalEdgeInsets, cornerRadius: CGFloat) {
 		super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
@@ -37,10 +36,10 @@ class CardCellBackgroundView : UIView {
 	}
 }
 
-class CardHeaderView : UIView, Themeable {
-	var label : UILabel
+public class CardHeaderView : UIView, Themeable {
+	public var label : UILabel
 
-	init(title: String) {
+	public init(title: String) {
 		label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -71,7 +70,7 @@ class CardHeaderView : UIView, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	override func didMoveToSuperview() {
+	override public func didMoveToSuperview() {
 		super.didMoveToSuperview()
 
 		if self.superview != nil {
@@ -79,7 +78,7 @@ class CardHeaderView : UIView, Themeable {
 		}
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		label.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.4, weight: .bold)
 		label.textColor = collection.tableRowColors.labelColor
 
@@ -87,15 +86,15 @@ class CardHeaderView : UIView, Themeable {
 	}
 }
 
-enum IssueUserResponse {
+public enum IssueUserResponse {
 	case cancel
 	case approve
 	case dismiss
 }
 
-class IssuesCardViewController: StaticTableViewController {
-	typealias CompletionHandler = (IssueUserResponse) -> Void
-	typealias DismissHandler = () -> Void
+open class IssuesCardViewController: StaticTableViewController {
+	public typealias CompletionHandler = (IssueUserResponse) -> Void
+	public typealias DismissHandler = () -> Void
 
 	var issues : DisplayIssues
 	var headerTitle : String?
@@ -105,7 +104,7 @@ class IssuesCardViewController: StaticTableViewController {
 	private var completionHandler : CompletionHandler?
 	private var dismissHandler : DismissHandler?
 
-	required init(with issue: OCIssue, displayIssues: DisplayIssues? = nil, bookmark: OCBookmark? = nil, completion:@escaping CompletionHandler, dismissed: DismissHandler? = nil) {
+	required public init(with issue: OCIssue, displayIssues: DisplayIssues? = nil, bookmark: OCBookmark? = nil, completion:@escaping CompletionHandler, dismissed: DismissHandler? = nil) {
 		issues = (displayIssues != nil) ? displayIssues! : issue.prepareForDisplay()
 		options = []
 		completionHandler = completion
@@ -231,11 +230,11 @@ class IssuesCardViewController: StaticTableViewController {
 		self.tableView.separatorStyle = .none
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-
-	static func present(on hostViewController: UIViewController, issue: OCIssue, displayIssues: DisplayIssues? = nil, bookmark: OCBookmark? = nil, completion:@escaping CompletionHandler, dismissed: DismissHandler? = nil) {
+	
+	static public func present(on hostViewController: UIViewController, issue: OCIssue, displayIssues: DisplayIssues? = nil, bookmark: OCBookmark? = nil, completion:@escaping CompletionHandler, dismissed: DismissHandler? = nil) {
 		let issuesViewController = self.init(with: issue, displayIssues: displayIssues, bookmark: bookmark, completion: completion, dismissed: dismissed)
 
 		let headerView = CardHeaderView(title: issuesViewController.headerTitle ?? "")
@@ -258,7 +257,7 @@ class IssuesCardViewController: StaticTableViewController {
 		self.presentingViewController?.dismiss(animated: true)
 	}
 
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	override public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		tableView.backgroundColor = collection.tableBackgroundColor

@@ -142,9 +142,23 @@ class ActionCell: ThemeableCollectionViewCell {
 		var backgroundConfig = backgroundConfiguration?.updated(for: state)
 
 		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) {
-			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : UIColor(white: 0, alpha: 0.10)
+			switch type {
+				case .regular:
+					backgroundConfig?.backgroundColor = UIColor(white: 0, alpha: 0.10)
+				case .warning:
+					backgroundConfig?.backgroundColor = collection.warningColors.highlighted.background
+				case .destructive:
+					backgroundConfig?.backgroundColor = collection.destructiveColors.highlighted.background
+			}
 		} else {
-			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : UIColor(white: 0, alpha: 0.05)
+			switch type {
+				case .regular:
+					backgroundConfig?.backgroundColor = UIColor(white: 0, alpha: 0.05)
+				case .warning:
+					backgroundConfig?.backgroundColor = collection.warningColors.normal.background
+				case .destructive:
+					backgroundConfig?.backgroundColor = collection.destructiveColors.normal.background
+			}
 		}
 
 		backgroundConfig?.cornerRadius = 8
@@ -154,6 +168,20 @@ class ActionCell: ThemeableCollectionViewCell {
 
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
+
+		switch type {
+			case .regular:
+				titleLabel.textColor = collection.tintColor
+				iconView.tintColor = collection.tintColor
+
+			case .warning:
+				titleLabel.textColor = collection.warningColors.normal.foreground
+				iconView.tintColor = collection.warningColors.normal.foreground
+
+			case .destructive:
+				titleLabel.textColor = collection.destructiveColors.normal.foreground
+				iconView.tintColor = collection.destructiveColors.normal.foreground
+		}
 
 		titleLabel.textColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
 		iconView.tintColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
@@ -188,25 +216,72 @@ extension ActionCell {
 
 		let actionSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var content = cell.defaultContentConfiguration()
+			var backgroundConfiguration: UIBackgroundConfiguration? = UIBackgroundConfiguration.listSidebarCell()
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
+				var accessories: [UICellAccessory] = []
+
 				if let action = item as? OCAction {
 					content.text = action.title
 					content.image = action.icon
+
+					switch action.type {
+						case .warning:
+							content.textProperties.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .semibold)
+
+							content.textProperties.color = Theme.shared.activeCollection.warningColors.normal.foreground
+							content.imageProperties.tintColor = Theme.shared.activeCollection.warningColors.normal.foreground
+							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.warningColors.normal.background
+
+						case .destructive:
+							content.textProperties.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .semibold)
+
+							content.textProperties.color = Theme.shared.activeCollection.destructiveColors.normal.foreground
+							content.imageProperties.tintColor = Theme.shared.activeCollection.destructiveColors.normal.foreground
+							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.destructiveColors.normal.background
+
+						default: break
+					}
+
+					if let buttonLabel = action.buttonLabel {
+						let context = cellConfiguration.clientContext
+
+						var buttonConfig = UIButton.Configuration.filled()
+						buttonConfig.title = buttonLabel
+						buttonConfig.buttonSize = .mini
+						buttonConfig.cornerStyle = .capsule
+
+						let button: UIButton = UIButton()
+						button.configuration = buttonConfig
+						button.addAction(UIAction(handler: { [weak action, weak context] _ in
+							var options: [OCActionRunOptionKey:Any] = [:]
+
+							if let context {
+								options[.clientContext] = context
+							}
+
+							action?.run(options: options)
+						}), for: .primaryActionTriggered)
+
+						accessories.append(.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing())))
+					}
 				}
 
 				if let sidebarAction = item as? CollectionSidebarAction {
 					if let badgeCount = sidebarAction.badgeCount {
-						cell.accessories = [
-							UICellAccessory.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: RoundedLabel(text: "\(badgeCount)", style: .token), placement: .trailing()))
-						]
-					} else {
-						cell.accessories = []
+						accessories.append(.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: RoundedLabel(text: "\(badgeCount)", style: .token), placement: .trailing())))
+					}
+					if sidebarAction.childrenDataSource != nil {
+						let headerDisclosureOption = UICellAccessory.OutlineDisclosureOptions(style: .cell)
+						accessories.append(.outlineDisclosure(options: headerDisclosureOption))
 					}
 				}
+
+				cell.accessories = accessories
 			})
 
 			cell.contentConfiguration = content
+			cell.backgroundConfiguration = backgroundConfiguration
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .action, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

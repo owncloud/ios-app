@@ -25,6 +25,8 @@ public extension OCActionRunOptionKey {
 
 public extension OCActionPropertyKey {
 	static let supportsDrop = OCActionPropertyKey(rawValue: "supportsDrop")
+	static let buttonLabel = OCActionPropertyKey(rawValue: "buttonLabel")
+	static let selectable = OCActionPropertyKey(rawValue: "selectable")
 }
 
 extension OCAction {
@@ -35,6 +37,26 @@ extension OCAction {
 
 		set {
 			properties[.supportsDrop] = newValue
+		}
+	}
+
+	var selectable: Bool {
+		get {
+			return properties[.selectable] as? Bool ?? true
+		}
+
+		set {
+			properties[.selectable] = newValue
+		}
+	}
+
+	var buttonLabel: String? {
+		get {
+			return properties[.buttonLabel] as? String
+		}
+
+		set {
+			properties[.buttonLabel] = newValue
 		}
 	}
 }
@@ -107,5 +129,15 @@ open class CollectionSidebarAction: OCAction {
 		completion?(false)
 
 		return nil
+	}
+
+	open var childrenDataSource: OCDataSource?
+
+	open override func hasChildren(using source: OCDataSource) -> Bool {
+		return childrenDataSource != nil
+	}
+
+	open override func dataSourceForChildren(using source: OCDataSource) -> OCDataSource? {
+		return childrenDataSource
 	}
 }

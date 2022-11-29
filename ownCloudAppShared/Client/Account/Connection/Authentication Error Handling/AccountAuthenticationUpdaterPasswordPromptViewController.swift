@@ -1,5 +1,5 @@
 //
-//  ClientAuthenticationUpdaterViewController.swift
+//  AccountAuthenticationUpdaterPasswordPromptViewController.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 26.04.20.
@@ -18,15 +18,15 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class ClientAuthenticationUpdaterViewController: StaticTableViewController {
+class AccountAuthenticationUpdaterPasswordPromptViewController: StaticTableViewController {
 	var headerText : String
-	typealias PasswordValidationHandler = (_ password: String, _ completion: @escaping (_ error: Error?) -> Void) -> Void
 	var validationHandler : PasswordValidationHandler?
 	var validationQueue : OCAsyncSequentialQueue
 
-	init(passwordHeaderText: String, passwordValidationHandler : @escaping PasswordValidationHandler) {
+	typealias PasswordValidationHandler = (_ password: String, _ completion: @escaping (_ error: Error?) -> Void) -> Void
+
+	required init(passwordHeaderText: String, passwordValidationHandler : @escaping PasswordValidationHandler) {
 		self.headerText = passwordHeaderText
 		self.validationHandler = passwordValidationHandler
 
@@ -109,7 +109,7 @@ class ClientAuthenticationUpdaterViewController: StaticTableViewController {
 	}
 }
 
-extension ClientAuthenticationUpdaterViewController : UITextFieldDelegate {
+extension AccountAuthenticationUpdaterPasswordPromptViewController : UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		startValidation(textField)
 

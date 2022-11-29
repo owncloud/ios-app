@@ -134,7 +134,10 @@ class ExpandableResourceCell: UICollectionViewListCell, Themeable {
 		}
 
 		if let collectionViewController = collectionViewController, let collectionItemRef = collectionItemRef {
-			collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef], animated: false)
+			collectionViewController.performDataSourceUpdate(with: { updateDone in
+				collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef], animated: false)
+				updateDone()
+			})
 		}
 	}
 

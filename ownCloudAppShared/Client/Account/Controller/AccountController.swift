@@ -54,7 +54,13 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	open var clientContext: ClientContext
 	open var configuration: Configuration
 
+	open var connectionErrorHandler: AccountConnectionCoreErrorHandler?
+
 	weak var accountControllerSection: AccountControllerSection?
+
+	open var bookmark: OCBookmark? { // Convenience accessor
+		return connection?.bookmark
+	}
 
 	public init(bookmark: OCBookmark, context: ClientContext, configuration: Configuration) {
 		let accountConnection = AccountConnectionPool.shared.connection(for: bookmark)
@@ -69,10 +75,20 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		self.configuration = configuration
 
 		itemsDataSource = OCDataSourceComposition(sources: [])
+		controllerDataSource = OCDataSourceArray(items: [])
 
 		consumer = AccountConnectionConsumer()
 
+		spacesFolderDataItemRef = UUID().uuidString as NSString
+		quickAccessFolderDataItemRef = UUID().uuidString as NSString
+		savedSearchesFolderDataItemRef = UUID().uuidString as NSString
+
+		legacyAccountRootLocation = OCLocation.legacyRoot
+		legacyAccountRootLocation.bookmarkUUID = bookmark.uuid
+
 		super.init()
+
+		controllerDataSource.setVersionedItems([ self ])
 
 		consumer.owner = self
 		consumer.statusObserver = self
@@ -80,6 +96,13 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		connection = accountConnection
 		connection?.add(consumer: consumer)
+
+		addErrorHandler()
+	}
+
+	func destroy() {
+		// Break retain cycles
+		controllerDataSource.setVersionedItems([])
 	}
 
 	deinit {
@@ -96,7 +119,12 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	public func connect(completion: CompletionHandler?) {
 		if let bookmark = connection?.bookmark,
 		   !OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: clientContext.rootViewController) {
+		   	// Add controller's error handler
+			addErrorHandler()
+
 			connection?.connect(consumer: consumer, completion: completion)
+		} else {
+			completion?(NSError.init(ocError: .internal))
 		}
 	}
 
@@ -104,30 +132,88 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		connection?.disconnect(consumer: consumer, completion: completion)
 	}
 
+	func addErrorHandler() {
+		if connectionErrorHandler == nil {
+			self.connectionErrorHandler = AccountConnectionErrorHandler(for: clientContext)
+		}
+	}
+
+	func removeErrorHandler() {
+		connectionErrorHandler = nil
+	}
+
 	// MARK: - Status handling
 	public func account(connection: AccountConnection, changedStatusTo status: AccountConnection.Status, initial: Bool) {
 		if let vault = connection.core?.vault {
 			// Create savedSearchesDataSource if wanted
 			if configuration.showSavedSearches, savedSearchesDataSource == nil {
-				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: nil)
+				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { obj, keypath, newValue in
+					if let savedSearches = newValue as? [OCSavedSearch] {
+						return savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
+					}
+
+					return nil
+				})
 			}
 		} else {
 			savedSearchesDataSource = nil
 		}
 
-		if status == .coreAvailable || status == .online {
-			// Begin to show account items
-			showAccountItems = true
-			showDisconnectButton = true
-		} else {
-			// Do not show account items
-			showAccountItems = false
-			showDisconnectButton = false
+		switch status {
+			case .authenticationError(failure: let failure):
+				// Authentication failure
+				authFailure = failure
+
+			case .coreAvailable, .online:
+				// Begin to show account items
+				showAccountItems = true
+				showDisconnectButton = true
+				authFailure = nil
+
+			default:
+				// Do not show account items
+				showAccountItems = false
+				showDisconnectButton = false
+				authFailure = nil
 		}
 
-		if status == .noCore, !initial {
+		if case .noCore = status, !initial {
+			// Remove controller's error handler
+			removeErrorHandler()
+
 			// Send connection closed navigation event
 			NavigationRevocationEvent.connectionClosed(bookmarkUUID: connection.bookmark.uuid).send()
+		}
+	}
+
+	// MARK: - Authentication failures
+	var authFailure: AccountConnection.AuthFailure? {
+		didSet {
+			if let authFailure = authFailure {
+				let authFailureResolveAction = OCAction(title: authFailure.title, icon: OCSymbol.icon(forSymbolName: "person.crop.circle.badge.exclamationmark"), action: { [weak self] _, _, completion in
+					if let self = self {
+						self.authFailure?.resolve(context: self.clientContext)
+					}
+					completion(nil)
+				})
+
+				authFailureResolveAction.selectable = false
+				authFailureResolveAction.buttonLabel = "More".localized
+				authFailureResolveAction.type = .warning
+
+				controllerDataSource.setVersionedItems([
+					self,
+					authFailureResolveAction
+				])
+			} else {
+				if authFailure == nil, oldValue == nil {
+					return
+				}
+
+				controllerDataSource.setVersionedItems([
+					self
+				])
+			}
 		}
 	}
 
@@ -138,6 +224,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				if showAccountItems {
 					composeItemsDataSource()
 				} else {
+					authFailure = nil
 					itemsDataSource.sources = []
 				}
 			}
@@ -151,12 +238,44 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	open var specialItems: [SpecialItem : OCDataItem] = [:]
 	open var specialItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
 
+	open var personalSpaceDataItemRef: OCDataItemReference? {
+		var personalSpaceItemRef: OCDataItemReference?
+
+		if connection?.core?.useDrives == true {
+			personalSpaceItemRef = connection?.core?.drives.first(where: { drive in
+				return drive.specialType == .personal
+			})?.dataItemReference
+		} else {
+			personalSpaceItemRef = legacyAccountRootLocation.dataItemReference
+		}
+
+		return personalSpaceItemRef
+	}
+
+	open var sharesFolderDataItemRef: OCDataItemReference? {
+		return connection?.core?.drives.first(where: { drive in
+			return drive.specialType == .shares
+		})?.dataItemReference
+	}
+
+	open var spacesFolderDataItemRef: OCDataItemReference
+	open var quickAccessFolderDataItemRef: OCDataItemReference
+	open var savedSearchesFolderDataItemRef: OCDataItemReference
+
+	private var legacyAccountRootLocation: OCLocation
+
 	func composeItemsDataSource() {
 		if let core = connection?.core {
 			var sources : [OCDataSource] = []
 
 			if core.useDrives {
-				let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"))
+				let (spacesDataSource, spacesFolderItem) = self.buildActionFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), folderItemRef: spacesFolderDataItemRef, viewControllerProvider: { context, action in
+					if let context {
+						return AccountControllerSpacesGridViewController(with: context)
+					}
+
+					return nil
+				})
 
 				specialItems[.savedSearchesFolder] = spacesFolderItem
 
@@ -170,17 +289,15 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 					spacesDataSource
 				]
 			} else {
-				let accountRootLocation = OCLocation.legacyRoot
-
-				specialItems[.accountRoot] = accountRootLocation
+				specialItems[.accountRoot] = legacyAccountRootLocation
 
 				sources = [
-					OCDataSourceArray(items: [accountRootLocation])
+					OCDataSourceArray(items: [legacyAccountRootLocation])
 				]
 			}
 
 			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
-				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Search views".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"))
+				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef: savedSearchesFolderDataItemRef)
 
 				specialItems[.savedSearchesFolder] = savedSearchesFolderItem
 
@@ -197,8 +314,31 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 	}
 
-	func buildFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?) -> (OCDataSource, OCDataItemPresentable) {
-		let folderItem = OCDataItemPresentable(reference: "_folder_\(UUID().uuidString)" as NSString, originalDataItemType: .presentable, version: "1" as NSString)
+	func buildActionFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?, folderItemRef: OCDataItemReference = "_folder_\(UUID().uuidString)" as NSString, viewControllerProvider: @escaping CollectionSidebarAction.ViewControllerProvider) -> (OCDataSource, CollectionSidebarAction) {
+		let folderAction = CollectionSidebarAction(with: title, icon: icon, viewControllerProvider: viewControllerProvider)
+		folderAction.childrenDataSource = contentsDataSource
+//
+//		let folderItem = OCDataItemPresentable(reference: folderItemRef, originalDataItemType: .presentable, version: "1" as NSString)
+//		folderItem.title = title
+//		folderItem.image = icon
+//
+//		folderItem.hasChildrenProvider = { (dataSource, item) in
+//			return true
+//		}
+//
+//		folderItem.childrenDataSourceProvider = { (parentItemDataSource, parentItem) in
+//			return contentsDataSource
+//		}
+
+		let titleSource = OCDataSourceArray()
+		titleSource.setVersionedItems([ folderAction ])
+
+		return (titleSource, folderAction)
+	}
+
+
+	func buildFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?, folderItemRef: OCDataItemReference = "_folder_\(UUID().uuidString)" as NSString) -> (OCDataSource, OCDataItemPresentable) {
+		let folderItem = OCDataItemPresentable(reference: folderItemRef, originalDataItemType: .presentable, version: "1" as NSString)
 		folderItem.title = title
 		folderItem.image = icon
 
@@ -217,6 +357,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	}
 
 	// MARK: - Data sources
+	open var controllerDataSource: OCDataSourceArray
 	open var itemsDataSource: OCDataSourceComposition
 	private weak var _accountSectionDataSource: OCDataSourceComposition?
 	open var accountSectionDataSource: OCDataSource? {
@@ -225,7 +366,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 
 		let dataSource = OCDataSourceComposition(sources: [
-			OCDataSourceArray(items: [self]),
+			controllerDataSource,
 			itemsDataSource
 		])
 
@@ -244,10 +385,33 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 }
 
 extension AccountController: DataItemSelectionInteraction {
-	public func allowSelection(in viewController: UIViewController?, with context: ClientContext?) -> Bool {
-		self.connect(completion: { error in
-			Log.debug("Connected with \(error.debugDescription)")
-		})
+	public func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool {
+		func revealPersonalItem() {
+			if let personalSpaceDataItemRef = self.personalSpaceDataItemRef,
+			   let sectionID = section?.identifier,
+			   let personalFolderItemRef = section?.collectionViewController?.wrap(references: [personalSpaceDataItemRef], forSection: sectionID).first,
+			   let /* spacesFolderItemRef */ _ = section?.collectionViewController?.wrap(references: [spacesFolderDataItemRef], forSection: sectionID).first {
+				section?.collectionViewController?.addActions([
+					CollectionViewAction(kind: .select(animated: false, scrollPosition: .centeredVertically), itemReference: personalFolderItemRef)
+					// CollectionViewAction(kind: .expand(animated: true), itemReference: spacesFolderItemRef)
+				])
+			}
+		}
+
+		if let bookmark = bookmark {
+			self.connect(completion: { error in
+				if let error = error {
+					Log.error("Connected with \(error)")
+
+					let alert = ThemedAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+					context?.rootViewController?.present(alert, animated: true)
+				} else {
+					revealPersonalItem()
+				}
+			})
+		}
 		return false
 	}
 }

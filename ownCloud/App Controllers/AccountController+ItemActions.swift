@@ -85,6 +85,17 @@ extension AccountController: DataItemContextMenuInteraction {
 		if let hostViewController = context?.originatingViewController ?? context?.rootViewController {
 			var menuItems: [UIMenuElement] = []
 
+			// Open in a new window
+//			if UIDevice.current.isIpad {
+//				let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+//					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+//						let activity = bookmark.openAccountUserActivity
+//						UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+//					}
+//				}
+//				menuItems.append(openWindow)
+//			}
+
 			// Edit
 			if VendorServices.shared.canEditAccount {
 				let editAction = UIAction(handler: { [weak self, weak hostViewController] action in

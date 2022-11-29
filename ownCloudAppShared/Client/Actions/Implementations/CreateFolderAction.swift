@@ -66,6 +66,7 @@ open class CreateFolderAction : Action {
 
 			OnMainThread {
 				let createFolderVC = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
+					// return (true, nil, nil) // Uncomment to allow errors (for f.ex. testing)
 					if name.contains("/") || name.contains("\\") {
 						return (false, nil, "File name cannot contain / or \\".localized)
 					} else {

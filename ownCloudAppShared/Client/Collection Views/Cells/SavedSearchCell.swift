@@ -181,7 +181,7 @@ extension OCSavedSearch {
 
 extension OCSavedSearch {
 	var displayName: String {
-		return (isNameUserDefined && name.count > 0) ? name : (isTemplate ? "Search template".localized : "Search view".localized)
+		return (isNameUserDefined && name.count > 0) ? name : (isTemplate ? "Search template".localized : "Saved search".localized)
 	}
 
 	var sideBarDisplayName: String {

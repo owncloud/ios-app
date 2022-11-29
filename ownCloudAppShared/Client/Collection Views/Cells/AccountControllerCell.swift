@@ -260,7 +260,11 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			updateStatus(iconFor: richStatus.status)
 		}
 
-		if let richStatus, let richStatusText = richStatus.text, richStatus.status != .offline, richStatus.status != .noCore {
+		var notOfflineNotCore: Bool = true
+		if case .offline = richStatus?.status { notOfflineNotCore = false }
+		if case .noCore = richStatus?.status { notOfflineNotCore = false }
+
+		if let richStatus, let richStatusText = richStatus.text, notOfflineNotCore {
 			detailLabel.text = richStatusText
 		} else {
 			detailLabel.text = detail
@@ -303,7 +307,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		var backgroundConfig = UIBackgroundConfiguration.listSidebarCell()
 		backgroundConfig.cornerRadius = 10
-		backgroundConfig.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
+		backgroundConfig.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
 
 		backgroundConfiguration = backgroundConfig
 	}

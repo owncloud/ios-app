@@ -100,7 +100,10 @@ public class CollectionViewCellConfiguration: NSObject {
 				// Request reconfiguration of cell
 				itemRecord.retrieveItem(completionHandler: { error, itemRecord in
 					if let collectionViewController = self.hostViewController {
-						collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+						collectionViewController.performDataSourceUpdate { updateDone in
+							collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+							updateDone()
+						}
 					}
 				})
 			}

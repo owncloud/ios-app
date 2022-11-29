@@ -113,6 +113,7 @@ public class ThemeCollection : NSObject {
 	@objc public var approvalColors : ThemeColorPairCollection
 	@objc public var neutralColors : ThemeColorPairCollection
 	@objc public var destructiveColors : ThemeColorPairCollection
+	@objc public var warningColors : ThemeColorPairCollection
 
 	@objc public var purchaseColors : ThemeColorPairCollection
 
@@ -225,6 +226,7 @@ public class ThemeCollection : NSObject {
 		self.purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
 		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale
 		self.destructiveColors = colors.resolveThemeColorPairCollection("Fill.destructiveColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red)))
+		self.warningColors = colors.resolveThemeColorPairCollection("Fill.warningColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.black, background: UIColor.systemYellow)))
 
 		self.tokenColors = colors.resolveThemeColorPairCollection("Fill.tokenColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColor, background: UIColor(white: 0, alpha: 0.1))))
 
@@ -635,14 +637,27 @@ class ThemeColorValueResolver : NSObject {
 
 @available(iOS 13.0, *)
 extension ThemeCollection {
-	var navigationBarAppearance : UINavigationBarAppearance {
+	func navigationBarAppearance(for style: ThemeItemStyle, scrollEdge: Bool = false) -> UINavigationBarAppearance {
 		let appearance = UINavigationBarAppearance()
 
-		appearance.configureWithOpaqueBackground()
-		appearance.backgroundColor = navigationBarColors.backgroundColor
-		appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
-		appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
-		appearance.shadowColor = .clear
+		switch style {
+			case .content:
+				appearance.configureWithOpaqueBackground()
+				// appearance.backgroundColor = tableBackgroundColor
+				appearance.titleTextAttributes = [ .foregroundColor : tableRowColors.labelColor  ]
+				appearance.largeTitleTextAttributes = [ .foregroundColor : tableRowColors.labelColor  ]
+				// appearance.shadowColor = .clear
+
+			default:
+				appearance.configureWithOpaqueBackground()
+				appearance.backgroundColor = navigationBarColors.backgroundColor
+				appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+				appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+		}
+
+		if scrollEdge {
+			appearance.shadowColor = .clear
+		}
 
 		return appearance
 	}

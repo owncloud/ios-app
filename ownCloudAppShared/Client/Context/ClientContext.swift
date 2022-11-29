@@ -117,6 +117,8 @@ public class ClientContext: NSObject {
 	public weak var progressSummarizer: ProgressSummarizer?
 	public weak var actionProgressHandlerProvider: ActionProgressHandlerProvider?
 
+	public weak var alertQueue: OCAsyncSequentialQueue?
+
 	// MARK: - UI item handling
 	public weak var openItemHandler: OpenItemAction?
 	public weak var viewItemHandler: ViewItemAction?
@@ -126,8 +128,11 @@ public class ClientContext: NSObject {
 	public weak var swipeActionsProvider: SwipeActionsProvider?
 	public weak var inlineMessageCenter: InlineMessageCenter?
 	public weak var dropTargetsProvider: DropTargetsProvider?
+
+	// MARK: - UI Handling
 	public weak var viewControllerPusher: ViewControllerPusher?
 	public weak var navigationRevocationHandler: NavigationRevocationHandler?
+	public weak var bookmarkEditingHandler: AccountAuthenticationHandlerBookmarkEditingHandler?
 
 	// MARK: - Permissions
 	public var permissionHandlers : [PermissionHandler]?
@@ -153,7 +158,7 @@ public class ClientContext: NSObject {
 	public typealias PostInitializationModifier = (_ owner: Any?, _ context: ClientContext) -> Void
 	public var postInitializationModifier: PostInitializationModifier?
 
-	public init(with inParent: ClientContext? = nil, accountConnection inAccountConnection: AccountConnection? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
+	public init(with inParent: ClientContext? = nil, accountConnection inAccountConnection: AccountConnection? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, alertQueue inAlertQueue: OCAsyncSequentialQueue? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
 		super.init()
 
 		parent = inParent
@@ -170,6 +175,8 @@ public class ClientContext: NSObject {
 
 		progressSummarizer = inProgressSummarizer ?? inParent?.progressSummarizer
 		actionProgressHandlerProvider = inParent?.actionProgressHandlerProvider
+
+		alertQueue = inAlertQueue ?? inParent?.alertQueue
 
 		openItemHandler = inParent?.openItemHandler
 		viewItemHandler = inParent?.viewItemHandler
@@ -297,5 +304,20 @@ extension ClientContext {
 		}
 
 		return viewController
+	}
+}
+
+extension ClientContext {
+	var presentationViewController: UIViewController? {
+		return originatingViewController ?? rootViewController
+	}
+
+	@discardableResult public func present(_ viewControllerToPresent: UIViewController, animated: Bool, completion: (() -> Void)? = nil) -> Bool {
+		if let fromViewController = presentationViewController {
+			fromViewController.present(viewControllerToPresent, animated: animated, completion: completion)
+			return true
+		}
+
+		return false
 	}
 }

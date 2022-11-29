@@ -18,10 +18,9 @@
 
 import UIKit
 import ownCloudUI
-import ownCloudAppShared
 
-class ThemeCertificateViewController: OCCertificateViewController, Themeable {
-	override func viewDidLoad() {
+public class ThemeCertificateViewController: OCCertificateViewController, Themeable {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		Theme.shared.register(client: self, applyImmediately: true)
@@ -31,7 +30,7 @@ class ThemeCertificateViewController: OCCertificateViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
 		self.tableView.separatorColor = collection.tableSeparatorColor
 
@@ -41,7 +40,7 @@ class ThemeCertificateViewController: OCCertificateViewController, Themeable {
 		self.lineValueColor = collection.tableRowColors.labelColor
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell : UITableViewCell = super.tableView(tableView, cellForRowAt: indexPath)
 
 		cell.backgroundColor = Theme.shared.activeCollection.tableRowColors.backgroundColor

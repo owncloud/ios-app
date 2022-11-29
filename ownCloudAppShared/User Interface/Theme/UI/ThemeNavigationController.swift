@@ -22,8 +22,17 @@ public protocol CustomStatusBarViewControllerProtocol : AnyObject {
 	func statusBarStyle() -> UIStatusBarStyle
 }
 
-open class ThemeNavigationController: UINavigationController {
-	private var themeToken : ThemeApplierToken?
+open class ThemeNavigationController: UINavigationController, Themeable {
+	public enum ThemeNavigationControllerStyle {
+		case regular
+		case splitViewContent
+	}
+
+	public var style: ThemeNavigationControllerStyle = .regular {
+		didSet {
+			applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
+		}
+	}
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
 		if let object = self.viewControllers.last {
@@ -44,19 +53,7 @@ open class ThemeNavigationController: UINavigationController {
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 
-		themeToken = Theme.shared.add(applier: {[weak self] (_, themeCollection, event) in
-			self?.applyThemeCollection(themeCollection)
-			self?.toolbar.applyThemeCollection(themeCollection)
-			self?.view.backgroundColor = .clear
-
-			if event == .update {
-				self?.setNeedsStatusBarAppearanceUpdate()
-			}
-		}, applyImmediately: true)
-	}
-
-	deinit {
-		Theme.shared.remove(applierForToken: themeToken)
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	open var popLastHandler : ((UIViewController?) -> Bool)?
@@ -75,5 +72,17 @@ open class ThemeNavigationController: UINavigationController {
 		}
 
 		return super.popViewController(animated: animated)
+	}
+
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		let style : ThemeItemStyle = style == .splitViewContent ? .content : .defaultForItem
+
+		self.applyThemeCollection(collection, itemStyle: style)
+		self.toolbar.applyThemeCollection(collection, itemStyle: style)
+		self.view.backgroundColor = .clear
+
+		if event == .update {
+			self.setNeedsStatusBarAppearanceUpdate()
+		}
 	}
 }

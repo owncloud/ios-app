@@ -17,21 +17,20 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class AlertViewController: UIViewController, Themeable {
-	var localizedHeader : String?
-	var localizedTitle : String
-	var localizedDescription : String
+open class AlertViewController: UIViewController, Themeable {
+	open var localizedHeader : String?
+	open var localizedTitle : String
+	open var localizedDescription : String
 
-	var options : [AlertOption]
+	open var options : [AlertOption]
 	private var chosenOption : AlertOption?
 
-	var alertView : AlertView?
+	open var alertView : AlertView?
 
-	var dismissHandler : (() -> Void)?
+	open var dismissHandler : (() -> Void)?
 
-	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, options: [AlertOption], dismissHandler: (() -> Void)? = nil) {
+	public init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, options: [AlertOption], dismissHandler: (() -> Void)? = nil) {
 		self.localizedHeader = localizedHeader
 		self.localizedTitle = localizedTitle
 		self.localizedDescription = localizedDescription
@@ -56,21 +55,22 @@ class AlertViewController: UIViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	override func loadView() {
+	override public func loadView() {
 		alertView = AlertView(localizedHeader: localizedHeader, localizedTitle: localizedTitle, localizedDescription: localizedDescription, options: options)
 		self.view = alertView
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
+		super.viewDidLoad()
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		becomeFirstResponder()
 	}
 
-	override func viewDidDisappear(_ animated: Bool) {
+	override public func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 
 		if chosenOption == nil, let dismissHandler = dismissHandler {
@@ -80,11 +80,11 @@ class AlertViewController: UIViewController, Themeable {
 		}
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 }

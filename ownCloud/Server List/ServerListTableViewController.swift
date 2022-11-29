@@ -71,7 +71,6 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
 		NotificationCenter.default.removeObserver(self, name: .NotificationAuthErrorForwarderOpenAccount, object: nil)
-		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
 	// MARK: - View controller events
@@ -157,13 +156,13 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 		self.navigationItem.largeTitleDisplayMode = .never
 		self.navigationItem.titleView = logoWrapperView
 
-		if ReleaseNotesDatasource().shouldShowReleaseNotes {
+		if ReleaseNotesDatasource.shouldShowReleaseNotes {
 			let releaseNotesHostController = ReleaseNotesHostViewController()
 			releaseNotesHostController.modalPresentationStyle = .formSheet
 			self.present(releaseNotesHostController, animated: true, completion: nil)
 		}
 
-		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
+		ReleaseNotesDatasource.updateLastSeenAppVersion()
 
 		if Migration.shared.legacyDataFound {
 			let migrationViewController = MigrationViewController()
@@ -537,8 +536,6 @@ class ServerListTableViewController: UITableViewController, Themeable, StateRest
 
 		self.present(alertController, animated: true, completion: nil)
 	}
-
-	var themeCounter : Int = 0
 
 	@IBAction func settings() {
 		let viewController : SettingsViewController = SettingsViewController(style: .grouped)

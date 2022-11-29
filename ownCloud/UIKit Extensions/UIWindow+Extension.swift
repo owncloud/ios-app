@@ -22,6 +22,7 @@ import ownCloudAppShared
 
 extension UIWindow {
     func display(itemWithID Identifier:String, in bookmark:OCBookmark) {
+    	/*
         if let rootViewController = self.rootViewController as? ThemeNavigationController {
             rootViewController.popToRootViewController(animated: false)
             if let serverListController = rootViewController.topViewController as? StateRestorationConnectProtocol {
@@ -34,5 +35,6 @@ extension UIWindow {
                 }
             }
         }
+        */
     }
 }

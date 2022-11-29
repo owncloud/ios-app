@@ -90,7 +90,7 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 
 				if context.pushViewControllerToNavigation(context: resultsContext, provider: { context in
 					let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true)
-					viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Search view".localized) + ")"
+					viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
 					viewController.revoke(in: context, when: .connectionClosed)
 					return viewController
 				}, push: true, animated: true) != nil {

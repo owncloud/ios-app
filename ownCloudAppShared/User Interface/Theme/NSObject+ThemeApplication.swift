@@ -48,6 +48,8 @@ public enum ThemeItemStyle {
 	case purchase
 	case welcome
     	case welcomeInformal
+
+    	case content
 }
 
 public enum ThemeItemState {
@@ -119,25 +121,35 @@ public extension NSObject {
 		}
 
 		if let navigationBar = self as? UINavigationBar {
-			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
-			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
-			navigationBar.tintColor = collection.navigationBarColors.tintColor
-			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
-			navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
-			navigationBar.isTranslucent = false
+			let navigationBarAppearance = collection.navigationBarAppearance(for: itemStyle)
+			let navigationBarScrollEdgeAppearance = collection.navigationBarAppearance(for: itemStyle, scrollEdge: true)
 
-			let navigationBarAppearance = collection.navigationBarAppearance
+			switch itemStyle {
+				case .content: break
+
+				default: break
+					// navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
+					// navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
+					// navigationBar.tintColor = collection.navigationBarColors.tintColor
+					// navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+					// navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+					// navigationBar.isTranslucent = false
+			}
 
 			navigationBar.standardAppearance = navigationBarAppearance
 			navigationBar.compactAppearance = navigationBarAppearance
-			navigationBar.scrollEdgeAppearance = navigationBarAppearance
+			navigationBar.scrollEdgeAppearance = navigationBarScrollEdgeAppearance
 		}
 
 		if let toolbar = self as? UIToolbar {
-			let appearance = UIToolbarAppearance()
-			appearance.backgroundColor = collection.toolbarColors.backgroundColor
-			toolbar.standardAppearance = appearance
-			toolbar.scrollEdgeAppearance = appearance
+			let standardAppearance = UIToolbarAppearance()
+			standardAppearance.backgroundColor = collection.toolbarColors.backgroundColor
+			toolbar.standardAppearance = standardAppearance
+
+			let edgeAppearance = UIToolbarAppearance()
+			edgeAppearance.backgroundColor = collection.toolbarColors.backgroundColor
+			edgeAppearance.shadowColor = .clear
+			toolbar.scrollEdgeAppearance = edgeAppearance
 
 			toolbar.barTintColor = collection.toolbarColors.backgroundColor
 			toolbar.tintColor = collection.toolbarColors.tintColor

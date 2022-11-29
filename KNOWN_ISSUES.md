@@ -1,4 +1,4 @@
-#  Known issues in version 12.0 alpha 2
+# Known issues
 
 ## WARNING
 
@@ -11,9 +11,38 @@ It should only be used with dedicated test servers, test data - and test devices
 	- breadcrumb title
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
-- the root of spaces-based accounts is not yet shown as hierarchic sidebar
 - support for sharing is widely untested and/or unavailable in the alpha
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
+- no grid overview for spaces yet
+- saved searches item is shown in sidebar even if there are no saved searches yet
+
+Missing:
+- [ ] quick access
+- [ ] proper iPhone support
+- [ ] static login/branded login UI
+- [ ] state restoration
+- [ ] full inline progress reporting when account databases are updated on first login
+- [ ] progress reporting in active connections
+- [ ] migration from the Legacy app is not currently wired up
+- [ ] iPadOS: opening an account in a new window
+	- by context menu (openAccountInWindow)
+	- by drag and drop (see ServerListTableViewController: UITableViewDragDelegate)
+- [ ] account auto connect (also account.auto-connect in ServerListTableViewController)
+- [ ] opening private links (display(itemWithID…:…))
+- [x] account issue handling
+- [ ] full themeing/branding support
+- [ ] reinstate Key Commands
+
+Jesus:
+- [ ] Presentation view after installing is missing
+- [ ] The icon to hide/show the sidebar is missing in portrait mode.
+- [x] Adding an oCIS account with existing custom spaces makes the app freezes and then crashes
+- [x] If an space is browsed and new space image is added in the web client, app crashes
+- [ ] "Open in new window" option does not work. It does nothing after clicking
+- [x] I miss the option to "Select All" and "Deselect All" in multiselection
+- [ ] "Copy" and "Move" operations show empty folder picker. No way to consolidate.
+- [ ] "Cut"/"Paste" only working in space scope
+- [ ] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
@@ -23,7 +52,7 @@ It should only be used with dedicated test servers, test data - and test devices
 
 # Evolution roadmap
 - collection views
-	- support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
+	- [x] support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
 	- ItemListCell: replace manual composition of info line below name with SegmentView
 		- allows to show different content there, f.ex. Space and Folder in search
 
@@ -65,4 +94,4 @@ It should only be used with dedicated test servers, test data - and test devices
 		- other errors
 			- report to user, drop silently, retry (how often/long?)?
 
-- more expressive "Empty folder" message display, based on new .message item type
+- [x] more expressive "Empty folder" message display, based on new .message item type

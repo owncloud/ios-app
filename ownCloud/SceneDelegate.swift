@@ -31,26 +31,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
-			var navigationController: UINavigationController?
-
-			if VendorServices.shared.isBranded {
-				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
-				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
-				navigationController?.setNavigationBarHidden(true, animated: false)
-			} else {
-				var serverListTableViewController : ServerListTableViewController?
-				if OCBookmarkManager.shared.bookmarks.count == 1 {
-					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-				} else {
-					serverListTableViewController = ServerListTableViewController(style: .plain)
-				}
-
-				guard let serverListTableViewController = serverListTableViewController else { return }
-
-				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
-
-				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
-			}
+//			var navigationController: UINavigationController?
+//
+//			if VendorServices.shared.isBranded {
+//				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
+//				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
+//				navigationController?.setNavigationBarHidden(true, animated: false)
+//			} else {
+//				var serverListTableViewController : ServerListTableViewController?
+//				if OCBookmarkManager.shared.bookmarks.count == 1 {
+//					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+//				} else {
+//					serverListTableViewController = ServerListTableViewController(style: .plain)
+//				}
+//
+//				guard let serverListTableViewController = serverListTableViewController else { return }
+//
+//				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
+//
+//				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
+//			}
 			// navigationController = ThemeNavigationController()
 			let appRootViewController = AppRootViewController(with: ClientContext())
 			// navigationController?.viewControllers = [ appRootViewController ]
@@ -79,9 +79,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			} else {
 				configure(window: window, with: userActivity)
 			}
-		} else if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false, let bookmark = OCBookmarkManager.shared.bookmarks.first {
-			connect(to: bookmark)
 		}
+//		} else if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false, let bookmark = OCBookmarkManager.shared.bookmarks.first {
+//			connect(to: bookmark)
+//		}
 	}
 
 	private func set(scene: UIScene, inForeground: Bool) {
@@ -107,39 +108,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
-		if let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String,
-		   let bookmarkUUID = UUID(uuidString: bookmarkUUIDString),
-		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-			if activity.title == OCBookmark.ownCloudOpenAccountPath {
-				connect(to: bookmark)
-
-				return true
-			} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
-				guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
-					return false
-				}
-
-				// At first connect to the bookmark for the item
-				connect(to: bookmark, lastVisibleItemId: itemLocalID, activity: activity)
-
-				return true
-			}
-		} else if activity.activityType == ServerListTableViewController.showServerListActivityType {
-			// Show server list
-			window?.windowScene?.userActivity = activity
-
-			return true
-		}
+//		if let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String,
+//		   let bookmarkUUID = UUID(uuidString: bookmarkUUIDString),
+//		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+//			if activity.title == OCBookmark.ownCloudOpenAccountPath {
+//				connect(to: bookmark)
+//
+//				return true
+//			} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
+//				guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
+//					return false
+//				}
+//
+//				// At first connect to the bookmark for the item
+//				connect(to: bookmark, lastVisibleItemId: itemLocalID, activity: activity)
+//
+//				return true
+//			}
+//		} else if activity.activityType == ServerListTableViewController.showServerListActivityType {
+//			// Show server list
+//			window?.windowScene?.userActivity = activity
+//
+//			return true
+//		}
 
 		return false
 	}
 
 	func connect(to bookmark: OCBookmark, lastVisibleItemId: String? = nil, activity: NSUserActivity? = nil) {
-		if let navigationController = window?.rootViewController as? ThemeNavigationController,
-		   let serverListController = navigationController.topViewController as? StateRestorationConnectProtocol {
-			serverListController.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false, present: nil)
-			window?.windowScene?.userActivity = activity ?? bookmark.openAccountUserActivity
-		}
+//		if let navigationController = window?.rootViewController as? ThemeNavigationController,
+//		   let serverListController = navigationController.topViewController as? StateRestorationConnectProtocol {
+//			serverListController.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false, present: nil)
+//			window?.windowScene?.userActivity = activity ?? bookmark.openAccountUserActivity
+//		}
 	}
 
 	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
