@@ -22,7 +22,7 @@ open class CreateFolderAction : Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
 	override open class var category : ActionCategory? { return .normal }
 	override open class var name : String? { return "Create folder".localized }
-	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
+	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder, .locationPickerBar] }
 	override open class var keyCommand : String? { return "N" }
 	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 

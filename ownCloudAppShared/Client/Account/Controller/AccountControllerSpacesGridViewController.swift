@@ -28,7 +28,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			context.viewControllerPusher = owner as? ViewControllerPusher
 		}
 
-		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: .grid(itemWidthDimension: .absolute(330), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)))
+		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: .grid(itemWidthDimension: .fractionalWidth(0.33), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)))
 
 		super.init(context: gridContext, sections: [ spacesSection ], useStackViewRoot: true, hierarchic: false)
 

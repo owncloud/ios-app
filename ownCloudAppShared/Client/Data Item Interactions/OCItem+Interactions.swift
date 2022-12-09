@@ -37,7 +37,13 @@ extension OCItem : DataItemSelectionInteraction {
 						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 						if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-							return ClientItemViewController(context: context, query: query)
+							let location = item.location
+
+							if location?.bookmarkUUID == nil {
+								location?.bookmarkUUID = context.core?.bookmark.uuid
+							}
+
+							return ClientItemViewController(context: context, query: query, location: location)
 						}, push: pushViewController, animated: animated) {
 							completion?(true)
 							return queryViewController

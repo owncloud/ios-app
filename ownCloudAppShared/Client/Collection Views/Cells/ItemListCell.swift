@@ -36,7 +36,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 
 	open weak var clientContext: ClientContext? {
 		didSet {
-			isMoreButtonPermanentlyHidden = (clientContext?.moreItemHandler as? MoreItemAction == nil)
+			isMoreButtonPermanentlyHidden = (clientContext?.moreItemHandler as? MoreItemAction == nil) || clientContext?.hasPermission(for: .moreOptions) == false
 		}
 	}
 
@@ -425,6 +425,18 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		self.detailLabel.text = detailLabelString(for: item)
 	}
 
+	var itemAppearance: ClientItemAppearance = .regular {
+		didSet {
+			switch itemAppearance {
+				case .regular:
+					contentView.alpha = 1.0
+
+				case .disabled:
+					contentView.alpha = 0.5
+			}
+		}
+	}
+
 	// MARK: - Available offline tracking
 	@objc open func updateAvailableOfflineStatus(_ notification: Notification) {
 		OnMainThread { [weak self] in
@@ -644,6 +656,12 @@ extension ItemListCell {
 				if let ocItem = item as? OCItem {
 					cell.item = ocItem
 				}
+
+				var itemAppearance: ClientItemAppearance = .regular
+				if let clientContext = cellConfiguration.clientContext, let itemStyler = clientContext.itemStyler {
+					itemAppearance = itemStyler(clientContext, itemRecord, item)
+				}
+				cell.itemAppearance = itemAppearance
 
 				cell.showRevealButton = cellConfiguration.style.showRevealButton
 				cell.showMoreButton = cellConfiguration.style.showMoreButton

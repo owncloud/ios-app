@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 import Down
 
 class ThemeableTextView : UITextView, Themeable {

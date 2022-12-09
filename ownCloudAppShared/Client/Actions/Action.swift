@@ -68,6 +68,7 @@ public extension OCExtensionLocationIdentifier {
 	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
 	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
 	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
+	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
 }
 
 public class ActionExtension: OCExtension {
@@ -505,6 +506,12 @@ open class Action : NSObject {
 		ocAction.type = (actionExtension.category == .destructive) ? .destructive : .regular
 
 		return ocAction
+	}
+
+	open func provideBarButtonItem() -> UIBarButtonItem {
+		return UIBarButtonItem(title: actionExtension.name, image: icon, primaryAction: UIAction(handler: { (_) in
+			self.perform()
+		}))
 	}
 
 	// MARK: - Action metadata

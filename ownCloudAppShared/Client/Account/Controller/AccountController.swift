@@ -30,16 +30,33 @@ public extension OCDataItemType {
 
 public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, AccountConnectionStatusObserver, AccountConnectionMessageUpdates {
 	public struct Configuration {
-		var showSavedSearches: Bool
-		var showActivity: Bool
+		public var showSavedSearches: Bool
+		public var showActivity: Bool
+		public var showAccountPill: Bool
+		public var autoSelectPersonalFolder: Bool
+
+		public var sectionAppearance: UICollectionLayoutListConfiguration.Appearance = .sidebar
 
 		public static var defaultConfiguration: Configuration {
 			return Configuration()
 		}
 
+		public static var pickerConfiguration: Configuration {
+			var config = Configuration()
+
+			config.showActivity = false
+			config.showSavedSearches = false
+			config.sectionAppearance = .insetGrouped
+			config.autoSelectPersonalFolder = false
+
+			return config
+		}
+
 		public init() {
 			showSavedSearches = true
 			showActivity = true
+			showAccountPill = true
+			autoSelectPersonalFolder = true
 		}
 	}
 
@@ -336,7 +353,6 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		return (titleSource, folderAction)
 	}
 
-
 	func buildFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?, folderItemRef: OCDataItemReference = "_folder_\(UUID().uuidString)" as NSString) -> (OCDataSource, OCDataItemPresentable) {
 		let folderItem = OCDataItemPresentable(reference: folderItemRef, originalDataItemType: .presentable, version: "1" as NSString)
 		folderItem.title = title
@@ -369,6 +385,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			controllerDataSource,
 			itemsDataSource
 		])
+
+		if !configuration.showAccountPill {
+			dataSource.setInclude(false, for: controllerDataSource)
+		}
 
 		_accountSectionDataSource = dataSource
 
@@ -408,7 +428,9 @@ extension AccountController: DataItemSelectionInteraction {
 
 					context?.rootViewController?.present(alert, animated: true)
 				} else {
-					revealPersonalItem()
+					if self.configuration.autoSelectPersonalFolder {
+						revealPersonalItem()
+					}
 				}
 			})
 		}

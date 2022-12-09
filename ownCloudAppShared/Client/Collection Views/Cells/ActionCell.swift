@@ -215,11 +215,10 @@ extension ActionCell {
 		}
 
 		let actionSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
-			var content = cell.defaultContentConfiguration()
-			var backgroundConfiguration: UIBackgroundConfiguration? = UIBackgroundConfiguration.listSidebarCell()
-
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				var accessories: [UICellAccessory] = []
+				var content = cell.defaultContentConfiguration()
+				var backgroundConfiguration: UIBackgroundConfiguration?
 
 				if let action = item as? OCAction {
 					content.text = action.title
@@ -231,6 +230,7 @@ extension ActionCell {
 
 							content.textProperties.color = Theme.shared.activeCollection.warningColors.normal.foreground
 							content.imageProperties.tintColor = Theme.shared.activeCollection.warningColors.normal.foreground
+							backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.warningColors.normal.background
 
 						case .destructive:
@@ -238,6 +238,7 @@ extension ActionCell {
 
 							content.textProperties.color = Theme.shared.activeCollection.destructiveColors.normal.foreground
 							content.imageProperties.tintColor = Theme.shared.activeCollection.destructiveColors.normal.foreground
+							backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.destructiveColors.normal.background
 
 						default: break
@@ -278,10 +279,9 @@ extension ActionCell {
 				}
 
 				cell.accessories = accessories
+				cell.contentConfiguration = content
+				cell.backgroundConfiguration = backgroundConfiguration
 			})
-
-			cell.contentConfiguration = content
-			cell.backgroundConfiguration = backgroundConfiguration
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .action, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

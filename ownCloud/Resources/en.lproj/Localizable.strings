@@ -166,6 +166,7 @@
 "Empty folder" = "Empty folder";
 "No contents" = "No contents";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
+"This folder is empty." = "This folder is empty.";
 "This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Folder removed";
@@ -385,9 +386,16 @@
 "Create folder" ="Create folder";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Move here";
+"Select target." = "Select target.";
 "Open in" = "Open in";
 "Copy" = "Copy";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
 "Copy here" = "Copy here";
+
 "Cannot connect to " = "Cannot connect to ";
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
@@ -418,6 +426,8 @@
 
 "Select one or more items." = "Select one or more items.";
 
+"Add item" = "Add item";
+
 /* App Provider */
 "New document" = "New document";
 "Pick a name" = "Pick a name";
@@ -426,9 +436,6 @@
 
 "Open in {{appName}} (web)" = "Open in {{appName}} (web)";
 "Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
-
-/* Directory Picker Messages */
-"Move here" = "Move here";
 
 /* Preview */
 "Open file" = "Open file";
@@ -811,6 +818,8 @@
 "Error importing %@" = "Error importing %@";
 "Error loading item" = "Error loading item";
 "Preparing…" = "Preparing…";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
 "Save here" = "Save here";
 
 /* FileProvider */

@@ -30,7 +30,13 @@ extension OCDrive : DataItemSelectionInteraction {
 		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 		let rootFolderViewController = context?.pushViewControllerToNavigation(context: driveContext, provider: { context in
-			return ClientItemViewController(context: context, query: query).revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
+			let location = self.rootLocation
+
+			if location.bookmarkUUID == nil {
+				location.bookmarkUUID = driveContext.core?.bookmark.uuid
+			}
+
+			return ClientItemViewController(context: context, query: query, location: location).revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
 		}, push: pushViewController, animated: animated)
 
 		completion?(true)

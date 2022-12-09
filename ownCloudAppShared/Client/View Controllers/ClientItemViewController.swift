@@ -58,21 +58,35 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public var footerItem: UIView?
 	public var footerFolderStatisticsLabel: UILabel?
 
+	public var location: OCLocation?
+
 	private var stateObservation: NSKeyValueObservation?
 	private var queryStateObservation: NSKeyValueObservation?
 	private var queryRootItemObservation: NSKeyValueObservation?
 
 	var navigationTitleLabel: UILabel = UILabel()
 
-	public init(context inContext: ClientContext?, query inQuery: OCQuery, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
+	private var viewControllerUUID: UUID
+
+	public init(context inContext: ClientContext?, query inQuery: OCQuery, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
 		inQuery.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
 
+		self.location = location
+
 		var sections : [ CollectionViewSection ] = []
+
+		let vcUUID = UUID()
+		viewControllerUUID = vcUUID
 
 		let itemControllerContext = ClientContext(with: inContext, modifier: { context in
 			// Add permission handler limiting interactions for specific items and scenarios
-			context.add(permissionHandler: { (context, record, interaction) in
+			context.add(permissionHandler: { (context, record, interaction, viewController) in
+				guard  let viewController = viewController as? ClientItemViewController, viewController.viewControllerUUID == vcUUID else {
+					// Only apply this permission handler to this view controller, otherwise -> just pass through
+					return true
+				}
+
 				switch interaction {
 					case .selection:
 						if record?.type == .drive {
@@ -200,11 +214,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}, on: .main, trackDifferences: true, performIntialUpdate: true)
 
 		if let queryDatasource = query?.queryResultsDataSource {
+			let emptyFolderMessage = "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
+
 			emptyItemListItem = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
 				.text("No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
 				.spacing(5),
-				.text("This folder is empty. Fill it with content:".localized, style: .systemSecondary(textStyle: .body), alignment: .centered)
+				.text(emptyFolderMessage, style: .systemSecondary(textStyle: .body), alignment: .centered)
 			])
 
 			emptyItemListItem?.elementInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 2, trailing: 0)
@@ -336,7 +352,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	// MARK: - Empty item list handling
 	func emptyActions() -> [OCAction]? {
-		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem else {
+		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem, clientContext?.hasPermission(for: .addContent) == true else {
 			return nil
 		}
 		let locationIdentifier: OCExtensionLocationIdentifier = .emptyFolder
@@ -488,7 +504,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		if contentState != .removed {
 			if query?.queryLocation != nil {
 				// More menu for folder
-				if clientContext?.moreItemHandler != nil {
+				if clientContext?.moreItemHandler != nil, clientContext?.hasPermission(for: .moreOptions) == true {
 					let folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 					folderActionBarButton.accessibilityIdentifier = "client.folder-action"
 					folderActionBarButton.accessibilityLabel = "Actions".localized
@@ -497,25 +513,32 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 
 				// Plus button for folder
-				let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
-				plusBarButton.menu = UIMenu(title: "", children: [
-					UIDeferredMenuElement.uncached({ [weak self] completion in
-						if let self = self, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
-							let contextMenuProvider = rootItem as DataItemContextMenuInteraction
+				if clientContext?.hasPermission(for: .addContent) == true {
+					let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+					plusBarButton.menu = UIMenu(title: "", children: [
+						UIDeferredMenuElement.uncached({ [weak self] completion in
+							if let self = self, let rootItem = self.query?.rootItem, let clientContext = self.clientContext {
+								let contextMenuProvider = rootItem as DataItemContextMenuInteraction
 
-							if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
-								    completion(contextMenuElements)
+								if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
+									    completion(contextMenuElements)
+								}
 							}
-						}
-					})
-				])
-				plusBarButton.accessibilityIdentifier = "client.file-add"
+						})
+					])
+					plusBarButton.accessibilityIdentifier = "client.file-add"
+					plusBarButton.accessibilityLabel = "Add item".localized
 
-				viewActionButtons.append(plusBarButton)
+					viewActionButtons.append(plusBarButton)
+				}
 
 				// Add search button
-				let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
-				viewActionButtons.append(searchButton)
+				if clientContext?.hasPermission(for: .search) == true {
+					let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
+					searchButton.accessibilityIdentifier = "client.search"
+					searchButton.accessibilityLabel = "Search".localized
+					viewActionButtons.append(searchButton)
+				}
 			}
 		}
 

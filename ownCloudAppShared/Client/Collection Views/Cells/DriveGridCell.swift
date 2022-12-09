@@ -27,5 +27,15 @@ class DriveGridCell: DriveHeaderCell {
 		super.configure()
 
 		contentView.layer.cornerRadius = 8
+		titleLabel.numberOfLines = 1
+		titleLabel.lineBreakMode = .byTruncatingTail
+		subtitleLabel.numberOfLines = 1
+		subtitleLabel.lineBreakMode = .byTruncatingTail
+	}
+
+	override var subtitle: String? {
+		didSet {
+			subtitleLabel.text = subtitle ?? " " // Ensure the grid cells' titles align by always showing a subtitle - if necessary, an empty one
+		}
 	}
 }

@@ -29,6 +29,7 @@ public class ComposedMessageElement: NSObject {
 		case progressCircle(progress: Progress? = nil)
 		case activityIndicator(style: UIActivityIndicatorView.Style = .medium, size: CGSize)
 		case spacing(size: CGFloat)
+		case button(action: UIAction)
 	}
 
 	public enum Alignment {
@@ -40,7 +41,11 @@ public class ComposedMessageElement: NSObject {
 	public var kind: Kind
 	public var alignment: Alignment
 
-	public var text: String?
+	public var text: String? {
+		didSet {
+			textView?.text = text
+		}
+	}
 	public var font: UIFont?
 	public var style: ThemeItemStyle?
 	public var textView: UILabel?
@@ -265,6 +270,20 @@ public class ComposedMessageElement: NSObject {
 					spacingView.heightAnchor.constraint(equalToConstant: spacing).isActive = true
 
 					_view = spacingView
+
+				case .button(let action):
+					let button = ThemeButton()
+					button.translatesAutoresizingMaskIntoConstraints = false
+					// button.setTitle(text, for: .normal)
+
+					var buttonConfig = UIButton.Configuration.filled()
+					buttonConfig.title = text
+					buttonConfig.cornerStyle = .large
+					button.configuration = buttonConfig
+
+					button.addAction(action, for: .primaryActionTriggered)
+
+					_view = button
 			}
 		}
 
@@ -296,7 +315,7 @@ public class ComposedMessageElement: NSObject {
 		}
 	}
 
-	init(kind: Kind, alignment: Alignment, insets altInsets: NSDirectionalEdgeInsets? = nil) {
+	public init(kind: Kind, alignment: Alignment, insets altInsets: NSDirectionalEdgeInsets? = nil) {
 		self.kind = kind
 		self.alignment = alignment
 		super.init()
@@ -327,6 +346,13 @@ public class ComposedMessageElement: NSObject {
 		element.text = text
 		element.font = font
 		element.style = style
+
+		return element
+	}
+
+	static public func button(_ title: String, action: UIAction, alignment: Alignment = .leading, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+		let element = ComposedMessageElement(kind: .button(action: action), alignment: alignment, insets: altInsets)
+		element.text = title
 
 		return element
 	}
@@ -384,7 +410,7 @@ public class ComposedMessageView: UIView, Themeable {
 		}
 	}
 
-	init(elements: [ComposedMessageElement]) {
+	public init(elements: [ComposedMessageElement]) {
 		super.init(frame: .zero)
 		self.translatesAutoresizingMaskIntoConstraints = false
 

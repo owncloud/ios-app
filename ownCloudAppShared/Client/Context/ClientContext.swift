@@ -80,10 +80,21 @@ public enum ClientItemInteraction {
 	case trailingSwipe
 	case drag
 	case acceptDrop
+
+	case moreOptions
+	case search
+	case addContent
+}
+
+public enum ClientItemAppearance {
+	case regular
+	case disabled
 }
 
 public class ClientContext: NSObject {
-	public typealias PermissionHandler = (_ context: ClientContext?, _ dataItemRecord: OCDataItemRecord?, _ checkInteraction: ClientItemInteraction) -> Bool
+	public typealias PermissionHandler = (_ context: ClientContext?, _ dataItemRecord: OCDataItemRecord?, _ checkInteraction: ClientItemInteraction, _ inViewController: UIViewController?) -> Bool
+
+	public typealias ItemStyler = (_ context: ClientContext?, _ dataItemRecord: OCDataItemRecord?, _ item: OCDataItem?) -> ClientItemAppearance
 
 	public weak var parent: ClientContext?
 
@@ -140,6 +151,7 @@ public class ClientContext: NSObject {
 
 	// MARK: - Display options
 	@objc public dynamic var sortDescriptor: SortDescriptor?
+	public var itemStyler: ItemStyler?
 	/*
 	public var sortMethod : SortMethod? {
 		didSet {
@@ -190,6 +202,7 @@ public class ClientContext: NSObject {
 		navigationRevocationHandler = inParent?.navigationRevocationHandler
 
 		sortDescriptor = inParent?.sortDescriptor
+		itemStyler = inParent?.itemStyler
 
 		permissions = inParent?.permissions
 		permissionHandlers = inParent?.permissionHandlers
@@ -261,7 +274,7 @@ public class ClientContext: NSObject {
 		permissionHandlers?.append(permissionHandler)
 	}
 
-	public func validate(interaction: ClientItemInteraction, for record: OCDataItemRecord) -> Bool {
+	public func validate(interaction: ClientItemInteraction, for record: OCDataItemRecord, in viewController: UIViewController? = nil) -> Bool {
 		if let permissions = permissions {
 			if !permissions.contains(interaction) {
 				return false
@@ -272,7 +285,7 @@ public class ClientContext: NSObject {
 			var allowed = true
 
 			for permissionHandler in permissionHandlers {
-				if !permissionHandler(self, record, interaction) {
+				if !permissionHandler(self, record, interaction, viewController) {
 					allowed = false
 					break
 				}
@@ -308,7 +321,7 @@ extension ClientContext {
 }
 
 extension ClientContext {
-	var presentationViewController: UIViewController? {
+	public var presentationViewController: UIViewController? {
 		return originatingViewController ?? rootViewController
 	}
 

@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-open class AppRootViewController: UIViewController {
+open class AppRootViewController: EmbeddingViewController {
 	var clientContext: ClientContext
 	var controllerConfiguration: AccountController.Configuration
 
@@ -80,38 +80,6 @@ open class AppRootViewController: UIViewController {
 				if let cardMessagePresenter {
 					OCMessageQueue.global.add(presenter: cardMessagePresenter)
 				}
-			}
-		}
-	}
-
-	// MARK: - Content View Controller handling
-	private var contentViewControllerConstraints : [NSLayoutConstraint]? {
-		willSet {
-			if let contentViewControllerConstraints = contentViewControllerConstraints {
-				NSLayoutConstraint.deactivate(contentViewControllerConstraints)
-			}
-		}
-		didSet {
-			if let contentViewControllerConstraints = contentViewControllerConstraints {
-				NSLayoutConstraint.activate(contentViewControllerConstraints)
-			}
-		}
-	}
-	var contentViewController: UIViewController? {
-		willSet {
-			contentViewController?.willMove(toParent: nil)
-			contentViewController?.view.removeFromSuperview()
-			contentViewController?.removeFromParent()
-
-			contentViewControllerConstraints = nil
-		}
-		didSet {
-			if let contentViewController = contentViewController, let contentViewControllerView = contentViewController.view {
-				addChild(contentViewController)
-				view.addSubview(contentViewControllerView)
-				contentViewControllerView.translatesAutoresizingMaskIntoConstraints = false
-				contentViewControllerConstraints = view.embed(toFillWith: contentViewController.view, enclosingAnchors: view.defaultAnchorSet)
-				contentViewController.didMove(toParent: self)
 			}
 		}
 	}

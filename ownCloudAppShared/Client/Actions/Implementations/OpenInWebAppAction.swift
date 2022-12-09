@@ -194,6 +194,7 @@ public class OpenInWebAppAction: Action {
 					}
 
 					let navigationController = ThemeNavigationController(rootViewController: webAppViewController)
+					navigationController.modalPresentationStyle = .overFullScreen // Fill the screen with the webapp on iPad
 
 					self.context.viewController?.present(navigationController, animated: true)
 				}

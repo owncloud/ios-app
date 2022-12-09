@@ -424,10 +424,8 @@ class Migration {
 			func setupInstantUpload() {
 				Log.debug(tagged: ["MIGRATION"], "Setting up instant upload")
 
-				userDefaults.instantPhotoUploadPath = Migration.legacyInstantUploadFolder
-				userDefaults.instantVideoUploadPath = Migration.legacyInstantUploadFolder
-				userDefaults.instantPhotoUploadBookmarkUUID = bookmark.uuid
-				userDefaults.instantVideoUploadBookmarkUUID = bookmark.uuid
+				userDefaults.instantPhotoUploadLocation = OCLocation(bookmarkUUID: bookmark.uuid, driveID: nil, path: Migration.legacyInstantUploadFolder)
+				userDefaults.instantVideoUploadLocation = OCLocation(bookmarkUUID: bookmark.uuid, driveID: nil, path: Migration.legacyInstantUploadFolder)
 
 				userDefaults.instantUploadPhotos = legacyInstantPhotoUploadActive > 0 ? true : false
 				userDefaults.instantUploadVideos = legacyInstantVideoUploadActive > 0 ? true : false

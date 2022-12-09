@@ -72,7 +72,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 								})
 
 								// Return early if leadingSwipes are not allowed
-								if !clientContext.validate(interaction: .leadingSwipe, for: record) {
+								if !clientContext.validate(interaction: .leadingSwipe, for: record, in: collectionViewController) {
 									return
 								}
 
@@ -107,7 +107,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 								})
 
 								// Return early if trailingSwipes are not allowed
-								if !clientContext.validate(interaction: .trailingSwipe, for: record) {
+								if !clientContext.validate(interaction: .trailingSwipe, for: record, in: collectionViewController) {
 									return
 								}
 

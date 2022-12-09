@@ -23,13 +23,14 @@ Missing:
 - [ ] state restoration
 - [ ] full inline progress reporting when account databases are updated on first login
 - [ ] progress reporting in active connections
-- [ ] migration from the Legacy app is not currently wired up
+- [ ] migration from the Legacy app is not currently wired up (remove?)
 - [ ] iPadOS: opening an account in a new window
 	- by context menu (openAccountInWindow)
 	- by drag and drop (see ServerListTableViewController: UITableViewDragDelegate)
 - [ ] account auto connect (also account.auto-connect in ServerListTableViewController)
 - [ ] opening private links (display(itemWithID…:…))
 - [x] account issue handling
+- [x] functional share extension
 - [ ] full themeing/branding support
 - [ ] reinstate Key Commands
 
@@ -40,9 +41,17 @@ Jesus:
 - [x] If an space is browsed and new space image is added in the web client, app crashes
 - [ ] "Open in new window" option does not work. It does nothing after clicking
 - [x] I miss the option to "Select All" and "Deselect All" in multiselection
-- [ ] "Copy" and "Move" operations show empty folder picker. No way to consolidate.
+- [x] "Copy" and "Move" operations show empty folder picker. No way to consolidate.
 - [ ] "Cut"/"Paste" only working in space scope
 - [ ] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
+
+Matthias:
+- [ ] Selecting an OC10 account's root folder twice results in an empty list
+
+Michael:
+- [x] Account deletion by swipe doesn't work
+- [x] Crash searching for accounts to share with
+- [ ] Certificate warning when an account refers to a mix of hostnames
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
@@ -56,20 +65,21 @@ Jesus:
 	- ItemListCell: replace manual composition of info line below name with SegmentView
 		- allows to show different content there, f.ex. Space and Folder in search
 
-- location picker replaces folder picker
-	- supports picking
-		- accounts
-		- spaces
-		- folders
-	- returns an OCLocation
+- [x] location picker replaces folder picker
+	- [x] supports picking
+		- [x] accounts
+		- [x] spaces
+		- [x] folders
+	- [x] returns an OCLocation
 	- allow passing "quick locations" to present on top in a group
 	- track and re-offer last-picked / recent locations (via account's KVS)
 	- quick access to personal and other spaces
 	- integrate favorites as group
+	- [x] use for preferences and share extension
 
 - account list
 	- allow grouping accounts (i.e. Home / Work)
-	- replace simple list with modern CollectionViewController-based UI
+	- [x] replace simple list with modern CollectionViewController-based UI
 
 - make sync smarter, f.ex.:
 	- a file that is updated locally multiple times only should be uploaded once, not once for every update

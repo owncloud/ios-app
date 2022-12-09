@@ -20,6 +20,8 @@ import UIKit
 import ownCloudSDK
 
 public class AccountConnectionPool: NSObject {
+	public typealias CompletionHandler = () -> Void
+
 	public static var shared: AccountConnectionPool = AccountConnectionPool()
 
 	var connectionsByBookmarkUUID: [String:AccountConnection] = [:]
@@ -51,5 +53,25 @@ public class AccountConnectionPool: NSObject {
 		}
 
 		return connection
+	}
+
+	public func disconnectAll(_ completion: CompletionHandler?) {
+		let waitGroup = DispatchGroup()
+
+		OCSynchronized(self) {
+			let connections = connectionsByBookmarkUUID.values
+
+			for connection in connections {
+				waitGroup.enter()
+
+				connection.disconnect { error in
+					waitGroup.leave()
+				}
+			}
+		}
+
+		waitGroup.notify(queue: .main, execute: {
+			completion?()
+		})
 	}
 }

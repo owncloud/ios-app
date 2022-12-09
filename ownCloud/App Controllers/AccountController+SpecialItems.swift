@@ -51,7 +51,7 @@ extension AccountController: AccountControllerSpecialItems {
 	}
 
 	public func updateSpecialItems(dataSource: OCDataSourceArray) {
-		if let activitySideBarItem = activitySideBarItem {
+		if let activitySideBarItem = activitySideBarItem, configuration.showActivity {
 			dataSource.setVersionedItems([ activitySideBarItem ])
 		}
 	}

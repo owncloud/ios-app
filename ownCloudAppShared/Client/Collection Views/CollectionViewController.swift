@@ -28,6 +28,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 	var highlightItemReference: OCDataItemReference?
 	var didHighlightItemReference: Bool = false
+	var hideNavigationBar: Bool?
 
 	var emptyCellRegistration: UICollectionView.CellRegistration<UICollectionViewCell, CollectionViewController.ItemRef>?
 
@@ -638,10 +639,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
 
 		retrieveItem(at: indexPath, synchronous: true, action: { [weak self] record, indexPath, section in
-			// Return early if .contextMenu is not allowed
+			// Return early if .selection is not allowed
 			let clientContext = section.clientContext ?? self?.clientContext
 
-			if clientContext?.validate(interaction: interaction, for: record) != false {
+			if clientContext?.validate(interaction: interaction, for: record, in: self) != false {
 				shouldSelect = true
 				if let clientContext, let self {
 					shouldSelect = self.allowSelection(of: record, at: indexPath, clientContext: clientContext)
@@ -659,7 +660,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			// Return early if .selection is not allowed
 			let clientContext = section.clientContext ?? self?.clientContext
 
-			if clientContext?.validate(interaction: interaction, for: record) != false, let clientContext {
+			if clientContext?.validate(interaction: interaction, for: record, in: self) != false, let clientContext {
 				if interaction == .multiselection {
 					self?.handleMultiSelection(of: record, at: indexPath, isSelected: true, clientContext: clientContext)
 				} else {
@@ -684,7 +685,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			// Return early if .selection is not allowed
 			let clientContext = section.clientContext ?? self?.clientContext
 
-			if clientContext?.validate(interaction: interaction, for: record) != false, let clientContext {
+			if clientContext?.validate(interaction: interaction, for: record, in: self) != false, let clientContext {
 				self?.handleMultiSelection(of: record, at: indexPath, isSelected: false, clientContext: clientContext)
 			}
 		})
@@ -697,7 +698,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			// Return early if .contextMenu is not allowed
 			let clientContext = section.clientContext ?? self?.clientContext
 
-			if clientContext?.validate(interaction: .contextMenu, for: record) != false, let clientContext {
+			if clientContext?.validate(interaction: .contextMenu, for: record, in: self) != false, let clientContext {
 				contextMenuConfiguration = self?.provideContextMenuConfiguration(for: record, at: indexPath, point: point, clientContext: clientContext)
 			}
 		}, handleError: { error in
@@ -842,7 +843,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			retrieveItem(at: destinationIndexPath, synchronous: true, action: { record, indexPath, section in
 				let clientContext = section.clientContext ?? self.clientContext
 
-				if clientContext?.validate(interaction: interaction, for: record) != false {
+				if clientContext?.validate(interaction: interaction, for: record, in: self) != false {
 					item = record.item
 				}
 			}, handleError: { error in
@@ -963,6 +964,24 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				closeActionsBar()
 				dropTargetsDataSource = nil
 			}
+		}
+	}
+
+	// MARK: - Events
+	private var _navigationBarWasHidden: Bool?
+
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if let hideNavigationBar, hideNavigationBar, navigationController?.isNavigationBarHidden != hideNavigationBar {
+			_navigationBarWasHidden = navigationController?.isNavigationBarHidden
+			navigationController?.setNavigationBarHidden(hideNavigationBar, animated: true)
+		}
+	}
+
+	open override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if let _navigationBarWasHidden, navigationController?.isNavigationBarHidden != _navigationBarWasHidden {
+			navigationController?.setNavigationBarHidden(_navigationBarWasHidden, animated: true)
 		}
 	}
 

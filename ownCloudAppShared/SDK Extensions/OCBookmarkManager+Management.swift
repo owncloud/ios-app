@@ -63,7 +63,9 @@ public extension OCBookmarkManager {
 								// Success! We can now remove the bookmark
 								OCMessageQueue.global.dequeueAllMessages(forBookmarkUUID: bookmark.uuid)
 
-								OCBookmarkManager.shared.removeBookmark(bookmark)
+								if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmark.uuid) {
+									OCBookmarkManager.shared.removeBookmark(bookmark)
+								}
 							}
 
 							completion?() // delete(withAlertOn:) completion Handler

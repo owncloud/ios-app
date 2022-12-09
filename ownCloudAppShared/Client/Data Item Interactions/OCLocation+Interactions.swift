@@ -32,7 +32,13 @@ extension OCLocation : DataItemSelectionInteraction {
 		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 		let locationViewController = context?.pushViewControllerToNavigation(context: driveContext, provider: { context in
-			let viewController = ClientItemViewController(context: context, query: query)
+			let location = OCLocation(bookmarkUUID: self.bookmarkUUID, driveID: self.driveID, path: self.path)
+
+			if location.bookmarkUUID == nil {
+				location.bookmarkUUID = driveContext.core?.bookmark.uuid
+			}
+
+			let viewController = ClientItemViewController(context: context, query: query, location: location)
 
 			viewController.revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
 
