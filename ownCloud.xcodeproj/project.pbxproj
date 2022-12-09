@@ -363,7 +363,6 @@
 		DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */; };
 		DC576EC022647A070087316D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC576EC222647A070087316D /* Localizable.strings */; };
 		DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */; };
-		DC5C48A7291A7C7F00EBC053 /* ClientTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5C48A6291A7C7F00EBC053 /* ClientTabBarController.swift */; };
 		DC6179E728E0578400C7C4E0 /* OCFileProviderSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6179E528E0578400C7C4E0 /* OCFileProviderSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC6179E828E0578400C7C4E0 /* OCFileProviderSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6179E628E0578400C7C4E0 /* OCFileProviderSettings.m */; };
 		DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */ = {isa = PBXBuildFile; fileRef = DC625140225C904700736874 /* NSError+MessageResolution.m */; };
@@ -1414,7 +1413,6 @@
 		DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellularSettingsViewController.swift; sourceTree = "<group>"; };
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSidebarViewController.swift; sourceTree = "<group>"; };
-		DC5C48A6291A7C7F00EBC053 /* ClientTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientTabBarController.swift; sourceTree = "<group>"; };
 		DC5D9E742496512400BFFE8E /* MessageQueueExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueExample.swift; sourceTree = "<group>"; };
 		DC6179E528E0578400C7C4E0 /* OCFileProviderSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderSettings.h; sourceTree = "<group>"; };
 		DC6179E628E0578400C7C4E0 /* OCFileProviderSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderSettings.m; sourceTree = "<group>"; };
@@ -2668,7 +2666,6 @@
 				DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */,
 				DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */,
 				DCD8640F2811821200CA6631 /* ClientRootViewController+ItemActions.swift */,
-				DC5C48A6291A7C7F00EBC053 /* ClientTabBarController.swift */,
 				DCE28F5F2433683700879DEC /* ClientSessionManager.swift */,
 				4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */,
 				4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */,
@@ -4647,7 +4644,6 @@
 				025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */,
 				399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */,
 				4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */,
-				DC5C48A7291A7C7F00EBC053 /* ClientTabBarController.swift in Sources */,
 				DCE4E45624C1ED8D0051722F /* ClientQueryViewController+InlineMessageSupport.swift in Sources */,
 				397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */,
 				4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */,

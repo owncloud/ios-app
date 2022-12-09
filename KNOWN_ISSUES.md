@@ -51,7 +51,7 @@ Matthias:
 Michael:
 - [x] Account deletion by swipe doesn't work
 - [x] Crash searching for accounts to share with
-- [ ] Certificate warning when an account refers to a mix of hostnames
+- [x] Certificate warning when an account refers to a mix of hostnames
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
@@ -76,6 +76,9 @@ Michael:
 	- quick access to personal and other spaces
 	- integrate favorites as group
 	- [x] use for preferences and share extension
+
+- improved bookmark setup / editing
+	- browsing UI for ALL certificates stored in a bookmark's store, not just the primary certificate
 
 - account list
 	- allow grouping accounts (i.e. Home / Work)

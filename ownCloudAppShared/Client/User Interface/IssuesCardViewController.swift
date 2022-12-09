@@ -188,9 +188,15 @@ open class IssuesCardViewController: StaticTableViewController {
 
 				let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 					if issue.type == .certificate, let certificate = issue.certificate {
-						let certificateViewController = ThemeCertificateViewController(certificate: certificate, compare: bookmark?.certificate)
+						var compareCertificate: OCCertificate?
 
-						if bookmark?.certificate != nil {
+						if let hostname = issue.certificateURL?.host, let certificateStore = bookmark?.certificateStore {
+							compareCertificate = certificateStore.certificate(forHostname: hostname, lastModified: nil)
+						}
+
+						let certificateViewController = ThemeCertificateViewController(certificate: certificate, compare: compareCertificate)
+
+						if compareCertificate != nil {
 							certificateViewController.showDifferences = true
 						}
 
@@ -233,7 +239,7 @@ open class IssuesCardViewController: StaticTableViewController {
 	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	static public func present(on hostViewController: UIViewController, issue: OCIssue, displayIssues: DisplayIssues? = nil, bookmark: OCBookmark? = nil, completion:@escaping CompletionHandler, dismissed: DismissHandler? = nil) {
 		let issuesViewController = self.init(with: issue, displayIssues: displayIssues, bookmark: bookmark, completion: completion, dismissed: dismissed)
 
