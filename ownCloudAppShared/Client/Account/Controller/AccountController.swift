@@ -20,8 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-public protocol AccountControllerSpecialItems: AccountController {
-	func updateSpecialItems(dataSource: OCDataSourceArray)
+public protocol AccountControllerExtraItems: AccountController {
+	func updateExtraItems(dataSource: OCDataSourceArray)
 }
 
 public extension OCDataItemType {
@@ -96,9 +96,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		consumer = AccountConnectionConsumer()
 
-		spacesFolderDataItemRef = UUID().uuidString as NSString
-		quickAccessFolderDataItemRef = UUID().uuidString as NSString
-		savedSearchesFolderDataItemRef = UUID().uuidString as NSString
+		specialItemsDataReferences[.spacesFolder] = UUID().uuidString as NSString
+		specialItemsDataReferences[.quickAccessFolder] = UUID().uuidString as NSString
+		specialItemsDataReferences[.savedSearchesFolder] = UUID().uuidString as NSString
 
 		legacyAccountRootLocation = OCLocation.legacyRoot
 		legacyAccountRootLocation.bookmarkUUID = bookmark.uuid
@@ -164,9 +164,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		if let vault = connection.core?.vault {
 			// Create savedSearchesDataSource if wanted
 			if configuration.showSavedSearches, savedSearchesDataSource == nil {
-				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { obj, keypath, newValue in
+				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { [weak self] obj, keypath, newValue in
 					if let savedSearches = newValue as? [OCSavedSearch] {
-						return savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
+						let searches = savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
+						self?.savedSearchesVisible = searches.count > 0
+						return searches
 					}
 
 					return nil
@@ -251,9 +253,19 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	@objc dynamic var showDisconnectButton: Bool = false
 
 	var savedSearchesDataSource: OCDataSourceKVO?
+	var savedSearchesVisible: Bool = true {
+		didSet {
+			if oldValue != savedSearchesVisible, let savedSearchesFolderDatasource = specialItemsDataSources[.savedSearchesFolder] {
+				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDatasource)
+			}
+		}
+	}
 
 	open var specialItems: [SpecialItem : OCDataItem] = [:]
-	open var specialItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
+	open var specialItemsDataReferences: [SpecialItem : OCDataItemReference] = [:]
+	open var specialItemsDataSources: [SpecialItem : OCDataSource] = [:]
+
+	open var extraItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
 
 	open var personalSpaceDataItemRef: OCDataItemReference? {
 		var personalSpaceItemRef: OCDataItemReference?
@@ -275,10 +287,6 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		})?.dataItemReference
 	}
 
-	open var spacesFolderDataItemRef: OCDataItemReference
-	open var quickAccessFolderDataItemRef: OCDataItemReference
-	open var savedSearchesFolderDataItemRef: OCDataItemReference
-
 	private var legacyAccountRootLocation: OCLocation
 
 	func composeItemsDataSource() {
@@ -286,7 +294,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			var sources : [OCDataSource] = []
 
 			if core.useDrives {
-				let (spacesDataSource, spacesFolderItem) = self.buildActionFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), folderItemRef: spacesFolderDataItemRef, viewControllerProvider: { context, action in
+				let spacesDataSource = self.buildTopFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), topItem: .spacesFolder, viewControllerProvider: { context, action in
 					if let context {
 						return AccountControllerSpacesGridViewController(with: context)
 					}
@@ -294,10 +302,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 					return nil
 				})
 
-				specialItems[.savedSearchesFolder] = spacesFolderItem
-
 				if let accountControllerSection = accountControllerSection,
-				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [ spacesFolderItem.dataItemReference ], forSection: accountControllerSection.identifier) {
+				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [ specialItemsDataReferences[.spacesFolder]! ], forSection: accountControllerSection.identifier) {
 					accountControllerSection.expandedItemRefs = expandedItemRefs
 				}
 
@@ -314,43 +320,46 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			}
 
 			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
-				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef: savedSearchesFolderDataItemRef)
+				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.savedSearchesFolder]!)
 
 				specialItems[.savedSearchesFolder] = savedSearchesFolderItem
+				specialItemsDataSources[.savedSearchesFolder] = savedSearchesFolderDataSource
 
 				sources.append(savedSearchesFolderDataSource)
 			}
 
-			if let specialItemsSupport = self as? AccountControllerSpecialItems {
-				specialItemsSupport.updateSpecialItems(dataSource: specialItemsDataSource)
+			if let extraItemsSupport = self as? AccountControllerExtraItems {
+				extraItemsSupport.updateExtraItems(dataSource: extraItemsDataSource)
 
-				sources.append(specialItemsDataSource)
+				sources.append(extraItemsDataSource)
 			}
 
 			itemsDataSource.sources = sources
+
+			if let savedSearchesFolderDataSource = specialItemsDataSources[.savedSearchesFolder], !savedSearchesVisible {
+				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDataSource)
+			}
 		}
 	}
 
 	func buildActionFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?, folderItemRef: OCDataItemReference = "_folder_\(UUID().uuidString)" as NSString, viewControllerProvider: @escaping CollectionSidebarAction.ViewControllerProvider) -> (OCDataSource, CollectionSidebarAction) {
-		let folderAction = CollectionSidebarAction(with: title, icon: icon, viewControllerProvider: viewControllerProvider)
+		let folderAction = CollectionSidebarAction(with: title, icon: icon, identifier: folderItemRef, viewControllerProvider: viewControllerProvider)
 		folderAction.childrenDataSource = contentsDataSource
-//
-//		let folderItem = OCDataItemPresentable(reference: folderItemRef, originalDataItemType: .presentable, version: "1" as NSString)
-//		folderItem.title = title
-//		folderItem.image = icon
-//
-//		folderItem.hasChildrenProvider = { (dataSource, item) in
-//			return true
-//		}
-//
-//		folderItem.childrenDataSourceProvider = { (parentItemDataSource, parentItem) in
-//			return contentsDataSource
-//		}
 
 		let titleSource = OCDataSourceArray()
 		titleSource.setVersionedItems([ folderAction ])
 
 		return (titleSource, folderAction)
+	}
+
+	func buildTopFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?, topItem: SpecialItem, viewControllerProvider: @escaping CollectionSidebarAction.ViewControllerProvider) -> OCDataSource {
+		let (titleSource, folderAction) = buildActionFolder(with: contentsDataSource, title: title, icon: icon, folderItemRef: specialItemsDataReferences[topItem]!, viewControllerProvider: viewControllerProvider)
+
+		specialItems[topItem] = folderAction
+		specialItemsDataSources[topItem] = titleSource
+		specialItemsDataReferences[topItem] = folderAction.dataItemReference
+
+		return titleSource
 	}
 
 	func buildFolder(with contentsDataSource: OCDataSource, title: String, icon: UIImage?, folderItemRef: OCDataItemReference = "_folder_\(UUID().uuidString)" as NSString) -> (OCDataSource, OCDataItemPresentable) {
@@ -410,7 +419,7 @@ extension AccountController: DataItemSelectionInteraction {
 			if let personalSpaceDataItemRef = self.personalSpaceDataItemRef,
 			   let sectionID = section?.identifier,
 			   let personalFolderItemRef = section?.collectionViewController?.wrap(references: [personalSpaceDataItemRef], forSection: sectionID).first,
-			   let /* spacesFolderItemRef */ _ = section?.collectionViewController?.wrap(references: [spacesFolderDataItemRef], forSection: sectionID).first {
+			   let /* spacesFolderItemRef */ _ = section?.collectionViewController?.wrap(references: [specialItemsDataReferences[.spacesFolder]!], forSection: sectionID).first {
 				section?.collectionViewController?.addActions([
 					CollectionViewAction(kind: .select(animated: false, scrollPosition: .centeredVertically), itemReference: personalFolderItemRef)
 					// CollectionViewAction(kind: .expand(animated: true), itemReference: spacesFolderItemRef)

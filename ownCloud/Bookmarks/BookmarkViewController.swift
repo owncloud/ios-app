@@ -171,9 +171,8 @@ class BookmarkViewController: StaticTableViewController {
 					changedBookmark = true
 				}
 
-				if self?.bookmark?.certificate != nil {
-					self?.bookmark?.certificate = nil
-					self?.bookmark?.certificateModificationDate = nil
+				if let certificateCount = self?.bookmark?.certificateStore?.allRecords.count, certificateCount > 0 {
+					self?.bookmark?.certificateStore?.removeAllCertificates()
 
 					changedBookmark = true
 				}
@@ -188,7 +187,7 @@ class BookmarkViewController: StaticTableViewController {
 		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			if let certificate = self?.bookmark?.certificate {
+			if let certificate = self?.bookmark?.primaryCertificate {
 				let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
 				let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
@@ -408,7 +407,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				if let connectionBookmark = bookmark {
 					let connection = instantiateConnection(for: connectionBookmark)
-					let previousCertificate = bookmark?.certificate
+					let previousCertificate = bookmark?.primaryCertificate
 
 					hud?.present(on: self, label: "Contacting server…".localized)
 
@@ -423,7 +422,7 @@ class BookmarkViewController: StaticTableViewController {
 									self?.updateInputFocus()
 								}
 
-								if self?.bookmark?.certificate == previousCertificate,
+								if self?.bookmark?.primaryCertificate == previousCertificate,
 								   let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier,
 								   OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) == true {
 
@@ -767,11 +766,11 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// URL section: certificate details - show if there's one
-		if bookmark?.certificate != nil {
+		if bookmark?.primaryCertificate != nil {
 			if certificateRow != nil, certificateRow?.attached == false {
 				urlSection?.add(row: certificateRow!, animated: animated)
 				showedOAuthInfoHeader = true
-				bookmark?.certificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
+				bookmark?.primaryCertificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
 					OnMainThread {
 						guard let accessoryView = self.certificateRow?.additionalAccessoryView as? BorderedLabel else { return }
 						accessoryView.update(text: shortDescription, color: color)

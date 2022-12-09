@@ -307,6 +307,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
 		collectionView.allowsMultipleSelectionDuringEditing = true
+
+//		navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .bookmarks, primaryAction: UIAction(handler: { [weak self] _ in
+//			self?.splitViewController?.show(.primary)
+//		}))
 	}
 
 	public override func viewWillAppear(_ animated: Bool) {

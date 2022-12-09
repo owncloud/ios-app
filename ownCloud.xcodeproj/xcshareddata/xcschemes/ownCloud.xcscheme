@@ -281,6 +281,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:connection.associated-certificates-tracking-rule"
+            value = "string:$hostname like &quot;*.local&quot;"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:core.cookie-support-enabled"
             value = "false"
             isEnabled = "NO">

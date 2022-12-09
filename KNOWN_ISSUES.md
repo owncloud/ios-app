@@ -13,8 +13,6 @@ It should only be used with dedicated test servers, test data - and test devices
 - subscription of spaces can't be turned on/off yet
 - support for sharing is widely untested and/or unavailable in the alpha
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
-- no grid overview for spaces yet
-- saved searches item is shown in sidebar even if there are no saved searches yet
 
 Missing:
 - [ ] quick access
@@ -51,7 +49,8 @@ Matthias:
 Michael:
 - [x] Account deletion by swipe doesn't work
 - [x] Crash searching for accounts to share with
-- [ ] Certificate warning when an account refers to a mix of hostnames
+- [x] Certificate warning when an account refers to a mix of hostnames
+- [ ] UI rendering picking an account for photo uploads on iPhone: prompt full length, button super-compressed.
 
 ## File Provider
 - dragging an entire space on top of another starts a full copy of the space, which eventually fails halfway through
@@ -76,6 +75,9 @@ Michael:
 	- quick access to personal and other spaces
 	- integrate favorites as group
 	- [x] use for preferences and share extension
+
+- improved bookmark setup / editing
+	- browsing UI for ALL certificates stored in a bookmark's store, not just the primary certificate
 
 - account list
 	- allow grouping accounts (i.e. Home / Work)

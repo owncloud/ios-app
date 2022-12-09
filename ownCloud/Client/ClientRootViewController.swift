@@ -282,7 +282,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 	}
 
 	// MARK: - Tab View Controller
-	var tabsController: ClientTabBarController = ClientTabBarController()
+	var tabsController: UITabBarController = UITabBarController()
 
 	// MARK: - Startup
 	func afterCoreStart(_ lastVisibleItemId: String?, busyHandler: OCCoreBusyStatusHandler? = nil, completionHandler: @escaping ((_ error: Error?) -> Void)) {
