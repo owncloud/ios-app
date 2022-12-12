@@ -21,7 +21,7 @@ Missing:
 - [ ] state restoration
 - [ ] full inline progress reporting when account databases are updated on first login
 - [ ] progress reporting in active connections
-- [ ] migration from the Legacy app is not currently wired up (remove?)
+- [x] migration from the Legacy app clarified: the feature was removed
 - [ ] iPadOS: opening an account in a new window
 	- by context menu (openAccountInWindow)
 	- by drag and drop (see ServerListTableViewController: UITableViewDragDelegate)

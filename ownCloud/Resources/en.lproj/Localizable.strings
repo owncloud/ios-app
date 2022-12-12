@@ -841,16 +841,6 @@
 "Import not allowed" = "Import not allowed";
 "Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
 
-/* Data migration from legacy app */
-"Account Migration" = "Account Migration";
-"App Passcode" = "App Passcode";
-"Instant Upload Settings" = "Instant Upload Settings";
-"Migrating" = "Migrating";
-"Migrated" = "Migrated";
-"Failed to migrate" = "Failed to migrate";
-"Failed to access legacy user data" = "Failed to access legacy user data";
-"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.";
-
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
 
