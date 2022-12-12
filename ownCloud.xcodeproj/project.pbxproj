@@ -274,6 +274,8 @@
 		DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */; };
 		DC0A5C432550C70800E6674B /* class-settings-sdk in Resources */ = {isa = PBXBuildFile; fileRef = DC0A5C422550C70800E6674B /* class-settings-sdk */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
+		DC0CE19228C7DBE3009ABDFB /* OpenInWebAppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */; };
+		DC0CE19D28C89CD9009ABDFB /* CreateDocumentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
@@ -555,6 +557,7 @@
 		DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */; };
 		DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */; };
 		DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */; };
+		DCFE682728D869A400091D2A /* ClientWebAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */; };
 		DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */; };
 		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
@@ -1249,6 +1252,8 @@
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
+		DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInWebAppAction.swift; sourceTree = "<group>"; };
+		DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDocumentAction.swift; sourceTree = "<group>"; };
 		DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmark+Extension.swift"; sourceTree = "<group>"; };
 		DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
@@ -1550,6 +1555,7 @@
 		DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellProvider.swift; sourceTree = "<group>"; };
 		DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
 		DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellConfiguration.swift; sourceTree = "<group>"; };
+		DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientWebAppViewController.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
 		DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VendorServices+App.swift"; sourceTree = "<group>"; };
@@ -2231,6 +2237,9 @@
 				0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */,
 				025F063224AA163C009D8FC5 /* DisplayExifMetadataAction.swift */,
 				39EF06AF25D6C3FC001E1E19 /* PresentationModeAction.swift */,
+				DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */,
+				DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */,
+				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -4224,6 +4233,7 @@
 				396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */,
 				394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */,
 				392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */,
+				DC0CE19228C7DBE3009ABDFB /* OpenInWebAppAction.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
 				0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
@@ -4285,12 +4295,14 @@
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,
 				4C51727F22DE04BD001BC97F /* ScheduledTaskManager.swift in Sources */,
 				39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */,
+				DCFE682728D869A400091D2A /* ClientWebAppViewController.swift in Sources */,
 				DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */,
 				399697F5260255B100E5AEBA /* PDFGotoPageAction.swift in Sources */,
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
 				DCC3701624D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */,
 				39A243C424BDD9E100F4441F /* StaticLoginBundle.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
+				DC0CE19D28C89CD9009ABDFB /* CreateDocumentAction.swift in Sources */,
 				4C51727D22DE04BD001BC97F /* ScheduledTaskExtension.swift in Sources */,
 				025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,

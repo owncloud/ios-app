@@ -111,6 +111,8 @@ public class ActionContext: OCExtensionContext {
 	private var cachedParentFolders = [OCLocalID : OCItem]()
 	private var itemStorage: [OCItem]
 
+	public var clientContext : ClientContext?
+
 	public var items: [OCItem] {
 		get {
 			return itemStorage
@@ -152,7 +154,7 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	// MARK: - Init & Deinit.
-	public init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 
 		itemStorage = items
 
@@ -162,6 +164,8 @@ public class ActionContext: OCExtensionContext {
 		self.sender = sender
 		self.core = core
 		self.location = location
+
+		self.clientContext = clientContext
 
 		self.query = query
 		self.requirements = requirements
@@ -273,18 +277,8 @@ open class Action : NSObject {
 	class open var features : [String : Any]? { return nil }
 
 	// MARK: - Extension creation
-	class open var actionExtension : ActionExtension {
-		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
-			if let actionExtension = rawExtension as? ActionExtension,
-				let actionContext   = context as? ActionContext {
-				return self.init(for: actionExtension, with: actionContext)
-			}
-
-			return nil
-		}
-
-		let customMatcher : OCExtensionCustomContextMatcher  = { (context, priority) -> OCExtensionPriority in
-
+	class public var actionCustomContextMatcher : OCExtensionCustomContextMatcher {
+		return { (context, priority) -> OCExtensionPriority in
 			// Make sure we have valid context and extension was not filtered out due to location mismatch
 			guard let actionContext = context as? ActionContext, priority != .noMatch else {
 				return priority
@@ -314,8 +308,19 @@ open class Action : NSObject {
 
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
 		}
+	}
 
-		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: keyCommand, keyModifierFlags: keyModifierFlags)
+	class open var actionExtension : ActionExtension {
+		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
+			if let actionExtension = rawExtension as? ActionExtension,
+				let actionContext   = context as? ActionContext {
+				return self.init(for: actionExtension, with: actionContext)
+			}
+
+			return nil
+		}
+
+		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: actionCustomContextMatcher, keyCommand: keyCommand, keyModifierFlags: keyModifierFlags)
 	}
 
 	// MARK: - Extension matching
@@ -519,11 +524,11 @@ open class Action : NSObject {
 
 }
 
-extension OCClassSettingsIdentifier {
+public extension OCClassSettingsIdentifier {
 	static let action = OCClassSettingsIdentifier("action")
 }
 
-extension OCClassSettingsKey {
+public extension OCClassSettingsKey {
 	static let allowedActions = OCClassSettingsKey("allowed")
 	static let disallowedActions = OCClassSettingsKey("disallowed")
 }

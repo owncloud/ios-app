@@ -74,6 +74,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
+	var appProviderObservation: NSKeyValueObservation?
+
 	init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
 
@@ -182,6 +184,8 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			core?.messageQueue.remove(presenter: cardMessagePresenter)
 		}
 
+		appProviderActionExtensions = nil
+
 		if self.coreRequested {
 			self.fpServiceStandby?.stop()
 			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
@@ -210,6 +214,11 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 			if let cardMessagePresenter = self.cardMessagePresenter {
 				core?.messageQueue.add(presenter: cardMessagePresenter)
 			}
+
+			// Observe .appProvider property
+			self.appProviderObservation = core?.observe(\OCCore.appProvider, options: .initial, changeHandler: { [weak self] (core, change) in
+				self?.appProviderChanged(to: core.appProvider)
+			})
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
@@ -527,6 +536,62 @@ class ClientRootViewController: UITabBarController, BookmarkContainer, ToolAndTa
 		}
 
 		return nil
+	}
+
+	var appProviderActionExtensions : [OCExtension]? {
+		willSet {
+			if let extensions = appProviderActionExtensions {
+				for ext in extensions {
+					OCExtensionManager.shared.removeExtension(ext)
+				}
+			}
+		}
+
+		didSet {
+			if let extensions = appProviderActionExtensions {
+				for ext in extensions {
+					OCExtensionManager.shared.addExtension(ext)
+				}
+			}
+		}
+	}
+
+	func appProviderChanged(to appProvider: OCAppProvider?) {
+		var actionExtensions : [OCExtension] = []
+
+		if let core = core {
+			if let apps = core.appProvider?.apps {
+				for app in apps {
+					// Pre-load app icon
+					if let appIconRequest = app.iconResourceRequest {
+						core.vault.resourceManager?.start(appIconRequest)
+					}
+
+					// Create app-specific open-in-web-app action
+					let openInWebAction = OpenInWebAppAction.createActionExtension(for: app, core: core)
+					actionExtensions.append(openInWebAction)
+				}
+			}
+
+			if let types = core.appProvider?.types {
+				let creationTypes = types.filter({ type in
+					return type.allowCreation
+				})
+
+				if creationTypes.count > 0 {
+					// Pre-load document icons
+					for type in creationTypes {
+						if let typeIconRequest = type.iconResourceRequest {
+							core.vault.resourceManager?.start(typeIconRequest)
+						}
+					}
+
+					// Log.debug("Creation Types: \(String(describing: creationTypes))")
+				}
+			}
+		}
+
+		appProviderActionExtensions = actionExtensions
 	}
 }
 

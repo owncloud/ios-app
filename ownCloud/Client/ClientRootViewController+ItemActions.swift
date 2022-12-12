@@ -40,7 +40,7 @@ extension ClientRootViewController : MoreItemAction {
 		}
 		let originatingViewController : UIViewController = context.originatingViewController ?? self
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: locationIdentifier)
-		let actionContext = ActionContext(viewController: originatingViewController, core: core, query: context.query, items: [item], location: actionsLocation, sender: sender)
+		let actionContext = ActionContext(viewController: originatingViewController, clientContext: context, core: core, query: context.query, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler(), completionHandler: nil) {
 			originatingViewController.present(asCard: moreViewController, animated: true)

@@ -313,7 +313,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		let locationIdentifier: OCExtensionLocationIdentifier = .emptyFolder
 		let originatingViewController : UIViewController = context.originatingViewController ?? self
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: locationIdentifier)
-		let actionContext = ActionContext(viewController: originatingViewController, core: core, query: context.query, items: [item], location: actionsLocation, sender: self)
+		let actionContext = ActionContext(viewController: originatingViewController, clientContext: clientContext, core: core, query: context.query, items: [item], location: actionsLocation, sender: self)
 
 		let emptyFolderActions = Action.sortedApplicableActions(for: actionContext)
 		let actions = emptyFolderActions.map({ action in action.provideOCAction() })
@@ -465,8 +465,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					// Setup new action context
 					if let core = clientContext?.core {
 						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .multiSelection)
-
-						multiSelectionActionContext = ActionContext(viewController: self, core: core, query: query, items: [OCItem](), location: actionsLocation)
+						multiSelectionActionContext = ActionContext(viewController: self, clientContext: clientContext, core: core, query: query, items: [OCItem](), location: actionsLocation)
 					}
 
 					// Setup multi selection action datasource
@@ -619,7 +618,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		let items = provideDropItems(from: dropSession, target: view)
 
 		if items.count > 0, let core = clientContext?.core {
-			dropTargetsActionContext = ActionContext(viewController: self, core: core, items: items, location: OCExtensionLocation(ofType: .action, identifier: .dropAction))
+			dropTargetsActionContext = ActionContext(viewController: self, clientContext: clientContext, core: core, items: items, location: OCExtensionLocation(ofType: .action, identifier: .dropAction))
 
 			if let dropTargetsActionContext = dropTargetsActionContext {
 				let actions = Action.sortedApplicableActions(for: dropTargetsActionContext)
@@ -638,7 +637,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Reveal
 	public func reveal(item: OCDataItem, context: ClientContext, sender: AnyObject?) -> Bool {
 		if let revealInteraction = item as? DataItemSelectionInteraction {
-			if revealInteraction.revealItem?(from: self, with: clientContext, animated: true, pushViewController: true, completion: nil) != nil {
+			if revealInteraction.revealItem?(from: self, with: context, animated: true, pushViewController: true, completion: nil) != nil {
 				return true
 			}
 		}
