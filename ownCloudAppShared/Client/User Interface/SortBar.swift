@@ -80,8 +80,8 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	let rightPadding: CGFloat = 20.0
 	let rightSelectButtonPadding: CGFloat = 8.0
 	let rightSearchScopePadding: CGFloat = 15.0
-	let topPadding: CGFloat = 10.0
-	let bottomPadding: CGFloat = 10.0
+	let topPadding: CGFloat = 2.0
+	let bottomPadding: CGFloat = 2.0
 
 	// MARK: - Instance variables.
 

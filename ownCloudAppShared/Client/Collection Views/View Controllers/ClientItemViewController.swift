@@ -21,12 +21,14 @@ import ownCloudSDK
 import ownCloudApp
 import Intents
 
-open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider, SearchViewControllerDelegate, RevealItemAction {
+open class ClientItemViewController: CollectionViewController, SortBarDelegate, DropTargetsProvider, SearchViewControllerDelegate, RevealItemAction, SearchViewControllerHost {
 	public enum ContentState : String, CaseIterable {
 		case loading
 
 		case empty
 		case hasContent
+
+		case searchNonItemContent
 	}
 
 	public var query: OCQuery?
@@ -46,11 +48,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	public var emptyItemListDataSource : OCDataSourceArray = OCDataSourceArray()
 	public var emptyItemListDecisionSubscription : OCDataSourceSubscription?
-	public var emptyItemListItem : OCDataItemPresentable?
+	public var emptyItemListItem : ComposedMessageView?
+	public var emptySectionDataSource: OCDataSourceComposition?
 	public var emptySection: CollectionViewSection?
 
-	public var loadingListItem : OCDataItemPresentable?
-	public var emptySearchResultsItem: OCDataItemPresentable?
+	public var loadingListItem : ComposedMessageView?
 
 	private var stateObservation : NSKeyValueObservation?
 	private var queryRootItemObservation : NSKeyValueObservation?
@@ -152,7 +154,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 		}
 
-		emptySection = CollectionViewSection(identifier: "empty", dataSource: emptyItemListDataSource, cellStyle: .init(with: .fillSpace), cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
+		emptySectionDataSource = OCDataSourceComposition(sources: [ emptyItemListDataSource ])
+
+		emptySection = CollectionViewSection(identifier: "empty", dataSource: emptySectionDataSource, cellStyle: .init(with: .fillSpace), cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
 		sections.append(emptySection!)
 
 		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true, highlightItemReference: highlightItemReference)
@@ -175,13 +179,25 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}, on: .main, trackDifferences: true, performIntialUpdate: true)
 
 		if let queryDatasource = query?.queryResultsDataSource {
-			emptyItemListItem = OCDataItemPresentable(reference: "_emptyItemList" as NSString, originalDataItemType: nil, version: nil)
-			emptyItemListItem?.title = "This folder is empty. Fill it with content:".localized
-			emptyItemListItem?.childrenDataSourceProvider = nil
+			emptyItemListItem = ComposedMessageView(elements: [
+				.image(UIImage(systemName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.text("No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+				.spacing(25),
+				.text("This folder is empty. Fill it with content:".localized, style: .systemSecondary(textStyle: .body), alignment: .centered)
+			])
 
-			loadingListItem = OCDataItemPresentable(reference: "_loadingListItem" as NSString, originalDataItemType: nil, version: nil)
-			loadingListItem?.title = "Loading…".localized
-			loadingListItem?.childrenDataSourceProvider = nil
+			emptyItemListItem?.elementInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 2, trailing: 0)
+			emptyItemListItem?.backgroundView = nil
+
+			let indeterminateProgress: Progress = .indeterminate()
+			indeterminateProgress.isCancellable = false
+
+			loadingListItem = ComposedMessageView(elements: [
+				.spacing(25),
+				.progressCircle(with: indeterminateProgress),
+				.spacing(25),
+				.text("Loading…".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
+			])
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateEmptyItemList(from: subscription)
@@ -253,7 +269,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup sort bar
 		sortBar = SortBar(sortMethod: sortMethod)
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
-		sortBar?.heightAnchor.constraint(equalToConstant: 40).isActive = true
 		sortBar?.delegate = self
 		sortBar?.sortMethod = sortMethod
 		sortBar?.searchScope = searchScope
@@ -327,14 +342,38 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	func recomputeContentState() {
 		OnMainThread {
-			switch self.itemsQueryDataSource?.state {
-				case .loading:
-					self.contentState = .loading
+			if self.searchActive == true {
+				// Search is active, adapt state to either results (.hasContent) or noResults/suggestions (.searchNonItemContent)
+				if let searchResultsContent = self.searchResultsContent {
+					if searchResultsContent.type != .results {
+						self.contentState = .searchNonItemContent
+					} else {
+						self.contentState = .hasContent
+					}
+				} else {
+					self.contentState = .searchNonItemContent
+				}
+			} else {
+				// Regular usage, use itemsQueryDataSource to determine state
+				switch self.itemsQueryDataSource?.state {
+					case .loading:
+						self.contentState = .loading
 
-				case .idle:
-					self.contentState = (self.emptyItemListDecisionSubscription?.snapshotResettingChangeTracking(true).numberOfItems == 0) ? .empty : .hasContent
+					case .idle:
+						let numberOfItems = self.emptyItemListDecisionSubscription?.snapshotResettingChangeTracking(true).numberOfItems
 
-				default: break
+						if let numberOfItems = numberOfItems, numberOfItems > 0 {
+							self.contentState = .hasContent
+						} else {
+							if (numberOfItems == nil) || (self.query?.rootItem == nil) {
+								self.contentState = .loading
+							} else {
+								self.contentState = .empty
+							}
+						}
+
+					default: break
+				}
 			}
 		}
 	}
@@ -343,6 +382,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public var contentState : ContentState = .loading {
 		didSet {
 			let hasRootItem = (query?.rootItem != nil)
+			let itemSectionHidden = itemSection?.hidden
+			var itemSectionHiddenNew = false
+			let emptySectionHidden = emptySection?.hidden
+			var emptySectionHiddenNew = false
 
 			if (contentState == oldValue) && (hadRootItem == hasRootItem) {
 				return
@@ -379,6 +422,20 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					if let sortBar = sortBar {
 						itemsLeadInDataSource.setVersionedItems([ sortBar ])
 					}
+
+					emptySectionHiddenNew = true
+
+				case .searchNonItemContent:
+					emptyItemListDataSource.setItems(nil, updated: nil)
+					itemsLeadInDataSource.setVersionedItems([ ])
+					itemSectionHiddenNew = true
+			}
+
+			if (itemSectionHidden != itemSectionHiddenNew) || (emptySectionHidden != emptySectionHiddenNew) {
+				updateSections(with: { sections in
+					self.itemSection?.hidden = itemSectionHiddenNew
+					self.emptySection?.hidden = emptySectionHiddenNew
+				}, animated: false)
 			}
 		}
 	}
@@ -646,21 +703,87 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	// MARK: - Search
 	open var searchController: UISearchController?
-	var searchViewController: SearchViewController?
+	open var searchViewController: SearchViewController?
 
 	@objc open func startSearch() {
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
-				searchViewController = SearchViewController(with: clientContext, scopes: [
-					// In this folder
+				var scopes : [SearchScope] = [
+					// - In this folder
 					.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
 
-					// + Folder and subfolders
-					// + This space
+					// - Folder and subfolders (tree / container)
+					.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Tree".localized)
+				]
 
-					// Account
-					.globalSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized)
-				], delegate: self)
+				// - Drive
+				if clientContext.core?.useDrives == true {
+					let driveName = "Space".localized
+					scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
+				}
+
+				// - Account
+				scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized))
+
+				// No results
+				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
+				let noResultsView = ComposedMessageView.infoBox(image: UIImage(systemName: "magnifyingglass"), title: "No matches".localized, subtitle: "The search term you entered did not match any item in the selected scope.".localized)
+
+				(noResultContent.source as? OCDataSourceArray)?.setVersionedItems([
+					noResultsView
+				])
+
+				// Suggestion view
+				let suggestionsSource = OCDataSourceArray()
+				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: emptySection!.cellStyle)
+
+				if let vault = clientContext.core?.vault {
+					vault.addSavedSearchesObserver(suggestionsSource, withInitial: true) { suggestionsSource, savedSearches, isInitial in
+						guard let suggestionsSource = suggestionsSource as? OCDataSourceArray else {
+							return
+						}
+
+						var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
+
+						// Offer saved search templates
+						if let savedTemplates = vault.savedSearches?.filter({ savedSearch in
+							return savedSearch.isTemplate
+						}), savedTemplates.count > 0 {
+							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
+								.spacing(10),
+								.text("Saved search templates".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
+							])
+							savedSearchTemplatesHeaderView.elementInsets = .zero
+
+							suggestionItems.append(savedSearchTemplatesHeaderView)
+							suggestionItems.append(contentsOf: savedTemplates)
+						}
+
+						// Offer saved searches
+						if let savedSearches = vault.savedSearches?.filter({ savedSearch in
+							return !savedSearch.isTemplate
+						}), savedSearches.count > 0 {
+							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
+								.spacing(10),
+								.text("Smart folders".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
+							])
+							savedSearchTemplatesHeaderView.elementInsets = .zero
+
+							suggestionItems.append(savedSearchTemplatesHeaderView)
+							suggestionItems.append(contentsOf: savedSearches)
+						}
+
+						// Provide "Enter a search term" placeholder if there is no other content available
+						if suggestionItems.count == 0 {
+							suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized) )
+						}
+
+						suggestionsSource.setVersionedItems(suggestionItems)
+					}
+				}
+
+				// Create and install SearchViewController
+				searchViewController = SearchViewController(with: clientContext, scopes: scopes, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
 				if let searchViewController = searchViewController {
 					self.addStacked(child: searchViewController, position: .top)
@@ -673,16 +796,52 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		if let searchViewController = searchViewController {
 			self.removeStacked(child: searchViewController)
 		}
-		searchResultsDataSource = nil
+		searchResultsContent = nil
 		searchViewController = nil
+
+		itemSectionDataSource?.setInclude(true, for: itemsLeadInDataSource)
 	}
 
 	// MARK: - SearchViewControllerDelegate
+	var searchResultsContent: SearchViewController.Content? {
+		didSet {
+			if let content = searchResultsContent {
+				let contentSource = content.source
+				let contentStyle = content.style
+
+				switch content.type {
+					case .results:
+						if searchResultsDataSource != contentSource {
+							searchResultsDataSource = contentSource
+						}
+
+						if let style = contentStyle ?? preSearchCellStyle, style != itemSection?.cellStyle {
+							itemSection?.cellStyle = style
+						}
+
+						searchNonItemDataSource = nil
+
+					case .noResults, .suggestion:
+						searchResultsDataSource = nil
+						searchNonItemDataSource = contentSource
+				}
+			} else {
+				searchResultsDataSource = nil
+				searchNonItemDataSource = nil
+			}
+
+			recomputeContentState()
+		}
+	}
+
 	var searchResultsDataSource: OCDataSource? {
 		willSet {
 			if let oldDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsQueryDataSource, oldDataSource != itemsQueryDataSource {
 				itemSectionDataSource?.removeSources([ oldDataSource ])
-				itemSectionDataSource?.setInclude(true, for: itemsQueryDataSource)
+
+				if (newValue == nil) || (newValue == itemsQueryDataSource) {
+					itemSectionDataSource?.setInclude(true, for: itemsQueryDataSource)
+				}
 			}
 		}
 
@@ -694,27 +853,39 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 	}
 
+	var searchNonItemDataSource: OCDataSource? {
+		willSet {
+			if let oldDataSource = searchNonItemDataSource, oldDataSource != newValue {
+				emptySectionDataSource?.removeSources([ oldDataSource ])
+			}
+		}
+
+		didSet {
+			if let newDataSource = searchNonItemDataSource, newDataSource != oldValue {
+				emptySectionDataSource?.addSources([ newDataSource ])
+			}
+		}
+	}
+
 	private var preSearchCellStyle : CollectionViewCellStyle?
+	var searchActive : Bool?
 
 	public func searchBegan(for viewController: SearchViewController) {
 		preSearchCellStyle = itemSection?.cellStyle
+		searchActive = true
 
 		updateSections(with: { sections in
 			self.driveSection?.hidden = true
 		}, animated: true)
 	}
 
-	public func search(for viewController: SearchViewController, withResults resultsDataSource: OCDataSource?, style: CollectionViewCellStyle?) {
-		if searchResultsDataSource != resultsDataSource {
-			searchResultsDataSource = resultsDataSource
-		}
-
-		if let style = style ?? preSearchCellStyle, style != itemSection?.cellStyle {
-			itemSection?.cellStyle = style
-		}
+	public func search(for viewController: SearchViewController, content: SearchViewController.Content?) {
+		searchResultsContent = content
 	}
 
 	public func searchEnded(for viewController: SearchViewController) {
+		searchActive = false
+
 		updateSections(with: { sections in
 			self.driveSection?.hidden = false
 		}, animated: true)
@@ -724,5 +895,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		endSearch()
+
+		recomputeContentState()
 	}
 }

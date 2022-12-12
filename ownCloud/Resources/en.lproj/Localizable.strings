@@ -105,7 +105,13 @@
 "size" = "size";
 "date" = "date";
 "Search folder" = "Search folder";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
+"Save search" = "Save search";
+
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 "Reveal in folder" = "Reveal in folder";
@@ -142,6 +148,7 @@
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
+"No contents" = "No contents";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
 "This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
@@ -160,6 +167,7 @@
 "Upload files" = "Upload files";
 
 "No matches" = "No matches";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "There are no results for this search term";
 "Status" = "Status";
 

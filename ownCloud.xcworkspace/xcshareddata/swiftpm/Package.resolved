@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "down",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnxnguyen/Down",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e754ab1c80920dd51a8e08290c912ac1c2ac8b58"
+      }
+    },
+    {
       "identity" : "openssl",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/OpenSSL.git",
@@ -14,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/microsoft/plcrashreporter.git",
       "state" : {
-        "revision" : "4637a7854de2cc5c354d46fb931d74bdbc2c043e",
-        "version" : "1.7.0"
+        "revision" : "81cdec2b3827feb03286cb297f4c501a8eb98df1",
+        "version" : "1.10.2"
       }
     },
     {

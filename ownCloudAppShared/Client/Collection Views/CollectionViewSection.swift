@@ -190,8 +190,10 @@ public class CollectionViewSection: NSObject {
 		set {
 			_cellStyle = newValue
 
-			OnMainThread {
-				self.collectionViewController?.reload(sections: [self], animated: false)
+			if _cellStyle != newValue {
+				OnMainThread {
+					self.collectionViewController?.reload(sections: [self], animated: false)
+				}
 			}
 		}
 	}
@@ -282,9 +284,13 @@ public class CollectionViewSection: NSObject {
 					cell = cellProvider.provideCell(for: collectionView, cellConfiguration: cellConfiguration, itemRecord: itemRecord, collectionItemRef: collectionItemRef, indexPath: indexPath)
 				}
 			}
+
+			if cell == nil {
+				cell = collectionViewController.provideEmptyFallbackCell(for: indexPath, item: collectionItemRef)
+			}
 		}
 
-		return cell ?? UICollectionViewCell()
+		return cell ?? UICollectionViewCell.emptyFallbackCell
 	}
 
 	// MARK: - Section layout

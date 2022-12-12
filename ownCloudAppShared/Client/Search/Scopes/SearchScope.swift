@@ -19,233 +19,88 @@
 import UIKit
 import ownCloudSDK
 
-open class SearchScope: NSObject {
+open class SearchScope: NSObject, SearchElementUpdating {
 	public var localizedName : String
+	public var localizedPlaceholder: String?
+	public var icon : UIImage?
 
 	@objc public dynamic var results: OCDataSource?
 	@objc public dynamic var resultsCellStyle: CollectionViewCellStyle?
 
 	public var isSelected: Bool = false
 
+	public weak var searchViewController: SearchViewController?
 	public var clientContext: ClientContext
 
+	public var tokenizer: SearchTokenizer? // a search tokenizer must be set by subclasses in init()
+	public var scopeViewController: (UIViewController & SearchElementUpdating)?
+
 	static public func modifyingQuery(with context: ClientContext, localizedName: String) -> SearchScope {
-		return QueryModifyingSearchScope(with: context, cellStyle: nil, localizedName: localizedName)
+		return SingleFolderSearchScope(with: context, cellStyle: nil, localizedName: localizedName, localizedPlaceholder: "Search folder".localized, icon: UIImage(systemName: "folder"))
 	}
 
-	static public func globalSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		let revealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
-			cellStyle.showRevealButton = true
-		})
-
-		return CustomQuerySearchScope(with: context, cellStyle: revealCellStyle, localizedName: localizedName)
+	static public func driveSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		var placeholder = "Search space".localized
+		if let driveName = context.drive?.name, driveName.count > 0 {
+			placeholder = "Search {{space.name}}".localized(["space.name" : driveName])
+		}
+		return DriveSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: UIImage(systemName: "square.grid.2x2"))
 	}
 
-	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String) {
+	static public func containerSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		var placeholder = "Search tree".localized
+		if let path = context.query?.queryLocation?.lastPathComponent, path.count > 0 {
+			placeholder = "Search from {{folder.name}}".localized(["folder.name" : path])
+		}
+		return ContainerSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: UIImage(systemName: "square.stack.3d.up"))
+	}
+
+	static public func accountSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: "Search account".localized, icon: UIImage(systemName: "person"))
+	}
+
+	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
 		clientContext = context
 		localizedName = name
 
 		super.init()
 
 		resultsCellStyle = cellStyle
+		self.localizedPlaceholder = placeholder
+		self.icon = icon
 	}
 
-	open func updateForSearchTerm(_ term: String?) {
-
-	}
-}
-
-open class ItemSearchScope : SearchScope {
-	private var sortDescriptorObserver: NSKeyValueObservation?
-
-	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String) {
-		super.init(with: context, cellStyle: cellStyle, localizedName: name)
-
-		sortDescriptorObserver = context.observe(\.sortDescriptor, changeHandler: { [weak self] context, change in
-			self?.sortDescriptorChanged(to: context.sortDescriptor)
-		})
+	open func updateFor(_ searchElements: [SearchElement]) {
 	}
 
-	deinit {
-		sortDescriptorObserver?.invalidate()
+	// Save and restore searches
+	open var canSaveSearch: Bool {
+		// subclasses should return true if the scope can save the current search
+		return false
 	}
 
-	open func sortDescriptorChanged(to sortDescriptor: SortDescriptor?) {
+	open var savedSearch: AnyObject? {
+		// subclasses should return an serializable object that can be used to restore the search if the scope can save the current search
+		return nil
 	}
 
-	open var queryCondition: OCQueryCondition?
-
-	open override var isSelected: Bool {
-		didSet {
-			if !isSelected {
-				queryCondition = nil
-				results = nil
-			}
-		}
+	open var canSaveTemplate: Bool {
+		// subclasses should return true if the scope can save the current search as template
+		return false
 	}
 
-	open var searchTerm: String?
-
-	open override func updateForSearchTerm(_ term: String?) {
-		if isSelected {
-			searchTerm = term
-
-			if let searchText = term {
-				queryCondition = OCQueryCondition.fromSearchTerm(searchText)
-			} else {
-				queryCondition = nil
-			}
-		}
-	}
-}
-
-open class QueryModifyingSearchScope : ItemSearchScope {
-	public override var isSelected: Bool {
-		didSet {
-			if let query = clientContext.query {
-				if isSelected {
-					// Modify existing query provided via clientContext
-					results = query.queryResultsDataSource
-				}
-			}
-		}
+	open var savedTemplate: AnyObject? {
+		// subclasses should return an serializable object that can be used to restore the search if the scope can save the current search as template
+		return nil
 	}
 
-	open override var queryCondition: OCQueryCondition? {
-		didSet {
-			let queryCondition = queryCondition
-
-			if let query = clientContext.query {
-				if queryCondition != nil {
-					let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-						if let item = item, let queryCondition = queryCondition {
-							return queryCondition.fulfilled(by: item)
-						}
-						return false
-					}
-
-					if let filter = query.filter(withIdentifier: "text-search") {
-						query.updateFilter(filter, applyChanges: { filterToChange in
-							(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
-						})
-					} else {
-						query.addFilter(OCQueryFilter(handler: filterHandler), withIdentifier: "text-search")
-					}
-				} else {
-					if let filter = query.filter(withIdentifier: "text-search") {
-						query.removeFilter(filter)
-					}
-				}
-			}
-		}
-	}
-}
-
-open class CustomQuerySearchScope : ItemSearchScope {
-	private let maxResultCountDefault = 100 // Maximum number of results to return from database (default)
- 	private var maxResultCount = 100 // Maximum number of results to return from database (flexible)
-
-	public override var isSelected: Bool {
-		didSet {
-			if isSelected {
-				resultActionSource.setItems([
-					OCAction(title: "Show more results".localized, icon: nil, action: { [weak self] action, options, completion in
-						self?.showMoreResults()
-						completion(nil)
-					})
-				], updated: nil)
-				composeResultsDataSource()
-			}
-		}
+	open func canRestore(savedTemplate: AnyObject) -> Bool {
+		// subclasses should return true if they can restore a saved template from the provided savedSearch object
+		return false
 	}
 
-	public var resultActionSource: OCDataSourceArray = OCDataSourceArray()
-
-	var resultsSubscription: OCDataSourceSubscription?
-
-	func composeResultsDataSource() {
-		if let queryResultsSource = customQuery?.queryResultsDataSource {
-			let composedResults = OCDataSourceComposition(sources: [
-				queryResultsSource,
-				resultActionSource
-			])
-
-			let maxResultCount = maxResultCount
-			let resultActionSource = resultActionSource
-
-			resultsSubscription = queryResultsSource.subscribe(updateHandler: { [weak composedResults, weak resultActionSource] (subscription) in
-				let snapshot = subscription.snapshotResettingChangeTracking(true)
-
-				if let resultActionSource = resultActionSource {
-					OnMainThread {
-						composedResults?.setInclude((snapshot.numberOfItems >= maxResultCount), for: resultActionSource)
-					}
-				}
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
-
-			results = composedResults
-		} else {
-			results = nil
-		}
-	}
-
-	public var customQuery: OCQuery? {
-		willSet {
-			if let core = clientContext.core, let oldQuery = customQuery {
-				core.stop(oldQuery)
-			}
-		}
-
-		didSet {
-			if let core = clientContext.core, let newQuery = customQuery {
-				core.start(newQuery)
-
-				composeResultsDataSource()
-			} else {
-				results = nil
-			}
-		}
-	}
-
-	private var lastSearchTerm : String?
-	private var scrollToTopWithNextRefresh : Bool = false
-
- 	public func updateCustomSearchQuery() {
-		if lastSearchTerm != searchTerm {
-			// Reset max result count when search text changes
-			maxResultCount = maxResultCountDefault
-			lastSearchTerm = searchTerm
-
-			// Scroll to top when search text changes
-			scrollToTopWithNextRefresh = true
-		}
-
- 		if let condition = queryCondition {
-			if let sortDescriptor = clientContext.sortDescriptor {
-				condition.sortBy = sortDescriptor.method.sortPropertyName
-				condition.sortAscending = sortDescriptor.direction != .ascendant
-			}
-
-			condition.maxResultCount = NSNumber(value: maxResultCount)
-
-			customQuery = OCQuery(condition:condition, inputFilter: nil)
- 		} else {
- 			customQuery = nil
- 		}
- 	}
-
-	func showMoreResults() {
-		maxResultCount += maxResultCountDefault
-		updateCustomSearchQuery()
-	}
-
- 	open override var queryCondition: OCQueryCondition? {
- 		didSet {
- 			updateCustomSearchQuery()
-		}
-	}
-
-	open override func sortDescriptorChanged(to sortDescriptor: SortDescriptor?) {
-		updateCustomSearchQuery()
+	open func restore(savedTemplate: AnyObject) -> [SearchElement]? {
+		// subclasses should convert the saved template into search elements that can be used to popuplate f.ex. UISearchTextField
+		return nil
 	}
 }

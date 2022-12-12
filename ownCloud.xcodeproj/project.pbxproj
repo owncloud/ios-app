@@ -289,6 +289,14 @@
 		DC24B29825BA2A34005783E2 /* Branding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24B27225B9DF31005783E2 /* Branding.m */; };
 		DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B2AA25BA316D005783E2 /* Branding+App.swift */; };
 		DC24B31D25BB6FC4005783E2 /* IssuesCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */; };
+		DC24E0EA28B36A81002E4F5B /* OCSearchSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = DC24E0E828B36A81002E4F5B /* OCSearchSegment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC24E0EB28B36A81002E4F5B /* OCSearchSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24E0E928B36A81002E4F5B /* OCSearchSegment.m */; };
+		DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */; };
+		DC24E10428B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10328B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift */; };
+		DC24E10728B7BFD6002E4F5B /* ItemSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */; };
+		DC24E10B28B7C185002E4F5B /* SingleFolderSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */; };
+		DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */; };
+		DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */; };
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
@@ -298,6 +306,10 @@
 		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
 		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
 		DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */; };
+		DC2A128428D0722F0088A2B7 /* OCSavedSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = DC2A127C28D06F060088A2B7 /* OCSavedSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */ = {isa = PBXBuildFile; fileRef = DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC2A128628D0725D0088A2B7 /* OCVault+SavedSearches.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */; };
+		DC2A128728D0725D0088A2B7 /* OCSavedSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */; };
 		DC2FE2DA24C30586002AFDB3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */; };
 		DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939C22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift */; };
@@ -330,6 +342,9 @@
 		DC46F3D32845583D00038880 /* OCDrive+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */; };
 		DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */; };
 		DC46F3D72845FCFA00038880 /* UIView+OCDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */; };
+		DC46F68E28DAFCDD008280CA /* RoundCornerBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */; };
+		DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */; };
+		DC46F69228DCB9C6008280CA /* OCSavedSearch+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */; };
 		DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */; };
 		DC49B55A28365C5F00DAF13B /* OCVault+VFSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */; };
 		DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */; };
@@ -346,6 +361,9 @@
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
 		DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
+		DC65590F28A2633C0003D130 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC65590E28A2633C0003D130 /* UITextField+Extension.swift */; };
+		DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC65592D28A644E10003D130 /* SearchTokenizer.swift */; };
+		DC65593228A648680003D130 /* SearchElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC65593128A648680003D130 /* SearchElement.swift */; };
 		DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B394482385334D00892E8D /* ThemeView.swift */; };
 		DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */; };
 		DC66A9F8279F467200792AC8 /* UIKeyCommand+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */; };
@@ -434,6 +452,7 @@
 		DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */; };
 		DCCD77792604C91600098573 /* NSDate+ComputedTimes.h in Headers */ = {isa = PBXBuildFile; fileRef = DCCD776A2604C81B00098573 /* NSDate+ComputedTimes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCCD778C2604C91B00098573 /* NSDate+ComputedTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = DCCD776B2604C81B00098573 /* NSDate+ComputedTimes.m */; };
+		DCCE1BFA28CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCE1BF928CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift */; };
 		DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1300923A191C000255779 /* LicenseOfferButton.swift */; };
 		DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */; };
 		DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */; };
@@ -558,6 +577,7 @@
 		DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */; };
 		DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */; };
 		DCFE682728D869A400091D2A /* ClientWebAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */; };
+		DCFE682E28D9CEDD00091D2A /* ComposedMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE682D28D9CEDD00091D2A /* ComposedMessageView.swift */; };
 		DCFEF90926EFA45A001DC7A4 /* VendorServices+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */; };
 		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
@@ -1269,6 +1289,14 @@
 		DC24B27225B9DF31005783E2 /* Branding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Branding.m; sourceTree = "<group>"; };
 		DC24B2AA25BA316D005783E2 /* Branding+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Branding+App.swift"; sourceTree = "<group>"; };
 		DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesCardViewController.swift; sourceTree = "<group>"; };
+		DC24E0E828B36A81002E4F5B /* OCSearchSegment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSearchSegment.h; sourceTree = "<group>"; };
+		DC24E0E928B36A81002E4F5B /* OCSearchSegment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSearchSegment.m; sourceTree = "<group>"; };
+		DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCQueryCondition+SearchToken.swift"; sourceTree = "<group>"; };
+		DC24E10328B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuerySearchTokenizer.swift; sourceTree = "<group>"; };
+		DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchScope.swift; sourceTree = "<group>"; };
+		DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleFolderSearchScope.swift; sourceTree = "<group>"; };
+		DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSearchScope.swift; sourceTree = "<group>"; };
+		DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupButtonController.swift; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC26ADDD2550C0B20059680D /* MetadataDocumentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataDocumentationTests.swift; sourceTree = "<group>"; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -1286,6 +1314,10 @@
 		DC297968226E52E600E01BC7 /* PushTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransition.swift; sourceTree = "<group>"; };
 		DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFileListTableViewController.swift; sourceTree = "<group>"; };
 		DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LibrarySharesTableViewController.swift; path = ownCloud/Client/Library/LibrarySharesTableViewController.swift; sourceTree = SOURCE_ROOT; };
+		DC2A127C28D06F060088A2B7 /* OCSavedSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSavedSearch.h; sourceTree = "<group>"; };
+		DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSavedSearch.m; sourceTree = "<group>"; };
+		DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+SavedSearches.h"; sourceTree = "<group>"; };
+		DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+SavedSearches.m"; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeAvailableOfflineAction.swift; sourceTree = "<group>"; };
 		DC33939C22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeUnavailableOfflineAction.swift; sourceTree = "<group>"; };
@@ -1328,6 +1360,9 @@
 		DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDrive+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCAction+Interactions.swift"; sourceTree = "<group>"; };
 		DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+OCDataItem.swift"; sourceTree = "<group>"; };
+		DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerBackgroundView.swift; sourceTree = "<group>"; };
+		DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedSearchCell.swift; sourceTree = "<group>"; };
+		DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCSavedSearch+Interactions.swift"; sourceTree = "<group>"; };
 		DC49B55728365C5F00DAF13B /* OCVault+VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+VFSManager.h"; sourceTree = "<group>"; };
 		DC49B55828365C5F00DAF13B /* OCVault+VFSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+VFSManager.m"; sourceTree = "<group>"; };
 		DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1347,6 +1382,9 @@
 		DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientActivityCell.swift; sourceTree = "<group>"; };
 		DC63208621FCEE5D007EC0A8 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
+		DC65590E28A2633C0003D130 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
+		DC65592D28A644E10003D130 /* SearchTokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTokenizer.swift; sourceTree = "<group>"; };
+		DC65593128A648680003D130 /* SearchElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchElement.swift; sourceTree = "<group>"; };
 		DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceViewHost.swift; sourceTree = "<group>"; };
 		DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKeyCommand+Extension.swift"; sourceTree = "<group>"; };
 		DC66F39A239659C000CF4812 /* OCASN1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCASN1.h; sourceTree = "<group>"; };
@@ -1457,6 +1495,7 @@
 		DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesSettingsSection.swift; sourceTree = "<group>"; };
 		DCCD776A2604C81B00098573 /* NSDate+ComputedTimes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDate+ComputedTimes.h"; sourceTree = "<group>"; };
 		DCCD776B2604C81B00098573 /* NSDate+ComputedTimes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDate+ComputedTimes.m"; sourceTree = "<group>"; };
+		DCCE1BF928CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchSuggestionsViewController.swift; sourceTree = "<group>"; };
 		DCD1300923A191C000255779 /* LicenseOfferButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferButton.swift; sourceTree = "<group>"; };
 		DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+AppStore.swift"; sourceTree = "<group>"; };
 		DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSettingsSection.swift; sourceTree = "<group>"; };
@@ -1556,6 +1595,7 @@
 		DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
 		DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellConfiguration.swift; sourceTree = "<group>"; };
 		DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientWebAppViewController.swift; sourceTree = "<group>"; };
+		DCFE682D28D9CEDD00091D2A /* ComposedMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedMessageView.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
 		DCFEF90526EFA45A001DC7A4 /* VendorServices+App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VendorServices+App.swift"; sourceTree = "<group>"; };
@@ -1991,6 +2031,7 @@
 				DC3AB24328104AA500789435 /* UIFont+Weight.swift */,
 				DC3AB2452810602500789435 /* UILabel+Extension.swift */,
 				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
+				DC65590E28A2633C0003D130 /* UITextField+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -2376,6 +2417,35 @@
 			path = Branding;
 			sourceTree = "<group>";
 		};
+		DC24E10228B7BF13002E4F5B /* Tokenizer */ = {
+			isa = PBXGroup;
+			children = (
+				DC24E10328B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift */,
+				DC24E0F728B41693002E4F5B /* OCQueryCondition+SearchToken.swift */,
+			);
+			path = Tokenizer;
+			sourceTree = "<group>";
+		};
+		DC24E10828B7C04B002E4F5B /* Item Search */ = {
+			isa = PBXGroup;
+			children = (
+				DC24E10228B7BF13002E4F5B /* Tokenizer */,
+				DCCE1BF928CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift */,
+				DC24E10928B7C05E002E4F5B /* Scopes */,
+			);
+			path = "Item Search";
+			sourceTree = "<group>";
+		};
+		DC24E10928B7C05E002E4F5B /* Scopes */ = {
+			isa = PBXGroup;
+			children = (
+				DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */,
+				DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */,
+				DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */,
+			);
+			path = Scopes;
+			sourceTree = "<group>";
+		};
 		DC255E432319AD13007279B1 /* Scanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -2421,6 +2491,29 @@
 				DCE4E45524C1ED8D0051722F /* ClientQueryViewController+InlineMessageSupport.swift */,
 			);
 			path = "FileList Extensions";
+			sourceTree = "<group>";
+		};
+		DC2A127B28D06EED0088A2B7 /* Saved Searches */ = {
+			isa = PBXGroup;
+			children = (
+				DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */,
+				DC2A127C28D06F060088A2B7 /* OCSavedSearch.h */,
+				DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */,
+				DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */,
+			);
+			path = "Saved Searches";
+			sourceTree = "<group>";
+		};
+		DC2A128828D076750088A2B7 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				DC24E0E928B36A81002E4F5B /* OCSearchSegment.m */,
+				DC24E0E828B36A81002E4F5B /* OCSearchSegment.h */,
+				DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */,
+				DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */,
+				DC2A127B28D06EED0088A2B7 /* Saved Searches */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		DC33939E22E0A1A300DD3DA4 /* Item Policies */ = {
@@ -2516,11 +2609,21 @@
 			isa = PBXGroup;
 			children = (
 				DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */,
-				DC46F3D0284546F000038880 /* OCItem+Interactions.swift */,
-				DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */,
 				DC46F3D4284563BD00038880 /* OCAction+Interactions.swift */,
+				DC46F3D22845583D00038880 /* OCDrive+Interactions.swift */,
+				DC46F3D0284546F000038880 /* OCItem+Interactions.swift */,
+				DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */,
 			);
 			path = "Data Item Interactions";
+			sourceTree = "<group>";
+		};
+		DC65592C28A644B60003D130 /* Tokenizer */ = {
+			isa = PBXGroup;
+			children = (
+				DC65592D28A644E10003D130 /* SearchTokenizer.swift */,
+				DC65593128A648680003D130 /* SearchElement.swift */,
+			);
+			path = Tokenizer;
 			sourceTree = "<group>";
 		};
 		DC66F3A723965BE300CF4812 /* Parser Support */ = {
@@ -2559,8 +2662,6 @@
 				DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */,
 				DC7C100F24B5F81E00227085 /* OCBookmark+AppExtensions.m */,
 				DC7C100E24B5F81E00227085 /* OCBookmark+AppExtensions.h */,
-				DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */,
-				DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */,
 			);
 			path = "SDK Extensions";
 			sourceTree = "<group>";
@@ -2780,6 +2881,8 @@
 			children = (
 				DCB5D56A2861BEBE004AF425 /* SearchViewController.swift */,
 				DCB5D5A828632C1B004AF425 /* Scopes */,
+				DC65592C28A644B60003D130 /* Tokenizer */,
+				DC24E10828B7C04B002E4F5B /* Item Search */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -2840,6 +2943,7 @@
 				DCF072D02798504E00E0B01D /* Views */,
 				DCF575E52796CBB3003BEBBA /* View Providers */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
+				DC2A128828D076750088A2B7 /* Search */,
 				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DCEA7F38282D3ACA0050A3C0 /* VFS */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
@@ -3051,13 +3155,16 @@
 		DCE4E42F24C1963F0051722F /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
 				394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */,
 				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
-				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
-				3912208123436EB80026C290 /* SortMethod.swift */,
-				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+				DCFE682D28D9CEDD00091D2A /* ComposedMessageView.swift */,
 				DCD864112811FC5700CA6631 /* GradientView.swift */,
+				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
+				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
+				DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */,
+				DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */,
+				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
+				3912208123436EB80026C290 /* SortMethod.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -3170,6 +3277,7 @@
 				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
 				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
+				DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */,
 				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
 				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
 				DC46F3CB2844A8EA00038880 /* ViewCell.swift */,
@@ -3421,8 +3529,10 @@
 				DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */,
 				DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */,
 				DCF072DC279857A300E0B01D /* OCCircularContentView.h in Headers */,
+				DC2A128428D0722F0088A2B7 /* OCSavedSearch.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
+				DC24E0EA28B36A81002E4F5B /* OCSearchSegment.h in Headers */,
 				DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */,
 				DCF072EC27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h in Headers */,
 				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
@@ -3462,6 +3572,7 @@
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
+				DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */,
 				DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */,
 				DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */,
 			);
@@ -3756,7 +3867,7 @@
 					};
 					394A0AF822EEFC2C00603813 = {
 						CreatedOnToolsVersion = 11.0;
-						LastSwiftMigration = 1330;
+						LastSwiftMigration = 1340;
 						ProvisioningStyle = Automatic;
 					};
 					39A7137F22E79C6700089423 = {
@@ -4402,6 +4513,8 @@
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
+				DC65590F28A2633C0003D130 /* UITextField+Extension.swift in Sources */,
+				DC24E10728B7BFD6002E4F5B /* ItemSearchScope.swift in Sources */,
 				DC46F3D72845FCFA00038880 /* UIView+OCDataItem.swift in Sources */,
 				399EA75A25E66DB000B6FF11 /* ClientItemResolvingCell.swift in Sources */,
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
@@ -4420,9 +4533,11 @@
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
 				399EA6F925E6544100B6FF11 /* SharingTableViewController.swift in Sources */,
+				DC46F69228DCB9C6008280CA /* OCSavedSearch+Interactions.swift in Sources */,
 				DCE4E45824C1F0F40051722F /* ClientDirectoryPickerViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
 				DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */,
+				DCFE682E28D9CEDD00091D2A /* ComposedMessageView.swift in Sources */,
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
@@ -4443,6 +4558,7 @@
 				DCE4E44F24C1DF130051722F /* UIViewController+Extension.swift in Sources */,
 				DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */,
 				DCB5D60B25FC14B6004C52D9 /* OCIssue+Extension.swift in Sources */,
+				DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */,
 				DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
@@ -4463,6 +4579,7 @@
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				DC0A358624C0E44600FB58FC /* ThemeTVGResource.swift in Sources */,
+				DC46F68E28DAFCDD008280CA /* RoundCornerBackgroundView.swift in Sources */,
 				DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,
@@ -4477,18 +4594,23 @@
 				DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */,
 				DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
+				DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */,
 				DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */,
 				DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */,
 				DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */,
 				DC0A357824C0E43700FB58FC /* CardPresentationController.swift in Sources */,
 				393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */,
 				DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */,
+				DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */,
+				DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */,
 				DC0A357324C0E42D00FB58FC /* PushTransitionDelegate.swift in Sources */,
 				DCE4E45424C1EC040051722F /* BreadCrumbTableViewController.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
 				399EA6F725E6544100B6FF11 /* PublicLinkEditTableViewController.swift in Sources */,
 				DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */,
+				DCCE1BFA28CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift in Sources */,
 				DC0A358824C0E44B00FB58FC /* ThemeTableViewCell.swift in Sources */,
+				DC24E10428B7BF4E002E4F5B /* CustomQuerySearchTokenizer.swift in Sources */,
 				DC36886224DDA9AB00333600 /* ProgressIndicatorViewController.swift in Sources */,
 				399EA72625E6565900B6FF11 /* OCCore+Extension.swift in Sources */,
 				DC0A359424C0E5C800FB58FC /* GitCommit.swift in Sources */,
@@ -4509,10 +4631,13 @@
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
+				DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */,
+				DC65593228A648680003D130 /* SearchElement.swift in Sources */,
 				DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
 				DC46F3CC2844A8EA00038880 /* ViewCell.swift in Sources */,
 				DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */,
+				DC24E10B28B7C185002E4F5B /* SingleFolderSearchScope.swift in Sources */,
 				3912208223436EB80026C290 /* SortMethod.swift in Sources */,
 				DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */,
 				DC0A359524C0E5F900FB58FC /* UIImage+Extension.swift in Sources */,
@@ -4588,6 +4713,7 @@
 				DCCD778C2604C91B00098573 /* NSDate+ComputedTimes.m in Sources */,
 				DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */,
 				DCF575EC2796CBDF003BEBBA /* OCImage+ViewProvider.m in Sources */,
+				DC24E0EB28B36A81002E4F5B /* OCSearchSegment.m in Sources */,
 				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,
 				DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */,
@@ -4595,6 +4721,7 @@
 				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
 				DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */,
+				DC2A128728D0725D0088A2B7 /* OCSavedSearch.m in Sources */,
 				DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */,
 				DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */,
 				DCC832F2242CC28400153F8C /* NotificationMessagePresenter.m in Sources */,
@@ -4615,6 +4742,7 @@
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
 				DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
+				DC2A128628D0725D0088A2B7 /* OCVault+SavedSearches.m in Sources */,
 				DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
 				DCC832F4242CC28F00153F8C /* NotificationManager.m in Sources */,
@@ -4996,7 +5124,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 224;
+				APP_VERSION = 228;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5066,7 +5194,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 224;
+				APP_VERSION = 228;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5261,6 +5389,7 @@
 				SKIP_INSTALL = YES;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -5294,6 +5423,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
