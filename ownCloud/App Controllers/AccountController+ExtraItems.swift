@@ -1,5 +1,5 @@
 //
-//  AccountController+SpecialItems.swift
+//  AccountController+ExtraItems.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 23.11.22.
@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-extension AccountController: AccountControllerSpecialItems {
+extension AccountController: AccountControllerExtraItems {
 	var activitySideBarItem: CollectionSidebarAction? {
 		var sideBarItem: CollectionSidebarAction? = specialItems[.activity] as? CollectionSidebarAction
 
@@ -37,7 +37,7 @@ extension AccountController: AccountControllerSpecialItems {
 				OnMainThread(inline: true) { [weak self, weak sideBarItem] in
 					sideBarItem?.badgeCount = (messageCount == 0) ? nil : messageCount
 					if let sideBarItemReference = sideBarItem?.dataItemReference {
-						self?.specialItemsDataSource.signalUpdates(forItemReferences: Set([sideBarItemReference]))
+						self?.extraItemsDataSource.signalUpdates(forItemReferences: Set([sideBarItemReference]))
 					}
 				}
 			})
@@ -50,7 +50,7 @@ extension AccountController: AccountControllerSpecialItems {
 		return sideBarItem
 	}
 
-	public func updateSpecialItems(dataSource: OCDataSourceArray) {
+	public func updateExtraItems(dataSource: OCDataSourceArray) {
 		if let activitySideBarItem = activitySideBarItem, configuration.showActivity {
 			dataSource.setVersionedItems([ activitySideBarItem ])
 		}

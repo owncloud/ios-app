@@ -75,11 +75,14 @@ open class CollectionSidebarAction: OCAction {
 
 	public var badgeCount: Int?
 
-	public init(with title: String, icon: UIImage?, viewControllerProvider: @escaping ViewControllerProvider, cacheViewControllers: Bool = true, clearCachedViewControllerOnConnectionClose: Bool = true) {
+	public init(with title: String, icon: UIImage?, identifier: OCDataItemReference? = nil, viewControllerProvider: @escaping ViewControllerProvider, cacheViewControllers: Bool = true, clearCachedViewControllerOnConnectionClose: Bool = true) {
 		self.viewControllerProvider = viewControllerProvider
 		self.cacheViewControllers = cacheViewControllers
 		self.clearCachedViewControllerOnConnectionClose = clearCachedViewControllerOnConnectionClose
 		super.init()
+		if let identifier = identifier as? String {
+			self.identifier = identifier
+		}
 		self.title = title
 		self.icon = icon
 	}
