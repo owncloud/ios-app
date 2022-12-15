@@ -21,7 +21,6 @@ import ownCloudSDK
 import ownCloudAppShared
 
 class DisplayHostViewController: UIPageViewController {
-
 	enum PagePosition {
 		case before, after
 	}
@@ -30,7 +29,7 @@ class DisplayHostViewController: UIPageViewController {
 	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
-	weak var core: OCCore?
+	public var clientContext : ClientContext?
 
 	private var initialItem: OCItem
 
@@ -45,44 +44,41 @@ class DisplayHostViewController: UIPageViewController {
 
 	private var playableItems: [OCItem]?
 
-	private var query: OCQuery
-	private var queryStarted : Bool = false
-	private var queryObservation : NSKeyValueObservation?
+	private var queryDatasource: OCDataSource?
+	private var queryDatasourceSubscription: OCDataSourceSubscription?
 
 	var progressSummarizer : ProgressSummarizer?
 
-	public var clientContext : ClientContext?
-
 	// MARK: - Init & deinit
-	init(clientContext: ClientContext? = nil, core: OCCore, selectedItem: OCItem, query: OCQuery) {
-		self.core = core
+	init(clientContext: ClientContext? = nil, core: OCCore? = nil, selectedItem: OCItem, query: OCQuery? = nil, queryDataSource: OCDataSource? = nil) {
 		self.initialItem = selectedItem
-		self.query = query
+		self.queryDatasource = queryDataSource ?? clientContext?.queryDatasource
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
 		self.clientContext = clientContext
 
-		if query.state == .stopped {
-			self.core?.start(query)
-			queryStarted = true
-		}
+		if let queryDataSource {
+			queryDatasourceSubscription = queryDataSource.subscribe(updateHandler: { [weak self]  subscription in
+				guard let self = self, let queryDataSource = self.queryDatasource else {
+					return
+				}
 
-		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
-			//guard self?.items == nil else { return }
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+				var allItems : [OCItem] = []
 
-			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
-				guard let changeSet = changeSet  else { return }
-				if let queryResult = changeSet.queryResult, let newItems = self?.applyMediaFilesFilter(items: queryResult) {
-					let shallUpdateDatasource = self?.items?.count != newItems.count ? true : false
-
-					self?.items = newItems
-
-					if shallUpdateDatasource {
-						self?.updateDatasource()
+				for itemRef in snapshot.items {
+					if let itemRecord = try? queryDataSource.record(forItemRef: itemRef) {
+						if let item = itemRecord.item as? OCItem {
+							allItems.append(item)
+						}
 					}
 				}
-			}
+
+				self.items = self.applyMediaFilesFilter(items: allItems)
+
+				self.updatePageViewControllerDatasource()
+			}, on: .main, trackDifferences: true, performIntialUpdate: true)
 		}
 
 		Theme.shared.register(client: self)
@@ -97,13 +93,7 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 
-		queryObservation?.invalidate()
-		queryObservation = nil
-
-		if queryStarted {
-			core?.stop(query)
-			queryStarted = false
-		}
+		queryDatasourceSubscription?.terminate()
 
 		Theme.shared.unregister(client: self)
 	}
@@ -184,7 +174,7 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Helper methods
-	private func updateDatasource() {
+	private func updatePageViewControllerDatasource() {
 		OnMainThread { [weak self] in
 			self?.dataSource = nil
 			if let itemCount = self?.items?.count {
@@ -290,7 +280,7 @@ class DisplayHostViewController: UIPageViewController {
 		let newViewController = createDisplayViewController(for: mimeType)
 
 		newViewController.progressSummarizer = progressSummarizer
-		newViewController.core = core
+		newViewController.core = clientContext?.core
 		newViewController.itemIndex = index
 
 		newViewController.item = item

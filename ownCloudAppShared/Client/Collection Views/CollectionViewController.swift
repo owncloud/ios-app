@@ -287,6 +287,16 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		updateSource()
 	}
 
+	open func insert(sections sectionsToAdd: [CollectionViewSection], at index: Int) {
+		for section in sectionsToAdd {
+			associate(section: section)
+		}
+
+		sections.insert(contentsOf: sectionsToAdd, at: index)
+
+		updateSource()
+	}
+
 	open func remove(sections sectionsToRemove: [CollectionViewSection]) {
 		for section in sectionsToRemove {
 			disassociate(section: section)

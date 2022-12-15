@@ -22,11 +22,13 @@ import ownCloudAppShared
 
 extension AppRootViewController: ViewItemAction {
 	public func provideViewer(for item: OCDataItem, context: ClientContext) -> UIViewController? {
-		guard let item = item as? OCItem, let query = context.query, let core = context.core else {
+		let queryDatasource = context.queryDatasource ?? context.query?.queryResultsDataSource
+
+		guard let item = item as? OCItem, let queryDatasource, context.core != nil else {
 			return nil
 		}
 
-		let itemViewController = DisplayHostViewController(clientContext: context, core: core, selectedItem: item, query: query)
+		let itemViewController = DisplayHostViewController(clientContext: context, selectedItem: item, queryDataSource: queryDatasource)
 		itemViewController.hidesBottomBarWhenPushed = true
 		itemViewController.progressSummarizer = context.progressSummarizer
 

@@ -33,9 +33,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	}
 
 	public var query: OCQuery?
+	private var _itemsDatasource: OCDataSource? // stores the data source passed to init (if any)
 
 	public var itemsLeadInDataSource: OCDataSourceArray = OCDataSourceArray()
-	public var itemsQueryDataSource: OCDataSource?
+	public var itemsListDataSource: OCDataSource? // typically query.queryResultsDataSource or .itemsDatasource
 	public var itemsTrailingDataSource: OCDataSourceArray = OCDataSourceArray()
 	public var itemSectionDataSource: OCDataSourceComposition?
 	public var itemSection: CollectionViewSection?
@@ -68,9 +69,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	private var viewControllerUUID: UUID
 
-	public init(context inContext: ClientContext?, query inQuery: OCQuery, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
-		inQuery.queryResultsDataSourceIncludesStatistics = true
+	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
+		inQuery?.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
+		_itemsDatasource = inDataSource
 
 		self.location = location
 
@@ -116,6 +118,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						return true
 				}
 			})
+
+			// Use inDataSource as queryDatasource if no query was provided
+			if inQuery == nil, let inDataSource {
+				context.queryDatasource = inDataSource
+			}
 		})
 		itemControllerContext.postInitializationModifier = { (owner, context) in
 			if context.openItemHandler == nil {
@@ -141,8 +148,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			context.originatingViewController = owner as? UIViewController
 		}
 
-		if let queryResultsDatasource = query?.queryResultsDataSource, let core = itemControllerContext.core {
-			itemsQueryDataSource = queryResultsDatasource
+		if let contentsDataSource = query?.queryResultsDataSource ?? _itemsDatasource, let core = itemControllerContext.core {
+			itemsListDataSource = contentsDataSource
 
 			if query?.queryLocation?.isRoot == true, core.useDrives {
 				// Create data source from one drive
@@ -165,7 +172,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
 			}
 
-			itemSectionDataSource = OCDataSourceComposition(sources: [itemsLeadInDataSource, queryResultsDatasource, itemsTrailingDataSource])
+			itemSectionDataSource = OCDataSourceComposition(sources: [itemsLeadInDataSource, contentsDataSource, itemsTrailingDataSource])
 			let itemSectionCellStyle = CollectionViewCellStyle(from: .init(with: .tableCell), changing: { cellStyle in
 				if showRevealButtonForItems {
 					cellStyle.showRevealButton = true
@@ -191,7 +198,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true, highlightItemReference: highlightItemReference)
 
 		// Track query state and recompute content state when it changes
-		stateObservation = itemsQueryDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in
+		stateObservation = itemsListDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in
 			self?.recomputeContentState()
 		})
 
@@ -389,7 +396,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 			} else {
 				// Regular usage, use itemsQueryDataSource to determine state
-				switch self.itemsQueryDataSource?.state {
+				switch self.itemsListDataSource?.state {
 					case .loading:
 						self.contentState = .loading
 
@@ -772,7 +779,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 		} else {
 			// Select all
-			selectAllSubscription = itemsQueryDataSource?.subscribe(updateHandler: { (subscription) in
+			selectAllSubscription = itemsListDataSource?.subscribe(updateHandler: { (subscription) in
 				let snapshot = subscription.snapshotResettingChangeTracking(true)
 				let selectIndexPaths = self.retrieveIndexPaths(for: snapshot.items)
 
@@ -1028,7 +1035,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	var searchResultsDataSource: OCDataSource? {
 		willSet {
-			if let oldDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsQueryDataSource, oldDataSource != itemsQueryDataSource {
+			if let oldDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsListDataSource, oldDataSource != itemsQueryDataSource {
 				itemSectionDataSource?.removeSources([ oldDataSource ])
 
 				if (newValue == nil) || (newValue == itemsQueryDataSource) {
@@ -1038,7 +1045,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		didSet {
-			if let newDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsQueryDataSource, newDataSource != itemsQueryDataSource {
+			if let newDataSource = searchResultsDataSource, let itemsQueryDataSource = itemsListDataSource, newDataSource != itemsQueryDataSource {
 				itemSectionDataSource?.setInclude(false, for: itemsQueryDataSource)
 				itemSectionDataSource?.insertSources([ newDataSource ], after: itemsQueryDataSource)
 			}

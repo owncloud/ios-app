@@ -115,7 +115,9 @@ public class ClientContext: NSObject {
 
 	// MARK: - Drive
 	public var drive: OCDrive?
+
 	public weak var query: OCQuery?
+	public weak var queryDatasource: OCDataSource? // Data source with the contents of a .query
 
 	// MARK: - Items
 	public var rootItem : OCDataItem?
@@ -180,6 +182,7 @@ public class ClientContext: NSObject {
 
 		drive = inDrive ?? inParent?.drive
 		query = inParent?.query
+		queryDatasource = inParent?.queryDatasource
 
 		rootViewController = inRootViewController ?? inParent?.rootViewController
 		navigationController = inNavigationController ?? inParent?.navigationController

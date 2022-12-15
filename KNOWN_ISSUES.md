@@ -13,6 +13,7 @@ It should only be used with dedicated test servers, test data - and test devices
 - subscription of spaces can't be turned on/off yet
 - support for sharing is widely untested and/or unavailable in the alpha
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
+- [x] clicking a file in favorite view doesn't open the viewer (due to lack of context.query - the viewer clases need to be updated to use data sources rather than queries)
 
 Missing:
 - [ ] quick access
@@ -82,6 +83,9 @@ Michael:
 - account list
 	- allow grouping accounts (i.e. Home / Work)
 	- [x] replace simple list with modern CollectionViewController-based UI
+
+- available offline
+	- allow creating available offline item policies from smart searches - or directly from the search UI
 
 - make sync smarter, f.ex.:
 	- a file that is updated locally multiple times only should be uploaded once, not once for every update

@@ -20,6 +20,11 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
+extension OCSavedSearchUserInfoKey {
+	static let customIconName = OCSavedSearchUserInfoKey(rawValue: "customIconName")
+	static let useNameAsTitle = OCSavedSearchUserInfoKey(rawValue: "useNameAsTitle")
+}
+
 extension OCSavedSearch {
 	func canDelete(in context: ClientContext?) -> Bool {
 		guard let context = context, let core = context.core, let savedSearches = core.vault.savedSearches else {
@@ -69,6 +74,44 @@ extension OCSavedSearch {
 
 		return composedCondition
 	}
+
+	var customIconName: String? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.customIconName : newValue]
+			} else {
+				userInfo?[.customIconName] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.customIconName] as? String
+		}
+	}
+
+	var useNameAsTitle: Bool? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.useNameAsTitle : newValue]
+			} else {
+				userInfo?[.useNameAsTitle] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.useNameAsTitle] as? Bool
+		}
+	}
+
+	func withCustomIcon(name: String) -> OCSavedSearch {
+		customIconName = name
+		return self
+	}
+
+	func useNameAsTitle(_ useIt: Bool) -> OCSavedSearch {
+		useNameAsTitle = useIt
+		return self
+	}
 }
 
 extension OCSavedSearch: DataItemSelectionInteraction {
@@ -90,7 +133,11 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 
 				if context.pushViewControllerToNavigation(context: resultsContext, provider: { context in
 					let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true)
-					viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
+					if self.useNameAsTitle == true {
+						viewController.navigationTitle = sideBarDisplayName
+					} else {
+						viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
+					}
 					viewController.revoke(in: context, when: .connectionClosed)
 					return viewController
 				}, push: true, animated: true) != nil {

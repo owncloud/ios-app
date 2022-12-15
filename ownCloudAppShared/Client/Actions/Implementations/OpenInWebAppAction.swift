@@ -68,6 +68,8 @@ public class OpenInWebAppAction: Action {
 	override public class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openinwebapp") }
 	override public class var category : ActionCategory? { return .normal }
 	override public class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .contextMenuItem] }
+	override open class var keyCommand : String? { return "E" }
+	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
 	class open func createActionExtension(for app: OCAppProviderApp, core: OCCore) -> ActionExtension {
 		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in

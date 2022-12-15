@@ -210,7 +210,11 @@ extension SavedSearchCell {
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let savedSearch = OCDataRenderer.default.renderItem(item, asType: .savedSearch, error: nil, withOptions: nil) as? OCSavedSearch {
 					content.text = savedSearch.sideBarDisplayName
-					content.image = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
+					if let customIconName = savedSearch.customIconName {
+						content.image = OCSymbol.icon(forSymbolName: customIconName)
+					} else {
+						content.image = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
+					}
 				}
 			})
 

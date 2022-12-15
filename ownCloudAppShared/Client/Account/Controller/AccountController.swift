@@ -31,6 +31,7 @@ public extension OCDataItemType {
 public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, AccountConnectionStatusObserver, AccountConnectionMessageUpdates {
 	public struct Configuration {
 		public var showSavedSearches: Bool
+		public var showQuickAccess: Bool
 		public var showActivity: Bool
 		public var showAccountPill: Bool
 		public var autoSelectPersonalFolder: Bool
@@ -44,9 +45,12 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public static var pickerConfiguration: Configuration {
 			var config = Configuration()
 
-			config.showActivity = false
 			config.showSavedSearches = false
+			config.showQuickAccess = false
+			config.showActivity = false
+
 			config.sectionAppearance = .insetGrouped
+
 			config.autoSelectPersonalFolder = false
 
 			return config
@@ -54,17 +58,32 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		public init() {
 			showSavedSearches = true
+			showQuickAccess = true
 			showActivity = true
 			showAccountPill = true
+
 			autoSelectPersonalFolder = true
 		}
 	}
 
 	public enum SpecialItem: String {
 		case accountRoot
+
 		case spacesFolder
+
 		case savedSearchesFolder
+
 		case quickAccessFolder
+			case favoriteItems
+			case availableOfflineItems
+
+			case searchPDFDocuments
+			case searchDocuments
+			// case searchText
+			case searchImages
+			case searchVideos
+			case searchAudios
+
 		case activity
 	}
 
@@ -265,6 +284,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	open var specialItemsDataReferences: [SpecialItem : OCDataItemReference] = [:]
 	open var specialItemsDataSources: [SpecialItem : OCDataSource] = [:]
 
+	open var quickAccessItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
+
 	open var extraItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
 
 	open var personalSpaceDataItemRef: OCDataItemReference? {
@@ -293,7 +314,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		if let core = connection?.core {
 			var sources : [OCDataSource] = []
 
+			// Personal Folder, Shared Files + Drives
 			if core.useDrives {
+				// Spaces
 				let spacesDataSource = self.buildTopFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), topItem: .spacesFolder, viewControllerProvider: { context, action in
 					if let context {
 						return AccountControllerSpacesGridViewController(with: context)
@@ -308,10 +331,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				}
 
 				sources = [
-					core.hierarchicDrivesDataSource,
+					core.personalAndSharedDrivesDataSource,
 					spacesDataSource
 				]
 			} else {
+				// OC10 Root folder
 				specialItems[.accountRoot] = legacyAccountRootLocation
 
 				sources = [
@@ -319,6 +343,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				]
 			}
 
+			// Saved searches
 			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
 				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.savedSearchesFolder]!)
 
@@ -328,6 +353,67 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				sources.append(savedSearchesFolderDataSource)
 			}
 
+			// Quick access
+			if configuration.showQuickAccess {
+				var quickAccessItems: [OCDataItem & OCDataItemVersioning] = []
+
+				// Favorites
+				if specialItems[.favoriteItems] == nil {
+					specialItems[.favoriteItems] = buildFavoritesSidebarItem()
+				}
+				if let sideBarItem = specialItems[.favoriteItems] as? OCDataItem & OCDataItemVersioning {
+					quickAccessItems.append(sideBarItem)
+				}
+
+				// Available offline
+				if specialItems[.availableOfflineItems] == nil {
+					specialItems[.availableOfflineItems] = buildAvailableOfflineItem()
+				}
+				if let sideBarItem = specialItems[.availableOfflineItems] as? OCDataItem & OCDataItemVersioning {
+					quickAccessItems.append(sideBarItem)
+				}
+
+				// Convenience searches
+				if specialItems[.searchPDFDocuments] == nil {
+					specialItems[.searchPDFDocuments] = OCSavedSearch(scope: .account, location: nil, name: "PDF Documents".localized, isTemplate: false, searchTerm: ":pdf").withCustomIcon(name: "doc.richtext").useNameAsTitle(true)
+				}
+				if specialItems[.searchDocuments] == nil {
+					specialItems[.searchDocuments] = OCSavedSearch(scope: .account, location: nil, name: "Documents".localized, isTemplate: false, searchTerm: ":document").withCustomIcon(name: "doc").useNameAsTitle(true)
+				}
+				if specialItems[.searchImages] == nil {
+					specialItems[.searchImages] = OCSavedSearch(scope: .account, location: nil, name: "Images".localized, isTemplate: false, searchTerm: ":image").withCustomIcon(name: "photo").useNameAsTitle(true)
+				}
+				if specialItems[.searchVideos] == nil {
+					specialItems[.searchVideos] = OCSavedSearch(scope: .account, location: nil, name: "Videos".localized, isTemplate: false, searchTerm: ":video").withCustomIcon(name: "film").useNameAsTitle(true)
+				}
+				if specialItems[.searchAudios] == nil {
+					specialItems[.searchAudios] = OCSavedSearch(scope: .account, location: nil, name: "Audios".localized, isTemplate: false, searchTerm: ":audio").withCustomIcon(name: "waveform").useNameAsTitle(true)
+				}
+
+				let addSpecialItemsTypes: [SpecialItem] = [ .searchPDFDocuments, .searchDocuments, .searchImages, .searchVideos, .searchAudios ]
+
+				for specialItemType in addSpecialItemsTypes {
+					if let item = specialItems[specialItemType] as? OCSavedSearch {
+						quickAccessItems.append(item)
+					}
+				}
+
+				quickAccessItemsDataSource.setVersionedItems(quickAccessItems)
+
+				// Quick access folder
+				if specialItems[.quickAccessFolder] == nil {
+					let (quickAccessFolderDataSource, quickAccessFolderItem) = self.buildFolder(with: quickAccessItemsDataSource, title: "Quick Access".localized, icon: OCSymbol.icon(forSymbolName: "speedometer"), folderItemRef:specialItemsDataReferences[.quickAccessFolder]!)
+
+					specialItems[.quickAccessFolder] = quickAccessFolderItem
+					specialItemsDataSources[.quickAccessFolder] = quickAccessFolderDataSource
+				}
+
+				if let quickAccessFolderDataSource = specialItemsDataSources[.quickAccessFolder] {
+					sources.append(quickAccessFolderDataSource)
+				}
+			}
+
+			// Extra items (Activity & Co via class extension in the app)
 			if let extraItemsSupport = self as? AccountControllerExtraItems {
 				extraItemsSupport.updateExtraItems(dataSource: extraItemsDataSource)
 
@@ -413,6 +499,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	}
 }
 
+// MARK: - Selection handling
 extension AccountController: DataItemSelectionInteraction {
 	public func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool {
 		func revealPersonalItem() {
@@ -444,5 +531,61 @@ extension AccountController: DataItemSelectionInteraction {
 			})
 		}
 		return false
+	}
+}
+
+// MARK: - Favorites
+extension AccountController {
+	func buildFavoritesSidebarItem() -> OCDataItem & OCDataItemVersioning {
+		let sideBarItem = CollectionSidebarAction(with: "Favorites".localized, icon: OCSymbol.icon(forSymbolName: "star"), viewControllerProvider: { (context, action) in
+			if let favoritesDataSource = context?.core?.favoritesDataSource {
+				let favoritesContext = ClientContext(with: context, modifier: { context in
+					context.queryDatasource = favoritesDataSource
+				})
+
+			   	let sortedDataSource = SortedItemDataSource(itemDataSource: favoritesDataSource)
+
+				let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
+				favoritesViewController.navigationTitle = "Favorites".localized
+
+				sortedDataSource.sortingFollowsContext = favoritesViewController.clientContext
+
+				favoritesViewController.revoke(in: favoritesContext, when: [ .connectionClosed ])
+				return favoritesViewController
+			}
+
+			return nil
+		}, cacheViewControllers: false)
+
+		return sideBarItem
+	}
+}
+
+// MARK: - Available Offline
+extension AccountController {
+	func buildAvailableOfflineItem() -> OCDataItem & OCDataItemVersioning {
+		let sideBarItem =  CollectionSidebarAction(with: "Available Offline".localized.localized, icon: UIImage(named: "cloud-available-offline"), viewControllerProvider: { (context, action) in
+			if let availableOfflineFilesDataSource = context?.core?.availableOfflineFilesDataSource,
+			   let context {
+			   	let sortedDataSource = SortedItemDataSource(itemDataSource: availableOfflineFilesDataSource)
+
+				let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
+				availableOfflineViewController.navigationTitle = "Available Offline".localized
+
+				sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext
+
+				let locationsSection = CollectionViewSection(identifier: "locations", dataSource: context.core?.availableOfflineItemPoliciesDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .insetGrouped), clientContext: context)
+
+				availableOfflineViewController.insert(sections: [ locationsSection ], at: 0)
+
+				availableOfflineViewController.revoke(in: context, when: [ .connectionClosed ])
+
+				return availableOfflineViewController
+			}
+
+			return nil
+		}, cacheViewControllers: false)
+
+		return sideBarItem
 	}
 }

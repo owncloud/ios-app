@@ -507,7 +507,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 						let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: UIImage(systemName: "square.grid.2x2"))
 
 						let combinedDS = OCDataSourceComposition(sources: [
-							core.hierarchicDrivesDataSource,
+							core.personalAndSharedDrivesDataSource,
 							spacesDataSource
 						])
 
@@ -520,7 +520,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 						let leftSidebarViewController = CollectionSidebarViewController(context: navigationContext, sections: [
 							CollectionViewSection(identifier: "top", dataSource: accountFlatDS, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), expandedItems: [ spacesFolderItem.dataItemReference ])
 //							CollectionViewSection(identifier: "top", dataSource: accountDS, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar, headerMode: .firstItemInSection))
-//							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar)),
+//							CollectionViewSection(identifier: "top", dataSource: core.personalAndSharedDrivesDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar)),
 //							CollectionViewSection(identifier: "projects", dataSource: self.wrap(dataSource: core.projectDrivesDataSource, withHeader: "Spaces".localized), cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar, headerMode: .firstItemInSection))
 						], navigationPusher: { [weak self, weak splitViewController] _, viewController, animated in
 							// self?.filesNavigationController?.setViewControllers([ viewController ], animated: animated)
@@ -553,7 +553,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 //						self.tabBar.isHidden = true
 
 //						topLevelViewController = CollectionViewController(context: navigationContext, sections: [
-//							CollectionViewSection(identifier: "top", dataSource: core.hierarchicDrivesDataSource, cellLayout: .list(appearance: .insetGrouped)),
+//							CollectionViewSection(identifier: "top", dataSource: core.personalAndSharedDrivesDataSource, cellLayout: .list(appearance: .insetGrouped)),
 //							CollectionViewSection(identifier: "projects", dataSource: core.projectDrivesDataSource, cellLayout: .list(appearance: .insetGrouped))
 //						])
 					} else {
