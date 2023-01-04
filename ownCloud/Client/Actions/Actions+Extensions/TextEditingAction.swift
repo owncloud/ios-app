@@ -74,8 +74,8 @@ class TextEditingAction : Action {
 			} else {
 				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
 				if let fileURL = files.first?.url, let item = self.context.items.first {
-						let editDocumentViewController = EditTextViewController(with: fileURL, item: item, core: self.core)
-						let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
+						let editorViewController = EditTextViewController(with: fileURL, item: item, core: self.core)
+						let navigationController = ThemeNavigationController(rootViewController: editorViewController)
 
 						navigationController.modalPresentationStyle = .overFullScreen
 						viewController.present(navigationController, animated: true)

@@ -278,8 +278,6 @@ extension EditTextViewController: UINavigationItemRenameDelegate {
 }
 
 class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
-
-    
     
     enum SavingMode {
         case createCopy, updateContents, discard
@@ -292,6 +290,7 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
 	var dismissedViewWithoutSaving: Bool = false
 	var source: URL
     let textView = TextView()
+    let previewView = PreviewView()
     var contentDidChanged: Bool = false
     var usedEncoding: String.Encoding = .utf8
     var canPreviewDocument: Bool = false {
@@ -312,6 +311,12 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
             updateBarButtons()
         }
     }
+    var trailingTextViewConstraint: NSLayoutConstraint?
+    var bottomTextViewConstraint: NSLayoutConstraint?
+    var leadingPreviewConstraint: NSLayoutConstraint?
+    var topPreviewConstraint: NSLayoutConstraint?
+    var textViewFullscreen: Bool = false
+    var previewFullscreen: Bool = false
 
 	init(with file: URL, item: OCItem, core: OCCore? = nil) {
 		self.source = file
@@ -410,17 +415,36 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.editorDelegate = self
         
-        updateToolbar()
-        updateBarButtons()
+        previewView.translatesAutoresizingMaskIntoConstraints = false
         
         setCustomization(on: textView)
+        
         view.addSubview(textView)
+        view.addSubview(previewView)
+        
         NSLayoutConstraint.activate([
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            //textView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -1),
             textView.topAnchor.constraint(equalTo: view.topAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            //textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            //previewView.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 1),
+            previewView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            //previewView.topAnchor.constraint(equalTo: view.topAnchor),
+            previewView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        bottomTextViewConstraint = textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        bottomTextViewConstraint?.isActive = true
+        trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -1)
+        trailingTextViewConstraint?.isActive = true
+        
+        
+        
+        leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 1)
+        leadingPreviewConstraint?.isActive = true
+        topPreviewConstraint = previewView.topAnchor.constraint(equalTo: view.topAnchor)
+        topPreviewConstraint?.isActive = true
+        
         
         let appTheme = Theme.shared.activeCollection
         textView.backgroundColor = appTheme.tableBackgroundColor
@@ -433,6 +457,14 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
             if let stringEncoding = data.stringEncoding, let string = String(data: data, encoding: stringEncoding) {
                 self.textView.text = string
                 determineTreeSitterLanguage()
+                if canPreviewDocument {
+                    updatePreview()
+                } else {
+                    toggleEditor()
+                }
+                
+                updateToolbar()
+                updateBarButtons()
                 
                 stringEncoding.printEncoding()
             }
@@ -612,14 +644,38 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
             
             let findReplaceBarButton = UIBarButtonItem(title: "Find and Replace".localized, image: UIImage(systemName: "text.magnifyingglass"), target: self, action: #selector(showFindReplaceUI)).creatingOptionalGroup(customizationIdentifier: "com.owncloud.toolbar.editor.find-replace", isInDefaultCustomization: false)
             
-            let previewBarButton = UIBarButtonItem(title: "Preview".localized, image: UIImage(systemName: "eye.square"), target: self, action: #selector(previewContent)).creatingOptionalGroup(customizationIdentifier: "com.owncloud.toolbar.editor.preview")
+            let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated)).creatingFixedGroup()
+            
+           
+            if canPreviewDocument {
+                var toggleEditorBarButton: UIBarButtonItem?
+                
+                if !textViewFullscreen {
+                    toggleEditorBarButton = UIBarButtonItem(title: "Halfsize Editor".localized, image: UIImage(systemName: "rectangle.lefthalf.inset.filled.arrow.left"), target: self, action: #selector(toggleEditor))
+                } else {
+                    toggleEditorBarButton = UIBarButtonItem(title: "Fullsize Editor".localized, image: UIImage(systemName: "rectangle.trailinghalf.inset.filled.arrow.trailing"), target: self, action: #selector(toggleEditor))
+                }
+                
+                navigationItem.leadingItemGroups = [doneBarButton, toggleEditorBarButton!.creatingFixedGroup(), findBarButton, findReplaceBarButton]
+                    navigationItem.customizationIdentifier = "com.owncloud.toolbar.editor.trailing"
+            } else {
+                navigationItem.leadingItemGroups = [doneBarButton, findBarButton, findReplaceBarButton]
+                navigationItem.customizationIdentifier = "com.owncloud.toolbar.editor.trailing"
+            }
             
             if canPreviewDocument {
-                navigationItem.centerItemGroups = [findBarButton, findReplaceBarButton, previewBarButton]
-                navigationItem.customizationIdentifier = "com.owncloud.toolbar.editor-preview"
-            } else {
-                navigationItem.centerItemGroups = [findBarButton, findReplaceBarButton]
-                navigationItem.customizationIdentifier = "com.owncloud.toolbar.editor"
+                
+                let printBarButton = UIBarButtonItem(title: "Print".localized, image: UIImage(systemName: "printer"), target: self, action: #selector(printPreview)).creatingOptionalGroup(customizationIdentifier: "com.owncloud.toolbar.editor.print")
+                let pdfBarButton = UIBarButtonItem(title: "Create PDF".localized, image: UIImage(systemName: "doc.richtext"), target: self, action: #selector(savePDF)).creatingOptionalGroup(customizationIdentifier: "com.owncloud.toolbar.editor.pdf")
+                
+                
+                var togglePreviewBarButton: UIBarButtonItem?
+                if !previewFullscreen {
+                    togglePreviewBarButton = UIBarButtonItem(title: "Halfsize Preview".localized, image: UIImage(systemName: "rectangle.righthalf.inset.filled.arrow.right"), target: self, action: #selector(togglePreview))
+                } else {
+                    togglePreviewBarButton = UIBarButtonItem(title: "Fullsize Preview".localized, image: UIImage(systemName: "rectangle.leadinghalf.inset.filled.arrow.leading"), target: self, action: #selector(togglePreview))
+                }
+                navigationItem.trailingItemGroups = [printBarButton, pdfBarButton, togglePreviewBarButton!.creatingFixedGroup()]
             }
             
             navigationItem.titleMenuProvider = { suggestedActions in
@@ -645,6 +701,128 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        
+        
+        guard canPreviewDocument else { return }
+        
+        if self.traitCollection.horizontalSizeClass == .compact {
+            trailingTextViewConstraint?.isActive = false
+            trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            trailingTextViewConstraint?.isActive = true
+            
+            bottomTextViewConstraint?.isActive = false
+            bottomTextViewConstraint = textView.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -1)
+            bottomTextViewConstraint?.isActive = true
+            
+            leadingPreviewConstraint?.isActive = false
+            leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+            leadingPreviewConstraint?.isActive = true
+            
+            topPreviewConstraint?.isActive = false
+            topPreviewConstraint = previewView.topAnchor.constraint(equalTo: view.centerYAnchor, constant: 1)
+            topPreviewConstraint?.isActive = true
+        } else {
+            trailingTextViewConstraint?.isActive = false
+            trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -1)
+            trailingTextViewConstraint?.isActive = true
+            
+            bottomTextViewConstraint?.isActive = false
+            bottomTextViewConstraint = textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            bottomTextViewConstraint?.isActive = true
+            
+            leadingPreviewConstraint?.isActive = false
+            leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 1)
+            leadingPreviewConstraint?.isActive = true
+            
+            topPreviewConstraint?.isActive = false
+            topPreviewConstraint = previewView.topAnchor.constraint(equalTo: view.topAnchor)
+            topPreviewConstraint?.isActive = true
+        }
+    }
+    
+    @objc func toggleEditor() {
+        
+        if !textViewFullscreen {
+            trailingTextViewConstraint?.isActive = false
+            trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            trailingTextViewConstraint?.isActive = true
+            
+            leadingPreviewConstraint?.isActive = false
+            leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.trailingAnchor)
+            leadingPreviewConstraint?.isActive = true
+        } else {
+            trailingTextViewConstraint?.isActive = false
+            trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -1)
+            trailingTextViewConstraint?.isActive = true
+            
+            leadingPreviewConstraint?.isActive = false
+            leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 1)
+            leadingPreviewConstraint?.isActive = true
+        }
+        updateToolbar()
+        textViewFullscreen.toggle()
+        previewFullscreen.toggle()
+
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+                self.textView.superview?.layoutIfNeeded()
+                self.previewView.superview?.layoutIfNeeded()
+            })
+        
+    }
+    
+    @objc func togglePreview() {
+        
+        if !previewFullscreen {
+            trailingTextViewConstraint?.isActive = false
+            trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.leadingAnchor)
+            trailingTextViewConstraint?.isActive = true
+            
+            leadingPreviewConstraint?.isActive = false
+            leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+            leadingPreviewConstraint?.isActive = true
+        } else {
+            trailingTextViewConstraint?.isActive = false
+            trailingTextViewConstraint = textView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -1)
+            trailingTextViewConstraint?.isActive = true
+            
+            leadingPreviewConstraint?.isActive = false
+            leadingPreviewConstraint = previewView.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 1)
+            leadingPreviewConstraint?.isActive = true
+        }
+        updateToolbar()
+        previewFullscreen.toggle()
+        textViewFullscreen.toggle()
+
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+                self.textView.superview?.layoutIfNeeded()
+                self.previewView.superview?.layoutIfNeeded()
+            })
+        
+    }
+    
+    @objc func printPreview() {
+        let webView = previewView.webView
+
+            let printInfo = UIPrintInfo(dictionary:nil)
+            printInfo.outputType = UIPrintInfo.OutputType.general
+
+            let printController = UIPrintInteractionController.shared
+            printController.printInfo = printInfo
+            
+            let renderer: UIPrintPageRenderer = UIPrintPageRenderer()
+            webView.viewPrintFormatter().printPageRenderer?.headerHeight = 30.0
+            webView.viewPrintFormatter().printPageRenderer?.footerHeight = 30.0
+            renderer.addPrintFormatter(webView.viewPrintFormatter(), startingAtPageAt: 0)
+            printController.printPageRenderer = renderer
+
+            printController.present(from: self.view.frame, in: self.view, animated: true, completionHandler: nil)
+    }
+    
+    @objc func savePDF() {
+        previewView.exportAsPDF(named: item.name?.appending(".pdf") ?? "Export.pdf", presenter: self)
+    }
+    
     func updateBarButtons() {
         var menuItems : [UIMenuElement] = []
         
@@ -667,13 +845,6 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
             })
             menuItems.append(findReplaceAction)
         }*/
-        
-        if canPreviewDocument {
-            let previewAction : UIAction = .init(title: "Preview".localized, image: UIImage(systemName: "eye.square"), identifier: nil, discoverabilityTitle: nil, attributes: .init(), handler: { (action) in
-                self.previewContent()
-            })
-            menuItems.append(previewAction)
-        }
         
         
         var languageItems : [UIMenuElement] = []
@@ -753,6 +924,7 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
                 navigationItem.rightBarButtonItem = menuButton
             }
         }
+        
     }
     
     @objc func previewContent() {
@@ -765,7 +937,15 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
         self.navigationController?.pushViewController(newViewController, animated: false)
     }
     
-
+    func updatePreview() {
+        guard let mimeType = self.item.mimeType else { return }
+        
+        previewView.html = self.textView.text
+        previewView.mimeType = mimeType
+        
+        previewView.updateContent()
+    }
+    
     private func createDisplayViewController(for mimeType: String) -> (DisplayViewController) {
         let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
         let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
@@ -873,12 +1053,15 @@ class EditTextViewController: UIViewController, TextViewDelegate, Themeable {
 	}
 
     func applyThemeCollection(theme: ownCloudAppShared.Theme, collection: ThemeCollection, event: ThemeEvent) {
+        view.backgroundColor = collection.navigationBarColors.backgroundColor
         self.activateRunestoneTheme(with: self.fontSize, collection: Theme.shared.activeCollection)
         self.textView.backgroundColor = collection.tableBackgroundColor
 	}
     
     func textViewDidChange(_ textView: Runestone.TextView) {
         contentDidChanged = true
+        
+        updatePreview()
     }
 }
 
@@ -972,4 +1155,136 @@ enum HighlightName: String {
         }
         return nil
     }
+}
+
+
+import WebKit
+
+class PreviewView: UIView, WKNavigationDelegate {
+    let webView: WKWebView
+    var html: String = ""
+    var mimeType: String = ""
+
+    override init(frame: CGRect) {
+        let config = WKWebViewConfiguration()
+        config.dataDetectorTypes = [.all]
+        webView = WKWebView(frame: .zero, configuration: config)
+   
+        super.init(frame: frame)
+  
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("called init(coder:)")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        renderView()
+    }
+    
+    func renderView() {
+              backgroundColor = .white
+              
+              webView.navigationDelegate = self
+              webView.translatesAutoresizingMaskIntoConstraints = false
+              addSubview(webView)
+              
+              NSLayoutConstraint.activate([
+                  webView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+                  webView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+                  webView.topAnchor.constraint(equalTo: self.topAnchor),
+                  webView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+              ])
+              
+              self.webView.navigationDelegate = self
+              do {
+                  if mimeType == "text/markdown" {
+                      let html = try html.toHTML()
+                      webView.loadHTMLString(html, baseURL: nil)
+                  } else if mimeType == "text/html" {
+                      webView.loadHTMLString(html, baseURL: nil)
+                  } else {
+                      webView.loadHTMLString(html.replacingOccurrences(of: "\n", with: "<br />"), baseURL: nil)
+                  }
+              } catch {
+                  print("Error: " + error.localizedDescription)
+              }
+    }
+    
+    func updateContent() {
+        
+        do {
+            if mimeType == "text/markdown" {
+                let html = try html.toHTML()
+                webView.loadHTMLString(html, baseURL: nil)
+            } else if mimeType == "text/html" {
+                webView.loadHTMLString(html, baseURL: nil)
+            } else {
+                webView.loadHTMLString(html.replacingOccurrences(of: "\n", with: "<br />"), baseURL: nil)
+            }
+        } catch {
+            print("Error: " + error.localizedDescription)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        insertCSSString(into: webView)
+    }
+
+    func insertCSSString(into webView: WKWebView) {
+        let cssString = "body { font-family: -apple-system; font-size: 17px; }"
+        let jsString = "var style = document.createElement('style'); style.innerHTML = '\(cssString)'; document.head.appendChild(style);"
+        webView.evaluateJavaScript(jsString, completionHandler: nil)
+    }
+    
+    
+    func exportAsWebArchive(named name: String, presenter: UIViewController) {
+        webView.createWebArchiveData { result in
+            switch result {
+            case .success(let data):
+                let tempDir = FileManager.default.temporaryDirectory
+                let tempUrl = tempDir.appendingPathComponent("\(name).webArchive")
+                try? data.write(to: tempUrl)
+                
+                presenter.present(UIDocumentPickerViewController(forExporting: [tempUrl]), animated: true)
+                                
+            case .failure(let error):
+                print("Failed to create web archive with error \(error)")
+            }
+        }
+    }
+    
+    func exportAsPDF(named name: String, presenter: UIViewController) {
+        webView.createPDF { result in
+            switch result {
+            case .success(let data):
+                let tempDir = FileManager.default.temporaryDirectory
+                let tempUrl = tempDir.appendingPathComponent("\(name).pdf")
+                try? data.write(to: tempUrl)
+                
+                presenter.present(UIDocumentPickerViewController(forExporting: [tempUrl]), animated: true)
+
+            case .failure(let error):
+                print("Failed to create PDF with error \(error)")
+            }
+        }
+    }
+    
+    // MARK: WKNavigationDelegate
+    
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        // Open all links externally.
+        if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {
+            decisionHandler(.cancel)
+            UIApplication.shared.open(url)
+        } else {
+            decisionHandler(.allow)
+        }
+    }
+
 }

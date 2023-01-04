@@ -212,6 +212,7 @@
 		39BF67B325E804EF0039663F /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
 		39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755323D8392D00193950 /* EditDocumentViewController.swift */; };
+		39CFFD75293642DD009AB09C /* EditorSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CFFD74293642DD009AB09C /* EditorSplitViewController.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
 		39DC7CD025C2E1570001E08C /* DocumentActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DC7CCF25C2E1570001E08C /* DocumentActionViewController.swift */; };
 		39DC7CD325C2E1570001E08C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DC7CD125C2E1570001E08C /* MainInterface.storyboard */; };
@@ -1185,6 +1186,7 @@
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		39CD755123D787E400193950 /* DocumentEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentEditingAction.swift; sourceTree = "<group>"; };
 		39CD755323D8392D00193950 /* EditDocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentViewController.swift; sourceTree = "<group>"; };
+		39CFFD74293642DD009AB09C /* EditorSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSplitViewController.swift; sourceTree = "<group>"; };
 		39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		39D8397F25A7219100FAA0A8 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Intents.strings; sourceTree = "<group>"; };
 		39D8398925A7219300FAA0A8 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Intents.strings; sourceTree = "<group>"; };
@@ -2046,6 +2048,7 @@
 				6E586CF52199A70100F680C4 /* Actions+Extensions */,
 				39CD755323D8392D00193950 /* EditDocumentViewController.swift */,
 				025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */,
+				39CFFD74293642DD009AB09C /* EditorSplitViewController.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -4665,6 +4668,7 @@
 				DCC832F6242CC5F700153F8C /* CardIssueMessagePresenter.swift in Sources */,
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,
 				DC24B31D25BB6FC4005783E2 /* IssuesCardViewController.swift in Sources */,
+				39CFFD75293642DD009AB09C /* EditorSplitViewController.swift in Sources */,
 				DC62514C225D254500736874 /* UploadBaseAction.swift in Sources */,
 				4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */,
 				DC3393A222E0A71100DD3DA4 /* ItemPolicyCell.swift in Sources */,

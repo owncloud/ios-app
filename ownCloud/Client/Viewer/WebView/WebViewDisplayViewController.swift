@@ -33,7 +33,7 @@ class WebViewDisplayViewController: DisplayViewController, WKNavigationDelegate 
     }
 
     func insertCSSString(into webView: WKWebView) {
-        let cssString = "body { font-family: -apple-system; font-size: 50px; }"
+        let cssString = "body { font-family: -apple-system; font-size: 17px; }"
         let jsString = "var style = document.createElement('style'); style.innerHTML = '\(cssString)'; document.head.appendChild(style);"
         webView.evaluateJavaScript(jsString, completionHandler: nil)
     }
