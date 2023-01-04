@@ -378,6 +378,7 @@
 		DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82D6F923171339001551C5 /* ScanAction.swift */; };
 		DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */; };
 		DC8EB271239308E5009148F9 /* LicenseOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */; };
+		DC9219FC2966179600F538EE /* OCShare+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9219FB2966179600F538EE /* OCShare+Interactions.swift */; };
 		DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEC3DE3242F665D0076B43C /* CoreServices.framework */; };
 		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
 		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
@@ -1375,6 +1376,8 @@
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSummarizer.swift; sourceTree = "<group>"; };
 		DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOffersViewController.swift; sourceTree = "<group>"; };
+		DC9219F9296615B400F538EE /* NewItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemListCell.swift; sourceTree = "<group>"; };
+		DC9219FB2966179600F538EE /* OCShare+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+Interactions.swift"; sourceTree = "<group>"; };
 		DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNumber+OCSyncAnchorData.h"; sourceTree = "<group>"; };
 		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
 		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
@@ -2518,6 +2521,7 @@
 				DC28F825294B733700AC4013 /* OCItemPolicy+Interactions.swift */,
 				DCB6B1E5292B6BE500D27573 /* OCLocation+Interactions.swift */,
 				DC46F69128DCB9C6008280CA /* OCSavedSearch+Interactions.swift */,
+				DC9219FB2966179600F538EE /* OCShare+Interactions.swift */,
 			);
 			path = "Data Item Interactions";
 			sourceTree = "<group>";
@@ -3260,6 +3264,7 @@
 				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
 				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
+				DC9219F9296615B400F538EE /* NewItemListCell.swift */,
 				DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */,
 				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
 				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
@@ -4419,6 +4424,7 @@
 				DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */,
 				DCB5D5A728632C17004AF425 /* SearchScope.swift in Sources */,
 				DC6FDAF72953AD50004F0C7F /* ClientSharedWithMeViewController.swift in Sources */,
+				DC9219FC2966179600F538EE /* OCShare+Interactions.swift in Sources */,
 				DC9B4FC629413AE20037F8F8 /* OCResourceText+ViewProvider.swift in Sources */,
 				DCB6B1FD292CF2DB00D27573 /* NavigationRevocationManager.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,

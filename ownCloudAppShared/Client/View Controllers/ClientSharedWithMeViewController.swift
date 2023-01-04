@@ -34,6 +34,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 
 	init(context inContext: ClientContext?) {
 		super.init(context: inContext, sections: nil, useStackViewRoot: true)
+		navigationItem.titleLabelText = "Shared with me".localized
 	}
 
 	required public init?(coder: NSCoder) {
