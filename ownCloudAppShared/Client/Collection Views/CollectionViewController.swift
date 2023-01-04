@@ -25,6 +25,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 	public var supportsHierarchicContent: Bool
 	public var usesStackViewRoot: Bool
+	public var useWrappedIdentifiers: Bool
 
 	var highlightItemReference: OCDataItemReference?
 	var didHighlightItemReference: Bool = false
@@ -32,9 +33,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 	var emptyCellRegistration: UICollectionView.CellRegistration<UICollectionViewCell, CollectionViewController.ItemRef>?
 
-	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false, highlightItemReference: OCDataItemReference? = nil) {
+	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false, useWrappedIdentifiers: Bool = false, highlightItemReference: OCDataItemReference? = nil) {
 		supportsHierarchicContent = hierarchic
 		usesStackViewRoot = useStackViewRoot
+		self.useWrappedIdentifiers = hierarchic ? hierarchic : useWrappedIdentifiers
 		self.highlightItemReference = highlightItemReference
 
 		super.init(nibName: nil, bundle: nil)
@@ -214,10 +216,29 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		collectionViewDataSource = UICollectionViewDiffableDataSource<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>(collectionView: collectionView) { [weak self] (collectionView: UICollectionView, indexPath: IndexPath, collectionItemRef: CollectionViewController.ItemRef) -> UICollectionViewCell? in
 			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 			   let section = self?.sectionsByID[sectionIdentifier] {
-				return section.provideReusableCell(for: collectionView, collectionItemRef: collectionItemRef, indexPath: indexPath)
+				var cell = section.provideReusableCell(for: collectionView, collectionItemRef: collectionItemRef, indexPath: indexPath)
+
+				if let cell {
+					return cell
+				} else if let self, !self.useWrappedIdentifiers {
+					// # UICollectionViewDiffableDataSource quirk workaround:
+					// If a cell moves from one section to another, the cell is requeested from the indexPath / section that it was PREVIOUSLY located at/in.
+					// At that point, however, the data source for that section no longer contains the item, so no cell can be returned.
+					// For this case, all other sections are asked to provide the cell before falling through.
+
+					for otherSection in self.sections {
+						if !otherSection.hidden, otherSection != section {
+							cell = otherSection.provideReusableCell(for: collectionView, collectionItemRef: collectionItemRef, indexPath: indexPath)
+
+							if let cell {
+								return cell
+							}
+						}
+					}
+				}
 			}
 
-			return self?.provideEmptyFallbackCell(for: indexPath, item: collectionItemRef)
+			return self?.provideUnknownCell(for: indexPath, item: collectionItemRef)
 		}
 
 		if supportsHierarchicContent {
@@ -309,6 +330,45 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		updateSource()
 	}
 
+	// MARK: - Sections Datasource changes
+	private var _needsSourceUpdate: Bool = false
+	private var _needsSourceUpdateWithAnimation: Bool = false
+
+	open func setNeedsSourceUpdate(animatingDifferences: Bool = true) {
+		var needsUpdate: Bool = false
+
+		OCSynchronized(self) {
+			if !_needsSourceUpdate {
+				_needsSourceUpdate = true
+				_needsSourceUpdateWithAnimation = animatingDifferences
+
+				needsUpdate = true
+			} else {
+				if _needsSourceUpdateWithAnimation && !animatingDifferences {
+					_needsSourceUpdateWithAnimation = false
+				}
+			}
+		}
+
+		if needsUpdate {
+			OnMainThread {
+				var performUpdate: Bool = false
+				var animatedUpdate: Bool = false
+
+				OCSynchronized(self) {
+					performUpdate = self._needsSourceUpdate
+					animatedUpdate = self._needsSourceUpdateWithAnimation
+
+					self._needsSourceUpdate = false
+				}
+
+				if performUpdate {
+					self.__updateSource(animatingDifferences: animatedUpdate)
+				}
+			}
+		}
+	}
+
 	// MARK: - Sections Datasource
 	private var _sectionsSubscription: OCDataSourceSubscription?
 	open var sectionsDataSource: OCDataSource? {
@@ -357,6 +417,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	open var animateDifferences : Bool = true
 
 	func updateSource(animatingDifferences: Bool = true) {
+		setNeedsSourceUpdate(animatingDifferences: animatingDifferences)
+	}
+
+	func __updateSource(animatingDifferences: Bool = true) {
 		performDataSourceUpdate { updateDone in
 			self._updateSource(animatingDifferences: animatingDifferences)
 			updateDone()
@@ -372,10 +436,12 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		var snapshotsBySection = [CollectionViewSection.SectionIdentifier : NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>]()
 		var updatedItems : [CollectionViewController.ItemRef] = []
 
+		// Log.debug("<=========================>")
+
 		for section in sections {
 			if !section.hidden {
 				snapshot.appendSections([section.identifier])
-				if !supportsHierarchicContent {
+				if !useWrappedIdentifiers {
 					section.populate(snapshot: &snapshot)
 				} else {
 					snapshotsBySection[section.identifier] = collectionViewDataSource.snapshot(for: section.identifier)
@@ -383,9 +449,9 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 
-		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences && !supportsHierarchicContent)
+		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences && !useWrappedIdentifiers)
 
-		if supportsHierarchicContent {
+		if useWrappedIdentifiers {
 			for section in sections {
 				if !section.hidden {
 					let (sectionSnapshot, sectionUpdatedItems) = section.composeSectionSnapshot(from: snapshotsBySection[section.identifier])
@@ -496,7 +562,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	public func wrap(references: [OCDataItemReference], forSection: CollectionViewSection.SectionIdentifier) -> [ItemRef] {
-		if supportsHierarchicContent {
+		if useWrappedIdentifiers {
 			// wrap references and section ID together into a single object
 			var itemRefs : [ItemRef] = []
 
@@ -512,7 +578,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	public func unwrap(_ collectionItemRef: ItemRef) -> (OCDataItemReference, CollectionViewSection.SectionIdentifier?) {
-		if supportsHierarchicContent, let wrappedItem = collectionItemRef as? WrappedItem {
+		if useWrappedIdentifiers, let wrappedItem = collectionItemRef as? WrappedItem {
 			// unwrap bundled item references + section ID
 			return (wrappedItem.dataItemReference, wrappedItem.sectionIdentifier)
 		}
@@ -989,7 +1055,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+		super.viewWillDisappear(animated)
 		if let _navigationBarWasHidden, navigationController?.isNavigationBarHidden != _navigationBarWasHidden {
 			navigationController?.setNavigationBarHidden(_navigationBarWasHidden, animated: true)
 		}
@@ -1017,10 +1083,10 @@ public extension CollectionViewController {
 		}
 	}
 
-	func provideEmptyFallbackCell(for indexPath: IndexPath, item itemRef: CollectionViewController.ItemRef) -> UICollectionViewCell {
- 		if let emptyCellRegistration = emptyCellRegistration {
+	func provideUnknownCell(for indexPath: IndexPath, item itemRef: CollectionViewController.ItemRef) -> UICollectionViewCell {
+ 		if let unknownCellRegistration = emptyCellRegistration {
 			let reUseIdentifier : CollectionViewController.ItemRef = NSString(string: "_empty_\(String(describing: itemRef))")
-			return collectionView.dequeueConfiguredReusableCell(using: emptyCellRegistration, for: indexPath, item: reUseIdentifier)
+			return collectionView.dequeueConfiguredReusableCell(using: unknownCellRegistration, for: indexPath, item: reUseIdentifier)
 		}
 
 		return UICollectionViewCell.emptyFallbackCell

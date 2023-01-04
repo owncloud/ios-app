@@ -62,7 +62,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 		}
 
 		let rejectedShares = shares.filter { (share) -> Bool in
-			return	((share.type != .remote) && (share.state == .rejected))		// Local share (rejected)
+			return	((share.type != .remote) && (share.state == .declined))		// Local share (declined)
 		}
 
 		updateSection(for: pendingShares, title: "Pending".localized, sectionID: "pending", placeAtTop: true)
@@ -132,7 +132,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 							self?.handleDecision(on: share, accept: true)
 						}))
 
-						if share.state != .rejected {
+						if share.state != .declined {
 							alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
 								self?.handleDecision(on: share, accept: false)
 							}))
@@ -206,7 +206,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 			completionHandler(true)
 		})
 
-		if share.state != .rejected {
+		if share.state != .declined {
 			return UISwipeActionsConfiguration(actions: [acceptAction, declineAction])
 		} else {
 			return UISwipeActionsConfiguration(actions: [acceptAction])

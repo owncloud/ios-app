@@ -30,10 +30,11 @@ public extension OCDataItemType {
 
 public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, AccountConnectionStatusObserver, AccountConnectionMessageUpdates {
 	public struct Configuration {
+		public var showAccountPill: Bool
+		public var showShared: Bool
 		public var showSavedSearches: Bool
 		public var showQuickAccess: Bool
 		public var showActivity: Bool
-		public var showAccountPill: Bool
 		public var autoSelectPersonalFolder: Bool
 
 		public var sectionAppearance: UICollectionLayoutListConfiguration.Appearance = .sidebar
@@ -57,10 +58,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 
 		public init() {
+			showAccountPill = true
+			showShared = true
 			showSavedSearches = true
 			showQuickAccess = true
 			showActivity = true
-			showAccountPill = true
 
 			autoSelectPersonalFolder = true
 		}
@@ -68,6 +70,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 	public enum SpecialItem: String {
 		case accountRoot
+
+		case sharingFolder
+			case sharedWithMe
+			case sharedByMe
+			case sharedByLink
 
 		case spacesFolder
 
@@ -115,9 +122,14 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		consumer = AccountConnectionConsumer()
 
-		specialItemsDataReferences[.spacesFolder] = UUID().uuidString as NSString
-		specialItemsDataReferences[.quickAccessFolder] = UUID().uuidString as NSString
-		specialItemsDataReferences[.savedSearchesFolder] = UUID().uuidString as NSString
+		specialItemsDataReferences[.sharingFolder] = "\(bookmark.uuid.uuidString)!sharingFolder" as NSString
+		specialItemsDataReferences[.sharedWithMe] = "\(bookmark.uuid.uuidString)!sharedWithMe" as NSString
+		specialItemsDataReferences[.sharedByMe] = "\(bookmark.uuid.uuidString)!sharedByMe" as NSString
+		specialItemsDataReferences[.sharedByLink] = "\(bookmark.uuid.uuidString)!sharedByLink" as NSString
+
+		specialItemsDataReferences[.spacesFolder] = "\(bookmark.uuid.uuidString)!spacesFolder" as NSString
+		specialItemsDataReferences[.quickAccessFolder] = "\(bookmark.uuid.uuidString)!quickAccessFolder" as NSString
+		specialItemsDataReferences[.savedSearchesFolder] = "\(bookmark.uuid.uuidString)!savedSearchesFolder" as NSString
 
 		legacyAccountRootLocation = OCLocation.legacyRoot
 		legacyAccountRootLocation.bookmarkUUID = bookmark.uuid
@@ -280,9 +292,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 	}
 
-	open var specialItems: [SpecialItem : OCDataItem] = [:]
+	open var specialItems: [SpecialItem : OCDataItem & OCDataItemVersioning] = [:]
 	open var specialItemsDataReferences: [SpecialItem : OCDataItemReference] = [:]
 	open var specialItemsDataSources: [SpecialItem : OCDataSource] = [:]
+
+	open var sharingItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
 
 	open var quickAccessItemsDataSource: OCDataSourceArray = OCDataSourceArray(items: [])
 
@@ -331,7 +345,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				}
 
 				sources = [
-					core.personalAndSharedDrivesDataSource,
+					core.personalDriveDataSource,
 					spacesDataSource
 				]
 			} else {
@@ -341,6 +355,58 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				sources = [
 					OCDataSourceArray(items: [legacyAccountRootLocation])
 				]
+			}
+
+			// Sharing
+			if configuration.showShared {
+				let (sharingFolderDataSource, sharingFolderItem) = self.buildFolder(with: sharingItemsDataSource, title: "Shares".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), folderItemRef: specialItemsDataReferences[.sharingFolder]!)
+
+				specialItems[.sharingFolder] = sharingFolderItem
+				specialItemsDataSources[.sharingFolder] = sharingFolderDataSource
+
+				if specialItems[.sharedWithMe] == nil {
+					specialItems[.sharedWithMe] = CollectionSidebarAction(with: "Shared with me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), identifier: specialItemsDataReferences[.sharedWithMe], viewControllerProvider: { context, action in
+						if let context {
+							return ClientSharedWithMeViewController(context: context)
+						}
+
+						return nil
+					}, cacheViewControllers: false)
+				}
+
+				if specialItems[.sharedByMe] == nil {
+					specialItems[.sharedByMe] = CollectionSidebarAction(with: "Shared by me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { context, action in
+						if let context {
+							return CollectionViewController(context: context, sections: [
+								CollectionViewSection(identifier: "sharedByMe", dataSource: context.core?.sharedByMeDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: context)
+							])
+						}
+
+						return nil
+					}, cacheViewControllers: false)
+				}
+
+				if specialItems[.sharedByLink] == nil {
+					specialItems[.sharedByLink] = CollectionSidebarAction(with: "Shared by link".localized, icon: OCSymbol.icon(forSymbolName: "link"), identifier: specialItemsDataReferences[.sharedByLink], viewControllerProvider: { context, action in
+						if let context {
+							return CollectionViewController(context: context, sections: [
+								CollectionViewSection(identifier: "sharedByLink", dataSource: context.core?.sharedByLinkDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: context)
+							])
+						}
+
+						return nil
+					}, cacheViewControllers: false)
+				}
+
+				var sharingItems : [OCDataItem & OCDataItemVersioning] = []
+
+				if let sharingItem = specialItems[.sharedWithMe] { sharingItems.append(sharingItem) }
+				if let sharingItem = specialItems[.sharedByMe]   { sharingItems.append(sharingItem) }
+				if let sharingItem = specialItems[.sharedByLink] { sharingItems.append(sharingItem) }
+
+				sharingItemsDataSource.setVersionedItems(sharingItems)
+
+				sources.insert(sharingFolderDataSource, at: 1)
 			}
 
 			// Saved searches
@@ -358,18 +424,20 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				var quickAccessItems: [OCDataItem & OCDataItemVersioning] = []
 
 				// Favorites
-				if specialItems[.favoriteItems] == nil {
-					specialItems[.favoriteItems] = buildFavoritesSidebarItem()
-				}
-				if let sideBarItem = specialItems[.favoriteItems] as? OCDataItem & OCDataItemVersioning {
-					quickAccessItems.append(sideBarItem)
+				if bookmark?.hasCapability(.favorites) == true {
+					if specialItems[.favoriteItems] == nil {
+						specialItems[.favoriteItems] = buildFavoritesSidebarItem()
+					}
+					if let sideBarItem = specialItems[.favoriteItems] {
+						quickAccessItems.append(sideBarItem)
+					}
 				}
 
 				// Available offline
 				if specialItems[.availableOfflineItems] == nil {
 					specialItems[.availableOfflineItems] = buildAvailableOfflineItem()
 				}
-				if let sideBarItem = specialItems[.availableOfflineItems] as? OCDataItem & OCDataItemVersioning {
+				if let sideBarItem = specialItems[.availableOfflineItems] {
 					quickAccessItems.append(sideBarItem)
 				}
 

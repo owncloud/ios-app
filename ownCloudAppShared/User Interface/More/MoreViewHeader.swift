@@ -41,7 +41,7 @@ open class MoreViewHeader: UIView {
 	public init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
 		self.item = item
 		self.core = core
-		self.showFavoriteButton = favorite
+		self.showFavoriteButton = favorite && core.bookmark.hasCapability(.favorites)
 		self.showActivityIndicator = showActivityIndicator
 
 		iconView = ResourceViewHost()

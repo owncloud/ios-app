@@ -507,7 +507,7 @@ class ClientRootViewController: UIViewController, BookmarkContainer, UINavigatio
 						let (spacesDataSource, spacesFolderItem) = self.buildFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: UIImage(systemName: "square.grid.2x2"))
 
 						let combinedDS = OCDataSourceComposition(sources: [
-							core.personalAndSharedDrivesDataSource,
+							core.personalDriveDataSource,
 							spacesDataSource
 						])
 

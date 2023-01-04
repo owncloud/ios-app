@@ -253,7 +253,13 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
 
 	public var animateDifferences: Bool? //!< If not specified, falls back to collectionViewController.animateDifferences
-	public var hidden : Bool = false
+	public var hidden : Bool = false {
+		didSet {
+			if hidden != oldValue {
+				collectionViewController?.updateSource()
+			}
+		}
+	}
 
 	private var _hideIfEmptyDataSourceSubscription: OCDataSourceSubscription?
 	public var hideIfEmptyDataSource: OCDataSource? {
@@ -265,7 +271,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				let snapshot = subscription.snapshotResettingChangeTracking(true)
 
 				OnMainThread { [weak self] in
-					self?.hidden = snapshot.numberOfItems > 0
+					self?.hidden = (snapshot.numberOfItems == 0)
 				}
 			}, on: .main, trackDifferences: false, performIntialUpdate: true)
 		}
@@ -345,6 +351,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 			if let wrappedItems = collectionViewController?.wrap(references: datasourceSnapshot.items, forSection: identifier) {
 				snapshot.appendItems(wrappedItems, toSection: identifier)
+				// Log.debug("Section[\(identifier)] contents: \(wrappedItems.debugDescription)")
 			}
 
 			if let updatedItems = datasourceSnapshot.updatedItems, updatedItems.count > 0,
@@ -398,7 +405,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	}
 
 	// MARK: - Cell provider
-	func provideReusableCell(for collectionView: UICollectionView, collectionItemRef: CollectionViewController.ItemRef, indexPath: IndexPath) -> UICollectionViewCell {
+	func provideReusableCell(for collectionView: UICollectionView, collectionItemRef: CollectionViewController.ItemRef, indexPath: IndexPath) -> UICollectionViewCell? {
 		var cell: UICollectionViewCell?
 
 		if let collectionViewController = collectionViewController {
@@ -423,15 +430,11 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					cell = cellProvider.provideCell(for: collectionView, cellConfiguration: cellConfiguration, itemRecord: itemRecord, collectionItemRef: collectionItemRef, indexPath: indexPath)
 				}
 			}
-
-			if cell == nil {
-				cell = collectionViewController.provideEmptyFallbackCell(for: indexPath, item: collectionItemRef)
-			}
 		}
 
 		#warning("Consider setting cell state (selection, etc.) here")
 
-		return cell ?? UICollectionViewCell.emptyFallbackCell
+		return cell
 	}
 
 	// MARK: - Hierarchic content provider and child data source tracking
@@ -573,7 +576,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				if let updatedItems = updatedItems {
 					var wrappedUpdatedItems = collectionViewController.wrap(references: Array(updatedItems), forSection: self.identifier)
 
-					if collectionViewController.supportsHierarchicContent {
+					if collectionViewController.useWrappedIdentifiers {
 						wrappedUpdatedItems = wrappedUpdatedItems.filter({ itemRef in
 							return snapshot.indexOfItem(itemRef) != nil
 						})
