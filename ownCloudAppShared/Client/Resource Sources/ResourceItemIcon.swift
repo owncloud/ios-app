@@ -25,6 +25,10 @@ public class ResourceItemIcon: OCResource, OCViewProvider {
 	public static let folder : ResourceItemIcon = ResourceItemIcon(iconName: "folder")
 	public static let file : ResourceItemIcon = ResourceItemIcon(iconName: "file")
 
+	public static func iconFor(mimeType: String) -> ResourceItemIcon {
+		return ResourceItemIcon(iconName: OCItem.iconName(for: mimeType) ?? "file")
+	}
+
 	public convenience init(iconName: String, identifier: String? = nil) {
 
 		self.init()

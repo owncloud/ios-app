@@ -54,8 +54,8 @@ public protocol ContextMenuProvider : AnyObject {
 }
 
 public protocol InlineMessageCenter : AnyObject {
-	func hasInlineMessage(for item: OCItem) -> Bool
-	func showInlineMessageFor(item: OCItem)
+	func hasInlineMessage(for item: OCDataItem) -> Bool
+	func showInlineMessage(for item: OCDataItem)
 }
 
 public protocol ViewControllerPusher: AnyObject {

@@ -293,7 +293,6 @@
 		DC36885F24DD917900333600 /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC36886224DDA9AB00333600 /* ProgressIndicatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC36886024DDA3C300333600 /* ProgressIndicatorViewController.swift */; };
 		DC3AB1982808C35300789435 /* ClientItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB1972808C35300789435 /* ClientItemViewController.swift */; };
-		DC3AB23E280FFE3400789435 /* ItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB23D280FFE3400789435 /* ItemListCell.swift */; };
 		DC3AB240280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB23F280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift */; };
 		DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB2412810404000789435 /* DriveHeaderCell.swift */; };
 		DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3AB24328104AA500789435 /* UIFont+Weight.swift */; };
@@ -379,6 +378,9 @@
 		DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */; };
 		DC8EB271239308E5009148F9 /* LicenseOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */; };
 		DC9219FC2966179600F538EE /* OCShare+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9219FB2966179600F538EE /* OCShare+Interactions.swift */; };
+		DC9219FD2966229100F538EE /* UniversalItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9219F9296615B400F538EE /* UniversalItemListCell.swift */; };
+		DC921A022966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC921A012966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift */; };
+		DC921A042966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC921A032966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift */; };
 		DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEC3DE3242F665D0076B43C /* CoreServices.framework */; };
 		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
 		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
@@ -1376,8 +1378,10 @@
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSummarizer.swift; sourceTree = "<group>"; };
 		DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOffersViewController.swift; sourceTree = "<group>"; };
-		DC9219F9296615B400F538EE /* NewItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemListCell.swift; sourceTree = "<group>"; };
+		DC9219F9296615B400F538EE /* UniversalItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalItemListCell.swift; sourceTree = "<group>"; };
 		DC9219FB2966179600F538EE /* OCShare+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+Interactions.swift"; sourceTree = "<group>"; };
+		DC921A012966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
+		DC921A032966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItem+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNumber+OCSyncAnchorData.h"; sourceTree = "<group>"; };
 		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
 		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
@@ -2761,6 +2765,15 @@
 			path = Licensing;
 			sourceTree = "<group>";
 		};
+		DC9219FE2966D5B800F538EE /* UniversalItemListCell Content Providers */ = {
+			isa = PBXGroup;
+			children = (
+				DC921A012966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift */,
+				DC921A032966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift */,
+			);
+			path = "UniversalItemListCell Content Providers";
+			sourceTree = "<group>";
+		};
 		DC99154A28E6364700DA0AB8 /* SegmentView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3264,7 +3277,8 @@
 				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
 				DC3AB23D280FFE3400789435 /* ItemListCell.swift */,
-				DC9219F9296615B400F538EE /* NewItemListCell.swift */,
+				DC9219F9296615B400F538EE /* UniversalItemListCell.swift */,
+				DC9219FE2966D5B800F538EE /* UniversalItemListCell Content Providers */,
 				DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */,
 				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
 				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
@@ -4341,6 +4355,7 @@
 				DC298C872934A405009FA87F /* ClientDefaultViewController.swift in Sources */,
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC298CA72936250D009FA87F /* ClientSidebarViewController.swift in Sources */,
+				DC921A042966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift in Sources */,
 				DCB6B1E6292B6BE500D27573 /* OCLocation+Interactions.swift in Sources */,
 				DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */,
 				DCE4E44524C1A4260051722F /* FileListTableViewController.swift in Sources */,
@@ -4354,6 +4369,7 @@
 				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
 				DC62F567292504060095BB5D /* AccountConnection.swift in Sources */,
+				DC9219FD2966229100F538EE /* UniversalItemListCell.swift in Sources */,
 				DC28F826294B733700AC4013 /* OCItemPolicy+Interactions.swift in Sources */,
 				DCB6B206292E1D8400D27573 /* RoundedLabel.swift in Sources */,
 				DC99155028E63D8300DA0AB8 /* SegmentViewItemView.swift in Sources */,
@@ -4406,6 +4422,7 @@
 				DC62F569292504510095BB5D /* AccountConnectionPool.swift in Sources */,
 				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
 				DC0A358F24C0E46000FB58FC /* PointerEffect.swift in Sources */,
+				DC921A022966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift in Sources */,
 				DC0A358924C0E44B00FB58FC /* ThemeNavigationController.swift in Sources */,
 				DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */,
 				391C79A824E186DC00CB6333 /* OCBookmark+Extension.swift in Sources */,
@@ -4482,7 +4499,6 @@
 				399EA72625E6565900B6FF11 /* OCCore+Extension.swift in Sources */,
 				DC0A359424C0E5C800FB58FC /* GitCommit.swift in Sources */,
 				DCE4E44B24C1D3780051722F /* QueryFileListTableViewController.swift in Sources */,
-				DC3AB23E280FFE3400789435 /* ItemListCell.swift in Sources */,
 				DC3AB2482810A10300789435 /* ExpandableResourceCell.swift in Sources */,
 				DC3AB240280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift in Sources */,
 				DC0A357C24C0E43C00FB58FC /* ThemeCollection.swift in Sources */,

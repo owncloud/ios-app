@@ -111,7 +111,7 @@ open class FileListTableViewController: UITableViewController, ClientItemCellDel
 	open func messageButtonTapped(cell: ClientItemCell) {
 		if let item = cell.item {
 			if let inlineMessageSupport = self as? InlineMessageCenter {
-				inlineMessageSupport.showInlineMessageFor(item: item)
+				inlineMessageSupport.showInlineMessage(for: item)
 			}
 		}
 	}

@@ -305,7 +305,7 @@ public class ClientLocationPicker : NSObject {
 			context.viewControllerPusher = nil
 			context.navigationController = navigationController
 			context.permissions = [ .selection ]
-			context.itemStyler = { [weak self] (context, itemRecord, item) in
+			context.itemStyler = { [weak self] (context, _, item) in
 				if let item = item as? OCItem {
 					if item.type == .file {
 						return .disabled

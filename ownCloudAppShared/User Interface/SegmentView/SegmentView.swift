@@ -148,5 +148,10 @@ public class SegmentView: ThemeView {
 
 			return constraintSet
 		})
+
+		// Layout without animation
+		UIView.performWithoutAnimation {
+			layoutIfNeeded()
+		}
 	}
 }

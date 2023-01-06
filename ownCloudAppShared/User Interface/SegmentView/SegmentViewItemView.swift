@@ -19,7 +19,7 @@
 import UIKit
 
 public class SegmentViewItemView: ThemeView {
-	var item: SegmentViewItem
+	weak var item: SegmentViewItem?
 
 	var iconView: UIImageView?
 	var titleView: UILabel?
@@ -37,10 +37,13 @@ public class SegmentViewItemView: ThemeView {
 	}
 
 	open override func setupSubviews() {
+		super.setupSubviews()
 		compose()
 	}
 
 	open func compose() {
+		guard let item else { return }
+
 		let rootView = self
 		var views : [UIView] = []
 
@@ -48,7 +51,8 @@ public class SegmentViewItemView: ThemeView {
 		rootView.setContentHuggingPriority(.required, for: .vertical)
 
 		if let icon = item.icon {
-			iconView = UIImageView(image: icon)
+			iconView = UIImageView()
+			iconView?.image = icon.withRenderingMode(.alwaysTemplate)
 			iconView?.contentMode = .scaleAspectFit
 			iconView?.translatesAutoresizingMaskIntoConstraints = false
 			iconView?.setContentHuggingPriority(.required, for: .horizontal)
@@ -75,7 +79,7 @@ public class SegmentViewItemView: ThemeView {
 
 		embedHorizontally(views: views, insets: item.insets, spacingProvider: { leadingView, trailingView in
 			if trailingView == self.titleView, leadingView == self.iconView {
-				return self.item.iconTitleSpacing
+				return item.iconTitleSpacing
 			}
 
 			return nil
@@ -88,21 +92,25 @@ public class SegmentViewItemView: ThemeView {
 			case .round(let points):
 				layer.cornerRadius = points
 		}
+
+		alpha = item.alpha
 	}
 
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
-		switch item.style {
-			case .plain, .label:
-				iconView?.tintColor = collection.tableRowColors.symbolColor
-				titleView?.textColor = collection.tableRowColors.secondaryLabelColor
-				backgroundColor = .clear
+		if let item {
+			switch item.style {
+				case .plain, .label:
+					iconView?.tintColor = collection.tableRowColors.symbolColor
+					titleView?.textColor = collection.tableRowColors.secondaryLabelColor
+					backgroundColor = .clear
 
-			case .token:
-				iconView?.tintColor = collection.tokenColors.normal.foreground
-				titleView?.textColor = collection.tokenColors.normal.foreground
-				backgroundColor = collection.tokenColors.normal.background
+				case .token:
+					iconView?.tintColor = collection.tokenColors.normal.foreground
+					titleView?.textColor = collection.tokenColors.normal.foreground
+					backgroundColor = collection.tokenColors.normal.background
+			}
 		}
 	}
 }

@@ -41,6 +41,7 @@ public class SegmentViewItem: NSObject {
 	open var iconTitleSpacing: CGFloat = 2
 	open var insets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 3, leading: 5, bottom: 3, trailing: 5)
 	open var cornerStyle: CornerStyle?
+	open var alpha: CGFloat = 1.0
 
 	var _view: UIView?
 	open var view: UIView? {

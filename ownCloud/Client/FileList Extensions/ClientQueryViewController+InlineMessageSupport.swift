@@ -21,8 +21,8 @@ import ownCloudSDK
 import ownCloudAppShared
 
 extension ClientQueryViewController : InlineMessageCenter {
-	public func hasInlineMessage(for item: OCItem) -> Bool {
-		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = (clientRootViewController as? ClientRootViewController)?.syncRecordIDsWithMessages else {
+	public func hasInlineMessage(for dataItem: OCDataItem) -> Bool {
+		guard let item = dataItem as? OCItem, let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = (clientRootViewController as? ClientRootViewController)?.syncRecordIDsWithMessages else {
 			return false
 		}
 
@@ -31,8 +31,9 @@ extension ClientQueryViewController : InlineMessageCenter {
 		}
 	}
 
-	public func showInlineMessageFor(item: OCItem) {
-		if let messages = (clientRootViewController as? ClientRootViewController)?.messageSelector?.selection,
+	public func showInlineMessage(for dataItem: OCDataItem) {
+		if let item = dataItem as? OCItem,
+		   let messages = (clientRootViewController as? ClientRootViewController)?.messageSelector?.selection,
 		   let firstMatchingMessage = messages.first(where: { (message) -> Bool in
 			guard let syncRecordID = message.syncIssue?.syncRecordID, let containsSyncRecordID = item.activeSyncRecordIDs?.contains(syncRecordID) else {
 				return false

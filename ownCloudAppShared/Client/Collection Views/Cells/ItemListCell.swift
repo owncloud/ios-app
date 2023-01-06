@@ -16,6 +16,8 @@
  *
  */
 
+#warning("Evaluate removal of file")
+
 import UIKit
 import ownCloudSDK
 import ownCloudApp
@@ -72,16 +74,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 	open var isMoreButtonPermanentlyHidden = false {
 		didSet {
 			updateAccessories()
-		}
-	}
-
-	open var isActive = true {
-		didSet {
-			let alpha : CGFloat = self.isActive ? 1.0 : 0.5
-			titleLabel.alpha = alpha
-			detailLabel.alpha = alpha
-			iconView.alpha = alpha
-			cloudStatusIconView.alpha = alpha
 		}
 	}
 
@@ -607,7 +599,7 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 			return
 		}
 
-		clientContext.inlineMessageCenter?.showInlineMessageFor(item: item)
+		clientContext.inlineMessageCenter?.showInlineMessage(for: item)
 	}
 
 	@objc open func revealButtonTapped() {
@@ -616,33 +608,6 @@ open class ItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		clientContext.revealItemHandler?.reveal(item: item, context: clientContext, sender: self)
-	}
-}
-
-public extension CollectionViewCellStyle.StyleOptionKey {
-	static let showRevealButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showRevealButton")
-	static let showMoreButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showMoreButton")
-}
-
-public extension CollectionViewCellStyle {
-	var showRevealButton : Bool {
-		get {
-			return options[.showRevealButton] as? Bool ?? false
-		}
-
-		set {
-			options[.showRevealButton] = newValue
-		}
-	}
-
-	var showMoreButton : Bool {
-		get {
-			return options[.showMoreButton] as? Bool ?? true
-		}
-
-		set {
-			options[.showMoreButton] = newValue
-		}
 	}
 }
 

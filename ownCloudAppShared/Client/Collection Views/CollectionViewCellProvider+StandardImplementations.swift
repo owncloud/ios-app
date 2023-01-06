@@ -21,15 +21,19 @@ import ownCloudSDK
 
 public extension CollectionViewCellProvider {
 	static func registerStandardImplementations() {
-		// Register cell providers for .drive and .presentable
-		DriveListCell.registerCellProvider()
-		ItemListCell.registerCellProvider()
-		ExpandableResourceCell.registerCellProvider()
-		ActionCell.registerCellProvider()
-		AccountControllerCell.registerCellProvider()
-		SavedSearchCell.registerCellProvider()
-		ViewCell.registerCellProvider()
+		// Register cell providers
+		DriveListCell.registerCellProvider()		// Cell providers for .drive
+		ExpandableResourceCell.registerCellProvider()	// Cell providers for .textResource
+		ActionCell.registerCellProvider()		// Cell providers for .action
+		AccountControllerCell.registerCellProvider()	// Cell providers for .accountController
+		SavedSearchCell.registerCellProvider()		// Cell providers for .savedSearch
+		ViewCell.registerCellProvider()			// Cell providers for .view
 
+		// Register UniversalItemListCell based cell providers
+		OCItem.registerUniversalCellProvider()		// Cell providers for .item
+		OCShare.registerUniversalCellProvider()		// Cell providers for .share
+
+		// Register cell providers for .presentable
 		registerPresentableCellProvider()
 	}
 

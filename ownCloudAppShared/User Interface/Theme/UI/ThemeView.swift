@@ -36,6 +36,8 @@ open class ThemeView: UIView, Themeable {
 	}
 
 	override open func didMoveToSuperview() {
+		super.didMoveToSuperview()
+
 		if self.superview != nil {
 			if !hasRegistered {
 				setupSubviews()

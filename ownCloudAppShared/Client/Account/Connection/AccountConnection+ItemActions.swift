@@ -20,8 +20,8 @@ import UIKit
 import ownCloudSDK
 
 extension AccountConnection : InlineMessageCenter {
-	public func hasInlineMessage(for item: OCItem) -> Bool {
-		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = self.syncRecordIDsWithMessages else {
+	public func hasInlineMessage(for dataItem: OCDataItem) -> Bool {
+		guard let item = dataItem as? OCItem, let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = self.syncRecordIDsWithMessages else {
 			return false
 		}
 
@@ -30,8 +30,9 @@ extension AccountConnection : InlineMessageCenter {
 		}
 	}
 
-	public func showInlineMessageFor(item: OCItem) {
-		if let messages = self.messageSelector?.selection,
+	public func showInlineMessage(for dataItem: OCDataItem) {
+		if let item = dataItem as? OCItem,
+		   let messages = self.messageSelector?.selection,
 		   let firstMatchingMessage = messages.first(where: { (message) -> Bool in
 			guard let syncRecordID = message.syncIssue?.syncRecordID, let containsSyncRecordID = item.activeSyncRecordIDs?.contains(syncRecordID) else {
 				return false
