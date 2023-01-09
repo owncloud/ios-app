@@ -340,7 +340,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				})
 
 				if let accountControllerSection = accountControllerSection,
-				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [ specialItemsDataReferences[.spacesFolder]! ], forSection: accountControllerSection.identifier) {
+				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [ /* specialItemsDataReferences[.spacesFolder]! */ ], forSection: accountControllerSection.identifier) {
 					accountControllerSection.expandedItemRefs = expandedItemRefs
 				}
 
@@ -377,9 +377,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				if specialItems[.sharedByMe] == nil {
 					specialItems[.sharedByMe] = CollectionSidebarAction(with: "Shared by me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { context, action in
 						if let context {
-							return CollectionViewController(context: context, sections: [
-								CollectionViewSection(identifier: "sharedByMe", dataSource: context.core?.sharedByMeDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: context)
-							])
+							return ClientSharedByMeViewController(context: context, byMe: true)
 						}
 
 						return nil
@@ -389,9 +387,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				if specialItems[.sharedByLink] == nil {
 					specialItems[.sharedByLink] = CollectionSidebarAction(with: "Shared by link".localized, icon: OCSymbol.icon(forSymbolName: "link"), identifier: specialItemsDataReferences[.sharedByLink], viewControllerProvider: { context, action in
 						if let context {
-							return CollectionViewController(context: context, sections: [
-								CollectionViewSection(identifier: "sharedByLink", dataSource: context.core?.sharedByLinkDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: context)
-							])
+							return ClientSharedByMeViewController(context: context, byLink: true)
 						}
 
 						return nil
@@ -401,7 +397,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				var sharingItems : [OCDataItem & OCDataItemVersioning] = []
 
 				if let sharingItem = specialItems[.sharedWithMe] { sharingItems.append(sharingItem) }
-				if let sharingItem = specialItems[.sharedByMe]   { sharingItems.append(sharingItem) }
+				if let sharingItem = specialItems[.sharedByMe] { sharingItems.append(sharingItem) }
 				if let sharingItem = specialItems[.sharedByLink] { sharingItems.append(sharingItem) }
 
 				sharingItemsDataSource.setVersionedItems(sharingItems)

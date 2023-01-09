@@ -218,6 +218,12 @@ open class AccountConnection: NSObject {
 						})
 					}
 
+					// Add shareJailQueryCustomizer
+					core?.shareJailQueryCustomizer = { (query) in
+						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
+						query.sortComparator = SortMethod.alphabetically.comparator(direction: .ascendant)
+					}
+
 					// Remove skip available offline when user opens the bookmark
 					core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 				}

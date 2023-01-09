@@ -71,21 +71,25 @@ class UnshareAction : Action {
 
 		let unshareItemAndPublishProgress = { (items: [OCItem]) in
 			for item in items {
+				let unshareItem = {
+					_ = self.core?.sharesSharedWithMe(for: item, initialPopulationHandler: { (shares) in
+						let userGroupShares = shares.filter { (share) -> Bool in
+							return share.type != .link
+						}
+						if let share = userGroupShares.first, let progress = self.core?.makeDecision(on: share, accept: false, completionHandler: { (error) in
+							if error != nil {
+								Log.log("Error \(String(describing: error)) unshare \(String(describing: item.path))")
+							}
+						}) {
+							self.publish(progress: progress)
+						}
+
+					}, keepRunning: false)
+				}
+
 				if let owner = item.owner {
 					if !owner.isRemote {
-						_ = self.core?.sharesSharedWithMe(for: item, initialPopulationHandler: { (shares) in
-							let userGroupShares = shares.filter { (share) -> Bool in
-								return share.type != .link
-							}
-							if let share = userGroupShares.first, let progress = self.core?.makeDecision(on: share, accept: false, completionHandler: { (error) in
-								if error != nil {
-									Log.log("Error \(String(describing: error)) unshare \(String(describing: item.path))")
-								}
-							}) {
-								self.publish(progress: progress)
-							}
-
-						}, keepRunning: false)
+						unshareItem()
 					} else {
 						_ = self.core?.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
 							let userGroupShares = shares.filter { (share) -> Bool in
@@ -101,6 +105,8 @@ class UnshareAction : Action {
 
 						}, keepRunning: false)
 					}
+				} else if item.isSharedWithUser {
+					unshareItem()
 				}
 			}
 

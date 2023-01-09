@@ -244,9 +244,7 @@ open class PublicLinkTableViewController: SharingTableViewController {
 				}),
 
 				UIContextualAction(style: .normal, title: "Copy".localized, handler: { (_, _, completionHandler) in
-					if let shareURL = share.url {
-						UIPasteboard.general.url = shareURL
-
+					if share.copyToClipboard() {
 						_ = NotificationHUDViewController(on: self, title: share.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 					}
 

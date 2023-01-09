@@ -22,18 +22,16 @@ import ownCloudSDK
 class ClientSharedWithMeViewController: CollectionViewController {
 	var pendingSectionDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 	var pendingSection: CollectionViewSection?
-	var pendingSubscription: OCDataSourceSubscription?
 
 	var acceptedSectionDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 	var acceptedSection: CollectionViewSection?
-	var acceptedSubscription: OCDataSourceSubscription?
 
 	var declinedSectionDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 	var declinedSection: CollectionViewSection?
-	var declinedSubscription: OCDataSourceSubscription?
 
 	init(context inContext: ClientContext?) {
 		super.init(context: inContext, sections: nil, useStackViewRoot: true)
+		revoke(in: inContext, when: [ .connectionClosed ])
 		navigationItem.titleLabelText = "Shared with me".localized
 	}
 
@@ -41,16 +39,12 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
-		pendingSubscription?.terminate()
-		acceptedSubscription?.terminate()
-		declinedSubscription?.terminate()
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource) -> (CollectionViewSection, OCDataSourceSubscription) {
+		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource, queryDataSource: OCDataSource? = nil) -> CollectionViewSection {
+			var sectionContext = clientContext
+
 			let headerView = ComposedMessageView(elements: [
 				.spacing(10),
 				.text(title, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
@@ -62,27 +56,25 @@ class ClientSharedWithMeViewController: CollectionViewController {
 				contentDataSource
 			])
 
-			let section = CollectionViewSection(identifier: identifier, dataSource: compositionDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: clientContext)
+			if let queryDataSource, clientContext?.queryDatasource == nil {
+				sectionContext = ClientContext(with: sectionContext, modifier: { context in
+					context.queryDatasource = queryDataSource
+					context.viewControllerPusher = nil
+				})
+			}
+
+			let section = CollectionViewSection(identifier: identifier, dataSource: compositionDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: sectionContext)
 			section.hideIfEmptyDataSource = contentDataSource
 
-			let subscription = contentDataSource.subscribe(updateHandler: { [weak section] subscription in
-//				let snapshot = subscription.snapshotResettingChangeTracking(true)
-//				let numberOfItems = snapshot.numberOfItems
-//
-//				OnMainThread {
-//					section?.hidden = numberOfItems == 0
-//				}
-			}, on: .main, trackDifferences: true, performIntialUpdate: true)
-
-			return (section, subscription)
+			return section
 		}
 
 		if let pendingDataSource = clientContext?.core?.sharedWithMePendingDataSource,
 		   let acceptedDataSource = clientContext?.core?.sharedWithMeAcceptedDataSource,
 		   let declinedDataSource = clientContext?.core?.sharedWithMeDeclinedDataSource {
-			(pendingSection, pendingSubscription) = buildSection(identifier: "pending", titled: "Pending".localized, compositionDataSource: pendingSectionDataSource, contentDataSource: pendingDataSource)
-			(acceptedSection, acceptedSubscription) = buildSection(identifier: "accepted", titled: "Accepted".localized, compositionDataSource: acceptedSectionDataSource, contentDataSource: acceptedDataSource)
-			(declinedSection, declinedSubscription) = buildSection(identifier: "declined", titled: "Declined".localized, compositionDataSource: declinedSectionDataSource, contentDataSource: declinedDataSource)
+			pendingSection = buildSection(identifier: "pending", titled: "Pending".localized, compositionDataSource: pendingSectionDataSource, contentDataSource: pendingDataSource)
+			acceptedSection = buildSection(identifier: "accepted", titled: "Accepted".localized, compositionDataSource: acceptedSectionDataSource, contentDataSource: acceptedDataSource, queryDataSource: clientContext?.core?.useDrives == true ? acceptedDataSource : nil)
+			declinedSection = buildSection(identifier: "declined", titled: "Declined".localized, compositionDataSource: declinedSectionDataSource, contentDataSource: declinedDataSource)
 
 			add(sections: [
 				pendingSection!,

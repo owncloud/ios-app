@@ -44,6 +44,24 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			dataItem = inDataItem
 		}
 
+		init(with content: Content) {
+			title = content.title
+
+			icon = content.icon
+			iconDisabled = content.iconDisabled
+
+			details = content.details
+
+			progress = content.progress
+			accessories = content.accessories
+
+			disabled = content.disabled
+
+			dataItem = content.dataItem
+
+			onlyFields = content.onlyFields
+		}
+
 		public enum Title {
 			case text(_ string: String)
 			case file(name: String)
@@ -371,7 +389,11 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			return
 		}
 
-		clientContext.revealItemHandler?.reveal(item: item, context: clientContext, sender: self)
+		if let revealItemHandler = clientContext.revealItemHandler {
+			revealItemHandler.reveal(item: item, context: clientContext, sender: self)
+		} else if let revealInteraction = item as? DataItemSelectionInteraction {
+			_ = revealInteraction.revealItem?(from: clientContext.originatingViewController, with: clientContext, animated: true, pushViewController: true, completion: nil)
+		}
 	}
 
 	// - Inline message
@@ -409,6 +431,34 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: progressView, placement: .trailing(displayed: .whenNotEditing)))
 	}()
+
+	// - Make custom accessory buttons
+	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, action: UIAction? = nil) -> (UIButton, UICellAccessory) {
+		let button = UIButton()
+
+		button.setTitle(title, for: .normal)
+		button.setImage(image, for: .normal)
+		button.contentMode = .center
+		button.isPointerInteractionEnabled = true
+		button.accessibilityLabel = accessibilityLabel
+
+		if let action {
+			button.addAction(action, for: .primaryActionTriggered)
+		}
+
+		button.applyThemeCollection(Theme.shared.activeCollection)
+
+		if image != nil, title != nil {
+			var configuration = UIButton.Configuration.borderedTinted()
+			configuration.buttonSize = .small
+			configuration.imagePadding = 5
+			configuration.cornerStyle = .large
+
+			button.configuration = configuration.updated(for: button)
+		}
+
+		return (button, .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing))))
+	}
 
 	// MARK: - Prepare for reuse
 	open override func prepareForReuse() {

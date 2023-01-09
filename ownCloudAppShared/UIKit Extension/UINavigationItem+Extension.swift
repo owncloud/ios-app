@@ -35,6 +35,7 @@ public extension UINavigationItem {
 				navigationTitleLabel.font = UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)
 				navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
 				navigationTitleLabel.textColor = Theme.shared.activeCollection.navigationBarColors.labelColor
+				navigationTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 				titleView = navigationTitleLabel
 			}
 

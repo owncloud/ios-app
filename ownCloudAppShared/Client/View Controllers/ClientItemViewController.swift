@@ -279,6 +279,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Initialize navigation title
 		navigationTitleLabel.font = UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)
 		navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
+		navigationTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 		navigationItem.titleView = navigationTitleLabel
 
 		updateNavigationTitleFromContext()

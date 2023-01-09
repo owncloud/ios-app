@@ -111,3 +111,14 @@ extension OCShare: DataItemContextMenuInteraction {
 		return elements
 	}
 }
+
+extension OCShare: DataItemSelectionInteraction {
+	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+		if let item = try? context?.core?.cachedItem(at: itemLocation) {
+			return item.revealItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
+		}
+
+		completion?(false)
+		return nil
+	}
+}

@@ -597,6 +597,10 @@
 "Share with user/group" = "Share with user/group";
 "Share link" = "Share link";
 
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Shared by link";
+
 /* Quick Access view */
 "Quick Access" = "Quick Access";
 "Collection" = "Collection";

@@ -299,6 +299,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	deinit {
 		dataSourceSubscription?.terminate()
+		_hideIfEmptyDataSourceSubscription?.terminate()
 	}
 
 	// MARK: - Expand/Collapse

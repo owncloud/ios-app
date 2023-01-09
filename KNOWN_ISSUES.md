@@ -11,12 +11,14 @@ It should only be used with dedicated test servers, test data - and test devices
 	- breadcrumb title
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
-- support for sharing is widely untested and/or unavailable in the alpha
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
 - [x] clicking a file in favorite view doesn't open the viewer (due to lack of context.query - the viewer clases need to be updated to use data sources rather than queries)
+- support for OC10 sharing is incomplete:
+	- lack of actions for accepted shares
+	- federated shares are not yet included in "Shared with me" view
 
 Missing:
-- [ ] quick access
+- [x] quick access
 - [ ] proper iPhone support
 - [ ] static login/branded login UI
 - [ ] state restoration
@@ -45,7 +47,7 @@ Jesus:
 - [ ] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
 
 Matthias:
-- [ ] Selecting an OC10 account's root folder twice results in an empty list
+- [?] Selecting an OC10 account's root folder twice results in an empty list
 
 Michael:
 - [x] Account deletion by swipe doesn't work

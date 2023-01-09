@@ -143,7 +143,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 		return (cloudStatusIcon, cloudStatusIconAlpha)
 	}
 
-	func content(for cell: UniversalItemListCell, context: ClientContext?, configuration: CollectionViewCellConfiguration?) -> (content: UniversalItemListCell.Content, hasMessageForItem: Bool) {
+	func content(for cell: UniversalItemListCell?, thumbnailSize: CGSize, context: ClientContext?, configuration: CollectionViewCellConfiguration?) -> (content: UniversalItemListCell.Content, hasMessageForItem: Bool) {
 		let content = UniversalItemListCell.Content(with: self)
 		let isFile = (type == .file)
 
@@ -160,7 +160,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 		}
 
 		// Icon
-		content.icon = .resource(request: OCResourceRequestItemThumbnail.request(for: self, maximumSize: cell.thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil))
+		content.icon = .resource(request: OCResourceRequestItemThumbnail.request(for: self, maximumSize: thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil))
 		content.iconDisabled = isPlaceholder
 
 		// Title
@@ -239,16 +239,18 @@ extension OCItem: UniversalItemListCellContentProvider {
 			includeMoreButton = configuration?.style.showMoreButton == true
 		}
 
-		if hasMessageForItem {
-			accessories.append(cell.messageButtonAccessory)
-		} else if progress != nil {
-			accessories.append(cell.progressAccessory)
-		} else if includeMoreButton {
-			accessories.append(cell.moreButtonAccessory)
-		}
+		if let cell {
+			if hasMessageForItem {
+				accessories.append(cell.messageButtonAccessory)
+			} else if progress != nil {
+				accessories.append(cell.progressAccessory)
+			} else if includeMoreButton {
+				accessories.append(cell.moreButtonAccessory)
+			}
 
-		if configuration?.style.showRevealButton == true {
-			accessories.append(cell.revealButtonAccessory)
+			if configuration?.style.showRevealButton == true {
+				accessories.append(cell.revealButtonAccessory)
+			}
 		}
 
 		content.accessories = accessories // [ cell.moreButtonAccessory, cell.progressAccessory, cell.messageButtonAccessory, cell.revealButtonAccessory ]
@@ -259,15 +261,15 @@ extension OCItem: UniversalItemListCellContentProvider {
 	// MARK: - UniversalItemListCellContentProvider implementation
 	public func provideContent(for cell: UniversalItemListCell, context: ClientContext?, configuration: CollectionViewCellConfiguration?, updateContent: @escaping UniversalItemListCell.ContentUpdater) {
 		// Assemble content
-		let (content, hasMessageForItem) = content(for: cell, context: context, configuration: configuration)
+		let (content, hasMessageForItem) = content(for: cell, thumbnailSize: cell.thumbnailSize, context: context, configuration: configuration)
 
 		// Install helper object listening for changes that don't propagate through OCItem changes
 		cell.contentProviderUserInfo = OCItemUniversalItemListCellHelper(with: self, hasMessageForItem: hasMessageForItem, context: context, contentRefresher: { [weak self, weak cell, weak context] (helper, fields) in
-			if let cell, let (content, hasMessageForItem) = self?.content(for: cell, context: context, configuration: configuration) {
+			if let cell, let (content, hasMessageForItem) = self?.content(for: cell, thumbnailSize: cell.thumbnailSize, context: context, configuration: configuration) {
 				content.onlyFields = fields
 				helper.hasMessageForItem = hasMessageForItem
 
-				return updateContent(content)
+				return updateContent(content) == true
 			}
 
 			return false
