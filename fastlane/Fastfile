@@ -28,7 +28,7 @@ platform :ios do
    lane :build_ipa_ad_hoc do
     #Create the build
     gym(
-      workspace: "ownCloud.xcworkspace",
+      project: "ownCloud.xcodeproj",
       scheme: "ownCloud",
       codesigning_identity: "Apple Distribution: ownCloud GmbH (4AP2STM4H5)",
       export_method: "ad-hoc",
@@ -830,7 +830,7 @@ end
 
     #Create the build
     build_app(
-      workspace: "ownCloud.xcworkspace",
+      project: "ownCloud.xcodeproj",
       scheme: "ownCloud",
       configuration: CONFIGURATION,
       codesigning_identity: ENTERPRISE_IDENTITY,
