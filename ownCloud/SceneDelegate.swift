@@ -67,7 +67,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// Was the app launched with registered URL scheme?
 		if let urlContext = connectionOptions.urlContexts.first {
 			if urlContext.url.matchesAppScheme {
-				openPrivateLink(url: urlContext.url, in: scene)
+			   	openAppSchemeLink(url: urlContext.url, scene: scene)
 			} else {
 				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
@@ -147,7 +147,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		if let firstURL = URLContexts.first?.url { // Ensure the set isn't empty
 			if !OCAuthenticationBrowserSessionCustomScheme.handleOpen(firstURL), // No custom scheme URL handling for this URL
 			   firstURL.matchesAppScheme {  // + URL matches app scheme
-				openPrivateLink(url: firstURL, in: scene)
+			   	openAppSchemeLink(url: firstURL, scene: scene)
 			} else {
 				if firstURL.isFileURL, // Ensure the URL is a file URL
 				   ImportFilesController.shared.importAllowed(alertUserOtherwise: true) { // Ensure import is allowed
@@ -165,21 +165,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				return
 		}
 
-		guard let windowScene = scene as? UIWindowScene else { return }
-
-		guard let window =  windowScene.windows.first else { return }
-
-		url.resolveAndPresent(in: window)
+	   	openAppSchemeLink(url: url, scene: scene)
 	}
 
-	private func openPrivateLink(url:URL, in scene:UIScene?) {
-		if url.privateLinkItemID() != nil {
-
-			guard let windowScene = scene as? UIWindowScene else { return }
-
-			guard let window =  windowScene.windows.first else { return }
-
-			url.resolveAndPresent(in: window)
+	private func openAppSchemeLink(url: URL, scene: UIScene? = nil) {
+		if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+			appDelegate.openAppSchemeLink(url: url, scene: scene)
 		}
 	}
 }

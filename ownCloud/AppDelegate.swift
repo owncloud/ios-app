@@ -175,7 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		   url.matchesAppScheme { // + URL matches app scheme
 			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
-			openPrivateLink(url: url, in: window)
+			openAppSchemeLink(url: url, in: window)
 		} else if url.isFileURL {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
@@ -214,7 +214,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
-		openPrivateLink(url: url, in: window)
+		openAppSchemeLink(url: url, in: window)
 
 		return true
 	}
@@ -231,17 +231,112 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
 	}
 
-	private func openPrivateLink(url:URL, in window:UIWindow) {
-		if UIApplication.shared.applicationState == .background {
-			// If the app is already running, just start link resolution
-			url.resolveAndPresent(in: window)
-		} else {
+	// MARK: - App Scheme URL handling
+	open func openAppSchemeLink(url: URL, in inWindow: UIWindow? = nil, scene: UIScene? = nil, autoDelay: Bool = true) {
+		guard let window = inWindow ?? (scene as? UIWindowScene)?.windows.first else { return }
+
+		if UIApplication.shared.applicationState != .background, autoDelay {
 			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
 			// with activities of the just instantiated ServerListTableViewController
-			OnMainThread(after:delayForLinkResolution) {
-				url.resolveAndPresent(in: window)
+			OnMainThread(after: delayForLinkResolution) {
+				self.openAppSchemeLink(url: url, in: window, autoDelay: false)
 			}
+
+			return
 		}
+
+		// App is already running, just start link resolution
+		if openPrivateLink(url: url, in: window) { return }
+		if openPostBuild(url: url, in: window) { return }
+	}
+
+	// MARK: Post Build
+	private func openPostBuild(url: URL, in window: UIWindow) -> Bool {
+		// owncloud://pb/[set|clear]/[all|flatID]/?[int|string|sarray]=[value]
+		/*
+			Examples:
+			owncloud://pb/set/branding.app-name?string=ocisCloud
+			owncloud://pb/clear/branding.app-name
+			owncloud://pb/clear/all
+		*/
+		if url.host == "pb" {
+			let components = url.pathComponents
+
+			if components.count >= 3 {
+				let command = components[1]
+				let targetID = components[2]
+				var relaunchReason: String?
+
+				switch command {
+					case "set":
+						if targetID == "all" { break }
+
+						let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+						if let queryItems = urlComponents?.queryItems {
+							for queryItem in queryItems {
+								if let value = queryItem.value {
+									switch queryItem.name {
+										case "int":
+											if let intVal = Int(value) as? NSNumber {
+												let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(intVal, forFlatIdentifier: targetID)
+												if error == nil {
+													relaunchReason = "Changed \(targetID) to int(\(intVal)). Top to relaunch.".localized
+												}
+											}
+
+										case "string":
+											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(value, forFlatIdentifier: targetID)
+											if error == nil {
+												relaunchReason = "Changed \(targetID) to string(\(value)). Top to relaunch.".localized
+											}
+
+										case "sarray":
+											let strings = (value as NSString).components(separatedBy: ".")
+											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(strings, forFlatIdentifier: targetID)
+											if error == nil {
+												relaunchReason = "Changed \(targetID) to stringArray(\(strings.joined(separator: ", "))). Top to relaunch.".localized
+											}
+
+										default: break
+									}
+								}
+							}
+						}
+
+					case "clear":
+						if targetID == "all" {
+							// Clear all post build settings
+							OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.clear()
+							relaunchReason = "Cleared all. Top to relaunch.".localized
+							break
+						}
+
+						// Clear specific setting
+						OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
+						relaunchReason = "Cleared \(targetID). Top to relaunch.".localized
+
+					default: break
+				}
+
+				if let relaunchReason {
+					OnMainThread {
+						self.offerRelaunchForReason(relaunchReason)
+					}
+				}
+			}
+			return true
+		}
+		return false
+	}
+
+	// MARK: Private Link
+	private func openPrivateLink(url: URL, in window: UIWindow) -> Bool {
+		if url.privateLinkItemID() != nil {
+			url.resolveAndPresent(in: window)
+			return true
+		}
+
+		return false
 	}
 }
 
@@ -281,11 +376,15 @@ extension AppDelegate : NotificationResponseHandler {
 	}
 
 	@objc func offerRelaunchAfterMDMPush() {
+		offerRelaunchForReason("New settings received from MDM".localized)
+	}
+
+	func offerRelaunchForReason(_ reason: String) {
 		NotificationManager.shared.requestAuthorization(options: [.alert, .sound], completionHandler: { (granted, _) in
 			if granted {
 				let content = UNMutableNotificationContent()
 
-				content.title = "New settings received from MDM".localized
+				content.title = reason
 				content.body = "Tap to quit the app.".localized
 
 				let request = UNNotificationRequest(identifier: NotificationManagerComposeIdentifier(AppDelegate.self, "terminate-app"), content: content, trigger: nil)
