@@ -280,21 +280,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 											if let intVal = Int(value) as? NSNumber {
 												let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(intVal, forFlatIdentifier: targetID)
 												if error == nil {
-													relaunchReason = "Changed \(targetID) to int(\(intVal)). Top to relaunch.".localized
+													relaunchReason = "Changed \(targetID) to int(\(intVal)).".localized
 												}
 											}
 
 										case "string":
 											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(value, forFlatIdentifier: targetID)
 											if error == nil {
-												relaunchReason = "Changed \(targetID) to string(\(value)). Top to relaunch.".localized
+												relaunchReason = "Changed \(targetID) to string(\(value)).".localized
 											}
 
 										case "sarray":
 											let strings = (value as NSString).components(separatedBy: ".")
 											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(strings, forFlatIdentifier: targetID)
 											if error == nil {
-												relaunchReason = "Changed \(targetID) to stringArray(\(strings.joined(separator: ", "))). Top to relaunch.".localized
+												relaunchReason = "Changed \(targetID) to stringArray(\(strings.joined(separator: ", "))).".localized
 											}
 
 										default: break
@@ -307,14 +307,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 						if targetID == "all" {
 							// Clear all post build settings
 							OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.clear()
-							relaunchReason = "Cleared all. Top to relaunch.".localized
+							relaunchReason = "Cleared all.".localized
 							break
 						}
 
 						// Clear specific setting
 						let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
 						if error == nil {
-							relaunchReason = "Cleared \(targetID). Top to relaunch.".localized
+							relaunchReason = "Cleared \(targetID).".localized
 						}
 
 					default: break
