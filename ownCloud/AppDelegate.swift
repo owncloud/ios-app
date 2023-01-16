@@ -312,8 +312,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 						}
 
 						// Clear specific setting
-						OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
-						relaunchReason = "Cleared \(targetID). Top to relaunch.".localized
+						let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
+						if error == nil {
+							relaunchReason = "Cleared \(targetID). Top to relaunch.".localized
+						}
 
 					default: break
 				}
