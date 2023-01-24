@@ -45,7 +45,7 @@ class PurchasesSettingsSection: SettingsSection {
 
 		transactionsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			row.viewController?.navigationController?.pushViewController(LicenseTransactionsViewController(), animated: true)
-		}, title: "Purchases".localized, accessoryType: .disclosureIndicator, identifier: "Purchases")
+		}, title: "Purchases & Subscriptions".localized, accessoryType: .disclosureIndicator, identifier: "purchases")
 	}
 
 	// MARK: - Update UI
