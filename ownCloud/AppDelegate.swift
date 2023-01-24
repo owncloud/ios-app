@@ -32,9 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //	var staticLoginViewController : StaticLoginViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		var navigationController: UINavigationController?
-		var rootViewController : UIViewController?
-
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 

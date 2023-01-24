@@ -16,30 +16,9 @@
  *
  */
 
-#warning("Evaluate removal of file")
-
 import UIKit
 
-public protocol ToolAndTabBarToggling : UITabBarController {
-	var toolbar : UIToolbar? { get set }
-}
-
 public extension UIViewController {
-	func populateToolbar(with items:[UIBarButtonItem]) {
-		if let tabBarController = self.tabBarController as? ToolAndTabBarToggling {
-			tabBarController.toolbar?.isHidden = false
-			tabBarController.tabBar.isHidden = true
-			tabBarController.toolbar?.setItems(items, animated: true)
-		}
-	}
-
-	func removeToolbar() {
-		if let tabBarController = self.tabBarController as? ToolAndTabBarToggling {
-			tabBarController.toolbar?.isHidden = true
-			tabBarController.tabBar.isHidden = false
-			tabBarController.toolbar?.setItems(nil, animated: true)
-		}
-	}
 
 	var topMostViewController: UIViewController {
 
