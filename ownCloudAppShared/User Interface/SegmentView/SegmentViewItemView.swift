@@ -67,7 +67,11 @@ public class SegmentViewItemView: ThemeView {
 			titleView?.translatesAutoresizingMaskIntoConstraints = false
 			titleView?.text = title
 			if let titleTextStyle = item.titleTextStyle {
-				titleView?.font = .preferredFont(forTextStyle: titleTextStyle)
+				if let titleTextWeight = item.titleTextWeight {
+					titleView?.font = .preferredFont(forTextStyle: titleTextStyle, with: titleTextWeight)
+				} else {
+					titleView?.font = .preferredFont(forTextStyle: titleTextStyle)
+				}
 			}
 			titleView?.setContentHuggingPriority(.required, for: .horizontal)
 			titleView?.setContentHuggingPriority(.required, for: .vertical)
@@ -77,7 +81,7 @@ public class SegmentViewItemView: ThemeView {
 			views.append(titleView!)
 		}
 
-		embedHorizontally(views: views, insets: item.insets, spacingProvider: { leadingView, trailingView in
+		embedHorizontally(views: views, insets: item.insets, limitHeight: item.segmentView?.limitVerticalSpaceUsage ?? false, spacingProvider: { leadingView, trailingView in
 			if trailingView == self.titleView, leadingView == self.iconView {
 				return item.iconTitleSpacing
 			}

@@ -376,6 +376,11 @@
 		DC82663C28168D2800F91F7D /* ClientContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82663B28168D2800F91F7D /* ClientContext.swift */; };
 		DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82D6F923171339001551C5 /* ScanAction.swift */; };
 		DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */; };
+		DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */; };
+		DC8E99E2297E906200594697 /* OCLicenseQAProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */; };
+		DC8E99E5297EEB2800594697 /* ClientLocationBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99E4297EEB2800594697 /* ClientLocationBarController.swift */; };
+		DC8E99E8297F3BA700594697 /* ActionTapGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99E7297F3BA700594697 /* ActionTapGestureRecognizer.swift */; };
 		DC8EB271239308E5009148F9 /* LicenseOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */; };
 		DC9219FC2966179600F538EE /* OCShare+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9219FB2966179600F538EE /* OCShare+Interactions.swift */; };
 		DC9219FD2966229100F538EE /* UniversalItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9219F9296615B400F538EE /* UniversalItemListCell.swift */; };
@@ -567,6 +572,8 @@
 		DCF575EC2796CBDF003BEBBA /* OCImage+ViewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EA2796CBDF003BEBBA /* OCImage+ViewProvider.m */; };
 		DCF575EF2796CE38003BEBBA /* OCViewHost.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF575ED2796CE38003BEBBA /* OCViewHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCF575F02796CE38003BEBBA /* OCViewHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF575EE2796CE38003BEBBA /* OCViewHost.m */; };
+		DCFA56432975734A0092C89F /* BrowserNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */; };
+		DCFA5645297574A60092C89F /* BrowserNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */; };
 		DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */; };
 		DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */; };
@@ -1377,6 +1384,11 @@
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSummarizer.swift; sourceTree = "<group>"; };
+		DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationHistory.swift; sourceTree = "<group>"; };
+		DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseQAProvider.h; sourceTree = "<group>"; };
+		DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseQAProvider.m; sourceTree = "<group>"; };
+		DC8E99E4297EEB2800594697 /* ClientLocationBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLocationBarController.swift; sourceTree = "<group>"; };
+		DC8E99E7297F3BA700594697 /* ActionTapGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTapGestureRecognizer.swift; sourceTree = "<group>"; };
 		DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOffersViewController.swift; sourceTree = "<group>"; };
 		DC9219F9296615B400F538EE /* UniversalItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalItemListCell.swift; sourceTree = "<group>"; };
 		DC9219FB2966179600F538EE /* OCShare+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+Interactions.swift"; sourceTree = "<group>"; };
@@ -1565,6 +1577,8 @@
 		DCF575EA2796CBDF003BEBBA /* OCImage+ViewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCImage+ViewProvider.m"; sourceTree = "<group>"; };
 		DCF575ED2796CE38003BEBBA /* OCViewHost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCViewHost.h; sourceTree = "<group>"; };
 		DCF575EE2796CE38003BEBBA /* OCViewHost.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCViewHost.m; sourceTree = "<group>"; };
+		DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationViewController.swift; sourceTree = "<group>"; };
+		DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationItem.swift; sourceTree = "<group>"; };
 		DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginServerListViewController.swift; sourceTree = "<group>"; };
 		DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSection.swift; sourceTree = "<group>"; };
 		DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellProvider.swift; sourceTree = "<group>"; };
@@ -2192,6 +2206,7 @@
 				DC0A359024C0E46800FB58FC /* Cursor Support */,
 				DC0A355124C0E1EF00FB58FC /* Theme */,
 				DC298C9B2934D3FA009FA87F /* Alert View */,
+				DCFA5641297573080092C89F /* Browser Navigation Controller */,
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				399EA74425E6575A00B6FF11 /* Notification */,
 				DC0A354D24C0E15100FB58FC /* Progress */,
@@ -2201,6 +2216,7 @@
 				DC99154A28E6364700DA0AB8 /* SegmentView */,
 				DCE4E43224C197480051722F /* User Activities */,
 				DC3AB2492810A67F00789435 /* View Providers */,
+				DC8E99E6297F3B8400594697 /* Gesture Recognizer */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -2434,6 +2450,7 @@
 				DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */,
 				DC921A0A2968BA4D00F538EE /* ClientSharedByMeViewController.swift */,
 				DC298C862934A405009FA87F /* ClientDefaultViewController.swift */,
+				DC8E99E4297EEB2800594697 /* ClientLocationBarController.swift */,
 				DC298CAA29362534009FA87F /* Location Picker */,
 			);
 			path = "View Controllers";
@@ -2754,6 +2771,23 @@
 				54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DC8E99DD297E8D1800594697 /* QA */ = {
+			isa = PBXGroup;
+			children = (
+				DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */,
+				DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */,
+			);
+			path = QA;
+			sourceTree = "<group>";
+		};
+		DC8E99E6297F3B8400594697 /* Gesture Recognizer */ = {
+			isa = PBXGroup;
+			children = (
+				DC8E99E7297F3BA700594697 /* ActionTapGestureRecognizer.swift */,
+			);
+			path = "Gesture Recognizer";
 			sourceTree = "<group>";
 		};
 		DC8EB26F239308C3009148F9 /* Licensing */ = {
@@ -3412,6 +3446,16 @@
 			path = "View Providers";
 			sourceTree = "<group>";
 		};
+		DCFA5641297573080092C89F /* Browser Navigation Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */,
+				DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */,
+				DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */,
+			);
+			path = "Browser Navigation Controller";
+			sourceTree = "<group>";
+		};
 		DCFEFE2223687637009A142F /* Licensing */ = {
 			isa = PBXGroup;
 			children = (
@@ -3438,6 +3482,7 @@
 				DC080CDC238AE3D00044C5D2 /* App Store */,
 				DC4331F82472E17F002DC0E5 /* EMM */,
 				DCDC20A42399A898003CFF5B /* Enterprise */,
+				DC8E99DD297E8D1800594697 /* QA */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -3571,6 +3616,7 @@
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
 				DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */,
+				DC8E99E2297E906200594697 /* OCLicenseQAProvider.h in Headers */,
 				DC49B55928365C5F00DAF13B /* OCVault+VFSManager.h in Headers */,
 				DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */,
 			);
@@ -3843,7 +3889,7 @@
 					};
 					394A0AF822EEFC2C00603813 = {
 						CreatedOnToolsVersion = 11.0;
-						LastSwiftMigration = 1340;
+						LastSwiftMigration = 1420;
 						ProvisioningStyle = Automatic;
 					};
 					39A7137F22E79C6700089423 = {
@@ -4368,6 +4414,7 @@
 				DCE4E43524C1999A0051722F /* Action.swift in Sources */,
 				DC298CAE2936598B009FA87F /* DriveGridCell.swift in Sources */,
 				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
+				DC8E99E5297EEB2800594697 /* ClientLocationBarController.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
 				DC62F567292504060095BB5D /* AccountConnection.swift in Sources */,
 				DC9219FD2966229100F538EE /* UniversalItemListCell.swift in Sources */,
@@ -4476,6 +4523,7 @@
 				DCE4E43124C197450051722F /* OpenItemUserActivity.swift in Sources */,
 				DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */,
 				DC6C0A542923FFF30045FF2A /* AccountControllerSection.swift in Sources */,
+				DCFA56432975734A0092C89F /* BrowserNavigationViewController.swift in Sources */,
 				DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */,
 				DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
@@ -4505,11 +4553,13 @@
 				DC0A357C24C0E43C00FB58FC /* ThemeCollection.swift in Sources */,
 				DC28F828294BB5ED00AC4013 /* SortedItemDataSource.swift in Sources */,
 				DC298C992934D3F8009FA87F /* AlertViewController.swift in Sources */,
+				DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */,
 				399EA6F525E6544100B6FF11 /* GroupSharingTableViewController.swift in Sources */,
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
 				DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */,
+				DC8E99E8297F3BA700594697 /* ActionTapGestureRecognizer.swift in Sources */,
 				DCB5D56B2861BEBE004AF425 /* SearchViewController.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
 				DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */,
@@ -4518,6 +4568,7 @@
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
+				DCFA5645297574A60092C89F /* BrowserNavigationItem.swift in Sources */,
 				DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */,
 				DC65593228A648680003D130 /* SearchElement.swift in Sources */,
 				DC0A355324C0E2C200FB58FC /* ClientItemCell.swift in Sources */,
@@ -4603,6 +4654,7 @@
 				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
 				DC6179E828E0578400C7C4E0 /* OCFileProviderSettings.m in Sources */,
+				DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */,
 				DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */,
 				DC2A128728D0725D0088A2B7 /* OCSavedSearch.m in Sources */,
 				DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */,
@@ -5006,7 +5058,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 245;
+				APP_VERSION = 246;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5076,7 +5128,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 245;
+				APP_VERSION = 246;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

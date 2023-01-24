@@ -27,7 +27,7 @@ public class ClientDefaultViewController: UIViewController, Themeable {
 		logoView.translatesAutoresizingMaskIntoConstraints = false
 		logoView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
-		rootView.embed(centered: logoView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), fixedSize: CGSize(width: 480, height: 480), minimumSize: CGSize(width: 240, height: 180), maximumSize: CGSize(width: 480, height: 480))
+		rootView.embed(centered: logoView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), fixedSize: CGSize(width: 480, height: 480), minimumSize: CGSize(width: 240, height: 180), maximumSize: CGSize(width: 280, height: 280))
 
 		self.view = rootView
 	}

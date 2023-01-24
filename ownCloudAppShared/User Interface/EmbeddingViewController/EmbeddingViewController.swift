@@ -37,6 +37,19 @@ open class EmbeddingViewController: UIViewController {
 			}
 		}
 	}
+
+	open func constraintsForEmbedding(contentViewController: UIViewController) -> [NSLayoutConstraint] {
+		if let customEmbedder = self as? CustomViewControllerEmbedding {
+			return customEmbedder.constraintsForEmbedding(contentView: contentViewController.view)
+		} else {
+			return view.embed(toFillWith: contentViewController.view, enclosingAnchors: view.defaultAnchorSet)
+		}
+	}
+
+	open func addContentViewControllerSubview(_ contentViewControllerView: UIView) {
+		view.addSubview(contentViewControllerView)
+	}
+
 	open var contentViewController: UIViewController? {
 		willSet {
 			contentViewController?.willMove(toParent: nil)
@@ -48,13 +61,9 @@ open class EmbeddingViewController: UIViewController {
 		didSet {
 			if let contentViewController = contentViewController, let contentViewControllerView = contentViewController.view {
 				addChild(contentViewController)
-				view.addSubview(contentViewControllerView)
+				addContentViewControllerSubview(contentViewControllerView)
 				contentViewControllerView.translatesAutoresizingMaskIntoConstraints = false
-				if let customEmbedder = self as? CustomViewControllerEmbedding {
-					contentViewControllerConstraints = customEmbedder.constraintsForEmbedding(contentView: contentViewController.view)
-				} else {
-					contentViewControllerConstraints = view.embed(toFillWith: contentViewController.view, enclosingAnchors: view.defaultAnchorSet)
-				}
+				contentViewControllerConstraints = constraintsForEmbedding(contentViewController: contentViewController)
 				contentViewController.didMove(toParent: self)
 			}
 		}

@@ -124,6 +124,7 @@ public class ClientContext: NSObject {
 
 	// MARK: - UI objects
 	public weak var rootViewController: UIViewController?
+	public weak var browserController: BrowserNavigationViewController? // Browser navigation controller to push to
 	public weak var navigationController: UINavigationController? // Navigation controller to push to
 	public weak var originatingViewController: UIViewController? // Originating view controller for f.ex. actions
 
@@ -185,6 +186,7 @@ public class ClientContext: NSObject {
 		queryDatasource = inParent?.queryDatasource
 
 		rootViewController = inRootViewController ?? inParent?.rootViewController
+		browserController = inParent?.browserController
 		navigationController = inNavigationController ?? inParent?.navigationController
 		originatingViewController = inOriginatingViewController ?? inParent?.originatingViewController
 
@@ -309,12 +311,22 @@ extension ClientContext {
 	public func pushViewControllerToNavigation(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController? {
 		var viewController: UIViewController?
 
+		if let browserController {
+			viewController = provider(context ?? self)
+
+			if push, let viewController {
+				browserController.push(viewController: viewController)
+			}
+
+			return viewController
+		}
+
 		if let viewControllerPusher = viewControllerPusher {
 			viewController = viewControllerPusher.pushViewController(context: context, provider: provider, push: push, animated: animated)
 		} else if let navigationController = navigationController {
 			viewController = provider(context ?? self)
 
-			if push, let viewController = viewController {
+			if push, let viewController {
 				navigationController.pushViewController(viewController, animated: animated)
 			}
 		}

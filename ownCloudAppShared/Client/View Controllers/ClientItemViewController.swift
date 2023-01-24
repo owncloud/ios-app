@@ -209,6 +209,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		queryRootItemObservation = query?.observe(\OCQuery.rootItem, options: [], changeHandler: { [weak self] query, change in
 			OnMainThread(inline: true) {
 				self?.clientContext?.rootItem = query.rootItem
+				if self?.location != nil {
+					self?.location = query.rootItem?.location
+					self?.updateLocationBarViewController()
+				}
 				self?.updateNavigationTitleFromContext()
 				self?.refreshEmptyActions()
 			}
@@ -321,18 +325,43 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 //		}))
 	}
 
+	var locationBarViewController: ClientLocationBarController? {
+		willSet {
+			if let locationBarViewController {
+				removeStacked(child: locationBarViewController)
+			}
+		}
+		didSet {
+			if let locationBarViewController {
+				addStacked(child: locationBarViewController, position: .bottom)
+			}
+		}
+	}
+
+	func updateLocationBarViewController() {
+		if let location, let clientContext {
+			self.locationBarViewController = ClientLocationBarController(clientContext: clientContext, location: location)
+		} else {
+			self.locationBarViewController = nil
+		}
+	}
+
 	public override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if let query = query {
+		if let query {
 			clientContext?.core?.start(query)
+		}
+
+		if locationBarViewController == nil {
+			updateLocationBarViewController()
 		}
 	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		if let query = query {
+		if let query {
 			clientContext?.core?.stop(query)
 		}
 	}

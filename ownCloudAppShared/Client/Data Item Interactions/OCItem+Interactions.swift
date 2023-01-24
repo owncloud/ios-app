@@ -43,7 +43,9 @@ extension OCItem : DataItemSelectionInteraction {
 								location?.bookmarkUUID = context.core?.bookmark.uuid
 							}
 
-							return ClientItemViewController(context: context, query: query, location: location)
+							let viewController = ClientItemViewController(context: context, query: query, location: location)
+							viewController.revoke(in: context, when: [.connectionClosed, .driveRemoved])
+							return viewController
 						}, push: pushViewController, animated: animated) {
 							completion?(true)
 							return queryViewController
@@ -52,7 +54,9 @@ extension OCItem : DataItemSelectionInteraction {
 
 				case .file:
 					if let viewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-						return context.viewItemHandler?.provideViewer(for: self, context: context)
+						let viewController = context.viewItemHandler?.provideViewer(for: self, context: context)
+						viewController?.revoke(in: context, when: [.connectionClosed, .driveRemoved])
+						return viewController
 					}, push: pushViewController, animated: animated) {
 						completion?(true)
 						return viewController
@@ -75,7 +79,9 @@ extension OCItem : DataItemSelectionInteraction {
 				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 				if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-					return ClientItemViewController(context: context, query: query, highlightItemReference: self.dataItemReference)
+					let viewController = ClientItemViewController(context: context, query: query, location: parentLocation, highlightItemReference: self.dataItemReference)
+					viewController.revoke(in: context, when: [.connectionClosed, .driveRemoved])
+					return viewController
 				}, push: pushViewController, animated: animated) {
 					completion?(true)
 					return queryViewController
