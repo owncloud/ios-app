@@ -385,7 +385,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		didSet {
 			_sectionsSubscription = sectionsDataSource?.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateSections(from: subscription.snapshotResettingChangeTracking(true))
-			}, on: .main, trackDifferences: true, performIntialUpdate: true)
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
 		}
 	}
 

@@ -74,7 +74,7 @@ open class NavigationRevocationTrigger: NSObject {
 					}
 				}
 			}
-		}, on: dispatchQueue, trackDifferences: true, performIntialUpdate: true)
+		}, on: dispatchQueue, trackDifferences: true, performInitialUpdate: true)
 
 		if attach {
 			objc_setAssociatedObject(dataSource, &self.objcAssociationHandle, self, .OBJC_ASSOCIATION_RETAIN)

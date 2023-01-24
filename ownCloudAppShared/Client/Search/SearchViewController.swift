@@ -329,7 +329,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 			if oldValue != scopeResults {
 				scopeResultsSubscription = scopeResults?.subscribe(updateHandler: { [weak self] (subscription) in
 					self?.scopeResultsItemCount = subscription.snapshotResettingChangeTracking(true).numberOfItems
-				}, on: .main, trackDifferences: false, performIntialUpdate: true)
+				}, on: .main, trackDifferences: false, performInitialUpdate: true)
 			}
 		}
 	}

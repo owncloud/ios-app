@@ -63,7 +63,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
 						composedResults?.setInclude((snapshot.numberOfItems >= maxResultCount), for: resultActionSource)
 					}
 				}
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}, on: .main, trackDifferences: false, performInitialUpdate: true)
 
 			results = composedResults
 		} else {

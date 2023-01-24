@@ -222,7 +222,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Subscribe to singleDriveDatasource for changes, to update driveSectionDataSource
 		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] (subscription) in
 			self?.updateAdditionalDriveItems(from: subscription)
-		}, on: .main, trackDifferences: true, performIntialUpdate: true)
+		}, on: .main, trackDifferences: true, performInitialUpdate: true)
 
 		if let queryDatasource = query?.queryResultsDataSource {
 			let emptyFolderMessage = "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
@@ -274,7 +274,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateEmptyItemList(from: subscription)
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}, on: .main, trackDifferences: false, performInitialUpdate: true)
 		}
 
 		// Initialize sort method
@@ -690,9 +690,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		didSet {
 			if multiSelectionToggleSelectionBarButtonItem == nil {
-				navigationItem.leftBarButtonItem = multiSelectionLeftNavigationItem
 				navigationItem.leftBarButtonItems = multiSelectionLeftNavigationItems
+				navigationItem.leftBarButtonItem = multiSelectionLeftNavigationItem
 			} else {
+				navigationItem.leftBarButtonItems = []
 				navigationItem.leftBarButtonItem = multiSelectionToggleSelectionBarButtonItem
 			}
 		}
@@ -820,7 +821,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				subscription.terminate()
 				self.selectAllSubscription = nil
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}, on: .main, trackDifferences: false, performInitialUpdate: true)
 		}
 	}
 
