@@ -36,8 +36,6 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		super.viewWillLayoutSubviews()
 
 		if let windowWidth = view.window?.bounds.width {
-			Log.warning("Window width: \(windowWidth) \(traitCollection.horizontalSizeClass)")
-
 			if preferredSideBarWidth > windowWidth {
 				// Adapt to widths slimmer than sidebarWidth
 				sideBarWidth = windowWidth - 20
@@ -178,12 +176,12 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 	}
 
 	func updateLeftBarButtonItems(for navigationItem: UINavigationItem, withToggleSideBar: Bool = false, withBackButton: Bool = false, withForwardButton: Bool = false) {
+		let (_, existingItems) = navigationItem.navigationContent.items(withIdentifier: "browser-navigation-left")
+
 		func reuseOrBuild(_ tag: BarButtonTags, _ build: () -> UIBarButtonItem) -> UIBarButtonItem {
-			if let leftBarButtonItems = navigationItem.leftBarButtonItems {
-				for barButtonItem in leftBarButtonItems {
-					if barButtonItem.tag == tag.rawValue {
-						return barButtonItem
-					}
+			for barButtonItem in existingItems {
+				if barButtonItem.tag == tag.rawValue {
+					return barButtonItem
 				}
 			}
 
@@ -191,13 +189,14 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		}
 
 		var leadingButtons : [UIBarButtonItem] = []
+		var sidebarButtons : [UIBarButtonItem] = []
 
 		if withToggleSideBar {
 			let item = reuseOrBuild(.showHideSideBar, {
 				return buildSideBarToggleBarButtonItem()
 			})
 
-			leadingButtons.append(item)
+			sidebarButtons.append(item)
 		}
 
 		if withBackButton {
@@ -226,17 +225,13 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 			leadingButtons.append(item)
 		}
 
-		var composedButtonItems : [UIBarButtonItem] = leadingButtons
+		let sideBarItem = NavigationContentItem(identifier: "browser-navigation-left", area: .left, priority: .standard, position: .leading, items: sidebarButtons)
+		sideBarItem.visibleInPriorities = [ .standard, .high, .highest ]
 
-		if let leftBarButtonItems = navigationItem.leftBarButtonItems {
-			for leftBarButtonItem in leftBarButtonItems {
-				if (leftBarButtonItem.tag & BarButtonTags.mask.rawValue) == 0 {
-					composedButtonItems.append(leftBarButtonItem)
-				}
-			}
-		}
-
-		navigationItem.leftBarButtonItems = composedButtonItems
+		navigationItem.navigationContent.add(items: [
+			sideBarItem,
+			NavigationContentItem(identifier: "browser-navigation-left", area: .left, priority: .standard, position: .leading, items: leadingButtons)
+		])
 	}
 
 	func updateContentNavigationItems() {

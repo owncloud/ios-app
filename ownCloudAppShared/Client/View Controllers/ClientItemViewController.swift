@@ -280,12 +280,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Initialize sort method
 		handleSortMethodChange()
 
-		// Initialize navigation title
-		navigationTitleLabel.font = UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)
-		navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
-		navigationTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-		navigationItem.titleView = navigationTitleLabel
-
+		// Update title
 		updateNavigationTitleFromContext()
 	}
 
@@ -319,10 +314,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
 		collectionView.allowsMultipleSelectionDuringEditing = true
-
-//		navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .bookmarks, primaryAction: UIAction(handler: { [weak self] _ in
-//			self?.splitViewController?.show(.primary)
-//		}))
 	}
 
 	var locationBarViewController: ClientLocationBarController? {
@@ -583,7 +574,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 		}
 
-		self.navigationItem.rightBarButtonItems = viewActionButtons
+		navigationItem.navigationContent.add(items: [
+			NavigationContentItem(identifier: "client-actions-right", area: .right, priority: .standard, position: .trailing, items: viewActionButtons)
+		])
 	}
 
 	@objc open func moreBarButtonPressed(_ sender: UIBarButtonItem) {
@@ -599,12 +592,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Navigation title
 	var navigationTitle: String? {
 		get {
-			return navigationTitleLabel.text
+			return navigationItem.titleLabel?.text
 		}
 
 		set {
-			navigationTitleLabel.text = newValue
-			navigationItem.title = newValue
+			navigationItem.titleLabelText = newValue
 		}
 	}
 
@@ -678,23 +670,14 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	var multiSelectionActionContext: ActionContext?
 	var multiSelectionActionsDatasource: OCDataSourceArray?
 
-	var multiSelectionLeftNavigationItem: UIBarButtonItem?
-	var multiSelectionLeftNavigationItems: [UIBarButtonItem]?
 	var multiSelectionToggleSelectionBarButtonItem: UIBarButtonItem? {
-		willSet {
-			if multiSelectionToggleSelectionBarButtonItem == nil {
-				multiSelectionLeftNavigationItem = navigationItem.leftBarButtonItem
-				multiSelectionLeftNavigationItems = navigationItem.leftBarButtonItems
-			}
-		}
-
 		didSet {
-			if multiSelectionToggleSelectionBarButtonItem == nil {
-				navigationItem.leftBarButtonItems = multiSelectionLeftNavigationItems
-				navigationItem.leftBarButtonItem = multiSelectionLeftNavigationItem
+			if let multiSelectionToggleSelectionBarButtonItem {
+				navigationItem.navigationContent.add(items: [
+					NavigationContentItem(identifier: "multiselect-toggle", area: .left, priority: .high, position: .trailing, items: [ multiSelectionToggleSelectionBarButtonItem ])
+				])
 			} else {
-				navigationItem.leftBarButtonItems = []
-				navigationItem.leftBarButtonItem = multiSelectionToggleSelectionBarButtonItem
+				navigationItem.navigationContent.remove(itemsWithIdentifier: "multiselect-toggle")
 			}
 		}
 	}

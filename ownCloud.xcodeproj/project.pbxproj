@@ -316,6 +316,9 @@
 		DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */; };
 		DC576EC022647A070087316D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC576EC222647A070087316D /* Localizable.strings */; };
 		DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */; };
+		DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */; };
+		DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A729802B0900905EC8 /* NavigationContent.swift */; };
+		DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */; };
 		DC6179E728E0578400C7C4E0 /* OCFileProviderSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6179E528E0578400C7C4E0 /* OCFileProviderSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC6179E828E0578400C7C4E0 /* OCFileProviderSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6179E628E0578400C7C4E0 /* OCFileProviderSettings.m */; };
 		DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */ = {isa = PBXBuildFile; fileRef = DC625140225C904700736874 /* NSError+MessageResolution.m */; };
@@ -1292,6 +1295,10 @@
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSidebarViewController.swift; sourceTree = "<group>"; };
 		DC5D9E742496512400BFFE8E /* MessageQueueExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueExample.swift; sourceTree = "<group>"; };
+		DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+NavigationContent.swift"; sourceTree = "<group>"; };
+		DC60F2A729802B0900905EC8 /* NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContent.swift; sourceTree = "<group>"; };
+		DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContentItem.swift; sourceTree = "<group>"; };
+		DC60F2AB29812A9B00905EC8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DC6179E528E0578400C7C4E0 /* OCFileProviderSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderSettings.h; sourceTree = "<group>"; };
 		DC6179E628E0578400C7C4E0 /* OCFileProviderSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderSettings.m; sourceTree = "<group>"; };
 		DC62513F225C904700736874 /* NSError+MessageResolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+MessageResolution.h"; sourceTree = "<group>"; };
@@ -2149,6 +2156,7 @@
 				DC0A359024C0E46800FB58FC /* Cursor Support */,
 				DC0A355124C0E1EF00FB58FC /* Theme */,
 				DC298C9B2934D3FA009FA87F /* Alert View */,
+				DC60F2A429802A7500905EC8 /* Navigation Content */,
 				DCFA5641297573080092C89F /* Browser Navigation Controller */,
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				399EA74425E6575A00B6FF11 /* Notification */,
@@ -2466,6 +2474,17 @@
 				DC9219FB2966179600F538EE /* OCShare+Interactions.swift */,
 			);
 			path = "Data Item Interactions";
+			sourceTree = "<group>";
+		};
+		DC60F2A429802A7500905EC8 /* Navigation Content */ = {
+			isa = PBXGroup;
+			children = (
+				DC60F2AB29812A9B00905EC8 /* README.md */,
+				DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */,
+				DC60F2A729802B0900905EC8 /* NavigationContent.swift */,
+				DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */,
+			);
+			path = "Navigation Content";
 			sourceTree = "<group>";
 		};
 		DC62F56A2925059E0095BB5D /* Connection */ = {
@@ -4338,6 +4357,7 @@
 				DC298CA429362057009FA87F /* AppUserActivity.swift in Sources */,
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
+				DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
 				DC298C9E2934D6D9009FA87F /* AccountAuthenticationUpdater.swift in Sources */,
 				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
@@ -4359,6 +4379,7 @@
 				DCB5D60B25FC14B6004C52D9 /* OCIssue+Extension.swift in Sources */,
 				DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */,
 				DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */,
+				DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC62F569292504510095BB5D /* AccountConnectionPool.swift in Sources */,
 				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
@@ -4451,6 +4472,7 @@
 				DC8E99E8297F3BA700594697 /* ActionTapGestureRecognizer.swift in Sources */,
 				DCB5D56B2861BEBE004AF425 /* SearchViewController.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
+				DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */,
 				DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */,
 				DC62F56C29250DC80095BB5D /* AccountConnectionConsumer.swift in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,

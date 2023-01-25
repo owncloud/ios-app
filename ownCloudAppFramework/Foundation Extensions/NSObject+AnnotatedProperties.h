@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (AnnotatedProperties)
 
+- (id)valueForAnnotatedProperty:(NSString *)annotatedPropertyName withGenerator:(id(^)(void))generator;
+
 - (nullable id)valueForAnnotatedProperty:(NSString *)annotatedPropertyName;
 - (void)setValue:(nullable id)value forAnnotatedProperty:(NSString *)annotatedPropertyName;
 
