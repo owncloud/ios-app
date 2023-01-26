@@ -46,7 +46,7 @@ open class BrowserNavigationItem: NSObject {
 		_viewController = viewController
 		self.builder = builder
 
-		if self.builder == nil, let trimmingSupport = viewController as? BrowserNavigationTrimming  {
+		if self.builder == nil, let trimmingSupport = viewController as? BrowserNavigationTrimming {
 			self.builder = trimmingSupport.browserNavigationBuilder
 		}
 	}

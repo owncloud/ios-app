@@ -190,7 +190,7 @@ public extension UIView {
 		return constraints
 	}
 
-	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil,  maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
+	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil, maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
 		view.translatesAutoresizingMaskIntoConstraints = false
 
 		addSubview(view)

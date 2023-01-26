@@ -531,4 +531,3 @@ public extension CollectionViewCellStyle {
 		}
 	}
 }
-
