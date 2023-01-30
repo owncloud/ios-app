@@ -160,7 +160,7 @@ public class ClientLocationPicker : NSObject {
 			let itemParentLocations = effectiveConflictItems.filter({ (item) -> Bool in
 				return item.location?.parent != nil
 			}).map { (item) -> OCLocation in
-				return item.location!.parent
+				return item.location!.parent!
 			}
 
 			if folderItemLocations.count > 0 {
