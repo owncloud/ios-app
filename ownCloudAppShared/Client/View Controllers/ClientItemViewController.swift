@@ -119,6 +119,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 			})
 
+			// Set .drive based on location.driveID
+			if let driveID = location?.driveID, let core = context.core {
+				context.drive = core.drive(withIdentifier: driveID)
+			}
+
 			// Use inDataSource as queryDatasource if no query was provided
 			if inQuery == nil, let inDataSource {
 				context.queryDatasource = inDataSource
@@ -209,6 +214,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		queryRootItemObservation = query?.observe(\OCQuery.rootItem, options: [], changeHandler: { [weak self] query, change in
 			OnMainThread(inline: true) {
 				self?.clientContext?.rootItem = query.rootItem
+				if self?.location != nil {
+					self?.location = query.rootItem?.location
+					self?.updateLocationBarViewController()
+				}
 				self?.updateNavigationTitleFromContext()
 				self?.refreshEmptyActions()
 			}
@@ -218,7 +227,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Subscribe to singleDriveDatasource for changes, to update driveSectionDataSource
 		singleDriveDatasourceSubscription = singleDriveDatasource?.subscribe(updateHandler: { [weak self] (subscription) in
 			self?.updateAdditionalDriveItems(from: subscription)
-		}, on: .main, trackDifferences: true, performIntialUpdate: true)
+		}, on: .main, trackDifferences: true, performInitialUpdate: true)
 
 		if let queryDatasource = query?.queryResultsDataSource {
 			let emptyFolderMessage = "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
@@ -270,18 +279,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateEmptyItemList(from: subscription)
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}, on: .main, trackDifferences: false, performInitialUpdate: true)
 		}
 
 		// Initialize sort method
 		handleSortMethodChange()
 
-		// Initialize navigation title
-		navigationTitleLabel.font = UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)
-		navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
-		navigationTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-		navigationItem.titleView = navigationTitleLabel
-
+		// Update title
 		updateNavigationTitleFromContext()
 	}
 
@@ -315,24 +319,45 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
 		collectionView.allowsMultipleSelectionDuringEditing = true
+	}
 
-//		navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .bookmarks, primaryAction: UIAction(handler: { [weak self] _ in
-//			self?.splitViewController?.show(.primary)
-//		}))
+	var locationBarViewController: ClientLocationBarController? {
+		willSet {
+			if let locationBarViewController {
+				removeStacked(child: locationBarViewController)
+			}
+		}
+		didSet {
+			if let locationBarViewController {
+				addStacked(child: locationBarViewController, position: .bottom)
+			}
+		}
+	}
+
+	func updateLocationBarViewController() {
+		if let location, let clientContext {
+			self.locationBarViewController = ClientLocationBarController(clientContext: clientContext, location: location)
+		} else {
+			self.locationBarViewController = nil
+		}
 	}
 
 	public override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if let query = query {
+		if let query {
 			clientContext?.core?.start(query)
+		}
+
+		if locationBarViewController == nil {
+			updateLocationBarViewController()
 		}
 	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		if let query = query {
+		if let query {
 			clientContext?.core?.stop(query)
 		}
 	}
@@ -554,7 +579,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 		}
 
-		self.navigationItem.rightBarButtonItems = viewActionButtons
+		navigationItem.navigationContent.add(items: [
+			NavigationContentItem(identifier: "client-actions-right", area: .right, priority: .standard, position: .trailing, items: viewActionButtons)
+		])
 	}
 
 	@objc open func moreBarButtonPressed(_ sender: UIBarButtonItem) {
@@ -570,17 +597,33 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Navigation title
 	var navigationTitle: String? {
 		get {
-			return navigationTitleLabel.text
+			return navigationItem.titleLabel?.text
 		}
 
 		set {
-			navigationTitleLabel.text = newValue
-			navigationItem.title = newValue
+			navigationItem.titleLabelText = newValue
 		}
 	}
 
 	func updateNavigationTitleFromContext() {
-		if let navigationTitle = query?.queryLocation?.isRoot == true ? self.clientContext?.drive?.name : ((self.clientContext?.rootItem as? OCItem)?.name ?? self.query?.queryLocation?.lastPathComponent) {
+		var navigationTitle: String?
+
+		// Set navigation title from location (if provided)
+		if let location {
+			navigationTitle = location.displayName(in: clientContext)
+		}
+
+		// Set navigation title from queryLocation
+		if navigationTitle == nil, let queryLocation = query?.queryLocation {
+			navigationTitle = queryLocation.displayName(in: clientContext)
+		}
+
+		// Set navigation title from rootItem.name
+		if navigationTitle == nil {
+			navigationTitle = (self.clientContext?.rootItem as? OCItem)?.name
+		}
+
+		if let navigationTitle {
 			self.navigationTitle = navigationTitle
 		} else {
 			self.navigationTitle = navigationItem.title
@@ -649,22 +692,14 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	var multiSelectionActionContext: ActionContext?
 	var multiSelectionActionsDatasource: OCDataSourceArray?
 
-	var multiSelectionLeftNavigationItem: UIBarButtonItem?
-	var multiSelectionLeftNavigationItems: [UIBarButtonItem]?
 	var multiSelectionToggleSelectionBarButtonItem: UIBarButtonItem? {
-		willSet {
-			if multiSelectionToggleSelectionBarButtonItem == nil {
-				multiSelectionLeftNavigationItem = navigationItem.leftBarButtonItem
-				multiSelectionLeftNavigationItems = navigationItem.leftBarButtonItems
-			}
-		}
-
 		didSet {
-			if multiSelectionToggleSelectionBarButtonItem == nil {
-				navigationItem.leftBarButtonItem = multiSelectionLeftNavigationItem
-				navigationItem.leftBarButtonItems = multiSelectionLeftNavigationItems
+			if let multiSelectionToggleSelectionBarButtonItem {
+				navigationItem.navigationContent.add(items: [
+					NavigationContentItem(identifier: "multiselect-toggle", area: .left, priority: .high, position: .trailing, items: [ multiSelectionToggleSelectionBarButtonItem ])
+				])
 			} else {
-				navigationItem.leftBarButtonItem = multiSelectionToggleSelectionBarButtonItem
+				navigationItem.navigationContent.remove(itemsWithIdentifier: "multiselect-toggle")
 			}
 		}
 	}
@@ -791,7 +826,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				subscription.terminate()
 				self.selectAllSubscription = nil
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}, on: .main, trackDifferences: false, performInitialUpdate: true)
 		}
 	}
 

@@ -42,10 +42,6 @@ extension OCLocation : DataItemSelectionInteraction {
 
 			viewController.revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
 
-			if let presentable = OCDataRenderer.default.renderItem(self, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-				viewController.navigationTitle = presentable.title
-			}
-
 			return viewController
 		}, push: pushViewController, animated: animated)
 

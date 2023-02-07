@@ -82,7 +82,12 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public func configureLayout() {
 		if usesStackViewRoot, let stackView = stackView {
 			collectionView.translatesAutoresizingMaskIntoConstraints = false
-			stackView.addArrangedSubview(collectionView)
+
+			let safeAreaView = UIView()
+			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
+			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
+
+			stackView.addArrangedSubview(safeAreaView)
 		} else {
 			collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 			view.addSubview(collectionView)
@@ -161,7 +166,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if usesStackViewRoot {
 			createStackView()
 			if let stackView = stackView {
-				view.embed(toFillWith: stackView, enclosingAnchors: view.safeAreaAnchorSet)
+				view.embed(toFillWith: stackView, enclosingAnchors: view.defaultAnchorSet)
 			}
 		}
 	}
@@ -380,7 +385,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		didSet {
 			_sectionsSubscription = sectionsDataSource?.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.updateSections(from: subscription.snapshotResettingChangeTracking(true))
-			}, on: .main, trackDifferences: true, performIntialUpdate: true)
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
 		}
 	}
 

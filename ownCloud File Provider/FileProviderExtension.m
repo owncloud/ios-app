@@ -1033,9 +1033,11 @@
 		thumbnailRequest.progress = [NSProgress progressWithTotalUnitCount:itemIdentifiers.count];
 
 		[thumbnailRequest requestNextThumbnail];
+
+		return (thumbnailRequest.progress);
 	}
 
-	return (thumbnailRequest.progress);
+	return (NSProgress.indeterminateProgress);
 }
 
 #pragma mark - Services

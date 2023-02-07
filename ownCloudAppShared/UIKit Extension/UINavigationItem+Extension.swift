@@ -20,7 +20,8 @@ import UIKit
 
 public extension UINavigationItem {
 	var titleLabel: UILabel? {
-		return titleView as? UILabel
+		let (items, _) = navigationContent.items(withIdentifier: "ios16-truncated-title-fix")
+		return items.first?.titleView as? UILabel
 	}
 
 	var titleLabelText: String? {
@@ -36,7 +37,11 @@ public extension UINavigationItem {
 				navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
 				navigationTitleLabel.textColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 				navigationTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-				titleView = navigationTitleLabel
+				navigationTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
+				navigationContent.add(items: [
+					NavigationContentItem(identifier: "ios16-truncated-title-fix", area: .title, priority: .lowest, position: .leading, titleView: navigationTitleLabel)
+				])
 			}
 
 			titleLabel?.text = newValue

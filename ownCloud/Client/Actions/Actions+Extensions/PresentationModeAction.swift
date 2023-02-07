@@ -34,8 +34,8 @@ class PresentationModeAction: Action {
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
 		if context.items.first?.cloudStatus == .cloudOnly {
 			return .none
-		} else if let hostViewController = context.viewController, type(of: hostViewController) === ClientQueryViewController.self {
-			return .none
+//		} else if let hostViewController = context.viewController, type(of: hostViewController) === ClientQueryViewController.self {
+//			return .none
 		} else if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
 			return .none
 		}

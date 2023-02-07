@@ -46,7 +46,7 @@ public extension UIView {
 		return AnchorSet(leadingAnchor: safeAreaLayoutGuide.leadingAnchor, trailingAnchor: safeAreaLayoutGuide.trailingAnchor, topAnchor: safeAreaLayoutGuide.topAnchor, bottomAnchor: safeAreaLayoutGuide.bottomAnchor, centerXAnchor: safeAreaLayoutGuide.centerXAnchor, centerYAnchor: safeAreaLayoutGuide.centerYAnchor)
 	}
 
-	@discardableResult func embedHorizontally(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
+	@discardableResult func embedHorizontally(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, limitHeight: Bool = false, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
 		var viewIdx : Int = 0
 		var previousView: UIView?
 		var embedConstraints: [NSLayoutConstraint] = []
@@ -78,6 +78,14 @@ public extension UIView {
 				view.topAnchor.constraint(greaterThanOrEqualTo: anchorSet.topAnchor, constant: insets.top),
 				view.bottomAnchor.constraint(lessThanOrEqualTo: anchorSet.bottomAnchor, constant: -insets.bottom)
 			])
+
+			if limitHeight {
+				// Add top/bottom constraints with stricter requirements, but with lower priority, nudging the layout engine to a more compact layout
+				embedConstraints.append(contentsOf: [
+					view.topAnchor.constraint(equalTo: anchorSet.topAnchor, constant: insets.top).with(priority: .defaultHigh),
+					view.bottomAnchor.constraint(equalTo: anchorSet.bottomAnchor, constant: -insets.bottom).with(priority: .defaultHigh)
+				])
+			}
 
 			// - trailing
 			if viewIdx == (views.count-1) {
@@ -182,7 +190,7 @@ public extension UIView {
 		return constraints
 	}
 
-	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil,  maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
+	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil, maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
 		view.translatesAutoresizingMaskIntoConstraints = false
 
 		addSubview(view)

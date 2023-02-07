@@ -16,10 +16,11 @@ It should only be used with dedicated test servers, test data - and test devices
 - support for OC10 sharing is incomplete:
 	- lack of actions for accepted shares
 	- federated shares are not yet included in "Shared with me" view
+- spaces support for Shortcuts
 
 Missing:
 - [x] quick access
-- [ ] proper iPhone support
+- [x] proper iPhone support
 - [ ] static login/branded login UI
 - [ ] state restoration
 - [ ] full inline progress reporting when account databases are updated on first login

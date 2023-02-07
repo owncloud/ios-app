@@ -586,3 +586,9 @@ extension AccountConnection : OCCoreDelegate {
 		}
 	}
 }
+
+public extension NSNotification.Name {
+	static let ClientSyncRecordIDsWithMessagesChanged = NSNotification.Name(rawValue: "client-sync-record-ids-with-messages-changed")
+}
+
+public typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void

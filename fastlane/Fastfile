@@ -836,7 +836,7 @@ end
       codesigning_identity: ENTERPRISE_IDENTITY,
       output_name: ipaName,
       export_method: EXPORT_METHOD,
-      xcargs: "APP_BUILD_FLAGS='" + appBuildFlags + "'",
+      xcargs: "CODE_SIGN_STYLE=Manual APP_BUILD_FLAGS='" + appBuildFlags + "'",
       export_options: {
         method: EXPORT_METHOD,
         provisioningProfiles: {

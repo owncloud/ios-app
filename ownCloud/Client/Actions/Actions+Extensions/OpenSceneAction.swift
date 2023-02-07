@@ -49,10 +49,10 @@ class OpenSceneAction: Action {
 		}
 
 		if UIDevice.current.isIpad {
-			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
-				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
-				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
-			}
+//			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
+//				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+//				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+//			}
 		}
 	}
 

@@ -78,7 +78,7 @@ class DisplayHostViewController: UIPageViewController {
 				self.items = self.applyMediaFilesFilter(items: allItems)
 
 				self.updatePageViewControllerDatasource()
-			}, on: .main, trackDifferences: true, performIntialUpdate: true)
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
 		}
 
 		Theme.shared.register(client: self)

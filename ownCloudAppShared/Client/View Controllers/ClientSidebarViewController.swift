@@ -76,9 +76,16 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 	// MARK: - NavigationRevocationHandler
 	public func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController) {
-		_ = sidebarContext.pushViewControllerToNavigation(context: sidebarContext, provider: { [weak self] context in
-			return self?.provideDefaultViewController()
-		}, push: true, animated: false)
+		if let history = sidebarContext.browserController?.history {
+			// Log.debug("Revoke view controller: \(viewController) \(viewController.navigationItem.titleLabelText)")
+			if let historyItem = history.item(for: viewController) {
+				history.remove(item: historyItem, completion: nil)
+			}
+		} /* else {
+			_ = sidebarContext.pushViewControllerToNavigation(context: sidebarContext, provider: { [weak self] context in
+				return self?.provideDefaultViewController()
+			}, push: true, animated: false)
+		} */
 	}
 
 	// MARK: - Default view (shown if nothing is selected in sidebar)

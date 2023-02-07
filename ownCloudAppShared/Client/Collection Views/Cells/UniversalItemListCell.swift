@@ -20,7 +20,7 @@ import UIKit
 import ownCloudApp
 import ownCloudSDK
 
-public protocol UniversalItemListCellContentProvider {
+public protocol UniversalItemListCellContentProvider: AnyObject {
 	func provideContent(for cell: UniversalItemListCell, context: ClientContext?, configuration: CollectionViewCellConfiguration?, updateContent: @escaping UniversalItemListCell.ContentUpdater) //!< Provides content for cell, completion must be called immediately or - if delayed - via main thread. Helper objects must be stored in .contentProviderUserInfo immediately upon function invocation. If new content is set, .contentProviderUserInfo may be overwritten, so this should only be used to keep a reference to a helper object, but not to retrieve the helper object again. Updates to content can be provided by calling completion repeatedly. However, updates should stop if completion returns false, which indicates that the cell is now presenting other content.
 }
 
@@ -350,6 +350,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.accessibilityLabel = "More".localized
 		button.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
 
+		button.frame = CGRect(x: 0, y: 0, width: 24, height: 24) // Avoid _UITemporaryLayoutWidths auto-layout warnings
 		button.widthAnchor.constraint(equalToConstant: 24).isActive = true
 
 		moreButton = button
@@ -377,6 +378,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.accessibilityLabel = "Reveal".localized
 		button.addTarget(self, action: #selector(revealButtonTapped), for: .primaryActionTriggered)
 
+		button.frame = CGRect(x: 0, y: 0, width: 24, height: 24) // Avoid _UITemporaryLayoutWidths auto-layout warnings
 		button.widthAnchor.constraint(equalToConstant: 24).isActive = true
 
 		revealButton = button
@@ -529,4 +531,3 @@ public extension CollectionViewCellStyle {
 		}
 	}
 }
-

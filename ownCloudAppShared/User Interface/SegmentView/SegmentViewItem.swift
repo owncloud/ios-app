@@ -30,10 +30,13 @@ public class SegmentViewItem: NSObject {
 		case token
 	}
 
+	open weak var segmentView: SegmentView?
+
 	open var style: Style
 	open var icon: UIImage?
 	open var title: String?
 	open var titleTextStyle: UIFont.TextStyle?
+	open var titleTextWeight: UIFont.Weight?
 
 	open var representedObject: AnyObject?
 	open weak var weakRepresentedObject: AnyObject?
@@ -43,16 +46,22 @@ public class SegmentViewItem: NSObject {
 	open var cornerStyle: CornerStyle?
 	open var alpha: CGFloat = 1.0
 
+	open var gestureRecognizers: [UIGestureRecognizer]?
+
 	var _view: UIView?
 	open var view: UIView? {
 		if _view == nil {
 			_view = SegmentViewItemView(with: self)
 			_view?.translatesAutoresizingMaskIntoConstraints = false
+
+			if let gestureRecognizers {
+				_view?.gestureRecognizers = gestureRecognizers
+			}
 		}
 		return _view
 	}
 
-	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil) {
+	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
 		self.style = style
 
 		super.init()
@@ -60,7 +69,9 @@ public class SegmentViewItem: NSObject {
 		self.icon = icon
 		self.title = title
 		self.titleTextStyle = titleTextStyle
+		self.titleTextWeight = titleTextWeight
 		self.representedObject = representedObject
 		self.weakRepresentedObject = weakRepresentedObject
+		self.gestureRecognizers = gestureRecognizers
 	}
 }

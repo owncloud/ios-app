@@ -273,7 +273,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				OnMainThread { [weak self] in
 					self?.hidden = (snapshot.numberOfItems == 0)
 				}
-			}, on: .main, trackDifferences: false, performIntialUpdate: true)
+			}, on: .main, trackDifferences: false, performInitialUpdate: true)
 		}
 	}
 
@@ -325,7 +325,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		if let dataSource = dataSource {
 			dataSourceSubscription = dataSource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.handleListUpdates(from: subscription)
-			}, on: .main, trackDifferences: true, performIntialUpdate: true)
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
 		}
 	}
 
@@ -460,7 +460,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 							let subscription = childrenDataSource.subscribe(updateHandler: { [weak self] (subscription) in
 								// Handle updates
 								self?.handleUpdate(for: subscription, parentItemRef: parentItemRef)
-							}, on: .main, trackDifferences: true, performIntialUpdate: false)
+							}, on: .main, trackDifferences: true, performInitialUpdate: false)
 
 							childrenDataSourceSubscription = subscription
 

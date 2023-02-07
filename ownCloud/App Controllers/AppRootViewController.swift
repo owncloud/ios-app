@@ -39,11 +39,10 @@ open class AppRootViewController: EmbeddingViewController {
 
 	// MARK: - View Controllers
 	var rootContext: ClientContext?
-	var contentSplitViewController: UISplitViewController?
 
 	var leftNavigationController: ThemeNavigationController?
 	var sidebarViewController: ClientSidebarViewController?
-	var contentNavigationController : ThemeNavigationController?
+	var contentBrowserController: BrowserNavigationViewController = BrowserNavigationViewController()
 
 	// MARK: - Message presentation
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
@@ -91,17 +90,12 @@ open class AppRootViewController: EmbeddingViewController {
 		// Add icons
 		AppRootViewController.addIcons()
 
-		// Create content navigation controller ("right" side of split view)
-		let defaultViewController = ClientDefaultViewController()
-
-		contentNavigationController = ThemeNavigationController(rootViewController: defaultViewController)
-		contentNavigationController?.style = .splitViewContent
-		// contentNavigationController?.navigationBar.isTranslucent = false
-
-		rootContext = ClientContext(with: clientContext, rootViewController: self, navigationController: contentNavigationController, alertQueue: alertQueue, modifier: { context in
+		// Create client context, using contentBrowserController to manage content + sidebar
+		rootContext = ClientContext(with: clientContext, rootViewController: self, alertQueue: alertQueue, modifier: { context in
 			context.viewItemHandler = self
 			context.moreItemHandler = self
 			context.bookmarkEditingHandler = self
+			context.browserController = self.contentBrowserController
 		})
 
 		// Build sidebar
@@ -116,19 +110,10 @@ open class AppRootViewController: EmbeddingViewController {
 		})
 
 		// Build split view controller
-		let splitViewController = UISplitViewController(style: .doubleColumn)
-		splitViewController.displayModeButtonVisibility = .always
-		splitViewController.preferredDisplayMode = .oneBesideSecondary
+		contentBrowserController.sidebarViewController = leftNavigationController
 
-		splitViewController.setViewController(leftNavigationController, for: .primary)
-		splitViewController.setViewController(contentNavigationController, for: .secondary)
-
-		splitViewController.view.translatesAutoresizingMaskIntoConstraints = false
-
-		contentSplitViewController = splitViewController
-
-		// Make split view controller the content
-		contentViewController = splitViewController
+		// Make browser navigation view controller the content
+		contentViewController = contentBrowserController
 
 		// Setup app icon badge message count
 		setupAppIconBadgeMessageCount()

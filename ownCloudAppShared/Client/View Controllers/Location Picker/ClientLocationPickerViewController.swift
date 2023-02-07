@@ -161,7 +161,9 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 			currentLocationContext = nil
 		}
 
-		viewController.navigationItem.rightBarButtonItems = rightBarButtonItems
+		viewController.navigationItem.navigationContent.add(items: [
+			NavigationContentItem(identifier: "location-picker-actions-right", area: .right, priority: .high, position: .trailing, items: rightBarButtonItems)
+		])
 	}
 
 	// MARK: - Location tracking and choice
