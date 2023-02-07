@@ -27,10 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	private let delayForLinkResolution = 0.2
 
-	var window: ThemeWindow?
-//	var serverListTableViewController: ServerListTableViewController?
-//	var staticLoginViewController : StaticLoginViewController?
-
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
@@ -45,35 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCHTTPPipelineManager.setupPersistentPipelines()
 
 		// Set up app
-		window = ThemeWindow(frame: UIScreen.main.bounds)
-
 		ThemeStyle.registerDefaultStyles()
 
 		CollectionViewCellProvider.registerStandardImplementations()
-
-//		if VendorServices.shared.isBranded {
-//			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
-//			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
-//			navigationController?.setNavigationBarHidden(true, animated: false)
-//			rootViewController = navigationController
-//		} else {
-//			if OCBookmarkManager.shared.bookmarks.count == 1 {
-//				serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-//			} else {
-//				serverListTableViewController = ServerListTableViewController(style: .plain)
-//			}
-//
-//			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
-//			rootViewController = navigationController
-//		}
-
-		// Only set up window on non-iPad devices and not on macOS 11 (Apple Silicon) which is >= iOS 14
-		if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
-			// do not set the rootViewController for iOS app on Mac
-		} else {
-//			window?.rootViewController = rootViewController!
-//			window?.makeKeyAndVisible()
-		}
 
 		ImportFilesController.removeImportDirectory()
 
@@ -204,27 +174,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-			let url = userActivity.webpageURL else {
-				return false
-		}
-
-		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
-
-		openPrivateLink(url: url, in: window)
-
-		return true
+		// Not applicable here at the app delegate level.
+		return false
 	}
+//		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+//			let url = userActivity.webpageURL else {
+//				return false
+//		}
+//
+//		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
+//
+//		openPrivateLink(url: url, in: window)
+//
+//		return true
+//	}
 
 	// MARK: UISceneSession Lifecycle
-	@available(iOS 13.0, *)
-	func application(_ application: UIApplication,
-					 configurationForConnecting connectingSceneSession: UISceneSession,
-					 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
 		return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
 	}
 
-	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
 	}
 
@@ -244,7 +213,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension UserInterfaceContext : UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
-		return (UIApplication.shared.delegate as? AppDelegate)?.window
+		return provideCurrentWindow()
 	}
 
 	public func provideCurrentWindow() -> UIWindow? {

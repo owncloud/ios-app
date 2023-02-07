@@ -19,45 +19,28 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+	// MARK: - Window
 	var window: ThemeWindow?
 
-	// UIWindowScene delegate
+	// MARK: - AppRootViewController
+	lazy var appRootViewController: AppRootViewController = {
+		return self.buildAppRootViewController()
+	}()
+
+	func buildAppRootViewController() -> AppRootViewController {
+		return AppRootViewController(with: ClientContext())
+	}
+
+	// MARK: - UIWindowSceneDelegate
+	// MARK: Sessions
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		// Set up HTTP pipelines
 		OCHTTPPipelineManager.setupPersistentPipelines()
 
+		// Window and AppRootViewController creation
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
-//			var navigationController: UINavigationController?
-//
-//			if VendorServices.shared.isBranded {
-//				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
-//				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
-//				navigationController?.setNavigationBarHidden(true, animated: false)
-//			} else {
-//				var serverListTableViewController : ServerListTableViewController?
-//				if OCBookmarkManager.shared.bookmarks.count == 1 {
-//					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-//				} else {
-//					serverListTableViewController = ServerListTableViewController(style: .plain)
-//				}
-//
-//				guard let serverListTableViewController = serverListTableViewController else { return }
-//
-//				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
-//
-//				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
-//			}
-			// navigationController = ThemeNavigationController()
-			let appRootViewController = AppRootViewController(with: ClientContext())
-			// navigationController?.viewControllers = [ appRootViewController ]
-
-			// ThemeNavigationController(rootViewController: AppRootViewController(with: ClientContext( )))
-			// window?.rootViewController = navigationController
-			// window?.addSubview((navigationController!.view)!)
 
 			window?.rootViewController = appRootViewController
 			window?.addSubview(appRootViewController.view)
@@ -85,6 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //		}
 	}
 
+	// MARK: Screen foreground/background events
 	private func set(scene: UIScene, inForeground: Bool) {
 		if let windowScene = scene as? UIWindowScene {
 			for window in windowScene.windows {
@@ -103,6 +87,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		self.set(scene: scene, inForeground: false)
 	}
 
+	// MARK: - State restoration
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
 		return scene.userActivity
 	}
