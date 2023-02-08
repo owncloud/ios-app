@@ -237,7 +237,7 @@ extension OCItem : DataItemDropInteraction {
 				for dragItem in dragItems {
 					if let localDataItem = dragItem.localObject as? LocalDataItem {
 						if let item = localDataItem.dataItem as? OCItem, localDataItem.bookmarkUUID == bookmarkUUID, item.driveID == driveID, let itemLocation = item.location {
-							if (item.path == path) || (itemLocation.parent.path == path) {
+							if (item.path == path) || (itemLocation.parent?.path == path) {
 								return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
 							}
 						}

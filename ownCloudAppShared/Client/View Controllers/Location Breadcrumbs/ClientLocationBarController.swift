@@ -72,54 +72,30 @@ open class ClientLocationBarController: UIViewController, Themeable {
 
 	func composeSegments(location: OCLocation, in clientContext: ClientContext) -> [SegmentViewItem] {
 		var segments: [SegmentViewItem] = []
-		var currentLocation = location
 
-		func addSegment(_ segment: SegmentViewItem, location: OCLocation? = nil) {
+		let breadcrumbs = location.breadcrumbs(in: clientContext)
+
+		for breadcrumb in breadcrumbs {
 			if !segments.isEmpty {
 				let seperatorSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "chevron.right"))
 				seperatorSegment.insets.leading = 0
 				seperatorSegment.insets.trailing = 0
-				segments.insert(seperatorSegment, at: 0)
+				segments.append(seperatorSegment)
 			}
 
-			if let location {
+			let segment = SegmentViewItem(with: breadcrumb.icon, title: breadcrumb.title, style: .plain, titleTextStyle: .footnote)
+
+			if breadcrumb.actionBlock != nil {
 				segment.gestureRecognizers = [
 					ActionTapGestureRecognizer(action: { [weak self] _ in
 						if let clientContext = self?.clientContext {
-							_ = (location as DataItemSelectionInteraction).openItem?(from: nil, with: clientContext, animated: true, pushViewController: true, completion: nil)
+							breadcrumb.run(options: [.clientContext : clientContext])
 						}
 					})
 				]
 			}
 
-			segments.insert(segment, at: 0)
-		}
-
-		// Location in reverse
-		if currentLocation.type == .folder {
-			while !currentLocation.isRoot, currentLocation.path != nil {
-				if currentLocation.type == .folder {
-					let folderSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "folder.fill"), title: currentLocation.lastPathComponent, style: .plain, titleTextStyle: .footnote)
-
-					addSegment(folderSegment, location: currentLocation)
-				}
-
-				currentLocation = currentLocation.parent
-			}
-		}
-
-		if let core = clientContext.core {
-			// Drive name
-			if let driveID = location.driveID, let drive = core.drive(withIdentifier: driveID) {
-				let driveSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "square.grid.2x2.fill"), title: drive.name, style: .plain, titleTextStyle: .footnote)
-				addSegment(driveSegment, location: OCLocation(driveID: driveID, path: "/"))
-			}
-
-			// Server name
-			if let bookmark = clientContext.core?.bookmark {
-				let serverSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "server.rack"), title: bookmark.displayName ?? bookmark.shortName, style: .plain, titleTextStyle: .footnote)
-				addSegment(serverSegment, location: (location.driveID == nil) ? OCLocation.legacyRoot : nil)
-			}
+			segments.append(segment)
 		}
 
 		segments.last?.titleTextWeight = .semibold

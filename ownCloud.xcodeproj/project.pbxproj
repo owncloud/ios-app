@@ -295,6 +295,7 @@
 		DC3DDF06287E1C0800E5586D /* UIViewController+HostBundleID.m in Sources */ = {isa = PBXBuildFile; fileRef = DC3DDF03287E1AC200E5586D /* UIViewController+HostBundleID.m */; };
 		DC3DDF07287E1C0E00E5586D /* UIViewController+HostBundleID.h in Headers */ = {isa = PBXBuildFile; fileRef = DC3DDF02287E1AC200E5586D /* UIViewController+HostBundleID.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */; };
+		DC3F0C2529828AE300C832DB /* OCLocation+Breadcrumbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3F0C2429828AE300C832DB /* OCLocation+Breadcrumbs.swift */; };
 		DC3F4522271A23A000ED2383 /* AcknowledgementsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */; };
 		DC4332002472E1B4002DC0E5 /* OCLicenseEMMProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC4332012472E1B4002DC0E5 /* OCLicenseEMMProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC4331FF2472E1B4002DC0E5 /* OCLicenseEMMProvider.m */; };
@@ -1263,6 +1264,7 @@
 		DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadItemsHUDViewController.swift; sourceTree = "<group>"; };
 		DC3DEC7C22AFFE8E00F3352D /* KVOWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOWaiter.swift; sourceTree = "<group>"; };
 		DC3DEC7F22B03AE700F3352D /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
+		DC3F0C2429828AE300C832DB /* OCLocation+Breadcrumbs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLocation+Breadcrumbs.swift"; sourceTree = "<group>"; };
 		DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsTableViewController.swift; sourceTree = "<group>"; };
 		DC422449207CAFAA0006A2A6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollection.swift; sourceTree = "<group>"; };
@@ -2382,7 +2384,7 @@
 				DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */,
 				DC921A0A2968BA4D00F538EE /* ClientSharedByMeViewController.swift */,
 				DC298C862934A405009FA87F /* ClientDefaultViewController.swift */,
-				DC8E99E4297EEB2800594697 /* ClientLocationBarController.swift */,
+				DC3F0C2329828AB500C832DB /* Location Breadcrumbs */,
 				DC298CAA29362534009FA87F /* Location Picker */,
 			);
 			path = "View Controllers";
@@ -2420,6 +2422,15 @@
 				DC3DDF02287E1AC200E5586D /* UIViewController+HostBundleID.h */,
 			);
 			path = "UIKit Extensions";
+			sourceTree = "<group>";
+		};
+		DC3F0C2329828AB500C832DB /* Location Breadcrumbs */ = {
+			isa = PBXGroup;
+			children = (
+				DC8E99E4297EEB2800594697 /* ClientLocationBarController.swift */,
+				DC3F0C2429828AE300C832DB /* OCLocation+Breadcrumbs.swift */,
+			);
+			path = "Location Breadcrumbs";
 			sourceTree = "<group>";
 		};
 		DC422448207CAED60006A2A6 /* Theming */ = {
@@ -3374,8 +3385,8 @@
 		DCFA5641297573080092C89F /* Browser Navigation Controller */ = {
 			isa = PBXGroup;
 			children = (
-				DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */,
 				DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */,
+				DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */,
 				DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */,
 			);
 			path = "Browser Navigation Controller";
@@ -4373,6 +4384,7 @@
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DC298C9F2934D6D9009FA87F /* AccountAuthenticationUpdaterPasswordPromptViewController.swift in Sources */,
 				DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */,
+				DC3F0C2529828AE300C832DB /* OCLocation+Breadcrumbs.swift in Sources */,
 				DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */,
 				DC0A358224C0E44200FB58FC /* TVGImage.swift in Sources */,
 				DC0A357F24C0E43C00FB58FC /* ThemeStyle+DefaultStyles.swift in Sources */,

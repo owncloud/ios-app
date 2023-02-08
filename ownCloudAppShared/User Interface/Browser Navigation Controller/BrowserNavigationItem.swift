@@ -39,6 +39,13 @@ open class BrowserNavigationItem: NSObject {
 		return nil
 	}
 	open var builder: Builder?
+	open var canTrimViewController: Bool {
+		if builder != nil {
+			return true
+		}
+
+		return false
+	}
 
 	init(viewController: UIViewController? = nil, builder: Builder? = nil) {
 		super.init()
@@ -52,7 +59,7 @@ open class BrowserNavigationItem: NSObject {
 	}
 
 	open func trim() {
-		if builder != nil {
+		if canTrimViewController {
 			_viewController = nil
 		}
 	}

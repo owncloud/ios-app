@@ -119,6 +119,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 			})
 
+			// Set .drive based on location.driveID
+			if let driveID = location?.driveID, let core = context.core {
+				context.drive = core.drive(withIdentifier: driveID)
+			}
+
 			// Use inDataSource as queryDatasource if no query was provided
 			if inQuery == nil, let inDataSource {
 				context.queryDatasource = inDataSource
@@ -601,7 +606,24 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	}
 
 	func updateNavigationTitleFromContext() {
-		if let navigationTitle = query?.queryLocation?.isRoot == true ? self.clientContext?.drive?.name : ((self.clientContext?.rootItem as? OCItem)?.name ?? self.query?.queryLocation?.lastPathComponent) {
+		var navigationTitle: String?
+
+		// Set navigation title from location (if provided)
+		if let location {
+			navigationTitle = location.displayName(in: clientContext)
+		}
+
+		// Set navigation title from queryLocation
+		if navigationTitle == nil, let queryLocation = query?.queryLocation {
+			navigationTitle = queryLocation.displayName(in: clientContext)
+		}
+
+		// Set navigation title from rootItem.name
+		if navigationTitle == nil {
+			navigationTitle = (self.clientContext?.rootItem as? OCItem)?.name
+		}
+
+		if let navigationTitle {
 			self.navigationTitle = navigationTitle
 		} else {
 			self.navigationTitle = navigationItem.title

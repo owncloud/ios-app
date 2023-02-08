@@ -7,7 +7,7 @@
  # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
 
-VERSION="1.2.0"
+VERSION="1.2.1"
 
 #Define output formats
 BOLD="$(tput bold)"
@@ -81,7 +81,7 @@ if [ ! -f "$UNSIGNED_IPA" ]; then
 fi
 
 # Get certificate SHA-1
-CERT_SHA_1=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-1" | cut -d: -f 2 | xargs`
+CERT_SHA_1=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-256" | cut -d: -f 2 | xargs`
 # Create temp directory
 mkdir $APPTEMP
 
@@ -96,7 +96,7 @@ else
 	# Convert provisioning profile to plist
 	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
 	# Get provisioning SHA-1
-	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA256" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
   rm -f "$APPTEMP/tmp.plist"
 
 	if [ "$CERT_SHA_1" = "$PROV_SHA_1" ]; then

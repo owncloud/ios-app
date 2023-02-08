@@ -19,45 +19,28 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+	// MARK: - Window
 	var window: ThemeWindow?
 
-	// UIWindowScene delegate
+	// MARK: - AppRootViewController
+	lazy var appRootViewController: AppRootViewController = {
+		return self.buildAppRootViewController()
+	}()
+
+	func buildAppRootViewController() -> AppRootViewController {
+		return AppRootViewController(with: ClientContext())
+	}
+
+	// MARK: - UIWindowSceneDelegate
+	// MARK: Sessions
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		// Set up HTTP pipelines
 		OCHTTPPipelineManager.setupPersistentPipelines()
 
+		// Window and AppRootViewController creation
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
-//			var navigationController: UINavigationController?
-//
-//			if VendorServices.shared.isBranded {
-//				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
-//				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
-//				navigationController?.setNavigationBarHidden(true, animated: false)
-//			} else {
-//				var serverListTableViewController : ServerListTableViewController?
-//				if OCBookmarkManager.shared.bookmarks.count == 1 {
-//					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-//				} else {
-//					serverListTableViewController = ServerListTableViewController(style: .plain)
-//				}
-//
-//				guard let serverListTableViewController = serverListTableViewController else { return }
-//
-//				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
-//
-//				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
-//			}
-			// navigationController = ThemeNavigationController()
-			let appRootViewController = AppRootViewController(with: ClientContext())
-			// navigationController?.viewControllers = [ appRootViewController ]
-
-			// ThemeNavigationController(rootViewController: AppRootViewController(with: ClientContext( )))
-			// window?.rootViewController = navigationController
-			// window?.addSubview((navigationController!.view)!)
 
 			window?.rootViewController = appRootViewController
 			window?.addSubview(appRootViewController.view)
@@ -67,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// Was the app launched with registered URL scheme?
 		if let urlContext = connectionOptions.urlContexts.first {
 			if urlContext.url.matchesAppScheme {
-				openPrivateLink(url: urlContext.url, in: scene)
+			   	openAppSchemeLink(url: urlContext.url, scene: scene)
 			} else {
 				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
@@ -85,6 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //		}
 	}
 
+	// MARK: Screen foreground/background events
 	private func set(scene: UIScene, inForeground: Bool) {
 		if let windowScene = scene as? UIWindowScene {
 			for window in windowScene.windows {
@@ -103,6 +87,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		self.set(scene: scene, inForeground: false)
 	}
 
+	// MARK: - State restoration
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
 		return scene.userActivity
 	}
@@ -147,7 +132,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		if let firstURL = URLContexts.first?.url { // Ensure the set isn't empty
 			if !OCAuthenticationBrowserSessionCustomScheme.handleOpen(firstURL), // No custom scheme URL handling for this URL
 			   firstURL.matchesAppScheme {  // + URL matches app scheme
-				openPrivateLink(url: firstURL, in: scene)
+			   	openAppSchemeLink(url: firstURL, scene: scene)
 			} else {
 				if firstURL.isFileURL, // Ensure the URL is a file URL
 				   ImportFilesController.shared.importAllowed(alertUserOtherwise: true) { // Ensure import is allowed
@@ -165,21 +150,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				return
 		}
 
-		guard let windowScene = scene as? UIWindowScene else { return }
-
-		guard let window =  windowScene.windows.first else { return }
-
-		url.resolveAndPresent(in: window)
+	   	openAppSchemeLink(url: url, scene: scene)
 	}
 
-	private func openPrivateLink(url:URL, in scene:UIScene?) {
-		if url.privateLinkItemID() != nil {
-
-			guard let windowScene = scene as? UIWindowScene else { return }
-
-			guard let window =  windowScene.windows.first else { return }
-
-			url.resolveAndPresent(in: window)
+	private func openAppSchemeLink(url: URL, scene: UIScene? = nil) {
+		if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+			appDelegate.openAppSchemeLink(url: url, scene: scene)
 		}
 	}
 }
