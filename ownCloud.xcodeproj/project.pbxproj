@@ -39,6 +39,8 @@
 		39057AA4233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39057AA7233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		3912208223436EB80026C290 /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3912208123436EB80026C290 /* SortMethod.swift */; };
+		3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */ = {isa = PBXBuildFile; fileRef = 3912D8AB29958BF400EDCB9A /* OCThemeValues.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3912D8AE29958BF400EDCB9A /* OCThemeValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 3912D8AC29958BF400EDCB9A /* OCThemeValues.m */; };
 		391C79A824E186DC00CB6333 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6624D848550000E3F9 /* branding-splashscreen.png */; };
 		3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */; };
@@ -947,6 +949,8 @@
 		3912208123436EB80026C290 /* SortMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		391220922344C30F0026C290 /* ImportPasteboardAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportPasteboardAction.swift; sourceTree = "<group>"; };
 		391220932344C30F0026C290 /* CutAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutAction.swift; sourceTree = "<group>"; };
+		3912D8AB29958BF400EDCB9A /* OCThemeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCThemeValues.h; sourceTree = "<group>"; };
+		3912D8AC29958BF400EDCB9A /* OCThemeValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCThemeValues.m; sourceTree = "<group>"; };
 		392CFEB62705831700631D2B /* LAContext+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		392DDB1324CF024C009E5406 /* ImportFilesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
 		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
@@ -2801,6 +2805,8 @@
 		DCB2C05C250C1ECD001083CA /* Branding */ = {
 			isa = PBXGroup;
 			children = (
+				3912D8AB29958BF400EDCB9A /* OCThemeValues.h */,
+				3912D8AC29958BF400EDCB9A /* OCThemeValues.m */,
 				DC24B27225B9DF31005783E2 /* Branding.m */,
 				DC24B27125B9DF31005783E2 /* Branding.h */,
 				DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */,
@@ -3549,6 +3555,7 @@
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
+				3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
 				DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */,
@@ -4596,6 +4603,7 @@
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DC3DDF06287E1C0800E5586D /* UIViewController+HostBundleID.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
+				3912D8AE29958BF400EDCB9A /* OCThemeValues.m in Sources */,
 				DCD71E8027427463001592C6 /* BuildOptions.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
 				DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */,

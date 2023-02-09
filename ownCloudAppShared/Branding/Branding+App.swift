@@ -42,7 +42,7 @@ extension Branding : BrandingInitialization {
             .helpURL 	  : "https://owncloud.com/docs-guides/",
             .privacyURL 	  : "https://owncloud.org/privacy-policy/",
             .termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
-            .themeJSONURL : "/themes/owncloud/theme.json",
+            //.themeJSONURL : "https://ocis.ocis-web.latest.owncloud.works/themes/owncloud/theme.json",
             .sendFeedbackAddress : "ios-app@owncloud.com",
             .canAddAccount : true,
             .canEditAccount : true,
