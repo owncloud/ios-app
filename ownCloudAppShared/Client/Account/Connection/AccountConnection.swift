@@ -531,18 +531,8 @@ open class AccountConnection: NSObject {
         core?.connection.retrieveThemeJSON(with: URL(string: "https://ocis.ocis-web.latest.owncloud.works/themes/owncloud/theme.json")!, completionHandler: { error, themeValues in
             if error != nil {
                 
-            } else if let themeValues = themeValues, let logoPath = themeValues.logo {
-                print("-->rawJSON \(themeValues.logo)")
-                
-                
-                
-               let remoteIcon = (themeValues.logoResourceRequest().resource as? OCResourceImage)
-                print("-->rawJSON \(remoteIcon)")
-            
-                
+            } else if let themeValues = themeValues {
                 themeValues.retrieveLogo(with: self.core!) { request, error, ongoing, previousResource, newResource in
-                    
-                        print("-->rawJSON newResource:\(newResource) \(error)")
                        let bookmarkUUID = self.bookmark.uuid
                     if !ongoing,
                        let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
@@ -583,13 +573,6 @@ open class AccountConnection: NSObject {
                     }
                 })
                  */
-                
-                /*
-                OCResourceRequestURLItem(URL(string: String(format:"https://ocis.ocis-web.latest.owncloud.works/%@", logoPath)), identifier: nil, version: OCResourceRequestURLItem.daySpecificVersion, structureDescription: "logo", waitForConnectivity: true, change: { [weak self] request, error, ongoing, previousResource, newResource in
-                    
-                    
-                    
-                })*/
             }
         })
     }
