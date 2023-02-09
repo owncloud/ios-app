@@ -497,6 +497,7 @@ open class AccountConnection: NSObject {
 			if connectionStatus == .online {
 				// Connection switched to online - perform actions
 				updateUserAvatar()
+                updateServerLogo()
 			}
 		}
 
@@ -525,6 +526,73 @@ open class AccountConnection: NSObject {
 			core?.vault.resourceManager?.start(avatarRequest)
 		}
 	}
+    
+    func updateServerLogo() {
+        core?.connection.retrieveThemeJSON(with: URL(string: "https://ocis.ocis-web.latest.owncloud.works/themes/owncloud/theme.json")!, completionHandler: { error, themeValues in
+            if error != nil {
+                
+            } else if let themeValues = themeValues, let logoPath = themeValues.logo {
+                print("-->rawJSON \(themeValues.logo)")
+                
+                
+                
+               let remoteIcon = (themeValues.logoResourceRequest().resource as? OCResourceImage)
+                print("-->rawJSON \(remoteIcon)")
+            
+                
+                themeValues.retrieveLogo(with: self.core!) { request, error, ongoing, previousResource, newResource in
+                    
+                        print("-->rawJSON newResource:\(newResource) \(error)")
+                       let bookmarkUUID = self.bookmark.uuid
+                    if !ongoing,
+                       let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
+                       let newResource = newResource as? OCViewProvider {
+                        bookmark.avatar = newResource
+                        OCBookmarkManager.shared.updateBookmark(bookmark)
+                    }
+                }
+                /*
+                self.core?.connection.send(OCHTTPRequest(url: URL(string: String(format:"https://ocis.ocis-web.latest.owncloud.works/%@", logoPath))!), ephermalCompletionHandler: { request, response, error in
+                    print("-->rawJSON \(response?.bodyData)")
+                    if let logoData = response?.bodyData {
+                        let logo = UIImage(data: logoData)
+                        
+                        let ocimage = OCImage()
+                        
+                        ocimage.url = URL(string: String(format:"https://ocis.ocis-web.latest.owncloud.works/%@", logoPath))
+                        ocimage.data = logoData
+                        
+                        ocimage.provideView(for: OCAvatar.defaultSize, in: nil) { view in
+                            let bookmarkUUID = self.bookmark.uuid
+                            if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
+                               let newResource = view as? OCViewProvider {
+                                //OCViewProvider(
+                                bookmark.avatar = newResource
+                                print("-->rawJSON newResource \(newResource)")
+                                OCBookmarkManager.shared.updateBookmark(bookmark)
+                            }
+                        }
+                        //logo.provi
+                        //OCResource(request: <#T##OCResourceRequest#>)
+                        /*
+                         
+                         
+                         
+                             [(id<OCViewProvider>)self.image provideViewForSize:size inContext:context completion:completionHandler];
+                         */
+                    }
+                })
+                 */
+                
+                /*
+                OCResourceRequestURLItem(URL(string: String(format:"https://ocis.ocis-web.latest.owncloud.works/%@", logoPath)), identifier: nil, version: OCResourceRequestURLItem.daySpecificVersion, structureDescription: "logo", waitForConnectivity: true, change: { [weak self] request, error, ongoing, previousResource, newResource in
+                    
+                    
+                    
+                })*/
+            }
+        })
+    }
 
 	// MARK: - Inline Message Center
 	public var messageSelector : MessageSelector?
