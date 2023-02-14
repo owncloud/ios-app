@@ -80,21 +80,37 @@ extension AccountController: DataItemSwipeInteraction {
 	}
 }
 
+extension AccountController {
+	func openInNewWindowUserActivity(with context: ClientContext) -> NSUserActivity? {
+		if let bookmark {
+			let activity = AppStateAction(with: [
+				.connection(with: bookmark, children: [
+					.goToPersonalFolder()
+				])
+			]).userActivity(with: clientContext)
+
+			return activity
+		}
+
+		return nil
+	}
+}
+
 extension AccountController: DataItemContextMenuInteraction {
 	public func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]? {
 		if let hostViewController = context?.originatingViewController ?? context?.rootViewController {
 			var menuItems: [UIMenuElement] = []
 
 			// Open in a new window
-//			if UIDevice.current.isIpad {
-//				let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
-//					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-//						let activity = bookmark.openAccountUserActivity
-//						UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
-//					}
-//				}
-//				menuItems.append(openWindow)
-//			}
+			if UIDevice.current.isIpad {
+				let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
+					if let clientContext = self?.clientContext, let userActivity = self?.openInNewWindowUserActivity(with: clientContext) {
+						UIApplication.shared.requestSceneSessionActivation(nil, userActivity: userActivity, options: nil)
+					}
+				}
+
+				menuItems.append(openWindow)
+			}
 
 			// Edit
 			if VendorServices.shared.canEditAccount {
@@ -136,5 +152,21 @@ extension AccountController: DataItemContextMenuInteraction {
 		}
 
 		return (nil)
+	}
+}
+
+extension AccountController: DataItemDragInteraction {
+	public func provideDragItems(with context: ClientContext?) -> [UIDragItem]? {
+		if let bookmark, let userActivity = openInNewWindowUserActivity(with: clientContext) {
+			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
+			itemProvider.registerObject(userActivity, visibility: .all)
+
+			let dragItem = UIDragItem(itemProvider: itemProvider)
+			dragItem.localObject = bookmark
+
+			return [dragItem]
+		}
+
+		return nil
 	}
 }

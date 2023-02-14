@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-open class AppRootViewController: EmbeddingViewController {
+open class AppRootViewController: EmbeddingViewController, BrowserNavigationViewControllerDelegate, BrowserNavigationBookmarkRestore {
 	var clientContext: ClientContext
 	var controllerConfiguration: AccountController.Configuration
 
@@ -40,9 +40,11 @@ open class AppRootViewController: EmbeddingViewController {
 	// MARK: - View Controllers
 	var rootContext: ClientContext?
 
-	var leftNavigationController: ThemeNavigationController?
-	var sidebarViewController: ClientSidebarViewController?
-	var contentBrowserController: BrowserNavigationViewController = BrowserNavigationViewController()
+	public var leftNavigationController: ThemeNavigationController?
+	public var sidebarViewController: ClientSidebarViewController?
+	public var contentBrowserController: BrowserNavigationViewController = BrowserNavigationViewController()
+
+	private var contentBrowserControllerObserver: NSKeyValueObservation?
 
 	// MARK: - Message presentation
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
@@ -115,6 +117,9 @@ open class AppRootViewController: EmbeddingViewController {
 		// Make browser navigation view controller the content
 		contentViewController = contentBrowserController
 
+		// Observe browserController contentViewController and update sidebar selection accordingly
+		contentBrowserController.delegate = self
+
 		// Setup app icon badge message count
 		setupAppIconBadgeMessageCount()
 	}
@@ -142,6 +147,24 @@ open class AppRootViewController: EmbeddingViewController {
 		super.viewDidDisappear(animated)
 
 		ClientSessionManager.shared.remove(delegate: self)
+	}
+
+	// MARK: - BrowserNavigationViewControllerDelegate
+	public func browserNavigation(viewController: ownCloudAppShared.BrowserNavigationViewController, contentViewControllerDidChange toViewController: UIViewController?) {
+		sidebarViewController?.updateSelection(for: toViewController?.navigationBookmark)
+	}
+
+	// MARK: - BrowserNavigationBookmarkRestore
+	public func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: @escaping ((Error?, UIViewController?) -> Void)) {
+		if let bookmarkUUID = navigationBookmark.bookmarkUUID, let accountController = sidebarViewController?.accountController(for: bookmarkUUID) {
+			if let specialItem = navigationBookmark.specialItem,
+			   let viewController = accountController.provideViewController(for: specialItem, in: context) {
+				completion(nil, viewController)
+				return
+			}
+		}
+
+		completion(NSError(ocError: .insufficientParameters), nil)
 	}
 
 	// MARK: - App Badge: Message Counts
@@ -346,6 +369,48 @@ extension ClientSidebarViewController {
 	// MARK: - Add account
 	func addBookmark() {
 		BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+	}
+
+	// MARK: - Update selection
+	public func section(for bookmarkUUID: UUID) -> AccountControllerSection? {
+		for section in allSections {
+			if let accountControllerSection = section as? AccountControllerSection,
+			   let sectionBookmark = accountControllerSection.accountController.bookmark,
+			   sectionBookmark.uuid == bookmarkUUID {
+				return accountControllerSection
+			}
+		}
+
+		return nil
+	}
+
+	public func accountController(for bookmarkUUID: UUID) -> AccountController? {
+		return section(for: bookmarkUUID)?.accountController
+	}
+
+	public func itemReferences(for itemReferences: [OCDataItemReference], inSectionFor bookmarkUUID: UUID?) -> [ItemRef]? {
+		if let bookmarkUUID, let section = section(for: bookmarkUUID) {
+			return section.collectionViewController?.wrap(references: itemReferences, forSection: section.identifier)
+		}
+
+		return nil
+	}
+
+	func updateSelection(for navigationBookmark: BrowserNavigationBookmark?) {
+		if let sideBarItemRefs = navigationBookmark?.representationSideBarItemRefs,
+		   let bookmarkUUID = navigationBookmark?.bookmarkUUID,
+		   let selectionItemRefs = itemReferences(for: sideBarItemRefs, inSectionFor: bookmarkUUID),
+		   let highlightAction = CollectionViewAction(kind: .highlight(animated: false, scrollPosition: .centeredVertically), itemReferences: selectionItemRefs) {
+			// Highlight all
+		   	addActions([
+		   		highlightAction
+		   	])
+		} else {
+			// Unhighlight all
+			addActions([
+				CollectionViewAction(kind: .unhighlightAll(animated: false))
+			])
+		}
 	}
 }
 

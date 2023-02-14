@@ -278,6 +278,13 @@ extension ActionCell {
 					}
 				}
 
+//				if cellConfiguration.highlight {
+//					if backgroundConfiguration == nil {
+//						backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
+//						backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.darkBrandColor
+//					}
+//				}
+
 				cell.accessories = accessories
 				cell.contentConfiguration = content
 				cell.backgroundConfiguration = backgroundConfiguration

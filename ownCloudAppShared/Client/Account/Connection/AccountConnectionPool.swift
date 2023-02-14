@@ -40,15 +40,17 @@ public class AccountConnectionPool: NSObject {
 		let bookmarkUUID = bookmark.uuid.uuidString
 
 		OCSynchronized(self) {
-			if let existingConnection = connectionsByBookmarkUUID[bookmarkUUID] {
-				connection = existingConnection
-			} else {
-				connection = AccountConnection(bookmark: bookmark)
-				connectionsByBookmarkUUID[bookmarkUUID] = connection
-
-				if let connection {
-					connection.add(consumer: AccountConnectionAuthErrorConsumer(for: connection))
+			OCSynchronized(connectionsByBookmarkUUID) {
+				if let existingConnection = connectionsByBookmarkUUID[bookmarkUUID] {
+					connection = existingConnection
+				} else {
+					connection = AccountConnection(bookmark: bookmark)
+					connectionsByBookmarkUUID[bookmarkUUID] = connection
 				}
+			}
+
+			if let connection {
+				connection.add(consumer: AccountConnectionAuthErrorConsumer(for: connection))
 			}
 		}
 
@@ -59,7 +61,10 @@ public class AccountConnectionPool: NSObject {
 		let waitGroup = DispatchGroup()
 
 		OCSynchronized(self) {
-			let connections = connectionsByBookmarkUUID.values
+			var connections: [AccountConnection] = []
+			OCSynchronized(connectionsByBookmarkUUID) {
+				connections = Array(connectionsByBookmarkUUID.values)
+			}
 
 			for connection in connections {
 				waitGroup.enter()
@@ -73,5 +78,25 @@ public class AccountConnectionPool: NSObject {
 		waitGroup.notify(queue: .main, execute: {
 			completion?()
 		})
+	}
+
+	public var activeConnections: [AccountConnection] {
+		var connections: [AccountConnection] = []
+		OCSynchronized(connectionsByBookmarkUUID) {
+			connections = Array(connectionsByBookmarkUUID.values)
+		}
+
+		var activeConnections: [AccountConnection] = []
+
+		for connection in connections {
+			switch connection.status {
+				case .offline, .noCore: break
+
+				default:
+					activeConnections.append(connection)
+			}
+		}
+
+		return activeConnections
 	}
 }

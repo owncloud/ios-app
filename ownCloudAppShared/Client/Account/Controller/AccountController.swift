@@ -22,6 +22,7 @@ import ownCloudApp
 
 public protocol AccountControllerExtraItems: AccountController {
 	func updateExtraItems(dataSource: OCDataSourceArray)
+	func provideExtraItemViewController(for specialItem: SpecialItem, in context: ClientContext) -> UIViewController?
 }
 
 public extension OCDataItemType {
@@ -68,9 +69,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 	}
 
-	public enum SpecialItem: String {
-		case accountRoot
-
+	public enum SpecialItem: String, CaseIterable {
 		case sharingFolder
 			case sharedWithMe
 			case sharedByMe
@@ -122,14 +121,13 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		consumer = AccountConnectionConsumer()
 
-		specialItemsDataReferences[.sharingFolder] = "\(bookmark.uuid.uuidString)!sharingFolder" as NSString
-		specialItemsDataReferences[.sharedWithMe] = "\(bookmark.uuid.uuidString)!sharedWithMe" as NSString
-		specialItemsDataReferences[.sharedByMe] = "\(bookmark.uuid.uuidString)!sharedByMe" as NSString
-		specialItemsDataReferences[.sharedByLink] = "\(bookmark.uuid.uuidString)!sharedByLink" as NSString
+		let bookmarkUUID = bookmark.uuid
 
-		specialItemsDataReferences[.spacesFolder] = "\(bookmark.uuid.uuidString)!spacesFolder" as NSString
-		specialItemsDataReferences[.quickAccessFolder] = "\(bookmark.uuid.uuidString)!quickAccessFolder" as NSString
-		specialItemsDataReferences[.savedSearchesFolder] = "\(bookmark.uuid.uuidString)!savedSearchesFolder" as NSString
+		for specialItem in SpecialItem.allCases {
+			if let representationSideBarItemRef = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: bookmarkUUID, specialItem: specialItem).representationSideBarItemRef {
+				specialItemsDataReferences[specialItem] = representationSideBarItemRef
+			}
+		}
 
 		legacyAccountRootLocation = OCLocation.legacyRoot
 		legacyAccountRootLocation.bookmarkUUID = bookmark.uuid
@@ -331,12 +329,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Personal Folder, Shared Files + Drives
 			if core.useDrives {
 				// Spaces
-				let spacesDataSource = self.buildTopFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), topItem: .spacesFolder, viewControllerProvider: { context, action in
-					if let context {
-						return AccountControllerSpacesGridViewController(with: context)
-					}
-
-					return nil
+				let spacesDataSource = self.buildTopFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), topItem: .spacesFolder, viewControllerProvider: { [weak self] context, action in
+					return self?.provideViewController(for: .spacesFolder, in: context)
 				})
 
 				if let accountControllerSection = accountControllerSection,
@@ -350,8 +344,6 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				]
 			} else {
 				// OC10 Root folder
-				specialItems[.accountRoot] = legacyAccountRootLocation
-
 				sources = [
 					OCDataSourceArray(items: [legacyAccountRootLocation])
 				]
@@ -365,32 +357,20 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				specialItemsDataSources[.sharingFolder] = sharingFolderDataSource
 
 				if specialItems[.sharedWithMe] == nil {
-					specialItems[.sharedWithMe] = CollectionSidebarAction(with: "Shared with me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), identifier: specialItemsDataReferences[.sharedWithMe], viewControllerProvider: { context, action in
-						if let context {
-							return ClientSharedWithMeViewController(context: context)
-						}
-
-						return nil
+					specialItems[.sharedWithMe] = CollectionSidebarAction(with: "Shared with me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), identifier: specialItemsDataReferences[.sharedWithMe], viewControllerProvider: { [weak self] context, action in
+						return self?.provideViewController(for: .sharedWithMe, in: context)
 					}, cacheViewControllers: false)
 				}
 
 				if specialItems[.sharedByMe] == nil {
-					specialItems[.sharedByMe] = CollectionSidebarAction(with: "Shared by me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { context, action in
-						if let context {
-							return ClientSharedByMeViewController(context: context, byMe: true)
-						}
-
-						return nil
+					specialItems[.sharedByMe] = CollectionSidebarAction(with: "Shared by me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { [weak self] context, action in
+						return self?.provideViewController(for: .sharedByMe, in: context)
 					}, cacheViewControllers: false)
 				}
 
 				if specialItems[.sharedByLink] == nil {
-					specialItems[.sharedByLink] = CollectionSidebarAction(with: "Shared by link".localized, icon: OCSymbol.icon(forSymbolName: "link"), identifier: specialItemsDataReferences[.sharedByLink], viewControllerProvider: { context, action in
-						if let context {
-							return ClientSharedByMeViewController(context: context, byLink: true)
-						}
-
-						return nil
+					specialItems[.sharedByLink] = CollectionSidebarAction(with: "Shared by link".localized, icon: OCSymbol.icon(forSymbolName: "link"), identifier: specialItemsDataReferences[.sharedByLink], viewControllerProvider: { [weak self] context, action in
+						return self?.provideViewController(for: .sharedByLink, in: context)
 					}, cacheViewControllers: false)
 				}
 
@@ -422,7 +402,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				// Favorites
 				if bookmark?.hasCapability(.favorites) == true {
 					if specialItems[.favoriteItems] == nil {
-						specialItems[.favoriteItems] = buildFavoritesSidebarItem()
+						specialItems[.favoriteItems] = buildSidebarSpecialItem(with: "Favorites".localized, icon: OCSymbol.icon(forSymbolName: "star"), for: .favoriteItems)
 					}
 					if let sideBarItem = specialItems[.favoriteItems] {
 						quickAccessItems.append(sideBarItem)
@@ -431,7 +411,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 				// Available offline
 				if specialItems[.availableOfflineItems] == nil {
-					specialItems[.availableOfflineItems] = buildAvailableOfflineItem()
+					specialItems[.availableOfflineItems] = buildSidebarSpecialItem(with: "Available Offline".localized, icon: UIImage(named: "cloud-available-offline"), for: .availableOfflineItems)
 				}
 				if let sideBarItem = specialItems[.availableOfflineItems] {
 					quickAccessItems.append(sideBarItem)
@@ -458,6 +438,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 				for specialItemType in addSpecialItemsTypes {
 					if let item = specialItems[specialItemType] as? OCSavedSearch {
+						if let representationUUID = specialItemsDataReferences[specialItemType] as? String {
+							item.uuid = representationUUID
+						}
 						quickAccessItems.append(item)
 					}
 				}
@@ -531,6 +514,74 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		return (titleSource, folderItem)
 	}
 
+	// MARK: - View controller construction
+	open func provideViewController(for specialItem: SpecialItem, in context: ClientContext?) -> UIViewController? {
+		guard let context else { return nil }
+
+		var viewController: UIViewController?
+
+		switch specialItem {
+			case .sharedWithMe:
+				viewController = ClientSharedWithMeViewController(context: context)
+
+			case .sharedByMe:
+				viewController = ClientSharedByMeViewController(context: context, byMe: true)
+
+			case .sharedByLink:
+				viewController = ClientSharedByMeViewController(context: context, byLink: true)
+
+			case .spacesFolder:
+				viewController = AccountControllerSpacesGridViewController(with: context)
+
+			case .availableOfflineItems:
+				if let availableOfflineFilesDataSource = context.core?.availableOfflineFilesDataSource {
+					let sortedDataSource = SortedItemDataSource(itemDataSource: availableOfflineFilesDataSource)
+
+					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
+					availableOfflineViewController.navigationTitle = "Available Offline".localized
+
+					sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext
+
+					let locationsSection = CollectionViewSection(identifier: "locations", dataSource: context.core?.availableOfflineItemPoliciesDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .insetGrouped), clientContext: context)
+
+					availableOfflineViewController.insert(sections: [ locationsSection ], at: 0)
+
+					availableOfflineViewController.revoke(in: context, when: [ .connectionClosed ])
+
+					viewController = availableOfflineViewController
+				}
+
+			case .favoriteItems:
+				if let favoritesDataSource = context.core?.favoritesDataSource {
+					let favoritesContext = ClientContext(with: context, modifier: { context in
+						context.queryDatasource = favoritesDataSource
+					})
+
+					let sortedDataSource = SortedItemDataSource(itemDataSource: favoritesDataSource)
+
+					let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
+					favoritesViewController.navigationTitle = "Favorites".localized
+
+					sortedDataSource.sortingFollowsContext = favoritesViewController.clientContext
+
+					favoritesViewController.revoke(in: favoritesContext, when: [ .connectionClosed ])
+					viewController = favoritesViewController
+				}
+
+			default:
+				if let extraItemsProvider = self as? AccountControllerExtraItems,
+				   let extraViewController = extraItemsProvider.provideExtraItemViewController(for: specialItem, in: context) {
+				   viewController = extraViewController
+				}
+		}
+
+		if viewController?.navigationBookmark == nil {
+			viewController?.navigationBookmark = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: context.accountConnection?.bookmark.uuid, specialItem: specialItem)
+		}
+
+		return viewController
+	}
+
 	// MARK: - Data sources
 	open var controllerDataSource: OCDataSourceArray
 	open var itemsDataSource: OCDataSourceComposition
@@ -598,58 +649,15 @@ extension AccountController: DataItemSelectionInteraction {
 	}
 }
 
-// MARK: - Favorites
+// MARK: - Special Side Bar Items
 extension AccountController {
-	func buildFavoritesSidebarItem() -> OCDataItem & OCDataItemVersioning {
-		let sideBarItem = CollectionSidebarAction(with: "Favorites".localized, icon: OCSymbol.icon(forSymbolName: "star"), viewControllerProvider: { (context, action) in
-			if let favoritesDataSource = context?.core?.favoritesDataSource {
-				let favoritesContext = ClientContext(with: context, modifier: { context in
-					context.queryDatasource = favoritesDataSource
-				})
-
-			   	let sortedDataSource = SortedItemDataSource(itemDataSource: favoritesDataSource)
-
-				let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
-				favoritesViewController.navigationTitle = "Favorites".localized
-
-				sortedDataSource.sortingFollowsContext = favoritesViewController.clientContext
-
-				favoritesViewController.revoke(in: favoritesContext, when: [ .connectionClosed ])
-				return favoritesViewController
-			}
-
-			return nil
+	func buildSidebarSpecialItem(with title: String, icon: UIImage?, for specialItem: SpecialItem) -> OCDataItem & OCDataItemVersioning {
+		let item = CollectionSidebarAction(with: title, icon: icon, viewControllerProvider: { [weak self] (context, action) in
+			return self?.provideViewController(for: specialItem, in: context)
 		}, cacheViewControllers: false)
 
-		return sideBarItem
-	}
-}
+		item.identifier = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: connection?.bookmark.uuid, specialItem: specialItem).representationSideBarItemRef as? String
 
-// MARK: - Available Offline
-extension AccountController {
-	func buildAvailableOfflineItem() -> OCDataItem & OCDataItemVersioning {
-		let sideBarItem =  CollectionSidebarAction(with: "Available Offline".localized.localized, icon: UIImage(named: "cloud-available-offline"), viewControllerProvider: { (context, action) in
-			if let availableOfflineFilesDataSource = context?.core?.availableOfflineFilesDataSource,
-			   let context {
-			   	let sortedDataSource = SortedItemDataSource(itemDataSource: availableOfflineFilesDataSource)
-
-				let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
-				availableOfflineViewController.navigationTitle = "Available Offline".localized
-
-				sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext
-
-				let locationsSection = CollectionViewSection(identifier: "locations", dataSource: context.core?.availableOfflineItemPoliciesDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .insetGrouped), clientContext: context)
-
-				availableOfflineViewController.insert(sections: [ locationsSection ], at: 0)
-
-				availableOfflineViewController.revoke(in: context, when: [ .connectionClosed ])
-
-				return availableOfflineViewController
-			}
-
-			return nil
-		}, cacheViewControllers: false)
-
-		return sideBarItem
+		return item
 	}
 }

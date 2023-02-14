@@ -198,21 +198,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	// MARK: - App Scheme URL handling
-	open func openAppSchemeLink(url: URL, in inWindow: UIWindow? = nil, scene: UIScene? = nil, autoDelay: Bool = true) {
-		guard let window = inWindow ?? (scene as? UIWindowScene)?.windows.first else { return }
+	open func openAppSchemeLink(url: URL, in inWindow: UIWindow? = nil, clientContext: ClientContext? = nil, autoDelay: Bool = true) {
+		guard let window = inWindow ?? (clientContext?.scene as? UIWindowScene)?.windows.first else { return }
 
 		if UIApplication.shared.applicationState != .background, autoDelay {
 			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
 			// with activities of the just instantiated ServerListTableViewController
 			OnMainThread(after: delayForLinkResolution) {
-				self.openAppSchemeLink(url: url, in: window, autoDelay: false)
+				self.openAppSchemeLink(url: url, in: window, clientContext: clientContext, autoDelay: false)
 			}
 
 			return
 		}
 
 		// App is already running, just start link resolution
-		if openPrivateLink(url: url, in: window) { return }
+		if openPrivateLink(url: url, clientContext: clientContext) { return }
 		if openPostBuild(url: url, in: window) { return }
 	}
 
@@ -298,9 +298,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	// MARK: Private Link
-	private func openPrivateLink(url: URL, in window: UIWindow) -> Bool {
-		if url.privateLinkItemID() != nil {
-			url.resolveAndPresent(in: window)
+	private func openPrivateLink(url: URL, clientContext: ClientContext?) -> Bool {
+		if let clientContext, url.privateLinkItemID != nil {
+			url.resolveAndPresentPrivateLink(with: clientContext)
 			return true
 		}
 

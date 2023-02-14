@@ -123,6 +123,7 @@ public class ClientContext: NSObject {
 	public var rootItem : OCDataItem?
 
 	// MARK: - UI objects
+	public weak var scene: UIScene?
 	public weak var rootViewController: UIViewController?
 	public weak var browserController: BrowserNavigationViewController? // Browser navigation controller to push to
 	public weak var navigationController: UINavigationController? // Navigation controller to push to
@@ -173,7 +174,7 @@ public class ClientContext: NSObject {
 	public typealias PostInitializationModifier = (_ owner: Any?, _ context: ClientContext) -> Void
 	public var postInitializationModifier: PostInitializationModifier?
 
-	public init(with inParent: ClientContext? = nil, accountConnection inAccountConnection: AccountConnection? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, alertQueue inAlertQueue: OCAsyncSequentialQueue? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
+	public init(with inParent: ClientContext? = nil, accountConnection inAccountConnection: AccountConnection? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, scene inScene: UIScene? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, alertQueue inAlertQueue: OCAsyncSequentialQueue? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
 		super.init()
 
 		parent = inParent
@@ -185,6 +186,7 @@ public class ClientContext: NSObject {
 		query = inParent?.query
 		queryDatasource = inParent?.queryDatasource
 
+		scene = inScene ?? inParent?.scene
 		rootViewController = inRootViewController ?? inParent?.rootViewController
 		browserController = inParent?.browserController
 		navigationController = inNavigationController ?? inParent?.navigationController

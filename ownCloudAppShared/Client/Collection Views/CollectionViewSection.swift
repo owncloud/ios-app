@@ -419,7 +419,8 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					cellProvider = CollectionViewCellProvider.providerFor(.presentable)
 				}
 
-				let doHighlight = collectionViewController.highlightItemReference == dataItemRef
+				let doHighlight = (collectionViewController.highlightItemReference == dataItemRef) // ||
+				// 		  (collectionViewController.selectedItemReferences?.contains(collectionItemRef) == true) // Consider setting cell state (selection, etc.) here
 
 				if let cellProvider = cellProvider, let dataSource = contentDataSource {
 					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, highlight: doHighlight, clientContext: clientContext)
@@ -432,8 +433,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				}
 			}
 		}
-
-		#warning("Consider setting cell state (selection, etc.) here")
 
 		return cell
 	}

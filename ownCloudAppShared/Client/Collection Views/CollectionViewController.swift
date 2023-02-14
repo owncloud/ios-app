@@ -294,6 +294,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	var sections: [CollectionViewSection] = []
 	var sectionsByID: [CollectionViewSection.SectionIdentifier : CollectionViewSection] = [:]
 
+	public var allSections: [CollectionViewSection] {
+		return sections
+	}
+
 	private func associate(section: CollectionViewSection) {
 		section.collectionViewController = self
 		sectionsByID[section.identifier] = section
@@ -702,17 +706,55 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	// MARK: - Selection
-	public func select(item: CollectionViewController.ItemRef, withTimeout: TimeInterval? = 0) {
-
-	}
-
-	func performSelection(of item: CollectionViewController.ItemRef, animated: Bool, scrollPosition: UICollectionView.ScrollPosition = .centeredVertically) -> Bool {
-		if let indexPath = collectionViewDataSource.indexPath(for: item) {
-			collectionView.selectItem(at: indexPath, animated: animated, scrollPosition: scrollPosition)
-		}
-
-		return false
-	}
+//	var selectedItemReferences: [ItemRef]?
+//
+//	enum SelectionOperation {
+//		case add
+//		case replace
+//		case toggle
+//		case remove
+//		case clear
+//	}
+//
+//	func recordSelection(ofItemWith itemRef: ItemRef?, operation: SelectionOperation = .replace) {
+//		var effectiveOperation: SelectionOperation = operation
+//
+//		if operation == .toggle, let itemRef {
+//			effectiveOperation = selectedItemReferences?.contains(itemRef) == true ? .remove :. add
+//		}
+//
+//		switch effectiveOperation {
+//			case .add:
+//				if let itemRef {
+//					if selectedItemReferences != nil {
+//						selectedItemReferences?.append(itemRef)
+//					} else {
+//						selectedItemReferences = [ itemRef ]
+//					}
+//				}
+//
+//			case .replace:
+//				if let itemRef {
+//					selectedItemReferences = [ itemRef ]
+//				}
+//
+//			case .remove:
+//				if let itemRef {
+//					selectedItemReferences = selectedItemReferences?.filter({ checkItemRef in
+//						return checkItemRef != itemRef
+//					})
+//				}
+//
+//			case .clear:
+//				selectedItemReferences = nil
+//
+//			default: break
+//		}
+//	}
+//
+//	func recordSelection(ofItemAt indexPath: IndexPath, operation: SelectionOperation = .replace) {
+//		recordSelection(ofItemWith: collectionViewDataSource?.itemIdentifier(for: indexPath), operation: operation)
+//	}
 
 	// MARK: - Collection View Delegate
 	public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -737,6 +779,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
 
+		// recordSelection(ofItemAt: indexPath, operation: .add)
+
 		retrieveItem(at: indexPath, action: { [weak self] record, indexPath, section in
 			// Return early if .selection is not allowed
 			let clientContext = section.clientContext ?? self?.clientContext
@@ -757,6 +801,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 	public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
+
+		// recordSelection(ofItemAt: indexPath, operation: .remove)
 
 		if interaction != .multiselection {
 			return

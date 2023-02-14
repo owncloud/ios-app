@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCSavedSearch : NSObject <NSSecureCoding, OCDataItem, OCDataItemVersioning>
 
-@property(readonly,strong) OCSavedSearchUUID uuid; //!< Unique ID of the saved search
+@property(strong) OCSavedSearchUUID uuid; //!< Unique ID of the saved search
 
 @property(strong) OCSavedSearchScope scope; //!< The scope of the saved search
 

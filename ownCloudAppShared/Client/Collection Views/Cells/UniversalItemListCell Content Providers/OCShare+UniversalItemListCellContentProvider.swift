@@ -86,15 +86,8 @@ extension OCShare: UniversalItemListCellContentProvider {
 		   ((category == .byMe) && isFile) {
 		   	let tokenArray: NSMutableArray = NSMutableArray()
 
-			if let trackItemToken = context?.core?.trackItem(at: itemLocation, trackingHandler: { [weak cell /*, weak context, weak configuration */] error, item, isInitial in
+			if let trackItemToken = context?.core?.trackItem(at: itemLocation, trackingHandler: { [weak cell] error, item, isInitial in
 				if let item, let cell {
-//					OnMainThread {
-//						let (itemContent, _) = item.content(for: cell, thumbnailSize: cell.thumbnailSize, context: context, configuration: configuration)
-//						_ = updateContent(itemContent)
-//
-//						tokenArray.removeAllObjects() // Drop token, end tracking
-//					}
-
 					let updatedContent = UniversalItemListCell.Content(with: content)
 
 					OnMainThread {

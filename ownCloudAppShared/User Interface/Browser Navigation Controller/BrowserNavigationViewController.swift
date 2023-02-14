@@ -19,18 +19,25 @@
 import UIKit
 import ownCloudSDK
 
+public protocol BrowserNavigationViewControllerDelegate: AnyObject {
+	func browserNavigation(viewController: BrowserNavigationViewController, contentViewControllerDidChange: UIViewController?)
+}
+
 open class BrowserNavigationViewController: EmbeddingViewController, Themeable, BrowserNavigationHistoryDelegate {
+
 	var navigationView: UINavigationBar = UINavigationBar()
 	var contentContainerView: UIView = UIView()
 	var contentContainerLidView: UIView = UIView()
 
 	var sideBarSeperatorView: UIView = UIView()
 
-	lazy var history: BrowserNavigationHistory = {
+	lazy open var history: BrowserNavigationHistory = {
 		let history = BrowserNavigationHistory()
 		history.delegate = self
 		return history
 	}()
+
+	weak open var delegate: BrowserNavigationViewControllerDelegate?
 
 	open override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
@@ -270,6 +277,8 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 				self.view.layoutIfNeeded()
 			}
 		}
+
+		delegate?.browserNavigation(viewController: self, contentViewControllerDidChange: contentViewController)
 
 		completion?(true)
 	}

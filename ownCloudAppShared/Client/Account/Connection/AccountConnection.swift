@@ -334,8 +334,10 @@ open class AccountConnection: NSObject {
 	func handleBusyStatus(progress: Progress?) {
 		OnMainThread(inline: true) {
 			// Build rich status
-			self.status = .busy
-			self.richStatus = AccountConnectionRichStatus(kind: .status, progress: progress, status: .busy)
+			if progress != nil { // nil value indicates the busy status has ended 
+				self.status = .busy
+				self.richStatus = AccountConnectionRichStatus(kind: .status, progress: progress, status: .busy)
+			}
 
 			// Distribute event to consumers
 			self.enumerateConsumers { consumer in

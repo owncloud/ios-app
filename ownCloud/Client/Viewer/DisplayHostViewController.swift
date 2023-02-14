@@ -44,22 +44,38 @@ class DisplayHostViewController: UIPageViewController {
 
 	private var playableItems: [OCItem]?
 
+	private var parentFolderQuery: OCQuery?
+
 	private var queryDatasource: OCDataSource?
 	private var queryDatasourceSubscription: OCDataSourceSubscription?
 
 	var progressSummarizer : ProgressSummarizer?
 
 	// MARK: - Init & deinit
-	init(clientContext: ClientContext? = nil, core: OCCore? = nil, selectedItem: OCItem, query: OCQuery? = nil, queryDataSource: OCDataSource? = nil) {
-		self.initialItem = selectedItem
-		self.queryDatasource = queryDataSource ?? clientContext?.queryDatasource
+	init(clientContext inClientContext: ClientContext? = nil, core: OCCore? = nil, selectedItem: OCItem, queryDataSource inQueryDataSource: OCDataSource? = nil) {
+		var clientContext = inClientContext
+
+		initialItem = selectedItem
+		queryDatasource = inQueryDataSource ?? clientContext?.queryDatasource
+
+		if queryDatasource == nil, let parentLocation = selectedItem.location?.parent, let core = clientContext?.core {
+			// If no data source was given, create one for the parent location
+			let query = OCQuery(for: parentLocation)
+			core.start(query)
+
+			parentFolderQuery = query
+			queryDatasource = parentFolderQuery?.queryResultsDataSource
+
+			clientContext = ClientContext(with: inClientContext)
+			clientContext?.queryDatasource = queryDatasource
+		}
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
 		self.clientContext = clientContext
 
-		if let queryDataSource {
-			queryDatasourceSubscription = queryDataSource.subscribe(updateHandler: { [weak self]  subscription in
+		if let queryDatasource {
+			queryDatasourceSubscription = queryDatasource.subscribe(updateHandler: { [weak self]  subscription in
 				guard let self = self, let queryDataSource = self.queryDatasource else {
 					return
 				}
@@ -94,6 +110,10 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 
 		queryDatasourceSubscription?.terminate()
+
+		if let parentFolderQuery {
+			clientContext?.core?.stop(parentFolderQuery)
+		}
 
 		Theme.shared.unregister(client: self)
 	}

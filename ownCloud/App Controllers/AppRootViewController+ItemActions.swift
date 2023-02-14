@@ -24,7 +24,7 @@ extension AppRootViewController: ViewItemAction {
 	public func provideViewer(for item: OCDataItem, context: ClientContext) -> UIViewController? {
 		let queryDatasource = context.queryDatasource ?? context.query?.queryResultsDataSource
 
-		guard let item = item as? OCItem, let queryDatasource, context.core != nil else {
+		guard let item = item as? OCItem, context.core != nil else {
 			return nil
 		}
 

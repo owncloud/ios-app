@@ -113,8 +113,7 @@
 		<string>GetFileIntent</string>
 		<string>PathExistsIntent</string>
 		<string>SaveFileIntent</string>
-		<string>com.owncloud.ios-app.openAccount</string>
-		<string>com.owncloud.ios-app.openItem</string>
+		<string>com.owncloud.captureRestoreActivityType</string>
 	</array>
 	<key>OCAppComponentIdentifier</key>
 	<string>app</string>

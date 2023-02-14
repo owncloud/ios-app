@@ -35,7 +35,7 @@ open class BrowserNavigationHistory {
 
 	open var items: [BrowserNavigationItem] = []
 	open var currentItem: BrowserNavigationItem? {
-		if items.count > 0, position < items.count - 1, position >= 0 {
+		if items.count > 0, position < items.count, position >= 0 {
 			return items[position]
 		}
 

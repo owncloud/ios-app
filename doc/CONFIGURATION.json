@@ -1,20 +1,6 @@
 [
   {
     "autoExpansion" : "none",
-    "category" : "Account",
-    "categoryTag" : "account",
-    "classIdentifier" : "account",
-    "className" : "ownCloud.ServerListTableViewController",
-    "defaultValue" : false,
-    "description" : "Skip \"Account\" screen / automatically open \"Files\" screen after login",
-    "flatIdentifier" : "account.auto-connect",
-    "key" : "auto-connect",
-    "label" : "account.auto-connect",
-    "status" : "supported",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
@@ -36,6 +22,10 @@
         "value" : "com.owncloud.action.copy"
       },
       {
+        "description" : "New document",
+        "value" : "com.owncloud.action.createDocument"
+      },
+      {
         "description" : "Create folder",
         "value" : "com.owncloud.action.createFolder"
       },
@@ -46,6 +36,10 @@
       {
         "description" : "Delete",
         "value" : "com.owncloud.action.delete"
+      },
+      {
+        "description" : "Close Window",
+        "value" : "com.owncloud.action.discardscene"
       },
       {
         "description" : "Duplicate",
@@ -82,6 +76,10 @@
       {
         "description" : "Open in",
         "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Open in a new Window",
+        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Go to page",
@@ -150,6 +148,10 @@
         "value" : "com.owncloud.action.copy"
       },
       {
+        "description" : "New document",
+        "value" : "com.owncloud.action.createDocument"
+      },
+      {
         "description" : "Create folder",
         "value" : "com.owncloud.action.createFolder"
       },
@@ -160,6 +162,10 @@
       {
         "description" : "Delete",
         "value" : "com.owncloud.action.delete"
+      },
+      {
+        "description" : "Close Window",
+        "value" : "com.owncloud.action.discardscene"
       },
       {
         "description" : "Duplicate",
@@ -196,6 +202,10 @@
       {
         "description" : "Open in",
         "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Open in a new Window",
+        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Go to page",
@@ -236,6 +246,61 @@
       {
         "description" : "Upload from your photo library",
         "value" : "com.owncloud.action.uploadphotos"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
+    "description" : "List of all operating system activities that should be excluded from OS share sheets in actions such as Open In.",
+    "flatIdentifier" : "action.excludedSystemActivities",
+    "key" : "excludedSystemActivities",
+    "label" : "action.excludedSystemActivities",
+    "possibleValues" : [
+      {
+        "description" : "Add to reading list",
+        "value" : "com.apple.UIKit.activity.AddToReadingList"
+      },
+      {
+        "description" : "AirDrop",
+        "value" : "com.apple.UIKit.activity.AirDrop"
+      },
+      {
+        "description" : "Assign to contact",
+        "value" : "com.apple.UIKit.activity.AssignToContact"
+      },
+      {
+        "description" : "Copy to pasteboard",
+        "value" : "com.apple.UIKit.activity.CopyToPasteboard"
+      },
+      {
+        "description" : "Mail",
+        "value" : "com.apple.UIKit.activity.Mail"
+      },
+      {
+        "description" : "Markup as PDF",
+        "value" : "com.apple.UIKit.activity.MarkupAsPDF"
+      },
+      {
+        "description" : "Message",
+        "value" : "com.apple.UIKit.activity.Message"
+      },
+      {
+        "description" : "Open in (i)Books",
+        "value" : "com.apple.UIKit.activity.OpenInIBooks"
+      },
+      {
+        "description" : "Print",
+        "value" : "com.apple.UIKit.activity.Print"
+      },
+      {
+        "description" : "Save to camera roll",
+        "value" : "com.apple.UIKit.activity.SaveToCameraRoll"
       }
     ],
     "status" : "advanced",
@@ -289,7 +354,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : false,
+    "defaultValue" : true,
     "description" : "Controls if the app is built for beta or release purposes.",
     "flatIdentifier" : "app.is-beta-build",
     "key" : "is-beta-build",
@@ -317,7 +382,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : false,
+    "defaultValue" : true,
     "description" : "Controls whether a warning should be shown on the first run of a beta version.",
     "flatIdentifier" : "app.show-beta-warning",
     "key" : "show-beta-warning",
@@ -407,6 +472,20 @@
     "label" : "authentication-oauth2.oa2-token-endpoint",
     "status" : "advanced",
     "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OIDC",
+    "categoryTag" : "oidc",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : true,
+    "description" : "If client registration is enabled, but registration fails, controls if the error should be ignored and the default client ID and secret should be used instead.",
+    "flatIdentifier" : "authentication-oauth2.oidc-fallback-on-client-registration-failure",
+    "key" : "oidc-fallback-on-client-registration-failure",
+    "label" : "authentication-oauth2.oidc-fallback-on-client-registration-failure",
+    "status" : "supported",
+    "type" : "bool"
   },
   {
     "autoExpansion" : "none",
@@ -830,8 +909,21 @@
     "categoryTag" : "build",
     "classIdentifier" : "build",
     "className" : "BuildOptions",
+    "description" : "Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier and updates other, directly signing-relevant parts of the Info.plist. With this value set, fastlane needs the provisioning profiles and certificate with the app group identifier. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.",
+    "flatIdentifier" : "build.app-group-identifier",
+    "key" : "app-group-identifier",
+    "label" : "build.app-group-identifier",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Build",
+    "categoryTag" : "build",
+    "classIdentifier" : "build",
+    "className" : "BuildOptions",
     "defaultValue" : "owncloud",
-    "description" : "Name of the URL scheme to use for private links. Must be provided in Branding.plist at build time. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+    "description" : "Name of the URL scheme to use for private links. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
     "flatIdentifier" : "build.custom-app-scheme",
     "key" : "custom-app-scheme",
     "label" : "build.custom-app-scheme",
@@ -845,7 +937,7 @@
     "classIdentifier" : "build",
     "className" : "BuildOptions",
     "defaultValue" : "oc",
-    "description" : "Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+    "description" : "Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
     "flatIdentifier" : "build.custom-auth-scheme",
     "key" : "custom-auth-scheme",
     "label" : "build.custom-auth-scheme",
@@ -858,10 +950,23 @@
     "categoryTag" : "build",
     "classIdentifier" : "build",
     "className" : "BuildOptions",
-    "description" : "A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see doc/BUILD_CUSTOMIZATION.md.",
+    "description" : "A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
     "flatIdentifier" : "build.flags",
     "key" : "flags",
     "label" : "build.flags",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Build",
+    "categoryTag" : "build",
+    "classIdentifier" : "build",
+    "className" : "BuildOptions",
+    "description" : "Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier only. Fastlane does not need the provisioning profile and certificate with the given app group identifer. Needs resigning with the correct provisioning profile and certificate. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.",
+    "flatIdentifier" : "build.oc-app-group-identifier",
+    "key" : "oc-app-group-identifier",
+    "label" : "build.oc-app-group-identifier",
     "status" : "supported",
     "type" : "string"
   },
@@ -937,6 +1042,20 @@
     "label" : "connection.always-request-private-link",
     "status" : "advanced",
     "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "categoryTag" : "security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "description" : "Rule that defines the criteria that need to be met by a hostname other than a bookmark's hostname for the associated certificate to be added to the bookmark, tracked for changes and validated by the same rules as the bookmark's primary certificate. No value (default) or a value of `(0 == 1)` disables this feature. A value of `$hostname like \"*.mycompany.com\"` tracks the certificates for all hosts ending with mycompany.com.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.associated-certificates-tracking-rule",
+    "key" : "associated-certificates-tracking-rule",
+    "label" : "connection.associated-certificates-tracking-rule",
+    "status" : "advanced",
+    "type" : "string"
   },
   {
     "autoExpansion" : "none",
@@ -1025,21 +1144,6 @@
     "flatIdentifier" : "connection.endpoint-status",
     "key" : "endpoint-status",
     "label" : "connection.endpoint-status",
-    "status" : "advanced",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Endpoints",
-    "categoryTag" : "endpoints",
-    "classIdentifier" : "connection",
-    "className" : "OCConnection",
-    "defaultValue" : "index.php/apps/files/api/v1/thumbnail",
-    "description" : "Path of the thumbnail endpoint.",
-    "flags" : 4,
-    "flatIdentifier" : "connection.endpoint-thumbnail",
-    "key" : "endpoint-thumbnail",
-    "label" : "connection.endpoint-thumbnail",
     "status" : "advanced",
     "type" : "string"
   },
@@ -1261,8 +1365,8 @@
   },
   {
     "autoExpansion" : "none",
-    "category" : "Privacy",
-    "categoryTag" : "privacy",
+    "category" : "Connection",
+    "categoryTag" : "connection",
     "classIdentifier" : "core",
     "className" : "OCCore",
     "defaultValue" : true,
@@ -1400,6 +1504,242 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Extensions",
+    "categoryTag" : "extensions",
+    "classIdentifier" : "extensions",
+    "className" : "OCExtensionManager",
+    "defaultValue" : [
+
+    ],
+    "description" : "List of all disallowed extensions. If provided, extensions not listed here are allowed.",
+    "flatIdentifier" : "extensions.disallowed",
+    "key" : "disallowed",
+    "label" : "extensions.disallowed",
+    "possibleValues" : [
+      {
+        "description" : "Extension with the identifier action-timeout-simulator.",
+        "value" : "action-timeout-simulator"
+      },
+      {
+        "description" : "Extension with the identifier auth-race-condition.",
+        "value" : "auth-race-condition"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.background_update.",
+        "value" : "com.owncloud.action.background_update"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.collaborate.",
+        "value" : "com.owncloud.action.collaborate"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.copy.",
+        "value" : "com.owncloud.action.copy"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.createDocument.",
+        "value" : "com.owncloud.action.createDocument"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.createFolder.",
+        "value" : "com.owncloud.action.createFolder"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.cutpasteboard.",
+        "value" : "com.owncloud.action.cutpasteboard"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.delete.",
+        "value" : "com.owncloud.action.delete"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.discardscene.",
+        "value" : "com.owncloud.action.discardscene"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.duplicate.",
+        "value" : "com.owncloud.action.duplicate"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.favorite.",
+        "value" : "com.owncloud.action.favorite"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.importpasteboard.",
+        "value" : "com.owncloud.action.importpasteboard"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.instant_media_upload.",
+        "value" : "com.owncloud.action.instant_media_upload"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.links.",
+        "value" : "com.owncloud.action.links"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.makeAvailableOffline.",
+        "value" : "com.owncloud.action.makeAvailableOffline"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.makeUnavailableOffline.",
+        "value" : "com.owncloud.action.makeUnavailableOffline"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.markup.",
+        "value" : "com.owncloud.action.markup"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.move.",
+        "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.openin.",
+        "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.openscene.",
+        "value" : "com.owncloud.action.openscene"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.pdfpage.",
+        "value" : "com.owncloud.action.pdfpage"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.pending_media_upload.",
+        "value" : "com.owncloud.action.pending_media_upload"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.presentationmode.",
+        "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.rename.",
+        "value" : "com.owncloud.action.rename"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.scan.",
+        "value" : "com.owncloud.action.scan"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.show-exif.",
+        "value" : "com.owncloud.action.show-exif"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.unfavorite.",
+        "value" : "com.owncloud.action.unfavorite"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.unshare.",
+        "value" : "com.owncloud.action.unshare"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.upload.camera_media.",
+        "value" : "com.owncloud.action.upload.camera_media"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.uploadfile.",
+        "value" : "com.owncloud.action.uploadfile"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.uploadphotos.",
+        "value" : "com.owncloud.action.uploadphotos"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.light.",
+        "value" : "com.owncloud.light"
+      },
+      {
+        "description" : "Extension with the identifier five-seconds-of-404.",
+        "value" : "five-seconds-of-404"
+      },
+      {
+        "description" : "Extension with the identifier license.Down.",
+        "value" : "license.Down"
+      },
+      {
+        "description" : "Extension with the identifier license.ISRunLoopThread.",
+        "value" : "license.ISRunLoopThread"
+      },
+      {
+        "description" : "Extension with the identifier license.PocketSVG.",
+        "value" : "license.PocketSVG"
+      },
+      {
+        "description" : "Extension with the identifier license.libzip.",
+        "value" : "license.libzip"
+      },
+      {
+        "description" : "Extension with the identifier license.openssl.",
+        "value" : "license.openssl"
+      },
+      {
+        "description" : "Extension with the identifier license.plcrashreporter.",
+        "value" : "license.plcrashreporter"
+      },
+      {
+        "description" : "Extension with the identifier lookup-table.",
+        "value" : "lookup-table"
+      },
+      {
+        "description" : "Extension with the identifier only-404.",
+        "value" : "only-404"
+      },
+      {
+        "description" : "Extension with the identifier org.owncloud.image.",
+        "value" : "org.owncloud.image"
+      },
+      {
+        "description" : "Extension with the identifier org.owncloud.media.",
+        "value" : "org.owncloud.media"
+      },
+      {
+        "description" : "Extension with the identifier org.owncloud.pdfViewer.default.",
+        "value" : "org.owncloud.pdfViewer.default"
+      },
+      {
+        "description" : "Extension with the identifier org.owncloud.ql_preview.",
+        "value" : "org.owncloud.ql_preview"
+      },
+      {
+        "description" : "Extension with the identifier org.owncloud.webview.",
+        "value" : "org.owncloud.webview"
+      },
+      {
+        "description" : "Extension with the identifier recovering-apm.",
+        "value" : "recovering-apm"
+      },
+      {
+        "description" : "Extension with the identifier reject-downloads-500.",
+        "value" : "reject-downloads-500"
+      },
+      {
+        "description" : "Extension with the identifier simple-apm.",
+        "value" : "simple-apm"
+      },
+      {
+        "description" : "Extension with the identifier web-finger.",
+        "value" : "web-finger"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "FileProvider",
+    "categoryTag" : "fileprovider",
+    "classIdentifier" : "fileprovider",
+    "className" : "OCFileProviderSettings",
+    "defaultValue" : true,
+    "description" : "Controls whether the account content is available to other apps via File Provider / Files.app.",
+    "flatIdentifier" : "fileprovider.browseable",
+    "key" : "browseable",
+    "label" : "fileprovider.browseable",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Connection",
     "categoryTag" : "connection",
     "classIdentifier" : "host-simulator",
@@ -1412,6 +1752,14 @@
     "key" : "active-simulations",
     "label" : "host-simulator.active-simulations",
     "possibleValues" : [
+      {
+        "description" : "Lets all MOVE/COPY/DELETE/PUT requests fail with a timeout error.",
+        "value" : "action-timeout-simulator"
+      },
+      {
+        "description" : "Responds to all .well-known/webfinger requests with server-instance responses.",
+        "value" : "auth-race-condition"
+      },
       {
         "description" : "Return status code 404 for every request for the first five seconds.",
         "value" : "five-seconds-of-404"
@@ -1431,6 +1779,10 @@
       {
         "description" : "Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.",
         "value" : "simple-apm"
+      },
+      {
+        "description" : "Responds to all .well-known/webfinger requests with server-instance responses.",
+        "value" : "web-finger"
       }
     ],
     "status" : "debugOnly",
@@ -1490,7 +1842,7 @@
     "key" : "vacuum-sync-anchor-ttl",
     "label" : "item-policy.vacuum-sync-anchor-ttl",
     "status" : "debugOnly",
-    "type" : "bool"
+    "type" : "int"
   },
   {
     "autoExpansion" : "none",
@@ -1765,6 +2117,21 @@
     "classIdentifier" : "log",
     "className" : "OCLogger",
     "defaultValue" : true,
+    "description" : "Controls whether messages spanning more than one line should be logged as a single line, after replacing new line characters with \"\\n\".",
+    "flags" : 4,
+    "flatIdentifier" : "log.replace-newline",
+    "key" : "replace-newline",
+    "label" : "log.replace-newline",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Logging",
+    "categoryTag" : "logging",
+    "classIdentifier" : "log",
+    "className" : "OCLogger",
+    "defaultValue" : false,
     "description" : "Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.",
     "flags" : 4,
     "flatIdentifier" : "log.single-lined",
@@ -1864,6 +2231,27 @@
     "categoryTag" : "passcode",
     "classIdentifier" : "passcode",
     "className" : "AppLockSettings",
+    "defaultValue" : {
+      "com.air-watch.boxer" : {
+        "allow" : false
+      },
+      "default" : {
+        "allow" : true
+      }
+    },
+    "description" : "Controls the  biometrical unlock availability in the share sheet, with per-app level control.",
+    "flatIdentifier" : "passcode.share-sheet-biometrical-unlock-by-app",
+    "key" : "share-sheet-biometrical-unlock-by-app",
+    "label" : "passcode.share-sheet-biometrical-unlock-by-app",
+    "status" : "advanced",
+    "type" : "dictionary"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "AppLockSettings",
     "defaultValue" : false,
     "description" : "Controls wether the biometrical unlock will be enabled automatically.",
     "flatIdentifier" : "passcode.use-biometrical-unlock",
@@ -1871,6 +2259,22 @@
     "label" : "passcode.use-biometrical-unlock",
     "status" : "advanced",
     "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "categoryTag" : "security",
+    "classIdentifier" : "post-build",
+    "className" : "OCClassSettingsFlatSourcePostBuild",
+    "defaultValue" : [
+
+    ],
+    "description" : "List of settings (as flat identifiers) that are allowed to be changed post-build via the app's URL scheme. Including a value of \"*\" allows any setting to be changed. Defaults to an empty array (equalling not allowed). ",
+    "flatIdentifier" : "post-build.allowed-settings",
+    "key" : "allowed-settings",
+    "label" : "post-build.allowed-settings",
+    "status" : "advanced",
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
@@ -1896,6 +2300,42 @@
     "key" : "lastSeenReleaseNotesVersion",
     "label" : "releasenotes.lastSeenReleaseNotesVersion",
     "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "server-locator",
+    "className" : "OCServerLocator",
+    "description" : "Lookup table that maps users to server URLs",
+    "flatIdentifier" : "server-locator.lookup-table",
+    "key" : "lookup-table",
+    "label" : "server-locator.lookup-table",
+    "status" : "advanced",
+    "type" : "dictionary"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "server-locator",
+    "className" : "OCServerLocator",
+    "description" : "Use Server Locator",
+    "flatIdentifier" : "server-locator.use",
+    "key" : "use",
+    "label" : "server-locator.use",
+    "possibleValues" : [
+      {
+        "description" : "Locate server via lookup table. Keys can match against the beginning (f.ex. \"begins:bob@\"), end (f.ex. \"ends:@owncloud.org\") or regular expression (f.ex. \"regexp:\")",
+        "value" : "lookup-table"
+      },
+      {
+        "description" : "Locate server via Webfinger service-instance relation (http://webfinger.owncloud/rel/server-instance) using the entered/provided server URL",
+        "value" : "web-finger"
+      }
+    ],
+    "status" : "advanced",
     "type" : "string"
   },
   {

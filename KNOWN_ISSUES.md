@@ -22,15 +22,15 @@ Missing:
 - [x] quick access
 - [x] proper iPhone support
 - [ ] static login/branded login UI
-- [ ] state restoration
+- [x] state restoration
 - [ ] full inline progress reporting when account databases are updated on first login
 - [ ] progress reporting in active connections
 - [x] migration from the Legacy app clarified: the feature was removed
-- [ ] iPadOS: opening an account in a new window
-	- by context menu (openAccountInWindow)
-	- by drag and drop (see ServerListTableViewController: UITableViewDragDelegate)
-- [ ] account auto connect (also account.auto-connect in ServerListTableViewController)
-- [ ] opening private links (display(itemWithID…:…))
+- [x] iPadOS: opening an account in a new window
+	- [x] by context menu (openAccountInWindow)
+	- [x] by drag and drop (see ServerListTableViewController: UITableViewDragDelegate)
+- [x] account auto connect (also account.auto-connect in ServerListTableViewController) -> no longer necessary, handled by state restoration
+- [x] opening private links (display(itemWithID…:…))
 - [x] account issue handling
 - [x] functional share extension
 - [ ] full themeing/branding support
@@ -38,17 +38,17 @@ Missing:
 
 Jesus:
 - [ ] Presentation view after installing is missing
-- [ ] The icon to hide/show the sidebar is missing in portrait mode.
+- [x] The icon to hide/show the sidebar is missing in portrait mode. -> resolved by BrowserNavigation replacement of UINavigationController
 - [x] Adding an oCIS account with existing custom spaces makes the app freezes and then crashes
 - [x] If an space is browsed and new space image is added in the web client, app crashes
-- [ ] "Open in new window" option does not work. It does nothing after clicking
+- [x] "Open in new window" option does not work. It does nothing after clicking
 - [x] I miss the option to "Select All" and "Deselect All" in multiselection
 - [x] "Copy" and "Move" operations show empty folder picker. No way to consolidate.
 - [ ] "Cut"/"Paste" only working in space scope
 - [ ] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
 
 Matthias:
-- [?] Selecting an OC10 account's root folder twice results in an empty list
+- [x] Selecting an OC10 account's root folder twice results in an empty list -> not reproducible in latest builds
 
 Michael:
 - [x] Account deletion by swipe doesn't work
@@ -63,10 +63,10 @@ Michael:
 - pre-population of accounts using infinite PROPFIND is not supported
 
 # Evolution roadmap
-- collection views
+- [x] collection views
 	- [x] support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
-	- ItemListCell: replace manual composition of info line below name with SegmentView
-		- allows to show different content there, f.ex. Space and Folder in search
+	- [x] ItemListCell: replace manual composition of info line below name with SegmentView
+		- [x] allows to show different content there, f.ex. Space and Folder in search
 
 - [x] location picker replaces folder picker
 	- [x] supports picking
