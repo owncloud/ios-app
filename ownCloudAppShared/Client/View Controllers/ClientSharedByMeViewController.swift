@@ -47,11 +47,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 		super.viewDidLoad()
 
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource) -> CollectionViewSection {
-			let headerView = ComposedMessageView(elements: [
-				.spacing(10),
-				.text(title, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
-			])
-			// headerView.elementInsets = .zero
+			let headerView = ComposedMessageView.sectionHeader(titled: title)
 
 			compositionDataSource.addSources([
 				OCDataSourceArray(items: [ headerView ]),

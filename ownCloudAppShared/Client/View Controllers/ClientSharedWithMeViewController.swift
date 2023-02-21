@@ -45,11 +45,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource, queryDataSource: OCDataSource? = nil) -> CollectionViewSection {
 			var sectionContext = clientContext
 
-			let headerView = ComposedMessageView(elements: [
-				.spacing(10),
-				.text(title, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
-			])
-			// headerView.elementInsets = .zero
+			let headerView = ComposedMessageView.sectionHeader(titled: title)
 
 			compositionDataSource.addSources([
 				OCDataSourceArray(items: [ headerView ]),

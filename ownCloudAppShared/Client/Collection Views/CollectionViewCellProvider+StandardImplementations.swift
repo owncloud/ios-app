@@ -32,6 +32,7 @@ public extension CollectionViewCellProvider {
 		// Register UniversalItemListCell based cell providers
 		OCItem.registerUniversalCellProvider()		// Cell providers for .item
 		OCShare.registerUniversalCellProvider()		// Cell providers for .share
+		OCItemPolicy.registerUniversalCellProvider()	// Cell providers for .itemPolicy
 
 		// Register cell providers for .presentable
 		registerPresentableCellProvider()

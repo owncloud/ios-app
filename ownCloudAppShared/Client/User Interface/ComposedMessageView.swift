@@ -537,4 +537,15 @@ public extension ComposedMessageView {
 
 		return infoBoxView
 	}
+
+	static func sectionHeader(titled title: String) -> ComposedMessageView {
+		let headerView = ComposedMessageView(elements: [
+			.spacing(10),
+			.text(title, style: .system(textStyle: .title3, weight: .bold), alignment: .leading, insets: .zero)
+		])
+		headerView.elementInsets.leading = 15
+		headerView.elementInsets.bottom = 5
+
+		return headerView
+	}
 }

@@ -124,7 +124,7 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 				context.query = query
 			})
 
-			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true)
+			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: "No matches".localized, emptyItemListMessageLocalized: "No items found matching the search criteria.".localized)
 			if self.useNameAsTitle == true {
 				viewController.navigationTitle = sideBarDisplayName
 			} else {

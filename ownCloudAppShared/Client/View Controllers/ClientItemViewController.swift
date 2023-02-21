@@ -69,7 +69,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	private var viewControllerUUID: UUID
 
-	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
+	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false, emptyItemListIcon: UIImage? = nil, emptyItemListTitleLocalized: String? = nil, emptyItemListMessageLocalized: String? = nil) {
 		inQuery?.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
 		_itemsDatasource = inDataSource
@@ -229,12 +229,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			self?.updateAdditionalDriveItems(from: subscription)
 		}, on: .main, trackDifferences: true, performInitialUpdate: true)
 
-		if let queryDatasource = query?.queryResultsDataSource {
-			let emptyFolderMessage = "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
+		if let queryDatasource = query?.queryResultsDataSource ?? inDataSource {
+			let emptyFolderMessage = emptyItemListMessageLocalized ?? "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
 
 			emptyItemListItem = ComposedMessageView(elements: [
-				.image(OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.text("No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+				.image(emptyItemListIcon ?? OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.text(emptyItemListTitleLocalized ?? "No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
 				.spacing(5),
 				.text(emptyFolderMessage, style: .systemSecondary(textStyle: .body), alignment: .centered)
 			])
@@ -435,7 +435,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						} else if let numberOfItems = numberOfItems, numberOfItems > 0 {
 							self.contentState = .hasContent
 							self.folderStatistics = snapshot?.specialItems?[.folderStatistics] as? OCStatistic
-						} else if (numberOfItems == nil) || (self.query?.rootItem == nil) {
+						} else if (numberOfItems == nil) || ((self.query?.rootItem == nil) && (self.query != nil) && (self.query?.isCustom != true)) {
 							self.contentState = .loading
 						} else {
 							self.contentState = .empty

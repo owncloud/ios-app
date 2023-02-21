@@ -49,6 +49,18 @@ extension OCLocation : DataItemSelectionInteraction {
 
 		return locationViewController
 	}
+
+	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+		if let core = context?.core {
+			if let item = try? core.cachedItem(at: self) {
+				return item.revealItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
+			}
+		}
+
+		completion?(true)
+
+		return nil
+	}
 }
 
 // MARK: - BrowserNavigationBookmark (re)store
