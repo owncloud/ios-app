@@ -212,6 +212,57 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	// MARK: - Cover view
+	var coverRootView: UIView? {
+		willSet {
+			coverRootView?.removeFromSuperview()
+		}
+
+		didSet {
+			if let coverRootView {
+				view.embed(toFillWith: coverRootView)
+			}
+		}
+	}
+
+	public enum CoverViewLayout {
+		case fill
+		case center
+		case top
+	}
+
+	open func setCoverView(_ coverView: UIView?, layout: CoverViewLayout) {
+		if view != nil {
+			if let coverView {
+				let rootView = UIView()
+				rootView.translatesAutoresizingMaskIntoConstraints = false
+				rootView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+
+				switch layout {
+					case .fill:
+						rootView.embed(toFillWith: coverView)
+
+					case .center:
+						rootView.embed(centered: coverView, enclosingAnchors: rootView.safeAreaAnchorSet)
+
+					case .top:
+						rootView.addSubview(coverView)
+						NSLayoutConstraint.activate([
+							coverView.leadingAnchor.constraint(greaterThanOrEqualTo: rootView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+							coverView.trailingAnchor.constraint(greaterThanOrEqualTo: rootView.safeAreaLayoutGuide.trailingAnchor, constant: 20),
+							coverView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
+							coverView.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: 20),
+							coverView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+						])
+				}
+
+				self.coverRootView = rootView
+			} else {
+				self.coverRootView = nil
+			}
+		}
+	}
+
 	// MARK: - Collection View Datasource
 	open func configureDataSource() {
 		dataSourceWorkQueue.executor = { (job, completionHandler) in
@@ -1132,6 +1183,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		collectionView.backgroundColor = collection.tableBackgroundColor
+		coverRootView?.backgroundColor = collection.tableBackgroundColor
 	}
 }
 

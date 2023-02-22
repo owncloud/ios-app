@@ -146,6 +146,12 @@ public class ComposedMessageElement: NSObject {
 
 					NSLayoutConstraint.activate(constraints)
 
+					add(applier: { [weak self] theme, collection, event in
+						if let self = self, let imageView = self.imageView {
+							imageView.tintColor = collection.tintColor
+						}
+					})
+
 					_view = rootView
 
 				case .divider:

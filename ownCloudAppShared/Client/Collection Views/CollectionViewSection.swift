@@ -253,7 +253,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
 
 	public var animateDifferences: Bool? //!< If not specified, falls back to collectionViewController.animateDifferences
-	public var hidden : Bool = false {
+	public var hidden: Bool = false {
 		didSet {
 			if hidden != oldValue {
 				collectionViewController?.updateSource()
@@ -261,19 +261,17 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		}
 	}
 
-	private var _hideIfEmptyDataSourceSubscription: OCDataSourceSubscription?
+	private var _hideIfEmptyDataSourceCondition: DataSourceCondition?
 	public var hideIfEmptyDataSource: OCDataSource? {
 		willSet {
-			_hideIfEmptyDataSourceSubscription = nil
+			_hideIfEmptyDataSourceCondition = nil
 		}
 		didSet {
-			_hideIfEmptyDataSourceSubscription = hideIfEmptyDataSource?.subscribe(updateHandler: { [weak self] subscription in
-				let snapshot = subscription.snapshotResettingChangeTracking(true)
-
+			_hideIfEmptyDataSourceCondition = DataSourceCondition(.empty, with: hideIfEmptyDataSource, initial: true, action: { condition in
 				OnMainThread { [weak self] in
-					self?.hidden = (snapshot.numberOfItems == 0)
+					self?.hidden = (condition.fulfilled == true)
 				}
-			}, on: .main, trackDifferences: false, performInitialUpdate: true)
+			})
 		}
 	}
 
@@ -299,7 +297,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	deinit {
 		dataSourceSubscription?.terminate()
-		_hideIfEmptyDataSourceSubscription?.terminate()
 	}
 
 	// MARK: - Expand/Collapse

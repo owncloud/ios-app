@@ -400,7 +400,7 @@ extension ClientSidebarViewController {
 		if let sideBarItemRefs = navigationBookmark?.representationSideBarItemRefs,
 		   let bookmarkUUID = navigationBookmark?.bookmarkUUID,
 		   let selectionItemRefs = itemReferences(for: sideBarItemRefs, inSectionFor: bookmarkUUID),
-		   let highlightAction = CollectionViewAction(kind: .highlight(animated: false, scrollPosition: .centeredVertically), itemReferences: selectionItemRefs) {
+		   let highlightAction = CollectionViewAction(kind: .highlight(animated: false, scrollPosition: []), itemReferences: selectionItemRefs) {
 			// Highlight all
 		   	addActions([
 		   		highlightAction

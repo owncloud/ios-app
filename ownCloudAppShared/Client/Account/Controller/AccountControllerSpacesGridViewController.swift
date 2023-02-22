@@ -17,9 +17,11 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class AccountControllerSpacesGridViewController: CollectionViewController, ViewControllerPusher {
 	var spacesSection: CollectionViewSection
+	var noSpacesCondition: DataSourceCondition?
 
 	init(with context: ClientContext) {
 		let gridContext = ClientContext(with: context)
@@ -35,6 +37,18 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 		self.revoke(in: gridContext, when: [ .connectionClosed ])
 
 		navigationItem.title = "Spaces".localized
+
+		if let projectDrivesDataSource = context.core?.projectDrivesDataSource {
+			let noSpacesMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "square.grid.2x2")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.text("No spaces".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
+			])
+
+			noSpacesCondition = DataSourceCondition(.empty, with: projectDrivesDataSource, initial: true, action: { [weak self] condition in
+				let coverView = (condition.fulfilled == true) ? noSpacesMessage : nil
+				self?.setCoverView(coverView, layout: .top)
+			})
+		}
 	}
 
 	required public init?(coder: NSCoder) {

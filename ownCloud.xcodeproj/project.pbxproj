@@ -435,6 +435,7 @@
 		DCBAEAE229A55D5A00BFF393 /* ViewSupplementaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE129A55D5A00BFF393 /* ViewSupplementaryCell.swift */; };
 		DCBAEAE429A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE329A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift */; };
 		DCBAEAE829A568D500BFF393 /* TitleSupplementaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */; };
+		DCBAEAED29A627D900BFF393 /* DataSourceCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */; };
 		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
 		DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */; };
 		DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -1438,6 +1439,7 @@
 		DCBAEAE129A55D5A00BFF393 /* ViewSupplementaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSupplementaryCell.swift; sourceTree = "<group>"; };
 		DCBAEAE329A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewSupplementaryCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
 		DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryCell.swift; sourceTree = "<group>"; };
+		DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCondition.swift; sourceTree = "<group>"; };
 		DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+AppExtension.swift"; sourceTree = "<group>"; };
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1858,6 +1860,7 @@
 			children = (
 				DCD68A2B291D973E00993FF5 /* Account */,
 				DC46F3CF284546DA00038880 /* Data Item Interactions */,
+				DCBAEAEB29A627C100BFF393 /* Data Source Conditions */,
 				DC82664028168DAA00F91F7D /* Context */,
 				DCB6B1FE292CF2E500D27573 /* Navigation Revocation */,
 				DCEAF0842808250E00980B6D /* Collection Views */,
@@ -2893,6 +2896,14 @@
 				DCBAEAE129A55D5A00BFF393 /* ViewSupplementaryCell.swift */,
 			);
 			path = "Supplementary Cells";
+			sourceTree = "<group>";
+		};
+		DCBAEAEB29A627C100BFF393 /* Data Source Conditions */ = {
+			isa = PBXGroup;
+			children = (
+				DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */,
+			);
+			path = "Data Source Conditions";
 			sourceTree = "<group>";
 		};
 		DCBF0A5E2280393A00465530 /* PDF */ = {
@@ -4408,6 +4419,7 @@
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,
 				DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */,
+				DCBAEAED29A627D900BFF393 /* DataSourceCondition.swift in Sources */,
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DCFA9CAF2987E14B00004F24 /* BrowserNavigationBookmark.swift in Sources */,
 				DC298C9F2934D6D9009FA87F /* AccountAuthenticationUpdaterPasswordPromptViewController.swift in Sources */,

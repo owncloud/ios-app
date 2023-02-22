@@ -163,7 +163,6 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Empty folder";
 "No contents" = "No contents";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
 "This folder is empty." = "This folder is empty.";
