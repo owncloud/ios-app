@@ -543,21 +543,24 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 					sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext
 
-					let locationsHeaderView = ComposedMessageView.sectionHeader(titled: "Locations".localized)
-					let filesHeaderView = ComposedMessageView.sectionHeader(titled: "Downloaded Files".localized)
-
 					let availableOfflineItemPoliciesDataSource = core.availableOfflineItemPoliciesDataSource
 
-					let composedDataSource = OCDataSourceComposition(sources: [
-						OCDataSourceArray(items: [locationsHeaderView]),
-						availableOfflineItemPoliciesDataSource,
-						OCDataSourceArray(items: [filesHeaderView])
-					])
+					let locationsSection = CollectionViewSection(identifier: "locations", dataSource: availableOfflineItemPoliciesDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0)), clientContext: context)
 
-					let locationsSection = CollectionViewSection(identifier: "locations", dataSource: composedDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain), clientContext: context)
 					locationsSection.hideIfEmptyDataSource = availableOfflineFilesDataSource
+					locationsSection.boundarySupplementaryItems = [
+						.title("Locations".localized, pinned: true)
+					]
+					locationsSection.hidden = true
 
-					availableOfflineViewController.insert(sections: [ locationsSection ], at: 0)
+					let downloadedFilesHeaderSection = CollectionViewSection(identifier: "downloadedFilesHeader", dataSource: nil, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain), clientContext: context)
+					downloadedFilesHeaderSection.hideIfEmptyDataSource = sortedDataSource
+					downloadedFilesHeaderSection.boundarySupplementaryItems = [
+						.title("Downloaded Files".localized)
+					]
+					downloadedFilesHeaderSection.hidden = true
+
+					availableOfflineViewController.insert(sections: [ locationsSection, downloadedFilesHeaderSection ], at: 0)
 
 					availableOfflineViewController.revoke(in: context, when: [ .connectionClosed ])
 

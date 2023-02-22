@@ -115,3 +115,5 @@ Michael:
 			- report to user, drop silently, retry (how often/long?)?
 
 - [x] more expressive "Empty folder" message display, based on new .message item type
+
+- show spinner while recreating a scene via "Open in new window"

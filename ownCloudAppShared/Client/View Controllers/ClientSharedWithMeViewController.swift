@@ -45,13 +45,6 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource, queryDataSource: OCDataSource? = nil) -> CollectionViewSection {
 			var sectionContext = clientContext
 
-			let headerView = ComposedMessageView.sectionHeader(titled: title)
-
-			compositionDataSource.addSources([
-				OCDataSourceArray(items: [ headerView ]),
-				contentDataSource
-			])
-
 			if let queryDataSource, clientContext?.queryDatasource == nil {
 				sectionContext = ClientContext(with: sectionContext, modifier: { context in
 					context.queryDatasource = queryDataSource
@@ -59,8 +52,12 @@ class ClientSharedWithMeViewController: CollectionViewController {
 				})
 			}
 
-			let section = CollectionViewSection(identifier: identifier, dataSource: compositionDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: sectionContext)
+			let section = CollectionViewSection(identifier: identifier, dataSource: contentDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)), clientContext: sectionContext)
 			section.hideIfEmptyDataSource = contentDataSource
+
+			section.boundarySupplementaryItems = [
+				.title(title, pinned: true)
+			]
 
 			return section
 		}

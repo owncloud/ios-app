@@ -623,9 +623,20 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		}
 	}
 
+	// MARK: - Supplementary items
+	public var boundarySupplementaryItems: [CollectionViewSupplementaryItem]?
+
 	// MARK: - Section layout
 	open func provideCollectionLayoutSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-		return cellLayout.collectionLayoutSection(for: self.collectionViewController, layoutEnvironment: layoutEnvironment)
+		let layoutSection = cellLayout.collectionLayoutSection(for: self.collectionViewController, layoutEnvironment: layoutEnvironment)
+
+		if let supplementaryItems = boundarySupplementaryItems?.compactMap({ item in
+			return item.supplementaryItem as? NSCollectionLayoutBoundarySupplementaryItem
+		}) {
+			layoutSection.boundarySupplementaryItems = supplementaryItems
+		}
+
+		return layoutSection
 	}
 
 	// MARK: - Data Item & Versioning conformance

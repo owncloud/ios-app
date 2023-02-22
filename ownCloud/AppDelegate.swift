@@ -44,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		ThemeStyle.registerDefaultStyles()
 
 		CollectionViewCellProvider.registerStandardImplementations()
+		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
 
 		ImportFilesController.removeImportDirectory()
 

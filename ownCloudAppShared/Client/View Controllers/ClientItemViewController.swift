@@ -311,10 +311,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.delegate = self
 		sortBar?.sortMethod = sortMethod
-		sortBar?.searchScope = searchScope
 		sortBar?.showSelectButton = true
 
-		itemsLeadInDataSource.setVersionedItems([ sortBar! ])
+		if let sortBar {
+			itemSection?.boundarySupplementaryItems = [
+				.view(sortBar, pinned: true)
+			]
+		}
+
+		// itemsLeadInDataSource.setVersionedItems([ sortBar! ])
 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
@@ -468,6 +473,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			switch contentState {
 				case .empty:
 					refreshEmptyActions()
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 
@@ -478,6 +484,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						loadingItems.append(loadingListItem)
 					}
 					emptyItemListDataSource.setItems(loadingItems, updated: nil)
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 
@@ -488,14 +495,16 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						folderRemovedItems.append(folderRemovedListItem)
 					}
 					emptyItemListDataSource.setItems(folderRemovedItems, updated: nil)
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 
 				case .hasContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
-					if let sortBar = sortBar {
-						itemsLeadInDataSource.setVersionedItems([ sortBar ])
-					}
+					sortBar?.isHidden = false
+//					if let sortBar = sortBar {
+//						itemsLeadInDataSource.setVersionedItems([ sortBar ])
+//					}
 
 					if searchActive == true {
 						itemsTrailingDataSource.setVersionedItems([ ])
@@ -509,6 +518,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				case .searchNonItemContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 					itemSectionHiddenNew = true
@@ -643,7 +653,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			return sort
 		}
 	}
-	open var searchScope: SortBarSearchScope = .local // only for SortBarDelegate protocol conformance
 	open var sortDirection: SortDirection {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
@@ -672,10 +681,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 //		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
 //	 		updateCustomSearchQuery()
 //		}
-	}
-
-	public func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
-		 // only for SortBarDelegate protocol conformance
 	}
 
 	public func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {

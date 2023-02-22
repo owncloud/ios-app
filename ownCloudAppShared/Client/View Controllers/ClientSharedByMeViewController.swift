@@ -47,15 +47,12 @@ class ClientSharedByMeViewController: CollectionViewController {
 		super.viewDidLoad()
 
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource) -> CollectionViewSection {
-			let headerView = ComposedMessageView.sectionHeader(titled: title)
-
-			compositionDataSource.addSources([
-				OCDataSourceArray(items: [ headerView ]),
-				contentDataSource
-			])
-
-			let section = CollectionViewSection(identifier: identifier, dataSource: compositionDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: clientContext)
+			let section = CollectionViewSection(identifier: identifier, dataSource: contentDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)), clientContext: clientContext)
 			section.hideIfEmptyDataSource = contentDataSource
+
+			section.boundarySupplementaryItems = [
+				.title(title, pinned: true)
+			]
 
 			return section
 		}
