@@ -328,8 +328,18 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		collectionViewDataSource.supplementaryViewProvider = { [weak self] (collectionView, elementKind, indexPath) in
+			// Fetch by section ID (may fail if section is process of being hidden)
 			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
 			   let section = self?.sectionsByID[sectionIdentifier], !section.hidden,
+			   let supplementaryItemProvider = CollectionViewSupplementaryCellProvider.providerFor(elementKind),
+			   let supplementaryItem = section.boundarySupplementaryItems?.first(where: { item in
+				   return item.elementKind == elementKind
+			   }) {
+			   	return supplementaryItemProvider.provideCell(for: collectionView, section: section, supplementaryItem: supplementaryItem, indexPath: indexPath)
+			}
+
+			// Fetch by section offset
+			if let section = self?.section(at: indexPath.section),
 			   let supplementaryItemProvider = CollectionViewSupplementaryCellProvider.providerFor(elementKind),
 			   let supplementaryItem = section.boundarySupplementaryItems?.first(where: { item in
 				   return item.elementKind == elementKind
