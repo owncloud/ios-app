@@ -289,6 +289,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			}
 		}
 	}
+	var savedSearchesCondition: DataSourceCondition?
 
 	open var specialItems: [SpecialItem : OCDataItem & OCDataItemVersioning] = [:]
 	open var specialItemsDataReferences: [SpecialItem : OCDataItemReference] = [:]
@@ -387,6 +388,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			// Saved searches
 			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
+				savedSearchesCondition = DataSourceCondition(.empty, with: savedSearchesDataSource, initial: true, action: { [weak self] condition in
+					self?.savedSearchesVisible = condition.fulfilled == false
+				})
+
 				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.savedSearchesFolder]!)
 
 				specialItems[.savedSearchesFolder] = savedSearchesFolderItem

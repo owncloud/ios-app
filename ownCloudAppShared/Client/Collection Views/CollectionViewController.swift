@@ -642,6 +642,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		public override var hash: Int {
 			return dataItemReference.hash ^ sectionIdentifier.hash
 		}
+
+		public override var description: String {
+			return "<WrappedItem: \(sectionIdentifier) : \(dataItemReference)>"
+		}
 	}
 
 	public func wrap(references: [OCDataItemReference], forSection: CollectionViewSection.SectionIdentifier) -> [ItemRef] {

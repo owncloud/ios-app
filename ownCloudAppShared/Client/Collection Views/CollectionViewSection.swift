@@ -529,8 +529,10 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 											}
 										} else {
 											// Only one item. Append as subitem of parent item.
-											sectionSnapshot.append([wrappedItemToAdd], to: parentItemRef)
-											itemsToAdd.remove(itemToAdd)
+											if let parentItemRef, sectionSnapshot.contains(parentItemRef) { // make sure parent item exists
+												sectionSnapshot.append([wrappedItemToAdd], to: parentItemRef)
+											}
+											itemsToAdd.remove(itemToAdd) // remove in any case, because it can't be added later either if the parent item does not exist
 										}
 									} else {
 										// Item not at position 0
