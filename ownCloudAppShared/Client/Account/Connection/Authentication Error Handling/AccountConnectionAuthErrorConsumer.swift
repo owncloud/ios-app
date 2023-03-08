@@ -183,7 +183,7 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 			Log.debug("Created cookie storage \(String(describing: connection.cookieStorage)) for client root view auth method detection")
 		}
 
-		connection.prepareForSetup(options: nil, completionHandler: { [weak self] (issue, suggestedURL, supportedMethods, preferredMethods) in
+		connection.prepareForSetup(options: nil, completionHandler: { [weak self] (issue, suggestedURL, supportedMethods, preferredMethods, generationOptions) in
 			Log.debug("Preparing for handling authentication error: issue=\(issue?.description ?? "nil"), suggestedURL=\(suggestedURL?.absoluteString ?? "nil"), supportedMethods: \(supportedMethods?.description ?? "nil"), preferredMethods: \(preferredMethods?.description ?? "nil"), existingAuthMethod: \(context.accountConnection?.bookmark.authenticationMethodIdentifier?.rawValue ?? "nil"))")
 
 			if let preferredMethods = preferredMethods, preferredMethods.count > 0 {

@@ -68,6 +68,8 @@ class BookmarkViewController: StaticTableViewController {
 	var bookmark : OCBookmark?
 	var originalBookmark : OCBookmark?
 
+	var generationOptions: [OCAuthenticationMethodKey : Any]?
+
 	enum BookmarkViewControllerMode {
 		case create
 		case edit
@@ -411,7 +413,7 @@ class BookmarkViewController: StaticTableViewController {
 
 					hud?.present(on: self, label: "Contacting server…".localized)
 
-					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods) in
+					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods, generationOptions) in
 						hudCompletion({
 							// Update URL
 							self.urlRow?.textField?.text = serverURL.absoluteString
@@ -429,6 +431,8 @@ class BookmarkViewController: StaticTableViewController {
 									self?.handleContinue()
 								}
 							}
+
+							self.generationOptions = generationOptions
 
 							if issue != nil {
 								// Parse issue for display
@@ -469,7 +473,7 @@ class BookmarkViewController: StaticTableViewController {
 
 	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
 		if let connectionBookmark = bookmark {
-			var options : [OCAuthenticationMethodKey : Any] = [:]
+			var options : [OCAuthenticationMethodKey : Any] = generationOptions ?? [:]
 
 			let connection = instantiateConnection(for: connectionBookmark)
 
@@ -488,14 +492,23 @@ class BookmarkViewController: StaticTableViewController {
 			hud?.present(on: self, label: "Authenticating…".localized)
 
 			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
-				if error == nil {
+				if error == nil, let authMethodIdentifier, let authMethodData {
 					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
 					self.bookmark?.authenticationData = authMethodData
 					self.bookmark?.scanForAuthenticationMethodsRequired = false
 					OnMainThread {
 						hud?.updateLabel(with: "Fetching user information…".localized)
 					}
-					self.save(hudCompletion: hudCompletion)
+
+					// Retrieve available instances for this account to chose from
+					connection.retrieveAvailableInstances(options: options, authenticationMethodIdentifier: authMethodIdentifier, authenticationData: authMethodData, completionHandler: { error, instances in
+						// No account chooser implemented at this time. If an account is returned, use the URL of the first one.
+						if error == nil, let instance = instances?.first {
+							self.bookmark?.apply(instance)
+						}
+
+						self.save(hudCompletion: hudCompletion)
+					})
 				} else {
 					hudCompletion({
 						var issue : OCIssue?
