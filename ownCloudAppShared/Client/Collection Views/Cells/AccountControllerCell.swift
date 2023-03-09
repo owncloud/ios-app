@@ -305,10 +305,11 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 	}
 
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: ThemeItemState(selected: self.isSelected))
+        detailLabel.applyThemeCollection(collection, itemStyle: .title, itemState: ThemeItemState(selected: self.isSelected))
 		var backgroundConfig = UIBackgroundConfiguration.listSidebarCell()
 		backgroundConfig.cornerRadius = 10
 		backgroundConfig.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
-
 		backgroundConfiguration = backgroundConfig
 	}
 }

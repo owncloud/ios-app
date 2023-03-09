@@ -196,11 +196,11 @@ extension ThemeStyle {
 
 	static public func registerDefaultStyles() {
 		if !Branding.shared.setupThemeStyles() {
-			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension(isDefault: true))
-//			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudWebDark.themeStyleExtension(isDefault: true))
-//			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension())
-//			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDarkBlack.themeStyleExtension())
-//			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudWebDark.themeStyleExtension(isDefault: true))
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDarkBlack.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
 		}
 	}
 

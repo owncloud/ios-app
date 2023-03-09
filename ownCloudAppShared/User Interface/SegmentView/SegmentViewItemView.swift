@@ -106,13 +106,13 @@ public class SegmentViewItemView: ThemeView {
 		if let item {
 			switch item.style {
 				case .plain, .label:
-					iconView?.tintColor = collection.tableRowColors.symbolColor
-					titleView?.textColor = collection.tableRowColors.secondaryLabelColor
+					iconView?.tintColor = collection.tintColor
+                    titleView?.textColor = collection.tintColor
 					backgroundColor = .clear
 
 				case .token:
 					iconView?.tintColor = collection.tokenColors.normal.foreground
-					titleView?.textColor = collection.tokenColors.normal.foreground
+                    titleView?.textColor = collection.tokenColors.normal.foreground
 					backgroundColor = collection.tokenColors.normal.background
 			}
 		}

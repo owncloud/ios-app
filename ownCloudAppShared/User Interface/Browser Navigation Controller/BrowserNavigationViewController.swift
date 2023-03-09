@@ -467,7 +467,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 	// MARK: - Themeing
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		navigationView.applyThemeCollection(collection, itemStyle: .content)
+		navigationView.applyThemeCollection(collection, itemStyle: .defaultForItem)
 
 		view.backgroundColor = collection.tableBackgroundColor
 		sideBarSeperatorView.backgroundColor = collection.tableSeparatorColor

@@ -643,7 +643,7 @@ extension ThemeCollection {
 		switch style {
 			case .content:
 				appearance.configureWithOpaqueBackground()
-				// appearance.backgroundColor = tableBackgroundColor
+                appearance.backgroundColor = tableBackgroundColor
 				appearance.titleTextAttributes = [ .foregroundColor : tableRowColors.labelColor  ]
 				appearance.largeTitleTextAttributes = [ .foregroundColor : tableRowColors.labelColor  ]
 				// appearance.shadowColor = .clear

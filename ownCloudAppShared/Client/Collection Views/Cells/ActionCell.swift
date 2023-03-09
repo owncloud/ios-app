@@ -190,6 +190,40 @@ class ActionCell: ThemeableCollectionViewCell {
 	}
 }
 
+
+class ActionListCell: UICollectionViewListCell, Themeable {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        Theme.shared.register(client: self, applyImmediately: true)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    deinit {
+        Theme.shared.unregister(client: self)
+    }
+    
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        setNeedsUpdateConfiguration()
+    }
+    
+
+    override func updateConfiguration(using state: UICellConfigurationState) {
+        if var content = self.contentConfiguration as? UIListContentConfiguration {
+            let collection = Theme.shared.activeCollection
+            
+            content.textProperties.color = collection.tableRowColors.labelColor
+            content.imageProperties.tintColor =  collection.tintColor
+            
+            self.contentConfiguration = content
+        }
+    }
+    
+}
+
 extension ActionCell {
 	static func registerCellProvider() {
 		let wideActionCellRegistration = UICollectionView.CellRegistration<ActionCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
@@ -214,7 +248,9 @@ extension ActionCell {
 			})
 		}
 
-		let actionSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let actionSideBarCellRegistration = UICollectionView.CellRegistration<ActionListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+            
+            
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				var accessories: [UICellAccessory] = []
 				var content = cell.defaultContentConfiguration()
@@ -241,8 +277,11 @@ extension ActionCell {
 							backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.destructiveColors.normal.background
 
-						default: break
-					}
+                    default:
+                        content.textProperties.color = Theme.shared.activeCollection.tableRowColors.labelColor
+                        content.imageProperties.tintColor = Theme.shared.activeCollection.tintColor
+                    }
+                    
 
 					if let buttonLabel = action.buttonLabel {
 						let context = cellConfiguration.clientContext

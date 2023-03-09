@@ -26,7 +26,8 @@ extension OCQueryCondition {
 	}
 }
 
-class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdating {
+class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdating, Themeable {
+    
 	class Category {
 		typealias SelectionBehaviour = (_ deselectOption: OCQueryCondition, _ whenOption: OCQueryCondition, _ isSelected: Bool) -> Bool
 
@@ -96,11 +97,16 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 	init(with scope: SearchScope) {
 		super.init(nibName: nil, bundle: nil)
 		self.scope = scope
+        Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+    
+    deinit {
+        Theme.shared.unregister(client: self)
+    }
 
 	func requestName(title: String, message: String? = nil, placeholder: String? = nil, cancelButtonText: String? = "Cancel".localized, saveButtonText: String? = "Save".localized, completionHandler: @escaping (_ save: Bool, _ name: String?) -> Void) {
 		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -227,6 +233,15 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			}
 		}
 	}
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        
+        for category in categories {
+            if let button = category.popupController?.button {
+                button.applyThemeCollection(collection)
+            }
+        }
+        self.view.backgroundColor = collection.navigationBarAppearance(for: .content).backgroundColor
+    }
 
 	var savedSearchPopup: PopupButtonController?
 

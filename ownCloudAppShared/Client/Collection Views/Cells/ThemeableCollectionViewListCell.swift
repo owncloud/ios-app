@@ -66,5 +66,16 @@ open class ThemeableCollectionViewListCell: UICollectionViewListCell, Themeable 
 		self.applyThemeCollection(Theme.shared.activeCollection)
 
 		self.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: ThemeItemState(selected: self.isSelected))
+        
+            setNeedsUpdateConfiguration()
 	}
+    
+    open override func updateConfiguration(using state: UICellConfigurationState) {
+        if var content = self.contentConfiguration as? UIListContentConfiguration {
+            content.textProperties.color = Theme.shared.activeCollection.tableRowColors.labelColor
+            content.imageProperties.tintColor = Theme.shared.activeCollection.tintColor
+            
+            self.contentConfiguration = content
+        }
+    }
 }

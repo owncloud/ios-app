@@ -112,6 +112,8 @@ class DriveListCell: ThemeableCollectionViewListCell {
 	}
 }
 
+
+
 extension DriveListCell {
 	static func registerCellProvider() {
 		let driveListCellRegistration = UICollectionView.CellRegistration<DriveListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
@@ -205,7 +207,7 @@ extension DriveListCell {
 			}
 		}
 
-		let driveSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let driveSideBarCellRegistration = UICollectionView.CellRegistration<DriveListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var title : String?
 			// var subtitle : String?
 			var icon: UIImage?
@@ -236,6 +238,9 @@ extension DriveListCell {
 
 			content.text = title
 			content.image = icon
+            
+            content.textProperties.color = Theme.shared.activeCollection.tableRowColors.labelColor
+            content.imageProperties.tintColor = Theme.shared.activeCollection.tintColor
 
 			cell.contentConfiguration = content
 		}

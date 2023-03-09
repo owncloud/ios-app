@@ -110,7 +110,7 @@ public extension CollectionViewCellProvider {
 			cell.accessories = hasDisclosureIndicator ? [ .disclosureIndicator() ] : [ ]
 		}
 
-		let presentableSidebarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let presentableSidebarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var title: String?
 			var image: UIImage?
 			var hasChildren: Bool = false
@@ -126,6 +126,9 @@ public extension CollectionViewCellProvider {
 			})
 
 			var content = cell.defaultContentConfiguration()
+            
+            content.textProperties.color = Theme.shared.activeCollection.tableRowColors.labelColor
+            content.imageProperties.tintColor = Theme.shared.activeCollection.tintColor
 
 			content.text = title
 			if let image = image {

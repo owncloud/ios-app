@@ -189,6 +189,36 @@ extension OCSavedSearch {
 	}
 }
 
+class SavedSearchListCell: UICollectionViewListCell, Themeable {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        Theme.shared.register(client: self, applyImmediately: true)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    deinit {
+        Theme.shared.unregister(client: self)
+    }
+    
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        setNeedsUpdateConfiguration()
+    }
+    
+
+    override func updateConfiguration(using state: UICellConfigurationState) {
+        if var content = self.contentConfiguration as? UIListContentConfiguration {
+            content.textProperties.color = Theme.shared.activeCollection.tableRowColors.labelColor
+            content.imageProperties.tintColor = Theme.shared.activeCollection.tintColor
+            
+            self.contentConfiguration = content
+        }
+    }
+}
+
 extension SavedSearchCell {
 	static let savedTemplateIcon = OCSymbol.icon(forSymbolName: "square.dashed.inset.filled")
 	static let savedSearchIcon = OCSymbol.icon(forSymbolName: "gearshape.fill")
@@ -204,8 +234,10 @@ extension SavedSearchCell {
 			})
 		}
 
-		let savedSearchSidebarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let savedSearchSidebarCellRegistration = UICollectionView.CellRegistration<SavedSearchListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var content = cell.defaultContentConfiguration()
+            content.textProperties.color = Theme.shared.activeCollection.tableRowColors.labelColor
+            content.imageProperties.tintColor = Theme.shared.activeCollection.tintColor
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let savedSearch = OCDataRenderer.default.renderItem(item, asType: .savedSearch, error: nil, withOptions: nil) as? OCSavedSearch {
@@ -231,4 +263,5 @@ extension SavedSearchCell {
 			}
 		}))
 	}
+    
 }
