@@ -644,15 +644,15 @@ extension ThemeCollection {
 			case .content:
 				appearance.configureWithOpaqueBackground()
                 appearance.backgroundColor = tableBackgroundColor
-				appearance.titleTextAttributes = [ .foregroundColor : tableRowColors.labelColor  ]
-				appearance.largeTitleTextAttributes = [ .foregroundColor : tableRowColors.labelColor  ]
+				appearance.titleTextAttributes = [ .foregroundColor : tableRowColors.labelColor ]
+				appearance.largeTitleTextAttributes = [ .foregroundColor : tableRowColors.labelColor ]
 				// appearance.shadowColor = .clear
 
 			default:
 				appearance.configureWithOpaqueBackground()
 				appearance.backgroundColor = navigationBarColors.backgroundColor
-				appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
-				appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+				appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor ]
+				appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor ]
 		}
 
 		if scrollEdge {

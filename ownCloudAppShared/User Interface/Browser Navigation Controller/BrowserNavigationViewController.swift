@@ -468,6 +468,10 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 	// MARK: - Themeing
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		navigationView.applyThemeCollection(collection, itemStyle: .defaultForItem)
+        contentViewController?.navigationItem.navigationContent.applyThemeCollection(collection)
+        if let items = contentViewController?.navigationItem.navigationContent.items(withIdentifier: "ios16-truncated-title-fix"), let label = items.0.first?.titleView as? UILabel {
+            label.applyThemeCollection(collection)
+        }
 
 		view.backgroundColor = collection.tableBackgroundColor
 		sideBarSeperatorView.backgroundColor = collection.tableSeparatorColor

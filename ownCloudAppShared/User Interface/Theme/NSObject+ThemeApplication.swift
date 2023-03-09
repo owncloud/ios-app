@@ -121,6 +121,7 @@ public extension NSObject {
 		}
 
 		if let navigationBar = self as? UINavigationBar {
+            navigationBar.tintColor = collection.tintColor
 			let navigationBarAppearance = collection.navigationBarAppearance(for: itemStyle)
 			let navigationBarScrollEdgeAppearance = collection.navigationBarAppearance(for: itemStyle, scrollEdge: true)
 
