@@ -311,6 +311,8 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		backgroundConfig.cornerRadius = 10
         backgroundConfig.backgroundColor = collection.tableGroupBackgroundColor
 		backgroundConfiguration = backgroundConfig
+        
+        disconnectButton.applyThemeCollection(collection)
 	}
 }
 
