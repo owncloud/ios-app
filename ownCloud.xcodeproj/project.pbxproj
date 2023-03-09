@@ -185,9 +185,6 @@
 		DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */; };
 		DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DC0A357124C0E42700FB58FC /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
-		DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC297966226E4D3100E01BC7 /* PushPresentationController.swift */; };
-		DC0A357324C0E42D00FB58FC /* PushTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC297964226E4D1100E01BC7 /* PushTransitionDelegate.swift */; };
-		DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC297968226E52E600E01BC7 /* PushTransition.swift */; };
 		DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208621FCEE5D007EC0A8 /* ProgressView.swift */; };
 		DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */; };
 		DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */; };
@@ -432,6 +429,13 @@
 		DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */; };
 		DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */; };
 		DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20E292F843800D27573 /* CollectionViewAction.swift */; };
+		DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */; };
+		DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */; };
+		DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */; };
+		DCBAEAE229A55D5A00BFF393 /* ViewSupplementaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE129A55D5A00BFF393 /* ViewSupplementaryCell.swift */; };
+		DCBAEAE429A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE329A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift */; };
+		DCBAEAE829A568D500BFF393 /* TitleSupplementaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */; };
+		DCBAEAED29A627D900BFF393 /* DataSourceCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */; };
 		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
 		DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */; };
 		DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -1228,9 +1232,6 @@
 		DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtensionThumbnailRequest.m; sourceTree = "<group>"; };
 		DC28F825294B733700AC4013 /* OCItemPolicy+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+Interactions.swift"; sourceTree = "<group>"; };
 		DC28F827294BB5ED00AC4013 /* SortedItemDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedItemDataSource.swift; sourceTree = "<group>"; };
-		DC297964226E4D1100E01BC7 /* PushTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransitionDelegate.swift; sourceTree = "<group>"; };
-		DC297966226E4D3100E01BC7 /* PushPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushPresentationController.swift; sourceTree = "<group>"; };
-		DC297968226E52E600E01BC7 /* PushTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransition.swift; sourceTree = "<group>"; };
 		DC298C862934A405009FA87F /* ClientDefaultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDefaultViewController.swift; sourceTree = "<group>"; };
 		DC298C8C2934B3E7009FA87F /* AccountConnectionErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountConnectionErrorHandler.swift; sourceTree = "<group>"; };
 		DC298C902934BDAD009FA87F /* AccountAuthenticationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdater.swift; sourceTree = "<group>"; };
@@ -1432,6 +1433,13 @@
 		DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountController+ExtraItems.swift"; sourceTree = "<group>"; };
 		DCB6B20E292F843800D27573 /* CollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewAction.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* AccountAuthenticationUpdaterPasswordPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdaterPasswordPromptViewController.swift; sourceTree = "<group>"; };
+		DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
+		DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryCellProvider.swift; sourceTree = "<group>"; };
+		DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryItem.swift; sourceTree = "<group>"; };
+		DCBAEAE129A55D5A00BFF393 /* ViewSupplementaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSupplementaryCell.swift; sourceTree = "<group>"; };
+		DCBAEAE329A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewSupplementaryCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
+		DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryCell.swift; sourceTree = "<group>"; };
+		DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCondition.swift; sourceTree = "<group>"; };
 		DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+AppExtension.swift"; sourceTree = "<group>"; };
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1523,6 +1531,7 @@
 		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE741DE29B8A85D00BFF393 /* BookmarkManagementContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManagementContext.swift; sourceTree = "<group>"; };
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -1852,6 +1861,7 @@
 			children = (
 				DCD68A2B291D973E00993FF5 /* Account */,
 				DC46F3CF284546DA00038880 /* Data Item Interactions */,
+				DCBAEAEB29A627C100BFF393 /* Data Source Conditions */,
 				DC82664028168DAA00F91F7D /* Context */,
 				DCB6B1FE292CF2E500D27573 /* Navigation Revocation */,
 				DCEAF0842808250E00980B6D /* Collection Views */,
@@ -2168,7 +2178,6 @@
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				399EA74425E6575A00B6FF11 /* Notification */,
 				DC0A354D24C0E15100FB58FC /* Progress */,
-				DC297959226E4C9200E01BC7 /* Push Presentation Controller */,
 				DC9B4FC1293F451F0037F8F8 /* EmbeddingViewController */,
 				DC0A354E24C0E15900FB58FC /* StaticTableView */,
 				DC99154A28E6364700DA0AB8 /* SegmentView */,
@@ -2317,16 +2326,6 @@
 				DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */,
 			);
 			path = "FileProvider Integration";
-			sourceTree = "<group>";
-		};
-		DC297959226E4C9200E01BC7 /* Push Presentation Controller */ = {
-			isa = PBXGroup;
-			children = (
-				DC297966226E4D3100E01BC7 /* PushPresentationController.swift */,
-				DC297964226E4D1100E01BC7 /* PushTransitionDelegate.swift */,
-				DC297968226E52E600E01BC7 /* PushTransition.swift */,
-			);
-			path = "Push Presentation Controller";
 			sourceTree = "<group>";
 		};
 		DC298C9B2934D3FA009FA87F /* Alert View */ = {
@@ -2768,6 +2767,7 @@
 			children = (
 				DC921A012966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift */,
 				DC921A032966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift */,
+				DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */,
 			);
 			path = "UniversalItemListCell Content Providers";
 			sourceTree = "<group>";
@@ -2888,6 +2888,23 @@
 				DCB6B204292D859B00D27573 /* UIViewController+NavigationRevocation.swift */,
 			);
 			path = "Navigation Revocation";
+			sourceTree = "<group>";
+		};
+		DCBAEADC29A552D100BFF393 /* Supplementary Cells */ = {
+			isa = PBXGroup;
+			children = (
+				DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */,
+				DCBAEAE129A55D5A00BFF393 /* ViewSupplementaryCell.swift */,
+			);
+			path = "Supplementary Cells";
+			sourceTree = "<group>";
+		};
+		DCBAEAEB29A627C100BFF393 /* Data Source Conditions */ = {
+			isa = PBXGroup;
+			children = (
+				DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */,
+			);
+			path = "Data Source Conditions";
 			sourceTree = "<group>";
 		};
 		DCBF0A5E2280393A00465530 /* PDF */ = {
@@ -3231,10 +3248,14 @@
 			isa = PBXGroup;
 			children = (
 				DCEAF0882808252300980B6D /* Cells */,
+				DCBAEADC29A552D100BFF393 /* Supplementary Cells */,
 				DCFC9ED428002F33005D9144 /* CollectionViewCellConfiguration.swift */,
 				DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */,
 				DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */,
 				DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */,
+				DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */,
+				DCBAEAE329A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift */,
+				DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */,
 				DC04FFC727F5B79000F22569 /* CollectionViewController.swift */,
 				DCB6B20E292F843800D27573 /* CollectionViewAction.swift */,
 				DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */,
@@ -3246,17 +3267,17 @@
 		DCEAF0882808252300980B6D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
+				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
 				DCD68A2E291D9BE400993FF5 /* AccountControllerCell.swift */,
 				DC46F3CD2844A92A00038880 /* ActionCell.swift */,
 				DC298CAD2936598B009FA87F /* DriveGridCell.swift */,
 				DC3AB2412810404000789435 /* DriveHeaderCell.swift */,
 				DCEAF0892808254800980B6D /* DriveListCell.swift */,
 				DC3AB2472810A10300789435 /* ExpandableResourceCell.swift */,
-				DC9219F9296615B400F538EE /* UniversalItemListCell.swift */,
-				DC9219FE2966D5B800F538EE /* UniversalItemListCell Content Providers */,
 				DC46F68F28DCA1B8008280CA /* SavedSearchCell.swift */,
-				DC49C22028524D6C00BAA910 /* ThemeableCollectionViewCell.swift */,
-				DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */,
+				DC9219FE2966D5B800F538EE /* UniversalItemListCell Content Providers */,
+				DC9219F9296615B400F538EE /* UniversalItemListCell.swift */,
 				DC46F3CB2844A8EA00038880 /* ViewCell.swift */,
 			);
 			path = Cells;
@@ -3318,6 +3339,7 @@
 			children = (
 				DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */,
 				4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */,
+				DCE741DE29B8A85D00BFF393 /* BookmarkManagementContext.swift */,
 			);
 			path = Bookmarks;
 			sourceTree = "<group>";
@@ -4344,6 +4366,7 @@
 				DCB6B1E6292B6BE500D27573 /* OCLocation+Interactions.swift in Sources */,
 				DC3AB2422810404000789435 /* DriveHeaderCell.swift in Sources */,
 				DC65590F28A2633C0003D130 /* UITextField+Extension.swift in Sources */,
+				DCBAEAE429A5603600BFF393 /* CollectionViewSupplementaryCellProvider+StandardImplementations.swift in Sources */,
 				DC298C9A2934D3F8009FA87F /* AlertView.swift in Sources */,
 				DC24E10728B7BFD6002E4F5B /* ItemSearchScope.swift in Sources */,
 				DC8E99E9297FF5C300594697 /* UIViewController+Extension.swift in Sources */,
@@ -4398,6 +4421,7 @@
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				DC0A357A24C0E43700FB58FC /* CardViewController.swift in Sources */,
 				DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */,
+				DCBAEAED29A627D900BFF393 /* DataSourceCondition.swift in Sources */,
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DCFA9CAF2987E14B00004F24 /* BrowserNavigationBookmark.swift in Sources */,
 				DC298C9F2934D6D9009FA87F /* AccountAuthenticationUpdaterPasswordPromptViewController.swift in Sources */,
@@ -4412,7 +4436,6 @@
 				DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC62F569292504510095BB5D /* AccountConnectionPool.swift in Sources */,
-				DC0A357224C0E42D00FB58FC /* PushPresentationController.swift in Sources */,
 				DC0A358F24C0E46000FB58FC /* PointerEffect.swift in Sources */,
 				DC921A022966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift in Sources */,
 				DC0A358924C0E44B00FB58FC /* ThemeNavigationController.swift in Sources */,
@@ -4428,6 +4451,7 @@
 				DC9B4FC3293F453C0037F8F8 /* EmbeddingViewController.swift in Sources */,
 				DC298C972934D354009FA87F /* IssuesCardViewController.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
+				DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */,
 				DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */,
 				DCB5D5A728632C17004AF425 /* SearchScope.swift in Sources */,
 				DC6FDAF72953AD50004F0C7F /* ClientSharedWithMeViewController.swift in Sources */,
@@ -4452,6 +4476,7 @@
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,
 				DC99154E28E6371500DA0AB8 /* SegmentViewItem.swift in Sources */,
 				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
+				DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,
 				DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */,
 				DCB6B1F2292B9A7A00D27573 /* OCMessage+Extension.swift in Sources */,
@@ -4472,13 +4497,11 @@
 				DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */,
 				DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */,
 				DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */,
-				DC0A357424C0E42D00FB58FC /* PushTransition.swift in Sources */,
 				DC0A357824C0E43700FB58FC /* CardPresentationController.swift in Sources */,
 				393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */,
 				DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */,
 				DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */,
 				DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */,
-				DC0A357324C0E42D00FB58FC /* PushTransitionDelegate.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
 				399EA6F725E6544100B6FF11 /* PublicLinkEditTableViewController.swift in Sources */,
 				DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */,
@@ -4494,6 +4517,7 @@
 				DC28F828294BB5ED00AC4013 /* SortedItemDataSource.swift in Sources */,
 				DC298C992934D3F8009FA87F /* AlertViewController.swift in Sources */,
 				DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */,
+				DCBAEAE829A568D500BFF393 /* TitleSupplementaryCell.swift in Sources */,
 				399EA6F525E6544100B6FF11 /* GroupSharingTableViewController.swift in Sources */,
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
@@ -4505,6 +4529,7 @@
 				DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */,
 				DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */,
 				DC62F56C29250DC80095BB5D /* AccountConnectionConsumer.swift in Sources */,
+				DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
@@ -4512,6 +4537,7 @@
 				DCFA5645297574A60092C89F /* BrowserNavigationItem.swift in Sources */,
 				DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */,
 				DC65593228A648680003D130 /* SearchElement.swift in Sources */,
+				DCBAEAE229A55D5A00BFF393 /* ViewSupplementaryCell.swift in Sources */,
 				DCB6B203292D45AD00D27573 /* NavigationRevocationTrigger.swift in Sources */,
 				DC921A0B2968BA4D00F538EE /* ClientSharedByMeViewController.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
@@ -5000,7 +5026,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 248;
+				APP_VERSION = 250;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5070,7 +5096,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 248;
+				APP_VERSION = 250;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

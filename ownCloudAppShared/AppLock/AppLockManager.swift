@@ -40,7 +40,7 @@ public class AppLockManager: NSObject {
 		get {
 			if let archivedData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainLockedDate) {
 				guard let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSDate.self, from: archivedData) else { return nil }
-				return value as? Date
+				return value as Date
 			}
 
 			return nil

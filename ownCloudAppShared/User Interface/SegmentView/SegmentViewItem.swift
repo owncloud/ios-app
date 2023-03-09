@@ -34,7 +34,11 @@ public class SegmentViewItem: NSObject {
 
 	open var style: Style
 	open var icon: UIImage?
-	open var title: String?
+	open var title: String? {
+		didSet {
+			_view = nil
+		}
+	}
 	open var titleTextStyle: UIFont.TextStyle?
 	open var titleTextWeight: UIFont.Weight?
 

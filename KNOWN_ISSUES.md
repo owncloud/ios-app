@@ -63,10 +63,11 @@ Michael:
 - pre-population of accounts using infinite PROPFIND is not supported
 
 # Evolution roadmap
-- [x] collection views
+- [ ] collection views
 	- [x] support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
 	- [x] ItemListCell: replace manual composition of info line below name with SegmentView
 		- [x] allows to show different content there, f.ex. Space and Folder in search
+	- [ ] sticky sort / multiselect bar in file lists
 
 - [x] location picker replaces folder picker
 	- [x] supports picking
@@ -114,3 +115,5 @@ Michael:
 			- report to user, drop silently, retry (how often/long?)?
 
 - [x] more expressive "Empty folder" message display, based on new .message item type
+
+- show spinner while recreating a scene via "Open in new window"

@@ -146,6 +146,12 @@ public class ComposedMessageElement: NSObject {
 
 					NSLayoutConstraint.activate(constraints)
 
+					add(applier: { [weak self] theme, collection, event in
+						if let self = self, let imageView = self.imageView {
+							imageView.tintColor = collection.tintColor
+						}
+					})
+
 					_view = rootView
 
 				case .divider:
@@ -536,5 +542,16 @@ public extension ComposedMessageView {
 		infoBoxView.translatesAutoresizingMaskIntoConstraints = false
 
 		return infoBoxView
+	}
+
+	static func sectionHeader(titled title: String) -> ComposedMessageView {
+		let headerView = ComposedMessageView(elements: [
+			.spacing(10),
+			.title(title, alignment: .leading, insets: .zero)
+		])
+		headerView.elementInsets.leading = 15
+		headerView.elementInsets.bottom = 5
+
+		return headerView
 	}
 }

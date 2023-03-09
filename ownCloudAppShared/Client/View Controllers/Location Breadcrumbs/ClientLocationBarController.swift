@@ -71,20 +71,8 @@ open class ClientLocationBarController: UIViewController, Themeable {
 	}
 
 	func composeSegments(location: OCLocation, in clientContext: ClientContext) -> [SegmentViewItem] {
-		var segments: [SegmentViewItem] = []
-
-		let breadcrumbs = location.breadcrumbs(in: clientContext)
-
-		for breadcrumb in breadcrumbs {
-			if !segments.isEmpty {
-				let seperatorSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "chevron.right"))
-				seperatorSegment.insets.leading = 0
-				seperatorSegment.insets.trailing = 0
-				segments.append(seperatorSegment)
-			}
-
-			let segment = SegmentViewItem(with: breadcrumb.icon, title: breadcrumb.title, style: .plain, titleTextStyle: .footnote)
-
+		return OCLocation.composeSegments(breadcrumbs: location.breadcrumbs(in: clientContext), in: clientContext, segmentConfigurator: { breadcrumb, segment in
+			// Make breadcrumbs tappable using the provided action's .actionBlock
 			if breadcrumb.actionBlock != nil {
 				segment.gestureRecognizers = [
 					ActionTapGestureRecognizer(action: { [weak self] _ in
@@ -94,14 +82,7 @@ open class ClientLocationBarController: UIViewController, Themeable {
 					})
 				]
 			}
-
-			segments.append(segment)
-		}
-
-		segments.last?.titleTextWeight = .semibold
-		segments.last?.gestureRecognizers = nil
-
-		return segments
+		})
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

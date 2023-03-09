@@ -399,7 +399,7 @@ extension OCItem: DataItemBrowserNavigationBookmarkReStore {
 
 	public static func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: @escaping ((Error?, UIViewController?) -> Void)) {
 		if let location = navigationBookmark.location, let context, let core = context.core {
-			var refKeeper: NSMutableArray = NSMutableArray()
+			let refKeeper: NSMutableArray = NSMutableArray()
 
 			if let trackItemToken = core.trackItem(at: location, trackingHandler: { (error, item, isInitial) in
 				if let error {

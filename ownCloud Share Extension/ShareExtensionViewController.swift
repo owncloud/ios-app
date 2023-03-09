@@ -36,6 +36,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 		ShareExtensionViewController.shared = self
 
 		CollectionViewCellProvider.registerStandardImplementations()
+		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
 	}
 
 	@available(*, unavailable)

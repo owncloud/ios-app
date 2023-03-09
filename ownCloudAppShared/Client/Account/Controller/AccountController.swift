@@ -289,6 +289,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			}
 		}
 	}
+	var savedSearchesCondition: DataSourceCondition?
 
 	open var specialItems: [SpecialItem : OCDataItem & OCDataItemVersioning] = [:]
 	open var specialItemsDataReferences: [SpecialItem : OCDataItemReference] = [:]
@@ -387,6 +388,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			// Saved searches
 			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
+				savedSearchesCondition = DataSourceCondition(.empty, with: savedSearchesDataSource, initial: true, action: { [weak self] condition in
+					self?.savedSearchesVisible = condition.fulfilled == false
+				})
+
 				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.savedSearchesFolder]!)
 
 				specialItems[.savedSearchesFolder] = savedSearchesFolderItem
@@ -534,17 +539,33 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				viewController = AccountControllerSpacesGridViewController(with: context)
 
 			case .availableOfflineItems:
-				if let availableOfflineFilesDataSource = context.core?.availableOfflineFilesDataSource {
+				if let core = context.core {
+					let availableOfflineFilesDataSource = core.availableOfflineFilesDataSource
 					let sortedDataSource = SortedItemDataSource(itemDataSource: availableOfflineFilesDataSource)
 
-					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
+					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: UIImage(named: "cloud-available-offline"), emptyItemListTitleLocalized: "No files available offline".localized, emptyItemListMessageLocalized: "Files selected and downloaded for offline availability will show up here.".localized)
 					availableOfflineViewController.navigationTitle = "Available Offline".localized
 
 					sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext
 
-					let locationsSection = CollectionViewSection(identifier: "locations", dataSource: context.core?.availableOfflineItemPoliciesDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .insetGrouped), clientContext: context)
+					let availableOfflineItemPoliciesDataSource = core.availableOfflineItemPoliciesDataSource
 
-					availableOfflineViewController.insert(sections: [ locationsSection ], at: 0)
+					let locationsSection = CollectionViewSection(identifier: "locations", dataSource: availableOfflineItemPoliciesDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0)), clientContext: context)
+
+					locationsSection.hideIfEmptyDataSource = availableOfflineFilesDataSource
+					locationsSection.boundarySupplementaryItems = [
+						.title("Locations".localized, pinned: true)
+					]
+					locationsSection.hidden = true
+
+					let downloadedFilesHeaderSection = CollectionViewSection(identifier: "downloadedFilesHeader", dataSource: nil, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain), clientContext: context)
+					downloadedFilesHeaderSection.hideIfEmptyDataSource = sortedDataSource
+					downloadedFilesHeaderSection.boundarySupplementaryItems = [
+						.title("Downloaded Files".localized)
+					]
+					downloadedFilesHeaderSection.hidden = true
+
+					availableOfflineViewController.insert(sections: [ locationsSection, downloadedFilesHeaderSection ], at: 0)
 
 					availableOfflineViewController.revoke(in: context, when: [ .connectionClosed ])
 
@@ -559,7 +580,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 					let sortedDataSource = SortedItemDataSource(itemDataSource: favoritesDataSource)
 
-					let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true)
+					let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "star.fill"), emptyItemListTitleLocalized: "No favorites found".localized, emptyItemListMessageLocalized: "If you make an item a favorite, it will turn up here.".localized)
 					favoritesViewController.navigationTitle = "Favorites".localized
 
 					sortedDataSource.sortingFollowsContext = favoritesViewController.clientContext

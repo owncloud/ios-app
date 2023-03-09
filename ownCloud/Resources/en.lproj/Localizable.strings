@@ -163,7 +163,6 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Empty folder";
 "No contents" = "No contents";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
 "This folder is empty." = "This folder is empty.";
@@ -186,6 +185,8 @@
 "No matches" = "No matches";
 "The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "There are no results for this search term";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "Status";
 
 "Authorization failed" = "Authorization failed";
@@ -612,6 +613,10 @@
 "Documents" = "Documents";
 "Audio" = "Audio";
 
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
+
 /* Media files settings */
 "Media Files" = "Media Files";
 "Download instead of streaming" = "Download instead of streaming";
@@ -694,10 +699,12 @@
 "Make unavailable offline" = "Make unavailable offline";
 
 "Available Offline" = "Available Offline";
-"No items have been selected for offline availability." = "No items have been selected for offline availability.";
 
-"Overview" = "Overview";
-"All Files" = "All Files";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";

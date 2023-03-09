@@ -21,12 +21,12 @@ import ownCloudSDK
 
 class ClientSharedByMeViewController: CollectionViewController {
 	var hasByMeSection: Bool
-	var sharedByMeDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 	var sharedByMeSection: CollectionViewSection?
 
 	var hasByLinkSection: Bool
-	var sharedByLinkDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 	var sharedByLinkSection: CollectionViewSection?
+
+	var noItemsCondition: DataSourceCondition?
 
 	init(context inContext: ClientContext?, byMe: Bool = false, byLink: Bool = false) {
 		hasByMeSection = byMe
@@ -46,34 +46,44 @@ class ClientSharedByMeViewController: CollectionViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource) -> CollectionViewSection {
-			let headerView = ComposedMessageView(elements: [
-				.spacing(10),
-				.text(title, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
-			])
-			// headerView.elementInsets = .zero
-
-			compositionDataSource.addSources([
-				OCDataSourceArray(items: [ headerView ]),
-				contentDataSource
-			])
-
-			let section = CollectionViewSection(identifier: identifier, dataSource: compositionDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: clientContext)
+		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, contentDataSource: OCDataSource) -> CollectionViewSection {
+			let section = CollectionViewSection(identifier: identifier, dataSource: contentDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)), clientContext: clientContext)
 			section.hideIfEmptyDataSource = contentDataSource
+			section.hidden = true
+
+			section.boundarySupplementaryItems = [
+				.title(title, pinned: true)
+			]
 
 			return section
+		}
+
+		func addNoItemsCondition(imageName: String, title: String, datasource: OCDataSource) {
+			let noShareMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: imageName)!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.text(title, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
+			])
+
+			noItemsCondition = DataSourceCondition(.empty, with: datasource, initial: true, action: { [weak self] condition in
+				let coverView = (condition.fulfilled == true) ? noShareMessage : nil
+				self?.setCoverView(coverView, layout: .top)
+			})
 		}
 
 		var sectionsToAdd: [CollectionViewSection] = []
 
 		if hasByMeSection, let byMeDataSource = clientContext?.core?.sharedByMeDataSource {
-			sharedByMeSection = buildSection(identifier: "byMe", titled: "Shared by me".localized, compositionDataSource: sharedByMeDataSource, contentDataSource: byMeDataSource)
+			sharedByMeSection = buildSection(identifier: "byMe", titled: "Shared by me".localized, contentDataSource: byMeDataSource)
 			sectionsToAdd.append(sharedByMeSection!)
+
+			addNoItemsCondition(imageName: "arrowshape.turn.up.right", title: "No items shared by you".localized, datasource: byMeDataSource)
 		}
 
 		if hasByLinkSection, let byLinkDataSource = clientContext?.core?.sharedByLinkDataSource {
-			sharedByLinkSection = buildSection(identifier: "byLink", titled: "Shared by link".localized, compositionDataSource: sharedByLinkDataSource, contentDataSource: byLinkDataSource)
+			sharedByLinkSection = buildSection(identifier: "byLink", titled: "Shared by link".localized, contentDataSource: byLinkDataSource)
 			sectionsToAdd.append(sharedByLinkSection!)
+
+			addNoItemsCondition(imageName: "link", title: "No items shared by link".localized, datasource: byLinkDataSource)
 		}
 
 		add(sections: sectionsToAdd)

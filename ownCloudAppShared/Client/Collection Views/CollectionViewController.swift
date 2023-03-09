@@ -212,6 +212,57 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	// MARK: - Cover view
+	var coverRootView: UIView? {
+		willSet {
+			coverRootView?.removeFromSuperview()
+		}
+
+		didSet {
+			if let coverRootView {
+				view.embed(toFillWith: coverRootView)
+			}
+		}
+	}
+
+	public enum CoverViewLayout {
+		case fill
+		case center
+		case top
+	}
+
+	open func setCoverView(_ coverView: UIView?, layout: CoverViewLayout) {
+		if view != nil {
+			if let coverView {
+				let rootView = UIView()
+				rootView.translatesAutoresizingMaskIntoConstraints = false
+				rootView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+
+				switch layout {
+					case .fill:
+						rootView.embed(toFillWith: coverView)
+
+					case .center:
+						rootView.embed(centered: coverView, enclosingAnchors: rootView.safeAreaAnchorSet)
+
+					case .top:
+						rootView.addSubview(coverView)
+						NSLayoutConstraint.activate([
+							coverView.leadingAnchor.constraint(greaterThanOrEqualTo: rootView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+							coverView.trailingAnchor.constraint(greaterThanOrEqualTo: rootView.safeAreaLayoutGuide.trailingAnchor, constant: 20),
+							coverView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
+							coverView.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: 20),
+							coverView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+						])
+				}
+
+				self.coverRootView = rootView
+			} else {
+				self.coverRootView = nil
+			}
+		}
+	}
+
 	// MARK: - Collection View Datasource
 	open func configureDataSource() {
 		dataSourceWorkQueue.executor = { (job, completionHandler) in
@@ -274,6 +325,29 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 				return sectionSnapshot
 			}
+		}
+
+		collectionViewDataSource.supplementaryViewProvider = { [weak self] (collectionView, elementKind, indexPath) in
+			// Fetch by section ID (may fail if section is process of being hidden)
+			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
+			   let section = self?.sectionsByID[sectionIdentifier], !section.hidden,
+			   let supplementaryItemProvider = CollectionViewSupplementaryCellProvider.providerFor(elementKind),
+			   let supplementaryItem = section.boundarySupplementaryItems?.first(where: { item in
+				   return item.elementKind == elementKind
+			   }) {
+			   	return supplementaryItemProvider.provideCell(for: collectionView, section: section, supplementaryItem: supplementaryItem, indexPath: indexPath)
+			}
+
+			// Fetch by section offset
+			if let section = self?.section(at: indexPath.section),
+			   let supplementaryItemProvider = CollectionViewSupplementaryCellProvider.providerFor(elementKind),
+			   let supplementaryItem = section.boundarySupplementaryItems?.first(where: { item in
+				   return item.elementKind == elementKind
+			   }) {
+			   	return supplementaryItemProvider.provideCell(for: collectionView, section: section, supplementaryItem: supplementaryItem, indexPath: indexPath)
+			}
+
+			return nil
 		}
 
 		// initial data
@@ -567,6 +641,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		public override var hash: Int {
 			return dataItemReference.hash ^ sectionIdentifier.hash
+		}
+
+		public override var description: String {
+			return "<WrappedItem: \(sectionIdentifier) : \(dataItemReference)>"
 		}
 	}
 
@@ -1119,6 +1197,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 
 		collectionView.backgroundColor = collection.tableBackgroundColor
+		coverRootView?.backgroundColor = collection.tableBackgroundColor
 	}
 }
 

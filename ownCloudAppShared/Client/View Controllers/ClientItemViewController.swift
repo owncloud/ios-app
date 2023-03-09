@@ -69,7 +69,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	private var viewControllerUUID: UUID
 
-	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false) {
+	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false, emptyItemListIcon: UIImage? = nil, emptyItemListTitleLocalized: String? = nil, emptyItemListMessageLocalized: String? = nil) {
 		inQuery?.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
 		_itemsDatasource = inDataSource
@@ -229,12 +229,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			self?.updateAdditionalDriveItems(from: subscription)
 		}, on: .main, trackDifferences: true, performInitialUpdate: true)
 
-		if let queryDatasource = query?.queryResultsDataSource {
-			let emptyFolderMessage = "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
+		if let queryDatasource = query?.queryResultsDataSource ?? inDataSource {
+			let emptyFolderMessage = emptyItemListMessageLocalized ?? "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
 
 			emptyItemListItem = ComposedMessageView(elements: [
-				.image(OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.text("No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+				.image(emptyItemListIcon ?? OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.text(emptyItemListTitleLocalized ?? "No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
 				.spacing(5),
 				.text(emptyFolderMessage, style: .systemSecondary(textStyle: .body), alignment: .centered)
 			])
@@ -311,10 +311,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.delegate = self
 		sortBar?.sortMethod = sortMethod
-		sortBar?.searchScope = searchScope
 		sortBar?.showSelectButton = true
 
-		itemsLeadInDataSource.setVersionedItems([ sortBar! ])
+		if let sortBar {
+			itemSection?.boundarySupplementaryItems = [
+				.view(sortBar, pinned: true)
+			]
+		}
+
+		// itemsLeadInDataSource.setVersionedItems([ sortBar! ])
 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
@@ -435,7 +440,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						} else if let numberOfItems = numberOfItems, numberOfItems > 0 {
 							self.contentState = .hasContent
 							self.folderStatistics = snapshot?.specialItems?[.folderStatistics] as? OCStatistic
-						} else if (numberOfItems == nil) || (self.query?.rootItem == nil) {
+						} else if (numberOfItems == nil) || ((self.query?.rootItem == nil) && (self.query != nil) && (self.query?.isCustom != true)) {
 							self.contentState = .loading
 						} else {
 							self.contentState = .empty
@@ -468,6 +473,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			switch contentState {
 				case .empty:
 					refreshEmptyActions()
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 
@@ -478,6 +484,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						loadingItems.append(loadingListItem)
 					}
 					emptyItemListDataSource.setItems(loadingItems, updated: nil)
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 
@@ -488,14 +495,16 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						folderRemovedItems.append(folderRemovedListItem)
 					}
 					emptyItemListDataSource.setItems(folderRemovedItems, updated: nil)
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 
 				case .hasContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
-					if let sortBar = sortBar {
-						itemsLeadInDataSource.setVersionedItems([ sortBar ])
-					}
+					sortBar?.isHidden = false
+//					if let sortBar = sortBar {
+//						itemsLeadInDataSource.setVersionedItems([ sortBar ])
+//					}
 
 					if searchActive == true {
 						itemsTrailingDataSource.setVersionedItems([ ])
@@ -509,6 +518,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				case .searchNonItemContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
+					sortBar?.isHidden = true
 					itemsLeadInDataSource.setVersionedItems([ ])
 					itemsTrailingDataSource.setVersionedItems([ ])
 					itemSectionHiddenNew = true
@@ -643,7 +653,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			return sort
 		}
 	}
-	open var searchScope: SortBarSearchScope = .local // only for SortBarDelegate protocol conformance
 	open var sortDirection: SortDirection {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
@@ -672,10 +681,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 //		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
 //	 		updateCustomSearchQuery()
 //		}
-	}
-
-	public func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope) {
-		 // only for SortBarDelegate protocol conformance
 	}
 
 	public func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
