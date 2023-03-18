@@ -215,11 +215,13 @@ open class ContainerSearchScope: AccountSearchScope {
 			if context.core?.useDrives == true, let driveID = queryLocation.driveID {
 				containerCondition = .require([
 					.where(.driveID, isEqualTo: driveID),
-					.where(.path, startsWith: path)
+					.where(.path, startsWith: path),
+					.where(.path, isNotEqualTo: path)
 				])
 			} else {
 				containerCondition = .require([
-					.where(.path, startsWith: path)
+					.where(.path, startsWith: path),
+					.where(.path, isNotEqualTo: path)
 				])
 			}
 
