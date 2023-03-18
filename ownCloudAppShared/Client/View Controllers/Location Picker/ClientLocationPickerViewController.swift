@@ -90,7 +90,7 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 				headerView.topAnchor.constraint(equalTo: view.topAnchor),
 
 				cancelButton.trailingAnchor.constraint(equalTo: selectButton.leadingAnchor, constant: -15),
-				cancelButton.centerYAnchor.constraint(equalTo: bottomBarContainer.centerYAnchor)
+				cancelButton.centerYAnchor.constraint(equalTo: selectButton.centerYAnchor)
 			])
 		}
 
