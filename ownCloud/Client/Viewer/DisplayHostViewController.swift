@@ -20,6 +20,10 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+class DisplayExtensionContext: OCExtensionContext {
+	public var clientContext: ClientContext?
+}
+
 class DisplayHostViewController: UIPageViewController {
 	enum PagePosition {
 		case before, after
@@ -72,7 +76,7 @@ class DisplayHostViewController: UIPageViewController {
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
-		self.clientContext = clientContext
+		self.clientContext = ClientContext(with: clientContext, originatingViewController: self)
 
 		if let queryDatasource {
 			queryDatasourceSubscription = queryDatasource.subscribe(updateHandler: { [weak self]  subscription in
@@ -266,7 +270,8 @@ class DisplayHostViewController: UIPageViewController {
 	private func createDisplayViewController(for mimeType: String) -> (DisplayViewController) {
 		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
 		let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
-		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
+		let context = DisplayExtensionContext(location: location, requirements: nil, preferences: nil)
+		context.clientContext = clientContext
 
 		var extensions: [OCExtensionMatch]?
 
