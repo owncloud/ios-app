@@ -298,11 +298,11 @@ public class ClientLocationPicker : NSObject {
 		// Set up navigation controller and context
 		rootNavigationController = navigationController
 		rootContext = ClientContext(with: baseContext, modifier: { context in
-			context.navigationController = navigationController
 			context.add(permissionHandler: { [weak self] context, dataItemRecord, checkInteraction, viewController in
 				return self?.checkPermission(context: context, dataItemRecord: dataItemRecord, interaction: checkInteraction, viewController: viewController) ?? false
 			})
 			context.viewControllerPusher = nil
+			context.browserController = nil
 			context.navigationController = navigationController
 			context.permissions = [ .selection ]
 			context.itemStyler = { [weak self] (context, _, item) in

@@ -612,6 +612,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		set {
 			navigationItem.titleLabelText = newValue
+			navigationItem.title = newValue
 		}
 	}
 
