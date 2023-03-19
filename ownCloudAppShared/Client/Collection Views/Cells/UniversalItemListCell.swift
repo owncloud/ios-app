@@ -350,8 +350,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.accessibilityLabel = "More".localized
 		button.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
 
-		button.frame = CGRect(x: 0, y: 0, width: 24, height: 24) // Avoid _UITemporaryLayoutWidths auto-layout warnings
-		button.widthAnchor.constraint(equalToConstant: 24).isActive = true
+		button.frame = CGRect(x: 0, y: 0, width: 32, height: 42) // Avoid _UITemporaryLayoutWidths auto-layout warnings
+		button.widthAnchor.constraint(equalToConstant: 32).isActive = true
+		button.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
 		moreButton = button
 
@@ -378,8 +379,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.accessibilityLabel = "Reveal".localized
 		button.addTarget(self, action: #selector(revealButtonTapped), for: .primaryActionTriggered)
 
-		button.frame = CGRect(x: 0, y: 0, width: 24, height: 24) // Avoid _UITemporaryLayoutWidths auto-layout warnings
-		button.widthAnchor.constraint(equalToConstant: 24).isActive = true
+		button.frame = CGRect(x: 0, y: 0, width: 32, height: 42) // Avoid _UITemporaryLayoutWidths auto-layout warnings
+		button.widthAnchor.constraint(equalToConstant: 32).isActive = true
+		button.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
 		revealButton = button
 
