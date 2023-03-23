@@ -254,36 +254,45 @@ class BookmarkViewController: StaticTableViewController {
 
 		switch mode {
 			case .create:
-				self.navigationItem.title = "Add account".localized
-				self.navigationItem.rightBarButtonItem = continueBarButtonItem
-
-				// Support for bookmark default URL
-				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
-					self.bookmark?.url = URL(string: defaultURLString)
-
-					if bookmark != nil {
-						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
-					}
-				}
-
-			case .edit:
-				// Fill UI
-				if bookmark != nil {
-					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
-
-					if bookmark?.isTokenBased == false, removeAuthDataFromCopy {
-						bookmark?.authenticationData = nil
-						self.passwordRow?.value = ""
-					}
-				}
-
-				self.usernameRow?.enabled =
-					(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
-					((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
-
-				self.navigationItem.title = "Edit account".localized
-				self.navigationItem.rightBarButtonItem = saveBarButtonItem
-		}
+            self.navigationItem.title = "Add account".localized
+            self.navigationItem.rightBarButtonItem = continueBarButtonItem
+            
+            // Support for bookmark default name
+            if let defaultNameString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultName) as? String {
+                self.bookmark?.name = defaultNameString
+                
+                if bookmark != nil {
+                    updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+                }
+            }
+            
+            // Support for bookmark default URL
+            if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
+                self.bookmark?.url = URL(string: defaultURLString)
+                
+                if bookmark != nil {
+                    updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+                }
+            }
+            
+        case .edit:
+            // Fill UI
+            if bookmark != nil {
+                updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+                
+                if bookmark?.isTokenBased == false, removeAuthDataFromCopy {
+                    bookmark?.authenticationData = nil
+                    self.passwordRow?.value = ""
+                }
+            }
+            
+            self.usernameRow?.enabled =
+            (bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
+            ((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
+            
+            self.navigationItem.title = "Edit account".localized
+            self.navigationItem.rightBarButtonItem = saveBarButtonItem
+        }
 
 		// Support for bookmark URL editable
 		if let bookmarkURLEditable = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool, bookmarkURLEditable == false {
@@ -1087,7 +1096,8 @@ extension OCClassSettingsIdentifier {
 }
 
 extension OCClassSettingsKey {
-	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
+    static let bookmarkDefaultName = OCClassSettingsKey("default-name")
+    static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
 	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
 	static let prepopulation = OCClassSettingsKey("prepopulation")
 }
@@ -1111,21 +1121,28 @@ extension BookmarkViewController : OCClassSettingsSupport {
 		return nil
 	}
 
-	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
-		return [
-			.bookmarkDefaultURL : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "The default URL for the creation of new bookmarks.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported
-			],
-
-			.bookmarkURLEditable : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported
-			],
+    static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+        return [
+                .bookmarkDefaultName : [
+                    .type 		: OCClassSettingsMetadataType.string,
+                    .description	: "The default name for the creation of new bookmarks.",
+                    .category	: "Bookmarks",
+                    .status		: OCClassSettingsKeyStatus.supported
+                ],
+            
+                .bookmarkDefaultURL : [
+                    .type         : OCClassSettingsMetadataType.string,
+                    .description    : "The default URL for the creation of new bookmarks.",
+                    .category    : "Bookmarks",
+                    .status        : OCClassSettingsKeyStatus.supported
+                ],
+            
+                .bookmarkURLEditable : [
+                    .type 		: OCClassSettingsMetadataType.boolean,
+                    .description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
+                    .category	: "Bookmarks",
+                    .status		: OCClassSettingsKeyStatus.supported
+                ],
 
 			.prepopulation : [
 				.type 		: OCClassSettingsMetadataType.string,
