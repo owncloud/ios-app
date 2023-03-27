@@ -100,8 +100,6 @@ class DisplayHostViewController: UIPageViewController {
 				self.updatePageViewControllerDatasource()
 			}, on: .main, trackDifferences: true, performInitialUpdate: true)
 		}
-
-		Theme.shared.register(client: self)
 	}
 
 	required init?(coder: NSCoder) {
@@ -152,8 +150,14 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 	}
 
+	private var registered = false
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+
+		if !registered {
+			registered = true
+			Theme.shared.register(client: self)
+		}
 
 		self.autoEnablePageScrolling()
 	}
@@ -374,7 +378,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 
 extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = collection.tableBackgroundColor
+		view.backgroundColor = collection.css.getColor(.fill, for: self.view)
 	}
 }
 

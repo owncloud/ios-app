@@ -23,8 +23,8 @@ import ownCloudApp
 class AccountControllerCell: ThemeableCollectionViewListCell {
 	static let avatarSideLength : CGFloat = 45
 
-	public var titleLabel: UILabel = UILabel()
-	public var detailLabel: UILabel = UILabel()
+	public var titleLabel: UILabel = ThemeCSSLabel(withSelectors: [.title])
+	public var detailLabel: UILabel = ThemeCSSLabel(withSelectors: [.description])
 	public var logoFallbackView: UIImageView = UIImageView()
 	public var iconView: ResourceViewHost = ResourceViewHost(fallbackSize: CGSize(width: AccountControllerCell.avatarSideLength, height: AccountControllerCell.avatarSideLength))
 	public var infoView: UIView = UIView()
@@ -39,6 +39,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		infoView.translatesAutoresizingMaskIntoConstraints = false
 		statusIconView.translatesAutoresizingMaskIntoConstraints = false
 		disconnectButton.translatesAutoresizingMaskIntoConstraints = false
+
+		cssSelectors = [.account]
+		iconView.cssSelectors = [.icon]
+		disconnectButton.cssSelectors = [.disconnect]
 
 		logoFallbackView.contentMode = .scaleAspectFit
 		logoFallbackView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
@@ -309,6 +313,18 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		backgroundConfig.cornerRadius = 10
 		backgroundConfig.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
 
+		if let backgroundColor = collection.css.getColor(.fill, for: self) {
+			backgroundConfig.backgroundColor = backgroundColor
+		}
+		if let cornerRadius = collection.css.getCGFloat(.cornerRadius, for: self) {
+			backgroundConfig.cornerRadius = cornerRadius
+		}
+
+		var disconnectButtonConfig = disconnectButton.configuration
+		disconnectButtonConfig?.baseBackgroundColor = collection.css.getColor(.fill,   for: disconnectButton)
+		disconnectButtonConfig?.baseForegroundColor = collection.css.getColor(.stroke, for: disconnectButton)
+		disconnectButton.configuration = disconnectButtonConfig
+
 		backgroundConfiguration = backgroundConfig
 	}
 }
@@ -345,4 +361,9 @@ extension AccountControllerCell {
 			}
 		}))
 	}
+}
+
+public extension ThemeCSSSelector {
+	static let account = ThemeCSSSelector(rawValue: "account")
+	static let disconnect = ThemeCSSSelector(rawValue: "disconnect")
 }

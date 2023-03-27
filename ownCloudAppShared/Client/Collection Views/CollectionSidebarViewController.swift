@@ -74,7 +74,11 @@ open class CollectionSidebarViewController: CollectionViewController {
 
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-		view.backgroundColor = collection.tableGroupBackgroundColor
+		view.backgroundColor = collection.css.getColor(.fill, for: collectionView) // collection.tableGroupBackgroundColor
+	}
+
+	open override var cssAutoSelectors: [ThemeCSSSelector] {
+		return [.sidebar, .collection]
 	}
 }
 

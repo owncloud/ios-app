@@ -18,7 +18,16 @@
 
 import UIKit
 
-public class SegmentViewItemView: ThemeView {
+public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
+	public var cssAutoSelectors: [ThemeCSSSelector] {
+		switch item?.style {
+			case .plain: return [ .item, .plain ]
+			case .label: return [ .item, .label ]
+			case .token: return [ .item, .token ]
+			default: return [.item]
+		}
+	}
+
 	weak var item: SegmentViewItem?
 
 	var iconView: UIImageView?
@@ -52,6 +61,7 @@ public class SegmentViewItemView: ThemeView {
 
 		if let icon = item.icon {
 			iconView = UIImageView()
+			iconView?.cssSelector = .icon
 			iconView?.image = icon.withRenderingMode(.alwaysTemplate)
 			iconView?.contentMode = .scaleAspectFit
 			iconView?.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +73,7 @@ public class SegmentViewItemView: ThemeView {
 		}
 
 		if let title = item.title {
-			titleView = UILabel()
+			titleView = ThemeCSSLabel(withSelectors: [.title])
 			titleView?.translatesAutoresizingMaskIntoConstraints = false
 			titleView?.text = title
 			if let titleTextStyle = item.titleTextStyle {
@@ -103,18 +113,10 @@ public class SegmentViewItemView: ThemeView {
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
-		if let item {
-			switch item.style {
-				case .plain, .label:
-					iconView?.tintColor = collection.tableRowColors.symbolColor
-					titleView?.textColor = collection.tableRowColors.secondaryLabelColor
-					backgroundColor = .clear
-
-				case .token:
-					iconView?.tintColor = collection.tokenColors.normal.foreground
-					titleView?.textColor = collection.tokenColors.normal.foreground
-					backgroundColor = collection.tokenColors.normal.background
-			}
+		if let iconView {
+			iconView.tintColor = collection.css.getColor(.stroke, for: iconView)
 		}
+
+		backgroundColor = collection.css.getColor(.fill, for: self)
 	}
 }

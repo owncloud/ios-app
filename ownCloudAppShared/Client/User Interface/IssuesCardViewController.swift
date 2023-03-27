@@ -37,13 +37,15 @@ public class CardCellBackgroundView : UIView {
 }
 
 public class CardHeaderView : UIView, Themeable {
-	public var label : UILabel
+	public var label : ThemeCSSLabel
 
 	public init(title: String) {
-		label = UILabel()
+		label = ThemeCSSLabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 
+		label.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.4, weight: .bold)
 		label.text = title
+
 		label.setContentHuggingPriority(.required, for: .vertical)
 		label.setContentHuggingPriority(.defaultLow, for: .horizontal)
 		label.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -79,10 +81,7 @@ public class CardHeaderView : UIView, Themeable {
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		label.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.4, weight: .bold)
-		label.textColor = collection.tableRowColors.labelColor
-
-		self.backgroundColor = collection.tableBackgroundColor
+		self.apply(css: collection.css, properties: [.fill])
 	}
 }
 
@@ -248,7 +247,7 @@ open class IssuesCardViewController: StaticTableViewController {
 
 		let frameViewController = FrameViewController(header: headerView, footer: alertView, viewController: issuesViewController)
 
-		alertView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		alertView.backgroundColor = Theme.shared.activeCollection.css.getColor(.fill, for: issuesViewController.tableView)
 		issuesViewController.alertView = alertView
 
 		hostViewController.present(asCard: frameViewController, animated: true, withHandle: false, dismissable: false) {
@@ -266,7 +265,6 @@ open class IssuesCardViewController: StaticTableViewController {
 	override public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
-		tableView.backgroundColor = collection.tableBackgroundColor
-		alertView?.backgroundColor = collection.tableBackgroundColor
+		tableView.applyThemeCollection(collection)
 	}
 }

@@ -150,13 +150,6 @@ open class MessageView: UIView {
 			messageImageView = imageView
 			messageTitleLabel = titleLabel
 			messageMessageLabel = messageLabel
-
-			messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
-				self?.messageView?.backgroundColor = collection.tableBackgroundColor
-
-				self?.messageTitleLabel?.applyThemeCollection(collection, itemStyle: .bigTitle)
-				self?.messageMessageLabel?.applyThemeCollection(collection, itemStyle: .bigMessage)
-			})
 		}
 
 		if messageView?.superview == nil {
@@ -167,6 +160,13 @@ open class MessageView: UIView {
 				rootView.alpha = 0
 
 				self.mainView.addSubview(rootView)
+
+				messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
+					self?.messageView?.backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: self?.messageView)
+
+					self?.messageTitleLabel?.applyThemeCollection(collection, itemStyle: .bigTitle)
+					self?.messageMessageLabel?.applyThemeCollection(collection, itemStyle: .bigMessage)
+				})
 
 				self.composeViewBottomConstraint = rootView.bottomAnchor.constraint(equalTo: self.mainView.safeAreaLayoutGuide.bottomAnchor)
 				if keyboardHeight > 0 {

@@ -56,8 +56,6 @@ open class MoreViewHeader: UIView {
 
 		self.translatesAutoresizingMaskIntoConstraints = false
 
-		Theme.shared.register(client: self)
-
 		render()
 	}
 
@@ -79,8 +77,6 @@ open class MoreViewHeader: UIView {
 
 		self.translatesAutoresizingMaskIntoConstraints = false
 
-		Theme.shared.register(client: self)
-
 		render()
 	}
 
@@ -89,6 +85,8 @@ open class MoreViewHeader: UIView {
 	}
 
 	private func render() {
+		cssSelectors = [.more, .header]
+
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -230,13 +228,25 @@ open class MoreViewHeader: UIView {
 
 	public func updateFavoriteButtonImage() {
 		if item.isFavorite == true {
+			favoriteButton.cssSelectors = [.favorite]
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
-			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			favoriteButton.accessibilityLabel = "Unfavorite item".localized
 		} else {
+			favoriteButton.cssSelectors = [.disabled, .favorite]
 			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
-			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
 			favoriteButton.accessibilityLabel = "Favorite item".localized
+		}
+
+		favoriteButton.tintColor = Theme.shared.activeCollection.css.getColor(.stroke, for: favoriteButton)
+	}
+
+	private var _hasRegistered = false
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil, !_hasRegistered {
+			_hasRegistered = true
+			Theme.shared.register(client: self)
 		}
 	}
 }
@@ -245,10 +255,12 @@ extension MoreViewHeader: Themeable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		titleLabel.applyThemeCollection(collection)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message)
-		activityIndicator.style = collection.activityIndicatorViewStyle
+		activityIndicator.style = collection.css.getActivityIndicatorStyle(for: activityIndicator) ?? .medium
 
 		if adaptBackgroundColor {
-			backgroundColor = collection.tableBackgroundColor
+			backgroundColor = collection.css.getColor(.fill, for: self)
 		}
+
+		updateFavoriteButtonImage()
 	}
 }

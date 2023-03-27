@@ -48,12 +48,12 @@ public class ComposedMessageElement: NSObject {
 	}
 	public var font: UIFont?
 	public var style: ThemeItemStyle?
-	public var textView: UILabel?
+	public var textView: ThemeCSSLabel?
 
 	public var imageView: UIImageView?
 
 	public var progress: Progress?
-	public var progressBar: UIProgressView?
+	public var progressBar: ThemeCSSProgressView?
 
 	public var activityIndicatorView: UIActivityIndicatorView?
 
@@ -64,7 +64,7 @@ public class ComposedMessageElement: NSObject {
 		if _view == nil {
 			switch kind {
 				case .title, .subtitle, .text:
-					textView = UILabel()
+					textView = ThemeCSSLabel(withSelectors: cssSelectors)
 					textView?.translatesAutoresizingMaskIntoConstraints = false
 					textView?.numberOfLines = 0
 
@@ -91,6 +91,8 @@ public class ComposedMessageElement: NSObject {
 					imageView = UIImageView(image: image)
 					imageView?.contentMode = .scaleAspectFit
 					imageView?.translatesAutoresizingMaskIntoConstraints = false
+
+					imageView?.cssSelectors = cssSelectors
 
 					let rootView = UIView()
 					rootView.translatesAutoresizingMaskIntoConstraints = false
@@ -148,23 +150,25 @@ public class ComposedMessageElement: NSObject {
 
 					add(applier: { [weak self] theme, collection, event in
 						if let self = self, let imageView = self.imageView {
-							imageView.tintColor = collection.tintColor
+							imageView.tintColor = collection.css.getColor(.stroke, for: imageView)
 						}
 					})
 
 					_view = rootView
 
 				case .divider:
-					let dividerView = UIView()
+					let dividerView = ThemeCSSView(withSelectors: cssSelectors ?? [.separator])
 					dividerView.translatesAutoresizingMaskIntoConstraints = false
 					dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-					dividerView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
+
 					_view = dividerView
 
 				case .progressBar(let progress, let relativeWidth):
-					let progressView = UIProgressView(progressViewStyle: .default)
+					let progressView = ThemeCSSProgressView(progressViewStyle: .default)
 					progressView.translatesAutoresizingMaskIntoConstraints = false
 					progressView.observedProgress = progress
+
+					progressView.cssSelectors = cssSelectors
 
 					let rootView = UIView()
 					rootView.translatesAutoresizingMaskIntoConstraints = false
@@ -203,6 +207,8 @@ public class ComposedMessageElement: NSObject {
 					progressView.translatesAutoresizingMaskIntoConstraints = false
 					progressView.progress = progress
 
+					progressView.cssSelectors = cssSelectors
+
 					let rootView = UIView()
 					rootView.translatesAutoresizingMaskIntoConstraints = false
 					rootView.addSubview(progressView)
@@ -236,6 +242,7 @@ public class ComposedMessageElement: NSObject {
 				case .activityIndicator(let style, let size):
 					let activityIndicator = UIActivityIndicatorView(style: style)
 					activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+					activityIndicator.cssSelectors = cssSelectors
 
 					let rootView = UIView()
 					rootView.translatesAutoresizingMaskIntoConstraints = false
@@ -280,7 +287,7 @@ public class ComposedMessageElement: NSObject {
 				case .button(let action):
 					let button = ThemeButton()
 					button.translatesAutoresizingMaskIntoConstraints = false
-					// button.setTitle(text, for: .normal)
+					button.cssSelectors = cssSelectors
 
 					var buttonConfig = UIButton.Configuration.filled()
 					buttonConfig.title = text
@@ -331,58 +338,67 @@ public class ComposedMessageElement: NSObject {
 		}
 	}
 
-	static public func title(_ title: String, alignment: Alignment = .leading, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+	static public func title(_ title: String, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = [.title], insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .title, alignment: alignment, insets: altInsets)
 		element.text = title
 		element.style = .system(textStyle: .title3, weight: .bold)
+		element.cssSelectors = cssSelectors
 
 		return element
 	}
 
-	static public func subtitle(_ subtitle: String, alignment: Alignment = .leading, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+	static public func subtitle(_ subtitle: String, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = [.subtitle], insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .subtitle, alignment: alignment, insets: altInsets)
 		element.text = subtitle
 		element.style = .systemSecondary(textStyle: .body, weight: nil)
+		element.cssSelectors = cssSelectors
 
 		return element
 	}
 
-	static public func text(_ text: String, font: UIFont? = nil, style: ThemeItemStyle?, alignment: Alignment = .leading, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+	static public func text(_ text: String, font: UIFont? = nil, style: ThemeItemStyle?, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .text, alignment: alignment, insets: altInsets)
 		element.text = text
 		element.font = font
 		element.style = style
+		element.cssSelectors = cssSelectors
 
 		return element
 	}
 
-	static public func button(_ title: String, action: UIAction, alignment: Alignment = .leading, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+	static public func button(_ title: String, action: UIAction, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .button(action: action), alignment: alignment, insets: altInsets)
 		element.text = title
+		element.cssSelectors = cssSelectors
 
 		return element
 	}
 
-	static public func image(_ image: UIImage, size: CGSize?, adaptSizeToRatio: Bool = false, alignment: Alignment = .centered, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
-		return ComposedMessageElement(kind: .image(image: image, imageSize: size, adaptSizeToRatio: adaptSizeToRatio), alignment: alignment, insets: altInsets)
+	static public func image(_ image: UIImage, size: CGSize?, adaptSizeToRatio: Bool = false, alignment: Alignment = .centered, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+		let element = ComposedMessageElement(kind: .image(image: image, imageSize: size, adaptSizeToRatio: adaptSizeToRatio), alignment: alignment, insets: altInsets)
+		element.cssSelectors = cssSelectors
+
+		return element
 	}
 
-	static public func progressBar(with relativeWidth: CGFloat = 1.0, progress: Progress?, alignment: Alignment = .centered, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+	static public func progressBar(with relativeWidth: CGFloat = 1.0, progress: Progress?, alignment: Alignment = .centered, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .progressBar(progress: progress, relativeWidth: relativeWidth), alignment: alignment, insets: altInsets)
 		element.progress = progress
+		element.cssSelectors = cssSelectors
 
 		return element
 	}
 
-	static public func progressCircle(with progress: Progress, alignment: Alignment = .centered, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+	static public func progressCircle(with progress: Progress, alignment: Alignment = .centered, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .progressCircle(progress: progress), alignment: alignment, insets: altInsets)
 		element.progress = progress
+		element.cssSelectors = cssSelectors
 
 		return element
 	}
 
 	static public func activityIndicator(with alignment: Alignment = .centered, style: UIActivityIndicatorView.Style? = nil, size: CGSize = CGSize(width: 30, height: 30), insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
-		let effectiveStyle = style ?? Theme.shared.activeCollection.activityIndicatorViewStyle
+		let effectiveStyle = style ?? Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium
 		return ComposedMessageElement(kind: .activityIndicator(style: effectiveStyle, size: size), alignment: alignment, insets: altInsets)
 	}
 
@@ -419,6 +435,7 @@ public class ComposedMessageView: UIView, Themeable {
 	public init(elements: [ComposedMessageElement]) {
 		super.init(frame: .zero)
 		self.translatesAutoresizingMaskIntoConstraints = false
+		self.cssSelectors = [.message]
 
 		self.elements = elements
 	}
@@ -520,25 +537,29 @@ public extension ComposedMessageView {
 		var elements: [ComposedMessageElement] = []
 
 		if let image = image {
-			let imageElement: ComposedMessageElement = .image(image, size: CGSize(width: 48, height: 48), alignment: .centered)
+			let imageElement: ComposedMessageElement = .image(image, size: CGSize(width: 48, height: 48), alignment: .centered, cssSelectors: [.icon])
 			imageElement.insets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10)
 			elements.append(imageElement)
 		}
 
-		if let title = title {
+		if let title {
 			elements.append(.title(title, alignment: .centered))
 		}
 
-		if let subtitle = subtitle {
+		if let subtitle {
 			elements.append(.subtitle(subtitle, alignment: .centered))
+		}
+
+		if let additionalElements {
+			elements.append(contentsOf: additionalElements)
 		}
 
 		let infoBoxView = ComposedMessageView(elements: elements)
 		infoBoxView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 30, trailing: 20)
 		infoBoxView.backgroundInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
-		infoBoxView.backgroundView = RoundCornerBackgroundView(fillColorPicker: { theme, collection, event in
-			return collection.tableGroupBackgroundColor
-		})
+		infoBoxView.backgroundView = RoundCornerBackgroundView()
+		infoBoxView.backgroundView?.cssSelectors = [.background]
+		infoBoxView.cssSelectors = [.message, .infoBox]
 		infoBoxView.translatesAutoresizingMaskIntoConstraints = false
 
 		return infoBoxView
@@ -547,11 +568,16 @@ public extension ComposedMessageView {
 	static func sectionHeader(titled title: String) -> ComposedMessageView {
 		let headerView = ComposedMessageView(elements: [
 			.spacing(10),
-			.title(title, alignment: .leading, insets: .zero)
+			.title(title, alignment: .leading, cssSelectors: [.sectionHeader], insets: .zero)
 		])
 		headerView.elementInsets.leading = 15
 		headerView.elementInsets.bottom = 5
 
 		return headerView
 	}
+}
+
+extension ThemeCSSSelector {
+	static let infoBox = ThemeCSSSelector(rawValue: "infoBox")
+	static let message = ThemeCSSSelector(rawValue: "message")
 }

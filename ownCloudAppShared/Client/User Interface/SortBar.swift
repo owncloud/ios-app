@@ -30,8 +30,7 @@ public protocol SortBarDelegate: AnyObject {
 	func toggleSelectMode()
 }
 
-public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
-
+public class SortBar: ThemeCSSView {
 	weak public var delegate: SortBarDelegate? {
 		didSet {
 			updateSortButtonTitle()
@@ -101,6 +100,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		self.sortMethod = sortMethod
 
 		super.init(frame: frame)
+		self.cssSelector = .sortBar
 
 		if let sortButton, let selectButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +114,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			// Sort Button
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
 			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
+			sortButton.cssSelector = .sorting
 			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
 			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
 			sortButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -153,7 +154,7 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 			])
 
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
-			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
+			selectButton.cssSelector = .multiselect
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
 			selectButton.accessibilityLabel = "Enter multiple selection".localized
 			selectButton.isPointerInteractionEnabled = true
@@ -168,7 +169,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 
 		// Finalize view setup
 		self.accessibilityIdentifier = "sort-bar"
-		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
 	}
@@ -177,15 +177,12 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
-
 	// MARK: - Theme support
-	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.sortButton?.applyThemeCollection(collection)
-		self.selectButton?.applyThemeCollection(collection)
-		self.backgroundColor = collection.tableRowColors.backgroundColor
+	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.sortButton?.apply(css: collection.css, properties: [.stroke])
+		self.selectButton?.apply(css: collection.css, properties: [.stroke])
+
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 	}
 
 	// MARK: - Sort Direction Title
@@ -206,13 +203,10 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	@objc private func toggleSelectMode() {
 		delegate?.toggleSelectMode()
 	}
+}
 
-	// MARK: - UIPopoverPresentationControllerDelegate
-	@objc open func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return .none
-	}
-
-	@objc open func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
-		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
-	}
+public extension ThemeCSSSelector {
+	static let sortBar = ThemeCSSSelector(rawValue: "sortBar")
+	static let multiselect = ThemeCSSSelector(rawValue: "multiselect")
+	static let sorting = ThemeCSSSelector(rawValue: "sorting")
 }

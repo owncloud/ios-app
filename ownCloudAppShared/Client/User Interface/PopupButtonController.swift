@@ -100,6 +100,8 @@ open class PopupButtonController : NSObject, Themeable {
 		button.setContentHuggingPriority(.required, for: .horizontal)
 
 		button.showsMenuAsPrimaryAction = true
+
+		button.cssSelectors = [.popupButton]
 	}
 
 	convenience init(with choices: [PopupButtonChoice], selectedChoice: PopupButtonChoice? = nil, selectFirstChoice: Bool = false, dropDown: Bool = false, staticTitle: String? = nil, titleCustomizer: TitleCustomizer? = nil, selectionCustomizer: SelectionCustomizer? = nil, choiceHandler: ChoiceHandler? = nil) {

@@ -354,6 +354,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.widthAnchor.constraint(equalToConstant: 32).isActive = true
 		button.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
+		button.cssSelectors = [.accessory, .more]
+
 		moreButton = button
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
@@ -383,6 +385,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.widthAnchor.constraint(equalToConstant: 32).isActive = true
 		button.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
+		button.cssSelectors = [.accessory, .reveal]
+
 		revealButton = button
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
@@ -410,6 +414,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.setTitle("⚠️", for: .normal)
 		button.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
 
+		button.cssSelectors = [.accessory]
+
 		messageButton = button
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
@@ -431,13 +437,15 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		progressView.progress = Progress(totalUnitCount: 100)
 
+		progressView.cssSelectors = [.accessory, .progress]
+
 		self.progressView = progressView
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: progressView, placement: .trailing(displayed: .whenNotEditing)))
 	}()
 
 	// - Make custom accessory buttons
-	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, action: UIAction? = nil) -> (UIButton, UICellAccessory) {
+	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], action: UIAction? = nil) -> (UIButton, UICellAccessory) {
 		let button = UIButton()
 
 		button.setTitle(title, for: .normal)
@@ -450,8 +458,6 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			button.addAction(action, for: .primaryActionTriggered)
 		}
 
-		button.applyThemeCollection(Theme.shared.activeCollection)
-
 		if image != nil, title != nil {
 			var configuration = UIButton.Configuration.borderedTinted()
 			configuration.buttonSize = .small
@@ -460,6 +466,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 			button.configuration = configuration.updated(for: button)
 		}
+
+		button.cssSelectors = cssSelectors
+
+		button.applyThemeCollection(Theme.shared.activeCollection)
 
 		return (button, .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing))))
 	}
@@ -487,9 +497,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		var backgroundConfig = backgroundConfiguration?.updated(for: state)
 
 		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) || revealHighlight {
-			backgroundConfig?.backgroundColor = collection.tableRowHighlightColors.backgroundColor?.withAlphaComponent(0.5)
+			backgroundConfig?.backgroundColor = collection.css.getColor(.fill, state: [.highlighted], for: self)?.withAlphaComponent(0.5)
 		} else {
-			backgroundConfig?.backgroundColor = collection.tableBackgroundColor
+			backgroundConfig?.backgroundColor = collection.css.getColor(.fill, for: self)
 		}
 
 		backgroundConfiguration = backgroundConfig
@@ -498,9 +508,15 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	open override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: state)
 
-		moreButton?.tintColor = collection.tableRowColors.secondaryLabelColor
-		revealButton?.tintColor = collection.tableRowColors.secondaryLabelColor
-		messageButton?.tintColor = collection.tableRowColors.secondaryLabelColor
+		if let moreButton {
+			moreButton.tintColor = collection.css.getColor(.stroke, for: moreButton)
+		}
+		if let revealButton {
+			revealButton.tintColor = collection.css.getColor(.stroke, for: revealButton)
+		}
+		if let messageButton {
+			messageButton.tintColor = collection.css.getColor(.stroke, for: messageButton)
+		}
 
 		setNeedsUpdateConfiguration()
 	}
@@ -532,4 +548,9 @@ public extension CollectionViewCellStyle {
 			options[.showMoreButton] = newValue
 		}
 	}
+}
+
+extension ThemeCSSSelector {
+	static let more = ThemeCSSSelector(rawValue: "more")
+	static let reveal = ThemeCSSSelector(rawValue: "reveal")
 }

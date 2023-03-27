@@ -57,8 +57,8 @@ class MessageGroupCell: ThemeTableViewCell {
 
 	var applyAllContainer : UIView?
 	var applyAllSwitch : UISwitch?
-	var applyAllLabel : UILabel?
-	var showAllLabel : UIButton?
+	var applyAllLabel : ThemeCSSLabel?
+	var showAllButton : ThemeCSSButton?
 	var badgeLabel : RoundedLabel?
 
 	var noBottomSpacing : Bool = false
@@ -134,7 +134,7 @@ class MessageGroupCell: ThemeTableViewCell {
 				}
 
 				if applyAllLabel == nil {
-					applyAllLabel = UILabel()
+					applyAllLabel = ThemeCSSLabel()
 					applyAllLabel?.translatesAutoresizingMaskIntoConstraints = false
 					applyAllLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
 					applyAllLabel?.text = "Apply to all".localized
@@ -159,17 +159,17 @@ class MessageGroupCell: ThemeTableViewCell {
 
 				badgeLabel?.isHidden = true
 
-				if showAllLabel == nil {
-					showAllLabel = UIButton(type: .system)
-					showAllLabel?.translatesAutoresizingMaskIntoConstraints = false
-					showAllLabel?.addTarget(self, action: #selector(showAllIssues), for: .primaryActionTriggered)
+				if showAllButton == nil {
+					showAllButton = ThemeCSSButton(type: .system)
+					showAllButton?.translatesAutoresizingMaskIntoConstraints = false
+					showAllButton?.addTarget(self, action: #selector(showAllIssues), for: .primaryActionTriggered)
 
-					applyAllContainer?.addSubview(showAllLabel!)
+					applyAllContainer?.addSubview(showAllButton!)
 				}
 
-				showAllLabel?.setTitle("\("Show all".localized) (\(multiMessageCount))", for: .normal)
+				showAllButton?.setTitle("\("Show all".localized) (\(multiMessageCount))", for: .normal)
 
-				if setupLayout, let applyAllContainer = applyAllContainer, let applyAllSwitch = applyAllSwitch, let applyAllLabel = applyAllLabel, let showAllLabel = showAllLabel {
+				if setupLayout, let applyAllContainer = applyAllContainer, let applyAllSwitch = applyAllSwitch, let applyAllLabel = applyAllLabel, let showAllButton = showAllButton {
 					NSLayoutConstraint.activate([
 						applyAllSwitch.topAnchor.constraint(equalTo: applyAllContainer.topAnchor, constant: applyAllSwitchVerticalInset),
 						applyAllSwitch.leftAnchor.constraint(equalTo: applyAllContainer.leftAnchor, constant: applyAllSwitchHorizontalInset),
@@ -178,9 +178,9 @@ class MessageGroupCell: ThemeTableViewCell {
 						applyAllLabel.leftAnchor.constraint(equalTo: applyAllSwitch.rightAnchor, constant: applyAllSwitchHorizontalSpacing),
 						applyAllLabel.centerYAnchor.constraint(equalTo: applyAllSwitch.centerYAnchor),
 
-						showAllLabel.leftAnchor.constraint(greaterThanOrEqualTo: applyAllLabel.rightAnchor, constant: showAllSwitchHorizontalInset),
-						showAllLabel.rightAnchor.constraint(equalTo: applyAllContainer.rightAnchor, constant: -showAllSwitchHorizontalInset),
-						showAllLabel.centerYAnchor.constraint(equalTo: applyAllSwitch.centerYAnchor)
+						showAllButton.leftAnchor.constraint(greaterThanOrEqualTo: applyAllLabel.rightAnchor, constant: showAllSwitchHorizontalInset),
+						showAllButton.rightAnchor.constraint(equalTo: applyAllContainer.rightAnchor, constant: -showAllSwitchHorizontalInset),
+						showAllButton.centerYAnchor.constraint(equalTo: applyAllSwitch.centerYAnchor)
 					])
 				}
 
@@ -248,12 +248,5 @@ class MessageGroupCell: ThemeTableViewCell {
 		if let message = messageGroup?.messages.first {
 			delegate?.cell(self, showMessagesLike: message)
 		}
-	}
-
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-
-		applyAllLabel?.textColor = collection.tableRowColors.labelColor
-		showAllLabel?.applyThemeCollection(collection)
 	}
 }

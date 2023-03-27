@@ -151,10 +151,10 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 		super.viewDidLayoutSubviews()
 
 		// Needs to be done here, because of an iOS 13 bug. Do not move to viewDidLoad!
-		let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.searchBarColors.secondaryLabelColor]
+		let attributedStringColor = [NSAttributedString.Key.foregroundColor : Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.secondary], for: searchController?.searchBar.searchTextField) ?? .placeholderText]
 		let attributedString = NSAttributedString(string: "Add email or name".localized, attributes: attributedStringColor)
 		searchController?.searchBar.searchTextField.attributedPlaceholder = attributedString
-		searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.searchBarColors.labelColor
+		searchController?.searchBar.searchTextField.textColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.searchField, .label], for:nil)
 	}
 
 	open override func viewDidAppear(_ animated: Bool) {
@@ -184,7 +184,7 @@ open class GroupSharingTableViewController: SharingTableViewController, UISearch
 					self.actionSection = section
 
 					let declineRow = StaticTableViewRow(buttonWithAction: { (row, _) in
-						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 						progressView.startAnimating()
 
 						row.cell?.accessoryView = progressView

@@ -18,7 +18,13 @@
 
 import UIKit
 
-public class SegmentView: ThemeView {
+extension ThemeCSSSelector {
+	static let segments = ThemeCSSSelector(rawValue: "segments")
+}
+
+public class SegmentView: ThemeView, ThemeCSSAutoSelector {
+	public let cssAutoSelectors: [ThemeCSSSelector] = [.segments]
+
 	public enum TruncationMode {
 		case none
 		case clipTail

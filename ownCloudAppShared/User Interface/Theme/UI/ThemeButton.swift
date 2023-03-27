@@ -25,24 +25,32 @@ public enum ThemeButtonCornerRadiusStyle : CGFloat {
 }
 
 @IBDesignable
-open class ThemeButton : UIButton {
-	internal var _themeColorCollection : ThemeColorPairCollection?
-	public var themeColorCollection : ThemeColorPairCollection? {
-		set(colorCollection) {
-			_themeColorCollection = colorCollection
+open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
+	private var themeRegistered = false
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
 
-			if _themeColorCollection != nil {
-				self.setTitleColor(_themeColorCollection?.normal.foreground, for: .normal)
-				self.setTitleColor(_themeColorCollection?.highlighted.foreground, for: .highlighted)
-				self.setTitleColor(_themeColorCollection?.disabled.foreground, for: .disabled)
-
-				self.updateBackgroundColor()
-			}
+		if !themeRegistered, window != nil {
+			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
+			Theme.shared.register(client: self, applyImmediately: true)
+			themeRegistered = true
 		}
+	}
 
-		get {
-			return _themeColorCollection
+	public func cssSelectorsChanged() {
+		if superview != nil {
+			self.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
 		}
+	}
+
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		let css = collection.css
+
+		setTitleColor(css.getColor(.stroke,  			    	for: self), for: .normal)
+		setTitleColor(css.getColor(.stroke, selectors: [.highlighted], 	for: self), for: .highlighted)
+		setTitleColor(css.getColor(.stroke, selectors: [.disabled],    	for: self), for: .highlighted)
+
+		updateBackgroundColor()
 	}
 
 	public override var isHighlighted: Bool {
@@ -68,15 +76,15 @@ open class ThemeButton : UIButton {
 	}
 
 	private func updateBackgroundColor() {
-		if _themeColorCollection != nil {
-			if !self.isEnabled {
-				self.backgroundColor = _themeColorCollection?.disabled.background
+		let css = Theme.shared.activeCollection.css
+
+		if !isEnabled {
+			backgroundColor = css.getColor(.fill, selectors: [.disabled], for: self)
+		} else {
+			if isHighlighted {
+				backgroundColor = css.getColor(.fill, selectors: [.highlighted], for: self)
 			} else {
-				if self.isHighlighted {
-					self.backgroundColor = _themeColorCollection?.highlighted.background
-				} else {
-					self.backgroundColor = _themeColorCollection?.normal.background
-				}
+				backgroundColor = css.getColor(.fill, for: self)
 			}
 		}
 	}

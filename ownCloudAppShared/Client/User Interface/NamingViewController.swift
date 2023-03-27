@@ -22,7 +22,7 @@ import ownCloudSDK
 public typealias StringValidatorResult = (Bool, String?, String?)
 public typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-open class NamingViewController: UIViewController, Themeable {
+open class NamingViewController: UIViewController {
 	weak open var item: OCItem?
 	weak open var core: OCCore?
 	open var completion: (String?, NamingViewController) -> Void
@@ -68,7 +68,7 @@ open class NamingViewController: UIViewController, Themeable {
 		thumbnailImageView = ResourceViewHost()
 
 		nameContainer = UIView(frame: .zero)
-		nameTextField = UITextField(frame: .zero)
+		nameTextField = ThemeCSSTextField()
 		nameTextField.accessibilityIdentifier = "name-text-field"
 
 		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
@@ -78,8 +78,6 @@ open class NamingViewController: UIViewController, Themeable {
 		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
 
 		super.init(nibName: nil, bundle: nil)
-
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	convenience public init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
@@ -96,13 +94,6 @@ open class NamingViewController: UIViewController, Themeable {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
-		Theme.shared.unregister(client: self)
-	}
-
-	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		nameTextField.backgroundColor = collection.tableBackgroundColor
-		nameTextField.textColor = collection.tableRowColors.labelColor
-		nameTextField.keyboardAppearance = collection.keyboardAppearance
 	}
 
 	override open func viewDidLoad() {
@@ -150,7 +141,7 @@ open class NamingViewController: UIViewController, Themeable {
 			thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
 			thumbnailImageView.centerXAnchor.constraint(equalTo: thumbnailContainer.centerXAnchor),
 			thumbnailImageView.centerYAnchor.constraint(equalTo: thumbnailContainer.centerYAnchor)
-			])
+		])
 
 		// Thumbnail container View
 		thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false

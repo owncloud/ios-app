@@ -56,8 +56,8 @@ class ThemeableTextView : UITextView, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		backgroundColor = collection.tableBackgroundColor
-		textColor = collection.tableRowColors.labelColor
+		backgroundColor = collection.css.getColor(.fill, for: self)
+		textColor = collection.css.getColor(.stroke, for: self)
 	}
 }
 

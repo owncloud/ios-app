@@ -48,15 +48,23 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 						config.footerMode = footerMode
 					}
 
-					switch listAppearance {
-						case .plain:
-							config.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+					let css = Theme.shared.activeCollection.css
 
+					var themedBackgroundColor: UIColor?
+					var isGrouped = false
+
+					switch listAppearance {
 						case .grouped, .insetGrouped:
-							config.backgroundColor = Theme.shared.activeCollection.tableGroupBackgroundColor
+							isGrouped = true
 
 						default: break
 					}
+
+					if let collectionViewController, let cssColor = css.getColor(.fill, selectors: isGrouped ? [.grouped] : nil, for: collectionViewController) {
+						themedBackgroundColor = cssColor
+					}
+
+					config.backgroundColor = themedBackgroundColor
 
 					// Leading and trailing swipe actions
 					if let collectionViewController = collectionViewController {

@@ -61,7 +61,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 		func addNoItemsCondition(imageName: String, title: String, datasource: OCDataSource) {
 			let noShareMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: imageName)!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.text(title, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
+				.title(title, alignment: .centered)
 			])
 
 			noItemsCondition = DataSourceCondition(.empty, with: datasource, initial: true, action: { [weak self] condition in

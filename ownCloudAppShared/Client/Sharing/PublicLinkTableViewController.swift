@@ -184,15 +184,17 @@ open class PublicLinkTableViewController: SharingTableViewController {
 						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
 
+							let originalColor = row.cell?.textLabel?.textColor
+
 							row.cell?.textLabel?.text = url.absoluteString
 							row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
-							row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
+							row.cell?.textLabel?.textColor = row.cell?.textLabel?.getThemeCSSColor(.stroke, selectors: [.secondary], state: [.disabled]) ?? .secondaryLabel
 							row.cell?.textLabel?.numberOfLines = 0
 
 							_ = NotificationHUDViewController(on: self, title: "Private Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: {
 								row.cell?.textLabel?.text = "Copy Private Link".localized
 								row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
-								row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tintColor
+								row.cell?.textLabel?.textColor = originalColor
 								row.cell?.textLabel?.numberOfLines = 1
 							})
 						}, title: "Copy Private Link".localized, style: .plain)

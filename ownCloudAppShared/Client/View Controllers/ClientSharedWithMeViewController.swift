@@ -80,7 +80,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 
 			let noShareMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.text("No items shared with you".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
+				.title("No items shared with you".localized, alignment: .centered)
 			])
 
 			noItemsCondition = DataSourceCondition(.allOf([

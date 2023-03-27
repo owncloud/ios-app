@@ -248,8 +248,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.navigationController?.navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
-		self.view.backgroundColor = collection.tableBackgroundColor
+		self.navigationController?.navigationBar.applyThemeCollection(collection)
+		self.view.backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: self.view)
 	}
 }
 

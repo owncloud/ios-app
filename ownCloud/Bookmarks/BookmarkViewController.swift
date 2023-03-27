@@ -40,7 +40,6 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
-	var tokenInfoView : RoundedInfoView?
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
@@ -184,7 +183,10 @@ class BookmarkViewController: StaticTableViewController {
 					self?.composeSectionsAndRows(animated: true)
 				}
 
-				self?.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
+				if let nameRowTextField = self?.nameRow?.textField {
+					let placeholderColor = nameRowTextField.getThemeCSSColor(.stroke, selectors: [.placeholder]) ?? .secondaryLabel
+					nameRowTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : placeholderColor])
+				}
 			}
 		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
@@ -239,8 +241,6 @@ class BookmarkViewController: StaticTableViewController {
 		}, title: "Delete Authentication Data".localized, style: .destructive, identifier: "row-credentials-auth-data-delete")
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
-
-		tokenInfoView = RoundedInfoView(text: "")
 
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
@@ -904,12 +904,18 @@ class BookmarkViewController: StaticTableViewController {
 				authMethodName = localizedAuthMethodName
 			}
 
-			tokenInfoView?.infoText = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName])
+			let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
+				.text("If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName]), style: .system(textStyle: .body, weight: .semibold), alignment: .centered, cssSelectors: [.info])
+			])
+			tokenMessageView.cssSelector = .info
+			tokenMessageView.backgroundView?.cssSelector = .info
+			tokenMessageView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+			tokenMessageView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
-			self.tableView.tableHeaderView = tokenInfoView
+			self.tableView.tableHeaderView = tokenMessageView
 			self.tableView.layoutTableHeaderView()
 		} else {
-			self.tableView.tableHeaderView?.removeFromSuperview()
+			self.tableView.tableHeaderView = nil
 		}
 
 		// Continue button: show always
@@ -988,7 +994,10 @@ class BookmarkViewController: StaticTableViewController {
 				placeholderString = bookmark.shortName
 			}
 
-			self.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
+			if let nameRowTextField = nameRow?.textField {
+				let placeholderColor = nameRowTextField.getThemeCSSColor(.stroke, selectors: [.placeholder]) ?? .secondaryLabel
+				nameRowTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : placeholderColor])
+			}
 		}
 
 		// URL

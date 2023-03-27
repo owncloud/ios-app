@@ -205,9 +205,8 @@ extension DriveListCell {
 			}
 		}
 
-		let driveSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let driveSideBarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var title : String?
-			// var subtitle : String?
 			var icon: UIImage?
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
@@ -237,7 +236,9 @@ extension DriveListCell {
 			content.text = title
 			content.image = icon
 
+			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
+			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

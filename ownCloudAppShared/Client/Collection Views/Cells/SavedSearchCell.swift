@@ -32,7 +32,7 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 	}
 
 	let iconView = UIImageView()
-	let titleLabel = UILabel()
+	let titleLabel = ThemeCSSLabel(withSelectors: [.title])
 	let segmentView = SegmentView(with: [], truncationMode: .truncateTail)
 
 	var iconInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)
@@ -52,13 +52,6 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 	var items: [SegmentViewItem]? {
 		didSet {
 			segmentView.items = items ?? []
-		}
-	}
-	var type: OCActionType = .regular {
-		didSet {
-			if superview != nil {
-				applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection, state: .normal)
-			}
 		}
 	}
 
@@ -114,30 +107,6 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 			segmentView.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
 			segmentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -titleInsets.bottom)
 		]
-	}
-
-	override func updateConfiguration(using state: UICellConfigurationState) {
-		let collection = Theme.shared.activeCollection
-		var backgroundConfig = backgroundConfiguration?.updated(for: state)
-
-		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) {
-			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.highlighted.background : collection.tableRowButtonColors.filledColorPairCollection.highlighted.background
-		} else {
-			backgroundConfig?.backgroundColor = (type == .destructive) ? collection.destructiveColors.normal.background : collection.tableRowButtonColors.filledColorPairCollection.normal.background
-		}
-
-		backgroundConfig?.cornerRadius = 8
-
-		backgroundConfiguration = backgroundConfig
-	}
-
-	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
-		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
-
-		titleLabel.textColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
-		iconView.tintColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
-
-		setNeedsUpdateConfiguration()
 	}
 }
 
@@ -204,7 +173,7 @@ extension SavedSearchCell {
 			})
 		}
 
-		let savedSearchSidebarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let savedSearchSidebarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var content = cell.defaultContentConfiguration()
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
@@ -218,7 +187,9 @@ extension SavedSearchCell {
 				}
 			})
 
+			cell.backgroundConfiguration = .listSidebarCell()
 			cell.contentConfiguration = content
+			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .savedSearch, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

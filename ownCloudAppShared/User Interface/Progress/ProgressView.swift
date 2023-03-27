@@ -18,7 +18,9 @@
 
 import UIKit
 
-public class ProgressView: UIView, Themeable, CAAnimationDelegate {
+public class ProgressView: UIView, Themeable, CAAnimationDelegate, ThemeCSSAutoSelector {
+	public var cssAutoSelectors: [ThemeCSSSelector] = [ .progress ]
+
 	var backgroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var foregroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var stopButtonLayer : CAShapeLayer = CAShapeLayer()
@@ -155,10 +157,10 @@ public class ProgressView: UIView, Themeable, CAAnimationDelegate {
 		backgroundCircleLayer.fillColor = nil
 		stopButtonLayer.strokeColor = nil
 
-		foregroundCircleLayer.strokeColor = collection.progressColors.foreground.cgColor
-		backgroundCircleLayer.strokeColor = collection.progressColors.background.cgColor
+		foregroundCircleLayer.strokeColor = collection.css.getColor(.stroke, for: self)?.cgColor
+		backgroundCircleLayer.strokeColor = collection.css.getColor(.fill,   for: self)?.cgColor
 
-		stopButtonLayer.fillColor = collection.tintColor.cgColor
+		stopButtonLayer.fillColor = collection.css.getColor(.fill, selectors: [.button], for: self)?.cgColor ?? foregroundCircleLayer.strokeColor
 	}
 
 	@objc private func cancel() {

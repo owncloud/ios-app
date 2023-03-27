@@ -266,7 +266,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	public override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		guard let sectionColor = Theme.shared.activeCollection.tableSectionHeaderColor else { return }
+		guard let sectionColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView) else { return }
 
 		if let label = view as? UILabel {
 			label.textColor = sectionColor
@@ -276,7 +276,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	public override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-		guard let sectionColor = Theme.shared.activeCollection.tableSectionFooterColor else { return }
+		guard let sectionColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionFooter], for: tableView) else { return }
 
 		if let label = view as? UILabel {
 			label.textColor = sectionColor

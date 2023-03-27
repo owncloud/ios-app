@@ -34,7 +34,7 @@ extension Action {
 		if core.connectionStatus == .online {
 			if core.connection.capabilities?.sharingAPIEnabled == 1 {
 				if item.isSharedWithUser || item.isShared {
-					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 					progressView.startAnimating()
 
 					let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
@@ -220,7 +220,7 @@ private extension Action {
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: title, style: .plain, image: nil, imageWidth:nil, imageTintColorKey: nil, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "group")))
+		}, title: title, style: .plain, image: nil, imageWidth:nil, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "group")))
 
 		return addGroupRow
 	}

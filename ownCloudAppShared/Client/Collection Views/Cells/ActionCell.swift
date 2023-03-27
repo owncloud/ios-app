@@ -53,6 +53,12 @@ class ActionCell: ThemeableCollectionViewCell {
 	}
 	var type : OCActionType = .regular {
 		didSet {
+			switch type {
+				case .warning: cssSelectors = [.action, .warning]
+				case .destructive: cssSelectors = [.action, .destructive]
+				case .regular: cssSelectors = [.action]
+			}
+
 			if superview != nil {
 				applyThemeCollectionToCellContents(theme: Theme.shared, collection: Theme.shared.activeCollection, state: .normal)
 			}
@@ -67,6 +73,8 @@ class ActionCell: ThemeableCollectionViewCell {
 	}
 
 	func configure() {
+		cssSelectors = [.action]
+
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -138,27 +146,15 @@ class ActionCell: ThemeableCollectionViewCell {
 	}
 
 	override func updateConfiguration(using state: UICellConfigurationState) {
+		super.updateConfiguration(using: state)
+
 		let collection = Theme.shared.activeCollection
 		var backgroundConfig = backgroundConfiguration?.updated(for: state)
 
 		if state.isHighlighted || state.isSelected || (state.cellDropState == .targeted) {
-			switch type {
-				case .regular:
-					backgroundConfig?.backgroundColor = UIColor(white: 0, alpha: 0.10)
-				case .warning:
-					backgroundConfig?.backgroundColor = collection.warningColors.highlighted.background
-				case .destructive:
-					backgroundConfig?.backgroundColor = collection.destructiveColors.highlighted.background
-			}
+			backgroundConfig?.backgroundColor = collection.css.getColor(.fill, state: [.highlighted], for: self)
 		} else {
-			switch type {
-				case .regular:
-					backgroundConfig?.backgroundColor = UIColor(white: 0, alpha: 0.05)
-				case .warning:
-					backgroundConfig?.backgroundColor = collection.warningColors.normal.background
-				case .destructive:
-					backgroundConfig?.backgroundColor = collection.destructiveColors.normal.background
-			}
+			backgroundConfig?.backgroundColor = collection.css.getColor(.fill, for: self)
 		}
 
 		backgroundConfig?.cornerRadius = 8
@@ -169,22 +165,10 @@ class ActionCell: ThemeableCollectionViewCell {
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
 
-		switch type {
-			case .regular:
-				titleLabel.textColor = collection.tintColor
-				iconView.tintColor = collection.tintColor
+		let tintColor = collection.css.getColor(.stroke, for: self)
 
-			case .warning:
-				titleLabel.textColor = collection.warningColors.normal.foreground
-				iconView.tintColor = collection.warningColors.normal.foreground
-
-			case .destructive:
-				titleLabel.textColor = collection.destructiveColors.normal.foreground
-				iconView.tintColor = collection.destructiveColors.normal.foreground
-		}
-
-		titleLabel.textColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
-		iconView.tintColor = (type == .destructive) ? collection.destructiveColors.normal.foreground : collection.tintColor
+		iconView.tintColor = tintColor
+		titleLabel.textColor = tintColor
 
 		setNeedsUpdateConfiguration()
 	}
@@ -214,7 +198,7 @@ extension ActionCell {
 			})
 		}
 
-		let actionSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let actionSideBarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				var accessories: [UICellAccessory] = []
 				var content = cell.defaultContentConfiguration()
@@ -225,24 +209,12 @@ extension ActionCell {
 					content.image = action.icon
 
 					switch action.type {
-						case .warning:
-							content.textProperties.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .semibold)
-
-							content.textProperties.color = Theme.shared.activeCollection.warningColors.normal.foreground
-							content.imageProperties.tintColor = Theme.shared.activeCollection.warningColors.normal.foreground
-							backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
-							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.warningColors.normal.background
-
-						case .destructive:
-							content.textProperties.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .semibold)
-
-							content.textProperties.color = Theme.shared.activeCollection.destructiveColors.normal.foreground
-							content.imageProperties.tintColor = Theme.shared.activeCollection.destructiveColors.normal.foreground
-							backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
-							backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.destructiveColors.normal.background
-
-						default: break
+						case .warning: cell.cssSelectors = [.warning]
+						case .destructive: cell.cssSelectors = [.destructive]
+						case .regular: cell.cssSelectors = []
 					}
+
+					backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 
 					if let buttonLabel = action.buttonLabel {
 						let context = cellConfiguration.clientContext
@@ -278,16 +250,10 @@ extension ActionCell {
 					}
 				}
 
-//				if cellConfiguration.highlight {
-//					if backgroundConfiguration == nil {
-//						backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
-//						backgroundConfiguration?.backgroundColor = Theme.shared.activeCollection.darkBrandColor
-//					}
-//				}
-
 				cell.accessories = accessories
 				cell.contentConfiguration = content
 				cell.backgroundConfiguration = backgroundConfiguration
+				cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 			})
 		}
 
@@ -305,4 +271,8 @@ extension ActionCell {
 
 		}))
 	}
+}
+
+extension ThemeCSSSelector {
+	static let action = ThemeCSSSelector(rawValue: "action")
 }

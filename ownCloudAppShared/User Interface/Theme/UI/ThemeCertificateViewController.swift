@@ -30,20 +30,24 @@ public class ThemeCertificateViewController: OCCertificateViewController, Themea
 		Theme.shared.unregister(client: self)
 	}
 
+	var cellBackgroundColor: UIColor?
+
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
-		self.tableView.separatorColor = collection.tableSeparatorColor
+		tableView.backgroundColor = collection.css.getColor(.fill, selectors: [.grouped], for:tableView)
+		tableView.separatorColor = collection.css.getColor(.fill, selectors: [.separator], for:tableView)
 
-		self.sectionHeaderTextColor = collection.tableRowColors.secondaryLabelColor
+		self.sectionHeaderTextColor = collection.css.getColor(.stroke, selectors: [.cell, .sectionHeader], for:tableView) ?? .secondaryLabel
 
-		self.lineTitleColor = collection.tableRowColors.secondaryLabelColor
-		self.lineValueColor = collection.tableRowColors.labelColor
+		self.lineTitleColor = collection.css.getColor(.stroke, selectors: [.label, .secondary], for:tableView) ?? .secondaryLabel
+		self.lineValueColor = collection.css.getColor(.stroke, selectors: [.label, .primary], for:tableView) ?? .label
+
+		cellBackgroundColor = collection.css.getColor(.fill, selectors: [.grouped, .table, .cell], for:nil)
 	}
 
 	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell : UITableViewCell = super.tableView(tableView, cellForRowAt: indexPath)
 
-		cell.backgroundColor = Theme.shared.activeCollection.tableRowColors.backgroundColor
+		cell.backgroundColor = cellBackgroundColor
 
 		return cell
 	}

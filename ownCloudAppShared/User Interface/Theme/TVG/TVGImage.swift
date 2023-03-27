@@ -26,6 +26,8 @@ public class TVGImage: NSObject {
 	var bezierPathsByIdentifier : [String:[SVGBezierPath]] = [:]
 	var bezierPathsBoundsByIdentifier : [String:CGRect] = [:]
 
+	var imageName: String?
+
 	public init?(with data: Data) {
 		do {
 			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
@@ -69,6 +71,8 @@ public class TVGImage: NSObject {
 		}
 
 		self.init(with: data)
+
+		imageName = name
 	}
 
 	public func svgString(with variables: [String:String]? = nil) -> String? {

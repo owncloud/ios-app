@@ -537,15 +537,18 @@ open class PublicLinkEditTableViewController: StaticTableViewController {
 		if let shareURL = share.url {
 			deleteSection.add(rows: [
 				StaticTableViewRow(buttonWithAction: { (row, _) in
+					let originalColor = row.cell?.textLabel?.textColor
+
 					UIPasteboard.general.url = shareURL
 					row.cell?.textLabel?.text = shareURL.absoluteString
 					row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
-					row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
+					row.cell?.textLabel?.textColor = row.cell?.textLabel?.getThemeCSSColor(.stroke, selectors: [.secondary], state: [.disabled]) ?? .secondaryLabel
 					row.cell?.textLabel?.numberOfLines = 0
+
 					DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 						row.cell?.textLabel?.text = "Copy Public Link".localized
 						row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
-						row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tintColor
+						row.cell?.textLabel?.textColor = originalColor
 						row.cell?.textLabel?.numberOfLines = 1
 					}
 				}, title: "Copy Public Link".localized, style: .plain)
@@ -554,7 +557,7 @@ open class PublicLinkEditTableViewController: StaticTableViewController {
 
 		deleteSection.add(rows: [
 			StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
-				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 				progressView.startAnimating()
 
 				row.cell?.accessoryView = progressView

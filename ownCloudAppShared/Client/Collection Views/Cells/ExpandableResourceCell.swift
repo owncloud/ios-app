@@ -24,8 +24,6 @@ class ExpandableResourceCell: UICollectionViewListCell, Themeable {
 		super.init(frame: frame)
 		configure()
 		configureLayout()
-
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	required init?(coder: NSCoder) {
@@ -36,9 +34,20 @@ class ExpandableResourceCell: UICollectionViewListCell, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
+	private var _registered: Bool = false
+
+	override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil, !_registered {
+			_registered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+	}
+
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.contentView.backgroundColor =  collection.tableBackgroundColor
-		expandButton.tintColor = collection.tintColor
+		self.contentView.backgroundColor = collection.css.getColor(.fill, for: self)
+		expandButton.tintColor = collection.css.getColor(.stroke, selectors: [.button], for: self)
 	}
 
 	var resourceView: UIView? {
@@ -74,6 +83,8 @@ class ExpandableResourceCell: UICollectionViewListCell, Themeable {
 	}
 
 	func configure() {
+		self.cssSelectors = [.expandable]
+
 		expandButton.translatesAutoresizingMaskIntoConstraints = false
 		shadowView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -173,4 +184,8 @@ extension ExpandableResourceCell {
 		}))
 	}
 
+}
+
+extension ThemeCSSSelector {
+	static let expandable = ThemeCSSSelector(rawValue: "expandable")
 }

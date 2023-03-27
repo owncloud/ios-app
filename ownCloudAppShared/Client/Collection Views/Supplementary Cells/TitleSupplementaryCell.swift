@@ -53,13 +53,24 @@ class TitleSupplementaryCell: UICollectionReusableView, Themeable {
 			])
 		}
 
-		Theme.shared.register(client: self, applyImmediately: true)
+		cssSelector = .sectionHeader
+	}
+
+	private var themeRegistered = false
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if !themeRegistered {
+			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
+			Theme.shared.register(client: self, applyImmediately: true)
+			themeRegistered = true
+		}
 	}
 
 	// MARK: - Themeing
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		label?.applyThemeCollection(collection, itemStyle: .system(textStyle: .title3, weight: .bold))
-		backgroundColor = collection.tableBackgroundColor
+		backgroundColor = collection.css.getColor(.fill, for: self)
 	}
 
 	// MARK: - Prepare for reuse

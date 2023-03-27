@@ -180,12 +180,12 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	// MARK: - Subviews / UI elements
 
 	private var iconImageView = ResourceViewHost()
-	private var progressView = UIProgressView(progressViewStyle: .bar)
+	private var progressView = ThemeCSSProgressView(progressViewStyle: .bar)
 	private var cancelButton = ThemeButton(type: .custom)
-	private var metadataInfoLabel = UILabel()
+	private var metadataInfoLabel = ThemeCSSLabel(withSelectors: [.primary, .metadata])
 	private var showPreviewButton = ThemeButton(type: .custom)
 	private var primaryUnviewableActionButton = ThemeButton(type: .custom)
-	private var infoLabel = UILabel()
+	private var infoLabel = ThemeCSSLabel(withSelectors: [.secondary])
 	private var connectionActivityView = UIActivityIndicatorView(style: .medium)
 
 	// MARK: - Editing delegate
@@ -201,6 +201,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	required init() {
 		super.init(nibName: nil, bundle: nil)
+		cssSelector = .viewer
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -304,13 +305,15 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		])
 	}
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		Theme.shared.register(client: self)
-	}
+	private var _themeRegistered = false
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self)
+		}
 
 		startQuery()
 
@@ -733,12 +736,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	// MARK: - Themeable implementation
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		progressView.applyThemeCollection(collection)
-		cancelButton.applyThemeCollection(collection)
-		metadataInfoLabel.applyThemeCollection(collection)
-		showPreviewButton.applyThemeCollection(collection)
-		primaryUnviewableActionButton.applyThemeCollection(collection)
-		infoLabel.applyThemeCollection(collection)
+		// For subclassing
 	}
 
 	// MARK: - Query delegate
@@ -772,4 +770,9 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			}
 		}
 	}
+}
+
+extension ThemeCSSSelector {
+	static let viewer = ThemeCSSSelector(rawValue: "viewer")
+	static let metadata = ThemeCSSSelector(rawValue: "metadata")
 }

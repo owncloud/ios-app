@@ -37,7 +37,7 @@ open class AlertOption : NSObject {
 	}
 }
 
-open class AlertView: UIView, Themeable {
+open class AlertView: ThemeCSSView {
 	public var localizedHeader : String?
 
 	public var localizedTitle : String
@@ -45,11 +45,11 @@ open class AlertView: UIView, Themeable {
 
 	public var options : [AlertOption]
 
-	public var headerLabel : UILabel = UILabel()
-	public var headerContainer : UIView = UIView()
+	public var headerLabel : ThemeCSSLabel = ThemeCSSLabel()
+	public var headerContainer : ThemeCSSView = ThemeCSSView(withSelectors: [.header])
 
-	public var titleLabel : UILabel = UILabel()
-	public var descriptionLabel : UILabel = UILabel()
+	public var titleLabel : UILabel = ThemeCSSLabel(withSelectors: [.title])
+	public var descriptionLabel : UILabel = ThemeCSSLabel(withSelectors: [.description])
 	public var optionStackView : UIStackView?
 
 	public var optionViews : [ThemeButton] = []
@@ -66,17 +66,13 @@ open class AlertView: UIView, Themeable {
 
 		super.init(frame: .zero)
 
-		prepareViewAndConstraints()
+		self.cssSelector = .alert
 
-		Theme.shared.register(client: self, applyImmediately: true)
+		prepareViewAndConstraints()
 	}
 
 	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-
-	deinit {
-		Theme.shared.unregister(client: self)
 	}
 
 	public func createOptionViews() {
@@ -89,6 +85,17 @@ open class AlertView: UIView, Themeable {
 			optionButton.tag = optionIdx
 			optionButton.translatesAutoresizingMaskIntoConstraints = false
 			optionButton.accessibilityIdentifier = option.accessibilityIdentifier
+
+			switch option.type {
+				case .cancel:
+					optionButton.cssSelector = .cancel
+
+				case .destructive:
+					optionButton.cssSelector = .destructive
+
+				case .regular, .default:
+					optionButton.cssSelector = .confirm
+			}
 
 			optionButton.setContentHuggingPriority(.required, for: .vertical)
 			optionButton.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -222,32 +229,6 @@ open class AlertView: UIView, Themeable {
 				optionStackView.leadingAnchor.constraint(equalTo: enclosure.leadingAnchor, constant: contentPadding),
 				optionStackView.trailingAnchor.constraint(equalTo: enclosure.trailingAnchor, constant: -contentPadding)
 			])
-		}
-	}
-
-	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.headerLabel.applyThemeCollection(collection)
-		self.titleLabel.applyThemeCollection(collection)
-		self.descriptionLabel.applyThemeCollection(collection)
-
-		self.headerContainer.backgroundColor = collection.navigationBarColors.backgroundColor
-		self.headerLabel.textColor = collection.navigationBarColors.secondaryLabelColor
-
-		var idx : Int = 0
-
-		for optionView in self.optionViews {
-			switch options[idx].type {
-				case .cancel:
-					optionView.themeColorCollection = collection.neutralColors
-
-				case .destructive:
-					optionView.themeColorCollection = collection.destructiveColors
-
-				case .regular, .default:
-					optionView.themeColorCollection = collection.approvalColors
-			}
-
-			idx += 1
 		}
 	}
 }

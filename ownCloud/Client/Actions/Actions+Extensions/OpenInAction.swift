@@ -120,13 +120,6 @@ class OpenInAction: Action {
 							sourceRect.size.height = 0.0
 
 							self.interactionController?.presentOptionsMenu(from: sourceRect, in: hostViewController.view, animated: true)
-						} else if let sender = self.context.sender as? UITabBarController {
-							var sourceRect = sender.view.frame
-							sourceRect.origin.y = viewController.view.frame.size.height
-							sourceRect.size.width = 0.0
-							sourceRect.size.height = 0.0
-
-							self.interactionController?.presentOptionsMenu(from: sourceRect, in: sender.view, animated: true)
 						} else if let barButtonItem = self.context.sender as? UIBarButtonItem {
 							self.interactionController?.presentOptionsMenu(from: barButtonItem, animated: true)
 //						} else if let cell = self.context.sender as? UITableViewCell, let clientQueryViewController = viewController as? ClientQueryViewController {
@@ -153,18 +146,8 @@ class OpenInAction: Action {
 					}
 
 					if UIDevice.current.isIpad {
-						if let sender = self.context.sender as? UITabBarController {
-							var sourceRect = sender.view.frame
-							sourceRect.origin.y = viewController.view.frame.size.height
-							sourceRect.size.width = 0.0
-							sourceRect.size.height = 0.0
-
-							activityController.popoverPresentationController?.sourceView = sender.view
-							activityController.popoverPresentationController?.sourceRect = sourceRect
-						} else {
-							activityController.popoverPresentationController?.sourceView = viewController.view
-							activityController.popoverPresentationController?.sourceRect = viewController.view.frame
-						}
+						activityController.popoverPresentationController?.sourceView = viewController.view
+						activityController.popoverPresentationController?.sourceRect = viewController.view.frame
 					}
 
 					viewController.present(activityController, animated: true, completion: nil)

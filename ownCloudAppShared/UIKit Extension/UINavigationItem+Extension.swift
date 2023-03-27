@@ -19,9 +19,9 @@
 import UIKit
 
 public extension UINavigationItem {
-	var titleLabel: UILabel? {
+	var titleLabel: ThemeCSSLabel? {
 		let (items, _) = navigationContent.items(withIdentifier: "ios16-truncated-title-fix")
-		return items.first?.titleView as? UILabel
+		return items.first?.titleView as? ThemeCSSLabel
 	}
 
 	var titleLabelText: String? {
@@ -32,10 +32,9 @@ public extension UINavigationItem {
 
 		set {
 			if titleView == nil {
-				let navigationTitleLabel = UILabel()
+				let navigationTitleLabel = ThemeCSSLabel(withSelectors: [.title])
 				navigationTitleLabel.font = UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)
 				navigationTitleLabel.lineBreakMode = .byTruncatingMiddle
-				navigationTitleLabel.textColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 				navigationTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 				navigationTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 

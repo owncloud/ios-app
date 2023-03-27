@@ -62,7 +62,6 @@
 		396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396C82FA2319AFDD00938262 /* CollaborateAction.swift */; };
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754F22327A33500119FCB /* OpenSceneAction.swift */; };
-		397E276C23D05A5400117B07 /* ServerListToolCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397E276B23D05A5400117B07 /* ServerListToolCell.swift */; };
 		398393BE246D63B0001A212B /* branding-login-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BC246D63B0001A212B /* branding-login-background.png */; };
 		398393BF246D63B0001A212B /* branding-login-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BD246D63B0001A212B /* branding-login-logo.png */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
@@ -70,7 +69,6 @@
 		399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220922344C30F0026C290 /* ImportPasteboardAction.swift */; };
 		39969904260A3CF500E5AEBA /* CutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220932344C30F0026C290 /* CutAction.swift */; };
 		399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399725E0233DF39300FC3B94 /* Calendar+Extension.swift */; };
-		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
 		399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD7C122A691BC00B45EB2 /* UnshareAction.swift */; };
@@ -209,7 +207,6 @@
 		DC0A358B24C0E44B00FB58FC /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		DC0A358C24C0E44B00FB58FC /* ThemeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC243BF92317B446004FBB5C /* ThemeWindow.swift */; };
 		DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAB9CC823417243009091B6 /* ThemedAlertController.swift */; };
-		DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		DC0A358F24C0E46000FB58FC /* PointerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39664AD9242CD3A800B6121A /* PointerEffect.swift */; };
 		DC0A359124C0E4AF00FB58FC /* OCBookmarkManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */; };
 		DC0A359224C0E55800FB58FC /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F1318205A693A0029F186 /* UIColor+Extension.swift */; };
@@ -252,7 +249,6 @@
 		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
 		DC28F826294B733700AC4013 /* OCItemPolicy+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC28F825294B733700AC4013 /* OCItemPolicy+Interactions.swift */; };
 		DC28F828294BB5ED00AC4013 /* SortedItemDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC28F827294BB5ED00AC4013 /* SortedItemDataSource.swift */; };
-		DC298C872934A405009FA87F /* ClientDefaultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298C862934A405009FA87F /* ClientDefaultViewController.swift */; };
 		DC298C922934CF56009FA87F /* AccountConnectionErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298C8C2934B3E7009FA87F /* AccountConnectionErrorHandler.swift */; };
 		DC298C972934D354009FA87F /* IssuesCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24B31C25BB6FC4005783E2 /* IssuesCardViewController.swift */; };
 		DC298C982934D381009FA87F /* OCIssue+DisplayIssues.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCIssue+DisplayIssues.swift */; };
@@ -403,6 +399,17 @@
 		DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */; };
 		DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */; };
 		DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35DA624D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift */; };
+		DCB1B89F29C7378200BFF393 /* ThemeCSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B89E29C7378200BFF393 /* ThemeCSS.swift */; };
+		DCB1B8A229C7379C00BFF393 /* NSObject+ThemeCSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8A129C7379C00BFF393 /* NSObject+ThemeCSS.swift */; };
+		DCB1B8A429C73DB800BFF393 /* ThemeCSSRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8A329C73DB800BFF393 /* ThemeCSSRecord.swift */; };
+		DCB1B8A729C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8A629C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift */; };
+		DCB1B8AB29C89E0900BFF393 /* ThemeCSSLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8AA29C89E0900BFF393 /* ThemeCSSLabel.swift */; };
+		DCB1B8C229C8A6E500BFF393 /* ThemeCSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8C129C8A6E500BFF393 /* ThemeCSSView.swift */; };
+		DCB1B8C429C8A84000BFF393 /* UIView+ThemeCSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8C329C8A84000BFF393 /* UIView+ThemeCSS.swift */; };
+		DCB1B8C829C8F84800BFF393 /* ThemeCSSProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B8C729C8F84800BFF393 /* ThemeCSSProgressView.swift */; };
+		DCB1B8CB29CD847500BFF393 /* NSObject+AnnotatedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */; };
+		DCB1B99729D1813D00BFF393 /* ThemeCSSTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B99629D1813D00BFF393 /* ThemeCSSTextField.swift */; };
+		DCB1B99929D187B400BFF393 /* ThemeCSSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B99829D187B400BFF393 /* ThemeCSSButton.swift */; };
 		DCB2C05F250C1F9E001083CA /* BrandingClassSettingsSource.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */; };
 		DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */; };
 		DCB458ED2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -448,7 +455,6 @@
 		DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3700624D466D2008B0DEB /* DiagnosticManager.swift */; };
 		DCC3701624D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */; };
-		DCC5E446232654DE002E5B84 /* NSObject+AnnotatedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC5E445232654DE002E5B84 /* NSObject+AnnotatedProperties.m */; };
 		DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
 		DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -501,7 +507,6 @@
 		DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236735A521217C3500E5834A /* FrameViewController.swift */; };
 		DCE4E43E24C19C3E0051722F /* Action+UserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */; };
 		DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */; };
-		DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
 		DCE4E45024C1E0400051722F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
 		DCE4E47224C1F5610051722F /* ownCloud Share Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DCE4E46824C1F5610051722F /* ownCloud Share Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -982,7 +987,6 @@
 		395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFileIntentHandler.swift; sourceTree = "<group>"; };
 		395E16FC22F06A7300DE89A1 /* SaveFileIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveFileIntentHandler.swift; sourceTree = "<group>"; };
 		395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderIntentHandler.swift; sourceTree = "<group>"; };
-		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
 		3961281522F8730A0087BD3A /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		39664AD9242CD3A800B6121A /* PointerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointerEffect.swift; sourceTree = "<group>"; };
 		3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseNotesHostViewController.swift; sourceTree = "<group>"; };
@@ -991,7 +995,6 @@
 		396BE4C92289500E00B254A9 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
 		396C82FA2319AFDD00938262 /* CollaborateAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollaborateAction.swift; sourceTree = "<group>"; };
 		396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscardSceneAction.swift; sourceTree = "<group>"; };
-		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		397754E123279EED00119FCB /* OCItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+Extension.swift"; sourceTree = "<group>"; };
 		397754F22327A33500119FCB /* OpenSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenSceneAction.swift; sourceTree = "<group>"; };
 		397E276923D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticLoginSingleAccountServerListViewController.swift; sourceTree = "<group>"; };
@@ -1007,7 +1010,6 @@
 		39954DE023A39625006B6DC0 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		399697F1260255B100E5AEBA /* PDFGotoPageAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFGotoPageAction.swift; sourceTree = "<group>"; };
 		399725E0233DF39300FC3B94 /* Calendar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Extension.swift"; sourceTree = "<group>"; };
-		3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInfoView.swift; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
 		3999BD2D25FA2C8100DB7C47 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1232,7 +1234,6 @@
 		DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtensionThumbnailRequest.m; sourceTree = "<group>"; };
 		DC28F825294B733700AC4013 /* OCItemPolicy+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+Interactions.swift"; sourceTree = "<group>"; };
 		DC28F827294BB5ED00AC4013 /* SortedItemDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedItemDataSource.swift; sourceTree = "<group>"; };
-		DC298C862934A405009FA87F /* ClientDefaultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDefaultViewController.swift; sourceTree = "<group>"; };
 		DC298C8C2934B3E7009FA87F /* AccountConnectionErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountConnectionErrorHandler.swift; sourceTree = "<group>"; };
 		DC298C902934BDAD009FA87F /* AccountAuthenticationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdater.swift; sourceTree = "<group>"; };
 		DC298CA029357809009FA87F /* AccountConnectionAuthErrorConsumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountConnectionAuthErrorConsumer.swift; sourceTree = "<group>"; };
@@ -1401,6 +1402,17 @@
 		DCA35D8024D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCSyncRecordActivity+DiagnosticGenerator.swift"; sourceTree = "<group>"; };
 		DCA35DA624D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCFileProviderServiceSession+UploadByFileProvider.swift"; sourceTree = "<group>"; };
 		DCAB9CC823417243009091B6 /* ThemedAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedAlertController.swift; sourceTree = "<group>"; };
+		DCB1B89E29C7378200BFF393 /* ThemeCSS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSS.swift; sourceTree = "<group>"; };
+		DCB1B8A129C7379C00BFF393 /* NSObject+ThemeCSS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ThemeCSS.swift"; sourceTree = "<group>"; };
+		DCB1B8A329C73DB800BFF393 /* ThemeCSSRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSSRecord.swift; sourceTree = "<group>"; };
+		DCB1B8A529C75D4A00BFF393 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DCB1B8A629C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeCSS+AutoSelectors.swift"; sourceTree = "<group>"; };
+		DCB1B8AA29C89E0900BFF393 /* ThemeCSSLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSSLabel.swift; sourceTree = "<group>"; };
+		DCB1B8C129C8A6E500BFF393 /* ThemeCSSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSSView.swift; sourceTree = "<group>"; };
+		DCB1B8C329C8A84000BFF393 /* UIView+ThemeCSS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ThemeCSS.swift"; sourceTree = "<group>"; };
+		DCB1B8C729C8F84800BFF393 /* ThemeCSSProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSSProgressView.swift; sourceTree = "<group>"; };
+		DCB1B99629D1813D00BFF393 /* ThemeCSSTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSSTextField.swift; sourceTree = "<group>"; };
+		DCB1B99829D187B400BFF393 /* ThemeCSSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCSSButton.swift; sourceTree = "<group>"; };
 		DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrandingClassSettingsSource.h; sourceTree = "<group>"; };
 		DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrandingClassSettingsSource.m; sourceTree = "<group>"; };
 		DCB3256A2559989200058EEB /* generate_docs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = generate_docs.sh; sourceTree = "<group>"; };
@@ -1959,7 +1971,6 @@
 				DC66A9F7279F467200792AC8 /* UIKeyCommand+Extension.swift */,
 				DC3AB2452810602500789435 /* UILabel+Extension.swift */,
 				399EA73925E656A900B6FF11 /* UITableView+Extension.swift */,
-				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
 				DC65590E28A2633C0003D130 /* UITextField+Extension.swift */,
 				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
 				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
@@ -2229,6 +2240,7 @@
 				DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */,
 				DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */,
 				DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */,
+				DCB1B8A029C7378A00BFF393 /* CSS */,
 				DC7DBA27207F6DFD00E7337D /* UI */,
 				DC7DBA26207F6DEE00E7337D /* Resources */,
 				DC7DBA21207F672700E7337D /* TVG */,
@@ -2386,7 +2398,6 @@
 				DCB6B1E8292B6E6B00D27573 /* ClientSidebarViewController.swift */,
 				DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */,
 				DC921A0A2968BA4D00F538EE /* ClientSharedByMeViewController.swift */,
-				DC298C862934A405009FA87F /* ClientDefaultViewController.swift */,
 				DC3F0C2329828AB500C832DB /* Location Breadcrumbs */,
 				DC298CAA29362534009FA87F /* Location Picker */,
 			);
@@ -2652,7 +2663,6 @@
 				39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */,
 				DC243BF92317B446004FBB5C /* ThemeWindow.swift */,
 				DCAB9CC823417243009091B6 /* ThemedAlertController.swift */,
-				3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */,
 				DC66A9F5279EEC3100792AC8 /* ResourceViewHost.swift */,
 			);
 			path = UI;
@@ -2809,6 +2819,32 @@
 				DCC3701524D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift */,
 			);
 			path = Diagnostic;
+			sourceTree = "<group>";
+		};
+		DCB1B8A029C7378A00BFF393 /* CSS */ = {
+			isa = PBXGroup;
+			children = (
+				DCB1B8A529C75D4A00BFF393 /* README.md */,
+				DCB1B89E29C7378200BFF393 /* ThemeCSS.swift */,
+				DCB1B8A329C73DB800BFF393 /* ThemeCSSRecord.swift */,
+				DCB1B8A629C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift */,
+				DCB1B8A129C7379C00BFF393 /* NSObject+ThemeCSS.swift */,
+				DCB1B8C329C8A84000BFF393 /* UIView+ThemeCSS.swift */,
+				DCB1B8AC29C89E0F00BFF393 /* Views */,
+			);
+			path = CSS;
+			sourceTree = "<group>";
+		};
+		DCB1B8AC29C89E0F00BFF393 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DCB1B99829D187B400BFF393 /* ThemeCSSButton.swift */,
+				DCB1B8AA29C89E0900BFF393 /* ThemeCSSLabel.swift */,
+				DCB1B8C729C8F84800BFF393 /* ThemeCSSProgressView.swift */,
+				DCB1B99629D1813D00BFF393 /* ThemeCSSTextField.swift */,
+				DCB1B8C129C8A6E500BFF393 /* ThemeCSSView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		DCB2C05C250C1ECD001083CA /* Branding */ = {
@@ -3350,7 +3386,6 @@
 				DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */,
 				DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */,
 				6EA78B8E2179B55400A5216A /* ImageScrollView.swift */,
-				3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */,
 				3998F5D422411EDF00B66713 /* BorderedLabel.swift */,
 			);
 			path = "UI Elements";
@@ -4220,7 +4255,6 @@
 				4C11EE5B22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift in Sources */,
 				DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */,
 				39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */,
-				3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */,
 				DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */,
 				DCC3700724D466D2008B0DEB /* DiagnosticManager.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
@@ -4300,7 +4334,6 @@
 				025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
-				397E276C23D05A5400117B07 /* ServerListToolCell.swift in Sources */,
 				DCC8535823CE1236007BA3EB /* LicenseInAppProductListViewController.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
 				DC3F4522271A23A000ED2383 /* AcknowledgementsTableViewController.swift in Sources */,
@@ -4310,7 +4343,6 @@
 				4CB8ADDE22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift in Sources */,
 				6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */,
 				DCD954DF247D62FA00E184E6 /* MessageTableViewController.swift in Sources */,
-				DCC5E446232654DE002E5B84 /* NSObject+AnnotatedProperties.m in Sources */,
 				025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */,
 				399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */,
 				4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */,
@@ -4359,7 +4391,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
-				DC298C872934A405009FA87F /* ClientDefaultViewController.swift in Sources */,
+				DCB1B8C829C8F84800BFF393 /* ThemeCSSProgressView.swift in Sources */,
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC298CA72936250D009FA87F /* ClientSidebarViewController.swift in Sources */,
 				DC921A042966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift in Sources */,
@@ -4409,10 +4441,9 @@
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
 				DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */,
+				DCB1B99929D187B400BFF393 /* ThemeCSSButton.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
 				DC298C9E2934D6D9009FA87F /* AccountAuthenticationUpdater.swift in Sources */,
-				DCE4E44124C1A07E0051722F /* UITableViewController+Extension.swift in Sources */,
-				DC0A358E24C0E44B00FB58FC /* ThemeableColoredView.swift in Sources */,
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
 				DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */,
 				0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */,
@@ -4425,6 +4456,8 @@
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
 				DCFA9CAF2987E14B00004F24 /* BrowserNavigationBookmark.swift in Sources */,
 				DC298C9F2934D6D9009FA87F /* AccountAuthenticationUpdaterPasswordPromptViewController.swift in Sources */,
+				DCB1B8A229C7379C00BFF393 /* NSObject+ThemeCSS.swift in Sources */,
+				DCB1B8C429C8A84000BFF393 /* UIView+ThemeCSS.swift in Sources */,
 				DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */,
 				DC3F0C2529828AE300C832DB /* OCLocation+Breadcrumbs.swift in Sources */,
 				DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */,
@@ -4458,6 +4491,7 @@
 				DC9219FC2966179600F538EE /* OCShare+Interactions.swift in Sources */,
 				DC9B4FC629413AE20037F8F8 /* OCResourceText+ViewProvider.swift in Sources */,
 				DCB6B1FD292CF2DB00D27573 /* NavigationRevocationManager.swift in Sources */,
+				DCB1B8C229C8A6E500BFF393 /* ThemeCSSView.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
 				DCB6B205292D859B00D27573 /* UIViewController+NavigationRevocation.swift in Sources */,
 				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
@@ -4513,6 +4547,7 @@
 				DC0A359424C0E5C800FB58FC /* GitCommit.swift in Sources */,
 				DC3AB2482810A10300789435 /* ExpandableResourceCell.swift in Sources */,
 				DC3AB240280FFF2700789435 /* NSMutableAttributedString+AppendStyled.swift in Sources */,
+				DCB1B89F29C7378200BFF393 /* ThemeCSS.swift in Sources */,
 				DC0A357C24C0E43C00FB58FC /* ThemeCollection.swift in Sources */,
 				DC28F828294BB5ED00AC4013 /* SortedItemDataSource.swift in Sources */,
 				DC298C992934D3F8009FA87F /* AlertViewController.swift in Sources */,
@@ -4522,10 +4557,13 @@
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
+				DCB1B99729D1813D00BFF393 /* ThemeCSSTextField.swift in Sources */,
 				DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */,
 				DC8E99E8297F3BA700594697 /* ActionTapGestureRecognizer.swift in Sources */,
 				DCB5D56B2861BEBE004AF425 /* SearchViewController.swift in Sources */,
+				DCB1B8A729C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
+				DCB1B8A429C73DB800BFF393 /* ThemeCSSRecord.swift in Sources */,
 				DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */,
 				DC49C22128524D6C00BAA910 /* ThemeableCollectionViewCell.swift in Sources */,
 				DC62F56C29250DC80095BB5D /* AccountConnectionConsumer.swift in Sources */,
@@ -4534,6 +4572,7 @@
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
+				DCB1B8AB29C89E0900BFF393 /* ThemeCSSLabel.swift in Sources */,
 				DCFA5645297574A60092C89F /* BrowserNavigationItem.swift in Sources */,
 				DC24E10D28B7C19F002E4F5B /* AccountSearchScope.swift in Sources */,
 				DC65593228A648680003D130 /* SearchElement.swift in Sources */,
@@ -4614,6 +4653,7 @@
 				DCCD778C2604C91B00098573 /* NSDate+ComputedTimes.m in Sources */,
 				DC66F3A623965A1400CF4812 /* NSDate+RFC3339.m in Sources */,
 				DCF575EC2796CBDF003BEBBA /* OCImage+ViewProvider.m in Sources */,
+				DCB1B8CB29CD847500BFF393 /* NSObject+AnnotatedProperties.m in Sources */,
 				DC24E0EB28B36A81002E4F5B /* OCSearchSegment.m in Sources */,
 				DCF2DA8724C87A330026D790 /* OCCore+FPServices.m in Sources */,
 				DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */,

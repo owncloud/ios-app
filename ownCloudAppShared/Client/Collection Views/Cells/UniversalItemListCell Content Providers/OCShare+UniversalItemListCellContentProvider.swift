@@ -108,7 +108,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .byMe {
 			if type == .link {
-				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "list.clipboard"), title: "Copy".localized, accessibilityLabel: "Copy to clipboard".localized, action: UIAction(handler: { [weak self, weak context] action in
+				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "list.clipboard"), title: "Copy".localized, accessibilityLabel: "Copy to clipboard".localized, cssSelectors: [.accessory, .copyToClipboard], action: UIAction(handler: { [weak self, weak context] action in
 					if let self {
 						if self.copyToClipboard(), let presentationViewController = context?.presentationViewController {
 							_ = NotificationHUDViewController(on: presentationViewController, title: self.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
@@ -131,27 +131,23 @@ extension OCShare: UniversalItemListCellContentProvider {
 			var accessories: [UICellAccessory] = []
 
 			if state == .pending || state == .declined {
-				let (button, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, action: UIAction(handler: { [weak self, weak context] action in
+				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: true, completionHandler: { error in
 						})
 					}
 				}))
 
-				button.tintColor = UIColor.systemGreen
-
 				accessories.append(accessory)
 			}
 
 			if state == .pending {
-				let (button, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, action: UIAction(handler: { [weak self, weak context] action in
+				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: false, completionHandler: { error in
 						})
 					}
 				}))
-
-				button.tintColor = UIColor.systemRed
 
 				accessories.append(accessory)
 			}
@@ -183,4 +179,10 @@ extension OCShare {
 			}
 		}))
 	}
+}
+
+extension ThemeCSSSelector {
+	static let copyToClipboard = ThemeCSSSelector(rawValue: "copyToClipboard")
+	static let accept = ThemeCSSSelector(rawValue: "accept")
+	static let decline = ThemeCSSSelector(rawValue: "decline")
 }

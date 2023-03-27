@@ -19,11 +19,15 @@
 import UIKit
 import ownCloudSDK
 
+extension ThemeCSSSelector {
+	static let locationBar = ThemeCSSSelector(rawValue: "locationBar")
+}
+
 open class ClientLocationBarController: UIViewController, Themeable {
 	public var location: OCLocation
 	public var clientContext: ClientContext
 
-	public var seperatorView: UIView?
+	public var seperatorView: ThemeCSSView?
 	public var segmentView: SegmentView?
 
 	public init(clientContext: ClientContext, location: OCLocation) {
@@ -40,7 +44,9 @@ open class ClientLocationBarController: UIViewController, Themeable {
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
-		seperatorView = UIView()
+		view.cssSelectors = [ .toolbar, .locationBar ]
+
+		seperatorView = ThemeCSSView(withSelectors: [.separator])
 		seperatorView?.translatesAutoresizingMaskIntoConstraints = false
 
 		segmentView = SegmentView(with: composeSegments(location: location, in: clientContext), truncationMode: .truncateTail, scrollable: true, limitVerticalSpaceUsage: true)
@@ -86,10 +92,11 @@ open class ClientLocationBarController: UIViewController, Themeable {
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let backgroundFillColor = collection.toolbarColors.backgroundColor ?? collection.tableGroupBackgroundColor
+		view.apply(css: collection.css, properties: [.fill])
+		seperatorView?.apply(css: collection.css, properties: [.fill])
 
-		view.backgroundColor = backgroundFillColor
-		segmentView?.scrollViewOverlayGradientColor = backgroundFillColor.cgColor
-		seperatorView?.backgroundColor = collection.tableSeparatorColor
+		if let backgroundFillColor = collection.css.getColor(.fill, for: view) {
+			segmentView?.scrollViewOverlayGradientColor = backgroundFillColor.cgColor
+		}
 	}
 }

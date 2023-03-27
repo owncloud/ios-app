@@ -1645,8 +1645,24 @@
         "value" : "com.owncloud.action.uploadphotos"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.classic.",
+        "value" : "com.owncloud.classic"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.dark.",
+        "value" : "com.owncloud.dark"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.dark.black.",
+        "value" : "com.owncloud.dark.black"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.light.",
         "value" : "com.owncloud.light"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.web.dark.",
+        "value" : "com.owncloud.web.dark"
       },
       {
         "description" : "Extension with the identifier five-seconds-of-404.",
@@ -2363,229 +2379,5 @@
     "label" : "user-settings.disallow",
     "status" : "advanced",
     "type" : "stringArray"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Indicates if the user can change the server URL for the account.",
-    "flatIdentifier" : "branding.profile-allow-url-configuration",
-    "key" : "profile-allow-url-configuration",
-    "label" : "Allow URL configuration",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.",
-    "flatIdentifier" : "branding.profile-allowed-authentication-methods",
-    "key" : "profile-allowed-authentication-methods",
-    "label" : "Allowed authentication methods",
-    "possibleValues" : [
-      {
-        "description" : "Basic Auth",
-        "value" : "com.owncloud.basicauth"
-      },
-      {
-        "description" : "OAuth2",
-        "value" : "com.owncloud.oauth2"
-      },
-      {
-        "description" : "OpenID Connect",
-        "value" : "com.owncloud.openid-connect"
-      }
-    ],
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "stringArray"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Domain names (can also include subdomain name), which are allowed as server url when adding a new account.",
-    "flatIdentifier" : "branding.profile-allowed-hosts",
-    "key" : "profile-allowed-hosts",
-    "label" : "Allowed Hosts",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "stringArray"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
-    "flatIdentifier" : "branding.profile-bookmark-name",
-    "key" : "profile-bookmark-name",
-    "label" : "Bookmark Name",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Text used for the onboarding button title",
-    "flatIdentifier" : "branding.profile-help-button-label",
-    "key" : "profile-help-button-label",
-    "label" : "Onboarding button title",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Optional URL to onboarding resources.",
-    "flatIdentifier" : "branding.profile-help-url",
-    "key" : "profile-help-url",
-    "label" : "Onboarding URL",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "urlString"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Identifier uniquely identifying the profile.",
-    "flatIdentifier" : "branding.profile-identifier",
-    "key" : "profile-identifier",
-    "label" : "Identifier",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Name of the profile during setup.",
-    "flatIdentifier" : "branding.profile-name",
-    "key" : "profile-name",
-    "label" : "Name",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Message shown in an alert before opening the onboarding URL.",
-    "flatIdentifier" : "branding.profile-open-help-message",
-    "key" : "profile-open-help-message",
-    "label" : "Open onboarding URL message",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Text that is shown when asking the user to enter their password.",
-    "flatIdentifier" : "branding.profile-password-auth-prompt",
-    "key" : "profile-password-auth-prompt",
-    "label" : "Password prompt",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Text that is shown to the user before opening the authentication web view (f.ex. for OAuth2, OIDC).",
-    "flatIdentifier" : "branding.profile-token-auth-prompt",
-    "key" : "profile-token-auth-prompt",
-    "label" : "Token authentication prompt",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "The URL of the server targeted by this profile.",
-    "flatIdentifier" : "branding.profile-url",
-    "key" : "profile-url",
-    "label" : "URL",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "urlString"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Text shown above the URL field when setting up an account.",
-    "flatIdentifier" : "branding.profile-url-prompt",
-    "key" : "profile-url-prompt",
-    "label" : "URL prompt",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Welcome message shown during account setup.",
-    "flatIdentifier" : "branding.profile-welcome-message",
-    "key" : "profile-welcome-message",
-    "label" : "Welcome Message",
-    "status" : "advanced",
-    "subCategory" : "Profile",
-    "subCategoryTag" : "profile",
-    "type" : "string"
   }
 ]

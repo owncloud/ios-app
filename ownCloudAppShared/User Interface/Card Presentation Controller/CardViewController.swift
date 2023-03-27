@@ -29,7 +29,7 @@ open class CardViewController: UIViewController, Themeable, CardPresentationSizi
 
 	// MARK: - Themeable
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		view.backgroundColor = collection.tableBackgroundColor
+		view.apply(css: collection.css, selectors: [.table], properties: [.fill])
 	}
 
 	// MARK: - CardPresentationSizing

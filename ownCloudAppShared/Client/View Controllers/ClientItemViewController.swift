@@ -57,15 +57,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public var loadingListItem: ComposedMessageView?
 	public var folderRemovedListItem: ComposedMessageView?
 	public var footerItem: UIView?
-	public var footerFolderStatisticsLabel: UILabel?
+	public var footerFolderStatisticsLabel: ThemeCSSLabel?
 
 	public var location: OCLocation?
 
 	private var stateObservation: NSKeyValueObservation?
 	private var queryStateObservation: NSKeyValueObservation?
 	private var queryRootItemObservation: NSKeyValueObservation?
-
-	var navigationTitleLabel: UILabel = UILabel()
 
 	private var viewControllerUUID: UUID
 
@@ -234,9 +232,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			emptyItemListItem = ComposedMessageView(elements: [
 				.image(emptyItemListIcon ?? OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.text(emptyItemListTitleLocalized ?? "No contents".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+				.title(emptyItemListTitleLocalized ?? "No contents".localized, alignment: .centered),
 				.spacing(5),
-				.text(emptyFolderMessage, style: .systemSecondary(textStyle: .body), alignment: .centered)
+				.subtitle(emptyFolderMessage, alignment: .centered),
 			])
 
 			emptyItemListItem?.elementInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 2, trailing: 0)
@@ -249,20 +247,20 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				.spacing(25),
 				.progressCircle(with: indeterminateProgress),
 				.spacing(25),
-				.text("Loading…".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered)
+				.title("Loading…".localized, alignment: .centered)
 			])
 
 			folderRemovedListItem = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "nosign")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.text("Folder removed".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+				.title("Folder removed".localized, alignment: .centered),
 				.spacing(5),
-				.text("This folder no longer exists on the server.".localized, style: .systemSecondary(textStyle: .body), alignment: .centered)
+				.subtitle("This folder no longer exists on the server.".localized, alignment: .centered)
 			])
 
 			footerItem = UIView()
 			footerItem?.translatesAutoresizingMaskIntoConstraints = false
 
-			footerFolderStatisticsLabel = UILabel()
+			footerFolderStatisticsLabel = ThemeCSSLabel(withSelectors: [.sectionFooter, .statistics])
 			footerFolderStatisticsLabel?.translatesAutoresizingMaskIntoConstraints = false
 			footerFolderStatisticsLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 			footerFolderStatisticsLabel?.textAlignment = .center
@@ -337,6 +335,18 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				addStacked(child: locationBarViewController, position: .bottom)
 			}
 		}
+	}
+
+	public override func addStacked(child viewController: UIViewController, position: CollectionViewController.StackedPosition, relativeTo: UIView? = nil) {
+		var relativeToView = relativeTo
+		var stackedPosition = position
+
+		if viewController == actionsBarViewController, let locationBarView = locationBarViewController?.view {
+			stackedPosition = .top
+			relativeToView = locationBarView
+		}
+
+		super.addStacked(child: viewController, position: stackedPosition, relativeTo: relativeToView)
 	}
 
 	func updateLocationBarViewController() {
@@ -990,10 +1000,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						if let savedTemplates = vault.savedSearches?.filter({ savedSearch in
 							return savedSearch.isTemplate
 						}), savedTemplates.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
-								.spacing(10),
-								.text("Saved search templates".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
-							])
+							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved search templates")
 							savedSearchTemplatesHeaderView.elementInsets = .zero
 
 							suggestionItems.append(savedSearchTemplatesHeaderView)
@@ -1004,10 +1011,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						if let savedSearches = vault.savedSearches?.filter({ savedSearch in
 							return !savedSearch.isTemplate
 						}), savedSearches.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView(elements: [
-								.spacing(10),
-								.text("Saved searches".localized, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
-							])
+							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved searches".localized)
 							savedSearchTemplatesHeaderView.elementInsets = .zero
 
 							suggestionItems.append(savedSearchTemplatesHeaderView)
@@ -1205,7 +1209,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Themeing
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-		navigationTitleLabel.textColor = collection.navigationBarColors.labelColor
-		footerFolderStatisticsLabel?.textColor = collection.tableRowColors.secondaryLabelColor
 	}
+}
+
+extension ThemeCSSSelector {
+	static let statistics = ThemeCSSSelector(rawValue: "statistics")
 }

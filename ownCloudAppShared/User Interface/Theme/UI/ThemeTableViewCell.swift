@@ -53,6 +53,8 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 		} else {
 			super.init(style: style, reuseIdentifier: reuseIdentifier)
 		}
+
+		cssSelector = .cell
 	}
 
 	public typealias CellLayouter = (_ cell: ThemeTableViewCell, _ textLabel: UILabel, _ detailLabel : UILabel?) -> Void
@@ -158,10 +160,10 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 		}
 	}
 
-	open override func willMove(toSuperview newSuperview: UIView?) {
-		super.willMove(toSuperview: newSuperview)
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
 
-		if !themeRegistered {
+		if !themeRegistered, window != nil {
 			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
 			Theme.shared.register(client: self, applyImmediately: true)
 			themeRegistered = true
@@ -177,25 +179,21 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 				var doStyle = true
 
 				switch messageStyle {
-					case .plain:
-						textColor = collection.tableRowColors.labelColor
-						backgroundColor = collection.tableRowColors.backgroundColor
-
-					case .text:
-						textColor = collection.tableRowColors.labelColor
-						backgroundColor = collection.tableRowColors.backgroundColor
+					case .plain, .text:
+						textColor = self.getThemeCSSColor(.stroke, selectors: [.label, .primary]) // collection.tableRowColors.labelColor
+						backgroundColor = self.getThemeCSSColor(.fill) 			// collection.tableRowColors.backgroundColor
 
 					case .confirmation:
-						textColor = collection.approvalColors.normal.foreground
-						backgroundColor = collection.approvalColors.normal.background
+						textColor = collection.css.getColor(.stroke, selectors: [.confirm], for: self)
+						backgroundColor = collection.css.getColor(.fill, selectors: [.confirm], for: self)
 
 					case .warning:
 						textColor = .black
 						backgroundColor = .systemYellow
 
 					case .alert:
-						textColor = collection.destructiveColors.normal.foreground
-						backgroundColor = collection.destructiveColors.normal.background
+						textColor = collection.css.getColor(.stroke, selectors: [.destructive], for: self)
+						backgroundColor = collection.css.getColor(.fill, selectors: [.destructive], for: self)
 
 					case let .custom(customTextColor, customBackgroundColor, _):
 						textColor = customTextColor

@@ -85,10 +85,6 @@ class ImportFilesController: NSObject {
 	var locationPicker: ClientLocationPicker?
 
 	func showAccountUI() {
-		let fileNames = importFiles.map { (importFile) -> String in
-			return importFile.url.lastPathComponent
-		}
-
 		let headerTitle = importFiles.count == 1 ?
 			"Import \"{{itemName}}\"".localized(["itemName" : "\(importFiles.first!.url.lastPathComponent)"]) :
 			"Import {{itemCount}} files".localized(["itemCount" : "\(importFiles.count)"])

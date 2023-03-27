@@ -309,7 +309,7 @@ open class GroupSharingEditTableViewController: StaticTableViewController {
 		let section = StaticTableViewSection(headerTitle: "", footerTitle: footer)
 		section.add(rows: [
 			StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
-				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 				progressView.startAnimating()
 
 				row.cell?.accessoryView = progressView

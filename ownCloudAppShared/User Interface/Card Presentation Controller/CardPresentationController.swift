@@ -147,9 +147,8 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		overStretchView.backgroundColor = collection.tableGroupBackgroundColor
-		dragHandleView.backgroundColor = collection.tableSeparatorColor
-
+		overStretchView.backgroundColor = collection.css.getColor(.fill, selectors: [.grouped, .table], for:overStretchView)
+		dragHandleView.backgroundColor = collection.css.getColor(.fill, selectors: [.separator], for:dragHandleView)
 	}
 
 	private func offset(for position: CardPosition, translatedBy: CGFloat = 0, allowOverStretch: Bool = false) -> CGFloat {

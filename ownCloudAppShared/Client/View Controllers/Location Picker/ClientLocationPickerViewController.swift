@@ -27,6 +27,8 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 		super.init(nibName: nil, bundle: nil)
 		self.locationPicker.rootNavigationController?.delegate = self
 
+		self.cssSelector = .locationPicker
+
 		currentLocation = (self.locationPicker.rootNavigationController?.topViewController as? ClientItemViewController)?.location
 	}
 
@@ -114,8 +116,15 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 		])
 
 		NSLayoutConstraint.activate(constraints)
+	}
 
-		Theme.shared.register(client: self, applyImmediately: true)
+	private var registered = false
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if !registered {
+			registered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
 	}
 
 	// MARK: - UINavigationControllerDelegate
@@ -212,7 +221,11 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 
 	// MARK: - Themeable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		view.backgroundColor = collection.tableBackgroundColor
-		separatorLine.backgroundColor = collection.tableSeparatorColor
+		view.backgroundColor = collection.css.getColor(.fill, for:view)
+		separatorLine.backgroundColor = collection.css.getColor(.fill, selectors: [.separator], for:view) // collection.tableSeparatorColor
 	}
+}
+
+extension ThemeCSSSelector {
+	static let locationPicker = ThemeCSSSelector(rawValue: "locationPicker")
 }

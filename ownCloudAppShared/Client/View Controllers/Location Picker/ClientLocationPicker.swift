@@ -128,12 +128,12 @@ public class ClientLocationPicker : NSObject {
 
 		// Create header view if title is specified, but headerView isn't
 		if let headerTitle, headerView == nil {
-			headerViewTitleElement = .text(headerTitle, style: .system(textStyle: .title2, weight: .bold), alignment: .leading)
+			headerViewTitleElement = .text(headerTitle, style: .system(textStyle: .title2, weight: .bold), alignment: .leading, cssSelectors: [.title])
 
 			var elements: [ComposedMessageElement] = [ headerViewTitleElement! ]
 
 			if let headerSubTitle {
-				headerViewSubtitleElement = .text(headerSubTitle, style: .systemSecondary(textStyle: .body), alignment: .leading)
+				headerViewSubtitleElement = .text(headerSubTitle, style: .systemSecondary(textStyle: .body), alignment: .leading, cssSelectors: [.subtitle])
 				elements.append(headerViewSubtitleElement!)
 			}
 
@@ -263,9 +263,11 @@ public class ClientLocationPicker : NSObject {
 			switch location.clientLocationLevel {
 				case .accounts:
 					title = "Accounts".localized
+					viewController.cssSelector = .accountList
 
 				case .account:
 					title = "Account".localized
+					viewController.cssSelector = .accountList
 					if let bookmarkUUID = location.bookmarkUUID {
 						title = OCBookmarkManager.shared.bookmark(for: bookmarkUUID)?.displayName
 					}
@@ -378,4 +380,8 @@ public class ClientLocationPicker : NSObject {
 			choiceHandler(item, location, context, cancelled)
 		}
 	}
+}
+
+extension ThemeCSSSelector {
+	static let accountList = ThemeCSSSelector(rawValue: "accountList")
 }

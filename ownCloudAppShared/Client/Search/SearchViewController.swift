@@ -169,7 +169,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	private var scopeViewControllerConstraints : [NSLayoutConstraint]?
 
 	open override func loadView() {
-		let rootView = UIView()
+		let rootView = ThemeCSSView(withSelectors: [.searchSuggestions])
 
 		scopePopup = PopupButtonController(with: [], selectedChoice: nil, choiceHandler: { [weak self] (choice, _) in
 			self?.activeScope = choice.representedObject as? SearchScope
@@ -190,7 +190,6 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
-		Theme.shared.register(client: self, applyImmediately: true)
 
 		searchField.translatesAutoresizingMaskIntoConstraints = false
 		searchField.addTarget(self, action: #selector(searchFieldContentsChanged), for: .editingChanged)
@@ -211,8 +210,15 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		}
 	}
 
+	private var _registered = false
 	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+
+		if !_registered {
+			_registered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+
 		OnMainThread {
 			self.searchField.becomeFirstResponder()
 		}
@@ -431,7 +437,10 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	// MARK: - Theme support
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = collection.navigationBarAppearance(for: .content).backgroundColor
 		searchField.applyThemeCollection(collection)
 	}
+}
+
+extension ThemeCSSSelector {
+	static let searchSuggestions = ThemeCSSSelector(rawValue: "searchSuggestions")
 }

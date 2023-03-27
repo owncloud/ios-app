@@ -220,13 +220,9 @@ public class Theme: NSObject {
 			}
 
 			// Globally change color values for UI elements
-			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
-			if VendorServices.shared.isBranded {
-				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
-			} else {
-				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
-			}
-			UITextField.appearance().tintColor = collection.searchBarColors.tintColor
+			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.css.getKeyboardAppearance(selectors: [.all], for: nil)
+			UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.css.getColor(.stroke, selectors: [.alert], for: nil)
+			UITextField.appearance().tintColor = collection.css.getColor(.stroke, selectors: [.textField], for: nil) // searchBarColors.tintColor
 		}
 	}
 

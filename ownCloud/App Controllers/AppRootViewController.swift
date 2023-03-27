@@ -105,6 +105,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		sidebarViewController?.addToolbarItems()
 
 		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
+		leftNavigationController?.cssSelectors = [ .sidebar ]
 		leftNavigationController?.setToolbarHidden(false, animated: false)
 
 		focusedBookmarkObservation = sidebarViewController?.observe(\.focusedBookmark, changeHandler: { [weak self] sidebarViewController, change in
@@ -147,6 +148,17 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		super.viewDidDisappear(animated)
 
 		ClientSessionManager.shared.remove(delegate: self)
+	}
+
+	// MARK: - Status Bar style
+	open override var childForStatusBarStyle: UIViewController? {
+		return contentViewController
+	}
+
+	open override var contentViewController: UIViewController? {
+		didSet {
+			setNeedsStatusBarAppearanceUpdate()
+		}
 	}
 
 	// MARK: - BrowserNavigationViewControllerDelegate

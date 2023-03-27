@@ -127,7 +127,6 @@ class LicenseInAppPurchaseFeatureView: UIView, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		titleLabel?.applyThemeCollection(collection)
 		descriptionLabel?.applyThemeCollection(collection)
-		purchaseButton?.applyThemeCollection(collection, itemStyle: .purchase)
 	}
 
 	@objc func takeOffer() {

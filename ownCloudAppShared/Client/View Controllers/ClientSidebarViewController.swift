@@ -19,6 +19,10 @@
 import UIKit
 import ownCloudSDK
 
+extension ThemeCSSSelector {
+	static let logo = ThemeCSSSelector(rawValue: "logo")
+}
+
 public class ClientSidebarViewController: CollectionSidebarViewController, NavigationRevocationHandler {
 	public var accountsSectionSubscription: OCDataSourceSubscription?
 	public var accountsControllerSectionSource: OCDataSourceMapped?
@@ -81,16 +85,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 			if let historyItem = history.item(for: viewController) {
 				history.remove(item: historyItem, completion: nil)
 			}
-		} /* else {
-			_ = sidebarContext.pushViewControllerToNavigation(context: sidebarContext, provider: { [weak self] context in
-				return self?.provideDefaultViewController()
-			}, push: true, animated: false)
-		} */
-	}
-
-	// MARK: - Default view (shown if nothing is selected in sidebar)
-	public func provideDefaultViewController() -> UIViewController {
-		return ClientDefaultViewController()
+		}
 	}
 
 	// MARK: - Selected Bookmark
@@ -126,9 +121,10 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 // MARK: - Branding
 extension ClientSidebarViewController {
-	func buildNavigationLogoView() -> ThemeView {
+	func buildNavigationLogoView() -> ThemeCSSView {
 		let logoImage = UIImage(named: "branding-login-logo")
 		let logoImageView = UIImageView(image: logoImage)
+		logoImageView.cssSelector = .icon
 		logoImageView.contentMode = .scaleAspectFit
 		logoImageView.translatesAutoresizingMaskIntoConstraints = false
 		if let logoImage = logoImage {
@@ -136,21 +132,21 @@ extension ClientSidebarViewController {
 			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
 		}
 
-		let logoLabel = UILabel()
+		let logoLabel = ThemeCSSLabel()
 		logoLabel.translatesAutoresizingMaskIntoConstraints = false
 		logoLabel.text = VendorServices.shared.appName
 		logoLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 		logoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 		logoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
-		let logoContainer = UIView()
+		let logoContainer = ThemeCSSView(withSelectors: [.logo])
 		logoContainer.translatesAutoresizingMaskIntoConstraints = false
 		logoContainer.addSubview(logoImageView)
 		logoContainer.addSubview(logoLabel)
 		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
 		logoContainer.setContentHuggingPriority(.required, for: .vertical)
 
-		let logoWrapperView = ThemeView()
+		let logoWrapperView = ThemeCSSView()
 		logoWrapperView.addSubview(logoContainer)
 
 		NSLayoutConstraint.activate([
@@ -171,9 +167,8 @@ extension ClientSidebarViewController {
 		])
 
 		logoWrapperView.addThemeApplier({ (_, collection, _) in
-			logoLabel.applyThemeCollection(collection, itemStyle: .logo)
-			if !VendorServices.shared.isBranded {
-				logoImageView.image = logoImageView.image?.tinted(with: collection.navigationBarColors.labelColor)
+			if !VendorServices.shared.isBranded, let logoColor = collection.css.getColor(.stroke, for: logoImageView) {
+				logoImageView.image = logoImageView.image?.tinted(with: logoColor)
 			}
 		})
 

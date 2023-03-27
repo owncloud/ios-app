@@ -86,15 +86,9 @@ public class GradientView : UIView {
 }
 
 public class ShadowBarView : GradientView, Themeable {
-	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		if let tableTintColor = collection.tableRowColors.tintColor {
-			self.colors = [tableTintColor.withAlphaComponent(0).cgColor, tableTintColor.withAlphaComponent(0.1).cgColor, tableTintColor.withAlphaComponent(0.25).cgColor]
-		}
-	}
-
 	public init() {
 		super.init(with: [UIColor(hex: 0, alpha: 0).cgColor, UIColor(hex: 0, alpha: 0.10).cgColor, UIColor(hex: 0, alpha: 0.25).cgColor], locations: [0.0, 0.9, 1.0])
-		Theme.shared.register(client: self, applyImmediately: true)
+		cssSelector = .shadow
 	}
 
 	required public init?(coder: NSCoder) {
@@ -103,5 +97,21 @@ public class ShadowBarView : GradientView, Themeable {
 
 	deinit {
 		Theme.shared.unregister(client: self)
+	}
+
+	private var _registered: Bool = false
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil, !_registered {
+			_registered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+	}
+
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		if let shadowColor = collection.css.getColor(.fill, for: self) {
+			self.colors = [shadowColor.withAlphaComponent(0).cgColor, shadowColor.withAlphaComponent(0.1).cgColor, shadowColor.withAlphaComponent(0.25).cgColor]
+		}
 	}
 }

@@ -79,7 +79,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		}
 
 		let collection = Theme.shared.activeCollection
-		self.view.backgroundColor = collection.toolbarColors.backgroundColor
+		view.backgroundColor = collection.css.getColor(.fill, selectors: [.toolbar], for: view)
 
 		prepareNavigationController()
 

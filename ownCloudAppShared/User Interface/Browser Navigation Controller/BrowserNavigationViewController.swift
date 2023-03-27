@@ -23,13 +23,12 @@ public protocol BrowserNavigationViewControllerDelegate: AnyObject {
 	func browserNavigation(viewController: BrowserNavigationViewController, contentViewControllerDidChange: UIViewController?)
 }
 
-open class BrowserNavigationViewController: EmbeddingViewController, Themeable, BrowserNavigationHistoryDelegate {
-
+open class BrowserNavigationViewController: EmbeddingViewController, Themeable, BrowserNavigationHistoryDelegate, ThemeCSSAutoSelector {
 	var navigationView: UINavigationBar = UINavigationBar()
 	var contentContainerView: UIView = UIView()
 	var contentContainerLidView: UIView = UIView()
 
-	var sideBarSeperatorView: UIView = UIView()
+	var sideBarSeperatorView: ThemeCSSView = ThemeCSSView(withSelectors: [.separator])
 
 	lazy open var history: BrowserNavigationHistory = {
 		let history = BrowserNavigationHistory()
@@ -68,6 +67,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
+		contentContainerView.cssSelector = .content
 		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(contentContainerView)
 
@@ -271,16 +271,23 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 		self.view.layoutIfNeeded()
 
-		if needsSideBarLayout {
-			UIView.animate(withDuration: 0.3) {
-				self.updateSideBarLayoutAndAppearance()
-				self.view.layoutIfNeeded()
-			}
+		let done = {
+			self.delegate?.browserNavigation(viewController: self, contentViewControllerDidChange: self.contentViewController)
+			completion?(true)
 		}
 
-		delegate?.browserNavigation(viewController: self, contentViewControllerDidChange: contentViewController)
-
-		completion?(true)
+		if needsSideBarLayout {
+			OnMainThread {
+				UIView.animate(withDuration: 0.3, animations: {
+					self.updateSideBarLayoutAndAppearance()
+					self.view.layoutIfNeeded()
+				}, completion: { _ in
+					done()
+				})
+			}
+		} else {
+			done()
+		}
 	}
 
 	// MARK: - Sidebar View Controller
@@ -312,7 +319,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 				updateSideBarNavigationItem()
 
 				addChild(sidebarViewController)
-				view.addSubview(sidebarViewControllerView)
+				view.insertSubview(sidebarViewControllerView, belowSubview: sideBarSeperatorView)
 				sidebarViewControllerView.translatesAutoresizingMaskIntoConstraints = false
 				updateSideBarLayoutAndAppearance()
 				sidebarViewController.didMove(toParent: self)
@@ -348,7 +355,11 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		case showEmptyHistoryViewController
 	}
 
-	public var isSideBarVisible: Bool = true
+	public var isSideBarVisible: Bool = true {
+		didSet {
+			setNeedsStatusBarAppearanceUpdate()
+		}
+	}
 	public var preferredSideBarWidth: CGFloat = 320
 	var sideBarWidth: CGFloat = 320
 	var preferredSideBarDisplayMode: SideBarDisplayMode?
@@ -398,6 +409,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 				} else {
 					self.contentContainerLidView.alpha = 0.0
 				}
+				self.sidebarViewController?.view.layoutIfNeeded()
 				self.view.layoutIfNeeded()
 			}, completion: { _ in
 				if !sideBarVisible {
@@ -430,7 +442,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 						// Sidebar + Content side-by-side
 						newConstraints = [
 							sidebarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-							sidebarView.trailingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: -1),
+							sidebarView.trailingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: 0),
 							sidebarView.topAnchor.constraint(equalTo: view.topAnchor),
 							sidebarView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 							sidebarView.widthAnchor.constraint(equalToConstant: sideBarWidth)
@@ -467,10 +479,31 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 	// MARK: - Themeing
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		navigationView.applyThemeCollection(collection, itemStyle: .content)
+		navigationView.applyThemeCollection(collection)
+		view.apply(css: collection.css, properties: [.fill])
+	}
 
-		view.backgroundColor = collection.tableBackgroundColor
-		sideBarSeperatorView.backgroundColor = collection.tableSeparatorColor
+	public var cssAutoSelectors: [ThemeCSSSelector] = [.splitView]
+
+	// MARK: - Status Bar style
+	open override var preferredStatusBarStyle: UIStatusBarStyle {
+		var statusBarStyle: UIStatusBarStyle?
+
+		if isSideBarVisible, let sidebarViewController {
+			statusBarStyle = Theme.shared.activeCollection.css.getStatusBarStyle(for: sidebarViewController)
+		} else if let contentViewController {
+			statusBarStyle = Theme.shared.activeCollection.css.getStatusBarStyle(for: contentViewController)
+		}
+
+		if statusBarStyle == nil {
+			statusBarStyle = Theme.shared.activeCollection.css.getStatusBarStyle(for: self)
+		}
+
+		return statusBarStyle ?? super.preferredStatusBarStyle
+	}
+
+	open override var childForStatusBarStyle: UIViewController? {
+		return nil
 	}
 }
 

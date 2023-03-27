@@ -20,7 +20,7 @@ import UIKit
 import ownCloudApp
 import ownCloudSDK
 
-open class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, Themeable {
+open class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, Themeable, ThemeCSSAutoSelector {
 	public var clientContext: ClientContext?
 
 	public var supportsHierarchicContent: Bool
@@ -65,7 +65,9 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	deinit {
-		Theme.shared.unregister(client: self)
+		if _themeRegistered {
+			Theme.shared.unregister(client: self)
+		}
 	}
 
 	// MARK: - View configuration
@@ -83,7 +85,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if usesStackViewRoot, let stackView = stackView {
 			collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-			let safeAreaView = UIView()
+			let safeAreaView = ThemeCSSView()
 			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
 			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
 
@@ -175,8 +177,6 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		super.viewDidLoad()
 		configureViews()
 		configureDataSource()
-
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	open func createCollectionViewLayout() -> UICollectionViewLayout {
@@ -236,7 +236,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			if let coverView {
 				let rootView = UIView()
 				rootView.translatesAutoresizingMaskIntoConstraints = false
-				rootView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+				rootView.backgroundColor = Theme.shared.activeCollection.css.getColor(.fill, for: collectionView)
 
 				switch layout {
 					case .fill:
@@ -1175,8 +1175,15 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	// MARK: - Events
 	private var _navigationBarWasHidden: Bool?
 
+	private var _themeRegistered = false
 	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+
 		if let hideNavigationBar, hideNavigationBar, navigationController?.isNavigationBarHidden != hideNavigationBar {
 			_navigationBarWasHidden = navigationController?.isNavigationBarHidden
 			navigationController?.setNavigationBarHidden(hideNavigationBar, animated: true)
@@ -1196,8 +1203,12 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: false)
 		}
 
-		collectionView.backgroundColor = collection.tableBackgroundColor
-		coverRootView?.backgroundColor = collection.tableBackgroundColor
+		collectionView.backgroundColor = collection.css.getColor(.fill, for: collectionView)
+		coverRootView?.backgroundColor = collection.css.getColor(.fill, for: collectionView)
+	}
+
+	open var cssAutoSelectors: [ThemeCSSSelector] {
+		return [.collection]
 	}
 }
 
