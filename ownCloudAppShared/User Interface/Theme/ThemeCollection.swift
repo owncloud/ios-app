@@ -53,7 +53,7 @@ private struct ThemeColorSet {
 
 		switch style {
 			case .light: highlightedColorSet.backgroundColor = highlightedColorSet.backgroundColor.darker(0.10)
-			case .dark:  highlightedColorSet.backgroundColor = highlightedColorSet.backgroundColor.lighter(0.10)
+			case .dark:  highlightedColorSet.backgroundColor = highlightedColorSet.backgroundColor.lighter(0.15)
 			default: break
 		}
 
@@ -242,7 +242,7 @@ public class ThemeCollection : NSObject {
 			- ..
 		*/
 		var lightBrandSet = ThemeColorSet.from(backgroundColor: lightColor, tintColor: darkColor, for: style.userInterfaceStyle)
-		var darkBrandSet = ThemeColorSet.from(backgroundColor: darkColor, tintColor: lightColor, for: style.userInterfaceStyle)
+		let darkBrandSet = ThemeColorSet.from(backgroundColor: darkColor, tintColor: lightColor, for: style.userInterfaceStyle)
 
 		let styleTraitCollection = UITraitCollection(userInterfaceStyle: interfaceStyle)
 
@@ -266,7 +266,7 @@ public class ThemeCollection : NSObject {
 		var sidebarLogoLabel: UIColor
 		var iconSymbolColor: UIColor
 
-		var tintColor: UIColor = lightBrandColor
+		let tintColor: UIColor = lightBrandColor
 
 		var separatorColor: UIColor = UIColor.opaqueSeparator.resolvedColor(with: styleTraitCollection)
 		var sectionHeaderColor: UIColor
@@ -274,7 +274,7 @@ public class ThemeCollection : NSObject {
 		var groupedSectionHeaderColor: UIColor
 		var groupedSectionFooterColor: UIColor
 
-		var lightBrandColors = ThemeColorCollection(
+		let lightBrandColors = ThemeColorCollection(
 			backgroundColor: lightColor,
 			tintColor: UIColor.white,
 			labelColor: UIColor.white,
@@ -283,8 +283,8 @@ public class ThemeCollection : NSObject {
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		)
 
-		var neutralColors = lightBrandColors.filledColorPairCollection
-		var purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
+		let neutralColors = lightBrandColors.filledColorPairCollection
+		let purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
 		purchaseColors.disabled.background = purchaseColors.disabled.background.greyscale
 
 		var tokenForegroundColor = lightBrandColor
@@ -475,6 +475,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .stroke, value: cellStateSet.regular.tintColor),
 			ThemeCSSRecord(selectors: [.collection, .cell,.title], 		property: .stroke, value: cellStateSet.regular.labelColor),
 			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .fill,   value: UIColor.clear),
 			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.icon], property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.title],property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.collection, .sectionFooter], 	property: .stroke, value: sectionFooterColor),
