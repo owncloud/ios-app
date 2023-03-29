@@ -266,6 +266,9 @@ public class ThemeCollection : NSObject {
 		var sidebarLogoLabel: UIColor
 		var iconSymbolColor: UIColor
 
+		var inlineActionBackgroundColor: UIColor
+		var inlineActionBackgroundColorHighlighted: UIColor
+
 		let tintColor: UIColor = lightBrandColor
 
 		var separatorColor: UIColor = UIColor.opaqueSeparator.resolvedColor(with: styleTraitCollection)
@@ -346,6 +349,9 @@ public class ThemeCollection : NSObject {
 
 				moreHeaderBackgroundColor = darkColor.lighter(0.05)
 
+				inlineActionBackgroundColor = UIColor(white: 1, alpha: 0.10)
+				inlineActionBackgroundColorHighlighted = UIColor(white: 1, alpha: 0.05)
+
 				// --
 
 				// Bars
@@ -405,6 +411,9 @@ public class ThemeCollection : NSObject {
 				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
 
 				moreHeaderBackgroundColor = cellSet.backgroundColor
+
+				inlineActionBackgroundColor = UIColor(white: 0, alpha: 0.05)
+				inlineActionBackgroundColorHighlighted = UIColor(white: 0, alpha: 0.10)
 
 				// --
 
@@ -603,8 +612,8 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.alert],				property: .stroke, value: tintColor),
 
 			// - Action / Drop target (plain) fill style
-			ThemeCSSRecord(selectors: [.action],				property: .fill, value: UIColor(white: 0, alpha: 0.05)),
-			ThemeCSSRecord(selectors: [.action, .highlighted],		property: .fill, value: UIColor(white: 0, alpha: 0.10)),
+			ThemeCSSRecord(selectors: [.action],				property: .fill, value: inlineActionBackgroundColor),
+			ThemeCSSRecord(selectors: [.action, .highlighted],		property: .fill, value: inlineActionBackgroundColorHighlighted),
 
 			// - Drive Header
 			ThemeCSSRecord(selectors: [.header, .drive, .cover],		property: .fill, value: lightBrandColor),
