@@ -56,6 +56,8 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 	}
 
 	func configure() {
+		cssSelector = .savedSearch
+
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		segmentView.translatesAutoresizingMaskIntoConstraints = false
@@ -202,4 +204,8 @@ extension SavedSearchCell {
 			}
 		}))
 	}
+}
+
+extension ThemeCSSSelector {
+	public static let savedSearch = ThemeCSSSelector(rawValue: "savedSearch")
 }

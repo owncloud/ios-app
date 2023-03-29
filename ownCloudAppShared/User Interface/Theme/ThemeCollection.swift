@@ -248,7 +248,8 @@ public class ThemeCollection : NSObject {
 
 		var cellSet: ThemeColorSet
 		var groupedCellSet: ThemeColorSet
-		var sidebarCellSet: ThemeColorSet
+		var collectionBackgroundColor: UIColor
+		var groupedCollectionBackgroundColor: UIColor
 		var accountCellSet: ThemeColorSet
 		var sidebarAccountCellSet: ThemeColorSet
 
@@ -263,15 +264,15 @@ public class ThemeCollection : NSObject {
 
 		var sidebarLogoIconColor: UIColor
 		var sidebarLogoLabel: UIColor
+		var iconSymbolColor: UIColor
 
-		var darkBrandColors = ThemeColorCollection(
-			backgroundColor: darkColor,
-			tintColor: lightColor,
-			labelColor: UIColor.white,
-			secondaryLabelColor: UIColor.lightGray,
-			symbolColor: UIColor.white,
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: darkColor))
-		)
+		var tintColor: UIColor = lightBrandColor
+
+		var separatorColor: UIColor = UIColor.opaqueSeparator.resolvedColor(with: styleTraitCollection)
+		var sectionHeaderColor: UIColor
+		var sectionFooterColor: UIColor
+		var groupedSectionHeaderColor: UIColor
+		var groupedSectionFooterColor: UIColor
 
 		var lightBrandColors = ThemeColorCollection(
 			backgroundColor: lightColor,
@@ -286,55 +287,11 @@ public class ThemeCollection : NSObject {
 		var purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
 		purchaseColors.disabled.background = purchaseColors.disabled.background.greyscale
 
-		var tokenColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColor, background: UIColor(white: 0, alpha: 0.1)))
-
-		var tintColor: UIColor = lightBrandColor
+		var tokenForegroundColor = lightBrandColor
+		var tokenBackgroundColor = UIColor(white: 0, alpha: 0.1)
 
 		// Table view
-		var tableBackgroundColor = UIColor.systemBackground.resolvedColor(with: styleTraitCollection)
-		var tableGroupBackgroundColor = UIColor.systemGroupedBackground.resolvedColor(with: styleTraitCollection)
-		var separatorColor = UIColor.opaqueSeparator.resolvedColor(with: styleTraitCollection)
-
-		var navigationBarColors : ThemeColorCollection
-		var toolbarColors : ThemeColorCollection
 		var progressColors : ThemeColorPair
-
-		var sectionHeaderColor = UIColor.black
-		var sectionFooterColor = UIColor.gray
-
-		// var tableRowBorderColor = UIColor.black.withAlphaComponent(0.1)
-
-		var defaultTableRowLabelColor = darkColor
-		if VendorServices.shared.isBranded {
-			defaultTableRowLabelColor = UIColor(hex: 0x000000)
-		}
-
-		var tableRowColors = ThemeColorCollection(
-			backgroundColor: tableBackgroundColor,
-			tintColor: nil,
-			labelColor: defaultTableRowLabelColor,
-			secondaryLabelColor: UIColor(hex: 0x475770),
-			symbolColor: UIColor(hex: 0x475770),
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		)
-
-		var tableRowHighlightColors = ThemeColorCollection(
-			backgroundColor: UIColor.white.darker(0.1),
-			tintColor: nil,
-			labelColor: darkColor,
-			secondaryLabelColor: UIColor(hex: 0x475770),
-			symbolColor: UIColor(hex: 0x475770),
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		)
-
-		var tableRowButtonColors = ThemeColorCollection(
-			backgroundColor: tableGroupBackgroundColor,
-			tintColor: nil,
-			labelColor: defaultTableRowLabelColor,
-			secondaryLabelColor: UIColor(hex: 0x475770),
-			symbolColor: UIColor(hex: 0x475770),
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: defaultTableRowLabelColor, background: tableGroupBackgroundColor))
-		)
 
 		// Styles
 		switch style {
@@ -343,6 +300,8 @@ public class ThemeCollection : NSObject {
 				interfaceStyle = .dark
 				keyboardAppearance = .dark
 				backgroundBlurEffectStyle = .dark
+				statusBarStyle = .lightContent
+				barStyle = .black
 
 				// --
 
@@ -350,69 +309,47 @@ public class ThemeCollection : NSObject {
 				lightBrandSet.secondaryLabelColor = .white
 				lightBrandSet.iconColor = .white
 
-				cellSet = ThemeColorSet.from(backgroundColor: UIColor(hex: 0), tintColor: lightColor, for: interfaceStyle)
-				groupedCellSet = lightBrandSet
-
-				sidebarCellSet = darkBrandSet
 				accountCellSet = lightBrandSet
 				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .init(hex: 0, alpha: 0.5), tintColor: lightBrandColor, for: interfaceStyle)
+
+				navigationBarSet = darkBrandSet
+				toolbarSet = darkBrandSet
+
+				cellSet = ThemeColorSet.from(backgroundColor: UIColor(hex: 0), tintColor: lightColor, for: interfaceStyle)
+				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
+				collectionBackgroundColor = darkColor.darker(0.1)
+
+				groupedCellSet = ThemeColorSet.from(backgroundColor: darkColor, tintColor: lightColor, for: interfaceStyle)
+				groupedCellStateSet = ThemeColorStateSet.from(colorSet: groupedCellSet, for: interfaceStyle)
+				groupedCollectionBackgroundColor = navigationBarSet.backgroundColor.darker(0.3)
 
 				contentNavigationBarSet = cellSet
 				contentToolbarSet = cellSet
 
-				toolbarSet = darkBrandSet
-
-				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: darkBrandSet, for: .dark)
+				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: darkBrandSet, for: interfaceStyle)
 				sidebarCellStateSet.selected.backgroundColor = sidebarCellStateSet.regular.labelColor
 				sidebarCellStateSet.selected.labelColor = sidebarCellStateSet.regular.backgroundColor
 				sidebarCellStateSet.selected.iconColor = sidebarCellStateSet.regular.backgroundColor
 
 				sidebarLogoIconColor = .white
 				sidebarLogoLabel = .white
+				iconSymbolColor = lightColor
+
+				separatorColor = .darkGray
+
+				sectionHeaderColor = .white
+				sectionFooterColor = .lightGray
+				groupedSectionHeaderColor = .lightGray
+				groupedSectionFooterColor = .lightGray
 
 				// --
 
 				// Bars
-				navigationBarColors = darkBrandColors
-				toolbarColors = darkBrandColors
-
-				tokenColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColor, background: UIColor(white: 1, alpha: 0.1)))
+				tokenForegroundColor = lightBrandColor
+				tokenBackgroundColor = UIColor(white: 1, alpha: 0.1)
 
 				// Table view
-				tableBackgroundColor = navigationBarColors.backgroundColor!.darker(0.1)
-				tableGroupBackgroundColor = navigationBarColors.backgroundColor!.darker(0.3)
-				separatorColor = UIColor.darkGray
 				// tableRowBorderColor = UIColor.white.withAlphaComponent(0.1)
-				tableRowColors = ThemeColorCollection(
-					backgroundColor: tableBackgroundColor,
-					tintColor: navigationBarColors.tintColor,
-					labelColor: navigationBarColors.labelColor,
-					secondaryLabelColor: navigationBarColors.secondaryLabelColor,
-					symbolColor: lightColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
-
-				tableRowHighlightColors = ThemeColorCollection(
-					backgroundColor: lightColor.darker(0.2),
-					tintColor: UIColor.white,
-					labelColor: UIColor.white,
-					secondaryLabelColor: UIColor.white,
-					symbolColor: darkColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
-
-				tableRowButtonColors = ThemeColorCollection(
-					backgroundColor: tableGroupBackgroundColor,
-					tintColor: navigationBarColors.tintColor,
-					labelColor: navigationBarColors.labelColor,
-					secondaryLabelColor: navigationBarColors.secondaryLabelColor,
-					symbolColor: lightColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightColor, background: tableGroupBackgroundColor))
-				)
-
-				// Bar styles
-				statusBarStyle = .lightContent
-				barStyle = .black
 
 				// Progress
 				progressColors = ThemeColorPair(foreground: lightBrandColor, background: lightBrandColor.withAlphaComponent(0.3))
@@ -426,20 +363,27 @@ public class ThemeCollection : NSObject {
 				interfaceStyle = .light
 				keyboardAppearance = .light
 				backgroundBlurEffectStyle = .light
+				statusBarStyle = .darkContent
+				barStyle = .default
 
 				// --
 
-				cellSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightColor, for: interfaceStyle)
-				groupedCellSet = ThemeColorSet.from(backgroundColor: .systemGroupedBackground.resolvedColor(with: styleTraitCollection), tintColor: darkColor, for: interfaceStyle)
-
-				sidebarCellSet = lightBrandSet
 				accountCellSet = darkBrandSet
 				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .white, tintColor: .white, for: interfaceStyle)
 
+				navigationBarSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightColor, for: interfaceStyle)
+				toolbarSet = navigationBarSet
+
+				cellSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightColor, for: interfaceStyle)
+				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
+				collectionBackgroundColor = cellSet.backgroundColor
+
+				groupedCellSet = cellSet
+				groupedCellStateSet = ThemeColorStateSet.from(colorSet: groupedCellSet, for: interfaceStyle)
+				groupedCollectionBackgroundColor = .systemGroupedBackground.resolvedColor(with: styleTraitCollection)
+
 				contentNavigationBarSet = cellSet
 				contentToolbarSet = cellSet
-
-				toolbarSet = cellSet
 
 				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: lightBrandSet, for: .light)
 				sidebarCellStateSet.regular.backgroundColor = .secondarySystemBackground.resolvedColor(with: styleTraitCollection)
@@ -449,24 +393,14 @@ public class ThemeCollection : NSObject {
 
 				sidebarLogoIconColor = darkBrandColor
 				sidebarLogoLabel = darkBrandColor
+				iconSymbolColor = darkColor
+
+				sectionHeaderColor = .label.resolvedColor(with: styleTraitCollection)
+				sectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
+				groupedSectionHeaderColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
+				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
 
 				// --
-
-				// Bars
-				navigationBarColors = ThemeColorCollection(
-					backgroundColor: UIColor.white.darker(0.05),
-					tintColor: lightColor,
-					labelColor: darkColor,
-					secondaryLabelColor: UIColor.gray,
-					symbolColor: darkColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
-
-				toolbarColors = navigationBarColors
-
-				// Bar styles
-				statusBarStyle = .darkContent
-				barStyle = .default
 
 				// Progress
 				progressColors = ThemeColorPair(foreground: lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
@@ -476,28 +410,21 @@ public class ThemeCollection : NSObject {
 				logoFillColor = logoColor
 		}
 
-		// CSS ingredients
-		let iconSymbolColor = tableRowColors.symbolColor
-
-		let primaryLabelColor = UIColor.label.resolvedColor(with: styleTraitCollection)
-		let secondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: styleTraitCollection)
-		let tertiaryLabelColor = UIColor.tertiaryLabel.resolvedColor(with: styleTraitCollection)
-		let placeholderTextColor = UIColor.placeholderText.resolvedColor(with: styleTraitCollection)
+		// Fixed colors
+		let primaryLabelColor = cellSet.labelColor // UIColor.label.resolvedColor(with: styleTraitCollection)
+		let secondaryLabelColor = cellSet.secondaryLabelColor // UIColor.secondaryLabel.resolvedColor(with: styleTraitCollection)
+		let tertiaryLabelColor = cellSet.secondaryLabelColor // UIColor.tertiaryLabel.resolvedColor(with: styleTraitCollection)
+		let placeholderTextColor = cellSet.secondaryLabelColor // UIColor.placeholderText.resolvedColor(with: styleTraitCollection)
 
 		let primaryBackgroundColor = UIColor.systemBackground.resolvedColor(with: styleTraitCollection)
 		let secondaryBackgroundColor = UIColor.secondarySystemBackground.resolvedColor(with: styleTraitCollection)
 		let tertiaryBackgroundColor = UIColor.tertiarySystemBackground.resolvedColor(with: styleTraitCollection)
-
-		let navigationBarTintColor = navigationBarColors.tintColor
-		let navigationBarLabelColor = navigationBarColors.labelColor
-		let navigationBarBackgroundColor = navigationBarColors.backgroundColor
 
 		let progressForegroundColor = progressColors.foreground
 		let progressBackgroundColor = progressColors.background
 
 		let favoriteEnabledColor = UIColor(hex: 0xFFCC00)
 		let favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
-		let activityIndicatorViewStyle : UIActivityIndicatorView.Style = .medium
 
 		// CSS
 		css.add(records: [
@@ -515,16 +442,16 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.all], 			   	property: .barStyle, value: barStyle),
 
 			// - Activity Indicator
-			ThemeCSSRecord(selectors: [.all], 			   	property: .activityIndicatorStyle, value: activityIndicatorViewStyle),
+			ThemeCSSRecord(selectors: [.all], 			   	property: .activityIndicatorStyle, value: UIActivityIndicatorView.Style.medium),
 
 			// General
 			// - Seperator
 			ThemeCSSRecord(selectors: [.separator], 			property: .fill,  value: separatorColor),
 
 			// - Navigation Bar
-			ThemeCSSRecord(selectors: [.navigationBar],			property: .stroke, value: navigationBarTintColor),
-			ThemeCSSRecord(selectors: [.navigationBar, .label],		property: .stroke, value: navigationBarLabelColor),
-			ThemeCSSRecord(selectors: [.navigationBar],			property: .fill,   value: navigationBarBackgroundColor),
+			ThemeCSSRecord(selectors: [.navigationBar],			property: .stroke, value: navigationBarSet.tintColor),
+			ThemeCSSRecord(selectors: [.navigationBar, .label],		property: .stroke, value: navigationBarSet.labelColor),
+			ThemeCSSRecord(selectors: [.navigationBar],			property: .fill,   value: navigationBarSet.backgroundColor),
 
 			// - Toolbar
 			ThemeCSSRecord(selectors: [.toolbar],				property: .stroke, value: toolbarSet.tintColor),
@@ -539,40 +466,47 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.cell, .sectionHeader],		property: .stroke, value: sectionHeaderColor),
 
 			// - Modal
-			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .fill,   value: tableBackgroundColor),
-			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .stroke, value: tableRowColors.labelColor),
+			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .fill,   value: cellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .stroke, value: cellSet.labelColor),
 
 			// - Collection View
-			ThemeCSSRecord(selectors: [.collection],     	    	   	property: .fill,   value: cellSet.backgroundColor),
-			ThemeCSSRecord(selectors: [.collection, .highlighted, .cell],  	property: .fill,   value: tableRowHighlightColors.backgroundColor),
-			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .stroke, value: lightBrandColor),
-			ThemeCSSRecord(selectors: [.collection, .cell,.title], 		property: .stroke, value: cellSet.labelColor),
-			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .stroke, value: cellSet.secondaryLabelColor),
-			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.icon], property: .stroke, value: cellSet.secondaryLabelColor),
-			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.title],property: .stroke, value: cellSet.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.collection, .highlighted, .cell],  	property: .fill,   value: cellStateSet.highlighted.backgroundColor),
+			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .stroke, value: cellStateSet.regular.tintColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.title], 		property: .stroke, value: cellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.icon], property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.title],property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.collection, .sectionFooter], 	property: .stroke, value: sectionFooterColor),
-			// ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .fill,   value: self.tableRowColors.backgroundColor ?? .white),
+			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 
 			// - Table View
-			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellSet.backgroundColor),
-			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCellSet.backgroundColor),
-			ThemeCSSRecord(selectors: [.insetGrouped, .table],    	   	property: .fill,   value: groupedCellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .table],    	   	property: .fill,   value: groupedCollectionBackgroundColor),
 
-			ThemeCSSRecord(selectors: [.table, .cell],    			property: .stroke, value: cellSet.tintColor), // tableRowColors.tintColor),
-			ThemeCSSRecord(selectors: [.table, .cell],     	    	   	property: .fill,   value: cellSet.backgroundColor),
-			ThemeCSSRecord(selectors: [.table, .highlighted, .cell],     	property: .fill,   value: tableRowHighlightColors.backgroundColor),
+			ThemeCSSRecord(selectors: [.table, .cell],    			property: .stroke, value: cellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.table, .cell],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.table, .highlighted, .cell],     	property: .fill,   value: cellStateSet.highlighted.backgroundColor),
 
-			ThemeCSSRecord(selectors: [.table, .sectionHeader],    		property: .stroke, value: sectionHeaderColor),
-			ThemeCSSRecord(selectors: [.table, .sectionFooter],    		property: .stroke, value: sectionFooterColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .cell],			property: .stroke, value: groupedCellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .cell],			property: .fill,   value: groupedCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .highlighted, .cell],	property: .fill,   value: groupedCellStateSet.highlighted.backgroundColor),
 
-			ThemeCSSRecord(selectors: [.table, .icon],    				property: .stroke, value: cellSet.iconColor),
-			ThemeCSSRecord(selectors: [.table, .label, .primary],    		property: .stroke, value: cellSet.labelColor),
-			ThemeCSSRecord(selectors: [.table, .label, .secondary], 		property: .stroke, value: cellSet.secondaryLabelColor),
-			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .primary],    	property: .stroke, value: tableRowHighlightColors.labelColor),
-			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .secondary], 	property: .stroke, value: tableRowHighlightColors.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .sectionHeader],    	property: .stroke, value: groupedSectionHeaderColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .sectionFooter],    	property: .stroke, value: groupedSectionFooterColor),
+
+			ThemeCSSRecord(selectors: [.table, .sectionHeader],    			property: .stroke, value: sectionHeaderColor),
+			ThemeCSSRecord(selectors: [.table, .sectionFooter],    			property: .stroke, value: sectionFooterColor),
+
+			ThemeCSSRecord(selectors: [.table, .icon],    				property: .stroke, value: cellStateSet.regular.iconColor),
+			ThemeCSSRecord(selectors: [.table, .label, .primary],    		property: .stroke, value: cellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.table, .label, .secondary], 		property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .primary],    	property: .stroke, value: cellStateSet.highlighted.labelColor),
+			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .secondary], 	property: .stroke, value: cellStateSet.highlighted.secondaryLabelColor),
 
 			// - Accessories
-			ThemeCSSRecord(selectors: [.accessory], 			property: .stroke, value: cellSet.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.accessory], 			property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.accessory, .accept],		property: .stroke, value: UIColor.systemGreen),
 			ThemeCSSRecord(selectors: [.accessory, .decline],		property: .stroke, value: UIColor.systemRed),
 
@@ -581,13 +515,14 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.segments, .icon], 			property: .stroke, value: cellSet.iconColor),
 			ThemeCSSRecord(selectors: [.segments, .title],			property: .stroke, value: cellSet.secondaryLabelColor),
 
-			ThemeCSSRecord(selectors: [.segments, .token],			property: .fill,   value: tokenColors.normal.background),
-			ThemeCSSRecord(selectors: [.segments, .token, .icon],		property: .stroke, value: tokenColors.normal.foreground),
-			ThemeCSSRecord(selectors: [.segments, .token, .title],		property: .stroke, value: tokenColors.normal.foreground),
+			ThemeCSSRecord(selectors: [.segments, .token],			property: .fill,   value: tokenBackgroundColor),
+			ThemeCSSRecord(selectors: [.segments, .token, .icon],		property: .stroke, value: tokenForegroundColor),
+			ThemeCSSRecord(selectors: [.segments, .token, .title],		property: .stroke, value: tokenForegroundColor),
 
 			// - Messages
-			ThemeCSSRecord(selectors: [.infoBox, .background],		property: .fill, value: tableGroupBackgroundColor),
+			ThemeCSSRecord(selectors: [.infoBox, .background],		property: .fill, value: groupedCollectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.infoBox, .icon],			property: .fill, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.infoBox, .subtitle],		property: .fill, value: secondaryLabelColor),
 
 			ThemeCSSRecord(selectors: [.title],				property: .stroke, value: primaryLabelColor),
 			ThemeCSSRecord(selectors: [.subtitle],				property: .stroke, value: secondaryLabelColor),
@@ -597,15 +532,19 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.secondary],				property: .stroke, value: secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.tertiary],				property: .stroke, value: tertiaryLabelColor),
 
+			// - Saved Search
+			ThemeCSSRecord(selectors: [.savedSearch],			property: .fill, value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.savedSearch, .cell],		property: .fill, value: groupedCollectionBackgroundColor),
+
 			// - Fills
 			ThemeCSSRecord(selectors: [.primary],				property: .fill, value: primaryBackgroundColor),
 			ThemeCSSRecord(selectors: [.secondary],				property: .fill, value: secondaryBackgroundColor),
 			ThemeCSSRecord(selectors: [.tertiary],				property: .fill, value: tertiaryBackgroundColor),
 
 			// - Text Field
-			ThemeCSSRecord(selectors: [.textField],				property: .fill,   value: tableBackgroundColor), // Background color
-			ThemeCSSRecord(selectors: [.textField, .label],			property: .stroke, value: tableRowColors.labelColor), // Text color
-			ThemeCSSRecord(selectors: [.textField, .disabled, .label],	property: .stroke, value: tableRowColors.secondaryLabelColor), // Disabled text color
+			ThemeCSSRecord(selectors: [.textField],				property: .fill,   value: collectionBackgroundColor), // Background color
+			ThemeCSSRecord(selectors: [.textField, .label],			property: .stroke, value: cellSet.labelColor), // Text color
+			ThemeCSSRecord(selectors: [.textField, .disabled, .label],	property: .stroke, value: cellSet.secondaryLabelColor), // Disabled text color
 			ThemeCSSRecord(selectors: [.textField, .placeholder],		property: .stroke, value: placeholderTextColor), // Text field placeholder
 
 			// - Search Field
@@ -640,7 +579,7 @@ public class ThemeCollection : NSObject {
 		css.add(records: ThemeCollection.generateColorPairs(with: [.digit], 	  from: neutralColors))
 
 		css.add(records: [
-			ThemeCSSRecord(selectors: [.passcode],				property: .fill,   value: tableBackgroundColor),
+			ThemeCSSRecord(selectors: [.passcode],				property: .fill,   value: collectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.passcode, .title],			property: .stroke, value: primaryLabelColor),
 			ThemeCSSRecord(selectors: [.passcode, .disabled, .title],	property: .stroke, value: secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.passcode, .code],			property: .stroke, value: neutralColors.normal.background),
@@ -659,14 +598,14 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.header, .drive, .cover],		property: .fill, value: lightBrandColor),
 
 			// - Expandable Resource Cell
-			ThemeCSSRecord(selectors: [.expandable],			property: .fill,   value: tableBackgroundColor),
+			ThemeCSSRecord(selectors: [.expandable],			property: .fill,   value: collectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.expandable, .button],		property: .stroke, value: tintColor),
-			ThemeCSSRecord(selectors: [.expandable, .textView],		property: .fill,   value: tableBackgroundColor),
+			ThemeCSSRecord(selectors: [.expandable, .textView],		property: .fill,   value: collectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.expandable, .textView],		property: .stroke, value: secondaryLabelColor),
-			ThemeCSSRecord(selectors: [.expandable, .shadow],		property: .fill,   value: tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.expandable, .shadow],		property: .fill,   value: cellSet.labelColor),
 
 			// - Location Bar
-			ThemeCSSRecord(selectors: [.locationBar],			property: .fill, value: tableRowColors.backgroundColor ?? .white),
+			ThemeCSSRecord(selectors: [.locationBar],			property: .fill, value: cellSet.backgroundColor),
 
 			// - Keyboard
 			ThemeCSSRecord(selectors: [.all],				property: .keyboardAppearance, value: keyboardAppearance),
@@ -679,12 +618,12 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.account, .disconnect],		property: .fill,   value: accountCellSet.labelColor),
 
 			// - Location Picker
-			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList], property: .fill, value: tableGroupBackgroundColor),
+			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList], property: .fill, value: groupedCollectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .cell], property: .fill, value: UIColor.white),
 			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .account], property: .fill, value: darkBrandColor),
 
 			// - More card header
-			ThemeCSSRecord(selectors: [.table, .grouped, .more, .header], 	property: .fill, value: tableBackgroundColor),
+			ThemeCSSRecord(selectors: [.table, .grouped, .more, .header], 	property: .fill, value: collectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.more, .favorite],			property: .stroke, value: favoriteEnabledColor),
 			ThemeCSSRecord(selectors: [.more, .favorite, .disabled],	property: .stroke, value: favoriteDisabledColor),
 
@@ -692,7 +631,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.vectorImage, .folderFillColor], 	property: .fill, value: iconSymbolColor),
 			ThemeCSSRecord(selectors: [.vectorImage, .fileFillColor], 	property: .fill, value: iconSymbolColor),
 			ThemeCSSRecord(selectors: [.vectorImage, .logoFillColor], 	property: .fill, value: logoFillColor ?? UIColor.white),
-			ThemeCSSRecord(selectors: [.vectorImage, .iconFillColor], 	property: .fill, value: tableRowColors.tintColor ?? iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .iconFillColor], 	property: .fill, value: iconSymbolColor),
 			ThemeCSSRecord(selectors: [.vectorImage, .symbolFillColor], 	property: .fill, value: iconSymbolColor),
 
 			// Side Bar
@@ -730,7 +669,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.sidebar, .toolbar],			property: .stroke, value: lightColor),
 
 			// Content Area
-			ThemeCSSRecord(selectors: [.content],				property: .fill,   value: tableRowColors.backgroundColor),
+			ThemeCSSRecord(selectors: [.content],				property: .fill,   value: collectionBackgroundColor),
 
 			// - Navigation Bar
 			ThemeCSSRecord(selectors: [.content, .navigationBar],			property: .fill,   value: contentNavigationBarSet.backgroundColor),

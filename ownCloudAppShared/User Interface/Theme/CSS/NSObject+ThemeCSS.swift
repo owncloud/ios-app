@@ -135,4 +135,31 @@ extension NSObject {
 
 		return "Selectors: \(selectors)\nMatching:\n\(records)"
 	}
+
+	@objc public func cssDescription(extraSelectors: [String]? = nil, stateSelectors: [String]? = nil) -> String {
+		let selectors = (cascadingStyleSelectors.compactMap({ selector in
+			return selector.rawValue as NSString
+		}) as NSArray).componentsJoined(by: ".")
+
+		let properties: [ThemeCSSProperty] = [
+			.stroke, .fill, .cornerRadius
+		]
+
+		var records = ""
+
+		for property in properties {
+			records += "- \(property.rawValue): "
+			if let record = Theme.shared.activeCollection.css.get(property,
+				selectors: extraSelectors?.compactMap({string in return ThemeCSSSelector(rawValue: string)}),
+				state: stateSelectors?.compactMap({string in return ThemeCSSSelector(rawValue: string)}),
+				for: self) {
+				records += "\((record.selectors.compactMap({ selector in selector.rawValue }) as NSArray).componentsJoined(by: ".")) -> \(record.value != nil ? record.value! : "-")"
+			} else {
+				records += "-"
+			}
+			records += "\n"
+		}
+
+		return "Selectors: \(selectors)\nMatching:\n\(records)"
+	}
 }

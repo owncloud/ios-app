@@ -452,22 +452,32 @@ public class ComposedMessageView: UIView, Themeable {
 	public override func willMove(toSuperview newSuperview: UIView?) {
 		if !_didSetupContent {
 			_didSetupContent = true
-
 			embedAndLayoutElements()
-
-			Theme.shared.register(client: self, applyImmediately: true)
 		}
 
 		super.willMove(toSuperview: newSuperview)
 	}
 
-	public override func willMove(toWindow newWindow: UIWindow?) {
-		super.willMove(toWindow: newWindow)
+	private var _clientRegistered = false
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil {
+			if !_didSetupContent {
+				_didSetupContent = true
+				embedAndLayoutElements()
+			}
+
+			if !_clientRegistered {
+				_clientRegistered = true
+				Theme.shared.register(client: self, applyImmediately: true)
+			}
+		}
 
 		guard let elements = elements else { return }
 
 		for element in elements {
-			element.elementInView = (newWindow != nil)
+			element.elementInView = (window != nil)
 		}
 	}
 

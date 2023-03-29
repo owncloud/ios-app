@@ -261,27 +261,48 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Theme support
+	func applyColor(headerFooterView view: UIView, color: UIColor) {
+		if let label = view as? UILabel {
+			label.textColor = color
+		} else if let headerView = view as? UITableViewHeaderFooterView {
+			headerView.textLabel?.textColor = color
+		}
+	}
+
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+
+		var headerTextColor: UIColor?
+		var footerTextColor: UIColor?
+
+		for sectionIdx in 0..<sections.count {
+			if let headerView = tableView.headerView(forSection: sectionIdx) {
+				if headerTextColor == nil {
+					headerTextColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView)
+				}
+				if let headerTextColor {
+					applyColor(headerFooterView: headerView, color: headerTextColor)
+				}
+			}
+
+			if let footerView = tableView.footerView(forSection: sectionIdx) {
+				if footerTextColor == nil {
+					footerTextColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView)
+				}
+				if let footerTextColor {
+					applyColor(headerFooterView: footerView, color: footerTextColor)
+				}
+			}
+		}
 	}
 
 	public override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
 		guard let sectionColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView) else { return }
-
-		if let label = view as? UILabel {
-			label.textColor = sectionColor
-		} else if let headerView = view as? UITableViewHeaderFooterView {
-			headerView.textLabel?.textColor = sectionColor
-		}
+		applyColor(headerFooterView: view, color: sectionColor)
 	}
 
 	public override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
 		guard let sectionColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionFooter], for: tableView) else { return }
-
-		if let label = view as? UILabel {
-			label.textColor = sectionColor
-		} else if let headerView = view as? UITableViewHeaderFooterView {
-			headerView.textLabel?.textColor = sectionColor
-		}
+		applyColor(headerFooterView: view, color: sectionColor)
 	}
 }
