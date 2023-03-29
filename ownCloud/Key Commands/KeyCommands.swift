@@ -1151,60 +1151,6 @@ extension PhotoSelectionViewController {
     }
 }
 
-extension PasscodeViewController {
-
-    public override var keyCommands: [UIKeyCommand]? {
-        var keyCommands : [UIKeyCommand] = []
-        for i in 0 ..< 10 {
-            keyCommands.append(
-                UIKeyCommand.ported(input:String(i),
-                             modifierFlags: [],
-                             action: #selector(self.performKeyCommand(sender:)),
-                             discoverabilityTitle: String(i))
-            )
-        }
-
-        keyCommands.append(
-            UIKeyCommand.ported(input: "\u{8}",
-                         modifierFlags: [],
-                         action: #selector(self.performKeyCommand(sender:)),
-                         discoverabilityTitle: "Delete".localized)
-        )
-
-        if cancelButton?.isHidden == false {
-            keyCommands.append(
-
-                UIKeyCommand.ported(input: UIKeyCommand.inputEscape,
-                            modifierFlags: [],
-                            action: #selector(self.performKeyCommand(sender:)),
-                            discoverabilityTitle: "Cancel".localized)
-            )
-        }
-
-        return keyCommands
-    }
-
-	override open var canBecomeFirstResponder: Bool {
-		return true
-	}
-
-    @objc func performKeyCommand(sender: UIKeyCommand) {
-        guard let key = sender.input else {
-            return
-        }
-
-        switch key {
-        case "\u{8}":
-            deleteLastDigit()
-        case UIKeyCommand.inputEscape:
-            cancelHandler?(self)
-        default:
-            appendDigit(digit: key)
-        }
-
-    }
-}
-
 extension DisplayHostViewController {
 
 	override var keyCommands: [UIKeyCommand]? {
@@ -1527,3 +1473,4 @@ extension FrameViewController {
 		}
 	}
 }
+
