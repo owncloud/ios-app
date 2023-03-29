@@ -36,7 +36,7 @@ class ImportPasteboardAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.importpasteboard") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Paste".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
