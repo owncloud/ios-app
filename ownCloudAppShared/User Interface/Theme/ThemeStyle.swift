@@ -30,44 +30,20 @@ public class ThemeStyle : NSObject {
 
 	public var darkStyleIdentifier: String?
 
-	public var customizedColorsByPath : [String:String]?
 	public var customColors : NSDictionary?
 	public var genericColors : NSDictionary?
 	public var styles : NSDictionary?
 
-	public init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil) {
+	public init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil) {
 		self.identifier = styleIdentifier
 		self.darkStyleIdentifier = darkIdentifier
 		self.localizedName = name
 		self.lightColor = lColor
 		self.darkColor = dColor
 		self.themeStyle = style
-		self.customizedColorsByPath = customizations
 		self.customColors = customColors
 		self.genericColors = genericColors
 		self.styles = interfaceStyles
-	}
-
-	public var parsedCustomizedColorsByPath : [String:UIColor]? {
-		if let rawColorsByPath = customizedColorsByPath {
-			var colorsByPath : [String:UIColor] = [:]
-
-			for (keyPath, rawColor) in rawColorsByPath {
-				var color : UIColor?
-
-				if let decodedHexColor = rawColor.colorFromHex {
-					color = decodedHexColor
-				}
-
-				if color != nil {
-					colorsByPath[keyPath] = color
-				}
-			}
-
-			return colorsByPath
-		}
-
-		return nil
 	}
 }
 
@@ -92,10 +68,5 @@ public extension String {
 public extension ThemeCollection {
 	convenience init(with style: ThemeStyle) {
 		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors, genericColors: style.genericColors, interfaceStyles: style.styles)
-		if let customizationColors = style.parsedCustomizedColorsByPath {
-			for (keyPath, color) in customizationColors {
-				self.setValue(color, forKeyPath: keyPath)
-			}
-		}
 	}
 }
