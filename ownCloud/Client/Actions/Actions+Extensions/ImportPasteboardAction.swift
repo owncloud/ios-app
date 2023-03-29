@@ -47,6 +47,12 @@ class ImportPasteboardAction : Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		let pasteboard = UIPasteboard.general
+
+		if forContext.items.first?.permissions.contains(.createFolder) == false ||
+		   forContext.items.first?.permissions.contains(.createFile) == false {
+			return .none
+		}
+
 		if pasteboard.numberOfItems > 0 {
 			return .afterMiddle
 		}

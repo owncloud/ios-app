@@ -432,6 +432,8 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				// 		  (collectionViewController.selectedItemReferences?.contains(collectionItemRef) == true) // Consider setting cell state (selection, etc.) here
 
 				if let cellProvider = cellProvider, let dataSource = contentDataSource {
+					let clientContext = clientContext ?? collectionViewController.clientContext
+
 					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, highlight: doHighlight, clientContext: clientContext)
 
 					if let cellConfigurationCustomizer = cellConfigurationCustomizer {
