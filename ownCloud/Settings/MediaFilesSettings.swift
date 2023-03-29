@@ -62,7 +62,7 @@ class MediaFilesSettingsSection: SettingsSection {
 	}
 
 	private func pushMediaUploadSettings() {
-		let mediaUploadSettingsViewController = MediaUploadSettingsViewController(style: .grouped)
+		let mediaUploadSettingsViewController = MediaUploadSettingsViewController(style: .insetGrouped)
 		self.viewController?.navigationController?.pushViewController(mediaUploadSettingsViewController, animated: true)
 	}
 }

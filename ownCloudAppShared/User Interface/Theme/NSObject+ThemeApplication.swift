@@ -275,7 +275,7 @@ public extension NSObject {
 					cell.contentConfiguration = cellListConfiguration
 				}
 
-				cell.tintColor = css.getColor(.stroke, for: cell)
+				cell.tintColor = css.getColor(.stroke, selectors: stateSelectors, for: cell)
 
 				cell.overrideUserInterfaceStyle = (css.get(.style, for: cell)?.value as? UIUserInterfaceStyle) ?? .unspecified
 			}

@@ -283,7 +283,11 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		}
 	}
 
-	public var cellLayout: CellLayout
+	public var cellLayout: CellLayout {
+		didSet {
+			collectionViewController?.updateCellLayout(animated: true)
+		}
+	}
 
 	public var expandedItemRefs: [CollectionViewController.ItemRef]
 	private var initialExpandedItems: [OCDataItemReference]?

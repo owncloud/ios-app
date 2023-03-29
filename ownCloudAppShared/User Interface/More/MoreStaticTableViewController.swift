@@ -68,7 +68,7 @@ open class MoreStaticTableViewController: StaticTableViewController {
 		if  (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle != nil {
 			return UITableView.automaticDimension
 		}
-		return 0.0
+		return UITableView.automaticDimension
 	}
 
 	open override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

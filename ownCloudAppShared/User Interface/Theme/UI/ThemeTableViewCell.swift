@@ -43,8 +43,10 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 	}
 
 	public typealias CellStyler = (_ cell: ThemeTableViewCell, _ styleSet: CellStyleSet) -> Bool
+	public typealias CellCustomizer = (_ cell: ThemeTableViewCell, _ styleSet: CellStyleSet) -> Void
 
 	public var cellStyler : CellStyler?
+	public var cellCustomizer: CellCustomizer?
 
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		if style == .default {
@@ -165,8 +167,8 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 
 		if !themeRegistered, window != nil {
 			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
-			Theme.shared.register(client: self, applyImmediately: true)
 			themeRegistered = true
+			Theme.shared.register(client: self, applyImmediately: true)
 		}
 	}
 
@@ -200,8 +202,12 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 						backgroundColor = customBackgroundColor
 				}
 
-				if let cellStyler = cellStyler, cellStyler(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor)) {
+				if let cellStyler, cellStyler(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor)) {
 					doStyle = false
+				}
+
+				if let cellCustomizer {
+					cellCustomizer(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor))
 				}
 
 				if doStyle {

@@ -274,6 +274,8 @@ public class ThemeCollection : NSObject {
 		var groupedSectionHeaderColor: UIColor
 		var groupedSectionFooterColor: UIColor
 
+		var moreHeaderBackgroundColor: UIColor
+
 		let lightBrandColors = ThemeColorCollection(
 			backgroundColor: lightColor,
 			tintColor: UIColor.white,
@@ -342,6 +344,8 @@ public class ThemeCollection : NSObject {
 				groupedSectionHeaderColor = .lightGray
 				groupedSectionFooterColor = .lightGray
 
+				moreHeaderBackgroundColor = darkColor.lighter(0.05)
+
 				// --
 
 				// Bars
@@ -399,6 +403,8 @@ public class ThemeCollection : NSObject {
 				sectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
 				groupedSectionHeaderColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
 				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
+
+				moreHeaderBackgroundColor = cellSet.backgroundColor
 
 				// --
 
@@ -491,11 +497,16 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.table, .highlighted, .cell],     	property: .fill,   value: cellStateSet.highlighted.backgroundColor),
 
 			ThemeCSSRecord(selectors: [.grouped, .table, .cell],			property: .stroke, value: groupedCellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .cell, .label],		property: .stroke, value: groupedCellStateSet.regular.labelColor),
 			ThemeCSSRecord(selectors: [.grouped, .table, .cell],			property: .fill,   value: groupedCellStateSet.regular.backgroundColor),
 			ThemeCSSRecord(selectors: [.grouped, .table, .highlighted, .cell],	property: .fill,   value: groupedCellStateSet.highlighted.backgroundColor),
 
 			ThemeCSSRecord(selectors: [.grouped, .table, .sectionHeader],    	property: .stroke, value: groupedSectionHeaderColor),
 			ThemeCSSRecord(selectors: [.grouped, .table, .sectionFooter],    	property: .stroke, value: groupedSectionFooterColor),
+
+			ThemeCSSRecord(selectors: [.insetGrouped, .table, .cell],		property: .stroke, value: groupedCellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .table, .cell],		property: .fill,   value: groupedCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .table, .highlighted, .cell],	property: .fill,   value: groupedCellStateSet.highlighted.backgroundColor),
 
 			ThemeCSSRecord(selectors: [.table, .sectionHeader],    			property: .stroke, value: sectionHeaderColor),
 			ThemeCSSRecord(selectors: [.table, .sectionFooter],    			property: .stroke, value: sectionFooterColor),
@@ -624,7 +635,10 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .account], property: .fill, value: darkBrandColor),
 
 			// - More card header
-			ThemeCSSRecord(selectors: [.table, .grouped, .more, .header], 	property: .fill, value: collectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.more, .header], 			property: .fill,   value: moreHeaderBackgroundColor),
+			ThemeCSSRecord(selectors: [.more, .collection], 		property: .fill,   value: groupedCellStateSet),
+			ThemeCSSRecord(selectors: [.more, .insetGrouped, .table, .cell, .proceed],	property: .stroke, value: UIColor.white),
+
 			ThemeCSSRecord(selectors: [.more, .favorite],			property: .stroke, value: favoriteEnabledColor),
 			ThemeCSSRecord(selectors: [.more, .favorite, .disabled],	property: .stroke, value: favoriteDisabledColor),
 

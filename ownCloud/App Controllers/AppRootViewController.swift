@@ -374,8 +374,7 @@ extension ClientSidebarViewController {
 
 	// MARK: - Open settings
 	@IBAction func settings() {
-		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
-		self.present(ThemeNavigationController(rootViewController: viewController), animated: true)
+		self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
 	}
 
 	// MARK: - Add account

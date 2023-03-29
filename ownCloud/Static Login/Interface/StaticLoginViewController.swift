@@ -352,8 +352,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 	}
 
 	@objc func settings() {
-        	let viewController : SettingsViewController = SettingsViewController(style: .grouped)
-        	let navigationViewController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+        	let navigationViewController : ThemeNavigationController = ThemeNavigationController(rootViewController: SettingsViewController())
 
 		self.present(navigationViewController, animated: true, completion: nil)
 	}

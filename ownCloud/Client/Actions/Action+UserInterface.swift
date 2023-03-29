@@ -27,7 +27,7 @@ extension Action {
 	class public func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
 		guard let core = context.core else { return nil }
 
-		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let tableViewController = MoreStaticTableViewController(style: .insetGrouped)
 		let header = MoreViewHeader(for: item, with: core)
 		let moreViewController = FrameViewController(header: header, viewController: tableViewController)
 
@@ -66,8 +66,6 @@ extension Action {
 			}
 		}
 
-		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
 		let actions = Action.sortedApplicableActions(for: context)
 
 		actions.forEach({
@@ -82,7 +80,7 @@ extension Action {
 
 		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
 
-		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+		tableViewController.addSection(StaticTableViewSection(headerTitle: nil, identifier: "actions-section", rows: actionsRows))
 
 		return moreViewController
 	}

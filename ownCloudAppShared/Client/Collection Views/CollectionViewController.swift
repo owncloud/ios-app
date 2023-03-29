@@ -1197,10 +1197,15 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	// MARK: - Update cell layout
+	public func updateCellLayout(animated: Bool = false) {
+		collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: animated)
+	}
+
 	// MARK: - Themeing
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		if event != .initial {
-			collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: false)
+			updateCellLayout(animated: false)
 		}
 
 		collectionView.backgroundColor = collection.css.getColor(.fill, for: collectionView)

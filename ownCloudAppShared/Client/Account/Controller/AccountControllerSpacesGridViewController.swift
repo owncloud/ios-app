@@ -30,7 +30,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			context.viewControllerPusher = owner as? ViewControllerPusher
 		}
 
-		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: .grid(itemWidthDimension: .fractionalWidth(0.33), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)))
+		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: AccountControllerSpacesGridViewController.cellLayout(for: .current))
 
 		super.init(context: gridContext, sections: [ spacesSection ], useStackViewRoot: true, hierarchic: false)
 
@@ -48,6 +48,25 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 				let coverView = (condition.fulfilled == true) ? noSpacesMessage : nil
 				self?.setCoverView(coverView, layout: .top)
 			})
+		}
+	}
+
+	static func cellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {
+		switch traitCollection.horizontalSizeClass {
+			case .regular:
+				return .grid(itemWidthDimension: .fractionalWidth(0.33), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+
+			// case .compact:
+			@unknown default:
+				return .grid(itemWidthDimension: .fractionalWidth(1.0), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+		}
+	}
+
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+
+		OnMainThread {
+			self.spacesSection.cellLayout = AccountControllerSpacesGridViewController.cellLayout(for: self.traitCollection)
 		}
 	}
 
