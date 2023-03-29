@@ -257,6 +257,15 @@ class BookmarkViewController: StaticTableViewController {
 				self.navigationItem.title = "Add account".localized
 				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
+				// Support for bookmark default name
+				if let defaultNameString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultName) as? String {
+					self.bookmark?.name = defaultNameString
+
+					if bookmark != nil {
+						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+					}
+				}
+
 				// Support for bookmark default URL
 				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
 					self.bookmark?.url = URL(string: defaultURLString)
@@ -278,8 +287,8 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				self.usernameRow?.enabled =
-					(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
-					((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
+				(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
+				((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
 
 				self.navigationItem.title = "Edit account".localized
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
@@ -344,9 +353,9 @@ class BookmarkViewController: StaticTableViewController {
 
 		//if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
 		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark, bookmark.authenticationData != nil {
-				updateBookmark(bookmark: bookmark)
-			 completeAndDismiss(with: hudCompletion)
-			 return
+			updateBookmark(bookmark: bookmark)
+			completeAndDismiss(with: hudCompletion)
+			return
 		}
 
 		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {
@@ -1014,7 +1023,7 @@ class BookmarkViewController: StaticTableViewController {
 		var password : String?
 
 		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier,
-			OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
+		   OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
 		   let authData = bookmark.authenticationData,
 		   let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier) {
 			userName = authenticationMethodClass.userName(fromAuthenticationData: authData)
@@ -1096,6 +1105,7 @@ extension OCClassSettingsIdentifier {
 }
 
 extension OCClassSettingsKey {
+	static let bookmarkDefaultName = OCClassSettingsKey("default-name")
 	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
 	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
 	static let prepopulation = OCClassSettingsKey("prepopulation")
@@ -1122,40 +1132,47 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
-			.bookmarkDefaultURL : [
+			.bookmarkDefaultName : [
 				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "The default URL for the creation of new bookmarks.",
+				.description	: "The default name for the creation of new bookmarks.",
 				.category	: "Bookmarks",
 				.status		: OCClassSettingsKeyStatus.supported
 			],
 
-			.bookmarkURLEditable : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported
-			],
+				.bookmarkDefaultURL : [
+					.type         : OCClassSettingsMetadataType.string,
+					.description    : "The default URL for the creation of new bookmarks.",
+					.category    : "Bookmarks",
+					.status        : OCClassSettingsKeyStatus.supported
+				],
 
-			.prepopulation : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported,
-				.possibleValues	: [
-					[
-						OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
-						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
-					],
-					[
-						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
-						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
-					],
-					[
-						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
-						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
+				.bookmarkURLEditable : [
+					.type 		: OCClassSettingsMetadataType.boolean,
+					.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
+					.category	: "Bookmarks",
+					.status		: OCClassSettingsKeyStatus.supported
+				],
+
+				.prepopulation : [
+					.type 		: OCClassSettingsMetadataType.string,
+					.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
+					.category	: "Bookmarks",
+					.status		: OCClassSettingsKeyStatus.supported,
+					.possibleValues	: [
+						[
+							OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
+							OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
+							OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
+							OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
+						]
 					]
 				]
-			]
 		]
 	}
 }
