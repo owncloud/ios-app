@@ -267,6 +267,7 @@
 		DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */ = {isa = PBXBuildFile; fileRef = DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC2A128628D0725D0088A2B7 /* OCVault+SavedSearches.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */; };
 		DC2A128728D0725D0088A2B7 /* OCSavedSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */; };
+		DC2A68D529D492B300BFF393 /* space.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC2A68D429D492B200BFF393 /* space.tvg */; };
 		DC2FE2DA24C30586002AFDB3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */; };
 		DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33939C22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift */; };
@@ -1245,6 +1246,7 @@
 		DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSavedSearch.m; sourceTree = "<group>"; };
 		DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+SavedSearches.h"; sourceTree = "<group>"; };
 		DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+SavedSearches.m"; sourceTree = "<group>"; };
+		DC2A68D429D492B200BFF393 /* space.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = space.tvg; path = "img/filetypes-tvg/space.tvg"; sourceTree = SOURCE_ROOT; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeAvailableOfflineAction.swift; sourceTree = "<group>"; };
 		DC33939C22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeUnavailableOfflineAction.swift; sourceTree = "<group>"; };
@@ -3111,6 +3113,7 @@
 				DCE5E8942080D77F005F60CE /* image.tvg */,
 				DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */,
 				DCE5E89C2080D780005F60CE /* package-x-generic.tvg */,
+				DC2A68D429D492B200BFF393 /* space.tvg */,
 				DCB504D7221EF07E007638BE /* status-flash.tvg */,
 				DCE5E89D2080D780005F60CE /* text-calendar.tvg */,
 				DCE5E8992080D780005F60CE /* text-code.tvg */,
@@ -4103,6 +4106,7 @@
 				DCE4E49724C1FB750051722F /* image.tvg in Resources */,
 				DCE4E49A24C1FB750051722F /* status-flash.tvg in Resources */,
 				DCE4E4A024C1FB750051722F /* x-office-document.tvg in Resources */,
+				DC2A68D529D492B300BFF393 /* space.tvg in Resources */,
 				DCE4E49124C1FB750051722F /* folder-starred.tvg in Resources */,
 				DCE4E4A124C1FB750051722F /* x-office-presentation.tvg in Resources */,
 				DC2FE2DA24C30586002AFDB3 /* Localizable.strings in Resources */,

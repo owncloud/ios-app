@@ -99,7 +99,7 @@ func extractRootAttributes(from svgString: String) -> [String:String]? {
 		var viewBoxRect : CGRect?
 
 		if sizeWidth != nil, sizeHeight != nil {
-			viewBoxRect = CGRect(origin: .zero, size: CGSize(width: sizeWidth!, height: sizeHeight!))
+			viewBoxRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: sizeWidth!, height: sizeHeight!))
 
 			if originX != nil, originY != nil {
 				viewBoxRect?.origin = CGPoint(x: originX!, y: originY!)

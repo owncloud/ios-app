@@ -177,7 +177,19 @@ open class MoreViewHeader: UIView {
 				print("Error: \(error)")
 			}
 		} else {
-			titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+			var itemName = item.name
+
+			if item.isRoot {
+				if let core, core.useDrives, let driveID = item.driveID {
+					if let drive = core.drive(withIdentifier: driveID) {
+						itemName = drive.name
+					}
+				} else {
+					itemName = "Files".localized
+				}
+			}
+
+			titleLabel.attributedText = NSAttributedString(string: itemName ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 			let byteCountFormatter = ByteCountFormatter()
 			byteCountFormatter.countStyle = .file

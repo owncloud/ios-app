@@ -118,7 +118,11 @@ extension OCItem {
 
 		if iconName == nil {
 			if self.type == .collection {
-				iconName = "folder"
+				if isRoot, driveID != nil {
+					iconName = "space"
+				} else {
+					iconName = "folder"
+				}
 			} else {
 				iconName = "file"
 			}
