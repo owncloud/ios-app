@@ -108,8 +108,15 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 		navigationView.items = [
 		]
+	}
 
-		Theme.shared.register(client: self, applyImmediately: true)
+	private var _themeRegistered = false
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
 	}
 
 	open override func viewDidAppear(_ animated: Bool) {
@@ -319,7 +326,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 				updateSideBarNavigationItem()
 
 				addChild(sidebarViewController)
-				view.insertSubview(sidebarViewControllerView, belowSubview: sideBarSeperatorView)
+				view.addSubview(sidebarViewControllerView)
 				sidebarViewControllerView.translatesAutoresizingMaskIntoConstraints = false
 				updateSideBarLayoutAndAppearance()
 				sidebarViewController.didMove(toParent: self)
@@ -442,7 +449,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 						// Sidebar + Content side-by-side
 						newConstraints = [
 							sidebarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-							sidebarView.trailingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: 0),
+							sidebarView.trailingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: -1),
 							sidebarView.topAnchor.constraint(equalTo: view.topAnchor),
 							sidebarView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 							sidebarView.widthAnchor.constraint(equalToConstant: sideBarWidth)

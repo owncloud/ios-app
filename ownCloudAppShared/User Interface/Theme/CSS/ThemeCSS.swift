@@ -129,6 +129,7 @@ public struct ThemeCSSProperty: RawRepresentable, Equatable {
 	public static let style = ThemeCSSProperty(rawValue: "style") // UIUserInterfaceStyle
 	public static let barStyle = ThemeCSSProperty(rawValue: "barStyle") // UIBarStyle
 	public static let statusBarStyle = ThemeCSSProperty(rawValue: "statusBarStyle") // UIStatusBarStyle
+	public static let blurEffectStyle = ThemeCSSProperty(rawValue: "blurEffectStyle") // UIBlurEffect.Style
 	public static let keyboardAppearance = ThemeCSSProperty(rawValue: "keyboardAppearance") // UIKeyboardAppearance
 	public static let activityIndicatorStyle = ThemeCSSProperty(rawValue: "activityIndicatorStyle") // UIActivityIndicatorView.Style
 }
@@ -174,11 +175,28 @@ open class ThemeCSS: NSObject {
 			selectors.insert(contentsOf: stateSelectors, at: (selectors.count > 0) ? selectors.count - 1 : 0)
 		}
 
+		if object == nil, !selectors.contains(.all) {
+			// If no object is provided, ensure .all is included in the selectors
+			selectors.insert(.all, at: 0)
+		}
+
 		return get(property, for: selectors)
 	}
 
 	open func getColor(_ property: ThemeCSSProperty, selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> UIColor? {
-		return get(property, selectors: selectors, state: stateSelectors, for: object)?.value as? UIColor
+		let value = get(property, selectors: selectors, state: stateSelectors, for: object)?.value
+
+		if let color = value as? UIColor {
+			return color
+		}
+
+		if let string = value as? String {
+			if let hexColor = string.colorFromHex {
+				return hexColor
+			}
+		}
+
+		return nil
 	}
 
 	open func getInteger(_ property: ThemeCSSProperty, selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> Int? {
@@ -190,61 +208,168 @@ open class ThemeCSS: NSObject {
 	}
 
 	open func getBool(_ property: ThemeCSSProperty, selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> Bool? {
-		return get(property, selectors: selectors, state: stateSelectors, for: object)?.value as? Bool
-	}
+		let value = get(property, selectors: selectors, state: stateSelectors, for: object)?.value
 
-	open func getUserInterfaceStyle(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> UIUserInterfaceStyle {
-		var style = get(.style, selectors: selectors, state: stateSelectors, for: object)?.value as? UIUserInterfaceStyle
-
-		if style == nil, let intValue = getInteger(.style, selectors: selectors, state: stateSelectors, for: object) {
-			// Convert int values to UIUserInterfaceStyle if needed
-			style = UIUserInterfaceStyle(rawValue: intValue)
+		if let bool = value as? Bool {
+			return bool
 		}
 
-		return style ?? .unspecified
+		if let string = value as? String {
+			switch string {
+				case "true":	return true
+				case "false":	return false
+				default: break
+			}
+		}
+
+		return nil
+	}
+
+	open func getUserInterfaceStyle(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject? = nil) -> UIUserInterfaceStyle {
+		let value = get(.style, selectors: selectors, state: stateSelectors, for: object)?.value
+
+		if let style = value as? UIUserInterfaceStyle {
+			return style
+		}
+
+		if let intValue = value as? Int {
+			// Convert Int values to UIUserInterfaceStyle if needed
+			return UIUserInterfaceStyle(rawValue: intValue) ?? .unspecified
+		}
+
+		if let stringValue = value as? String {
+			// Convert String values to UIUserInterfaceStyle if needed
+			switch stringValue {
+				case "unspecified":	return .unspecified
+				case "light":		return .light
+				case "dark":		return .dark
+				default: break
+			}
+		}
+
+		return .unspecified
 	}
 
 	open func getStatusBarStyle(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> UIStatusBarStyle? {
-		var style = get(.statusBarStyle, selectors: selectors, state: stateSelectors, for: object)?.value as? UIStatusBarStyle
+		let value = get(.statusBarStyle, selectors: selectors, state: stateSelectors, for: object)?.value
 
-		if style == nil, let intValue = getInteger(.statusBarStyle, selectors: selectors, state: stateSelectors, for: object) {
-			// Convert int values to UIStatusBarStyle if needed
-			style = UIStatusBarStyle(rawValue: intValue)
+		if let style = value as? UIStatusBarStyle {
+			return style
 		}
 
-		return style
+		if let intValue = value as? Int {
+			// Convert Int values to UIStatusBarStyle if needed
+			return UIStatusBarStyle(rawValue: intValue)
+		}
+
+		if let stringValue = value as? String {
+			// Convert String values to UIStatusBarStyle if needed
+			switch stringValue {
+				case "default":		return .default
+				case "lightContent":	return .lightContent
+				case "darkContent":	return .darkContent
+				default: break
+			}
+		}
+
+		return nil
 	}
 
 	open func getBarStyle(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> UIBarStyle? {
-		var style = get(.barStyle, selectors: selectors, state: stateSelectors, for: object)?.value as? UIBarStyle
+		let value = get(.barStyle, selectors: selectors, state: stateSelectors, for: object)?.value
 
-		if style == nil, let intValue = getInteger(.barStyle, selectors: selectors, state: stateSelectors, for: object) {
-			// Convert int values to UIBarStyle if needed
-			style = UIBarStyle(rawValue: intValue)
+		if let style = value as? UIBarStyle {
+			return style
 		}
 
-		return style
+		if let intValue = value as? Int {
+			// Convert Int values to UIBarStyle if needed
+			return UIBarStyle(rawValue: intValue)
+		}
+
+		if let stringValue = value as? String {
+			// Convert String values to UIBarStyle if needed
+			switch stringValue {
+				case "default":	return .default
+				case "black":	return .black
+				default: break
+			}
+		}
+
+		return nil
 	}
 
 	open func getKeyboardAppearance(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject? = nil) -> UIKeyboardAppearance {
-		var keyboardAppearance = get(.keyboardAppearance, selectors: selectors, state: stateSelectors, for: object)?.value as? UIKeyboardAppearance
+		let value = get(.keyboardAppearance, selectors: selectors, state: stateSelectors, for: object)?.value
 
-		if keyboardAppearance == nil, let intValue = getInteger(.keyboardAppearance, selectors: selectors, state: stateSelectors, for: object) {
-			// Convert int values to UIKeyboardAppearance if needed
-			keyboardAppearance = UIKeyboardAppearance(rawValue: intValue)
+		if let style = value as? UIKeyboardAppearance {
+			return style
 		}
 
-		return keyboardAppearance ?? .default
+		if let intValue = value as? Int {
+			// Convert Int values to UIKeyboardAppearance if needed
+			return UIKeyboardAppearance(rawValue: intValue) ?? .default
+		}
+
+		if let stringValue = value as? String {
+			// Convert String values to UIKeyboardAppearance if needed
+			switch stringValue {
+				case "default":	return .default
+				case "light":	return .light
+				case "dark":	return .dark
+				default: break
+			}
+		}
+
+		return .default
 	}
 
 	open func getActivityIndicatorStyle(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject? = nil) -> UIActivityIndicatorView.Style? {
-		var indicatorStyle = get(.activityIndicatorStyle, selectors: selectors, state: stateSelectors, for: object)?.value as? UIActivityIndicatorView.Style
+		let value = get(.activityIndicatorStyle, selectors: selectors, state: stateSelectors, for: object)?.value
 
-		if indicatorStyle == nil, let intValue = getInteger(.activityIndicatorStyle, selectors: selectors, state: stateSelectors, for: object) {
-			// Convert int values to UIKeyboardAppearance if needed
-			indicatorStyle = UIActivityIndicatorView.Style(rawValue: intValue)
+		if let style = value as? UIActivityIndicatorView.Style {
+			return style
 		}
 
-		return indicatorStyle
+		if let intValue = value as? Int {
+			// Convert Int values to UIActivityIndicatorView.Style if needed
+			return UIActivityIndicatorView.Style(rawValue: intValue)
+		}
+
+		if let stringValue = value as? String {
+			// Convert String values to UIActivityIndicatorView.Style if needed
+			switch stringValue {
+				case "medium", "white", "gray":	return .medium
+				case "whiteLarge", "large":	return .large
+				default: break
+			}
+		}
+
+		return nil
+	}
+
+	open func getBlurEffectStyle(selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject? = nil) -> UIBlurEffect.Style {
+		let value = get(.blurEffectStyle, selectors: selectors, state: stateSelectors, for: object)?.value
+
+		if let style = value as? UIBlurEffect.Style {
+			return style
+		}
+
+		if let intValue = value as? Int, let style = UIBlurEffect.Style(rawValue: intValue) {
+			// Convert Int values to UIBlurEffect.Style if needed
+			return style
+		}
+
+		if let stringValue = value as? String {
+			// Convert String values to UIBlurEffect.Style if needed
+			switch stringValue {
+				case "regular":	return .regular
+				case "light":	return .light
+				case "dark":	return .dark
+				default: break
+			}
+		}
+
+		return .regular
 	}
 }

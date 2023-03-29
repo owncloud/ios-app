@@ -59,7 +59,7 @@ open class NamingViewController: UIViewController {
 		self.stringValidator = stringValidator
 		self.defaultName = defaultName
 
-		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.backgroundBlurEffectStyle))
+		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.css.getBlurEffectStyle()))
 
 		stackView = UIStackView(frame: .zero)
 

@@ -27,6 +27,7 @@ public class SegmentViewItem: NSObject {
 	public enum Style {
 		case plain
 		case label
+		case chevron
 		case token
 	}
 

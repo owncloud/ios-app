@@ -41,10 +41,12 @@ open class ClientLocationBarController: UIViewController, Themeable {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	open override func loadView() {
+		view = ThemeCSSView(withSelectors: [.toolbar, .locationBar])
+	}
+
 	open override func viewDidLoad() {
 		super.viewDidLoad()
-
-		view.cssSelectors = [ .toolbar, .locationBar ]
 
 		seperatorView = ThemeCSSView(withSelectors: [.separator])
 		seperatorView?.translatesAutoresizingMaskIntoConstraints = false
@@ -72,8 +74,15 @@ open class ClientLocationBarController: UIViewController, Themeable {
 				segmentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
 			])
 		}
+	}
 
-		Theme.shared.register(client: self, applyImmediately: true)
+	var _themeRegistered: Bool = false
+	open override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
 	}
 
 	func composeSegments(location: OCLocation, in clientContext: ClientContext) -> [SegmentViewItem] {
@@ -92,7 +101,6 @@ open class ClientLocationBarController: UIViewController, Themeable {
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		view.apply(css: collection.css, properties: [.fill])
 		seperatorView?.apply(css: collection.css, properties: [.fill])
 
 		if let backgroundFillColor = collection.css.getColor(.fill, for: view) {

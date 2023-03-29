@@ -124,6 +124,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 
+		titleLabel.cssSelector = .title
+
 		contentView.addSubview(titleLabel)
 		contentView.addSubview(detailSegmentView)
 		contentView.addSubview(iconView)
@@ -506,7 +508,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	}
 
 	open override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
-		titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: state)
+		titleLabel.apply(css: collection.css, state: state.cssState, properties: [.stroke])
 
 		if let moreButton {
 			moreButton.tintColor = collection.css.getColor(.stroke, for: moreButton)

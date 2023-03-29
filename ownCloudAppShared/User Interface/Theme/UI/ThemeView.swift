@@ -33,6 +33,15 @@ open class ThemeView: ThemeCSSView {
 		}
 	}
 
+	override open func didMoveToWindow() {
+		if window != nil, !hasSetupSubviews {
+			hasSetupSubviews = true
+			setupSubviews()
+		}
+
+		super.didMoveToWindow()
+	}
+
 	open func setupSubviews() {
 		// Override point for subclasses
 		// Themeing is performed at a later time, when moved into a visible view tree (window)

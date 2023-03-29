@@ -21,9 +21,10 @@ import UIKit
 public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 	public var cssAutoSelectors: [ThemeCSSSelector] {
 		switch item?.style {
-			case .plain: return [ .item, .plain ]
-			case .label: return [ .item, .label ]
-			case .token: return [ .item, .token ]
+			case .plain:   return [ .item, .plain ]
+			case .label:   return [ .item, .label ]
+			case .token:   return [ .item, .token ]
+			case .chevron: return [ .item, .separator ]
 			default: return [.item]
 		}
 	}

@@ -141,7 +141,7 @@ extension OCLocation {
 
 		for breadcrumb in breadcrumbs {
 			if !segments.isEmpty {
-				let seperatorSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "chevron.right"))
+				let seperatorSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "chevron.right"), style: .chevron)
 				seperatorSegment.insets.leading = 0
 				seperatorSegment.insets.trailing = 0
 				segments.append(seperatorSegment)

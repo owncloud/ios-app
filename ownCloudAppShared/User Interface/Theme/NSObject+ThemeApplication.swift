@@ -64,49 +64,26 @@ public enum ThemeItemState {
 			self = .normal
 		}
 	}
+
+	var cssState: [ThemeCSSSelector] {
+		switch self {
+			case .disabled:
+				return [.disabled]
+
+			case .highlighted:
+				return [.highlighted]
+
+			default:
+				return []
+		}
+	}
 }
 
 public extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal, cellState: UICellConfigurationState? = nil) {
 		let css = collection.css
 
-		if let themeButton = self as? ThemeButton {
-			Log.debug("ThemeButton")
-//			switch itemStyle {
-//				case .approval:
-//					themeButton.themeColorCollection = collection.approvalColors
-//
-//				case .neutral:
-//					themeButton.themeColorCollection = collection.neutralColors
-//
-//				case .destructive:
-//					themeButton.themeColorCollection = collection.destructiveColors
-//
-//				case .bigTitle:
-//					themeButton.themeColorCollection = collection.neutralColors
-//					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 34)
-//
-//				case .purchase:
-//					themeButton.themeColorCollection = collection.purchaseColors
-//
-//				case .welcome:
-//					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
-//
-//				case .welcomeInformal:
-//					let fromPair = collection.loginColors.filledColorPairCollection
-//					let normal = ThemeColorPair(foreground: fromPair.normal.foreground.lighter(0.25), background: fromPair.normal.background.lighter(0.25))
-//					themeButton.themeColorCollection = ThemeColorPairCollection(fromPair: normal)
-//
-//				case .informal:
-//					themeButton.themeColorCollection = collection.informalColors.filledColorPairCollection
-//
-//				case .cancel:
-//					themeButton.themeColorCollection = collection.cancelColors.filledColorPairCollection
-//
-//				default:
-//					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
-//			}
-		} else if let button = self as? UIButton {
+		if let button = self as? UIButton, (self as? ThemeButton) == nil {
 			button.apply(css: css, properties: [.stroke])
 		}
 
@@ -157,7 +134,7 @@ public extension NSObject {
 			searchBar.barStyle = css.getBarStyle(for: searchBar) ?? .default
 
 			// Ensure search bar icon color is correct
-			searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			searchBar.overrideUserInterfaceStyle = collection.css.getUserInterfaceStyle()
 
 			searchBar.searchTextField.applyThemeCollection(collection)
 		}
@@ -321,7 +298,7 @@ public extension NSObject {
 		}
 
 		if let visualEffectView = self as? UIVisualEffectView {
-			visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			visualEffectView.overrideUserInterfaceStyle = collection.css.getUserInterfaceStyle()
 		}
 	}
 }
