@@ -1247,7 +1247,7 @@
 		DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSavedSearch.m; sourceTree = "<group>"; };
 		DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+SavedSearches.h"; sourceTree = "<group>"; };
 		DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+SavedSearches.m"; sourceTree = "<group>"; };
-		DC2A68D429D492B200BFF393 /* space.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = space.tvg; path = "img/filetypes-tvg/space.tvg"; sourceTree = SOURCE_ROOT; };
+		DC2A68D429D492B200BFF393 /* space.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = space.tvg; path = "img/filetypes-tvg/space.tvg"; sourceTree = SOURCE_ROOT; };
 		DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKeyCommands.swift; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC33939522E0747400DD3DA4 /* MakeAvailableOfflineAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeAvailableOfflineAction.swift; sourceTree = "<group>"; };
@@ -5074,7 +5074,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 252;
+				APP_VERSION = 253;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5144,7 +5144,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 252;
+				APP_VERSION = 253;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
