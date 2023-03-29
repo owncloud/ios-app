@@ -279,6 +279,8 @@ public class ThemeCollection : NSObject {
 
 		var moreHeaderBackgroundColor: UIColor
 
+		var modalBackgroundColor: UIColor
+
 		let lightBrandColors = ThemeColorCollection(
 			backgroundColor: lightColor,
 			tintColor: UIColor.white,
@@ -349,6 +351,8 @@ public class ThemeCollection : NSObject {
 
 				moreHeaderBackgroundColor = darkColor.lighter(0.05)
 
+				modalBackgroundColor = darkBrandColor
+
 				inlineActionBackgroundColor = UIColor(white: 1, alpha: 0.10)
 				inlineActionBackgroundColorHighlighted = UIColor(white: 1, alpha: 0.05)
 
@@ -411,6 +415,8 @@ public class ThemeCollection : NSObject {
 				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
 
 				moreHeaderBackgroundColor = cellSet.backgroundColor
+
+				modalBackgroundColor = collectionBackgroundColor
 
 				inlineActionBackgroundColor = UIColor(white: 0, alpha: 0.05)
 				inlineActionBackgroundColorHighlighted = UIColor(white: 0, alpha: 0.10)
@@ -481,8 +487,13 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.cell, .sectionHeader],		property: .stroke, value: sectionHeaderColor),
 
 			// - Modal
-			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .fill,   value: cellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .fill,   value: modalBackgroundColor),
+			ThemeCSSRecord(selectors: [.modal, .issues, .table],		property: .fill,   value: modalBackgroundColor),
+			ThemeCSSRecord(selectors: [.modal, .issues, .table, .cell],	property: .fill,   value: modalBackgroundColor),
 			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .stroke, value: cellSet.labelColor),
+
+			// - Splitview
+			ThemeCSSRecord(selectors: [.splitView],     	    	   	property: .fill,   value: cellSet.backgroundColor),
 
 			// - Collection View
 			ThemeCSSRecord(selectors: [.collection],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),

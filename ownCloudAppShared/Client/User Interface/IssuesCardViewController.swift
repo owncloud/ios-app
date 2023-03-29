@@ -68,14 +68,12 @@ public class CardHeaderView : UIView, Themeable {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
+	private var _themeRegistered = false
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
 
-	override public func didMoveToSuperview() {
-		super.didMoveToSuperview()
-
-		if self.superview != nil {
+		if window != nil, !_themeRegistered {
+			_themeRegistered = true
 			Theme.shared.register(client: self)
 		}
 	}
@@ -219,10 +217,10 @@ open class IssuesCardViewController: StaticTableViewController {
 				if row.cell?.accessoryType == .disclosureIndicator {
 					// On iOS 13+, chevrons created via .accessoryType are not using the .tintColor anymore
 					let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
-					(row.cell as? ThemeTableViewCell)?.accessoryView = chevronImageView
+					row.cell?.accessoryView = chevronImageView
 				}
 
-				(row.cell as? ThemeTableViewCell)?.cellStyler = cellStyler
+				row.cell?.cellStyler = cellStyler
 
 				section.add(row: row)
 			}
@@ -241,6 +239,7 @@ open class IssuesCardViewController: StaticTableViewController {
 
 	static public func present(on hostViewController: UIViewController, issue: OCIssue, displayIssues: DisplayIssues? = nil, bookmark: OCBookmark? = nil, completion:@escaping CompletionHandler, dismissed: DismissHandler? = nil) {
 		let issuesViewController = self.init(with: issue, displayIssues: displayIssues, bookmark: bookmark, completion: completion, dismissed: dismissed)
+		issuesViewController.cssSelector = .issues
 
 		let headerView = CardHeaderView(title: issuesViewController.headerTitle ?? "")
 		let alertView = AlertView(localizedTitle: "", localizedDescription: "", contentPadding: 15, options: issuesViewController.options)
@@ -267,4 +266,8 @@ open class IssuesCardViewController: StaticTableViewController {
 
 		tableView.applyThemeCollection(collection)
 	}
+}
+
+extension ThemeCSSSelector {
+	static let issues = ThemeCSSSelector(rawValue: "issues")
 }

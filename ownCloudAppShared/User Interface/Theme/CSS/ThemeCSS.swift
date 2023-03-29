@@ -191,6 +191,9 @@ open class ThemeCSS: NSObject {
 		}
 
 		if let string = value as? String {
+			if string == "none" {
+				return nil
+			}
 			if let hexColor = string.colorFromHex {
 				return hexColor
 			}

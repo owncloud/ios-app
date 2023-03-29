@@ -160,9 +160,7 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	// MARK: - View Controller
 	override open func viewDidLoad() {
 		super.viewDidLoad()
-
 		extendedLayoutIncludesOpaqueBars = true
-		Theme.shared.register(client: self)
 	}
 
 	public var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
@@ -180,10 +178,16 @@ open class StaticTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	private var _themeRegistered = false
 	override open func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
 		hasBeenPresentedAtLeastOnce = true
 
-		super.viewWillAppear(animated)
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self)
+		}
 	}
 
 	deinit {
