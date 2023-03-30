@@ -66,11 +66,13 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			case text(_ string: String)
 			case file(name: String)
 			case folder(name: String)
+			case drive(name: String)
 		}
 
 		public enum Icon {
 			case file
 			case folder
+			case drive
 			case mime(type: String)
 			case resource(request: OCResourceRequest)
 		}
@@ -243,6 +245,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 						case .folder:
 							iconViewProvider = ResourceItemIcon.folder
 
+						case .drive:
+							iconViewProvider = ResourceItemIcon.drive
+
 						case .mime(type: let type):
 							iconViewProvider = ResourceItemIcon.iconFor(mimeType: type)
 
@@ -271,6 +276,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 							set(title: name, isFileName: true)
 
 						case .folder(name: let name):
+							set(title: name)
+
+						case .drive(name: let name):
 							set(title: name)
 					}
 				} else {

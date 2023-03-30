@@ -551,6 +551,9 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.segments, .token, .icon],		property: .stroke, value: tokenForegroundColor),
 			ThemeCSSRecord(selectors: [.segments, .token, .title],		property: .stroke, value: tokenForegroundColor),
 
+			ThemeCSSRecord(selectors: [.segments, .item, .separator],	property: .fill,   value: nil),
+			ThemeCSSRecord(selectors: [.segments, .item, .separator],	property: .stroke, value: cellSet.secondaryLabelColor),
+
 			// - Messages
 			ThemeCSSRecord(selectors: [.infoBox, .background],		property: .fill, value: groupedCollectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.infoBox, .icon],			property: .fill, value: secondaryLabelColor),
@@ -721,7 +724,6 @@ public class ThemeCollection : NSObject {
 			// - Location Bar
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .plain],		property: .stroke, value: contentToolbarSet.tintColor),
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .stroke, value: contentToolbarSet.secondaryLabelColor),
-			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .fill,   value: contentToolbarSet.backgroundColor),
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
 		])
 

@@ -28,11 +28,13 @@ extension OCShare: UniversalItemListCellContentProvider {
 		if let mimeType = itemMIMEType, isFile {
 			content.icon = .mime(type: mimeType)
 		} else {
-			content.icon = isFile ? .file : .folder
+			content.icon = isFile ? .file : (itemLocation.isDriveRoot ? .drive : .folder)
 		}
 
 		// Title
-		if let name = itemLocation.lastPathComponent {
+		if itemLocation.isDriveRoot, let driveID = itemLocation.driveID, let drive = context?.core?.drive(withIdentifier: driveID), let driveName = drive.name {
+			content.title = .drive(name: driveName)
+		} else if let name = itemLocation.lastPathComponent {
 			content.title = isFile ? .file(name: name) : .folder(name: name)
 		}
 
