@@ -6,6 +6,16 @@
 //  Copyright © 2021 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2021, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudApp
 import ownCloudSDK
@@ -251,16 +261,17 @@ extension Branding {
 
 extension Branding {
 	func generateThemeStyle(from theme: [String : Any], generic: [String : Any]) -> ThemeStyle? {
-		let style = theme["ThemeStyle"] as? String ?? "contrast"
+		let style = theme["ThemeStyle"] as? String ?? ThemeCollectionStyle.light.rawValue
 		let identifier = theme["Identifier"] as? String ?? "com.owncloud.branding"
 		let name = theme["Name"] as? String ?? "ownCloud-branding-theme"
+		let cssRecordStrings = theme["cssRecords"] as? [String]
 
 		if let themeStyle = ThemeCollectionStyle(rawValue: style),
 		   let darkBrandColor = theme["darkBrandColor"] as? String,
 		   let lightBrandColor = theme["lightBrandColor"] as? String {
 			let colors = theme["Colors"] as? NSDictionary
 			let styles = theme["Styles"] as? NSDictionary
-			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles)
+			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
 		}
 
 		return nil

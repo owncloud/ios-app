@@ -157,7 +157,7 @@ The best matching record to derive property values from is determined through th
 - records whose last element is identical to that of the *Selector Path* are preferred (+100)
 - the specifity - and therefore weight - of selectors increases (+10) from the beginning to the end of the *Selector Path* (in `.sidebar .cell .label .account`, `.label` is weighted higher than `.cell` - at 30 vs 20)
 - records with the `important` property are preferred (+1000)
-- if two or more records reach the same score, the one that was last added to the `ThemeCSS` instance will be used (allows override, f.e.x. through `Theme.plist`)
+- if two or more records reach the same score, the one that was last added to the `ThemeCSS` instance will be used (allows override, f.e.x. through `Branding.plist`)
 
 ## Debugging selectors and matching
 If a view doesn't use the expected values for the respective properties, this can different reasons:
@@ -165,6 +165,8 @@ If a view doesn't use the expected values for the respective properties, this ca
 - a record other than the expected one is determined as most specific. This can be fixed by adding a more specific record, or changing the request.
 
 To make debugging straightforward, you can use `cssDescription` and `cssDescription(extraSelectors: [String]? = nil, stateSelectors: [String]? = nil)` in the debugger, which will output the applicable records and values for the `.stroke`, `.fill` and `.cornerRadius` properties.
+
+### Usage in practice
 
 Combining this with view debugging turns this into a fast, flexible debugging tool:
 - enter *Debug View Hierarchy* in Xcode (button that shows a stack of rectangles in the bottom bar)
@@ -182,7 +184,46 @@ Matching:
 - cornerRadius: -
 ```
 
-A way to change the value of the `stroke` property, then, would be to add a more specific record, f.ex. for `collection.cell.sortBar` - or for `sortBar` directly.
+A way to change the value of the `stroke` property, then, would be to add a more specific record, f.ex. for `collection.cell.sortBar` - or possibly for `sortBar` directly (the last selector is weighted much higher).
 
-## Styling via `Theme.plist`
+## Adding styling via branding
+Additional CSS records can be added through the usual branding options, including `Branding.plist`, by providing an array of css records following this format:
 
+```
+selector1.selector2….property: value
+```
+
+Example for a `Branding.plist` that fills the logo in the sidebar's navigation bar with red color:
+
+```xml
+<key>branding.theme-definitions$[0].cssRecords</key>
+<array>
+	<string>sidebar.navigationBar.logo.stroke: #ff0000</string>
+</array>
+```
+
+See *Debugging selectors and matching* > *Usage in practice* above for how to determine the selectors of a view on screen.
+
+### Reference
+#### Selectors
+These selectors are used to differentiate beteween different areas:
+
+Selector     | Description
+-------------|---------------
+`all`        | Matches all elements
+`sidebar`    | All elements in the sidebar part of the splitview.
+`content`    | All elements in the content part of the splitview.
+`modal`      | All modal and standalone views, including views in app extensions.
+
+#### Properties
+Property | Type   | Description / Values
+---------|--------|------------
+`stroke` | color  | Color used for f.ex. text and tinting. In hex string notation. Use `none` for no color.
+`fill`   | color  | Color used for f.ex. background fill. In hex string notation. Use `none` for no color.
+`cornerRadius` | float | Corner radius (not widely used)
+`style` | `UIUserInterfaceStyle` | `unspecified`, `light`, `dark`
+`barStyle` | `UIBarStyle` | `default`, `black`
+`statusBarStyle` | `UIStatusBarStyle` | `default`, `lightContent`, `darkContent`
+`blurEffectStyle` | `UIBlurEffect.Style` | `regular`, `light`,  `dark`
+`keyboardAppearance` | `UIKeyboardAppearance` | `default`, `light`, `dark`
+`activityIndicatorStyle` |  `UIActivityIndicatorView.Style` | `medium`, `large`

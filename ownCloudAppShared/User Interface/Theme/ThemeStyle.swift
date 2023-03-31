@@ -34,7 +34,9 @@ public class ThemeStyle : NSObject {
 	public var genericColors : NSDictionary?
 	public var styles : NSDictionary?
 
-	public init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil) {
+	public var cssRecordStrings: [String]?
+
+	public init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil, cssRecordStrings: [String]? = nil) {
 		self.identifier = styleIdentifier
 		self.darkStyleIdentifier = darkIdentifier
 		self.localizedName = name
@@ -44,6 +46,7 @@ public class ThemeStyle : NSObject {
 		self.customColors = customColors
 		self.genericColors = genericColors
 		self.styles = interfaceStyles
+		self.cssRecordStrings = cssRecordStrings
 	}
 }
 
@@ -65,8 +68,37 @@ public extension String {
 	}
 }
 
+public extension ThemeCSSRecord {
+	static func from(_ cssRecordStrings: [String]) -> [ThemeCSSRecord]? {
+		// Format: selector1.selector2.property: value
+		var records: [ThemeCSSRecord] = []
+
+		let whitespace = CharacterSet.whitespaces
+
+		for recordString in cssRecordStrings {
+			let recordString = recordString as NSString
+			let separatorIndex = recordString.range(of: ":").location
+
+			if separatorIndex != -1 {
+				let selectionAndPropertyPart = recordString.substring(to: separatorIndex)
+				let valuePart = recordString.substring(from: separatorIndex+1).trimmingCharacters(in: whitespace)
+
+				if let record = ThemeCSSRecord(with: selectionAndPropertyPart, value: valuePart) {
+					records.append(record)
+				}
+			}
+		}
+
+		return records.count > 0 ? records : nil
+	}
+}
+
 public extension ThemeCollection {
 	convenience init(with style: ThemeStyle) {
 		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors, genericColors: style.genericColors, interfaceStyles: style.styles)
+
+		if let cssRecordStrings = style.cssRecordStrings, let records = ThemeCSSRecord.from(cssRecordStrings) {
+			css.add(records: records)
+		}
 	}
 }

@@ -726,17 +726,6 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .stroke, value: contentToolbarSet.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
 		])
-
-//		{
-//			<key>sidebar.collection.icon.stroke</key>
-//			<string>#ffffff</string>
-//
-//			<key>css.0</key><string>sidebar.collection.icon.stroke=#ffffff</string>
-//			<key>css.1</key><string>sidebar.collection.icon.stroke=#ffffff</string>
-//
-//			ThemeCSSRecord(selectors: [.sidebar, .collection, .icon],  property: .stroke, value: UIColor.white)
-//
-//		}
 	}
 
 	convenience override init() {
