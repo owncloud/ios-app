@@ -58,7 +58,7 @@ If more than one selector should be assigned to an alement, the `cssSelectors` p
 tableView.cssSelector = [.collection, .tableView]
 ```
 
-### Defining new selectors
+#### Defining new selectors
 New selectors can be defined by using extensions, like f.ex.
 
 ```swift
@@ -67,7 +67,7 @@ extension ThemeCSSSelector {
 }
 ```
 
-### Defining property values
+#### Defining property values
 Property values are encapsulated in `ThemeCSSRecord`s, which consist of
 - `selectors`: an array of `ThemeCSSSelector`s that is later matched with the *Selector Path* of elements
 - `property`: the property for which a value is defined (most commonly `.stroke` and `.fill`)
