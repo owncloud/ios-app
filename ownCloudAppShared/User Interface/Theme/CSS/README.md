@@ -32,7 +32,7 @@ public override func didMoveToWindow() {
 ```
 
 #### Example for `UIViewController`
-```
+```swift
 private var _themeRegistered = false
 open override func viewWillAppear(_ animated: Bool) {
 	super.viewWillAppear(animated)
@@ -75,7 +75,7 @@ Property values are encapsulated in `ThemeCSSRecord`s, which consist of
 - `important`: if true, the record receives an extra boost to its matching score
 
 Example of how to add styling records to a `ThemeCSS` instance:
-```
+```swift
 css.add(records: [
 	ThemeCSSRecord(selectors: [.account],				property: .fill,   value: accountCellSet.backgroundColor),
 	ThemeCSSRecord(selectors: [.account, .title],			property: .stroke, value: accountCellSet.labelColor),
@@ -135,7 +135,7 @@ This is where additional selectors come in. All methods described above therefor
 
 #### Example for sub elements
 A text field needs a color for placeholder text that's different from the color for typed text:
-```
+```swift
 let placeholderColor = css.getColor(.stroke, selectors: [.placeholder], for: textField)
 ```
 
@@ -143,7 +143,7 @@ If the *Selector Path* for `textField` is `.modal .textField`, adding the `.plac
 
 #### Example for different states
 A button should be able to use a different background color when pressed:
-```
+```swift
 let backgroundColor = button.getThemeCSSColor(.fill, state: isPressed ? [.highlighted] : nil)
 ```
 
