@@ -22,7 +22,6 @@ import Down
 
 class ThemeableTextView : UITextView, Themeable {
 	init() {
-		registeredThemeable = false
 		super.init(frame: .zero, textContainer: nil)
 	}
 
@@ -30,28 +29,13 @@ class ThemeableTextView : UITextView, Themeable {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
+	private var _themeRegistered = false
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
 
-	private var registeredThemeable : Bool
-
-	func registerThemeable() {
-		if !registeredThemeable {
-			registeredThemeable = true
-			Theme.shared.register(client: self, applyImmediately: true)
-		}
-	}
-
-	override var attributedText: NSAttributedString! {
-		didSet {
-			registerThemeable()
-		}
-	}
-
-	override var text: String! {
-		didSet {
-			registerThemeable()
+		if window != nil, !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self)
 		}
 	}
 
