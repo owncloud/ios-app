@@ -57,7 +57,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 				return .grid(itemWidthDimension: .fractionalWidth(0.33), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
 
 			// case .compact:
-			@unknown default:
+			default:
 				return .grid(itemWidthDimension: .fractionalWidth(1.0), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
 		}
 	}

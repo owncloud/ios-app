@@ -74,15 +74,6 @@ open class ThemeCSSRecord: NSObject {
 			} else {
 				return -1
 			}
-
-			// All matches weighted equal,
-			// but then "collection.cell" overrides "segments" for "collection.cell.segments.title"
-			//
-			// if inSelectors.contains(selector) {
-			//	score += 10
-			// } else {
-			//	return -1
-			// }
 		}
 
 		// Important

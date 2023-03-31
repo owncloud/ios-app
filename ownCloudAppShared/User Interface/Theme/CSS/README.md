@@ -1,9 +1,188 @@
 # Theme CSS
 
-`ThemeCSS` aims to bring CSS-style styling to view trees, by letting `UIView`s and `UIViewController`s provide no, one or multiple selectors that are also added to all sub views and sub view controllers.
+## Overview
 
-Using these selectors, a `ThemeCSS` object then can search for and return the best-matching value for a specific property.
+`ThemeCSS` brings CSS-style styling to the `UIViewController`/`UIView` (henceforth summarized as "elements") tree, by allowing to attach CSS-style selectors to them via new `cssSelector` and `cssSelectors` properties.
 
-Classes adopting `ThemeCSSAutoSelector` can "inject" their own class-specific selector automatically, f.ex. `label` for `UILabel`, `cell` for `UICollectionReusableView` etc. 
+After an element has settled in its place in the view tree, traversing the tree from an element to the tree's root element allows building a *Selector Path*, which can then be used to find the *most specific* value for a styling property.
 
-The best matching record for a sequence of selectors is determined following CSS specifity (https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity). 
+## Implementation
+
+### `ThemeCSSAutoSelector`
+The `ThemeCSSAutoSelector` protocol is used to add class-specific selectors to commonly used, system-provided view classes automatically, f.ex. `label` for `UILabel`, or `cell` for `UICollectionReusableView`.
+
+### `Theme` registration
+To receive notifications on Theme changes and to perform initial styling, elements opt into themeing by registering with `Theme`, with an initial themeing taking place at the time of registration.
+
+To ensure the full, applicable *Selector Path* can be built correctly, themeing should only occur once a view has arrived in its final place in the view structure.
+
+This is typically the case when `UIView.didMoveToWindow()` or `UIViewController.viewWillAppear(_:)` are called respectively. Appropriate registration code could therefore look like this:
+
+#### Example for `UIView`
+```swift
+private var _themeRegistered = false
+public override func didMoveToWindow() {
+	super.didMoveToWindow()
+
+	if window != nil, !_themeRegistered {
+		_themeRegistered = true
+		Theme.shared.register(client: self)
+	}
+}
+```
+
+#### Example for `UIViewController`
+```
+private var _themeRegistered = false
+open override func viewWillAppear(_ animated: Bool) {
+	super.viewWillAppear(animated)
+	if !_themeRegistered {
+		_themeRegistered = true
+		Theme.shared.register(client: self, applyImmediately: true)
+	}
+}
+```
+
+### Using CSS selectors
+
+#### Assigning selectors to elements
+A single selector can be assigned to an element via the `cssSelector` property, like f.ex.
+
+```swift
+tokenView.cssSelector = .token
+```
+
+If more than one selector should be assigned to an alement, the `cssSelectors` property can be used, like f.ex.
+
+```swift
+tableView.cssSelector = [.collection, .tableView]
+```
+
+### Defining new selectors
+New selectors can be defined by using extensions, like f.ex.
+
+```swift
+extension ThemeCSSSelector {
+	static let releaseNotes = ThemeCSSSelector(rawValue: "releaseNotes")
+}
+```
+
+### Defining property values
+Property values are encapsulated in `ThemeCSSRecord`s, which consist of
+- `selectors`: an array of `ThemeCSSSelector`s that is later matched with the *Selector Path* of elements
+- `property`: the property for which a value is defined (most commonly `.stroke` and `.fill`)
+- `value`:  the value of the property, which can take virtually any type
+- `important`: if true, the record receives an extra boost to its matching score
+
+Example of how to add styling records to a `ThemeCSS` instance:
+```
+css.add(records: [
+	ThemeCSSRecord(selectors: [.account],				property: .fill,   value: accountCellSet.backgroundColor),
+	ThemeCSSRecord(selectors: [.account, .title],			property: .stroke, value: accountCellSet.labelColor),
+	ThemeCSSRecord(selectors: [.account, .description],		property: .stroke, value: accountCellSet.secondaryLabelColor),
+	ThemeCSSRecord(selectors: [.account, .disconnect],		property: .stroke, value: accountCellSet.tintColor),
+	ThemeCSSRecord(selectors: [.account, .disconnect],		property: .fill,   value: accountCellSet.labelColor),
+])
+```
+
+It is also possible to pass a `nil` value, to "remove" a value for a certain *Selector Path*.
+
+### Retrieving property values
+There are several ways to retrieve values:
+
+#### Directly from an element
+Using the `getThemeCSSColor(_ property: ThemeCSSProperty, selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil) -> UIColor?` method:
+```swift
+let fillColor = view.getThemeCSSColor(.fill)
+```
+
+This method is a convenience way for typed access to the `ThemeCSS` instance of `Theme.shared.activeCollection`.
+
+#### Typed, from the `ThemeCSS` instance
+Using its typed `getPROPERTY(_ property: ThemeCSSProperty, selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> VALUE?` family of methods:
+```swift
+let fillColor = collection.css.getColor(.fill, for: view)
+```
+
+This family of methods also carries out conversion from other types, where appropriate:
+
+Method name    			| Allowed types
+--------------------------------|--------------
+getColor     			| `UIColor`, `String` (in hex `RRGGBB` or `#RRGGBB` notations, f.ex. `abcdef` or `#abcdef`)
+getInteger   			| `Int`
+getCGFloat   			| `CGFloat`
+getBool      			| `Boolean`, `String` (`true` and `false`)
+getUserInterfaceStyle		| `UIUserInterfaceStyle`, `Int`, `String` (`unspecified`, `light`, `dark`)
+getStatusBarStyle		| `UIStatusBarStyle`, `Int`, `String` (`default`, `lightContent`, `darkContent`)
+getBarStyle			| `UIBarStyle`, `Int`, `String` (`default`, `black`)
+getKeyboardAppearance		| `UIKeyboardAppearance`, `Int`, `String` (`default`, `light`, `dark`)
+getActivityIndicatorStyle 	| `UIActivityIndicatorView.Style`, `Int`, `String` (`medium`, `large`)
+getBlurEffectStyle		| `UIBlurEffect.Style`, `Int`, `String` (`regular`, `light`,  `dark`)
+
+#### Raw, from the `ThemeCSS` instance
+Using the `get(_ property: ThemeCSSProperty, selectors additionalSelectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> ThemeCSSRecord?` method, it is possible to retrieve the best matching `ThemeCSSRecord` for the property:
+```swift
+let record = collection.css.get(.fill, for: view)
+let fillColor = record.value as? UIColor
+```
+
+### "Virtual" properties and states
+While most elements only have a foreground (`.stroke`) and background (`.fill`) color, some elements require greater flexibility - or should look different depending on their state.
+
+This is where additional selectors come in. All methods described above therefore allow passing additional 
+- `selectors` for sub elements, which are appended to the end of the *Selector Path* for an element
+- `state` for state information, which are inserted *before* the last selector in the *Selector Path* (already including additional selectors)
+
+#### Example for sub elements
+A text field needs a color for placeholder text that's different from the color for typed text:
+```
+let placeholderColor = css.getColor(.stroke, selectors: [.placeholder], for: textField)
+```
+
+If the *Selector Path* for `textField` is `.modal .textField`, adding the `.placeholder` selector now requests the `.stroke` color for `.modal .textField .placeholder`.
+
+#### Example for different states
+A button should be able to use a different background color when pressed:
+```
+let backgroundColor = button.getThemeCSSColor(.fill, state: isPressed ? [.highlighted] : nil)
+```
+
+If the *Selector Path* for `button` is `.modal .button`, adding the `.highlighted` state selector now requests the `.stroke` color for `.modal .highlighted .textField`.
+
+### How matching works
+The best matching record to derive property values from is determined through the following rules:
+- a record is only considered if:
+  - *all* of the record's Selectors are also contained in the *Selector Path*
+  - the record's property matches the requested property
+- records whose last element is identical to that of the *Selector Path* are preferred (+100)
+- the specifity - and therefore weight - of selectors increases (+10) from the beginning to the end of the *Selector Path* (in `.sidebar .cell .label .account`, `.label` is weighted higher than `.cell` - at 30 vs 20)
+- records with the `important` property are preferred (+1000)
+- if two or more records reach the same score, the one that was last added to the `ThemeCSS` instance will be used (allows override, f.e.x. through `Theme.plist`)
+
+## Debugging selectors and matching
+If a view doesn't use the expected values for the respective properties, this can different reasons:
+- themeing is performed at a time where the final *Selector Path* can't be built. Debug by setting a breakpoint and check if the element hierarchy has been correctly established at that point.
+- a record other than the expected one is determined as most specific. This can be fixed by adding a more specific record, or changing the request.
+
+To make debugging straightforward, you can use `cssDescription` and `cssDescription(extraSelectors: [String]? = nil, stateSelectors: [String]? = nil)` in the debugger, which will output the applicable records and values for the `.stroke`, `.fill` and `.cornerRadius` properties.
+
+Combining this with view debugging turns this into a fast, flexible debugging tool:
+- enter *Debug View Hierarchy* in Xcode (button that shows a stack of rectangles in the bottom bar)
+- right-click the element you'd like to inspect and pick use *Reveal in Debug Navigator* from the popup menu
+- right-click the revealed element in the sidebar and pick *Copy* from the popup menu
+- type `po [PASTEHERE cssDescription]` behind `(lldb)` into the Debug Console, whereby you replace `PASTEHERE` with the clipboard contents, of course
+
+Example:
+```
+(lldb) po [((UIView *)0x11bcf9150) cssDescription]
+Selectors: all.splitView.content.collection.cell.sortBar
+Matching:
+- stroke: collection.cell -> UIExtendedSRGBColorSpace 0.305882 0.521569 0.784314 1
+- fill: collection.cell -> UIExtendedGrayColorSpace 1 1
+- cornerRadius: -
+```
+
+A way to change the value of the `stroke` property, then, would be to add a more specific record, f.ex. for `collection.cell.sortBar` - or for `sortBar` directly.
+
+## Styling via `Theme.plist`
+
