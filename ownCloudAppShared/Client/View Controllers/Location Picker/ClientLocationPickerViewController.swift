@@ -40,7 +40,8 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 	var selectButton: UIButton = UIButton()
 	var cancelButton: UIButton = UIButton()
 	var promptLabel: UILabel = UILabel()
-	var separatorLine: UIView = UIView()
+	var topSeparatorLine: UIView = ThemeCSSView(withSelectors: [.separator])
+	var bottomSeparatorLine: UIView = ThemeCSSView(withSelectors: [.separator])
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -51,7 +52,8 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 		selectButton.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton.translatesAutoresizingMaskIntoConstraints = false
 		promptLabel.translatesAutoresizingMaskIntoConstraints = false
-		separatorLine.translatesAutoresizingMaskIntoConstraints = false
+		topSeparatorLine.translatesAutoresizingMaskIntoConstraints = false
+		bottomSeparatorLine.translatesAutoresizingMaskIntoConstraints = false
 
 		var selectButtonConfig = UIButton.Configuration.borderedProminent()
 		selectButtonConfig.title = locationPicker.selectButtonTitle
@@ -74,7 +76,7 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 
 		bottomBarContainer.addSubview(selectButton)
 		bottomBarContainer.addSubview(promptLabel)
-		bottomBarContainer.addSubview(separatorLine)
+		bottomBarContainer.addSubview(bottomSeparatorLine)
 		view.addSubview(bottomBarContainer)
 
 		var constraints: [NSLayoutConstraint] = []
@@ -86,10 +88,17 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 
 			leadingButtonAnchor = cancelButton.leadingAnchor
 
+			headerView.addSubview(topSeparatorLine)
+
 			constraints.append(contentsOf: [
 				headerView.leftAnchor.constraint(equalTo: view.leftAnchor),
 				headerView.rightAnchor.constraint(equalTo: view.rightAnchor),
 				headerView.topAnchor.constraint(equalTo: view.topAnchor),
+
+				topSeparatorLine.leftAnchor.constraint(equalTo: headerView.leftAnchor),
+				topSeparatorLine.rightAnchor.constraint(equalTo: headerView.rightAnchor),
+				topSeparatorLine.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
+				topSeparatorLine.heightAnchor.constraint(equalToConstant: 1),
 
 				cancelButton.trailingAnchor.constraint(equalTo: selectButton.leadingAnchor, constant: -15),
 				cancelButton.centerYAnchor.constraint(equalTo: selectButton.centerYAnchor)
@@ -109,10 +118,10 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 			selectButton.topAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.topAnchor, constant: 20),
 			selectButton.bottomAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
-			separatorLine.leftAnchor.constraint(equalTo: bottomBarContainer.leftAnchor),
-			separatorLine.rightAnchor.constraint(equalTo: bottomBarContainer.rightAnchor),
-			separatorLine.topAnchor.constraint(equalTo: bottomBarContainer.topAnchor),
-			separatorLine.heightAnchor.constraint(equalToConstant: 1)
+			bottomSeparatorLine.leftAnchor.constraint(equalTo: bottomBarContainer.leftAnchor),
+			bottomSeparatorLine.rightAnchor.constraint(equalTo: bottomBarContainer.rightAnchor),
+			bottomSeparatorLine.topAnchor.constraint(equalTo: bottomBarContainer.topAnchor),
+			bottomSeparatorLine.heightAnchor.constraint(equalToConstant: 1)
 		])
 
 		NSLayoutConstraint.activate(constraints)
@@ -222,7 +231,6 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 	// MARK: - Themeable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		view.backgroundColor = collection.css.getColor(.fill, for:view)
-		separatorLine.backgroundColor = collection.css.getColor(.fill, selectors: [.separator], for:view) // collection.tableSeparatorColor
 	}
 }
 

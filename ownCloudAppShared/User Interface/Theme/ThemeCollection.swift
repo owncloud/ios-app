@@ -310,14 +310,13 @@ public class ThemeCollection : NSObject {
 				statusBarStyle = .lightContent
 				barStyle = .black
 
-				// --
-
 				lightBrandSet.labelColor = .white
 				lightBrandSet.secondaryLabelColor = .white
 				lightBrandSet.iconColor = .white
 
 				accountCellSet = lightBrandSet
 				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .init(hex: 0, alpha: 0.5), tintColor: lightBrandColor, for: interfaceStyle)
+				accountCellSet = sidebarAccountCellSet
 
 				navigationBarSet = darkBrandSet
 				toolbarSet = darkBrandSet
@@ -356,21 +355,15 @@ public class ThemeCollection : NSObject {
 				inlineActionBackgroundColor = UIColor(white: 1, alpha: 0.10)
 				inlineActionBackgroundColorHighlighted = UIColor(white: 1, alpha: 0.05)
 
-				// --
-
 				// Bars
 				tokenForegroundColor = lightBrandColor
 				tokenBackgroundColor = UIColor(white: 1, alpha: 0.1)
-
-				// Table view
-				// tableRowBorderColor = UIColor.white.withAlphaComponent(0.1)
 
 				// Progress
 				progressColors = ThemeColorPair(foreground: lightBrandColor, background: lightBrandColor.withAlphaComponent(0.3))
 
 				// Logo fill color
-				let logoColor : UIColor? = UIColor.white
-				logoFillColor = logoColor
+				logoFillColor = .white
 
 			case .light:
 				// Interface style
@@ -380,10 +373,8 @@ public class ThemeCollection : NSObject {
 				statusBarStyle = .darkContent
 				barStyle = .default
 
-				// --
-
-				accountCellSet = darkBrandSet
 				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .white, tintColor: .white, for: interfaceStyle)
+				accountCellSet = sidebarAccountCellSet
 
 				navigationBarSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightColor, for: interfaceStyle)
 				toolbarSet = navigationBarSet
@@ -421,14 +412,11 @@ public class ThemeCollection : NSObject {
 				inlineActionBackgroundColor = UIColor(white: 0, alpha: 0.05)
 				inlineActionBackgroundColorHighlighted = UIColor(white: 0, alpha: 0.10)
 
-				// --
-
 				// Progress
 				progressColors = ThemeColorPair(foreground: lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
 
 				// Logo fill color
-				let logoColor : UIColor? = UIColor.lightGray
-				logoFillColor = logoColor
+				logoFillColor = .lightGray
 		}
 
 		// Fixed colors
@@ -653,13 +641,13 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.account, .disconnect],		property: .fill,   value: accountCellSet.labelColor),
 
 			// - Location Picker
-			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList], property: .fill, value: groupedCollectionBackgroundColor),
-			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .cell], property: .fill, value: UIColor.white),
-			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .account], property: .fill, value: darkBrandColor),
+			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList], 		property: .fill, value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .cell], 		property: .fill, value: accountCellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.locationPicker, .navigationBar], 				property: .fill, value: groupedCollectionBackgroundColor),
 
 			// - More card header
-			ThemeCSSRecord(selectors: [.more, .header], 			property: .fill,   value: moreHeaderBackgroundColor),
-			ThemeCSSRecord(selectors: [.more, .collection], 		property: .fill,   value: groupedCellStateSet),
+			ThemeCSSRecord(selectors: [.more, .header], 					property: .fill,   value: moreHeaderBackgroundColor),
+			ThemeCSSRecord(selectors: [.more, .collection], 				property: .fill,   value: groupedCellStateSet),
 			ThemeCSSRecord(selectors: [.more, .insetGrouped, .table, .cell, .proceed],	property: .stroke, value: UIColor.white),
 
 			ThemeCSSRecord(selectors: [.more, .favorite],			property: .stroke, value: favoriteEnabledColor),
