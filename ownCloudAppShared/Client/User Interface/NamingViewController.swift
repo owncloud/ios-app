@@ -52,12 +52,15 @@ open class NamingViewController: UIViewController {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	public init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	open var fallbackIcon: OCResource?
+
+	public init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, fallbackIcon: OCResource? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion
 		self.stringValidator = stringValidator
 		self.defaultName = defaultName
+		self.fallbackIcon = fallbackIcon
 
 		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.css.getBlurEffectStyle()))
 
@@ -80,12 +83,12 @@ open class NamingViewController: UIViewController {
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	convenience public init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
-		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, completion: completion)
+	convenience public init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, fallbackIcon: OCResource? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, fallbackIcon: fallbackIcon, completion: completion)
 	}
 
-	convenience public init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
-		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, completion: completion)
+	convenience public init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, fallbackIcon: OCResource? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, fallbackIcon: fallbackIcon, completion: completion)
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
@@ -111,7 +114,7 @@ open class NamingViewController: UIViewController {
 			core.vault.resourceManager?.start(thumbnailRequest)
 		} else {
 			nameTextField.text = defaultName
-			thumbnailImageView.activeViewProvider = ResourceItemIcon.folder
+			thumbnailImageView.activeViewProvider = (fallbackIcon as? OCViewProvider) ?? ResourceItemIcon.folder
 		}
 
 		// Navigation buttons
@@ -341,6 +344,10 @@ extension NamingViewController: UITextFieldDelegate {
 
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
 
+		} else if let name = textField.text,
+		  	  let range = name.range(of: ".", options: .backwards),
+			  let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.utf16Offset(in: name)) {
+			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
 		} else {
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
 		}
