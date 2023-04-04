@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 public protocol SortBarDelegate: AnyObject {
 
@@ -24,10 +25,8 @@ public protocol SortBarDelegate: AnyObject {
 	var sortMethod: SortMethod { get set }
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
-
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
-
-	func toggleSelectMode()
+	func sortBar(_ sortBar: SortBar, itemLayout: ItemLayout)
+	func sortBarToggleSelectMode(_ sortBar: SortBar)
 }
 
 public class SortBar: ThemeCSSView {
@@ -42,13 +41,14 @@ public class SortBar: ThemeCSSView {
 	let leftPadding: CGFloat = 16.0
 	let rightPadding: CGFloat = 20.0
 	let rightSelectButtonPadding: CGFloat = 8.0
-	let rightSearchScopePadding: CGFloat = 15.0
+	let rightDisplayModeButtonPadding: CGFloat = 8.0
 	let topPadding: CGFloat = 10.0
 	let bottomPadding: CGFloat = 10.0
 
 	// MARK: - Instance variables.
 	public var sortButton: UIButton?
 	public var selectButton: UIButton?
+	public var changeItemLayoutButton: UIButton?
 	public var allowMultiSelect: Bool = true {
 		didSet {
 			updateSelectButtonVisibility()
@@ -92,9 +92,19 @@ public class SortBar: ThemeCSSView {
 		}
 	}
 
+	public var itemLayout: ItemLayout = .list {
+		didSet {
+			switch itemLayout {
+				case .grid: changeItemLayoutButton?.setImage(OCSymbol.icon(forSymbolName: "list.bullet"), for: .normal)
+				case .list: changeItemLayoutButton?.setImage(OCSymbol.icon(forSymbolName: "square.grid.2x2"), for: .normal)
+			}
+		}
+	}
+
 	// MARK: - Init & Deinit
 	public init(frame: CGRect = .zero, sortMethod: SortMethod) {
 		selectButton = UIButton()
+		changeItemLayoutButton = UIButton()
 		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
@@ -102,14 +112,16 @@ public class SortBar: ThemeCSSView {
 		super.init(frame: frame)
 		self.cssSelector = .sortBar
 
-		if let sortButton, let selectButton {
+		if let sortButton, let selectButton, let changeItemLayoutButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
+			changeItemLayoutButton.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 
 			self.addSubview(sortButton)
 			self.addSubview(selectButton)
+			self.addSubview(changeItemLayoutButton)
 
 			// Sort Button
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
@@ -153,6 +165,7 @@ public class SortBar: ThemeCSSView {
 				sortButton.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
 
+			// Select Button
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.cssSelector = .multiselect
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
@@ -164,6 +177,20 @@ public class SortBar: ThemeCSSView {
 				selectButton.trailingAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightSelectButtonPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
+			])
+
+			// Disply Mode Button
+			changeItemLayoutButton.setImage(OCSymbol.icon(forSymbolName: "square.grid.2x2"), for: .normal)
+			changeItemLayoutButton.cssSelector = .itemLayout
+			changeItemLayoutButton.addTarget(self, action: #selector(toggleDisplayMode), for: .touchUpInside)
+			changeItemLayoutButton.accessibilityLabel = "Toggle layout".localized
+			changeItemLayoutButton.isPointerInteractionEnabled = true
+
+			NSLayoutConstraint.activate([
+				changeItemLayoutButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+				changeItemLayoutButton.trailingAnchor.constraint(lessThanOrEqualTo: selectButton.leadingAnchor, constant: -rightDisplayModeButtonPadding),
+				changeItemLayoutButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
+				changeItemLayoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
 		}
 
@@ -181,6 +208,7 @@ public class SortBar: ThemeCSSView {
 	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton?.apply(css: collection.css, properties: [.stroke])
 		self.selectButton?.apply(css: collection.css, properties: [.stroke])
+		self.changeItemLayoutButton?.apply(css: collection.css, properties: [.stroke])
 
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 	}
@@ -201,12 +229,20 @@ public class SortBar: ThemeCSSView {
 
 	// MARK: - Actions
 	@objc private func toggleSelectMode() {
-		delegate?.toggleSelectMode()
+		delegate?.sortBarToggleSelectMode(self)
+	}
+
+	@objc private func toggleDisplayMode() {
+		var newItemLayout: ItemLayout = (itemLayout == .grid) ? .list : .grid
+
+		itemLayout = newItemLayout
+		delegate?.sortBar(self, itemLayout: newItemLayout)
 	}
 }
 
 public extension ThemeCSSSelector {
 	static let sortBar = ThemeCSSSelector(rawValue: "sortBar")
 	static let multiselect = ThemeCSSSelector(rawValue: "multiselect")
+	static let itemLayout = ThemeCSSSelector(rawValue: "itemLayout")
 	static let sorting = ThemeCSSSelector(rawValue: "sorting")
 }

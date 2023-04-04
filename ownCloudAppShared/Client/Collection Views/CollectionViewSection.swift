@@ -248,10 +248,11 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			return _cellStyle
 		}
 		set {
+			let oldValue = _cellStyle
 			_cellStyle = newValue
 
-			if _cellStyle != newValue {
-				OnMainThread {
+			if _cellStyle != oldValue {
+				OnMainThread(inline: !_animateCellLayoutChange) {
 					self.collectionViewController?.reload(sections: [self], animated: false)
 				}
 			}
@@ -285,9 +286,10 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	public var cellLayout: CellLayout {
 		didSet {
-			collectionViewController?.updateCellLayout(animated: true)
+			collectionViewController?.updateCellLayout(animated: _animateCellLayoutChange)
 		}
 	}
+	private var _animateCellLayoutChange = true
 
 	public var expandedItemRefs: [CollectionViewController.ItemRef]
 	private var initialExpandedItems: [OCDataItemReference]?
@@ -320,13 +322,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		if let idx = expandedItemRefs.firstIndex(of: item) {
 			expandedItemRefs.remove(at: idx)
 		}
-
-//		if let (itemRef, _) = collectionViewController?.unwrap(item) {
-//			dataSourcesByParentItemRef[itemRef] = nil
-//
-//			dataSourceSubscriptionsByParentItemRef[itemRef]?.terminate()
-//			dataSourceSubscriptionsByParentItemRef[itemRef] = nil
-//		}
 	}
 
 	// MARK: - Data source handling
@@ -660,4 +655,17 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	}
 
 	public let dataItemVersion: OCDataItemVersion = NSNumber(0)
+}
+
+extension CollectionViewSection {
+	func adopt(itemLayout: ItemLayout) {
+		let animateCellLayoutChange = _animateCellLayoutChange
+
+		UIView.performWithoutAnimation {
+			_animateCellLayoutChange = false
+			cellStyle = itemLayout.cellStyle
+			cellLayout = itemLayout.sectionCellLayout(for: collectionViewController?.traitCollection ?? .current)
+			_animateCellLayoutChange = animateCellLayoutChange
+		}
+	}
 }

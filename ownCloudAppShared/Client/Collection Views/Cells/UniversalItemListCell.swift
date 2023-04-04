@@ -133,41 +133,90 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		contentView.addSubview(iconView)
 	}
 
+	var cellStyle: CollectionViewCellStyle.StyleType = .tableCell {
+		didSet {
+			if cellStyle != oldValue {
+				updateLayoutConstraints()
+			}
+		}
+	}
+
 	open func updateLayoutConstraints() {
 		if let cellConstraints {
 			NSLayoutConstraint.deactivate(cellConstraints)
 			self.cellConstraints = nil
 		}
 
-		let horizontalMargin : CGFloat = 15
-		let verticalLabelMargin : CGFloat = 10
-		let verticalIconMargin : CGFloat = 10
-//		let horizontalSmallMargin : CGFloat = 10
-		let spacing : CGFloat = 15
-//		let smallSpacing : CGFloat = 2
-		let iconViewWidth : CGFloat = 40
-//		let detailIconViewHeight : CGFloat = 15
-//		let accessoryButtonWidth : CGFloat = 35
-		let verticalLabelMarginFromCenter : CGFloat = 1
+		var constraints: [NSLayoutConstraint]
 
-		let constraints: [NSLayoutConstraint] = [
-			iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
-			iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
-			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
-			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
-			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
+		if cellStyle == .gridCell {
+			let horizontalMargin: CGFloat = 10
+			let verticalMargin: CGFloat = 5
+			let iconTextMargin: CGFloat = 5
+			let titleDetailsSpacing: CGFloat = 3
 
-			titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-			detailSegmentView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-			detailSegmentView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+			let titleAndDetailsHeight: CGFloat = 74
 
-			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
-			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
-			detailSegmentView.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
-			detailSegmentView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
+			titleLabel.numberOfLines = 2
+			titleLabel.textAlignment = .center
+			titleLabel.lineBreakMode = .byTruncatingMiddle
+			titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+			titleLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+			titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize * 0.8)
 
-			separatorLayoutGuide.leadingAnchor.constraint(equalTo: iconView.leadingAnchor)
-		]
+			detailSegmentView.setContentHuggingPriority(.required, for: .vertical)
+
+			constraints = [
+				iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				iconView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
+				iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalMargin),
+				iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -titleAndDetailsHeight),
+
+				titleLabel.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: iconTextMargin),
+				titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
+				titleLabel.bottomAnchor.constraint(equalTo: detailSegmentView.topAnchor, constant: -titleDetailsSpacing),
+
+				detailSegmentView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				detailSegmentView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
+//				detailSegmentView.bottomAnchor.constraint(lessThanOrEqualTo: self.contentView.bottomAnchor, constant: -verticalMargin),
+
+				separatorLayoutGuide.leadingAnchor.constraint(equalTo: self.contentView.trailingAnchor)
+			]
+		} else {
+			let horizontalMargin : CGFloat = 15
+			let verticalLabelMargin : CGFloat = 10
+			let verticalIconMargin : CGFloat = 10
+			let spacing : CGFloat = 15
+			let iconViewWidth : CGFloat = 40
+			let verticalLabelMarginFromCenter : CGFloat = 1
+
+			titleLabel.numberOfLines = 1
+			titleLabel.textAlignment = .left
+			titleLabel.lineBreakMode = .byTruncatingTail
+			titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+			titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+			titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+
+			constraints = [
+				iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
+				iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
+				iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
+				iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
+
+				titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+				detailSegmentView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+				detailSegmentView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+
+				titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
+				titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
+				detailSegmentView.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
+				detailSegmentView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
+
+				separatorLayoutGuide.leadingAnchor.constraint(equalTo: iconView.leadingAnchor)
+			]
+		}
 
 		if constraints.count > 0 {
 			cellConstraints = constraints
@@ -187,11 +236,17 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 	}
 
-	open func set(title: String?, isFileName: Bool = false) {
-		self.title = attributedTitle(for: title, isFileName: isFileName)
+	open func set(title: String?, isFileName: Bool = false, small: Bool? = nil) {
+		var effectiveSmall = small
+
+		if effectiveSmall == nil, cellStyle == .gridCell {
+			effectiveSmall = true
+		}
+
+		self.title = attributedTitle(for: title, isFileName: isFileName, small: effectiveSmall ?? false)
 	}
 
-	func attributedTitle(for title: String?, isFileName: Bool) -> NSAttributedString {
+	func attributedTitle(for title: String?, isFileName: Bool, small: Bool = false) -> NSAttributedString {
 		guard let title = title as? NSString else {
 			return NSAttributedString(string: "")
 		}
@@ -202,12 +257,12 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			let baseName = title.deletingPathExtension
 
 			return NSMutableAttributedString()
-				.appendBold(baseName)
-				.appendNormal(".")
-				.appendNormal(pathExtension)
+				.appendBold(baseName, small: small)
+				.appendNormal(".", small: small)
+				.appendNormal(pathExtension, small: small)
 		} else {
 			return NSMutableAttributedString()
-				.appendBold(title as String)
+				.appendBold(title as String, small: small)
 		}
 	}
 
@@ -314,10 +369,14 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 			// Accessories
 			if onlyFields == nil || onlyFields?.contains(.accessories) == true {
-				if let accessories = content?.accessories {
-					self.accessories = accessories
-				} else {
+				if cellStyle == .gridCell {
 					self.accessories = []
+				} else {
+					if let accessories = content?.accessories {
+						self.accessories = accessories
+					} else {
+						self.accessories = []
+					}
 				}
 			}
 
@@ -338,6 +397,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		clientContext = context
 
 		contentProviderUserInfo = nil
+
+		if let cellStyleType = configuration?.style.type {
+			self.cellStyle = cellStyleType
+		}
 
 		contentProvider.provideContent(for: self, context: context ?? configuration?.clientContext ?? clientContext, configuration: configuration) { [weak self] (content) in
 			if fillSeed == self?._contentSeed {

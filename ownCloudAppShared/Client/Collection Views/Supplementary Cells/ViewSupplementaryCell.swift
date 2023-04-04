@@ -44,27 +44,31 @@ class ViewSupplementaryCell: UICollectionReusableView {
 
 	// MARK: - Registration
 	static func registerSupplementaryCellProvider() {
-		let viewSupplementaryCellRegistration = UICollectionView.SupplementaryRegistration<ViewSupplementaryCell>(elementKind: CollectionViewSupplementaryItem.ElementKind.view) { supplementaryView, elementKind, indexPath in
+		let supplementaryViewElementKinds: [CollectionViewSupplementaryItem.ElementKind] = [ .view ]
+
+		for supplementaryViewElementKind in supplementaryViewElementKinds {
+			let viewSupplementaryCellRegistration = UICollectionView.SupplementaryRegistration<ViewSupplementaryCell>(elementKind: supplementaryViewElementKind) { supplementaryView, elementKind, indexPath in
+			}
+
+			CollectionViewSupplementaryCellProvider.register(CollectionViewSupplementaryCellProvider(for: supplementaryViewElementKind, with: { collectionView, section, supplementaryItem, indexPath in
+				let cellView = collectionView.dequeueConfiguredReusableSupplementary(using: viewSupplementaryCellRegistration, for: indexPath)
+
+				cellView.view = supplementaryItem.content as? UIView
+
+				return cellView
+			}))
 		}
-
-		CollectionViewSupplementaryCellProvider.register(CollectionViewSupplementaryCellProvider(for: .view, with: { collectionView, section, supplementaryItem, indexPath in
-			let cellView = collectionView.dequeueConfiguredReusableSupplementary(using: viewSupplementaryCellRegistration, for: indexPath)
-
-			cellView.view = supplementaryItem.content as? UIView
-
-			return cellView
-		}))
 	}
 }
 
 public extension CollectionViewSupplementaryItem {
-	static func view(_ view: UIView, pinned: Bool = false) -> CollectionViewSupplementaryItem {
+	static func view(_ view: UIView, pinned: Bool = false, elementKind: CollectionViewSupplementaryItem.ElementKind = .view, alignment: NSRectAlignment = .top) -> CollectionViewSupplementaryItem {
 	        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(view.frame.size.height))
-		let supplementaryItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: .view, alignment: .top)
+		let supplementaryItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: elementKind, alignment: alignment)
 
 		if pinned {
 			supplementaryItem.pinToVisibleBounds = true
-			supplementaryItem.zIndex = 2
+			supplementaryItem.zIndex = 200
 		}
 
 		return CollectionViewSupplementaryItem(supplementaryItem: supplementaryItem, content: view)

@@ -156,6 +156,7 @@ public class ClientContext: NSObject {
 	// MARK: - Display options
 	@objc public dynamic var sortDescriptor: SortDescriptor?
 	public var itemStyler: ItemStyler?
+	public var itemLayout: ItemLayout?
 	/*
 	public var sortMethod : SortMethod? {
 		didSet {
@@ -210,6 +211,7 @@ public class ClientContext: NSObject {
 
 		sortDescriptor = inParent?.sortDescriptor
 		itemStyler = inParent?.itemStyler
+		itemLayout = inParent?.itemLayout
 
 		permissions = inParent?.permissions
 		permissionHandlers = inParent?.permissionHandlers

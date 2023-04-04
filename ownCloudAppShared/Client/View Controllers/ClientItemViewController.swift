@@ -35,11 +35,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public var query: OCQuery?
 	private var _itemsDatasource: OCDataSource? // stores the data source passed to init (if any)
 
-	public var itemsLeadInDataSource: OCDataSourceArray = OCDataSourceArray()
 	public var itemsListDataSource: OCDataSource? // typically query.queryResultsDataSource or .itemsDatasource
-	public var itemsTrailingDataSource: OCDataSourceArray = OCDataSourceArray()
 	public var itemSectionDataSource: OCDataSourceComposition?
 	public var itemSection: CollectionViewSection?
+
+	public var footerSectionDataSource: OCDataSourceArray = OCDataSourceArray()
+	public var footerSection: CollectionViewSection?
 
 	public var driveSection: CollectionViewSection?
 
@@ -175,21 +176,29 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
 			}
 
-			itemSectionDataSource = OCDataSourceComposition(sources: [itemsLeadInDataSource, contentsDataSource, itemsTrailingDataSource])
-			let itemSectionCellStyle = CollectionViewCellStyle(from: .init(with: .tableCell), changing: { cellStyle in
+			itemSectionDataSource = OCDataSourceComposition(sources: [contentsDataSource])
+
+			let itemLayout = itemControllerContext.itemLayout ?? .list
+			let itemSectionCellStyle = CollectionViewCellStyle(from: itemLayout.cellStyle, changing: { cellStyle in
 				if showRevealButtonForItems {
 					cellStyle.showRevealButton = true
 				}
 			})
 
-			itemSection = CollectionViewSection(identifier: "items", dataSource: itemSectionDataSource, cellStyle: itemSectionCellStyle, cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemControllerContext)
+			itemSection = CollectionViewSection(identifier: "items", dataSource: itemSectionDataSource, cellStyle: itemSectionCellStyle, cellLayout: itemLayout.sectionCellLayout(for: .current), clientContext: itemControllerContext)
 
-			if let driveSection = driveSection {
+			footerSection = CollectionViewSection(identifier: "items-footer", dataSource: footerSectionDataSource, cellStyle: ItemLayout.list.cellStyle, cellLayout: ItemLayout.list.sectionCellLayout(for: .current), clientContext: itemControllerContext)
+
+			if let driveSection {
 				sections.append(driveSection)
 			}
 
-			if let queryItemDataSourceSection = itemSection {
-				sections.append(queryItemDataSourceSection)
+			if let itemSection {
+				sections.append(itemSection)
+			}
+
+			if let footerSection {
+				sections.append(footerSection)
 			}
 		}
 
@@ -234,7 +243,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				.image(emptyItemListIcon ?? OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
 				.title(emptyItemListTitleLocalized ?? "No contents".localized, alignment: .centered),
 				.spacing(5),
-				.subtitle(emptyFolderMessage, alignment: .centered),
+				.subtitle(emptyFolderMessage, alignment: .centered)
 			])
 
 			emptyItemListItem?.elementInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 2, trailing: 0)
@@ -316,8 +325,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				.view(sortBar, pinned: true)
 			]
 		}
-
-		// itemsLeadInDataSource.setVersionedItems([ sortBar! ])
 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
@@ -484,8 +491,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				case .empty:
 					refreshEmptyActions()
 					sortBar?.isHidden = true
-					itemsLeadInDataSource.setVersionedItems([ ])
-					itemsTrailingDataSource.setVersionedItems([ ])
+					footerSectionDataSource.setVersionedItems([ ])
 
 				case .loading:
 					var loadingItems : [OCDataItem] = [ ]
@@ -495,8 +501,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					}
 					emptyItemListDataSource.setItems(loadingItems, updated: nil)
 					sortBar?.isHidden = true
-					itemsLeadInDataSource.setVersionedItems([ ])
-					itemsTrailingDataSource.setVersionedItems([ ])
+					footerSectionDataSource.setVersionedItems([ ])
 
 				case .removed:
 					var folderRemovedItems : [OCDataItem] = [ ]
@@ -506,21 +511,17 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					}
 					emptyItemListDataSource.setItems(folderRemovedItems, updated: nil)
 					sortBar?.isHidden = true
-					itemsLeadInDataSource.setVersionedItems([ ])
-					itemsTrailingDataSource.setVersionedItems([ ])
+					footerSectionDataSource.setVersionedItems([ ])
 
 				case .hasContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
 					sortBar?.isHidden = false
-//					if let sortBar = sortBar {
-//						itemsLeadInDataSource.setVersionedItems([ sortBar ])
-//					}
 
 					if searchActive == true {
-						itemsTrailingDataSource.setVersionedItems([ ])
+						footerSectionDataSource.setVersionedItems([ ])
 					} else {
-						if let footerItem = footerItem {
-							itemsTrailingDataSource.setVersionedItems([ footerItem ])
+						if let footerItem {
+							footerSectionDataSource.setVersionedItems([ footerItem ])
 						}
 					}
 
@@ -529,8 +530,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				case .searchNonItemContent:
 					emptyItemListDataSource.setItems(nil, updated: nil)
 					sortBar?.isHidden = true
-					itemsLeadInDataSource.setVersionedItems([ ])
-					itemsTrailingDataSource.setVersionedItems([ ])
+					footerSectionDataSource.setVersionedItems([ ])
 					itemSectionHiddenNew = true
 			}
 
@@ -687,19 +687,19 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
  		let comparator = sortMethod.comparator(direction: sortDirection)
 
  		query?.sortComparator = comparator
-// 		customSearchQuery?.sortComparator = comparator
-//
-//		if (customSearchQuery?.queryResults?.count ?? 0) >= maxResultCount {
-//	 		updateCustomSearchQuery()
-//		}
 	}
 
-	public func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
-		self.present(presentViewController, animated: animated, completion: completionHandler)
+	public func sortBar(_ sortBar: SortBar, itemLayout: ItemLayout) {
+		if itemLayout != clientContext?.itemLayout {
+			clientContext?.itemLayout = itemLayout
+
+			itemSection?.clientContext?.itemLayout = itemLayout
+			itemSection?.adopt(itemLayout: itemLayout)
+		}
 	}
 
 	// MARK: - Multiselect
-	public func toggleSelectMode() {
+	public func sortBarToggleSelectMode(_ sortBar: SortBar) {
 		if let clientContext = clientContext, clientContext.hasPermission(for: .multiselection) {
 			isMultiSelecting = !isMultiSelecting
 		}
@@ -1043,8 +1043,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 		searchResultsContent = nil
 		searchViewController = nil
-
-		itemSectionDataSource?.setInclude(true, for: itemsLeadInDataSource)
+		sortBar?.isHidden = false
 	}
 
 	// MARK: - SearchViewControllerDelegate
