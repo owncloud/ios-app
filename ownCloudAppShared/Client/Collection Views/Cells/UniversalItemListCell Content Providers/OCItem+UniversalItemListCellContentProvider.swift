@@ -175,7 +175,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 		let (cloudStatusIcon, cloudStatusIconAlpha) = cloudStatus(in: context?.core)
 
 		if let cloudStatusIcon {
-			let segmentItem = SegmentViewItem(with: cloudStatusIcon, style: .plain)
+			let segmentItem = SegmentViewItem(with: cloudStatusIcon.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
 			segmentItem.insets = .zero
 			segmentItem.alpha = cloudStatusIconAlpha
 			detailItems.append(segmentItem)
@@ -183,13 +183,13 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Sharing
 		if isSharedWithUser || sharedByUserOrGroup {
-			let segmentItem = SegmentViewItem(with: UIImage(named: "group"), style: .plain)
+			let segmentItem = SegmentViewItem(with: UIImage(named: "group")?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
 
 		if sharedByPublicLink {
-			let segmentItem = SegmentViewItem(with: UIImage(named: "link"), style: .plain)
+			let segmentItem = SegmentViewItem(with: UIImage(named: "link")?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
@@ -203,9 +203,16 @@ extension OCItem: UniversalItemListCellContentProvider {
 		if state == .serverSideProcessing {
 			detailString = "Processing on server".localized
 		}
+
+		let primaryLineSizeSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.primary])
+		detailItems.append(primaryLineSizeSegment)
+
+		let secondaryLineDateSegment = SegmentViewItem(with: nil, title: lastModifiedLocalizedCompact, style: .plain, titleTextStyle: .footnote, lines: [.secondary])
+		detailItems.append(secondaryLineDateSegment)
+
 		detailString += " - " + lastModifiedLocalized
 
-		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote)
+		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine])
 		detailSegment.insets = .zero
 
 		detailItems.append(detailSegment)

@@ -133,6 +133,7 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 	}
 
 	private var itemViews: [UIView] = []
+	private var borderMaskView: UIView?
 	private var scrollView: UIScrollView?
 	private var scrollGradientLeft: GradientView?
 	private var scrollGradientRight: GradientView?
@@ -242,6 +243,7 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 
 			if let maskView = maskView {
 				maskView.translatesAutoresizingMaskIntoConstraints = false
+				self.borderMaskView = maskView
 				self.embed(toFillWith: maskView)
 				self.mask = maskView
 			}
@@ -273,10 +275,54 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 		}
 	}
 
+//	private var allViewsFullyVisible: Bool = false {
+//		didSet {
+//			if allViewsFullyVisible != oldValue, let borderMaskView {
+//				if allViewsFullyVisible {
+//					borderMaskView.removeFromSuperview()
+//					mask = nil
+//				} else {
+////					embed(toFillWith: borderMaskView)
+////					mask = borderMaskView
+//				}
+//			}
+//		}
+//	}
+//
+//	private func evaluateBorderMaskNecessity() {
+//		if borderMaskView != nil, !isScrollable {
+//			if let lastViewFrame = items.last?.view?.frame,
+//			   let firstViewFrame = items.first?.view?.frame {
+//				let bounds = bounds
+//
+//				if firstViewFrame.origin.x >= bounds.origin.x,
+//				   (lastViewFrame.origin.x + lastViewFrame.size.width) <= (bounds.origin.x + bounds.size.width) {
+//					allViewsFullyVisible = true
+//				} else {
+//					allViewsFullyVisible = false
+//				}
+//			}
+//		}
+//	}
+//
+//	public override func didMoveToWindow() {
+//		super.didMoveToWindow()
+//
+//		OnMainThread {
+//			self.evaluateBorderMaskNecessity()
+//		}
+//	}
+//
+//	public override func layoutSubviews() {
+//		super.layoutSubviews()
+//		self.evaluateBorderMaskNecessity()
+//	}
+
 	public override var bounds: CGRect {
 		didSet {
 			OnMainThread {
 				self.scrollToTruncationTarget()
+				// self.evaluateBorderMaskNecessity()
 			}
 		}
 	}

@@ -31,7 +31,7 @@ public enum ItemLayout {
 				return .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
 			case .grid:
-				return .grid(itemWidthDimension: .absolute(142), itemHeightDimension: .absolute(180), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5))
+				return .grid(itemWidthDimension: .absolute(140), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5))
 		}
 	}
 

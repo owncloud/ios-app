@@ -31,6 +31,12 @@ public class SegmentViewItem: NSObject {
 		case token
 	}
 
+	public enum Line: Int {
+		case singleLine
+		case primary
+		case secondary
+	}
+
 	open weak var segmentView: SegmentView?
 
 	open var style: Style
@@ -51,6 +57,8 @@ public class SegmentViewItem: NSObject {
 	open var cornerStyle: CornerStyle?
 	open var alpha: CGFloat = 1.0
 
+	open var lines: [Line]? //!< Optional Lines that can be used to separate content into multiple lines (used f.ex. for grid cell layouts to use a single array for single line and multi line views)
+
 	open var gestureRecognizers: [UIGestureRecognizer]?
 
 	var _view: UIView?
@@ -66,7 +74,7 @@ public class SegmentViewItem: NSObject {
 		return _view
 	}
 
-	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
+	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, lines: [Line]? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
 		self.style = style
 
 		super.init()
@@ -75,8 +83,27 @@ public class SegmentViewItem: NSObject {
 		self.title = title
 		self.titleTextStyle = titleTextStyle
 		self.titleTextWeight = titleTextWeight
+		self.lines = lines
 		self.representedObject = representedObject
 		self.weakRepresentedObject = weakRepresentedObject
 		self.gestureRecognizers = gestureRecognizers
+	}
+}
+
+extension [SegmentViewItem] {
+	func filtered(for lines: [SegmentViewItem.Line], includeUntagged: Bool) -> [SegmentViewItem] {
+		return filter({ item in
+			if let itemLines = item.lines {
+				for line in lines {
+					if itemLines.contains(line) {
+						return true
+					}
+				}
+
+				return false
+			}
+
+			return includeUntagged
+		})
 	}
 }

@@ -96,7 +96,14 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	public typealias ContentUpdater = (UniversalItemListCell.Content) -> Bool
 
 	open var titleLabel: UILabel = UILabel()
-	open var detailSegmentView: SegmentView = SegmentView(with: [], truncationMode: .truncateTail)
+	open var detailSegmentPrimaryView: SegmentView = SegmentView(with: [], truncationMode: .clipTail)
+	private var hasSecondaryDetailView = false
+	open lazy var detailSegmentSecondaryView: SegmentView? = {
+		let view = SegmentView(with: [], truncationMode: .clipTail)
+		view.translatesAutoresizingMaskIntoConstraints = false
+		hasSecondaryDetailView = true
+		return view
+	}()
 
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	public let thumbnailSize : CGSize = CGSize(width: 60, height: 60) // when changing size, also update .iconView.fallbackSize
@@ -122,14 +129,14 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	var cellConstraints: [NSLayoutConstraint]?
 
 	open func prepareViews() {
-		detailSegmentView.translatesAutoresizingMaskIntoConstraints = false
+		detailSegmentPrimaryView.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 
 		titleLabel.cssSelector = .title
 
 		contentView.addSubview(titleLabel)
-		contentView.addSubview(detailSegmentView)
+		contentView.addSubview(detailSegmentPrimaryView)
 		contentView.addSubview(iconView)
 	}
 
@@ -150,12 +157,15 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		var constraints: [NSLayoutConstraint]
 
 		if cellStyle == .gridCell {
+			let useSecondarySegmentView = true
+
 			let horizontalMargin: CGFloat = 10
 			let verticalMargin: CGFloat = 5
 			let iconTextMargin: CGFloat = 5
 			let titleDetailsSpacing: CGFloat = 3
+			let detailsDetailsSpacing: CGFloat = 0
 
-			let titleAndDetailsHeight: CGFloat = 74
+			let titleAndDetailsHeight: CGFloat = useSecondarySegmentView ? 94 : 74
 
 			titleLabel.numberOfLines = 2
 			titleLabel.textAlignment = .center
@@ -164,7 +174,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			titleLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
 			titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize * 0.8)
 
-			detailSegmentView.setContentHuggingPriority(.required, for: .vertical)
+			detailSegmentPrimaryView.setContentHuggingPriority(.required, for: .vertical)
 
 			constraints = [
 				iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
@@ -175,14 +185,28 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				titleLabel.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: iconTextMargin),
 				titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
 				titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
-				titleLabel.bottomAnchor.constraint(equalTo: detailSegmentView.topAnchor, constant: -titleDetailsSpacing),
+				titleLabel.bottomAnchor.constraint(equalTo: detailSegmentPrimaryView.topAnchor, constant: -titleDetailsSpacing),
 
-				detailSegmentView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
-				detailSegmentView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
-//				detailSegmentView.bottomAnchor.constraint(lessThanOrEqualTo: self.contentView.bottomAnchor, constant: -verticalMargin),
+				detailSegmentPrimaryView.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				detailSegmentPrimaryView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
+				detailSegmentPrimaryView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
 
 				separatorLayoutGuide.leadingAnchor.constraint(equalTo: self.contentView.trailingAnchor)
 			]
+
+			if useSecondarySegmentView, let detailSegmentSecondaryView {
+				if detailSegmentSecondaryView.superview == nil {
+					contentView.addSubview(detailSegmentSecondaryView)
+				}
+
+				constraints.append(contentsOf: [
+					detailSegmentSecondaryView.topAnchor.constraint(equalTo: detailSegmentPrimaryView.bottomAnchor, constant: detailsDetailsSpacing),
+
+					detailSegmentSecondaryView.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+					detailSegmentSecondaryView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
+					detailSegmentSecondaryView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor)
+				])
+			}
 		} else {
 			let horizontalMargin : CGFloat = 15
 			let verticalLabelMargin : CGFloat = 10
@@ -198,6 +222,11 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
 			titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
 
+			if hasSecondaryDetailView {
+				detailSegmentSecondaryView?.removeFromSuperview()
+				hasSecondaryDetailView = false
+			}
+
 			constraints = [
 				iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
 				iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
@@ -206,13 +235,13 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
 				titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-				detailSegmentView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-				detailSegmentView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+				detailSegmentPrimaryView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+				detailSegmentPrimaryView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
 
 				titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
 				titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
-				detailSegmentView.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
-				detailSegmentView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
+				detailSegmentPrimaryView.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
+				detailSegmentPrimaryView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
 
 				separatorLayoutGuide.leadingAnchor.constraint(equalTo: iconView.leadingAnchor)
 			]
@@ -230,9 +259,15 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			titleLabel.attributedText = title
 		}
 	}
-	var detailSegments: [SegmentViewItem]? {
+	var primaryDetailSegments: [SegmentViewItem]? {
 		didSet {
-			detailSegmentView.items = detailSegments ?? []
+			detailSegmentPrimaryView.items = primaryDetailSegments ?? []
+		}
+	}
+
+	var secondaryDetailSegments: [SegmentViewItem]? {
+		didSet {
+			detailSegmentSecondaryView?.items = secondaryDetailSegments ?? []
 		}
 	}
 
@@ -344,9 +379,19 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			// Details
 			if onlyFields == nil || onlyFields?.contains(.details) == true {
 				if let details = content?.details {
-					detailSegments = details
+					if cellStyle == .gridCell {
+						primaryDetailSegments = details.filtered(for: [.primary], includeUntagged: false)
+						secondaryDetailSegments = details.filtered(for: [.secondary], includeUntagged: false)
+					} else {
+						primaryDetailSegments = details.filtered(for: [.singleLine], includeUntagged: true)
+					}
 				} else {
-					detailSegments = nil
+					if cellStyle == .gridCell {
+						primaryDetailSegments = nil
+						secondaryDetailSegments = nil
+					} else {
+						primaryDetailSegments = nil
+					}
 				}
 			}
 
@@ -551,7 +596,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	open override func prepareForReuse() {
 		super.prepareForReuse()
 
-		detailSegments = nil
+		primaryDetailSegments = nil
 		title = nil
 
 		iconView.request = nil
