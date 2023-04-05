@@ -130,9 +130,8 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 					}))
 				])
 
-				let rootView = UIView()
+				let rootView = ThemeCSSView(withSelectors: [.modal])
 				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-				rootView.backgroundColor = .white
 
 				let messageViewController = UIViewController()
 				messageViewController.view = rootView
