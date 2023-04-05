@@ -46,6 +46,8 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 	var selectionChangeObservation: NSKeyValueObservation?
 
+	var combinedSectionsDatasource: OCDataSourceComposition?
+
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -65,8 +67,22 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 			}
 		}, queue: .main)
 
+		// Combined data source
+		if let accountsControllerSectionSource {
+			let label = UIButton()
+			label.translatesAutoresizingMaskIntoConstraints = false
+			label.setTitle("Hello world", for: .normal)
+
+			let labelDataSource = OCDataSourceArray(items: [ label ])
+
+			let labelSection = CollectionViewSection(identifier: "label", dataSource: labelDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0)), clientContext: clientContext)
+			let labelSectionDatasource = OCDataSourceArray(items: [ labelSection ])
+
+			combinedSectionsDatasource = OCDataSourceComposition(sources: [ labelSectionDatasource, accountsControllerSectionSource ])
+		}
+
 		// Set up Collection View
-		sectionsDataSource = accountsControllerSectionSource
+		sectionsDataSource = combinedSectionsDatasource ?? accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.titleView = self.buildNavigationLogoView()
 

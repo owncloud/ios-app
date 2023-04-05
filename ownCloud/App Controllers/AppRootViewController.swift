@@ -86,6 +86,8 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 	}
 
 	// MARK: - View Controller Events
+	var noBookmarkCondition: DataSourceCondition?
+
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -116,7 +118,31 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		contentBrowserController.sidebarViewController = leftNavigationController
 
 		// Make browser navigation view controller the content
-		contentViewController = contentBrowserController
+		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
+			if condition.fulfilled == true {
+				// Empty
+				let messageView = ComposedMessageView(elements: [
+					.image(UIImage(named: "AppIcon")!, size: CGSize(width: 64, height: 64)),
+					.title("Welcome", alignment: .centered),
+					.subtitle("Add an account…", alignment: .centered),
+					.button("Add account", action: UIAction(handler: { [weak self] action in
+						self?.contentViewController = self?.contentBrowserController
+					}))
+				])
+
+				let rootView = UIView()
+				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+				rootView.backgroundColor = .white
+
+				let messageViewController = UIViewController()
+				messageViewController.view = rootView
+
+				self?.contentViewController = messageViewController
+			} else {
+				// Not empty
+				self?.contentViewController = self?.contentBrowserController
+			}
+		})
 
 		// Observe browserController contentViewController and update sidebar selection accordingly
 		contentBrowserController.delegate = self
