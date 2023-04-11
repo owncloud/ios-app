@@ -122,11 +122,13 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 			if condition.fulfilled == true {
 				// Empty
 				let messageView = ComposedMessageView(elements: [
-					.image(UIImage(named: "AppIcon")!, size: CGSize(width: 64, height: 64)),
-					.title("Welcome", alignment: .centered),
-					.subtitle("Add an account…", alignment: .centered),
-					.button("Add account", action: UIAction(handler: { [weak self] action in
-						self?.contentViewController = self?.contentBrowserController
+					.image(UIImage(named: "AppIcon")!, size: CGSize(width: 128, height: 128)),
+                    .title("Welcome".localized, alignment: .centered),
+                    //.subtitle("Start with ownCloud and add an account".localized, alignment: .centered),
+                    .button("Add account".localized, action: UIAction(handler: { [weak self] action in
+                        if let self = self {
+                            BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+                        }
 					}))
 				])
 

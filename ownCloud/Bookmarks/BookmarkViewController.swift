@@ -265,16 +265,18 @@ class BookmarkViewController: StaticTableViewController {
 						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
 					}
 				}
+            
+            
 
 				// Support for bookmark default URL
-				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
+				if let defaultURLString = defaultURLString {
 					self.bookmark?.url = URL(string: defaultURLString)
 
 					if bookmark != nil {
 						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
 					}
 				}
-
+            
 			case .edit:
 				// Fill UI
 				if bookmark != nil {
@@ -314,11 +316,40 @@ class BookmarkViewController: StaticTableViewController {
 				self.handleContinue()
 			}
 		}
+        
+        
+        let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
+            .text("Welcome".localized, style: .system(textStyle: .title1, weight: .semibold), alignment: .centered, cssSelectors: [.info]),
+            .image(UIImage(named: "AppIcon")!, size: CGSize(width: 128, height: 128))
+        ])
+/*
+        let tokenMessageView = ComposedMessageView(elements: [
+            .image(UIImage(named: "AppIcon")!, size: CGSize(width: 128, height: 128)),
+            .text("Welcome".localized, style: .system(textStyle: .body, weight: .semibold), alignment: .centered, cssSelectors: [.info])
+        ])*/
+        tokenMessageView.cssSelector = .info
+        tokenMessageView.backgroundView?.cssSelector = .info
+        tokenMessageView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+        tokenMessageView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
+
+        self.tableView.tableHeaderView = tokenMessageView
+        self.tableView.layoutTableHeaderView()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+    
+    var defaultURLString: String? {
+        /*
+        if let defaultURLString = StaticLoginProfile().classSetting(forOCClassSettingsKey: StaticLoginProfile.Key.url.settingsKey) as? String {
+            return defaultURLString
+        } else*/ if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
+            return defaultURLString
+        }
+        
+        return nil
+    }
 
 	// MARK: - View controller events
 	override func viewDidAppear(_ animated: Bool) {
