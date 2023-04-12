@@ -318,6 +318,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.delegate = self
 		sortBar?.sortMethod = sortMethod
+		sortBar?.itemLayout = clientContext?.itemLayout ?? .list
 		sortBar?.showSelectButton = true
 
 		if let sortBar {
