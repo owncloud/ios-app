@@ -159,21 +159,21 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				// Create data source from one drive
 				singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 				singleDriveDatasource?.filter = OCDataSourceComposition.itemFilter(withItemRetrieval: false, fromRecordFilter: { itemRecord in
-					if let drive = itemRecord?.item as? OCDrive {
-						if drive.identifier == itemControllerContext.drive?.identifier,
-						   drive.specialType == .space { // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
-							return true
-						}
+					if let drive = itemRecord?.item as? OCDrive,
+					   drive.identifier == itemControllerContext.drive?.identifier {
+						return true
 					}
 
 					return false
 				})
 
-				// Create combined data source from drive + additional items
-				driveSectionDataSource = OCDataSourceComposition(sources: [ singleDriveDatasource!, driveAdditionalItemsDataSource ])
+				if itemControllerContext.drive?.specialType == .space { // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
+					// Create combined data source from drive + additional items
+					driveSectionDataSource = OCDataSourceComposition(sources: [ singleDriveDatasource!, driveAdditionalItemsDataSource ])
 
-				// Create drive section from combined data source
-				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
+					// Create drive section from combined data source
+					driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
+				}
 			}
 
 			itemSectionDataSource = OCDataSourceComposition(sources: [contentsDataSource])
@@ -388,13 +388,17 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public func updateAdditionalDriveItems(from subscription: OCDataSourceSubscription) {
 		let snapshot = subscription.snapshotResettingChangeTracking(true)
 
-		if let core = clientContext?.core,
-		   let firstItemRef = snapshot.items.first,
-	  	   let itemRecord = try? subscription.source?.record(forItemRef: firstItemRef),
-		   let drive = itemRecord.item as? OCDrive,
-		   let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
+		guard let core = clientContext?.core,
+		      let firstItemRef = snapshot.items.first,
+		      let itemRecord = try? subscription.source?.record(forItemRef: firstItemRef),
+		      let drive = itemRecord.item as? OCDrive else { return }
+
+		driveQuota = drive.quota
+
+		guard drive.specialType == .space else { return } // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
+
+		if let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
 		   let descriptionResourceRequest = try? driveRepresentation.provideResourceRequest(.coverDescription) {
-			driveQuota = drive.quota
 
 			descriptionResourceRequest.lifetime = .singleRun
 			descriptionResourceRequest.changeHandler = { [weak self] (request, error, isOngoing, previousResource, newResource) in
