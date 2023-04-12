@@ -36,13 +36,19 @@ public extension UIViewController {
 		var triggers: [NavigationRevocationTrigger] = []
 		var events: [NavigationRevocationEvent] = []
 
-		if let bookmarkUUID = context.accountConnection?.bookmark.uuid {
-			events.append(.connectionClosed(bookmarkUUID: bookmarkUUID))
+		// Log.debug("Register revokation of view controller: \(self) \(self.navigationItem.titleLabelText ?? "?")")
 
-			if let drivesDataSource = context.core?.subscribedDrivesDataSource,
-			   let driveID = context.drive?.identifier as? OCDataItemReference {
-				let driveTrigger = NavigationRevocationTrigger(itemRemovalTriggerFor: drivesDataSource, itemRefs: [ driveID ], bookmarkUUID: bookmarkUUID)
-				triggers.append(driveTrigger)
+		if let bookmarkUUID = context.accountConnection?.bookmark.uuid {
+			if revocationTriggers.contains(.connectionClosed) {
+				events.append(.connectionClosed(bookmarkUUID: bookmarkUUID))
+			}
+
+			if revocationTriggers.contains(.driveRemoved) {
+				if let drivesDataSource = context.core?.subscribedDrivesDataSource,
+				   let driveID = context.drive?.identifier as? OCDataItemReference {
+					let driveTrigger = NavigationRevocationTrigger(itemRemovalTriggerFor: drivesDataSource, itemRefs: [ driveID ], bookmarkUUID: bookmarkUUID)
+					triggers.append(driveTrigger)
+				}
 			}
 		}
 
@@ -51,7 +57,13 @@ public extension UIViewController {
 
 			NavigationRevocationAction(triggeredBy: events, for: triggers, action: { [weak self, weak context, weak navigationRevocationHandler] event, action in
 				if let self = self, let event = event {
-					navigationRevocationHandler?.handleRevocation(event: event, context: context, for: self)
+					if let navigationRevocationHandler {
+						navigationRevocationHandler.handleRevocation(event: event, context: context, for: self)
+					} else {
+						Log.warning("navigation revocation triggered, but navigationRevocationHandler is gone")
+					}
+				} else {
+					Log.warning("navigation revocation triggered, but viewController is gone")
 				}
 			}).register(for: self, globally: true)
 		}

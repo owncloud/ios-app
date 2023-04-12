@@ -82,7 +82,10 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 	public func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController) {
 		if let history = sidebarContext.browserController?.history {
 			// Log.debug("Revoke view controller: \(viewController) \(viewController.navigationItem.titleLabelText)")
-			if let historyItem = history.item(for: viewController) {
+
+			// A view controller may appear more than once in history, so if a view controller is to be removed,
+			// make sure that all history items for it are removed
+			while let historyItem = history.item(for: viewController) {
 				history.remove(item: historyItem, completion: nil)
 			}
 		}
