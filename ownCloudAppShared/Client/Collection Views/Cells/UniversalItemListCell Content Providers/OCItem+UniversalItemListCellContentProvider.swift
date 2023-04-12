@@ -205,9 +205,11 @@ extension OCItem: UniversalItemListCellContentProvider {
 		}
 
 		let primaryLineSizeSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.primary])
+		primaryLineSizeSegment.insets = .zero
 		detailItems.append(primaryLineSizeSegment)
 
 		let secondaryLineDateSegment = SegmentViewItem(with: nil, title: lastModifiedLocalizedCompact, style: .plain, titleTextStyle: .footnote, lines: [.secondary])
+		secondaryLineDateSegment.insets = .zero
 		detailItems.append(secondaryLineDateSegment)
 
 		detailString += " - " + lastModifiedLocalized

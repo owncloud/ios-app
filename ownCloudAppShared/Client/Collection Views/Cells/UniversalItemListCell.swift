@@ -162,8 +162,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			let horizontalMargin: CGFloat = 10
 			let verticalMargin: CGFloat = 5
 			let iconTextMargin: CGFloat = 5
-			let titleDetailsSpacing: CGFloat = 3
-			let detailsDetailsSpacing: CGFloat = 0
+			let titleDetailsSpacing: CGFloat = 4
+			let detailsDetailsSpacing: CGFloat = 2
 
 			let titleAndDetailsHeight: CGFloat = useSecondarySegmentView ? 94 : 74
 
