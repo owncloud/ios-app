@@ -495,6 +495,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.collection, .sectionFooter], 	property: .stroke, value: sectionFooterColor),
 			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 
+			ThemeCSSRecord(selectors: [.collection, .selectionCheckmark], 			property: .fill,   value: cellStateSet.regular.tintColor),
+			ThemeCSSRecord(selectors: [.collection, .selectionCheckmark], 			property: .stroke, value: cellStateSet.regular.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.collection, .selected, .selectionCheckmark], 		property: .stroke,   value: UIColor.white),
+
 			// - Table View
 			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCollectionBackgroundColor),

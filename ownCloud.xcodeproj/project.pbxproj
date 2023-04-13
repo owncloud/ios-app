@@ -415,6 +415,7 @@
 		DCB1B99929D187B400BFF393 /* ThemeCSSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B99829D187B400BFF393 /* ThemeCSSButton.swift */; };
 		DCB2C05F250C1F9E001083CA /* BrandingClassSettingsSource.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */; };
 		DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */; };
+		DCB32FE829E704D600BFF393 /* SelectionCheckmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB32FE729E704D600BFF393 /* SelectionCheckmarkButton.swift */; };
 		DCB458ED2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCB458EE2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */; };
 		DCB459052604AD2A006A02AB /* SearchSegmentationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB459042604AD2A006A02AB /* SearchSegmentationTests.m */; };
@@ -1423,6 +1424,7 @@
 		DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrandingClassSettingsSource.m; sourceTree = "<group>"; };
 		DCB3256A2559989200058EEB /* generate_docs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = generate_docs.sh; sourceTree = "<group>"; };
 		DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */ = {isa = PBXFileReference; lastKnownFileType = text; path = ios_mdm_tables.adoc.tmpl; sourceTree = "<group>"; };
+		DCB32FE729E704D600BFF393 /* SelectionCheckmarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionCheckmarkButton.swift; sourceTree = "<group>"; };
 		DCB403EB262D9C35008CFE9E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
@@ -1549,7 +1551,6 @@
 		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE741DE29B8A85D00BFF393 /* BookmarkManagementContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManagementContext.swift; sourceTree = "<group>"; };
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -3207,6 +3208,7 @@
 				DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */,
 				DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */,
 				396BE4C92289500E00B254A9 /* RoundedLabel.swift */,
+				DCB32FE729E704D600BFF393 /* SelectionCheckmarkButton.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
 				3912208123436EB80026C290 /* SortMethod.swift */,
 				DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */,
@@ -3384,7 +3386,6 @@
 			children = (
 				DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */,
 				4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */,
-				DCE741DE29B8A85D00BFF393 /* BookmarkManagementContext.swift */,
 			);
 			path = Bookmarks;
 			sourceTree = "<group>";
@@ -4457,6 +4458,7 @@
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
 				DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */,
 				0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */,
+				DCB32FE829E704D600BFF393 /* SelectionCheckmarkButton.swift in Sources */,
 				DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */,
 				DC298C922934CF56009FA87F /* AccountConnectionErrorHandler.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,

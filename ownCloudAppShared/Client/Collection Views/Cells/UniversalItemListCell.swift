@@ -621,7 +621,40 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		backgroundConfiguration = backgroundConfig
+
+		// Multiselection in grid cell layout
+		if state.isEditing, cellStyle == .gridCell {
+			let checkmarkSize = CGSize(width: 24, height: 24)
+
+			if selectionCheckmarkView == nil {
+				let iconFrame = iconView.frame
+
+				selectionCheckmarkView = SelectionCheckmarkView(frame: CGRect(x: iconFrame.origin.x + ((iconFrame.size.width - checkmarkSize.width)/2.0), y: iconFrame.origin.y + ((iconFrame.size.height - checkmarkSize.height)/2.0), width: checkmarkSize.width, height: checkmarkSize.height))
+				selectionCheckmarkView?.translatesAutoresizingMaskIntoConstraints = false
+				selectionCheckmarkView?.setContentCompressionResistancePriority(.required, for: .vertical)
+				selectionCheckmarkView?.setContentCompressionResistancePriority(.required, for: .horizontal)
+			}
+
+			UIView.performWithoutAnimation {
+				if let selectionCheckmarkView, selectionCheckmarkView.superview == nil {
+					contentView.addSubview(selectionCheckmarkView)
+					contentView.addConstraints([
+						selectionCheckmarkView.widthAnchor.constraint(equalToConstant: checkmarkSize.width),
+						selectionCheckmarkView.heightAnchor.constraint(equalToConstant: checkmarkSize.height),
+						selectionCheckmarkView.centerXAnchor.constraint(equalTo: iconView.centerXAnchor),
+						selectionCheckmarkView.centerYAnchor.constraint(equalTo: iconView.centerYAnchor)
+					])
+				}
+
+				selectionCheckmarkView?.isSelected = isSelected
+			}
+		} else {
+			selectionCheckmarkView?.removeFromSuperview()
+			selectionCheckmarkView = nil
+		}
 	}
+
+	private var selectionCheckmarkView: SelectionCheckmarkView?
 
 	open override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		titleLabel.apply(css: collection.css, state: state.cssState, properties: [.stroke])
