@@ -68,6 +68,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	private var viewControllerUUID: UUID
 
+	private var coreConnectionStatusObservation : NSKeyValueObservation?
+
 	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false, emptyItemListIcon: UIImage? = nil, emptyItemListTitleLocalized: String? = nil, emptyItemListMessageLocalized: String? = nil) {
 		inQuery?.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
@@ -294,6 +296,17 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		// Update title
 		updateNavigationTitleFromContext()
+
+		// Observe connection status
+		if let core = itemControllerContext.core {
+			coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: .initial) { [weak self, weak core] (_, _) in
+				OnMainThread { [weak self, weak core] in
+					if let connectionStatus = core?.connectionStatus {
+						self?.coreConnectionStatus = connectionStatus
+					}
+				}
+			}
+		}
 	}
 
 	required public init?(coder: NSCoder) {
@@ -414,6 +427,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	var _actionProgressHandler : ActionProgressHandler?
 
+	// MARK: - Connection status
+	var coreConnectionStatus: OCCoreConnectionStatus? {
+		didSet {
+			if coreConnectionStatus != oldValue {
+				recomputeContentState()
+			}
+		}
+	}
+
 	// MARK: - Empty item list handling
 	func emptyActions() -> [OCAction]? {
 		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem, clientContext?.hasPermission(for: .addContent) == true else {
@@ -459,10 +481,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 						if self.query?.state == .targetRemoved {
 							self.contentState = .removed
-						} else if let numberOfItems = numberOfItems, numberOfItems > 0 {
+						} else if let numberOfItems, numberOfItems > 0 {
 							self.contentState = .hasContent
 							self.folderStatistics = snapshot?.specialItems?[.folderStatistics] as? OCStatistic
-						} else if (numberOfItems == nil) || ((self.query?.rootItem == nil) && (self.query != nil) && (self.query?.isCustom != true)) {
+						} else if (numberOfItems == nil) ||
+						          ((self.query != nil) && (self.query?.rootItem == nil) && (self.query?.isCustom != true)) ||
+						          ((self.query != nil) && (self.query?.state == .started)) ||
+						          ((self.query != nil) && (self.query?.state == .waitingForServerReply) && self.clientContext?.core?.connectionStatus == .online) {
 							self.contentState = .loading
 						} else {
 							self.contentState = .empty
