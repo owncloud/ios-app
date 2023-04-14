@@ -148,6 +148,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 	}
 
+	static func titleAndDetailsHeight(withSecondarySegment: Bool) -> CGFloat {
+		return withSecondarySegment ? 84 : 64
+	}
+
 	open func updateLayoutConstraints() {
 		if let cellConstraints {
 			NSLayoutConstraint.deactivate(cellConstraints)
@@ -165,7 +169,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			let titleDetailsSpacing: CGFloat = 4
 			let detailsDetailsSpacing: CGFloat = 2
 
-			let titleAndDetailsHeight: CGFloat = useSecondarySegmentView ? 94 : 74
+			let titleAndDetailsHeight: CGFloat = UniversalItemListCell.titleAndDetailsHeight(withSecondarySegment: useSecondarySegmentView)
 
 			titleLabel.numberOfLines = 2
 			titleLabel.textAlignment = .center

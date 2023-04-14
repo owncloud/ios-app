@@ -25,13 +25,17 @@ public enum ItemLayout {
 	case grid
 
 	// MARK: - Layout information
-	public func sectionCellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {
+	public func sectionCellLayout(for traitCollection: UITraitCollection, collectionView: UICollectionView? = nil) -> CollectionViewSection.CellLayout {
 		switch self {
 			case .list:
 				return .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
 			case .grid:
-				return .grid(itemWidthDimension: .absolute(140), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5))
+				let titleAndDetailsHeight = UniversalItemListCell.titleAndDetailsHeight(withSecondarySegment: true)
+
+				return .fillingGrid(minimumWidth: 130, computeHeight: { width in
+					return (width * 3 / 4) + titleAndDetailsHeight
+				}, cellSpacing: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), sectionInsets: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), center: true)
 		}
 	}
 
