@@ -655,9 +655,9 @@ public class ThemeCollection : NSObject {
 
 			// - TVG icon colors
 			ThemeCSSRecord(selectors: [.vectorImage, .folderColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .logoColor], 	property: .fill, value: logoFillColor ?? UIColor.white),
-			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 		property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .logoColor], 		property: .fill, value: logoFillColor ?? UIColor.white),
+			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 		property: .fill, value: iconSymbolColor),
 			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
 
 			// Side Bar

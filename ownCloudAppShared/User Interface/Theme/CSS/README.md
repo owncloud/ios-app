@@ -204,17 +204,16 @@ Example for a `Branding.plist` that fills the logo in the sidebar's navigation b
 
 See *Debugging selectors and matching* > *Usage in practice* above for how to determine the selectors of a view on screen.
 
-### Icon color CSS selectors
+#### Icon color CSS selectors
 Icon colors are now also configured via CSS selectors:
 
-TVG/Legacy Color  | CSS record value
+TVG/Legacy Color  | CSS selector string
 ------------------|------------------------------------
 `folderFillColor` | `vectorImage.folderColor.fill`
 `fileFillColor`   | `vectorImage.fileColor.fill`
 `logoFillColor`   | `vectorImage.logoColor.fill`
 `iconFillColor`   | `vectorImage.iconColor.fill`
 `symbolFillColor` | `vectorImage.symbolColor.fill`
-
 
 ### Reference
 #### Selectors
