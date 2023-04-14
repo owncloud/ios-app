@@ -654,11 +654,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.more, .favorite, .disabled],	property: .stroke, value: favoriteDisabledColor),
 
 			// - TVG icon colors
-			ThemeCSSRecord(selectors: [.vectorImage, .folderFillColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .fileFillColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .logoFillColor], 	property: .fill, value: logoFillColor ?? UIColor.white),
-			ThemeCSSRecord(selectors: [.vectorImage, .iconFillColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .symbolFillColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .folderColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .logoColor], 	property: .fill, value: logoFillColor ?? UIColor.white),
+			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
 
 			// Side Bar
 			// - Interface Style
@@ -726,11 +726,11 @@ public class ThemeCollection : NSObject {
 		if _iconColors == nil {
 			_iconColors = [:]
 
-			_iconColors?["folderFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .folderFillColor], for: nil)?.hexString()
-			_iconColors?["fileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .fileFillColor], for: nil)?.hexString()
-			_iconColors?["logoFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .logoFillColor], for: nil)?.hexString()
-			_iconColors?["iconFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .iconFillColor], for: nil)?.hexString()
-			_iconColors?["symbolFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .symbolFillColor], for: nil)?.hexString()
+			_iconColors?["folderFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .folderColor], for: nil)?.hexString()
+			_iconColors?["fileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .fileColor], for: nil)?.hexString()
+			_iconColors?["logoFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .logoColor], for: nil)?.hexString()
+			_iconColors?["iconFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .iconColor], for: nil)?.hexString()
+			_iconColors?["symbolFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .symbolColor], for: nil)?.hexString()
 		}
 
 		return _iconColors ?? [:]
@@ -738,11 +738,11 @@ public class ThemeCollection : NSObject {
 }
 
 extension ThemeCSSSelector {
-	static let folderFillColor = ThemeCSSSelector(rawValue: "folderFillColor")
-	static let fileFillColor = ThemeCSSSelector(rawValue: "fileFillColor")
-	static let logoFillColor = ThemeCSSSelector(rawValue: "logoFillColor")
-	static let iconFillColor = ThemeCSSSelector(rawValue: "iconFillColor")
-	static let symbolFillColor = ThemeCSSSelector(rawValue: "symbolFillColor")
+	static let folderColor = ThemeCSSSelector(rawValue: "folderColor")
+	static let fileColor = ThemeCSSSelector(rawValue: "fileColor")
+	static let logoColor = ThemeCSSSelector(rawValue: "logoColor")
+	static let iconColor = ThemeCSSSelector(rawValue: "iconColor")
+	static let symbolColor = ThemeCSSSelector(rawValue: "symbolColor")
 }
 
 extension ThemeCollection {
