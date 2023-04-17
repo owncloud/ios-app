@@ -76,19 +76,19 @@ extension Branding : BrandingInitialization {
 			],
 
 			.termsOfUseURL : [
-				.type         : OCClassSettingsMetadataType.urlString,
-				.label        : "Terms of use URL",
-				.description     : "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "Terms of use URL",
+				.description	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.themeJSONURL : [
-				.type         : OCClassSettingsMetadataType.urlString,
-				.label        : "URL to the Theme.json",
-				.description     : "URL to the instance Theme.json file, which can contain instance or app specific branding parameter.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "URL to the Theme.json",
+				.description	: "URL to the instance Theme.json file, which can contain instance or app specific branding parameter.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.sendFeedbackAddress : [
