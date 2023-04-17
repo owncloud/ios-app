@@ -1,6 +1,6 @@
 //
 //  OCThemeValues.m
-//  ownCloudSDK
+//  ownCloudAppFramework
 //
 //  Created by Matthias Hühne on 08.02.23.
 //  Copyright © 2023 ownCloud GmbH. All rights reserved.
@@ -20,8 +20,8 @@
 
 @interface OCThemeValues()
 {
-    NSDictionary<NSString *, id> *_common;
-    NSDictionary<NSString *, id> *_ios;
+	NSDictionary<NSString *, id> *_common;
+	NSDictionary<NSString *, id> *_ios;
 }
 
 @property(readonly,strong) NSDictionary<NSString *, id> *rawJSON;
@@ -39,83 +39,82 @@
 
 - (instancetype)initWithURL:(NSURL *)inURL core:(OCCore *)core
 {
-    if ((self = [super init]) != nil)
-    {
-        _url = inURL;
-        _core = core;
-    }
+	if ((self = [super init]) != nil)
+	{
+		_url = inURL;
+		_core = core;
+	}
 
-    return (self);
+	return (self);
 }
 
 #pragma mark - Retrieve theme values
 - (NSProgress *)retrieveThemeJSONWithCompletionHandler:(void(^)(NSError * _Nullable error))completionHandler
 {
-    OCHTTPRequest *request;
-    NSProgress *progress = nil;
+	OCHTTPRequest *request;
+	NSProgress *progress = nil;
 
-    if ((request = [OCHTTPRequest requestWithURL:self.url]) != nil)
-    {
-        progress = [self.core.connection sendRequest:request ephermalCompletionHandler:^(OCHTTPRequest *request, OCHTTPResponse *response, NSError *error) {
-            NSData *responseBody = response.bodyData;
+	if ((request = [OCHTTPRequest requestWithURL:self.url]) != nil)
+	{
+		progress = [self.core.connection sendRequest:request ephermalCompletionHandler:^(OCHTTPRequest *request, OCHTTPResponse *response, NSError *error) {
+			NSData *responseBody = response.bodyData;
 
-            if ((error == nil) && response.status.isSuccess && (responseBody!=nil))
-            {
-                NSDictionary<NSString *, id> *rawJSON;
+			if ((error == nil) && response.status.isSuccess && (responseBody!=nil))
+			{
+				NSDictionary<NSString *, id> *rawJSON;
 
-                if ((rawJSON = [NSJSONSerialization JSONObjectWithData:responseBody options:0 error:&error]) != nil)
-                {
-                    if ((rawJSON = OCTypedCast(rawJSON, NSDictionary)) != nil)
-                    {
-                        self->_rawJSON = rawJSON;
-                        self->_common = rawJSON[@"common"];
-                        self->_ios = rawJSON[@"ios"];
-                    }
-                    else
-                    {
-                        error = OCError(OCErrorResponseUnknownFormat);
-                    }
-                }
-            }
-            else
-            {
-                if (error == nil)
-                {
-                    error = response.status.error;
-                }
-            }
-            completionHandler(error);
-        }];
-    }
+				if ((rawJSON = [NSJSONSerialization JSONObjectWithData:responseBody options:0 error:&error]) != nil)
+				{
+					if ((rawJSON = OCTypedCast(rawJSON, NSDictionary)) != nil)
+					{
+						self->_rawJSON = rawJSON;
+						self->_common = rawJSON[@"common"];
+						self->_ios = rawJSON[@"ios"];
+					}
+					else
+					{
+						error = OCError(OCErrorResponseUnknownFormat);
+					}
+				}
+			}
+			else
+			{
+				if (error == nil)
+				{
+					error = response.status.error;
+				}
+			}
+			completionHandler(error);
+		}];
+	}
 
-    return (progress);
+	return (progress);
 }
 
 - (void)retrieveLogoWithChangeHandler:(OCResourceRequestChangeHandler)changeHandler
 {
-    OCResourceRequest *iconResourceRequest = [OCResourceRequestURLItem requestURLItem:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", _core.connection.bookmark.url, self.logo]] identifier:nil version:OCResourceRequestURLItem.daySpecificVersion structureDescription:@"icon" waitForConnectivity:YES changeHandler:changeHandler];
-    iconResourceRequest.lifetime = OCResourceRequestLifetimeSingleRun;
+	OCResourceRequest *iconResourceRequest = [OCResourceRequestURLItem requestURLItem:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", _core.connection.bookmark.url, self.logo]] identifier:nil version:OCResourceRequestURLItem.daySpecificVersion structureDescription:@"icon" waitForConnectivity:YES changeHandler:changeHandler];
+	iconResourceRequest.lifetime = OCResourceRequestLifetimeSingleRun;
 
-    OCResourceManager *resourceManager = self.core.vault.resourceManager;
-    [resourceManager startRequest:iconResourceRequest];
+	OCResourceManager *resourceManager = self.core.vault.resourceManager;
+	[resourceManager startRequest:iconResourceRequest];
 }
 
 #pragma mark - Common
 - (NSString *)logo
 {
-    return (OCTypedCast(_rawJSON[@"common"][@"logo"], NSString));
+	return (OCTypedCast(_rawJSON[@"common"][@"logo"], NSString));
 }
 
 - (NSString *)name
 {
-    return (OCTypedCast(_rawJSON[@"common"][@"name"], NSString));
+	return (OCTypedCast(_rawJSON[@"common"][@"name"], NSString));
 }
 
 - (NSString *)slogan
 {
-    return (OCTypedCast(_rawJSON[@"common"][@"slogan"], NSString));
+	return (OCTypedCast(_rawJSON[@"common"][@"slogan"], NSString));
 }
-
 
 @end
 

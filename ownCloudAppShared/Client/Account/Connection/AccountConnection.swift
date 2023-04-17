@@ -496,11 +496,11 @@ open class AccountConnection: NSObject {
 
 			if connectionStatus == .online {
 				// Connection switched to online - perform actions
-                if Branding.shared.themeJSONURL != nil {
-                    updateServerLogo()
-                } else {
-                    updateUserAvatar()
-                }
+				if Branding.shared.themeJSONURL != nil {
+					updateServerLogo()
+				} else {
+					updateUserAvatar()
+				}
 			}
 		}
 
@@ -529,28 +529,28 @@ open class AccountConnection: NSObject {
 			core?.vault.resourceManager?.start(avatarRequest)
 		}
 	}
-    
-    func updateServerLogo() {
-        guard let themeJSONURL = Branding.shared.themeJSONURL else { return }
-        
-        let themeValues = OCThemeValues(url: themeJSONURL, core: core!)
-        
-        themeValues.retrieveThemeJSON { error in
-            if error == nil {
-                themeValues.retrieveLogo { request, error, ongoing, previousResource, newResource in
-                    let bookmarkUUID = self.bookmark.uuid
-                    if !ongoing,
-                       let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
-                       let newResource = newResource as? OCViewProvider {
-                        bookmark.avatar = newResource
-                        OCBookmarkManager.shared.updateBookmark(bookmark)
-                    }
-                }
-            } else {
-                self.updateUserAvatar()
-            }
-        }
-    }
+
+	func updateServerLogo() {
+		guard let themeJSONURL = Branding.shared.themeJSONURL else { return }
+
+		let themeValues = OCThemeValues(url: themeJSONURL, core: core!)
+
+		themeValues.retrieveThemeJSON { error in
+			if error == nil {
+				themeValues.retrieveLogo { request, error, ongoing, previousResource, newResource in
+					let bookmarkUUID = self.bookmark.uuid
+					if !ongoing,
+					   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
+					   let newResource = newResource as? OCViewProvider {
+						bookmark.avatar = newResource
+						OCBookmarkManager.shared.updateBookmark(bookmark)
+					}
+				}
+			} else {
+				self.updateUserAvatar()
+			}
+		}
+	}
 
 	// MARK: - Inline Message Center
 	public var messageSelector : MessageSelector?

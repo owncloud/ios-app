@@ -1,6 +1,6 @@
 //
 //  OCThemeValues.h
-//  ownCloudSDK
+//  ownCloudAppFramework
 //
 //  Created by Matthias Hühne on 08.02.23.
 //  Copyright © 2023 ownCloud GmbH. All rights reserved.
