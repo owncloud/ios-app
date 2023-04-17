@@ -47,9 +47,9 @@ extension Branding : BrandingInitialization {
 			.canEditAccount : true,
 			.enableReviewPrompt : false
 
-			//			.profileDefinitions : [],
-			//			.themeGenericColors : [:],
-			//			.themeDefinitions : [:]
+//			.profileDefinitions : [],
+//			.themeGenericColors : [:],
+//			.themeDefinitions : [:]
 		], metadata: [
 			.documentationURL : [
 				.type 		: OCClassSettingsMetadataType.urlString,
@@ -59,98 +59,98 @@ extension Branding : BrandingInitialization {
 				.category	: "Branding"
 			],
 
-				.helpURL : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label		: "Help URL",
-					.description 	: "URL to get help for the app. Opened when selecting \"Help\" in the settings.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding"
-				],
+			.helpURL : [
+				.type 		: OCClassSettingsMetadataType.urlString,
+				.label		: "Help URL",
+				.description 	: "URL to get help for the app. Opened when selecting \"Help\" in the settings.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
+			],
 
-				.privacyURL : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label		: "Privacy URL",
-					.description 	: "URL to get privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding"
-				],
+			.privacyURL : [
+				.type 		: OCClassSettingsMetadataType.urlString,
+				.label		: "Privacy URL",
+				.description 	: "URL to get privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
+			],
 
-				.termsOfUseURL : [
-					.type         : OCClassSettingsMetadataType.urlString,
-					.label        : "Terms of use URL",
-					.description     : "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.termsOfUseURL : [
+				.type         : OCClassSettingsMetadataType.urlString,
+				.label        : "Terms of use URL",
+				.description     : "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
-				.themeJSONURL : [
-					.type         : OCClassSettingsMetadataType.urlString,
-					.label        : "URL to the Theme.json",
-					.description     : "URL to the instance Theme.json file, which can contain instance or app specific branding parameter.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.themeJSONURL : [
+				.type         : OCClassSettingsMetadataType.urlString,
+				.label        : "URL to the Theme.json",
+				.description     : "URL to the instance Theme.json file, which can contain instance or app specific branding parameter.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
-				.sendFeedbackAddress : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Feedback Email address",
-					.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.sendFeedbackAddress : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Feedback Email address",
+				.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.sendFeedbackURL : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Feedback URL",
-					.description	: "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.sendFeedbackURL : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Feedback URL",
+				.description	: "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.canAddAccount : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.label		: "Allow adding accounts",
-					.description	: "Controls whether the user can add accounts.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.canAddAccount : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow adding accounts",
+				.description	: "Controls whether the user can add accounts.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.canEditAccount : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.label		: "Allow editing accounts",
-					.description	: "Controls whether the user can edit accounts.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.canEditAccount : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow editing accounts",
+				.description	: "Controls whether the user can edit accounts.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.enableReviewPrompt : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.enableReviewPrompt : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.profileDefinitions : [
-					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.label		: "Profile definitions",
-					.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.profileDefinitions : [
+				.type 		: OCClassSettingsMetadataType.dictionaryArray,
+				.label		: "Profile definitions",
+				.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.themeGenericColors : [
-					.type 		: OCClassSettingsMetadataType.dictionary,
-					.description	: "Dictionary defining generic colors that can be used in the definitions.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.themeGenericColors : [
+				.type 		: OCClassSettingsMetadataType.dictionary,
+				.description	: "Dictionary defining generic colors that can be used in the definitions.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.themeDefinitions : [
-					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.description	: "Array of dictionaries, each specifying a theme.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				]
+			.themeDefinitions : [
+				.type 		: OCClassSettingsMetadataType.dictionaryArray,
+				.description	: "Array of dictionaries, each specifying a theme.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			]
 		])
 	}
 
@@ -188,7 +188,7 @@ extension BrandingImageName {
 extension Branding {
 	public var isBranded: Bool {
 		return (organizationName != nil) && // Organization name must be set
-		((profileDefinitions?.count ?? 0) > 0) // At least one profile needs to have been defined
+			((profileDefinitions?.count ?? 0) > 0) // At least one profile needs to have been defined
 	}
 
 	public var documentationURL : URL? {
@@ -296,7 +296,7 @@ extension Branding {
 			OCExtensionManager.shared.addExtension(themeStyleExtension)
 			isDefault = false
 		}
-		
+
 		return !isDefault // only true if there's at least one theme
 	}
 }
