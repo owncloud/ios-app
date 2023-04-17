@@ -159,7 +159,7 @@ extension Branding : BrandingInitialization {
 		registerLegacyKeyPath("URLs.Documentation",	forClassSettingsKey: .documentationURL)
 		registerLegacyKeyPath("URLs.Help",		forClassSettingsKey: .helpURL)
 		registerLegacyKeyPath("URLs.Privacy",		forClassSettingsKey: .privacyURL)
-		registerLegacyKeyPath("URLs.TermsOfUse",    forClassSettingsKey: .termsOfUseURL)
+		registerLegacyKeyPath("URLs.TermsOfUse",	forClassSettingsKey: .termsOfUseURL)
 
 		registerLegacyKeyPath("feedbackMail",		forClassSettingsKey: .sendFeedbackAddress)
 
