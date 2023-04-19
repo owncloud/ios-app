@@ -122,21 +122,31 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 			if condition.fulfilled == true {
 				// Empty
 				let messageView = ComposedMessageView(elements: [
-					.image(UIImage(named: "AppIcon")!, size: CGSize(width: 128, height: 128)),
+					.image(UIImage(named: "AppIcon")!.withRoundedCorners(radius: 4)!, size: CGSize(width: 128, height: 128)),
                     .title("Welcome".localized, alignment: .centered),
-                    //.subtitle("Start with ownCloud and add an account".localized, alignment: .centered),
                     .button("Add account".localized, action: UIAction(handler: { [weak self] action in
                         if let self = self {
                             BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
                         }
-					}))
+					})),
+                    .button("Settings".localized ,action: UIAction(handler: { [weak self] action in
+                        if let self = self {
+                            self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+                        }
+                    }), cssSelectors: [.success])
 				])
 
 				let rootView = ThemeCSSView(withSelectors: [.modal])
 				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
 
+                
 				let messageViewController = UIViewController()
 				messageViewController.view = rootView
+                let toolbar = UIToolbar()
+                toolbar.tintColor = .red
+                rootView.addSubview(toolbar)
+                
+               // let navigationController = UINavigationController(rootViewController: messageViewController)
 
 				self?.contentViewController = messageViewController
 			} else {

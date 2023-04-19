@@ -317,10 +317,9 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
         
-        
         let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
-            .text("Welcome".localized, style: .system(textStyle: .title1, weight: .semibold), alignment: .centered, cssSelectors: [.info]),
-            .image(UIImage(named: "AppIcon")!, size: CGSize(width: 128, height: 128))
+            .text("Please enter your Server URL".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+            .image(UIImage(named: "AppIcon")!.withRoundedCorners(radius: 4)!, size: CGSize(width: 64, height: 64))
         ])
 /*
         let tokenMessageView = ComposedMessageView(elements: [
