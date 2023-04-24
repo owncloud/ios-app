@@ -3472,7 +3472,6 @@
 					233BDE9B204FEFE500C06732 = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -4825,7 +4824,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(APP_VERSION)";
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = B6X8BT7KVK;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
@@ -4853,11 +4852,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(APP_VERSION)";
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = B6X8BT7KVK;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
@@ -4871,7 +4869,7 @@
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
