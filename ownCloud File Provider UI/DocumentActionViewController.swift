@@ -36,7 +36,10 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		super.viewDidLoad()
 
 		ThemeStyle.registerDefaultStyles()
-		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
+		// Initially apply theme based on light / dark mode
+		ThemeStyle.considerAppearanceUpdate()
+
 		self.cssSelector = .modal
 
 		CollectionViewCellProvider.registerStandardImplementations()
@@ -115,7 +118,6 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		OCCoreManager.shared.requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
 			guard let self = self else {
 				// DocumentActionViewController vanished - and .complete() with it - return core immediately
-
 				if let bookmark = core?.bookmark {
 					OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 				}
@@ -129,6 +131,8 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 				guard let item = databaseItem else { return }
 				guard let core = self.core else { return }
 				var triedConnecting = false
+
+				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
 
 				self.coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (_, _) in
 					guard let self = self else { return }

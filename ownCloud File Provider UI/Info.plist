@@ -42,6 +42,8 @@
 	<string>group.com.owncloud.ios-app</string>
 	<key>OCAppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
+	<key>OCAppComponentIdentifier</key>
+	<string>fileProviderUIExtension</string>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
 </dict>

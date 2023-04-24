@@ -122,21 +122,21 @@ extension OCItem: UniversalItemListCellContentProvider {
 		if type == .file {
 			switch cloudStatus {
 				case .cloudOnly:
-					cloudStatusIcon = UIImage(named: "cloud-only")
+					cloudStatusIcon = OCItem.cloudOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
 
 				case .localCopy:
-					cloudStatusIcon = (downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
+					cloudStatusIcon = (downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? OCItem.cloudAvailableOfflineStatusIcon : nil
 
 				case .locallyModified, .localOnly:
-					cloudStatusIcon = UIImage(named: "cloud-local-only")
+					cloudStatusIcon = OCItem.cloudLocalOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
 			}
 		} else {
 			if availableOfflineCoverage == .none {
 				cloudStatusIcon = nil
 			} else {
-				cloudStatusIcon = UIImage(named: "cloud-available-offline")
+				cloudStatusIcon = OCItem.cloudAvailableOfflineStatusIcon
 			}
 		}
 
@@ -183,13 +183,13 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Sharing
 		if isSharedWithUser || sharedByUserOrGroup {
-			let segmentItem = SegmentViewItem(with: UIImage(named: "group")?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
 
 		if sharedByPublicLink {
-			let segmentItem = SegmentViewItem(with: UIImage(named: "link")?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
@@ -312,4 +312,18 @@ extension OCItem {
 			}
 		}))
 	}
+}
+
+extension OCItem {
+	static func loadIcon(named name: String) -> UIImage? {
+		return UIImage(named: name, in: Bundle.sharedAppBundle, with: nil)
+	}
+
+	public static var linkIcon: UIImage? = { return loadIcon(named: "link") }()
+	public static var groupIcon: UIImage? = { return loadIcon(named: "group") }()
+
+	public static var cloudOnlyStatusIcon: UIImage? = { return loadIcon(named: "cloud-only") }()
+	public static var cloudLocalOnlyStatusIcon: UIImage? = { return loadIcon(named: "cloud-local-only") }()
+	public static var cloudAvailableOfflineStatusIcon: UIImage? = { return loadIcon(named: "cloud-available-offline") }()
+	public static var cloudUnavailableOfflineStatusIcon: UIImage? = { return loadIcon(named: "cloud-unavailable-offline") }()
 }

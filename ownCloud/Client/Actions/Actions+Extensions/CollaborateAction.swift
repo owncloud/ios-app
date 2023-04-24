@@ -50,6 +50,6 @@ class CollaborateAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(named: "group")?.withRenderingMode(.alwaysTemplate)
+		return OCItem.groupIcon?.withRenderingMode(.alwaysTemplate)
 	}
 }

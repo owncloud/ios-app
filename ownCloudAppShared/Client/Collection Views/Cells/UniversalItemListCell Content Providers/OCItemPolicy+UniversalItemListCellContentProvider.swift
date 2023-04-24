@@ -45,7 +45,7 @@ extension OCItemPolicy: UniversalItemListCellContentProvider {
 			breadcrumbSegment.insets.leading = 0
 			}
 
-			let availableOfflineInfoSegment = SegmentViewItem(with: UIImage(named: "cloud-available-offline"), title: "", style: .plain, titleTextStyle: .footnote)
+			let availableOfflineInfoSegment = SegmentViewItem(with: OCItem.cloudAvailableOfflineStatusIcon, title: "", style: .plain, titleTextStyle: .footnote)
 			availableOfflineInfoSegment.insets = .zero
 			availableOfflineInfoSegment.insets.trailing = 5
 			availableOfflineInfoSegment.iconTitleSpacing = 3
