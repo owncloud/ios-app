@@ -24,7 +24,7 @@ class CollaborateAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.collaborate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Sharing".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem, .moreItem, .moreDetailItem] }
 	override class var keyCommand : String? { return "S" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -39,13 +39,13 @@ class CollaborateAction: Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count == 1, let item = context.items.first, let viewController = context.viewController, let core = self.core else {
+		guard context.items.count == 1, let item = context.items.first, let viewController = context.viewController, let clientContext = context.clientContext else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
-		let groupSharingController = GroupSharingTableViewController(core: core, item: item)
-		let navigationController = ThemeNavigationController(rootViewController: groupSharingController)
+		let sharingViewController = SharingViewController(clientContext: clientContext, item: item)
+		let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 		viewController.present(navigationController, animated: true)
 	}
 

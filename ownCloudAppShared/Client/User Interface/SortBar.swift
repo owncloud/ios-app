@@ -233,7 +233,7 @@ public class SortBar: ThemeCSSView {
 	}
 
 	@objc private func toggleDisplayMode() {
-		var newItemLayout: ItemLayout = (itemLayout == .grid) ? .list : .grid
+		let newItemLayout: ItemLayout = (itemLayout == .grid) ? .list : .grid
 
 		itemLayout = newItemLayout
 		delegate?.sortBar(self, itemLayout: newItemLayout)

@@ -552,8 +552,8 @@ extension Action : OCClassSettingsSupport {
 
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
-			.allowedActions : [],
-			.disallowedActions : []
+			.allowedActions : [] as [String],
+			.disallowedActions : [] as [String]
 		]
 	}
 

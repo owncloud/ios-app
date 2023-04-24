@@ -500,6 +500,13 @@ public class ThemeCollection : NSObject {
 
 			ThemeCSSRecord(selectors: [.collection, .selected, .selectionCheckmark], 		property: .stroke,   value: UIColor.white),
 
+			ThemeCSSRecord(selectors: [.grouped, .collection],  	   		property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection],    		property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .sectionHeader],  	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .cell, .action],  	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .sectionHeader], property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .cell, .action], property: .fill,   value: cellStateSet.regular.backgroundColor),
+
 			// - Table View
 			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCollectionBackgroundColor),
@@ -529,6 +536,10 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.table, .label, .secondary], 		property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .primary],    	property: .stroke, value: cellStateSet.highlighted.labelColor),
 			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .secondary], 	property: .stroke, value: cellStateSet.highlighted.secondaryLabelColor),
+
+			// - Section titles
+			ThemeCSSRecord(selectors: [.sectionHeader, .mediumTitle, .label],	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.sectionHeader, .smallTitle, .label],	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 
 			// - Accessories
 			ThemeCSSRecord(selectors: [.accessory], 			property: .stroke, value: cellStateSet.regular.secondaryLabelColor),

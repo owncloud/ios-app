@@ -36,57 +36,31 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	var bottomBarContainer: UIView = UIView()
-	var selectButton: UIButton = UIButton()
-	var cancelButton: UIButton = UIButton()
-	var promptLabel: UILabel = UILabel()
+	var bottomButtonBar: BottomButtonBar?
 	var topSeparatorLine: UIView = ThemeCSSView(withSelectors: [.separator])
-	var bottomSeparatorLine: UIView = ThemeCSSView(withSelectors: [.separator])
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		let showCancelButton = locationPicker.headerView != nil
 
-		bottomBarContainer.translatesAutoresizingMaskIntoConstraints = false
-		selectButton.translatesAutoresizingMaskIntoConstraints = false
-		cancelButton.translatesAutoresizingMaskIntoConstraints = false
-		promptLabel.translatesAutoresizingMaskIntoConstraints = false
+		bottomButtonBar = BottomButtonBar(prompt: locationPicker.selectPrompt, selectButtonTitle: locationPicker.selectButtonTitle, cancelButtonTitle: "Cancel".localized, hasCancelButton: showCancelButton, selectAction: UIAction(handler: { [weak self] _ in
+			self?.chooseCurrentLocation()
+		}), cancelAction: UIAction(handler: { [weak self] _ in
+			self?.cancel()
+		}))
+
 		topSeparatorLine.translatesAutoresizingMaskIntoConstraints = false
-		bottomSeparatorLine.translatesAutoresizingMaskIntoConstraints = false
 
-		var selectButtonConfig = UIButton.Configuration.borderedProminent()
-		selectButtonConfig.title = locationPicker.selectButtonTitle
-		selectButtonConfig.cornerStyle = .large
-		selectButton.configuration = selectButtonConfig
+		guard let bottomButtonBar else { return }
 
-		selectButton.addTarget(self, action: #selector(chooseCurrentLocation), for: .primaryActionTriggered)
-
-		if showCancelButton {
-			var cancelButtonConfig = UIButton.Configuration.bordered()
-			cancelButtonConfig.title = "Cancel".localized
-			cancelButtonConfig.cornerStyle = .large
-			cancelButton.configuration = cancelButtonConfig
-			cancelButton.addTarget(self, action: #selector(cancel), for: .primaryActionTriggered)
-
-			bottomBarContainer.addSubview(cancelButton)
-		}
-
-		promptLabel.text = locationPicker.selectPrompt
-
-		bottomBarContainer.addSubview(selectButton)
-		bottomBarContainer.addSubview(promptLabel)
-		bottomBarContainer.addSubview(bottomSeparatorLine)
-		view.addSubview(bottomBarContainer)
+		view.addSubview(bottomButtonBar)
 
 		var constraints: [NSLayoutConstraint] = []
-		var leadingButtonAnchor = selectButton.leadingAnchor
 
 		if let headerView = locationPicker.headerView {
 			headerView.translatesAutoresizingMaskIntoConstraints = false
 			view.addSubview(headerView)
-
-			leadingButtonAnchor = cancelButton.leadingAnchor
 
 			headerView.addSubview(topSeparatorLine)
 
@@ -98,30 +72,14 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 				topSeparatorLine.leftAnchor.constraint(equalTo: headerView.leftAnchor),
 				topSeparatorLine.rightAnchor.constraint(equalTo: headerView.rightAnchor),
 				topSeparatorLine.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
-				topSeparatorLine.heightAnchor.constraint(equalToConstant: 1),
-
-				cancelButton.trailingAnchor.constraint(equalTo: selectButton.leadingAnchor, constant: -15),
-				cancelButton.centerYAnchor.constraint(equalTo: selectButton.centerYAnchor)
+				topSeparatorLine.heightAnchor.constraint(equalToConstant: 1)
 			])
 		}
 
 		constraints.append(contentsOf: [
-			bottomBarContainer.leftAnchor.constraint(equalTo: view.leftAnchor),
-			bottomBarContainer.rightAnchor.constraint(equalTo: view.rightAnchor),
-			bottomBarContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-			promptLabel.leadingAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-			promptLabel.trailingAnchor.constraint(lessThanOrEqualTo: leadingButtonAnchor, constant: -20),
-			promptLabel.centerYAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.centerYAnchor),
-
-			selectButton.trailingAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-			selectButton.topAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.topAnchor, constant: 20),
-			selectButton.bottomAnchor.constraint(equalTo: bottomBarContainer.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-
-			bottomSeparatorLine.leftAnchor.constraint(equalTo: bottomBarContainer.leftAnchor),
-			bottomSeparatorLine.rightAnchor.constraint(equalTo: bottomBarContainer.rightAnchor),
-			bottomSeparatorLine.topAnchor.constraint(equalTo: bottomBarContainer.topAnchor),
-			bottomSeparatorLine.heightAnchor.constraint(equalToConstant: 1)
+			bottomButtonBar.leftAnchor.constraint(equalTo: view.leftAnchor),
+			bottomButtonBar.rightAnchor.constraint(equalTo: view.rightAnchor),
+			bottomButtonBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		])
 
 		NSLayoutConstraint.activate(constraints)
@@ -198,7 +156,7 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 				}
 			}
 
-			selectButton.isEnabled = validTargetLocation
+			bottomButtonBar?.selectButton.isEnabled = validTargetLocation
 		}
 	}
 
@@ -219,7 +177,9 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 	func constraintsForEmbedding(contentView: UIView) -> [NSLayoutConstraint] {
 		var defaultAnchorSet = view.defaultAnchorSet
 
-		defaultAnchorSet.bottomAnchor = bottomBarContainer.topAnchor
+		if let bottomButtonBar {
+			defaultAnchorSet.bottomAnchor = bottomButtonBar.topAnchor
+		}
 
 		if let headerView = locationPicker.headerView {
 			defaultAnchorSet.topAnchor = headerView.bottomAnchor

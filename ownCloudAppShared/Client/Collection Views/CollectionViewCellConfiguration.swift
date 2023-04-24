@@ -24,6 +24,7 @@ open class CollectionViewCellStyle: NSObject {
 		case header
 		case footer
 		case tableCell
+		case tableLine
 		case gridCell
 		case fillSpace
 		case sideBar

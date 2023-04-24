@@ -72,7 +72,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 
 		var sectionsToAdd: [CollectionViewSection] = []
 
-		if hasByMeSection, let byMeDataSource = clientContext?.core?.sharedByMeDataSource {
+		if hasByMeSection, let byMeDataSource = clientContext?.core?.sharedByMeGroupedDataSource {
 			sharedByMeSection = buildSection(identifier: "byMe", titled: "Shared by me".localized, contentDataSource: byMeDataSource)
 			sectionsToAdd.append(sharedByMeSection!)
 

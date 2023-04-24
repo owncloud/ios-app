@@ -231,7 +231,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	var niHidesBackButton: Bool = false
 
 	func injectIntoNavigationItem() {
-		if !niInjected, let targetNavigationItem = targetNavigationItem {
+		if !niInjected, let targetNavigationItem {
 			// Store content
 			niHidesBackButton = targetNavigationItem.hidesBackButton
 

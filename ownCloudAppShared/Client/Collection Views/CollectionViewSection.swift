@@ -25,7 +25,7 @@ public extension OCDataItemType {
 
 public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	public enum CellLayout {
-		case list(appearance: UICollectionLayoutListConfiguration.Appearance, headerMode: UICollectionLayoutListConfiguration.HeaderMode? = nil, headerTopPadding : CGFloat? = nil, footerMode: UICollectionLayoutListConfiguration.FooterMode? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
+		case list(appearance: UICollectionLayoutListConfiguration.Appearance, headerMode: UICollectionLayoutListConfiguration.HeaderMode? = nil, headerTopPadding: CGFloat? = nil, footerMode: UICollectionLayoutListConfiguration.FooterMode? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case fullWidth(itemHeightDimension: NSCollectionLayoutDimension, groupHeightDimension: NSCollectionLayoutDimension, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case sideways(item: NSCollectionLayoutItem? = nil, groupSize: NSCollectionLayoutSize? = nil, innerInsets : NSDirectionalEdgeInsets? = nil, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil, orthogonalScrollingBehaviour: UICollectionLayoutSectionOrthogonalScrollingBehavior = .continuousGroupLeadingBoundary)
 		case grid(itemWidthDimension: NSCollectionLayoutDimension, itemHeightDimension: NSCollectionLayoutDimension, contentInsets: NSDirectionalEdgeInsets? = nil)
@@ -141,7 +141,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					}
 
 					let layoutSection = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-					if let contentInsets = contentInsets {
+					if let contentInsets {
 						layoutSection.contentInsets = contentInsets
 					}
 					return layoutSection
@@ -193,18 +193,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					section.interGroupSpacing = 0
 
 					return section
-//					let itemSize = NSCollectionLayoutSize(widthDimension: itemWidthDimension,
-//									     heightDimension: .fractionalHeight(1.0))
-//					let item = NSCollectionLayoutItem(layoutSize: itemSize)
-//					item.contentInsets = contentInsets ?? NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-//
-//					let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-//									      heightDimension: itemHeightDimension)
-//					let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-//											 subitems: [item])
-//
-//					let section = NSCollectionLayoutSection(group: group)
-//					return section
 
 				case .fillingGrid(let minimumWidth, let maximumWidth, let computeHeight, let cellInsets, let sectionInsets, let center):
 					let effectiveContentSize = layoutEnvironment.container.effectiveContentSize
@@ -213,11 +201,13 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					let sectionInsets = sectionInsets ?? .zero
 					var groupInsets: NSDirectionalEdgeInsets = .zero
 
-					Log.debug("GRID: Available width: \(availableWidth) - contentSize: \(effectiveContentSize)")
-
 					// Determine item size depending on width
 					var totalItemWidth = minimumWidth + cellInsets.leading + cellInsets.trailing
 					var maxItemCount = floor(availableWidth / totalItemWidth)
+
+					if maxItemCount < 1 {
+						maxItemCount = 1
+					}
 
 					if let maximumWidth, maximumWidth > minimumWidth {
 						let maxTotalWidth = floor(availableWidth / maxItemCount)
@@ -236,8 +226,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					}
 
 					let itemHeight = computeHeight(totalItemWidth - cellInsets.leading - cellInsets.trailing) + cellInsets.top + cellInsets.bottom
-
-					Log.debug("GRID: Section insets: \(sectionInsets) - itemWidth: \(totalItemWidth) - itemHeight: \(itemHeight)")
 
 					// Put layout together
 					let itemWidthDimension: NSCollectionLayoutDimension = .absolute(totalItemWidth)
@@ -684,7 +672,11 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	}
 
 	// MARK: - Supplementary items
-	public var boundarySupplementaryItems: [CollectionViewSupplementaryItem]?
+	public var boundarySupplementaryItems: [CollectionViewSupplementaryItem]? {
+		didSet {
+			collectionViewController?.updateCellLayout(animated: _animateCellLayoutChange)
+		}
+	}
 
 	// MARK: - Section layout
 	open func provideCollectionLayoutSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
@@ -720,4 +712,9 @@ extension CollectionViewSection {
 			_animateCellLayoutChange = animateCellLayoutChange
 		}
 	}
+}
+
+public extension NSDirectionalEdgeInsets {
+	// CollectionViewSection insets for .insetGrouped sections
+	static let insetGroupedSectionInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 20)
 }

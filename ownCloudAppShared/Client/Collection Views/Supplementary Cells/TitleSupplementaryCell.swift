@@ -20,6 +20,8 @@ import UIKit
 
 public extension CollectionViewSupplementaryItem.ElementKind {
 	static let title = "title"
+	static let mediumTitle = "mediumTitle"
+	static let smallTitle = "smallTitle"
 }
 
 class TitleSupplementaryCell: UICollectionReusableView, Themeable {
@@ -33,6 +35,51 @@ class TitleSupplementaryCell: UICollectionReusableView, Themeable {
 
 	required init?(coder: NSCoder) {
 		fatalError()
+	}
+
+	var elementKind: CollectionViewSupplementaryItem.ElementKind = .title {
+		didSet {
+			updateCSSSelectors()
+
+			if themeRegistered {
+				applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
+			}
+		}
+	}
+
+	var itemStyle: ThemeItemStyle {
+		switch elementKind {
+			case .smallTitle:
+				return .system(textStyle: .footnote, weight: .regular)
+
+			case .mediumTitle:
+				return .system(textStyle: .subheadline, weight: .bold)
+
+			default: // case .title:
+				return .system(textStyle: .title3, weight: .bold)
+		}
+	}
+
+	func updateCSSSelectors() {
+		cssSelectors = [
+			.sectionHeader,
+			ThemeCSSSelector(rawValue: elementKind)
+		]
+	}
+
+	var text: String? {
+		didSet {
+			var transformedText = text
+
+			switch elementKind {
+				case .mediumTitle, .smallTitle:
+					transformedText = transformedText?.uppercased()
+
+				default: break
+			}
+
+			label?.text = transformedText
+		}
 	}
 
 	func configure() {
@@ -53,7 +100,7 @@ class TitleSupplementaryCell: UICollectionReusableView, Themeable {
 			])
 		}
 
-		cssSelector = .sectionHeader
+		updateCSSSelectors()
 	}
 
 	private var themeRegistered = false
@@ -69,7 +116,7 @@ class TitleSupplementaryCell: UICollectionReusableView, Themeable {
 
 	// MARK: - Themeing
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		label?.applyThemeCollection(collection, itemStyle: .system(textStyle: .title3, weight: .bold))
+		label?.applyThemeCollection(collection, itemStyle: itemStyle)
 		backgroundColor = collection.css.getColor(.fill, for: self)
 	}
 
@@ -81,29 +128,55 @@ class TitleSupplementaryCell: UICollectionReusableView, Themeable {
 
 	// MARK: - Registration
 	static func registerSupplementaryCellProvider() {
-		let supplementaryCellRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryCell>(elementKind: CollectionViewSupplementaryItem.ElementKind.title) { supplementaryView, elementKind, indexPath in
+		let elementKinds: [CollectionViewSupplementaryItem.ElementKind] = [
+			.title,
+			.mediumTitle,
+			.smallTitle
+		]
+
+		for elementKind in elementKinds {
+			let supplementaryCellRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryCell>(elementKind: elementKind) { supplementaryView, elementKind, indexPath in
+				supplementaryView.elementKind = elementKind
+			}
+
+			CollectionViewSupplementaryCellProvider.register(CollectionViewSupplementaryCellProvider(for: elementKind, with: { collectionView, section, supplementaryItem, indexPath in
+				let cellView = collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryCellRegistration, for: indexPath)
+
+				cellView.text = supplementaryItem.content as? String
+
+				return cellView
+			}))
 		}
-
-		CollectionViewSupplementaryCellProvider.register(CollectionViewSupplementaryCellProvider(for: .title, with: { collectionView, section, supplementaryItem, indexPath in
-			let cellView = collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryCellRegistration, for: indexPath)
-
-			cellView.label?.text = supplementaryItem.content as? String
-
-			return cellView
-		}))
 	}
 }
 
 public extension CollectionViewSupplementaryItem {
-	static func title(_ title: String, pinned: Bool = false) -> CollectionViewSupplementaryItem {
-	        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(30))
-		let supplementaryItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: .title, alignment: .top)
+	static func title(_ title: String, elementKind: ElementKind, estimatedHeight: CGFloat, pinned: Bool) -> CollectionViewSupplementaryItem {
+	        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(estimatedHeight))
+		let supplementaryItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: elementKind, alignment: .top)
 
 		if pinned {
 			supplementaryItem.pinToVisibleBounds = true
-			supplementaryItem.zIndex = 2
+			supplementaryItem.zIndex = 200
 		}
 
 		return CollectionViewSupplementaryItem(supplementaryItem: supplementaryItem, content: title)
 	}
+
+	static func title(_ title: String, pinned: Bool = false) -> CollectionViewSupplementaryItem {
+		return .title(title, elementKind: .title, estimatedHeight: 24, pinned: pinned)
+	}
+
+	static func mediumTitle(_ title: String, pinned: Bool = false) -> CollectionViewSupplementaryItem {
+		return .title(title, elementKind: .mediumTitle, estimatedHeight: 21, pinned: pinned)
+	}
+
+	static func smallTitle(_ title: String) -> CollectionViewSupplementaryItem {
+		return .title(title, elementKind: .smallTitle, estimatedHeight: 19, pinned: false)
+	}
+}
+
+extension ThemeCSSSelector {
+	static let mediumTitle = ThemeCSSSelector(rawValue: CollectionViewSupplementaryItem.ElementKind.mediumTitle)
+	static let smallTitle = ThemeCSSSelector(rawValue: CollectionViewSupplementaryItem.ElementKind.smallTitle)
 }

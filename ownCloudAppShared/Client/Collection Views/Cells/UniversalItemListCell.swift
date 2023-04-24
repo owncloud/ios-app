@@ -62,6 +62,27 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			onlyFields = content.onlyFields
 		}
 
+		init(with title: Title, detailText: String? = nil, icon: Icon? = nil, accessories: [UICellAccessory]? = nil) {
+			self.title = title
+
+			if let detailText {
+				details = [
+					.detailText(detailText)
+				]
+			}
+
+			self.icon = icon
+			self.accessories = accessories
+		}
+
+		convenience init(with title: Title, detailText: String? = nil, iconSymbolName: String? = nil, accessories: [UICellAccessory]? = nil) {
+			var icon: Icon?
+			if let iconSymbolName, let iconImage = OCSymbol.icon(forSymbolName: iconSymbolName) {
+				icon = .icon(image: iconImage)
+			}
+			self.init(with: title, detailText: detailText, icon: icon, accessories: accessories)
+		}
+
 		public enum Title {
 			case text(_ string: String)
 			case file(name: String)
@@ -75,6 +96,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			case drive
 			case mime(type: String)
 			case resource(request: OCResourceRequest)
+			case icon(image: UIImage)
 		}
 
 		var title: Title?
@@ -159,6 +181,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		var constraints: [NSLayoutConstraint]
+		var truncationMode: SegmentView.TruncationMode = .none
 
 		if cellStyle == .gridCell {
 			let useSecondarySegmentView = true
@@ -211,13 +234,49 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 					detailSegmentSecondaryView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor)
 				])
 			}
-		} else {
+		} else if cellStyle == .header {
+			let horizontalMargin : CGFloat = 15
+			let verticalLabelMargin : CGFloat = 4
+			let verticalIconMargin : CGFloat = 15
+			let spacing : CGFloat = 15
+			let iconViewHeight : CGFloat = 80
+
+			titleLabel.numberOfLines = 1
+			titleLabel.textAlignment = .left
+			titleLabel.lineBreakMode = .byTruncatingTail
+			titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+			titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+			titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+
+			if hasSecondaryDetailView {
+				detailSegmentSecondaryView?.removeFromSuperview()
+				hasSecondaryDetailView = false
+			}
+
+			constraints = [
+				iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
+				iconView.widthAnchor.constraint(equalToConstant: floor(iconViewHeight / 0.75)), // 4:3
+				iconView.heightAnchor.constraint(equalToConstant: iconViewHeight),
+				iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
+				iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
+
+				titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+				detailSegmentPrimaryView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+				detailSegmentPrimaryView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+
+				titleLabel.topAnchor.constraint(equalTo: iconView.topAnchor, constant: 0),
+				detailSegmentPrimaryView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: verticalLabelMargin),
+
+				separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+			]
+		} else if cellStyle == .tableLine {
 			let horizontalMargin : CGFloat = 15
 			let verticalLabelMargin : CGFloat = 10
 			let verticalIconMargin : CGFloat = 10
 			let spacing : CGFloat = 15
-			let iconViewWidth : CGFloat = 40
-			let verticalLabelMarginFromCenter : CGFloat = 1
+			let iconViewWidth : CGFloat = floor(iconSize.width / 2)
+			let titleDetailSpacing: CGFloat = 15
 
 			titleLabel.numberOfLines = 1
 			titleLabel.textAlignment = .left
@@ -238,6 +297,44 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 				iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
+				titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: detailSegmentPrimaryView.leadingAnchor, constant: -titleDetailSpacing),
+				detailSegmentPrimaryView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -horizontalMargin),
+
+				titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
+				titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
+				detailSegmentPrimaryView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+
+				separatorLayoutGuide.leadingAnchor.constraint(equalTo: iconView.leadingAnchor)
+			]
+		} else {
+			let horizontalMargin : CGFloat = 15
+			let verticalLabelMargin : CGFloat = 10
+			let verticalIconMargin : CGFloat = 10
+			let spacing : CGFloat = 15
+			let iconViewWidth : CGFloat = iconSize.width
+			let verticalLabelMarginFromCenter : CGFloat = 1
+
+			titleLabel.numberOfLines = 1
+			titleLabel.textAlignment = .left
+			titleLabel.lineBreakMode = .byTruncatingTail
+			titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+			titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+			titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+
+			if hasSecondaryDetailView {
+				detailSegmentSecondaryView?.removeFromSuperview()
+				hasSecondaryDetailView = false
+			}
+
+			truncationMode = .truncateTail
+
+			constraints = [
+				iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
+				iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
+				iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
+				iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
+				iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
+
 				titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
 				detailSegmentPrimaryView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
 				detailSegmentPrimaryView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
@@ -250,6 +347,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				separatorLayoutGuide.leadingAnchor.constraint(equalTo: iconView.leadingAnchor)
 			]
 		}
+
+		detailSegmentPrimaryView.truncationMode = truncationMode
 
 		if constraints.count > 0 {
 			cellConstraints = constraints
@@ -347,6 +446,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 						case .resource(request: let request):
 							iconRequest = request
+
+						case .icon(image: let image):
+							iconViewProvider = image as OCViewProvider
 					}
 				}
 
@@ -568,32 +670,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 	// - Make custom accessory buttons
 	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], action: UIAction? = nil) -> (UIButton, UICellAccessory) {
-		let button = UIButton()
-
-		button.setTitle(title, for: .normal)
-		button.setImage(image, for: .normal)
-		button.contentMode = .center
-		button.isPointerInteractionEnabled = true
-		button.accessibilityLabel = accessibilityLabel
-
-		if let action {
-			button.addAction(action, for: .primaryActionTriggered)
-		}
-
-		if image != nil, title != nil {
-			var configuration = UIButton.Configuration.borderedTinted()
-			configuration.buttonSize = .small
-			configuration.imagePadding = 5
-			configuration.cornerStyle = .large
-
-			button.configuration = configuration.updated(for: button)
-		}
-
-		button.cssSelectors = cssSelectors
-
-		button.applyThemeCollection(Theme.shared.activeCollection)
-
-		return (button, .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing))))
+		return UICellAccessory.borderedButton(image: image, title: title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action)
 	}
 
 	// MARK: - Prepare for reuse
@@ -702,6 +779,14 @@ public extension CollectionViewCellStyle {
 		set {
 			options[.showMoreButton] = newValue
 		}
+	}
+}
+
+extension SegmentViewItem {
+	static public func detailText(_ detailText: String, linebreakMode: NSLineBreakMode? = nil) -> SegmentViewItem {
+		let item = SegmentViewItem(with: nil, title: detailText, style: .plain, titleTextStyle: .footnote, linebreakMode: linebreakMode)
+		item.insets = .zero
+		return item
 	}
 }
 

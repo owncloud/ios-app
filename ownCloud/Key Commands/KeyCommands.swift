@@ -453,98 +453,6 @@ extension UITableViewController {
 	}
 }
 
-extension GroupSharingTableViewController {
-	open override var keyCommands: [UIKeyCommand]? {
-		var shortcuts = [UIKeyCommand]()
-		if let superKeyCommands = super.keyCommands {
-			shortcuts.append(contentsOf: superKeyCommands)
-		}
-		let searchCommand = UIKeyCommand.ported(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
-		let doneCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Done".localized)
-		shortcuts.append(searchCommand)
-		shortcuts.append(doneCommand)
-
-		return shortcuts
-	}
-
-	@objc func enableSearch() {
-		self.searchController?.isActive = true
-		self.searchController?.searchBar.becomeFirstResponder()
-	}
-
-	open override var canBecomeFirstResponder: Bool {
-		return true
-	}
-}
-
-extension GroupSharingEditTableViewController {
-	open override var keyCommands: [UIKeyCommand]? {
-		var shortcuts = [UIKeyCommand]()
-		if let superKeyCommands = super.keyCommands {
-			shortcuts.append(contentsOf: superKeyCommands)
-		}
-		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
-		let createCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.command], action: #selector(createShareAndDismiss), discoverabilityTitle: "Save".localized)
-		shortcuts.append(dismissCommand)
-		shortcuts.append(createCommand)
-
-		if createShare {
-			let showInfoObjectCommand = UIKeyCommand.ported(input: "H", modifierFlags: [.command, .alternate], action: #selector(showInfoSubtitles), discoverabilityTitle: "Help".localized)
-			shortcuts.append(showInfoObjectCommand)
-		}
-
-		return shortcuts
-	}
-
-	open override var canBecomeFirstResponder: Bool {
-		return true
-	}
-}
-
-extension PublicLinkTableViewController {
-	open override var keyCommands: [UIKeyCommand]? {
-		var shortcuts = [UIKeyCommand]()
-		if let superKeyCommands = super.keyCommands {
-			shortcuts.append(contentsOf: superKeyCommands)
-		}
-		let doneCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Done".localized)
-		shortcuts.append(doneCommand)
-
-		return shortcuts
-	}
-
-	open override var canBecomeFirstResponder: Bool {
-		return true
-	}
-}
-
-extension PublicLinkEditTableViewController {
-	open override var keyCommands: [UIKeyCommand]? {
-		var shortcuts = [UIKeyCommand]()
-		if let superKeyCommands = super.keyCommands {
-			shortcuts.append(contentsOf: superKeyCommands)
-		}
-		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
-		let createCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.command], action: #selector(createPublicLink), discoverabilityTitle: "Create".localized)
-		shortcuts.append(dismissCommand)
-		shortcuts.append(createCommand)
-
-		if createLink {
-			let showInfoObjectCommand = UIKeyCommand.ported(input: "H", modifierFlags: [.command, .alternate], action: #selector(showInfoSubtitles), discoverabilityTitle: "Help".localized)
-			shortcuts.append(showInfoObjectCommand)
-		} else {
-			let shareObjectCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.command], action: #selector(shareLinkURL), discoverabilityTitle: "Share".localized)
-			shortcuts.append(shareObjectCommand)
-		}
-
-		return shortcuts
-	}
-
-	open override var canBecomeFirstResponder: Bool {
-		return true
-	}
-}
-
 extension StaticTableViewController {
 
 	open override var keyCommands: [UIKeyCommand]? {
@@ -1473,4 +1381,3 @@ extension FrameViewController {
 		}
 	}
 }
-

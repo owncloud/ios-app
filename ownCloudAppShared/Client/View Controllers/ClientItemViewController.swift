@@ -983,7 +983,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	}
 
 	// MARK: - Search
-	open var searchController: UISearchController?
 	open var searchViewController: SearchViewController?
 
 	@objc open func startSearch() {
