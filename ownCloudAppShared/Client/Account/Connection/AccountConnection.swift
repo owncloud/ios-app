@@ -508,7 +508,8 @@ open class AccountConnection: NSObject {
 	}
 
 	// MARK: - Actions to perform on connect
-	private var userAvatarUpdated : Bool = false
+    private var userAvatarUpdated : Bool = false
+    private var serverLogoUpdated : Bool = false
 
 	func updateUserAvatar() {
 		if !userAvatarUpdated, let user = core?.connection.loggedInUser {
@@ -531,13 +532,14 @@ open class AccountConnection: NSObject {
 	}
 
 	func updateServerLogo() {
-		guard let themeJSONURL = Branding.shared.themeJSONURL else { return }
+		guard let themeJSONURL = Branding.shared.themeJSONURL, !serverLogoUpdated else { return }
 
 		let themeValues = OCThemeValues(url: themeJSONURL, core: core!)
 
 		themeValues.retrieveThemeJSON { error in
 			if error == nil {
 				themeValues.retrieveLogo { request, error, ongoing, previousResource, newResource in
+                    self.serverLogoUpdated = true
 					let bookmarkUUID = self.bookmark.uuid
 					if !ongoing,
 					   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),

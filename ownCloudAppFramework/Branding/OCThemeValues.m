@@ -93,7 +93,7 @@
 
 - (void)retrieveLogoWithChangeHandler:(OCResourceRequestChangeHandler)changeHandler
 {
-	OCResourceRequest *iconResourceRequest = [OCResourceRequestURLItem requestURLItem:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", _core.connection.bookmark.url, self.logo]] identifier:nil version:OCResourceRequestURLItem.daySpecificVersion structureDescription:@"icon" waitForConnectivity:YES changeHandler:changeHandler];
+	OCResourceRequest *iconResourceRequest = [OCResourceRequestURLItem requestURLItem:[_core.connection.bookmark.url URLByAppendingPathComponent: self.logo] identifier:nil version:OCResourceRequestURLItem.daySpecificVersion structureDescription:@"icon" waitForConnectivity:YES changeHandler:changeHandler];
 	iconResourceRequest.lifetime = OCResourceRequestLifetimeSingleRun;
 
 	OCResourceManager *resourceManager = self.core.vault.resourceManager;
