@@ -149,8 +149,16 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 
 		// - Links
+		var linksSectionContext = shareControllerContext
+		if self.type == .link, self.mode == .edit, share != nil {
+			// Prevent clicks on links during editing
+			linksSectionContext = ClientContext(with: shareControllerContext, modifier: { context in
+				context.permissions = []
+			})
+		}
+
 		linksSectionDatasource = OCDataSourceArray(items: [])
-		linksSection =  CollectionViewSection(identifier: "links", dataSource: linksSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
+		linksSection =  CollectionViewSection(identifier: "links", dataSource: linksSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: linksSectionContext)
 
 		if let linksSection, self.type == .link, self.mode == .edit, let share {
 			linksSectionDatasource?.setVersionedItems([share])
@@ -193,6 +201,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		super.init(context: shareControllerContext, sections: sections, useStackViewRoot: true)
 
 		self.cssSelector = .grouped
+
+		linksSectionContext.originatingViewController = self
 	}
 
 	required public init?(coder: NSCoder) {
