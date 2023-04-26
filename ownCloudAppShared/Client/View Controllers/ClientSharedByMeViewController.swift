@@ -43,6 +43,9 @@ class ClientSharedByMeViewController: CollectionViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	var noShareMessage: ComposedMessageView?
+	var connectionStatusObservation: NSKeyValueObservation?
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -59,14 +62,13 @@ class ClientSharedByMeViewController: CollectionViewController {
 		}
 
 		func addNoItemsCondition(imageName: String, title: String, datasource: OCDataSource) {
-			let noShareMessage = ComposedMessageView(elements: [
+			noShareMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: imageName)!, size: CGSize(width: 64, height: 48), alignment: .centered),
 				.title(title, alignment: .centered)
 			])
 
 			noItemsCondition = DataSourceCondition(.empty, with: datasource, initial: true, action: { [weak self] condition in
-				let coverView = (condition.fulfilled == true) ? noShareMessage : nil
-				self?.setCoverView(coverView, layout: .top)
+				self?.updateCoverMessage()
 			})
 		}
 
@@ -87,5 +89,30 @@ class ClientSharedByMeViewController: CollectionViewController {
 		}
 
 		add(sections: sectionsToAdd)
+
+		connectionStatusObservation = clientContext?.core?.observe(\OCCore.connectionStatus, options: .initial, changeHandler: { [weak self] core, change in
+			OnMainThread {
+				self?.updateCoverMessage()
+			}
+		})
+	}
+
+	func updateCoverMessage() {
+		var coverView: UIView?
+
+		if clientContext?.core?.connectionStatus != .online {
+			let offlineMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "network")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.title("Sharing requires an internet connection.".localized, alignment: .centered)
+			])
+
+			coverView = offlineMessage
+		}
+
+		if coverView == nil, noItemsCondition?.fulfilled == true {
+			coverView = noShareMessage
+		}
+
+		setCoverView(coverView, layout: .top)
 	}
 }

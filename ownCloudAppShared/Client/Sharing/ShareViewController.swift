@@ -203,6 +203,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.cssSelector = .grouped
 
 		linksSectionContext.originatingViewController = self
+
+		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
 	}
 
 	required public init?(coder: NSCoder) {
@@ -242,6 +244,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}), cancelAction: UIAction(handler: { [weak self] _ in
 			self?.complete()
 		}))
+		bottomButtonBar?.showActivityIndicatorWhileModalActionRunning = mode != .edit
 
 		let bottomButtonBarViewController = UIViewController()
 		bottomButtonBarViewController.view = bottomButtonBar
@@ -690,7 +693,13 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					return
 				}
 
+				bottomButtonBar?.modalActionRunning = true
+
 				core.createShare(newShare, completionHandler: { error, share in
+					OnMainThread {
+						self.bottomButtonBar?.modalActionRunning = false
+					}
+
 					if let error {
 						self.showError(error)
 					} else {
@@ -703,6 +712,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					case .share, .link:
 						if let permissions {
 							if let core = clientContext?.core, let share {
+								bottomButtonBar?.modalActionRunning = true
+
 								core.update(share, afterPerformingChanges: { [weak self] share in
 									share.permissions = permissions
 
@@ -716,6 +727,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 									share.expirationDate = self?.expirationDate
 								}, completionHandler: { error, share in
+									OnMainThread {
+										self.bottomButtonBar?.modalActionRunning = false
+									}
+
 									if let error {
 										self.showError(error)
 									} else {

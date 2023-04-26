@@ -175,6 +175,8 @@ open class SharingViewController: CollectionViewController {
 		}
 
 		addLinkDataSource?.setVersionedItems(linkActions)
+
+		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
 	}
 
 	func createShare(type: ShareViewController.ShareType) {

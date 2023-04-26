@@ -27,6 +27,7 @@ public struct RevocationTriggers: OptionSet {
 
 	static public let connectionClosed = RevocationTriggers(rawValue: 1)
 	static public let driveRemoved = RevocationTriggers(rawValue: 2)
+	static public let connectionOffline = RevocationTriggers(rawValue: 4)
 }
 
 public extension UIViewController {
@@ -49,6 +50,14 @@ public extension UIViewController {
 					let driveTrigger = NavigationRevocationTrigger(itemRemovalTriggerFor: drivesDataSource, itemRefs: [ driveID ], bookmarkUUID: bookmarkUUID)
 					triggers.append(driveTrigger)
 				}
+			}
+
+			if revocationTriggers.contains(.connectionOffline) {
+				events.append(contentsOf: [
+					.connectionStateEntered(bookmarkUUID: bookmarkUUID, status: .connecting),
+					.connectionStateEntered(bookmarkUUID: bookmarkUUID, status: .unavailable),
+					.connectionStateEntered(bookmarkUUID: bookmarkUUID, status: .offline)
+				])
 			}
 		}
 

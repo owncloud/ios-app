@@ -43,6 +43,38 @@ open class BottomButtonBar: ThemeCSSView {
 		}
 	}
 
+	var activityIndicator: UIActivityIndicatorView?
+	var showActivityIndicatorWhileModalActionRunning = true
+	open var modalActionRunning: Bool = false {
+		didSet {
+			if modalActionRunning {
+				if activityIndicator == nil, showActivityIndicatorWhileModalActionRunning {
+					activityIndicator = UIActivityIndicatorView(style: .medium)
+					activityIndicator?.translatesAutoresizingMaskIntoConstraints = false
+
+					if let activityIndicator {
+						self.addSubview(activityIndicator)
+						NSLayoutConstraint.activate([
+							activityIndicator.centerYAnchor.constraint(equalTo: selectButton.centerYAnchor),
+							activityIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
+						])
+					}
+
+					activityIndicator?.startAnimating()
+				}
+			} else {
+				if activityIndicator != nil {
+					activityIndicator?.stopAnimating()
+					activityIndicator?.removeFromSuperview()
+					activityIndicator = nil
+				}
+			}
+
+			cancelButton.isEnabled = !modalActionRunning
+			selectButton.isEnabled = !modalActionRunning
+		}
+	}
+
 	public init(prompt: String? = nil, selectButtonTitle: String, cancelButtonTitle: String? = "Cancel".localized, hasCancelButton: Bool, selectAction: UIAction?, cancelAction: UIAction?) {
 		self.selectButtonTitle = selectButtonTitle
 
