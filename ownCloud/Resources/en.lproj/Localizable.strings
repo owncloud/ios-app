@@ -126,6 +126,12 @@
 
 "Show more results" = "Show more results";
 
+/* Item Layouts */
+"List" = "List";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
 /* Saved searches */
 "Saved searches" = "Saved searches";
 "Saved search templates" = "Saved search templates";
