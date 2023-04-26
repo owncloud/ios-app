@@ -70,6 +70,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	private var coreConnectionStatusObservation : NSKeyValueObservation?
 
+	private var refreshControl: UIRefreshControl?
+
 	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false, emptyItemListIcon: UIImage? = nil, emptyItemListTitleLocalized: String? = nil, emptyItemListMessageLocalized: String? = nil) {
 		inQuery?.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
@@ -217,6 +219,14 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		})
 
 		queryStateObservation = query?.observe(\OCQuery.state, options: [], changeHandler: { [weak self] query, change in
+			if query.state == .idle || self?.clientContext?.core?.connectionStatus != .online {
+				OnMainThread {
+					if self?.refreshControl?.isRefreshing == true {
+						self?.refreshControl?.endRefreshing()
+					}
+				}
+			}
+
 			self?.recomputeContentState()
 		})
 
@@ -343,6 +353,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
 		collectionView.allowsMultipleSelectionDuringEditing = true
+
+		// Implement drag to refresh
+		if supportsDragToRefresh {
+			refreshControl = UIRefreshControl(frame: .zero, primaryAction: UIAction(handler: { [weak self] _ in
+				self?.performDragToRefresh()
+			}))
+
+			collectionView.refreshControl = refreshControl
+		}
 	}
 
 	var locationBarViewController: ClientLocationBarController? {
@@ -1236,6 +1255,21 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		emptyItemListDataSource.setItems(emptyItems, updated: nil)
+	}
+
+	// MARK: - Drag to refresh
+	open var supportsDragToRefresh: Bool {
+		return clientContext?.query != nil
+	}
+
+	open func performDragToRefresh() {
+		if let core = clientContext?.core, let query = clientContext?.query {
+			if core.connectionStatus == .online {
+				core.reload(query)
+			} else {
+				refreshControl?.endRefreshing()
+			}
+		}
 	}
 
 	// MARK: - Themeing
