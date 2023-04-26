@@ -19,10 +19,28 @@
 import UIKit
 import ownCloudSDK
 
-public enum ItemLayout {
+public enum ItemLayout: CaseIterable {
 	// MARK: - Layouts
 	case list
 	case grid
+	case gridLowDetail
+	case gridNoDetail
+
+	public func labelAndIcon() -> (String, UIImage?) {
+		switch self {
+			case .list:
+				return ("List".localized, OCSymbol.icon(forSymbolName: "list.bullet"))
+
+			case .grid:
+				return ("Grid".localized, OCSymbol.icon(forSymbolName: "square.grid.2x2"))
+
+			case .gridLowDetail:
+				return ("Item grid".localized, OCSymbol.icon(forSymbolName: "text.below.photo"))
+
+			case .gridNoDetail:
+				return ("Image grid".localized, OCSymbol.icon(forSymbolName: "photo"))
+		}
+	}
 
 	// MARK: - Layout information
 	public func sectionCellLayout(for traitCollection: UITraitCollection, collectionView: UICollectionView? = nil) -> CollectionViewSection.CellLayout {
@@ -30,10 +48,10 @@ public enum ItemLayout {
 			case .list:
 				return .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
-			case .grid:
-				let titleAndDetailsHeight = UniversalItemListCell.titleAndDetailsHeight(withSecondarySegment: true)
+			case .grid, .gridLowDetail, .gridNoDetail:
+				let titleAndDetailsHeight = UniversalItemListCell.titleAndDetailsHeight(withTitle: (self != .gridNoDetail), withPrimarySegment: (self == .grid), withSecondarySegment: (self == .grid))
 
-				return .fillingGrid(minimumWidth: 130, computeHeight: { width in
+				return .fillingGrid(minimumWidth: 130, maximumWidth: 160, computeHeight: { width in
 					return (width * 3 / 4) + titleAndDetailsHeight
 				}, cellSpacing: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), sectionInsets: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), center: true)
 		}
@@ -46,6 +64,12 @@ public enum ItemLayout {
 
 			case .grid:
 				return .gridCell
+
+			case .gridLowDetail:
+				return .gridCellLowDetail
+
+			case .gridNoDetail:
+				return .gridCellNoDetail
 		}
 	}
 

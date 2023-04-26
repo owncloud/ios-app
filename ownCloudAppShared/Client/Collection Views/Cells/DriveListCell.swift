@@ -263,7 +263,7 @@ extension DriveListCell {
 				case .sideBar:
 					return collectionView.dequeueConfiguredReusableCell(using: driveSideBarCellRegistration, for: indexPath, item: itemRef)
 
-				case .gridCell:
+				case .gridCell, .gridCellLowDetail, .gridCellNoDetail:
 					return collectionView.dequeueConfiguredReusableCell(using: driveGridCellRegistration, for: indexPath, item: itemRef)
 
 				default:

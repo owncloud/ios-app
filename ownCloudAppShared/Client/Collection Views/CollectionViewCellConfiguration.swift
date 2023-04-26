@@ -26,8 +26,14 @@ open class CollectionViewCellStyle: NSObject {
 		case tableCell
 		case tableLine
 		case gridCell
+		case gridCellLowDetail
+		case gridCellNoDetail
 		case fillSpace
 		case sideBar
+
+		var isGrid: Bool {
+			return (self == .gridCell) || (self == .gridCellLowDetail) || (self == .gridCellNoDetail)
+		}
 	}
 
 	public struct StyleOptionKey : Hashable {

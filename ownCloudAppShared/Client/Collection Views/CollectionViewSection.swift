@@ -707,8 +707,8 @@ extension CollectionViewSection {
 
 		UIView.performWithoutAnimation {
 			_animateCellLayoutChange = false
-			cellStyle = itemLayout.cellStyle
 			cellLayout = itemLayout.sectionCellLayout(for: collectionViewController?.traitCollection ?? .current)
+			cellStyle = itemLayout.cellStyle
 			_animateCellLayoutChange = animateCellLayoutChange
 		}
 	}

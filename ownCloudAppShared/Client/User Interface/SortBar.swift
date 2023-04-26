@@ -94,17 +94,15 @@ public class SortBar: ThemeCSSView {
 
 	public var itemLayout: ItemLayout = .list {
 		didSet {
-			switch itemLayout {
-				case .grid: changeItemLayoutButton?.setImage(OCSymbol.icon(forSymbolName: "list.bullet"), for: .normal)
-				case .list: changeItemLayoutButton?.setImage(OCSymbol.icon(forSymbolName: "square.grid.2x2"), for: .normal)
-			}
+			let (_, icon) = itemLayout.labelAndIcon()
+			changeItemLayoutButton?.setImage(icon, for: .normal)
 		}
 	}
 
 	// MARK: - Init & Deinit
 	public init(frame: CGRect = .zero, sortMethod: SortMethod) {
 		selectButton = UIButton()
-		changeItemLayoutButton = UIButton()
+		changeItemLayoutButton = UIButton(type: .system)
 		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
@@ -180,11 +178,27 @@ public class SortBar: ThemeCSSView {
 			])
 
 			// Disply Mode Button
-			changeItemLayoutButton.setImage(OCSymbol.icon(forSymbolName: "square.grid.2x2"), for: .normal)
 			changeItemLayoutButton.cssSelector = .itemLayout
-			changeItemLayoutButton.addTarget(self, action: #selector(toggleDisplayMode), for: .touchUpInside)
 			changeItemLayoutButton.accessibilityLabel = "Toggle layout".localized
 			changeItemLayoutButton.isPointerInteractionEnabled = true
+			changeItemLayoutButton.showsMenuAsPrimaryAction = true
+			changeItemLayoutButton.menu = UIMenu(title: "", children: [
+				UIDeferredMenuElement.uncached({ [weak self] completion in
+					var menuItems : [UIMenuElement] = []
+
+					for itemLayout in ItemLayout.allCases {
+						let (title, icon) = itemLayout.labelAndIcon()
+
+						let menuItem = UIAction(title: "\(title)", image: icon, attributes: []) { [weak self] _ in
+							self?.switchItemLayout(to: itemLayout)
+						}
+
+						menuItems.append(menuItem)
+					}
+
+					completion(menuItems)
+				})
+			])
 
 			NSLayoutConstraint.activate([
 				changeItemLayoutButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
@@ -232,9 +246,7 @@ public class SortBar: ThemeCSSView {
 		delegate?.sortBarToggleSelectMode(self)
 	}
 
-	@objc private func toggleDisplayMode() {
-		let newItemLayout: ItemLayout = (itemLayout == .grid) ? .list : .grid
-
+	private func switchItemLayout(to newItemLayout: ItemLayout) {
 		itemLayout = newItemLayout
 		delegate?.sortBar(self, itemLayout: newItemLayout)
 	}
