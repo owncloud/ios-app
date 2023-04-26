@@ -31,7 +31,7 @@ class CutAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.containsRoot {
+		if forContext.containsRoot || !forContext.allItemsMoveable {
 			return .none
 		}
 

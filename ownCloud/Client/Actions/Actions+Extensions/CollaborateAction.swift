@@ -30,7 +30,7 @@ class CollaborateAction: Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
+		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, let item = forContext.items.first, item.isShareable {
 			return .first
 		}
 

@@ -438,7 +438,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	// MARK: - Empty item list handling
 	func emptyActions() -> [OCAction]? {
-		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem, clientContext?.hasPermission(for: .addContent) == true else {
+		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem ?? (context.rootItem as? OCItem), clientContext?.hasPermission(for: .addContent) == true else {
 			return nil
 		}
 		let locationIdentifier: OCExtensionLocationIdentifier = .emptyFolder
