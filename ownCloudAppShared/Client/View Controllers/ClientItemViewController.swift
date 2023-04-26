@@ -608,7 +608,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 								let contextMenuProvider = rootItem as DataItemContextMenuInteraction
 
 								if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
-									    completion(contextMenuElements)
+									if contextMenuElements.count == 0 {
+										completion([UIAction(title: "No actions available".localized, image: nil, attributes: .disabled, handler: {_ in })])
+									} else {
+										completion(contextMenuElements)
+									}
 								}
 							}
 						})
