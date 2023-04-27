@@ -65,11 +65,7 @@ extension Branding : BrandingInitialization {
 			.canAddAccount : true,
 			.canEditAccount : true,
 			.enableReviewPrompt : false
-
-//			.profileDefinitions : [],
-//			.themeGenericColors : [:],
-//			.themeDefinitions : [:]
-		], metadata: [
+		],  : [
 			.documentationURL : [
 				.type 		: OCClassSettingsMetadataType.urlString,
 				.label		: "Documentation URL",
@@ -161,11 +157,60 @@ extension Branding : BrandingInitialization {
 				.description	: "Array of dictionaries, each specifying a theme.",
 				.category	: "Branding",
 				.status		: OCClassSettingsKeyStatus.advanced
-			]
-		])
-	}
-
-	public func initializeSharedBranding() {
+            ],
+            
+                .profileBookmarkName : [
+                    .type         : OCClassSettingsMetadataType.string,
+                    .label        : "Bookmark Name",
+                    .description    : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+                    .status        : OCClassSettingsKeyStatus.advanced,
+                    .category    : "Branding"
+                ],
+            
+                .profileURL : [
+                    .type         : OCClassSettingsMetadataType.urlString,
+                    .label        : "URL",
+                    .description     : "The URL of the server targeted by this profile.",
+                    .status        : OCClassSettingsKeyStatus.advanced,
+                    .category    : "Branding"
+                ],
+            
+                .profileHelpURL : [
+                    .type         : OCClassSettingsMetadataType.urlString,
+                    .label         : "Onboarding URL",
+                    .description    : "Optional URL to onboarding resources.",
+                    .status        : OCClassSettingsKeyStatus.advanced,
+                    .category    : "Branding"
+                ],
+            
+                .profileOpenHelpMessage: [
+                    .type         : OCClassSettingsMetadataType.string,
+                    .label        : "Open onboarding URL message",
+                    .description     : "Message shown in an alert before opening the onboarding URL.",
+                    .status        : OCClassSettingsKeyStatus.advanced,
+                    .category    : "Branding"
+                ],
+            
+                .profileHelpButtonLabel : [
+                    .type         : OCClassSettingsMetadataType.string,
+                    .label        : "Onboarding button title",
+                    .description     : "Text used for the onboarding button title",
+                    .status        : OCClassSettingsKeyStatus.advanced,
+                    .category    : "Branding"
+                ],
+            
+                .profileAllowUrlConfiguration : [
+                    .type         : OCClassSettingsMetadataType.boolean,
+                    .label         : "Allow URL configuration",
+                    .description    : "Indicates if the user can change the server URL for the account.",
+                    .status        : OCClassSettingsKeyStatus.advanced,
+                    .category    : "Branding"
+                ]
+            
+        ])
+    }
+    
+    public func initializeSharedBranding() {
 		// swiftlint:disable comma
 		registerLegacyKeyPath("URLs.Documentation",	forClassSettingsKey: .documentationURL)
 		registerLegacyKeyPath("URLs.Help",		forClassSettingsKey: .helpURL)
