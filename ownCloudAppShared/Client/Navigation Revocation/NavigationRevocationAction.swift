@@ -21,6 +21,8 @@ import ownCloudSDK
 
 public enum NavigationRevocationEvent: Equatable {
 	case connectionClosed(bookmarkUUID: UUID)
+	case connectionStateLeft(bookmarkUUID: UUID, status: OCCoreConnectionStatus)
+	case connectionStateEntered(bookmarkUUID: UUID, status: OCCoreConnectionStatus)
 	case driveRemoved(driveID: String, bookmarkUUID: UUID)
 	case itemRemoved(itemReference: OCDataItemReference, dataSource: String, bookmarkUUID: UUID?)
 

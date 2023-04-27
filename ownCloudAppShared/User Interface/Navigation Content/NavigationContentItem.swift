@@ -35,7 +35,7 @@ public class NavigationContentItem: NSObject {
 	public var titleView: UIView?
 	public var title: String?
 
-	init(identifier: String, area: NavigationContent.Area, priority: NavigationContent.Priority, position: NavigationContent.Position, items: [UIBarButtonItem]? = nil, titleView: UIView? = nil, title: String? = nil) {
+	public init(identifier: String, area: NavigationContent.Area, priority: NavigationContent.Priority, position: NavigationContent.Position, items: [UIBarButtonItem]? = nil, titleView: UIView? = nil, title: String? = nil) {
 		self.identifier = identifier
 		self.area = area
 		self.priority = priority

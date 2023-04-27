@@ -161,7 +161,7 @@ extension OCItem {
 		return byteCounterFormatter
 	}()
 
-	static private let dateFormatter: DateFormatter = {
+	static public let dateFormatter: DateFormatter = {
 		let dateFormatter: DateFormatter =  DateFormatter()
 		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .medium
@@ -170,7 +170,7 @@ extension OCItem {
 		return dateFormatter
 	}()
 
-	static private let compactDateFormatter: DateFormatter = {
+	static public let compactDateFormatter: DateFormatter = {
 		let dateFormatter: DateFormatter =  DateFormatter()
 		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .short

@@ -543,7 +543,7 @@ public class ComposedMessageView: UIView, Themeable {
 }
 
 public extension ComposedMessageView {
-	static func infoBox(image: UIImage? = nil, title: String? = nil, subtitle: String? = nil, additionalElements: [ComposedMessageElement]? = nil) -> ComposedMessageView {
+	static func infoBox(image: UIImage? = nil, title: String? = nil, subtitle: String? = nil, additionalElements: [ComposedMessageElement]? = nil, withRoundedBackgroundView: Bool = true) -> ComposedMessageView {
 		var elements: [ComposedMessageElement] = []
 
 		if let image = image {
@@ -566,9 +566,11 @@ public extension ComposedMessageView {
 
 		let infoBoxView = ComposedMessageView(elements: elements)
 		infoBoxView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 30, trailing: 20)
-		infoBoxView.backgroundInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
-		infoBoxView.backgroundView = RoundCornerBackgroundView()
-		infoBoxView.backgroundView?.cssSelectors = [.background]
+		if withRoundedBackgroundView {
+			infoBoxView.backgroundInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
+			infoBoxView.backgroundView = RoundCornerBackgroundView()
+			infoBoxView.backgroundView?.cssSelectors = [.background]
+		}
 		infoBoxView.cssSelectors = [.message, .infoBox]
 		infoBoxView.translatesAutoresizingMaskIntoConstraints = false
 

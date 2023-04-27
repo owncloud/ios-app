@@ -48,6 +48,7 @@ public class SegmentViewItem: NSObject {
 	}
 	open var titleTextStyle: UIFont.TextStyle?
 	open var titleTextWeight: UIFont.Weight?
+	open var titleLinebreakMode: NSLineBreakMode?
 
 	open var representedObject: AnyObject?
 	open weak var weakRepresentedObject: AnyObject?
@@ -58,6 +59,8 @@ public class SegmentViewItem: NSObject {
 	open var alpha: CGFloat = 1.0
 
 	open var lines: [Line]? //!< Optional Lines that can be used to separate content into multiple lines (used f.ex. for grid cell layouts to use a single array for single line and multi line views)
+
+	open var embedView: UIView?
 
 	open var gestureRecognizers: [UIGestureRecognizer]?
 
@@ -74,7 +77,7 @@ public class SegmentViewItem: NSObject {
 		return _view
 	}
 
-	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, lines: [Line]? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
+	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, linebreakMode: NSLineBreakMode? = nil, lines: [Line]? = nil, view: UIView? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
 		self.style = style
 
 		super.init()
@@ -83,7 +86,9 @@ public class SegmentViewItem: NSObject {
 		self.title = title
 		self.titleTextStyle = titleTextStyle
 		self.titleTextWeight = titleTextWeight
+		self.titleLinebreakMode = linebreakMode
 		self.lines = lines
+		self.embedView = view
 		self.representedObject = representedObject
 		self.weakRepresentedObject = weakRepresentedObject
 		self.gestureRecognizers = gestureRecognizers

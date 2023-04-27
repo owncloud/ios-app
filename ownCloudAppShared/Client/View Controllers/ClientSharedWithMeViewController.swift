@@ -30,6 +30,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 	var declinedSection: CollectionViewSection?
 
 	var noItemsCondition: DataSourceCondition?
+	var connectionStatusObservation: NSKeyValueObservation?
 
 	init(context inContext: ClientContext?) {
 		super.init(context: inContext, sections: nil, useStackViewRoot: true)
@@ -78,19 +79,43 @@ class ClientSharedWithMeViewController: CollectionViewController {
 				declinedSection!
 			])
 
-			let noShareMessage = ComposedMessageView(elements: [
-				.image(OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("No items shared with you".localized, alignment: .centered)
-			])
-
 			noItemsCondition = DataSourceCondition(.allOf([
 				DataSourceCondition(.empty, with: pendingDataSource),
 				DataSourceCondition(.empty, with: acceptedDataSource),
 				DataSourceCondition(.empty, with: declinedDataSource)
 			]), initial: true, action: { [weak self] condition in
-				let coverView = (condition.fulfilled == true) ? noShareMessage : nil
-				self?.setCoverView(coverView, layout: .top)
+				self?.updateCoverMessage()
 			})
 		}
+
+		connectionStatusObservation = clientContext?.core?.observe(\OCCore.connectionStatus, options: .initial, changeHandler: { [weak self] core, change in
+			OnMainThread {
+				self?.updateCoverMessage()
+			}
+		})
+	}
+
+	func updateCoverMessage() {
+		var coverView: UIView?
+
+		if clientContext?.core?.connectionStatus != .online {
+			let offlineMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "network")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.title("Sharing requires an internet connection.".localized, alignment: .centered)
+			])
+
+			coverView = offlineMessage
+		}
+
+		if coverView == nil, noItemsCondition?.fulfilled == true {
+			let noShareMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.title("No items shared with you".localized, alignment: .centered)
+			])
+
+			coverView = noShareMessage
+		}
+
+		setCoverView(coverView, layout: .top)
 	}
 }

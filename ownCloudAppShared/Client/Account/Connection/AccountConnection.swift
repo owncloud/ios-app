@@ -459,7 +459,22 @@ open class AccountConnection: NSObject {
 
 	// MARK: - Connection status observation
 	var connectionStatusObservation : NSKeyValueObservation?
-	open var connectionStatus: OCCoreConnectionStatus?
+	open var connectionStatus: OCCoreConnectionStatus? {
+		didSet {
+			if connectionStatus != oldValue {
+				if let oldValue {
+					OnMainThread(inline: true) {
+						NavigationRevocationEvent.connectionStateLeft(bookmarkUUID: self.bookmark.uuid, status: oldValue).send()
+					}
+				}
+				if let connectionStatus {
+					OnMainThread(inline: true) {
+						NavigationRevocationEvent.connectionStateEntered(bookmarkUUID: self.bookmark.uuid, status: connectionStatus).send()
+					}
+				}
+			}
+		}
+	}
 	var connectionStatusSummary : ProgressSummary? {
 		willSet {
 			if newValue != nil {
@@ -479,7 +494,7 @@ open class AccountConnection: NSObject {
 
 		connectionStatus = core?.connectionStatus
 
-		if let connectionStatus = connectionStatus {
+		if let connectionStatus {
 			var connectionShortDescription = core?.connectionStatusShortDescription
 
 			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription!.hasSuffix(".") ? connectionShortDescription! + " " : connectionShortDescription! + ". ") : ""
@@ -494,6 +509,7 @@ open class AccountConnection: NSObject {
 
 				case .offline, .unavailable:
 					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
+					status = .coreAvailable
 			}
 
 			if connectionStatus == .online {

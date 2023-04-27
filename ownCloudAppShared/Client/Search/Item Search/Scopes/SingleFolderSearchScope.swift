@@ -71,11 +71,20 @@ open class SingleFolderSearchScope : QueryModifyingSearchScope {
 		return .folder
 	}
 	open override var canSaveSearch: Bool {
-		return false
+		return true
 	}
 	open override var canSaveTemplate: Bool {
 		return super.canSaveSearch
 	}
+
+	open override var savedSearch: AnyObject? {
+		if let savedSearch = super.savedSearch as? OCSavedSearch {
+			savedSearch.location = clientContext.query?.queryLocation
+			return savedSearch
+		}
+		return nil
+	}
+
 	open override var savedTemplate: AnyObject? {
 		if let savedTemplate = super.savedSearch as? OCSavedSearch {
 			savedTemplate.location = clientContext.query?.queryLocation

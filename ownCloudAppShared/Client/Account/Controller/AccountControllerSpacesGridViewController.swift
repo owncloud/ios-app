@@ -52,14 +52,9 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 	}
 
 	static func cellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {
-		switch traitCollection.horizontalSizeClass {
-			case .regular:
-				return .grid(itemWidthDimension: .fractionalWidth(0.33), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-
-			// case .compact:
-			default:
-				return .grid(itemWidthDimension: .fractionalWidth(1.0), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-		}
+		return .fillingGrid(minimumWidth: 260, maximumWidth: 300, computeHeight: { width in
+			return floor(width * 3 / 4)
+		}, cellSpacing: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10), sectionInsets: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), center: true)
 	}
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

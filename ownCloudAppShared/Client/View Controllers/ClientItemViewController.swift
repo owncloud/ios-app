@@ -68,6 +68,10 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	private var viewControllerUUID: UUID
 
+	private var coreConnectionStatusObservation : NSKeyValueObservation?
+
+	private var refreshControl: UIRefreshControl?
+
 	public init(context inContext: ClientContext?, query inQuery: OCQuery?, itemsDatasource inDataSource: OCDataSource? = nil, location: OCLocation? = nil, highlightItemReference: OCDataItemReference? = nil, showRevealButtonForItems: Bool = false, emptyItemListIcon: UIImage? = nil, emptyItemListTitleLocalized: String? = nil, emptyItemListMessageLocalized: String? = nil) {
 		inQuery?.queryResultsDataSourceIncludesStatistics = true
 		query = inQuery
@@ -159,21 +163,21 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				// Create data source from one drive
 				singleDriveDatasource = OCDataSourceComposition(sources: [core.drivesDataSource])
 				singleDriveDatasource?.filter = OCDataSourceComposition.itemFilter(withItemRetrieval: false, fromRecordFilter: { itemRecord in
-					if let drive = itemRecord?.item as? OCDrive {
-						if drive.identifier == itemControllerContext.drive?.identifier,
-						   drive.specialType == .space { // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
-							return true
-						}
+					if let drive = itemRecord?.item as? OCDrive,
+					   drive.identifier == itemControllerContext.drive?.identifier {
+						return true
 					}
 
 					return false
 				})
 
-				// Create combined data source from drive + additional items
-				driveSectionDataSource = OCDataSourceComposition(sources: [ singleDriveDatasource!, driveAdditionalItemsDataSource ])
+				if itemControllerContext.drive?.specialType == .space { // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
+					// Create combined data source from drive + additional items
+					driveSectionDataSource = OCDataSourceComposition(sources: [ singleDriveDatasource!, driveAdditionalItemsDataSource ])
 
-				// Create drive section from combined data source
-				driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
+					// Create drive section from combined data source
+					driveSection = CollectionViewSection(identifier: "drive", dataSource: driveSectionDataSource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain))
+				}
 			}
 
 			itemSectionDataSource = OCDataSourceComposition(sources: [contentsDataSource])
@@ -215,6 +219,14 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		})
 
 		queryStateObservation = query?.observe(\OCQuery.state, options: [], changeHandler: { [weak self] query, change in
+			if query.state == .idle || self?.clientContext?.core?.connectionStatus != .online {
+				OnMainThread {
+					if self?.refreshControl?.isRefreshing == true {
+						self?.refreshControl?.endRefreshing()
+					}
+				}
+			}
+
 			self?.recomputeContentState()
 		})
 
@@ -294,6 +306,17 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		// Update title
 		updateNavigationTitleFromContext()
+
+		// Observe connection status
+		if let core = itemControllerContext.core {
+			coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: .initial) { [weak self, weak core] (_, _) in
+				OnMainThread { [weak self, weak core] in
+					if let connectionStatus = core?.connectionStatus {
+						self?.coreConnectionStatus = connectionStatus
+					}
+				}
+			}
+		}
 	}
 
 	required public init?(coder: NSCoder) {
@@ -318,6 +341,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.delegate = self
 		sortBar?.sortMethod = sortMethod
+		sortBar?.itemLayout = clientContext?.itemLayout ?? .list
 		sortBar?.showSelectButton = true
 
 		if let sortBar {
@@ -329,6 +353,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// Setup multiselect
 		collectionView.allowsSelectionDuringEditing = true
 		collectionView.allowsMultipleSelectionDuringEditing = true
+
+		// Implement drag to refresh
+		if supportsDragToRefresh {
+			refreshControl = UIRefreshControl(frame: .zero, primaryAction: UIAction(handler: { [weak self] _ in
+				self?.performDragToRefresh()
+			}))
+
+			collectionView.refreshControl = refreshControl
+		}
 	}
 
 	var locationBarViewController: ClientLocationBarController? {
@@ -387,13 +420,17 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public func updateAdditionalDriveItems(from subscription: OCDataSourceSubscription) {
 		let snapshot = subscription.snapshotResettingChangeTracking(true)
 
-		if let core = clientContext?.core,
-		   let firstItemRef = snapshot.items.first,
-	  	   let itemRecord = try? subscription.source?.record(forItemRef: firstItemRef),
-		   let drive = itemRecord.item as? OCDrive,
-		   let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
+		guard let core = clientContext?.core,
+		      let firstItemRef = snapshot.items.first,
+		      let itemRecord = try? subscription.source?.record(forItemRef: firstItemRef),
+		      let drive = itemRecord.item as? OCDrive else { return }
+
+		driveQuota = drive.quota
+
+		guard drive.specialType == .space else { return } // limit to spaces, do not show header for f.ex. the personal space or the Shares Jail space
+
+		if let driveRepresentation = OCDataRenderer.default.renderItem(drive, asType: .presentable, error: nil) as? OCDataItemPresentable,
 		   let descriptionResourceRequest = try? driveRepresentation.provideResourceRequest(.coverDescription) {
-			driveQuota = drive.quota
 
 			descriptionResourceRequest.lifetime = .singleRun
 			descriptionResourceRequest.changeHandler = { [weak self] (request, error, isOngoing, previousResource, newResource) in
@@ -409,9 +446,18 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	var _actionProgressHandler : ActionProgressHandler?
 
+	// MARK: - Connection status
+	var coreConnectionStatus: OCCoreConnectionStatus? {
+		didSet {
+			if coreConnectionStatus != oldValue {
+				recomputeContentState()
+			}
+		}
+	}
+
 	// MARK: - Empty item list handling
 	func emptyActions() -> [OCAction]? {
-		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem, clientContext?.hasPermission(for: .addContent) == true else {
+		guard let context = clientContext, let core = context.core, let item = context.query?.rootItem ?? (context.rootItem as? OCItem), clientContext?.hasPermission(for: .addContent) == true else {
 			return nil
 		}
 		let locationIdentifier: OCExtensionLocationIdentifier = .emptyFolder
@@ -454,10 +500,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 						if self.query?.state == .targetRemoved {
 							self.contentState = .removed
-						} else if let numberOfItems = numberOfItems, numberOfItems > 0 {
+						} else if let numberOfItems, numberOfItems > 0 {
 							self.contentState = .hasContent
 							self.folderStatistics = snapshot?.specialItems?[.folderStatistics] as? OCStatistic
-						} else if (numberOfItems == nil) || ((self.query?.rootItem == nil) && (self.query != nil) && (self.query?.isCustom != true)) {
+						} else if (numberOfItems == nil) ||
+						          ((self.query != nil) && (self.query?.rootItem == nil) && (self.query?.isCustom != true)) ||
+						          ((self.query != nil) && (self.query?.state == .started)) ||
+						          ((self.query != nil) && (self.query?.state == .waitingForServerReply) && self.clientContext?.core?.connectionStatus == .online) {
 							self.contentState = .loading
 						} else {
 							self.contentState = .empty
@@ -578,7 +627,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 								let contextMenuProvider = rootItem as DataItemContextMenuInteraction
 
 								if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
-									    completion(contextMenuElements)
+									if contextMenuElements.count == 0 {
+										completion([UIAction(title: "No actions available".localized, image: nil, attributes: .disabled, handler: {_ in })])
+									} else {
+										completion(contextMenuElements)
+									}
 								}
 							}
 						})
@@ -953,7 +1006,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	}
 
 	// MARK: - Search
-	open var searchController: UISearchController?
 	open var searchViewController: SearchViewController?
 
 	@objc open func startSearch() {
@@ -1203,6 +1255,21 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		emptyItemListDataSource.setItems(emptyItems, updated: nil)
+	}
+
+	// MARK: - Drag to refresh
+	open var supportsDragToRefresh: Bool {
+		return clientContext?.query != nil
+	}
+
+	open func performDragToRefresh() {
+		if let core = clientContext?.core, let query = clientContext?.query {
+			if core.connectionStatus == .online {
+				core.reload(query)
+			} else {
+				refreshControl?.endRefreshing()
+			}
+		}
 	}
 
 	// MARK: - Themeing

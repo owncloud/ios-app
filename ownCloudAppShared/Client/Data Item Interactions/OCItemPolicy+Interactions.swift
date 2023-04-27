@@ -53,7 +53,7 @@ extension OCItemPolicy: DataItemSwipeInteraction {
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
-		deleteAction.image = UIImage(named: "cloud-unavailable-offline")
+		deleteAction.image = OCItem.cloudUnavailableOfflineStatusIcon
 
 		return UISwipeActionsConfiguration(actions: [ deleteAction ])
 	}
@@ -69,7 +69,7 @@ extension OCItemPolicy: DataItemContextMenuInteraction {
 			self?.delete(in: context)
 		})
 		deleteAction.title = "Make unavailable offline".localized
-		deleteAction.image = UIImage(named: "cloud-unavailable-offline")
+		deleteAction.image = OCItem.cloudUnavailableOfflineStatusIcon
 		deleteAction.attributes = .destructive
 
 		return [ deleteAction ]

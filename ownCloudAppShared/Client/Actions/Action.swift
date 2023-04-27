@@ -155,6 +155,10 @@ public class ActionContext: OCExtensionContext {
 		return false
 	}
 
+	public var rootItem: OCItem? {
+		return query?.rootItem ?? (clientContext?.rootItem as? OCItem)
+	}
+
 	// MARK: - Init & Deinit.
 	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 
@@ -552,8 +556,8 @@ extension Action : OCClassSettingsSupport {
 
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
-			.allowedActions : [],
-			.disallowedActions : []
+			.allowedActions : [] as [String],
+			.disallowedActions : [] as [String]
 		]
 	}
 

@@ -53,6 +53,7 @@ class DriveGridCell: DriveHeaderCell {
 			self?.moreAction?.run()
 		}), for: .primaryActionTriggered)
 		moreButton.isHidden = true
+		moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
 		contentView.addSubview(moreButton)
 	}
@@ -65,7 +66,7 @@ class DriveGridCell: DriveHeaderCell {
 		NSLayoutConstraint.activate([
 			titleLabel.centerYAnchor.constraint(equalTo: moreButton.centerYAnchor),
 			titleLabel.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: -10),
-			moreButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10)
+			moreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
 		])
 	}
 
