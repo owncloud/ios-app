@@ -129,13 +129,16 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
                 messageView.backgroundView?.cssSelector = .info
                 messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
                 
-                if VendorServices.shared.canAddAccount {
-                    messageView.elements?.append(.button("Add account".localized, action: UIAction(handler: { [weak self] action in
-                        if let self = self {
-                            BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
-                        }
-                    })))
+                var addAccountTitle = "Add account".localized
+                if !VendorServices.shared.canAddAccount {
+                    addAccountTitle = "Login".localized
                 }
+                
+                messageView.elements?.append(.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
+                    if let self = self {
+                        BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+                    }
+                })))
                 
                 messageView.elements?.append(.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
                     if let self = self {
