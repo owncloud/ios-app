@@ -23,6 +23,10 @@ extension OCShare: UniversalItemListCellContentProvider {
 	public func provideContent(for cell: UniversalItemListCell, context: ClientContext?, configuration: CollectionViewCellConfiguration?, updateContent: @escaping UniversalItemListCell.ContentUpdater) {
 		let content = UniversalItemListCell.Content(with: self)
 		let isFile = (itemType == .file)
+		let showManagementView = (configuration?.style.options[.showManagementView] as? Bool) ?? false
+		let withoutDisclosure = (configuration?.style.options[.withoutDisclosure] as? Bool) ?? false
+		let sharedItemProvider = (configuration?.style.options[.sharedItemProvider] as? ItemProvider)
+		let sharedItem = sharedItemProvider?()
 
 		// Icon
 		if let mimeType = itemMIMEType, isFile {
@@ -32,14 +36,17 @@ extension OCShare: UniversalItemListCellContentProvider {
 		}
 
 		// Title
-		if itemLocation.isDriveRoot, let driveID = itemLocation.driveID, let drive = context?.core?.drive(withIdentifier: driveID), let driveName = drive.name {
-			content.title = .drive(name: driveName)
-		} else if let name = itemLocation.lastPathComponent {
-			content.title = isFile ? .file(name: name) : .folder(name: name)
+		if !showManagementView {
+			if itemLocation.isDriveRoot, let driveID = itemLocation.driveID, let drive = context?.core?.drive(withIdentifier: driveID), let driveName = drive.name {
+				content.title = .drive(name: driveName)
+			} else if let name = itemLocation.lastPathComponent {
+				content.title = isFile ? .file(name: name) : .folder(name: name)
+			}
 		}
 
 		// Details
 		var detailText: String?
+		var detailExtraItems: [SegmentViewItem]?
 
 		switch category {
 			case .withMe:
@@ -47,65 +54,152 @@ extension OCShare: UniversalItemListCellContentProvider {
 				detailText = "Shared by {{owner}}".localized([ "owner" : ownerName ])
 
 			case .byMe:
-				if type != .link {
-					let recipientName = recipient?.displayName ?? ""
-					var recipients: String
-					if let otherItemShares, otherItemShares.count > 0 {
-						var recipientNames : [String] = [ recipientName ]
-						for otherItemShare in otherItemShares {
-							if let otherRecipientName = otherItemShare.recipient?.displayName {
-								recipientNames.append(otherRecipientName)
+				if showManagementView {
+					// Management view
+					var roleDescription: String?
+					var matchingRole: OCShareRole?
+
+					if let sharedItem, let core = context?.core {
+						matchingRole = core.matchingShareRole(for: sharedItem, share: self)
+
+						if let matchingRole {
+							// Name and description for determined role
+							roleDescription = "\(matchingRole.localizedName) (\(matchingRole.localizedDescription))"
+						}
+					}
+
+					if type != .link {
+						// Group + User shares
+						if let user = recipient?.user {
+							if let displayName = user.displayName {
+	 							content.title = .text(displayName)
+							}
+							detailText = user.userName
+						} else if let displayName = recipient?.displayName {
+							content.title = .text(displayName)
+						}
+
+						if let roleDescription {
+							detailText = roleDescription
+						}
+					} else {
+						// Link shares
+						content.title = .text(name ?? "Link".localized)
+
+						if let urlString = url?.absoluteString, urlString.count > 0 {
+							if let roleName = matchingRole?.localizedName {
+								detailText = "\(roleName) | \(urlString)"
+							} else {
+								detailText = urlString
 							}
 						}
-						recipients = "Shared with {{recipients}}".localized([ "recipients" : recipientNames.joined(separator: ", ") ])
-					} else {
-						recipients = "Shared with {{recipient}}".localized([ "recipient" : recipientName ])
 					}
-					detailText = recipients
 				} else {
-					if let urlString = url?.absoluteString, urlString.count > 0 {
-						if let name, name.count > 0 {
-							detailText = "\(name) | \(urlString)"
+					// Overview
+					if type != .link {
+						let recipientName = recipient?.displayName ?? ""
+						var recipients: String
+						if let otherItemShares, otherItemShares.count > 0 {
+							var recipientNames : [String] = [ recipientName ]
+							for otherItemShare in otherItemShares {
+								if let otherRecipientName = otherItemShare.recipient?.displayName {
+									recipientNames.append(otherRecipientName)
+								}
+							}
+							recipients = "Shared with {{recipients}}".localized([ "recipients" : recipientNames.joined(separator: ", ") ])
 						} else {
-							detailText = urlString
+							recipients = "Shared with {{recipient}}".localized([ "recipient" : recipientName ])
+						}
+						detailText = recipients
+					} else {
+						if let urlString = url?.absoluteString, urlString.count > 0 {
+							if let name, name.count > 0 {
+								detailText = "\(name) | \(urlString)"
+							} else {
+								detailText = urlString
+							}
 						}
 					}
+				}
+
+				if let expirationDate {
+					let prettyExpirationDate = OCItem.compactDateFormatter.string(from: expirationDate)
+
+					let expirationDateIconSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "calendar"))
+					expirationDateIconSegment.insets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
+
+					let expirationDateSegment = SegmentViewItem(with: nil, title: "Expires {{expirationDate}}".localized(["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote)
+					expirationDateSegment.insets = .zero
+
+					detailExtraItems = [
+						expirationDateIconSegment,
+						expirationDateSegment
+					]
 				}
 
 			default: break
 		}
 
 		if let detailText {
-			let detailTextSegment = SegmentViewItem(with: nil, title: detailText, style: .plain, titleTextStyle: .footnote)
-			detailTextSegment.insets = .zero
-
-			content.details = [
-				detailTextSegment
+			var detailSegments: [SegmentViewItem] = [
+				.detailText(detailText)
 			]
-		}
 
-		if ((category == .withMe) && (state == .accepted)) ||
-		   ((category == .byMe) && isFile) {
-		   	let tokenArray: NSMutableArray = NSMutableArray()
-
-			if let trackItemToken = context?.core?.trackItem(at: itemLocation, trackingHandler: { [weak cell] error, item, isInitial in
-				if let item, let cell {
-					let updatedContent = UniversalItemListCell.Content(with: content)
-
-					OnMainThread {
-						updatedContent.icon = .resource(request: OCResourceRequestItemThumbnail.request(for: item, maximumSize: cell.thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil))
-						updatedContent.onlyFields = .icon
-
-						if !updateContent(updatedContent) {
-							tokenArray.removeAllObjects() // Drop token, end tracking
-						}
-					}
-				}
-			}) {
-				tokenArray.add(trackItemToken)
+			if let detailExtraItems {
+				detailSegments.append(contentsOf: detailExtraItems)
 			}
 
-			cell.contentProviderUserInfo = tokenArray
+			content.details = detailSegments
+		} else {
+			content.details = detailExtraItems
+		}
+
+		if showManagementView {
+			// Management view
+			switch type {
+				case .userShare:
+					if let recipientUser = recipient?.user {
+						let avatarRequest = OCResourceRequestAvatar(for: recipientUser, maximumSize: OCAvatar.defaultSize, scale: 0, waitForConnectivity: false)
+						content.icon = .resource(request: avatarRequest)
+					}
+
+				case .groupShare:
+					if recipient?.group != nil, let groupIcon = OCSymbol.icon(forSymbolName: "person.3.fill") {
+						content.icon = .icon(image: groupIcon)
+					}
+
+				case .link:
+					if let linkIcon = OCSymbol.icon(forSymbolName: "link") {
+						content.icon = .icon(image: linkIcon)
+					}
+
+				default: break
+			}
+		} else {
+			// Retrieve icon
+			if ((category == .withMe) && (state == .accepted)) ||
+			   ((category == .byMe) && isFile) {
+				let tokenArray: NSMutableArray = NSMutableArray()
+
+				if let trackItemToken = context?.core?.trackItem(at: itemLocation, trackingHandler: { [weak cell] error, item, isInitial in
+					if let item, let cell {
+						let updatedContent = UniversalItemListCell.Content(with: content)
+
+						OnMainThread {
+							updatedContent.icon = .resource(request: OCResourceRequestItemThumbnail.request(for: item, maximumSize: cell.thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil))
+							updatedContent.onlyFields = .icon
+
+							if !updateContent(updatedContent) {
+								tokenArray.removeAllObjects() // Drop token, end tracking
+							}
+						}
+					}
+				}) {
+					tokenArray.add(trackItemToken)
+				}
+
+				cell.contentProviderUserInfo = tokenArray
+			}
 		}
 
 		if category == .byMe {
@@ -118,14 +212,29 @@ extension OCShare: UniversalItemListCellContentProvider {
 					}
 				}))
 
-				content.accessories = [
-					copyToClipboardAccessory,
-					cell.revealButtonAccessory
-				]
+				var accessories = [ copyToClipboardAccessory ]
+
+				if showManagementView {
+					if !withoutDisclosure {
+						accessories.append(.disclosureIndicator())
+					}
+				} else {
+					accessories.append(cell.revealButtonAccessory)
+				}
+
+				content.accessories = accessories
 			} else {
-				content.accessories = [
-					cell.revealButtonAccessory
-				]
+				if showManagementView {
+					if !withoutDisclosure {
+						content.accessories = [
+							.disclosureIndicator()
+						]
+					}
+				} else {
+					content.accessories = [
+						cell.revealButtonAccessory
+					]
+				}
 			}
 		}
 
@@ -172,13 +281,7 @@ extension OCShare {
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .share, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
-			switch cellConfiguration?.style.type {
-//				case .sideBar:
-//					return collectionView.dequeueConfiguredReusableCell(using: savedSearchSidebarCellRegistration, for: indexPath, item: itemRef)
-//
-				default:
-					return collectionView.dequeueConfiguredReusableCell(using: shareCellRegistration, for: indexPath, item: itemRef)
-			}
+			return collectionView.dequeueConfiguredReusableCell(using: shareCellRegistration, for: indexPath, item: itemRef)
 		}))
 	}
 }

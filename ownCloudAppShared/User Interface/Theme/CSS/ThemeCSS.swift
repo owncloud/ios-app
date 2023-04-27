@@ -137,19 +137,39 @@ public struct ThemeCSSProperty: RawRepresentable, Equatable {
 // MARK: - CSS
 open class ThemeCSS: NSObject {
 	open var records: [ThemeCSSRecord] = []
+	private var _cachedMatches: [ThemeCSSAddress : ThemeCSSRecord] = [:]
 
 	open func add(record: ThemeCSSRecord) {
 		records.append(record)
+		OCSynchronized(self) {
+			_cachedMatches.removeAll() // Clear cache
+		}
 	}
 
 	open func add(records: [ThemeCSSRecord]) {
 		self.records.append(contentsOf: records)
+		OCSynchronized(self) {
+			_cachedMatches.removeAll() // Clear cache
+		}
 	}
 
 	open func get(_ property: ThemeCSSProperty, for selectors: [ThemeCSSSelector]) -> ThemeCSSRecord? {
 		var bestRecord: ThemeCSSRecord?
 		var bestRecordScore: Int = -1
 
+		// Search cache
+		let cssAddress = selectors.address(with: property)
+
+		var cachedMatch: ThemeCSSRecord?
+		OCSynchronized(self) {
+			cachedMatch = _cachedMatches[cssAddress]
+		}
+		if let cachedMatch {
+			// Return cached match
+			return cachedMatch
+		}
+
+		// Determine best match from records
 		for record in records {
 			let score = record.score(for: selectors, property: property)
 
@@ -157,6 +177,11 @@ open class ThemeCSS: NSObject {
 				bestRecordScore = score
 				bestRecord = record
 			}
+		}
+
+		// Store match in cache
+		OCSynchronized(self) {
+			_cachedMatches[cssAddress] = bestRecord
 		}
 
 		return bestRecord
@@ -374,5 +399,17 @@ open class ThemeCSS: NSObject {
 		}
 
 		return .regular
+	}
+}
+
+// MARK: - CSS addresses (for caching)
+typealias ThemeCSSAddress = String
+
+extension [ThemeCSSSelector] {
+	func address(with property: ThemeCSSProperty) -> ThemeCSSAddress {
+		var stringComponents = self.compactMap { selector in selector.rawValue }
+		stringComponents.append(property.rawValue)
+
+		return stringComponents.joined(separator: ".")
 	}
 }

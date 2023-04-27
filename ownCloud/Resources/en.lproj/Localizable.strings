@@ -126,6 +126,12 @@
 
 "Show more results" = "Show more results";
 
+/* Item Layouts */
+"List" = "List";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
 /* Saved searches */
 "Saved searches" = "Saved searches";
 "Saved search templates" = "Saved search templates";
@@ -507,6 +513,8 @@
 "Create one file per page" = "Create one file per page";
 
 /* Sharing */
+"Sharing requires an internet connection." = "Sharing requires an internet connection.";
+
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";
 "Recipients" = "Recipients";

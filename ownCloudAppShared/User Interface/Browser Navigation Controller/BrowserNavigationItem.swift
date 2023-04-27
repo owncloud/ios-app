@@ -38,6 +38,9 @@ open class BrowserNavigationItem: NSObject {
 
 		return nil
 	}
+	open var viewControllerIfLoaded: UIViewController? {
+		return _viewController
+	}
 
 	open var builder: Builder?
 

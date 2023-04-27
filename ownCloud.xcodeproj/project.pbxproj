@@ -54,7 +54,6 @@
 		394B0CFC29F958200005CBFE /* AccountSettingsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394B0CFB29F958200005CBFE /* AccountSettingsProvider.swift */; };
 		394E1FDA233E2D64009D2897 /* FavoriteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FD9233E2D64009D2897 /* FavoriteAction.swift */; };
 		394E1FDC233E3750009D2897 /* UnfavoriteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FDB233E3750009D2897 /* UnfavoriteAction.swift */; };
-		394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394E1FFE233E43F5009D2897 /* LinksAction.swift */; };
 		39534BC724EA903200AD7907 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39534BC924EA903200AD7907 /* InfoPlist.strings */; };
 		3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3961281522F8730A0087BD3A /* SceneDelegate.swift */; };
 		3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */; };
@@ -73,11 +72,6 @@
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
 		399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD7C122A691BC00B45EB2 /* UnshareAction.swift */; };
-		399EA6F525E6544100B6FF11 /* GroupSharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA6EE25E6544000B6FF11 /* GroupSharingTableViewController.swift */; };
-		399EA6F725E6544100B6FF11 /* PublicLinkEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA6F025E6544000B6FF11 /* PublicLinkEditTableViewController.swift */; };
-		399EA6F825E6544100B6FF11 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA6F125E6544000B6FF11 /* PublicLinkTableViewController.swift */; };
-		399EA6F925E6544100B6FF11 /* SharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA6F225E6544000B6FF11 /* SharingTableViewController.swift */; };
-		399EA6FA25E6544100B6FF11 /* GroupSharingEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA6F325E6544000B6FF11 /* GroupSharingEditTableViewController.swift */; };
 		399EA71B25E6561E00B6FF11 /* OCShare+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA71A25E6561D00B6FF11 /* OCShare+Extension.swift */; };
 		399EA72625E6565900B6FF11 /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA72525E6565900B6FF11 /* OCCore+Extension.swift */; };
 		399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA73925E656A900B6FF11 /* UITableView+Extension.swift */; };
@@ -416,6 +410,19 @@
 		DCB1B99929D187B400BFF393 /* ThemeCSSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1B99829D187B400BFF393 /* ThemeCSSButton.swift */; };
 		DCB2C05F250C1F9E001083CA /* BrandingClassSettingsSource.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB2C05D250C1F9E001083CA /* BrandingClassSettingsSource.h */; };
 		DCB2C061250C253C001083CA /* BrandingClassSettingsSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */; };
+		DCB32FE829E704D600BFF393 /* SelectionCheckmarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB32FE729E704D600BFF393 /* SelectionCheckmarkButton.swift */; };
+		DCB330C129EDDD4C00BFF393 /* SharingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330C029EDDD4C00BFF393 /* SharingViewController.swift */; };
+		DCB330C929EF30BD00BFF393 /* OCIdentity+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330C829EF30BD00BFF393 /* OCIdentity+UniversalItemListCellContentProvider.swift */; };
+		DCB330D029F051B300BFF393 /* RecipientSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330CF29F051B300BFF393 /* RecipientSearchScope.swift */; };
+		DCB330D129F0737B00BFF393 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330C229EEFF6100BFF393 /* ShareViewController.swift */; };
+		DCB330D629F07ECF00BFF393 /* UIImage+ViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB330D229F07AA000BFF393 /* UIImage+ViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCB330D729F07ED600BFF393 /* UIImage+ViewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB330D329F07AA000BFF393 /* UIImage+ViewProvider.m */; };
+		DCB330DA29F12A0D00BFF393 /* BottomButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330D929F12A0D00BFF393 /* BottomButtonBar.swift */; };
+		DCB330E029F1442500BFF393 /* OCShareRole+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330DF29F1442500BFF393 /* OCShareRole+UniversalItemListCellContentProvider.swift */; };
+		DCB330E429F18C6800BFF393 /* OptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330E329F18C6800BFF393 /* OptionItem.swift */; };
+		DCB330E629F18C6F00BFF393 /* OptionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330E529F18C6F00BFF393 /* OptionGroup.swift */; };
+		DCB330E829F2E21F00BFF393 /* UICellAccessory+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB330E729F2E21F00BFF393 /* UICellAccessory+Extension.swift */; };
+		DCB330EB29F6864D00BFF393 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCB330EA29F6864D00BFF393 /* Assets.xcassets */; };
 		DCB458ED2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCB458EE2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */; };
 		DCB459052604AD2A006A02AB /* SearchSegmentationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB459042604AD2A006A02AB /* SearchSegmentationTests.m */; };
@@ -971,7 +978,6 @@
 		394B0CFB29F958200005CBFE /* AccountSettingsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsProvider.swift; sourceTree = "<group>"; };
 		394E1FD9233E2D64009D2897 /* FavoriteAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteAction.swift; sourceTree = "<group>"; };
 		394E1FDB233E3750009D2897 /* UnfavoriteAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnfavoriteAction.swift; sourceTree = "<group>"; };
-		394E1FFE233E43F5009D2897 /* LinksAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinksAction.swift; sourceTree = "<group>"; };
 		39534BC824EA903200AD7907 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39534BCA24EA903800AD7907 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39534BCB24EA903B00AD7907 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1025,11 +1031,6 @@
 		399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Extension.swift"; sourceTree = "<group>"; };
 		399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathExistsIntentHandler.swift; sourceTree = "<group>"; };
 		399DD7C122A691BC00B45EB2 /* UnshareAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnshareAction.swift; sourceTree = "<group>"; };
-		399EA6EE25E6544000B6FF11 /* GroupSharingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupSharingTableViewController.swift; sourceTree = "<group>"; };
-		399EA6F025E6544000B6FF11 /* PublicLinkEditTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicLinkEditTableViewController.swift; sourceTree = "<group>"; };
-		399EA6F125E6544000B6FF11 /* PublicLinkTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicLinkTableViewController.swift; sourceTree = "<group>"; };
-		399EA6F225E6544000B6FF11 /* SharingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingTableViewController.swift; sourceTree = "<group>"; };
-		399EA6F325E6544000B6FF11 /* GroupSharingEditTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupSharingEditTableViewController.swift; sourceTree = "<group>"; };
 		399EA71A25E6561D00B6FF11 /* OCShare+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCShare+Extension.swift"; sourceTree = "<group>"; };
 		399EA72525E6565900B6FF11 /* OCCore+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCCore+Extension.swift"; sourceTree = "<group>"; };
 		399EA73925E656A900B6FF11 /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
@@ -1419,6 +1420,19 @@
 		DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrandingClassSettingsSource.m; sourceTree = "<group>"; };
 		DCB3256A2559989200058EEB /* generate_docs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = generate_docs.sh; sourceTree = "<group>"; };
 		DCB3257425599ABC00058EEB /* ios_mdm_tables.adoc.tmpl */ = {isa = PBXFileReference; lastKnownFileType = text; path = ios_mdm_tables.adoc.tmpl; sourceTree = "<group>"; };
+		DCB32FE729E704D600BFF393 /* SelectionCheckmarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionCheckmarkButton.swift; sourceTree = "<group>"; };
+		DCB330C029EDDD4C00BFF393 /* SharingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingViewController.swift; sourceTree = "<group>"; };
+		DCB330C229EEFF6100BFF393 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		DCB330C829EF30BD00BFF393 /* OCIdentity+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIdentity+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
+		DCB330CF29F051B300BFF393 /* RecipientSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipientSearchScope.swift; sourceTree = "<group>"; };
+		DCB330D229F07AA000BFF393 /* UIImage+ViewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+ViewProvider.h"; sourceTree = "<group>"; };
+		DCB330D329F07AA000BFF393 /* UIImage+ViewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ViewProvider.m"; sourceTree = "<group>"; };
+		DCB330D929F12A0D00BFF393 /* BottomButtonBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomButtonBar.swift; sourceTree = "<group>"; };
+		DCB330DF29F1442500BFF393 /* OCShareRole+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShareRole+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
+		DCB330E329F18C6800BFF393 /* OptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionItem.swift; sourceTree = "<group>"; };
+		DCB330E529F18C6F00BFF393 /* OptionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionGroup.swift; sourceTree = "<group>"; };
+		DCB330E729F2E21F00BFF393 /* UICellAccessory+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extension.swift"; sourceTree = "<group>"; };
+		DCB330EA29F6864D00BFF393 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DCB403EB262D9C35008CFE9E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
@@ -1545,7 +1559,6 @@
 		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE741DE29B8A85D00BFF393 /* BookmarkManagementContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManagementContext.swift; sourceTree = "<group>"; };
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -1878,6 +1891,7 @@
 				DCB6B1FE292CF2E500D27573 /* Navigation Revocation */,
 				DCEAF0842808250E00980B6D /* Collection Views */,
 				DC3AB1932808C2DE00789435 /* View Controllers */,
+				DCB330E129F18C2B00BFF393 /* Static Elements */,
 				DCB5D5692861BE9A004AF425 /* Search */,
 				DCA2EDDB279B0E5D001F04E6 /* Resource Sources */,
 				DCE4E43424C199860051722F /* Actions */,
@@ -1910,6 +1924,7 @@
 				399A4BF92317CC300027DDD6 /* Tools */,
 				395E16FB22F0691F00DE89A1 /* Intent */,
 				DCE4E4C024C255A70051722F /* App Extensions */,
+				DCB330E929F6861400BFF393 /* Resources */,
 				394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */,
 				DCD863FA28115C8700CA6631 /* Down.LICENSE */,
 				DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */,
@@ -1976,6 +1991,7 @@
 				DC46F3D62845FCFA00038880 /* UIView+OCDataItem.swift */,
 				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 				DC9B4FCD2941DA6E0037F8F8 /* UINavigationItem+Extension.swift */,
+				DCB330E729F2E21F00BFF393 /* UICellAccessory+Extension.swift */,
 			);
 			path = "UIKit Extension";
 			sourceTree = "<group>";
@@ -1996,11 +2012,8 @@
 		399EA6ED25E6544000B6FF11 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
-				399EA6EE25E6544000B6FF11 /* GroupSharingTableViewController.swift */,
-				399EA6F025E6544000B6FF11 /* PublicLinkEditTableViewController.swift */,
-				399EA6F125E6544000B6FF11 /* PublicLinkTableViewController.swift */,
-				399EA6F225E6544000B6FF11 /* SharingTableViewController.swift */,
-				399EA6F325E6544000B6FF11 /* GroupSharingEditTableViewController.swift */,
+				DCB330C029EDDD4C00BFF393 /* SharingViewController.swift */,
+				DCB330C229EEFF6100BFF393 /* ShareViewController.swift */,
 			);
 			path = Sharing;
 			sourceTree = "<group>";
@@ -2120,7 +2133,6 @@
 				391220922344C30F0026C290 /* ImportPasteboardAction.swift */,
 				39CD755123D787E400193950 /* DocumentEditingAction.swift */,
 				397754F22327A33500119FCB /* OpenSceneAction.swift */,
-				394E1FFE233E43F5009D2897 /* LinksAction.swift */,
 				394E1FDB233E3750009D2897 /* UnfavoriteAction.swift */,
 				394E1FD9233E2D64009D2897 /* FavoriteAction.swift */,
 				396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */,
@@ -2754,9 +2766,11 @@
 		DC9219FE2966D5B800F538EE /* UniversalItemListCell Content Providers */ = {
 			isa = PBXGroup;
 			children = (
-				DC921A012966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift */,
+				DCB330C829EF30BD00BFF393 /* OCIdentity+UniversalItemListCellContentProvider.swift */,
 				DC921A032966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift */,
 				DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */,
+				DC921A012966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift */,
+				DCB330DF29F1442500BFF393 /* OCShareRole+UniversalItemListCellContentProvider.swift */,
 			);
 			path = "UniversalItemListCell Content Providers";
 			sourceTree = "<group>";
@@ -2854,6 +2868,39 @@
 			path = templates;
 			sourceTree = "<group>";
 		};
+		DCB330CE29F0519800BFF393 /* Identity Search */ = {
+			isa = PBXGroup;
+			children = (
+				DCB330CF29F051B300BFF393 /* RecipientSearchScope.swift */,
+			);
+			path = "Identity Search";
+			sourceTree = "<group>";
+		};
+		DCB330E129F18C2B00BFF393 /* Static Elements */ = {
+			isa = PBXGroup;
+			children = (
+				DCB330E229F18C3A00BFF393 /* Options */,
+			);
+			path = "Static Elements";
+			sourceTree = "<group>";
+		};
+		DCB330E229F18C3A00BFF393 /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				DCB330E529F18C6F00BFF393 /* OptionGroup.swift */,
+				DCB330E329F18C6800BFF393 /* OptionItem.swift */,
+			);
+			path = Options;
+			sourceTree = "<group>";
+		};
+		DCB330E929F6861400BFF393 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DCB330EA29F6864D00BFF393 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		DCB5D5692861BE9A004AF425 /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -2861,6 +2908,7 @@
 				DCB5D5A828632C1B004AF425 /* Scopes */,
 				DC65592C28A644B60003D130 /* Tokenizer */,
 				DC24E10828B7C04B002E4F5B /* Item Search */,
+				DCB330CE29F0519800BFF393 /* Identity Search */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -3179,9 +3227,11 @@
 				DC24E10E28B7D2B9002E4F5B /* PopupButtonController.swift */,
 				DC46F68D28DAFCDD008280CA /* RoundCornerBackgroundView.swift */,
 				396BE4C92289500E00B254A9 /* RoundedLabel.swift */,
+				DCB32FE729E704D600BFF393 /* SelectionCheckmarkButton.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
 				3912208123436EB80026C290 /* SortMethod.swift */,
 				DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */,
+				DCB330D929F12A0D00BFF393 /* BottomButtonBar.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -3356,7 +3406,6 @@
 			children = (
 				DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */,
 				4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */,
-				DCE741DE29B8A85D00BFF393 /* BookmarkManagementContext.swift */,
 				394B0CFB29F958200005CBFE /* AccountSettingsProvider.swift */,
 			);
 			path = Bookmarks;
@@ -3421,6 +3470,8 @@
 				DCF575E92796CBDF003BEBBA /* OCImage+ViewProvider.h */,
 				DCF072EB27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.m */,
 				DCF072EA27986CCA00E0B01D /* OCResourceTextPlaceholder+ViewProvider.h */,
+				DCB330D329F07AA000BFF393 /* UIImage+ViewProvider.m */,
+				DCB330D229F07AA000BFF393 /* UIImage+ViewProvider.h */,
 			);
 			path = "View Providers";
 			sourceTree = "<group>";
@@ -3564,6 +3615,7 @@
 				DCF072DC279857A300E0B01D /* OCCircularContentView.h in Headers */,
 				DC2A128428D0722F0088A2B7 /* OCSavedSearch.h in Headers */,
 				DC3DDF07287E1C0E00E5586D /* UIViewController+HostBundleID.h in Headers */,
+				DCB330D629F07ECF00BFF393 /* UIImage+ViewProvider.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
 				DC24E0EA28B36A81002E4F5B /* OCSearchSegment.h in Headers */,
@@ -3881,7 +3933,7 @@
 					};
 					394A0AF822EEFC2C00603813 = {
 						CreatedOnToolsVersion = 11.0;
-						LastSwiftMigration = 1420;
+						LastSwiftMigration = 1430;
 						ProvisioningStyle = Automatic;
 					};
 					39A7137F22E79C6700089423 = {
@@ -4078,6 +4130,7 @@
 				DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */,
 				DCE4E48E24C1FB750051722F /* folder-external.tvg in Resources */,
 				DCE4E48924C1FB750051722F /* application-pdf.tvg in Resources */,
+				DCB330EB29F6864D00BFF393 /* Assets.xcassets in Resources */,
 				DCE4E48D24C1FB750051722F /* folder-drag-accept.tvg in Resources */,
 				DCE4E49E24C1FB750051722F /* text.tvg in Resources */,
 				DCE4E48B24C1FB750051722F /* audio.tvg in Resources */,
@@ -4256,7 +4309,6 @@
 				3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */,
 				DCA35D8124D1707100DBE2B0 /* OCSyncRecordActivity+DiagnosticGenerator.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
-				394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */,
 				392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
 				0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */,
@@ -4397,6 +4449,7 @@
 				DC9219FD2966229100F538EE /* UniversalItemListCell.swift in Sources */,
 				DC28F826294B733700AC4013 /* OCItemPolicy+Interactions.swift in Sources */,
 				DC89EA5C2993A0E000BFF393 /* AppStateActionConnect.swift in Sources */,
+				DCB330C929EF30BD00BFF393 /* OCIdentity+UniversalItemListCellContentProvider.swift in Sources */,
 				DCB6B206292E1D8400D27573 /* RoundedLabel.swift in Sources */,
 				DC99155028E63D8300DA0AB8 /* SegmentViewItemView.swift in Sources */,
 				DC3AB2462810602500789435 /* UILabel+Extension.swift in Sources */,
@@ -4408,20 +4461,21 @@
 				DCE2F03E27FADF2600E9E136 /* UICollectionViewDiffableDataSource+Tools.swift in Sources */,
 				DC0A355724C0E35B00FB58FC /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				DC0A359224C0E55800FB58FC /* UIColor+Extension.swift in Sources */,
-				399EA6F825E6544100B6FF11 /* PublicLinkTableViewController.swift in Sources */,
 				DCE4E45024C1E0400051722F /* UIButton+Extension.swift in Sources */,
 				DC89EA672995456A00BFF393 /* BrowserNavigationBookmark+AccountController.swift in Sources */,
 				DC0A357024C0E42700FB58FC /* StaticTableViewSection.swift in Sources */,
 				DC0A357624C0E43200FB58FC /* ProgressHUDViewController.swift in Sources */,
-				399EA6F925E6544100B6FF11 /* SharingTableViewController.swift in Sources */,
 				DC46F69228DCB9C6008280CA /* OCSavedSearch+Interactions.swift in Sources */,
+				DCB330C129EDDD4C00BFF393 /* SharingViewController.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
 				DCE4E44724C1AC4F0051722F /* MessageView.swift in Sources */,
 				DCFE682E28D9CEDD00091D2A /* ComposedMessageView.swift in Sources */,
 				DCD68A2D291D979400993FF5 /* AccountController.swift in Sources */,
+				DCB330E029F1442500BFF393 /* OCShareRole+UniversalItemListCellContentProvider.swift in Sources */,
 				DC9B4FCE2941DA6E0037F8F8 /* UINavigationItem+Extension.swift in Sources */,
 				DC89EA572992FDCD00BFF393 /* AppStateAction.swift in Sources */,
 				DC298CB029366B96009FA87F /* AccountControllerSpacesGridViewController.swift in Sources */,
+				DCB330E429F18C6800BFF393 /* OptionItem.swift in Sources */,
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
 				DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */,
@@ -4431,6 +4485,7 @@
 				DC0A356D24C0E42200FB58FC /* PasscodeViewController.swift in Sources */,
 				DC24B2AB25BA316D005783E2 /* Branding+App.swift in Sources */,
 				0234EF0E2515138B00AE921A /* PasscodeSetupCoordinator.swift in Sources */,
+				DCB32FE829E704D600BFF393 /* SelectionCheckmarkButton.swift in Sources */,
 				DCA35DA724D309B600DBE2B0 /* OCFileProviderServiceSession+UploadByFileProvider.swift in Sources */,
 				DC298C922934CF56009FA87F /* AccountConnectionErrorHandler.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
@@ -4468,6 +4523,7 @@
 				DC9B4FC3293F453C0037F8F8 /* EmbeddingViewController.swift in Sources */,
 				DC298C972934D354009FA87F /* IssuesCardViewController.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
+				DCB330E629F18C6F00BFF393 /* OptionGroup.swift in Sources */,
 				DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */,
 				DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */,
 				DCB5D5A728632C17004AF425 /* SearchScope.swift in Sources */,
@@ -4489,6 +4545,7 @@
 				DC298CA129357809009FA87F /* AccountConnectionAuthErrorConsumer.swift in Sources */,
 				DC3AB24428104AA500789435 /* UIFont+Weight.swift in Sources */,
 				DCB6B1F9292CCAF200D27573 /* OCBookmarkManager+Management.swift in Sources */,
+				DCB330DA29F12A0D00BFF393 /* BottomButtonBar.swift in Sources */,
 				DC0A358524C0E44600FB58FC /* ThemeResource.swift in Sources */,
 				DC99154C28E636A500DA0AB8 /* SegmentView.swift in Sources */,
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,
@@ -4521,7 +4578,6 @@
 				DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */,
 				DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
-				399EA6F725E6544100B6FF11 /* PublicLinkEditTableViewController.swift in Sources */,
 				DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */,
 				DCCE1BFA28CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift in Sources */,
 				DC0A358824C0E44B00FB58FC /* ThemeTableViewCell.swift in Sources */,
@@ -4537,7 +4593,6 @@
 				DC298C992934D3F8009FA87F /* AlertViewController.swift in Sources */,
 				DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */,
 				DCBAEAE829A568D500BFF393 /* TitleSupplementaryCell.swift in Sources */,
-				399EA6F525E6544100B6FF11 /* GroupSharingTableViewController.swift in Sources */,
 				DC0A357924C0E43700FB58FC /* CardTransitionDelegate.swift in Sources */,
 				DC0A358724C0E44600FB58FC /* ThemeImage.swift in Sources */,
 				DC0A355824C0E35B00FB58FC /* Synchronized.swift in Sources */,
@@ -4553,8 +4608,10 @@
 				DC62F56C29250DC80095BB5D /* AccountConnectionConsumer.swift in Sources */,
 				DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */,
 				DC0A359924C0E6FE00FB58FC /* VendorServices.swift in Sources */,
+				DCB330E829F2E21F00BFF393 /* UICellAccessory+Extension.swift in Sources */,
 				DC0A358324C0E44200FB58FC /* VectorImage.swift in Sources */,
 				DC0A359824C0E68700FB58FC /* OCItem+AppExtension.swift in Sources */,
+				DCB330D129F0737B00BFF393 /* ShareViewController.swift in Sources */,
 				DC0A358424C0E44200FB58FC /* VectorImageView.swift in Sources */,
 				DCB1B8AB29C89E0900BFF393 /* ThemeCSSLabel.swift in Sources */,
 				DCFA5645297574A60092C89F /* BrowserNavigationItem.swift in Sources */,
@@ -4565,6 +4622,7 @@
 				DC921A0B2968BA4D00F538EE /* ClientSharedByMeViewController.swift in Sources */,
 				DC0A357D24C0E43C00FB58FC /* ThemeStyle.swift in Sources */,
 				DC46F3CC2844A8EA00038880 /* ViewCell.swift in Sources */,
+				DCB330D029F051B300BFF393 /* RecipientSearchScope.swift in Sources */,
 				DC298C982934D381009FA87F /* OCIssue+DisplayIssues.swift in Sources */,
 				DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */,
 				DC0A357524C0E43200FB58FC /* ProgressView.swift in Sources */,
@@ -4583,7 +4641,6 @@
 				399EA74625E6575B00B6FF11 /* NotificationHUDViewController.swift in Sources */,
 				DC0A357B24C0E43C00FB58FC /* Theme.swift in Sources */,
 				DC2A68D729D4E93300BFF393 /* SharedKeyCommands.swift in Sources */,
-				399EA6FA25E6544100B6FF11 /* GroupSharingEditTableViewController.swift in Sources */,
 				DC8AA7BE29DC154400BFF393 /* ItemLayout.swift in Sources */,
 				DCD68A2F291D9BE400993FF5 /* AccountControllerCell.swift in Sources */,
 				DC89EA6929958DF500BFF393 /* UIViewController+BrowserNavigation.swift in Sources */,
@@ -4681,6 +4738,7 @@
 				DC66F3AC23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m in Sources */,
 				DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */,
 				DCF575F02796CE38003BEBBA /* OCViewHost.m in Sources */,
+				DCB330D729F07ED600BFF393 /* UIImage+ViewProvider.m in Sources */,
 				DCB458EE2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m in Sources */,
 				DC080CF3238C92480044C5D2 /* OCLicenseAppStoreItem.m in Sources */,
 				DCFEFE982368D099009A142F /* OCLicenseEnvironment.m in Sources */,
@@ -5052,7 +5110,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 254;
+				APP_VERSION = 257;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5122,7 +5180,7 @@
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
 				APP_SHORT_VERSION = 12.0;
-				APP_VERSION = 254;
+				APP_VERSION = 257;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

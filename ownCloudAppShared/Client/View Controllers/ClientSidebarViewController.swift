@@ -98,9 +98,35 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 	public func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController) {
 		if let history = sidebarContext.browserController?.history {
 			// Log.debug("Revoke view controller: \(viewController) \(viewController.navigationItem.titleLabelText)")
-			if let historyItem = history.item(for: viewController) {
+			var hasHistoryItem = false
+
+			// A view controller may appear more than once in history, so if a view controller is to be removed,
+			// make sure that all history items for it are removed
+			while let historyItem = history.item(for: viewController) {
 				history.remove(item: historyItem, completion: nil)
+				hasHistoryItem = true
 			}
+
+			// Dismiss view controllers that are being presented but are not part of the sidebar browser controller's history
+			if !hasHistoryItem {
+				if viewController.presentingViewController != nil {
+					dismissDeep(viewController: viewController)
+				}
+			}
+		}
+	}
+
+	func dismissDeep(viewController: UIViewController) {
+		if viewController.presentingViewController != nil {
+			var dismissStartViewController: UIViewController? = viewController
+
+			while let deeperViewController = dismissStartViewController?.presentedViewController {
+				dismissStartViewController = deeperViewController
+			}
+
+			dismissStartViewController?.dismiss(animated: true, completion: { [weak self] in
+				self?.dismissDeep(viewController: viewController)
+			})
 		}
 	}
 

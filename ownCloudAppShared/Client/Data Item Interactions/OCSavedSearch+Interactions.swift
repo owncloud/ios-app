@@ -56,7 +56,12 @@ extension OCSavedSearch {
 			}
 
 			switch scope {
-				case .folder, .container:
+				case .folder:
+					if let path = location.path {
+						requirements.append(OCQueryCondition.where(.parentPath, isEqualTo: path))
+					}
+
+				case .container:
 					if let path = location.path {
 						requirements.append(OCQueryCondition.where(.path, startsWith: path))
 					}

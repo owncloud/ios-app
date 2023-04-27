@@ -259,7 +259,7 @@ extension ActionCell {
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .action, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
 			switch cellConfiguration?.style.type {
-				case .gridCell:
+				case .gridCell, .gridCellLowDetail, .gridCellNoDetail:
 					return collectionView.dequeueConfiguredReusableCell(using: gridActionCellRegistration, for: indexPath, item: itemRef)
 
 				case .sideBar:

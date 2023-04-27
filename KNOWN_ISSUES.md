@@ -7,7 +7,6 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## App
 - in the new browsing experience, some features are not yet available:
-	- a grid view
 	- breadcrumb title
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
@@ -33,7 +32,7 @@ Missing:
 - [x] opening private links (display(itemWithID…:…))
 - [x] account issue handling
 - [x] functional share extension
-- [ ] full themeing/branding support
+- [x] full themeing/branding support
 - [ ] reinstate Key Commands
 
 Jesus:

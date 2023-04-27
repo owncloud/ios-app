@@ -495,6 +495,18 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.collection, .sectionFooter], 	property: .stroke, value: sectionFooterColor),
 			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 
+			ThemeCSSRecord(selectors: [.collection, .selectionCheckmark], 			property: .fill,   value: cellStateSet.regular.tintColor),
+			ThemeCSSRecord(selectors: [.collection, .selectionCheckmark], 			property: .stroke, value: cellStateSet.regular.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.collection, .selected, .selectionCheckmark], 		property: .stroke,   value: UIColor.white),
+
+			ThemeCSSRecord(selectors: [.grouped, .collection],  	   		property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection],    		property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .sectionHeader],  	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .cell, .action],  	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .sectionHeader], property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .cell, .action], property: .fill,   value: cellStateSet.regular.backgroundColor),
+
 			// - Table View
 			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCollectionBackgroundColor),
@@ -524,6 +536,10 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.table, .label, .secondary], 		property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .primary],    	property: .stroke, value: cellStateSet.highlighted.labelColor),
 			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .secondary], 	property: .stroke, value: cellStateSet.highlighted.secondaryLabelColor),
+
+			// - Section titles
+			ThemeCSSRecord(selectors: [.sectionHeader, .mediumTitle, .label],	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.sectionHeader, .smallTitle, .label],	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 
 			// - Accessories
 			ThemeCSSRecord(selectors: [.accessory], 			property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
@@ -654,11 +670,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.more, .favorite, .disabled],	property: .stroke, value: favoriteDisabledColor),
 
 			// - TVG icon colors
-			ThemeCSSRecord(selectors: [.vectorImage, .folderFillColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .fileFillColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .logoFillColor], 	property: .fill, value: logoFillColor ?? UIColor.white),
-			ThemeCSSRecord(selectors: [.vectorImage, .iconFillColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .symbolFillColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .folderColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 		property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .logoColor], 		property: .fill, value: logoFillColor ?? UIColor.white),
+			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 		property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
 
 			// Side Bar
 			// - Interface Style
@@ -726,11 +742,11 @@ public class ThemeCollection : NSObject {
 		if _iconColors == nil {
 			_iconColors = [:]
 
-			_iconColors?["folderFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .folderFillColor], for: nil)?.hexString()
-			_iconColors?["fileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .fileFillColor], for: nil)?.hexString()
-			_iconColors?["logoFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .logoFillColor], for: nil)?.hexString()
-			_iconColors?["iconFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .iconFillColor], for: nil)?.hexString()
-			_iconColors?["symbolFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .symbolFillColor], for: nil)?.hexString()
+			_iconColors?["folderFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .folderColor], for: nil)?.hexString()
+			_iconColors?["fileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .fileColor], for: nil)?.hexString()
+			_iconColors?["logoFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .logoColor], for: nil)?.hexString()
+			_iconColors?["iconFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .iconColor], for: nil)?.hexString()
+			_iconColors?["symbolFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .symbolColor], for: nil)?.hexString()
 		}
 
 		return _iconColors ?? [:]
@@ -738,11 +754,11 @@ public class ThemeCollection : NSObject {
 }
 
 extension ThemeCSSSelector {
-	static let folderFillColor = ThemeCSSSelector(rawValue: "folderFillColor")
-	static let fileFillColor = ThemeCSSSelector(rawValue: "fileFillColor")
-	static let logoFillColor = ThemeCSSSelector(rawValue: "logoFillColor")
-	static let iconFillColor = ThemeCSSSelector(rawValue: "iconFillColor")
-	static let symbolFillColor = ThemeCSSSelector(rawValue: "symbolFillColor")
+	static let folderColor = ThemeCSSSelector(rawValue: "folderColor")
+	static let fileColor = ThemeCSSSelector(rawValue: "fileColor")
+	static let logoColor = ThemeCSSSelector(rawValue: "logoColor")
+	static let iconColor = ThemeCSSSelector(rawValue: "iconColor")
+	static let symbolColor = ThemeCSSSelector(rawValue: "symbolColor")
 }
 
 extension ThemeCollection {

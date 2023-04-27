@@ -46,7 +46,13 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 		}
 	}
  	open var itemSpacing: CGFloat = 5
- 	open var truncationMode: TruncationMode = .none
+ 	open var truncationMode: TruncationMode = .none {
+ 		didSet {
+ 			if truncationMode != oldValue {
+ 				recreateAndLayoutItemViews()
+			}
+		}
+	}
  	open var insets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
  	open var limitVerticalSpaceUsage: Bool = false
 
@@ -167,6 +173,11 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 			}
 		}
 
+		if let lastSegmentView = (itemViews.last as? SegmentViewItemView) {
+			// If the last view is a label, allow it to stretch and fill the space
+			lastSegmentView.titleViewHugging = .defaultHigh
+		}
+
 		// Scroll View
 		var hostView: UIView = self
 
@@ -241,11 +252,14 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 					}
 			}
 
-			if let maskView = maskView {
+			if let maskView {
 				maskView.translatesAutoresizingMaskIntoConstraints = false
 				self.borderMaskView = maskView
 				self.embed(toFillWith: maskView)
 				self.mask = maskView
+			} else {
+				self.mask?.removeFromSuperview()
+				self.mask = nil
 			}
 
 			return constraintSet
@@ -275,54 +289,10 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 		}
 	}
 
-//	private var allViewsFullyVisible: Bool = false {
-//		didSet {
-//			if allViewsFullyVisible != oldValue, let borderMaskView {
-//				if allViewsFullyVisible {
-//					borderMaskView.removeFromSuperview()
-//					mask = nil
-//				} else {
-////					embed(toFillWith: borderMaskView)
-////					mask = borderMaskView
-//				}
-//			}
-//		}
-//	}
-//
-//	private func evaluateBorderMaskNecessity() {
-//		if borderMaskView != nil, !isScrollable {
-//			if let lastViewFrame = items.last?.view?.frame,
-//			   let firstViewFrame = items.first?.view?.frame {
-//				let bounds = bounds
-//
-//				if firstViewFrame.origin.x >= bounds.origin.x,
-//				   (lastViewFrame.origin.x + lastViewFrame.size.width) <= (bounds.origin.x + bounds.size.width) {
-//					allViewsFullyVisible = true
-//				} else {
-//					allViewsFullyVisible = false
-//				}
-//			}
-//		}
-//	}
-//
-//	public override func didMoveToWindow() {
-//		super.didMoveToWindow()
-//
-//		OnMainThread {
-//			self.evaluateBorderMaskNecessity()
-//		}
-//	}
-//
-//	public override func layoutSubviews() {
-//		super.layoutSubviews()
-//		self.evaluateBorderMaskNecessity()
-//	}
-
 	public override var bounds: CGRect {
 		didSet {
 			OnMainThread {
 				self.scrollToTruncationTarget()
-				// self.evaluateBorderMaskNecessity()
 			}
 		}
 	}

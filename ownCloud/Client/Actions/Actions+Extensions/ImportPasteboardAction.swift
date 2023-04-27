@@ -64,7 +64,7 @@ class ImportPasteboardAction : Action {
 	override func run() {
 		var importToRootItem : OCItem?
 
-		if let root = context.query?.rootItem {
+		if let root = context.rootItem {
 			importToRootItem = root
 		} else if let root = context.preferences?["rootItem"] as? OCItem { // KeyCommands send the rootItem via Preferences, because if a table view cell is selected, we need the folder root item
 			importToRootItem = root

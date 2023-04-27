@@ -34,6 +34,8 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 	var iconView: UIImageView?
 	var titleView: UILabel?
 
+	var titleViewHugging: UILayoutPriority = .required
+
 	public init(with item: SegmentViewItem) {
 		self.item = item
 
@@ -77,6 +79,9 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 			titleView = ThemeCSSLabel(withSelectors: [.title])
 			titleView?.translatesAutoresizingMaskIntoConstraints = false
 			titleView?.text = title
+			if let titleLinebreakMode = item.titleLinebreakMode {
+				titleView?.lineBreakMode = titleLinebreakMode
+			}
 			if let titleTextStyle = item.titleTextStyle {
 				if let titleTextWeight = item.titleTextWeight {
 					titleView?.font = .preferredFont(forTextStyle: titleTextStyle, with: titleTextWeight)
@@ -84,12 +89,17 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 					titleView?.font = .preferredFont(forTextStyle: titleTextStyle)
 				}
 			}
-			titleView?.setContentHuggingPriority(.required, for: .horizontal)
+			titleView?.setContentHuggingPriority(titleViewHugging, for: .horizontal)
 			titleView?.setContentHuggingPriority(.required, for: .vertical)
 			titleView?.setContentCompressionResistancePriority(.required, for: .vertical)
 			titleView?.setContentCompressionResistancePriority(.required, for: .horizontal)
 
 			views.append(titleView!)
+		}
+
+		if let embedView = item.embedView {
+			embedView.translatesAutoresizingMaskIntoConstraints = false
+			views.append(embedView)
 		}
 
 		embedHorizontally(views: views, insets: item.insets, limitHeight: item.segmentView?.limitVerticalSpaceUsage ?? false, spacingProvider: { leadingView, trailingView in

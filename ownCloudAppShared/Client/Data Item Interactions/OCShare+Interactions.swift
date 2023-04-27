@@ -121,6 +121,30 @@ extension OCShare: DataItemContextMenuInteraction {
 }
 
 extension OCShare: DataItemSelectionInteraction {
+	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
+		if let context {
+			var editViewController: UIViewController?
+
+			if let otherItemShares, otherItemShares.count > 0, (viewController as? SharingViewController) == nil {
+				// Grouped share
+				if let item = try? context.core?.cachedItem(at: itemLocation) {
+					editViewController = SharingViewController(clientContext: context, item: item)
+				}
+			} else {
+				// Single share
+				editViewController = ShareViewController(mode: .edit, share: self, clientContext: context, completion: { _ in })
+			}
+
+			if let editViewController {
+				let navigationController = ThemeNavigationController(rootViewController: editViewController)
+				context.present(navigationController, animated: true)
+			}
+		}
+
+		completion?(true)
+		return true
+	}
+
 	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
 		if let item = try? context?.core?.cachedItem(at: itemLocation) {
 			return item.revealItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)

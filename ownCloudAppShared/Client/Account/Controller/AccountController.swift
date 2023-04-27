@@ -416,7 +416,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 				// Available offline
 				if specialItems[.availableOfflineItems] == nil {
-					specialItems[.availableOfflineItems] = buildSidebarSpecialItem(with: "Available Offline".localized, icon: UIImage(named: "cloud-available-offline"), for: .availableOfflineItems)
+					specialItems[.availableOfflineItems] = buildSidebarSpecialItem(with: "Available Offline".localized, icon: OCItem.cloudAvailableOfflineStatusIcon, for: .availableOfflineItems)
 				}
 				if let sideBarItem = specialItems[.availableOfflineItems] {
 					quickAccessItems.append(sideBarItem)
@@ -543,7 +543,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 					let availableOfflineFilesDataSource = core.availableOfflineFilesDataSource
 					let sortedDataSource = SortedItemDataSource(itemDataSource: availableOfflineFilesDataSource)
 
-					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: UIImage(named: "cloud-available-offline"), emptyItemListTitleLocalized: "No files available offline".localized, emptyItemListMessageLocalized: "Files selected and downloaded for offline availability will show up here.".localized)
+					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: OCItem.cloudAvailableOfflineStatusIcon, emptyItemListTitleLocalized: "No files available offline".localized, emptyItemListMessageLocalized: "Files selected and downloaded for offline availability will show up here.".localized)
 					availableOfflineViewController.navigationTitle = "Available Offline".localized
 
 					sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext

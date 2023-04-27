@@ -56,3 +56,9 @@ extension SearchToken {
 		return token
 	}
 }
+
+extension [SearchElement] {
+	var composedSearchTerm: String {
+		return compactMap({ element in return element.text }).joined(separator: " ")
+	}
+}

@@ -444,7 +444,7 @@
 						}
 						else if ([modifierKeyword isEqual:@"owner"])
 						{
-							condition = [OCQueryCondition where:OCItemPropertyNameOwnerUserName startsWith:parameter];
+							condition = [OCQueryCondition where:OCItemPropertyNameOwnerUserName isEqualTo:parameter];
 							AddDescription(condition, @"person.crop.circle", nil, negateCondition ? [OCLocalized(@"Not") stringByAppendingFormat:@" %@", parameter] : parameter);
 						}
 						else if ([modifier isEqual:@""])
