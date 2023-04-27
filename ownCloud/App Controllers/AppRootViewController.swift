@@ -122,7 +122,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 			if condition.fulfilled == true {
 				// No account available
                 let messageView = ComposedMessageView.infoBox(additionalElements: [
-                    .image(AccountSettingsProvider.shared.logo.withRoundedCorners(radius: 4)!, size: CGSize(width: 128, height: 128)),
+                    .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128)),
                     .title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0))
                 ])
                 messageView.cssSelector = .info

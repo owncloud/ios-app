@@ -330,7 +330,8 @@ class BookmarkViewController: StaticTableViewController {
 		}
         
         let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
-            .image(AccountSettingsProvider.shared.logo.withRoundedCorners(radius: 4)!, size: CGSize(width: 64, height: 64))
+            .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64)),
+            .title(VendorServices.shared.appName, alignment: .centered)
         ])
         tokenMessageView.cssSelector = .info
         tokenMessageView.backgroundView?.cssSelector = .info
