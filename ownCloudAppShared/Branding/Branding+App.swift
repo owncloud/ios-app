@@ -65,7 +65,7 @@ extension Branding : BrandingInitialization {
 			.canAddAccount : true,
 			.canEditAccount : true,
 			.enableReviewPrompt : false
-		],  : [
+		], metadata: [
 			.documentationURL : [
 				.type 		: OCClassSettingsMetadataType.urlString,
 				.label		: "Documentation URL",
