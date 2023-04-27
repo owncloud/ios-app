@@ -35,6 +35,14 @@ extension OCClassSettingsKey {
 	public static let canAddAccount : OCClassSettingsKey = OCClassSettingsKey("can-add-account")
 	public static let canEditAccount : OCClassSettingsKey = OCClassSettingsKey("can-edit-account")
 	public static let enableReviewPrompt : OCClassSettingsKey = OCClassSettingsKey("enable-review-prompt")
+    
+    public static let profileBookmarkName : OCClassSettingsKey = OCClassSettingsKey("profile-bookmark-name")
+    public static let profileURL : OCClassSettingsKey = OCClassSettingsKey("profile-url")
+    public static let profileAllowUrlConfiguration : OCClassSettingsKey = OCClassSettingsKey("profile-allow-url-configuration")
+    public static let profileHelpButtonLabel = OCClassSettingsKey("profile-help-button-label")
+    public static let profileOpenHelpMessage = OCClassSettingsKey("profile-open-help-message")
+    public static let profileHelpURL = OCClassSettingsKey("profile-help-url")
+    
 
 	// Profiles
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
@@ -190,8 +198,7 @@ extension BrandingImageName {
 
 extension Branding {
 	public var isBranded: Bool {
-		return (organizationName != nil) && // Organization name must be set
-		       ((profileDefinitions?.count ?? 0) > 0) // At least one profile needs to have been defined
+		return (organizationName != nil) // Organization name must be set
 	}
 
 	public var documentationURL : URL? {
@@ -257,6 +264,31 @@ extension Branding {
 
 		return definitions
 	}
+    
+    public var profileBookmarkName: String? {
+        return computedValue(forClassSettingsKey: .profileBookmarkName) as? String ?? nil
+    }
+    
+    public var profileURL: URL? {
+        return url(forClassSettingsKey: .profileURL) ?? nil
+    }
+    
+    public var profileAllowUrlConfiguration: Bool? {
+        return computedValue(forClassSettingsKey: .profileAllowUrlConfiguration) as? Bool ?? nil
+    }
+    
+    public var profileOpenHelpMessage: String? {
+        return computedValue(forClassSettingsKey: .profileOpenHelpMessage) as? String ?? nil
+    }
+    
+    public var profileHelpButtonLabel: String? {
+        return computedValue(forClassSettingsKey: .profileHelpButtonLabel) as? String ?? nil
+    }
+    
+    public var profileHelpURL: URL? {
+        return url(forClassSettingsKey: .profileHelpURL) ?? nil
+    }
+    
 }
 
 extension Branding {

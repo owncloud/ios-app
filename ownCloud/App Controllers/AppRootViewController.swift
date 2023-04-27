@@ -120,37 +120,38 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		// Make browser navigation view controller the content
 		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
 			if condition.fulfilled == true {
-				// Empty
-				let messageView = ComposedMessageView(elements: [
-					.image(UIImage(named: "AppIcon")!.withRoundedCorners(radius: 4)!, size: CGSize(width: 128, height: 128)),
-                    .title("Welcome".localized, alignment: .centered),
-                    .button("Add account".localized, action: UIAction(handler: { [weak self] action in
+				// No account available
+                let messageView = ComposedMessageView.infoBox(additionalElements: [
+                    .image(AccountSettingsProvider.shared.logo.withRoundedCorners(radius: 4)!, size: CGSize(width: 128, height: 128)),
+                    .title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0))
+                ])
+                messageView.cssSelector = .info
+                messageView.backgroundView?.cssSelector = .info
+                messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
+                
+                if VendorServices.shared.canAddAccount {
+                    messageView.elements?.append(.button("Add account".localized, action: UIAction(handler: { [weak self] action in
                         if let self = self {
                             BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
                         }
-					})),
-                    .button("Settings".localized ,action: UIAction(handler: { [weak self] action in
-                        if let self = self {
-                            self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
-                        }
-                    }), cssSelectors: [.success])
-				])
-
-				let rootView = ThemeCSSView(withSelectors: [.modal])
-				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-
+                    })))
+                }
+                
+                messageView.elements?.append(.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
+                    if let self = self {
+                        self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+                    }
+                }), cssSelectors: [.cancel]))
+                
+                let rootView = ThemeCSSView(withSelectors: [.modal])
+                rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
                 
 				let messageViewController = UIViewController()
 				messageViewController.view = rootView
-                let toolbar = UIToolbar()
-                toolbar.tintColor = .red
-                rootView.addSubview(toolbar)
-                
-               // let navigationController = UINavigationController(rootViewController: messageViewController)
 
 				self?.contentViewController = messageViewController
 			} else {
-				// Not empty
+				// Account already available
 				self?.contentViewController = self?.contentBrowserController
 			}
 		})

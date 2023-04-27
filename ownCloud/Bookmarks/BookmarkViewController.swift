@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudUI
+import ownCloudApp
 import ownCloudAppShared
 // UNCOMMENT FOR HOST SIMULATOR: // import ownCloudMocking
 
@@ -29,6 +30,9 @@ class BookmarkViewController: StaticTableViewController {
 	var nameSection : StaticTableViewSection?
 	var nameRow : StaticTableViewRow?
 	var nameChanged = false
+    
+    var helpSection : StaticTableViewSection?
+    var helpButtonRow : StaticTableViewRow?
 
 	var urlSection : StaticTableViewSection?
 	var urlRow : StaticTableViewRow?
@@ -251,33 +255,41 @@ class BookmarkViewController: StaticTableViewController {
 		self.navigationController?.navigationBar.isHidden = false
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(BookmarkViewController.userActionCancel))
 		self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
-
-		switch mode {
-			case .create:
-				self.navigationItem.title = "Add account".localized
-				self.navigationItem.rightBarButtonItem = continueBarButtonItem
-
-				// Support for bookmark default name
-				if let defaultNameString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultName) as? String {
-					self.bookmark?.name = defaultNameString
-
-					if bookmark != nil {
-						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
-					}
-				}
+        
+        switch mode {
+        case .create:
+            self.navigationItem.title = Branding.shared.organizationName ?? "Add account".localized
+            self.navigationItem.rightBarButtonItem = continueBarButtonItem
             
+            // Support for bookmark default name
+            if let defaultNameString = AccountSettingsProvider.shared.defaultBookmarkName {
+                self.bookmark?.name = defaultNameString
+                
+                if bookmark != nil {
+                    updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+                }
+            }
             
-
-				// Support for bookmark default URL
-				if let defaultURLString = defaultURLString {
-					self.bookmark?.url = URL(string: defaultURLString)
-
-					if bookmark != nil {
-						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
-					}
-				}
+            // Support for bookmark default URL
+            if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+                self.bookmark?.url = defaultURL
+                
+                if bookmark != nil {
+                    updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+                }
+            }
             
-			case .edit:
+            if let url = AccountSettingsProvider.shared.profileHelpURL, let title = AccountSettingsProvider.shared.profileHelpButtonLabel {
+                let imageView = UIImageView(image: UIImage(systemName: "questionmark.circle")!)
+                helpButtonRow = StaticTableViewRow(rowWithAction: { staticRow, sender in
+                    UIApplication.shared.open(url)
+                }, title: title, alignment: .center, accessoryView: imageView)
+                
+                
+                helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: AccountSettingsProvider.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
+            }
+            
+        case .edit:
 				// Fill UI
 				if bookmark != nil {
 					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
@@ -297,8 +309,8 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Support for bookmark URL editable
-		if let bookmarkURLEditable = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool, bookmarkURLEditable == false {
-			self.urlRow?.enabled = bookmarkURLEditable
+        if AccountSettingsProvider.shared.URLEditable == false {
+			self.urlRow?.enabled = false
 
 			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
 
@@ -318,14 +330,8 @@ class BookmarkViewController: StaticTableViewController {
 		}
         
         let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
-            .text("Please enter your Server URL".localized, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
-            .image(UIImage(named: "AppIcon")!.withRoundedCorners(radius: 4)!, size: CGSize(width: 64, height: 64))
+            .image(AccountSettingsProvider.shared.logo.withRoundedCorners(radius: 4)!, size: CGSize(width: 64, height: 64))
         ])
-/*
-        let tokenMessageView = ComposedMessageView(elements: [
-            .image(UIImage(named: "AppIcon")!, size: CGSize(width: 128, height: 128)),
-            .text("Welcome".localized, style: .system(textStyle: .body, weight: .semibold), alignment: .centered, cssSelectors: [.info])
-        ])*/
         tokenMessageView.cssSelector = .info
         tokenMessageView.backgroundView?.cssSelector = .info
         tokenMessageView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
@@ -333,22 +339,15 @@ class BookmarkViewController: StaticTableViewController {
 
         self.tableView.tableHeaderView = tokenMessageView
         self.tableView.layoutTableHeaderView()
+        
+        if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
+            self.tableView.backgroundView = UIImageView(image: image)
+        }
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-    
-    var defaultURLString: String? {
-        /*
-        if let defaultURLString = StaticLoginProfile().classSetting(forOCClassSettingsKey: StaticLoginProfile.Key.url.settingsKey) as? String {
-            return defaultURLString
-        } else*/ if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
-            return defaultURLString
-        }
-        
-        return nil
-    }
 
 	// MARK: - View controller events
 	override func viewDidAppear(_ animated: Bool) {
@@ -972,6 +971,10 @@ class BookmarkViewController: StaticTableViewController {
 				continueBarButtonItem.isEnabled = false
 			}
 		}
+        
+        if helpSection?.attached == false {
+            self.insertSection(helpSection!, at: self.sections.count, animated: animated)
+        }
 	}
 
 	@discardableResult func updateInputFocus(fallbackRow: StaticTableViewRow? = nil ) -> Bool {
@@ -1130,14 +1133,12 @@ extension BookmarkViewController {
 }
 
 // MARK: - OCClassSettings support
+
 extension OCClassSettingsIdentifier {
-	static let bookmark = OCClassSettingsIdentifier("bookmark")
+    static let bookmark = OCClassSettingsIdentifier("bookmark")
 }
 
 extension OCClassSettingsKey {
-	static let bookmarkDefaultName = OCClassSettingsKey("default-name")
-	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
-	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
 	static let prepopulation = OCClassSettingsKey("prepopulation")
 }
 
@@ -1148,41 +1149,14 @@ enum BookmarkPrepopulationMethod : String {
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
+    static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+        return nil
+    }
+    
 	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
-
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .bookmark {
-			return [
-				.bookmarkURLEditable : true
-			]
-		}
-
-		return nil
-	}
 
 	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
-			.bookmarkDefaultName : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "The default name for the creation of new bookmarks.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported
-			],
-
-				.bookmarkDefaultURL : [
-					.type         : OCClassSettingsMetadataType.string,
-					.description    : "The default URL for the creation of new bookmarks.",
-					.category    : "Bookmarks",
-					.status        : OCClassSettingsKeyStatus.supported
-				],
-
-				.bookmarkURLEditable : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-					.category	: "Bookmarks",
-					.status		: OCClassSettingsKeyStatus.supported
-				],
-
 				.prepopulation : [
 					.type 		: OCClassSettingsMetadataType.string,
 					.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
