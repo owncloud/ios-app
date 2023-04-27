@@ -1002,7 +1002,6 @@
 		396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscardSceneAction.swift; sourceTree = "<group>"; };
 		397754E123279EED00119FCB /* OCItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+Extension.swift"; sourceTree = "<group>"; };
 		397754F22327A33500119FCB /* OpenSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenSceneAction.swift; sourceTree = "<group>"; };
-		397E276923D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticLoginSingleAccountServerListViewController.swift; sourceTree = "<group>"; };
 		397E276B23D05A5400117B07 /* ServerListToolCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListToolCell.swift; sourceTree = "<group>"; };
 		398393BC246D63B0001A212B /* branding-login-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-login-background.png"; path = "ownCloud/Resources/Theming/branding-login-background.png"; sourceTree = SOURCE_ROOT; };
 		398393BD246D63B0001A212B /* branding-login-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-login-logo.png"; path = "ownCloud/Resources/Theming/branding-login-logo.png"; sourceTree = SOURCE_ROOT; };
@@ -1035,7 +1034,6 @@
 		399EA72525E6565900B6FF11 /* OCCore+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCCore+Extension.swift"; sourceTree = "<group>"; };
 		399EA73925E656A900B6FF11 /* UITableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		399EA74525E6575A00B6FF11 /* NotificationHUDViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationHUDViewController.swift; sourceTree = "<group>"; };
-		39A243C324BDD9E100F4441F /* StaticLoginBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticLoginBundle.swift; sourceTree = "<group>"; };
 		39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFileInfoIntentHandler.swift; sourceTree = "<group>"; };
 		39A7138022E79C6700089423 /* ownCloud Intents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud Intents.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39A7138222E79C6700089423 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
@@ -1281,10 +1279,6 @@
 		DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEMMProvider.h; sourceTree = "<group>"; };
 		DC4331FF2472E1B4002DC0E5 /* OCLicenseEMMProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEMMProvider.m; sourceTree = "<group>"; };
 		DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+OCIssue.swift"; sourceTree = "<group>"; };
-		DC44343D21ABFA5200376B16 /* StaticLoginProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginProfile.swift; sourceTree = "<group>"; };
-		DC44344321AC031600376B16 /* StaticLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginViewController.swift; sourceTree = "<group>"; };
-		DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginStepViewController.swift; sourceTree = "<group>"; };
-		DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginSetupViewController.swift; sourceTree = "<group>"; };
 		DC46F3C62844A75200038880 /* OCDataItem+InteractionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDataItem+InteractionProtocols.swift"; sourceTree = "<group>"; };
 		DC46F3CB2844A8EA00038880 /* ViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCell.swift; sourceTree = "<group>"; };
 		DC46F3CD2844A92A00038880 /* ActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
@@ -1588,7 +1582,6 @@
 		DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationViewController.swift; sourceTree = "<group>"; };
 		DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationItem.swift; sourceTree = "<group>"; };
 		DCFA9CAB2987E14B00004F24 /* BrowserNavigationBookmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserNavigationBookmark.swift; sourceTree = "<group>"; };
-		DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticLoginServerListViewController.swift; sourceTree = "<group>"; };
 		DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSection.swift; sourceTree = "<group>"; };
 		DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellProvider.swift; sourceTree = "<group>"; };
 		DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
@@ -1788,7 +1781,6 @@
 				DCC832D1242BB3E900153F8C /* Messages */,
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
 				DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */,
-				DC44343721ABF9A200376B16 /* Static Login */,
 				DC7DF17C205140F400189B9A /* Server List */,
 				DCF4F1802051A91500189B9A /* Settings */,
 				39E42D152315286300B82AC3 /* Key Commands */,
@@ -2471,28 +2463,6 @@
 				DC4331FE2472E1B4002DC0E5 /* OCLicenseEMMProvider.h */,
 			);
 			path = EMM;
-			sourceTree = "<group>";
-		};
-		DC44343721ABF9A200376B16 /* Static Login */ = {
-			isa = PBXGroup;
-			children = (
-				39A243C324BDD9E100F4441F /* StaticLoginBundle.swift */,
-				DC44343D21ABFA5200376B16 /* StaticLoginProfile.swift */,
-				DC44344921AC2C2B00376B16 /* Interface */,
-			);
-			path = "Static Login";
-			sourceTree = "<group>";
-		};
-		DC44344921AC2C2B00376B16 /* Interface */ = {
-			isa = PBXGroup;
-			children = (
-				397E276923D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift */,
-				DC44344321AC031600376B16 /* StaticLoginViewController.swift */,
-				DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */,
-				DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */,
-				DCFB74C321AD7E18005796AF /* StaticLoginServerListViewController.swift */,
-			);
-			path = Interface;
 			sourceTree = "<group>";
 		};
 		DC46F3CF284546DA00038880 /* Data Item Interactions */ = {
