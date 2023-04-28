@@ -41,6 +41,8 @@ open class SharingViewController: CollectionViewController {
 		}
 	}
 
+	var itemSharesQuery: OCShareQuery?
+
 	public init(clientContext: ClientContext, item: OCItem) {
 		var sections: [CollectionViewSection] = []
 
@@ -70,11 +72,29 @@ open class SharingViewController: CollectionViewController {
 		addRecipientDataSource = OCDataSourceArray(items: [])
 
 		// Recipients section
-		if let sharedByMeDataSource = clientContext.core?.sharedByMeDataSource, let location = item.location, let addRecipientDataSource {
+		itemSharesQuery = OCShareQuery(scope: .itemWithReshares, item: item)
+
+		if let itemSharesQueryDataSource = itemSharesQuery?.dataSource, let addRecipientDataSource {
 			recipientsSectionDatasource = OCDataSourceComposition(sources: [
-				sharedByMeDataSource,
+				// Unified solution based on a single data source, not currently possible for oCIS due to to https://github.com/owncloud/ocis/issues/5355
+				// with sharedByMeDataSource = clientContext.core?.sharedByMeDataSource in if-clause
+				// sharedByMeDataSource,
+
+				itemSharesQueryDataSource,
 				addRecipientDataSource
-			], applyCustomizations: { composedDataSource in
+			], applyCustomizations: {  composedDataSource in
+				// Filter for non-link shares in results
+				composedDataSource.setFilter({ dataSource, dataItemRef in
+					if let itemRecord = try? dataSource.record(forItemRef: dataItemRef),
+					   let share = itemRecord.item as? OCShare {
+						return share.type != .link
+					}
+					return false
+				}, for: itemSharesQueryDataSource)
+
+				/*
+				// Unified solution based on a single data source, not currently possible for oCIS due to to https://github.com/owncloud/ocis/issues/5355
+				// with let location = item.location in if-clause
 				composedDataSource.setFilter({ dataSource, dataItemRef in
 					if let itemRecord = try? dataSource.record(forItemRef: dataItemRef),
 					   let share = itemRecord.item as? OCShare {
@@ -82,6 +102,7 @@ open class SharingViewController: CollectionViewController {
 					}
 					return false
 				}, for: sharedByMeDataSource)
+				*/
 			})
 
 			recipientsSection = CollectionViewSection(identifier: "recipients", dataSource: recipientsSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
@@ -95,11 +116,27 @@ open class SharingViewController: CollectionViewController {
 		if clientContext.core?.connection.capabilities?.publicSharingEnabled == true {
 			addLinkDataSource = OCDataSourceArray(items: [])
 
-			if let sharedByLinkDataSource = clientContext.core?.sharedByLinkDataSource, let location = item.location, let addLinkDataSource {
+			if let itemSharesQueryDataSource = itemSharesQuery?.dataSource, let addLinkDataSource {
 				linksSectionDatasource = OCDataSourceComposition(sources: [
-					sharedByLinkDataSource,
+					// Unified solution based on a single data source, not currently possible for oCIS due to to https://github.com/owncloud/ocis/issues/5355
+					// with let sharedByLinkDataSource = clientContext.core?.sharedByLinkDataSource in if-clause
+					// sharedByLinkDataSource,
+
+					itemSharesQueryDataSource,
 					addLinkDataSource
 				], applyCustomizations: { composedDataSource in
+					// Filter for link shares in results
+					composedDataSource.setFilter({ dataSource, dataItemRef in
+						if let itemRecord = try? dataSource.record(forItemRef: dataItemRef),
+						   let share = itemRecord.item as? OCShare {
+							return share.type == .link
+						}
+						return false
+					}, for: itemSharesQueryDataSource)
+
+					// Unified solution based on a single data source, not currently possible for oCIS due to to https://github.com/owncloud/ocis/issues/5355
+					/*
+					// with let location = item.location, in if-clause
 					composedDataSource.setFilter({ dataSource, dataItemRef in
 						if let itemRecord = try? dataSource.record(forItemRef: dataItemRef),
 						   let share = itemRecord.item as? OCShare {
@@ -107,6 +144,7 @@ open class SharingViewController: CollectionViewController {
 						}
 						return false
 					}, for: sharedByLinkDataSource)
+					*/
 				})
 
 				linksSection = CollectionViewSection(identifier: "links", dataSource: linksSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
@@ -177,6 +215,16 @@ open class SharingViewController: CollectionViewController {
 		addLinkDataSource?.setVersionedItems(linkActions)
 
 		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
+
+		if let core = clientContext.core, let itemSharesQuery {
+			core.start(itemSharesQuery)
+		}
+	}
+
+	deinit {
+		if let core = clientContext?.core, let itemSharesQuery {
+			core.stop(itemSharesQuery)
+		}
 	}
 
 	func createShare(type: ShareViewController.ShareType) {

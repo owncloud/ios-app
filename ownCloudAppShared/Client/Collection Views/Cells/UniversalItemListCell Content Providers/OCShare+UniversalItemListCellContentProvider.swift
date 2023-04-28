@@ -25,8 +25,8 @@ extension OCShare: UniversalItemListCellContentProvider {
 		let isFile = (itemType == .file)
 		let showManagementView = (configuration?.style.options[.showManagementView] as? Bool) ?? false
 		let withoutDisclosure = (configuration?.style.options[.withoutDisclosure] as? Bool) ?? false
-		let sharedItemProvider = (configuration?.style.options[.sharedItemProvider] as? ItemProvider)
-		let sharedItem = sharedItemProvider?()
+		// let sharedItemProvider = (configuration?.style.options[.sharedItemProvider] as? ItemProvider)
+		// let sharedItem = sharedItemProvider?()
 
 		// Icon
 		if let mimeType = itemMIMEType, isFile {
@@ -59,8 +59,8 @@ extension OCShare: UniversalItemListCellContentProvider {
 					var roleDescription: String?
 					var matchingRole: OCShareRole?
 
-					if let sharedItem, let core = context?.core {
-						matchingRole = core.matchingShareRole(for: sharedItem, share: self)
+					if let core = context?.core {
+						matchingRole = core.matchingShareRole(for: self)
 
 						if let matchingRole {
 							// Name and description for determined role
