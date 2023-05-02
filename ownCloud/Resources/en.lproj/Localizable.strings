@@ -513,7 +513,7 @@
 "Create one file per page" = "Create one file per page";
 
 /* Sharing */
-"Sharing requires an internet connection." = "Sharing requires an internet connection.";
+"Sharing requires an active connection." = "Sharing requires an active connection.";
 
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";

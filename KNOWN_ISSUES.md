@@ -44,7 +44,7 @@ Jesus:
 - [x] I miss the option to "Select All" and "Deselect All" in multiselection
 - [x] "Copy" and "Move" operations show empty folder picker. No way to consolidate.
 - [ ] "Cut"/"Paste" only working in space scope
-- [ ] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
+- [x] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
 
 Matthias:
 - [x] Selecting an OC10 account's root folder twice results in an empty list -> not reproducible in latest builds
