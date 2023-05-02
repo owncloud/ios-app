@@ -73,6 +73,7 @@ open class SharingViewController: CollectionViewController {
 
 		// Recipients section
 		itemSharesQuery = OCShareQuery(scope: .itemWithReshares, item: item)
+		itemSharesQuery?.refreshInterval = 5
 
 		if let itemSharesQueryDataSource = itemSharesQuery?.dataSource, let addRecipientDataSource {
 			recipientsSectionDatasource = OCDataSourceComposition(sources: [
