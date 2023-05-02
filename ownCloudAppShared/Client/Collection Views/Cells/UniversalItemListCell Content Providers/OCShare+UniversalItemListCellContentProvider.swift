@@ -240,8 +240,9 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .withMe, let state, state != .accepted {
 			var accessories: [UICellAccessory] = []
+			let omitLongActions = (state == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
 
-			if state == .pending || state == .declined {
+			if (state == .pending || state == .declined) && !omitLongActions {
 				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: true, completionHandler: { error in
@@ -252,7 +253,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 				accessories.append(accessory)
 			}
 
-			if state == .pending {
+			if state == .pending, !omitLongActions {
 				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: false, completionHandler: { error in
@@ -260,6 +261,12 @@ extension OCShare: UniversalItemListCellContentProvider {
 					}
 				}))
 
+				accessories.append(accessory)
+			}
+
+			if omitLongActions, let menuItems = composeContextMenuItems(in: nil, location: .contextMenuItem, with: context) {
+				let menu = UIMenu(children: menuItems)
+				let (_, accessory) = UICellAccessory.borderedButton(image: OCSymbol.icon(forSymbolName: "ellipsis.circle"), accessibilityLabel: "Accept or decline".localized, cssSelectors: [.accessory, .action], menu: menu)
 				accessories.append(accessory)
 			}
 

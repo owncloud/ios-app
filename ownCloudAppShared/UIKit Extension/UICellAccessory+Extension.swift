@@ -41,7 +41,7 @@ public extension UICellAccessory {
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: placement))
 	}
 
-	static func borderedButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], placement: Placement = .trailing(displayed: .whenNotEditing), action: UIAction? = nil) -> (UIButton, UICellAccessory) {
+	static func borderedButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], placement: Placement = .trailing(displayed: .whenNotEditing), action: UIAction? = nil, menu: UIMenu? = nil) -> (UIButton, UICellAccessory) {
 		let button = UIButton()
 
 		button.setTitle(title, for: .normal)
@@ -54,7 +54,12 @@ public extension UICellAccessory {
 			button.addAction(action, for: .primaryActionTriggered)
 		}
 
-		if image != nil, title != nil {
+		if let menu {
+			button.showsMenuAsPrimaryAction = true
+			button.menu = menu
+		}
+
+		if image != nil, (title != nil || menu != nil) {
 			var configuration = UIButton.Configuration.borderedTinted()
 			configuration.buttonSize = .small
 			configuration.imagePadding = 5

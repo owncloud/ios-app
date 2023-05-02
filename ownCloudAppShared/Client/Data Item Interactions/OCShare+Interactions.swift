@@ -75,7 +75,7 @@ extension OCShare: DataItemSwipeInteraction {
 				uiCompletionHandler(false)
 				self?.accept(in: context)
 			})
-			action.image = OCSymbol.icon(forSymbolName: "checkmark")
+			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
 			actions.append(action)
 		}
@@ -98,7 +98,7 @@ extension OCShare: DataItemContextMenuInteraction {
 				self?.accept(in: context)
 			})
 			action.title = "Accept".localized
-			action.image = OCSymbol.icon(forSymbolName: "checkmark")
+			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
 			elements.append(action)
 		}
