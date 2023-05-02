@@ -266,6 +266,10 @@ extension OCShare: UniversalItemListCellContentProvider {
 			content.accessories = accessories
 		}
 
+		if category == .withMe, let state, state == .accepted {
+			content.accessories = [ cell.revealButtonAccessory ]
+		}
+
 		_ = updateContent(content)
 	}
 }
