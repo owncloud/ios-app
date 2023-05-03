@@ -121,30 +121,29 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
 			if condition.fulfilled == true {
 				// No account available
-                let messageView = ComposedMessageView.infoBox(additionalElements: [
-                    .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128)),
-                    .title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0))
-                ])
-                messageView.cssSelector = .info
-                messageView.backgroundView?.cssSelector = .info
-                messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
                 
                 var addAccountTitle = "Add account".localized
                 if !VendorServices.shared.canAddAccount {
                     addAccountTitle = "Login".localized
                 }
                 
-                messageView.elements?.append(.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
-                    if let self = self {
-                        BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
-                    }
-                })))
-                
-                messageView.elements?.append(.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
-                    if let self = self {
-                        self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
-                    }
-                }), cssSelectors: [.cancel]))
+                let messageView = ComposedMessageView.infoBox(additionalElements: [
+                    .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128)),
+                    .title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
+                    .button(addAccountTitle, action: UIAction(handler: { [weak self] action in
+                        if let self = self {
+                            BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+                        }
+                    })),
+                    .button("Settings".localized ,action: UIAction(handler: { [weak self] action in
+                        if let self = self {
+                            self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+                        }
+                    }), cssSelectors: [.cancel])
+                ])
+                messageView.cssSelector = .info
+                messageView.backgroundView?.cssSelector = .info
+                messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
                 
                 let rootView = ThemeCSSView(withSelectors: [.modal])
                 rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))

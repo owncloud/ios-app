@@ -329,16 +329,16 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
         
-        let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
+        let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
             .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64)),
             .title(VendorServices.shared.appName, alignment: .centered)
         ])
-        tokenMessageView.cssSelector = .info
-        tokenMessageView.backgroundView?.cssSelector = .info
-        tokenMessageView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
-        tokenMessageView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
+        logoAndAppNameView.cssSelector = .info
+        logoAndAppNameView.backgroundView?.cssSelector = .info
+        logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+        logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
-        self.tableView.tableHeaderView = tokenMessageView
+        self.tableView.tableHeaderView = logoAndAppNameView
         self.tableView.layoutTableHeaderView()
         
         if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
