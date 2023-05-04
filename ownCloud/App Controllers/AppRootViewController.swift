@@ -128,8 +128,8 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 				}
 
 				let messageView = ComposedMessageView.infoBox(additionalElements: [
-					.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128)),
-					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
+					.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128), cssSelectors: [.icon]),
+					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
 					.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
 						if let self = self {
 							BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
@@ -141,11 +141,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 						}
 					}), cssSelectors: [.cancel])
 				])
-				messageView.cssSelector = .info
-				messageView.backgroundView?.cssSelector = .info
 				messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
 
-				let rootView = ThemeCSSView(withSelectors: [.modal])
+				let rootView = ThemeCSSView(withSelectors: [.modal, .welcome])
 				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
 
 				let messageViewController = UIViewController()

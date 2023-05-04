@@ -375,3 +375,7 @@ extension Branding {
 		return !isDefault // only true if there's at least one theme
 	}
 }
+
+public extension ThemeCSSSelector {
+	static let welcome = ThemeCSSSelector(rawValue: "welcome")
+}
