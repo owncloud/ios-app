@@ -21,111 +21,109 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-
 class AccountSettingsProvider: NSObject {
-    
-    static public var shared : AccountSettingsProvider = {
-        return AccountSettingsProvider()
-    }()
 
-    public var defaultBookmarkName: String? {
-        if let name = Branding.shared.profileBookmarkName {
-            return name
-        } else if let name = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultName) as? String {
-            return name
-        }
-        
-        return nil
-    }
-    
-    public var defaultURL: URL? {
-        if let url = Branding.shared.profileURL {
-            return url
-        } else if let urlString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
-            return URL(string: urlString)
-        }
-        
-        return nil
-    }
-    
-    public var URLEditable: Bool {
-        if let url = Branding.shared.profileAllowUrlConfiguration {
-            return url
-        } else if let value = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool {
-            return value
-        }
-        
-        return true
-    }
-    
-    public var profileOpenHelpMessage: String? {
-        return Branding.shared.profileOpenHelpMessage
-    }
-    
-    public var profileHelpButtonLabel: String? {
-        return Branding.shared.profileHelpButtonLabel
-    }
-    
-    public var profileHelpURL: URL? {
-        return Branding.shared.profileHelpURL
-    }
-    
-    var logo: UIImage {
-        if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginLogo) {
-            return image
-        }
-        
-        return UIImage(named: "branding-bookmark-icon")!
-    }
+	static public var shared : AccountSettingsProvider = {
+		return AccountSettingsProvider()
+	}()
+
+	public var defaultBookmarkName: String? {
+		if let name = Branding.shared.profileBookmarkName {
+			return name
+		} else if let name = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultName) as? String {
+			return name
+		}
+
+		return nil
+	}
+
+	public var defaultURL: URL? {
+		if let url = Branding.shared.profileURL {
+			return url
+		} else if let urlString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
+			return URL(string: urlString)
+		}
+
+		return nil
+	}
+
+	public var URLEditable: Bool {
+		if let url = Branding.shared.profileAllowUrlConfiguration {
+			return url
+		} else if let value = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool {
+			return value
+		}
+
+		return true
+	}
+
+	public var profileOpenHelpMessage: String? {
+		return Branding.shared.profileOpenHelpMessage
+	}
+
+	public var profileHelpButtonLabel: String? {
+		return Branding.shared.profileHelpButtonLabel
+	}
+
+	public var profileHelpURL: URL? {
+		return Branding.shared.profileHelpURL
+	}
+
+	var logo: UIImage {
+		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginLogo) {
+			return image
+		}
+
+		return UIImage(named: "branding-bookmark-icon")!
+	}
 }
 
 // MARK: - OCClassSettings support
 extension OCClassSettingsIdentifier {
-    static let accountSettings = OCClassSettingsIdentifier("account-settings")
+	static let accountSettings = OCClassSettingsIdentifier("account-settings")
 }
 
 extension OCClassSettingsKey {
-    static let bookmarkDefaultName = OCClassSettingsKey("default-name")
-    static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
-    static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
+	static let bookmarkDefaultName = OCClassSettingsKey("default-name")
+	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
+	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
 }
 
-
 extension AccountSettingsProvider : OCClassSettingsSupport {
-    public static let classSettingsIdentifier : OCClassSettingsIdentifier = .accountSettings
+	public static let classSettingsIdentifier : OCClassSettingsIdentifier = .accountSettings
 
-    public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-        if identifier == .bookmark {
-            return [
-                .bookmarkURLEditable : true
-            ]
-        }
+	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .bookmark {
+			return [
+				.bookmarkURLEditable : true
+			]
+		}
 
-        return nil
-    }
+		return nil
+	}
 
-    public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
-        return [
-            .bookmarkDefaultName : [
-                .type         : OCClassSettingsMetadataType.string,
-                .description    : "The default name for the creation of new bookmarks.",
-                .category    : "Bookmarks",
-                .status        : OCClassSettingsKeyStatus.supported
-            ],
+	public static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
+		return [
+			.bookmarkDefaultName : [
+				.type         : OCClassSettingsMetadataType.string,
+				.description    : "The default name for the creation of new bookmarks.",
+				.category    : "Bookmarks",
+				.status        : OCClassSettingsKeyStatus.supported
+			],
 
-                .bookmarkDefaultURL : [
-                    .type         : OCClassSettingsMetadataType.string,
-                    .description    : "The default URL for the creation of new bookmarks.",
-                    .category    : "Bookmarks",
-                    .status        : OCClassSettingsKeyStatus.supported
-                ],
+			.bookmarkDefaultURL : [
+				.type         : OCClassSettingsMetadataType.string,
+				.description    : "The default URL for the creation of new bookmarks.",
+				.category    : "Bookmarks",
+				.status        : OCClassSettingsKeyStatus.supported
+			],
 
-                .bookmarkURLEditable : [
-                    .type         : OCClassSettingsMetadataType.boolean,
-                    .description    : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-                    .category    : "Bookmarks",
-                    .status        : OCClassSettingsKeyStatus.supported
-                ],
-        ]
-    }
+			.bookmarkURLEditable : [
+				.type         : OCClassSettingsMetadataType.boolean,
+				.description    : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
+				.category    : "Bookmarks",
+				.status        : OCClassSettingsKeyStatus.supported
+			]
+		]
+	}
 }

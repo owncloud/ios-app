@@ -30,9 +30,9 @@ class BookmarkViewController: StaticTableViewController {
 	var nameSection : StaticTableViewSection?
 	var nameRow : StaticTableViewRow?
 	var nameChanged = false
-    
-    var helpSection : StaticTableViewSection?
-    var helpButtonRow : StaticTableViewRow?
+
+	var helpSection : StaticTableViewSection?
+	var helpButtonRow : StaticTableViewRow?
 
 	var urlSection : StaticTableViewSection?
 	var urlRow : StaticTableViewRow?
@@ -255,41 +255,40 @@ class BookmarkViewController: StaticTableViewController {
 		self.navigationController?.navigationBar.isHidden = false
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(BookmarkViewController.userActionCancel))
 		self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
-        
-        switch mode {
-        case .create:
-            self.navigationItem.title = Branding.shared.organizationName ?? "Add account".localized
-            self.navigationItem.rightBarButtonItem = continueBarButtonItem
-            
-            // Support for bookmark default name
-            if let defaultNameString = AccountSettingsProvider.shared.defaultBookmarkName {
-                self.bookmark?.name = defaultNameString
-                
-                if bookmark != nil {
-                    updateUI(from: bookmark!) { (_) -> Bool in return(true) }
-                }
-            }
-            
-            // Support for bookmark default URL
-            if let defaultURL = AccountSettingsProvider.shared.defaultURL {
-                self.bookmark?.url = defaultURL
-                
-                if bookmark != nil {
-                    updateUI(from: bookmark!) { (_) -> Bool in return(true) }
-                }
-            }
-            
-            if let url = AccountSettingsProvider.shared.profileHelpURL, let title = AccountSettingsProvider.shared.profileHelpButtonLabel {
-                let imageView = UIImageView(image: UIImage(systemName: "questionmark.circle")!)
-                helpButtonRow = StaticTableViewRow(rowWithAction: { staticRow, sender in
-                    UIApplication.shared.open(url)
-                }, title: title, alignment: .center, accessoryView: imageView)
-                
-                
-                helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: AccountSettingsProvider.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
-            }
-            
-        case .edit:
+
+		switch mode {
+			case .create:
+				self.navigationItem.title = Branding.shared.organizationName ?? "Add account".localized
+				self.navigationItem.rightBarButtonItem = continueBarButtonItem
+
+				// Support for bookmark default name
+				if let defaultNameString = AccountSettingsProvider.shared.defaultBookmarkName {
+					self.bookmark?.name = defaultNameString
+
+					if bookmark != nil {
+						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+					}
+				}
+
+				// Support for bookmark default URL
+				if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+					self.bookmark?.url = defaultURL
+
+					if bookmark != nil {
+						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+					}
+				}
+
+				if let url = AccountSettingsProvider.shared.profileHelpURL, let title = AccountSettingsProvider.shared.profileHelpButtonLabel {
+					let imageView = UIImageView(image: UIImage(systemName: "questionmark.circle")!)
+					helpButtonRow = StaticTableViewRow(rowWithAction: { staticRow, sender in
+						UIApplication.shared.open(url)
+					}, title: title, alignment: .center, accessoryView: imageView)
+
+					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: AccountSettingsProvider.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
+				}
+
+			case .edit:
 				// Fill UI
 				if bookmark != nil {
 					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
@@ -309,7 +308,7 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Support for bookmark URL editable
-        if AccountSettingsProvider.shared.URLEditable == false {
+		if AccountSettingsProvider.shared.URLEditable == false {
 			self.urlRow?.enabled = false
 
 			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
@@ -328,22 +327,22 @@ class BookmarkViewController: StaticTableViewController {
 				self.handleContinue()
 			}
 		}
-        
-        let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
-            .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64)),
-            .title(VendorServices.shared.appName, alignment: .centered)
-        ])
-        logoAndAppNameView.cssSelector = .info
-        logoAndAppNameView.backgroundView?.cssSelector = .info
-        logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
-        logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
-        self.tableView.tableHeaderView = logoAndAppNameView
-        self.tableView.layoutTableHeaderView()
-        
-        if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
-            self.tableView.backgroundView = UIImageView(image: image)
-        }
+		let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
+			.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64)),
+			.title(VendorServices.shared.appName, alignment: .centered)
+		])
+		logoAndAppNameView.cssSelector = .info
+		logoAndAppNameView.backgroundView?.cssSelector = .info
+		logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+		logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
+
+		self.tableView.tableHeaderView = logoAndAppNameView
+		self.tableView.layoutTableHeaderView()
+
+		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
+			self.tableView.backgroundView = UIImageView(image: image)
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -972,10 +971,10 @@ class BookmarkViewController: StaticTableViewController {
 				continueBarButtonItem.isEnabled = false
 			}
 		}
-        
-        if helpSection?.attached == false {
-            self.insertSection(helpSection!, at: self.sections.count, animated: animated)
-        }
+
+		if helpSection?.attached == false {
+			self.insertSection(helpSection!, at: self.sections.count, animated: animated)
+		}
 	}
 
 	@discardableResult func updateInputFocus(fallbackRow: StaticTableViewRow? = nil ) -> Bool {
@@ -1136,7 +1135,7 @@ extension BookmarkViewController {
 // MARK: - OCClassSettings support
 
 extension OCClassSettingsIdentifier {
-    static let bookmark = OCClassSettingsIdentifier("bookmark")
+	static let bookmark = OCClassSettingsIdentifier("bookmark")
 }
 
 extension OCClassSettingsKey {
@@ -1150,34 +1149,34 @@ enum BookmarkPrepopulationMethod : String {
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
-    static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-        return nil
-    }
-    
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return nil
+	}
+
 	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
 
 	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
-				.prepopulation : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
-					.category	: "Bookmarks",
-					.status		: OCClassSettingsKeyStatus.supported,
-					.possibleValues	: [
-						[
-							OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
-							OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
-							OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
-							OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
-						]
+			.prepopulation : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",
+				.category	: "Bookmarks",
+				.status		: OCClassSettingsKeyStatus.supported,
+				.possibleValues	: [
+					[
+						OCClassSettingsMetadataKey.description : "No prepopulation. Request the contents of every folder individually.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.doNot.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata while receiving it.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.streaming.rawValue
+					],
+					[
+						OCClassSettingsMetadataKey.description : "Parse the prepopulation metadata after receiving it as a whole.",
+						OCClassSettingsMetadataKey.value : BookmarkPrepopulationMethod.split.rawValue
 					]
 				]
+			]
 		]
 	}
 }

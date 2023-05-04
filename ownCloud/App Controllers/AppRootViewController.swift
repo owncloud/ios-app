@@ -121,33 +121,33 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
 			if condition.fulfilled == true {
 				// No account available
-                
-                var addAccountTitle = "Add account".localized
-                if !VendorServices.shared.canAddAccount {
-                    addAccountTitle = "Login".localized
-                }
-                
-                let messageView = ComposedMessageView.infoBox(additionalElements: [
-                    .image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128)),
-                    .title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
-                    .button(addAccountTitle, action: UIAction(handler: { [weak self] action in
-                        if let self = self {
-                            BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
-                        }
-                    })),
-                    .button("Settings".localized ,action: UIAction(handler: { [weak self] action in
-                        if let self = self {
-                            self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
-                        }
-                    }), cssSelectors: [.cancel])
-                ])
-                messageView.cssSelector = .info
-                messageView.backgroundView?.cssSelector = .info
-                messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
-                
-                let rootView = ThemeCSSView(withSelectors: [.modal])
-                rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-                
+
+				var addAccountTitle = "Add account".localized
+				if !VendorServices.shared.canAddAccount {
+					addAccountTitle = "Login".localized
+				}
+
+				let messageView = ComposedMessageView.infoBox(additionalElements: [
+					.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128)),
+					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
+					.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
+						if let self = self {
+							BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+						}
+					})),
+					.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
+						if let self = self {
+							self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+						}
+					}), cssSelectors: [.cancel])
+				])
+				messageView.cssSelector = .info
+				messageView.backgroundView?.cssSelector = .info
+				messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
+
+				let rootView = ThemeCSSView(withSelectors: [.modal])
+				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+
 				let messageViewController = UIViewController()
 				messageViewController.view = rootView
 
@@ -272,8 +272,8 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		Log.log("Show beta warning: \(String(describing: VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
 
 		if VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
-			let lastGitCommit = LastGitCommit(),
-			(lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
+		   let lastGitCommit = LastGitCommit(),
+		   (lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
 			// Beta warning has never been shown before - or has last been shown for a different release
 			let betaAlert = ThemedAlertController(with: "Beta Warning".localized, message: "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.".localized, okLabel: "Agree".localized) {
 				OCAppIdentity.shared.userDefaults?.set(lastGitCommit, forKey: "LastBetaWarningCommit")
@@ -346,10 +346,10 @@ extension AppRootViewController : ClientSessionManagerDelegate {
 	func present(bookmark: OCBookmark, message: OCMessage?) {
 		OnMainThread {
 			/*
-			if self.presentedViewController == nil {
-				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
-			} else {
-			*/
+			 if self.presentedViewController == nil {
+			 self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
+			 } else {
+			 */
 
 			if let message = message {
 				self.presentInClient(message: message)
@@ -453,9 +453,9 @@ extension ClientSidebarViewController {
 		   let selectionItemRefs = itemReferences(for: sideBarItemRefs, inSectionFor: bookmarkUUID),
 		   let highlightAction = CollectionViewAction(kind: .highlight(animated: false, scrollPosition: []), itemReferences: selectionItemRefs) {
 			// Highlight all
-		   	addActions([
-		   		highlightAction
-		   	])
+			addActions([
+				highlightAction
+			])
 		} else {
 			// Unhighlight all
 			addActions([
