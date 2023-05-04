@@ -422,6 +422,21 @@
             value = "[branding.app-name]"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:account-settings.default-name"
+            value = "string:Demo Account"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:account-settings.default-url"
+            value = "string:demo.owncloud.com"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:account-settings.url-editable"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
