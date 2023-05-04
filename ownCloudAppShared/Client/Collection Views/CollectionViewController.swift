@@ -605,12 +605,21 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if reloadSectionIDs.count > 0 {
 			performDataSourceUpdate { updateDone in
 				var snapshot = self.collectionViewDataSource.snapshot()
-				snapshot.reloadSections(reloadSectionIDs)
+				let existingSectionIdentifiers = snapshot.sectionIdentifiers
+				let applicableSectionIDs = reloadSectionIDs.filter { sectionID in
+					return existingSectionIdentifiers.contains(sectionID)
+				}
 
-				self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+				if applicableSectionIDs.count > 0 {
+					snapshot.reloadSections(applicableSectionIDs)
 
-				// Notify view controller of content updates
-				self.setContentDidUpdate()
+					self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+
+					// Notify view controller of content updates
+					self.setContentDidUpdate()
+				} else {
+					Log.debug("Reload of sections \(reloadSectionIDs as [String]) requested, but only \(existingSectionIdentifiers as [String]) currently exist. Did nothing.")
+				}
 
 				updateDone()
 			}
