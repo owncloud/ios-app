@@ -75,7 +75,7 @@ extension OCShare: DataItemSwipeInteraction {
 				uiCompletionHandler(false)
 				self?.accept(in: context)
 			})
-			action.image = OCSymbol.icon(forSymbolName: "checkmark")
+			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
 			actions.append(action)
 		}
@@ -98,7 +98,7 @@ extension OCShare: DataItemContextMenuInteraction {
 				self?.accept(in: context)
 			})
 			action.title = "Accept".localized
-			action.image = OCSymbol.icon(forSymbolName: "checkmark")
+			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
 			elements.append(action)
 		}
@@ -123,21 +123,28 @@ extension OCShare: DataItemContextMenuInteraction {
 extension OCShare: DataItemSelectionInteraction {
 	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
 		if let context {
-			var editViewController: UIViewController?
-
-			if let otherItemShares, otherItemShares.count > 0, (viewController as? SharingViewController) == nil {
-				// Grouped share
-				if let item = try? context.core?.cachedItem(at: itemLocation) {
-					editViewController = SharingViewController(clientContext: context, item: item)
+			if category == .withMe {
+				if state == .accepted {
+					_ = revealItem(from: viewController, with: context, animated: true, pushViewController: true, completion: completion)
+					return true
 				}
 			} else {
-				// Single share
-				editViewController = ShareViewController(mode: .edit, share: self, clientContext: context, completion: { _ in })
-			}
+				var editViewController: UIViewController?
 
-			if let editViewController {
-				let navigationController = ThemeNavigationController(rootViewController: editViewController)
-				context.present(navigationController, animated: true)
+				if let otherItemShares, otherItemShares.count > 0, (viewController as? SharingViewController) == nil {
+					// Grouped share
+					if let item = try? context.core?.cachedItem(at: itemLocation) {
+						editViewController = SharingViewController(clientContext: context, item: item)
+					}
+				} else {
+					// Single share
+					editViewController = ShareViewController(mode: .edit, share: self, clientContext: context, completion: { _ in })
+				}
+
+				if let editViewController {
+					let navigationController = ThemeNavigationController(rootViewController: editViewController)
+					context.present(navigationController, animated: true)
+				}
 			}
 		}
 

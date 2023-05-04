@@ -489,6 +489,8 @@ open class AccountConnection: NSObject {
 		}
 	}
 
+	private var _authFailureStatus: Status?
+
 	func updateConnectionStatusSummary() {
 		var summary : ProgressSummary? = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
@@ -499,17 +501,24 @@ open class AccountConnection: NSObject {
 
 			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription!.hasSuffix(".") ? connectionShortDescription! + " " : connectionShortDescription! + ". ") : ""
 
+			if case .authenticationError(_
+			) = status {
+				_authFailureStatus = status
+			}
+
 			switch connectionStatus {
 				case .online:
 					summary = nil
+					_authFailureStatus = nil
 					status = .online
 
 				case .connecting:
+					_authFailureStatus = nil
 					summary?.message = "Connecting…".localized
 
 				case .offline, .unavailable:
 					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
-					status = .coreAvailable
+					status = _authFailureStatus ?? .coreAvailable
 			}
 
 			if connectionStatus == .online {

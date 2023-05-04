@@ -101,7 +101,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		if clientContext?.core?.connectionStatus != .online {
 			let offlineMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "network")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("Sharing requires an internet connection.".localized, alignment: .centered)
+				.title("Sharing requires an active connection.".localized, alignment: .centered)
 			])
 
 			coverView = offlineMessage

@@ -275,8 +275,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.addStacked(child: bottomButtonBarViewController, position: .bottom)
 
 		// Set up view
-		if let share, let item, let core = clientContext?.core {
-			role = core.matchingShareRole(for: item, share: share)
+		if let share, let core = clientContext?.core {
+			role = core.matchingShareRole(for: share)
 		}
 
 		if let share, let recipient = share.recipient {
@@ -346,6 +346,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				rolesSectionOptionGroup?.items = roleOptions
 				rolesSectionOptionGroup?.changeAction = { [weak self] (group, selectedItem) in
 					self?.role = selectedItem.value as? OCShareRole
+				}
+				if let role {
+					rolesSectionOptionGroup?.chosenValues = [ role ]
 				}
 
 				rolesSectionDatasource?.setVersionedItems(roleOptions)

@@ -545,6 +545,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.accessory], 			property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.accessory, .accept],		property: .stroke, value: UIColor.systemGreen),
 			ThemeCSSRecord(selectors: [.accessory, .decline],		property: .stroke, value: UIColor.systemRed),
+			ThemeCSSRecord(selectors: [.accessory, .action],		property: .stroke, value: lightBrandColor),
 
 			// - Segment View
 			ThemeCSSRecord(selectors: [.segments], 				property: .fill,   value: UIColor.clear),

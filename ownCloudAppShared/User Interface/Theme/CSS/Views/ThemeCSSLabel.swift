@@ -31,11 +31,20 @@ open class ThemeCSSLabel: UILabel, Themeable {
 
 		if window != nil, !_hasRegistered {
 			_hasRegistered = true
-			Theme.shared.register(client: self)
+			Theme.shared.register(client: self, applyImmediately: true)
 		}
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		apply(css: collection.css, properties: [.stroke])
+
+		if event == .initial {
+			// For some reason, setting .textColor at the time the view moved to the window doesn't seem
+			// to be sufficient during launch, so for the initial color setting perform the action once more
+			// in the next runloop cycle
+			OnMainThread {
+				self.apply(css: collection.css, properties: [.stroke])
+			}
+		}
 	}
 }
