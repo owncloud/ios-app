@@ -36,6 +36,10 @@ class UnshareAction : Action {
 			if !forContext.isShareRoot(item: sharedItem) {
 				return .none
 			}
+
+			if sharedItem.location?.isDriveRoot == true {
+				return .none
+			}
 		}
 
 		return .last

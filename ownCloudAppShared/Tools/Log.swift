@@ -105,6 +105,6 @@ extension OCLogger : OCLogIntroFormat {
 	}
 
 	public func logHostCommit() -> String? {
-		return LastGitCommit()
+		return GitInfo.app.versionInfo
 	}
 }

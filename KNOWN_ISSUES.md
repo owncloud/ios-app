@@ -19,6 +19,9 @@ Missing:
 - [ ] full inline progress reporting when account databases are updated on first login
 - [ ] progress reporting in active connections
 - [ ] reinstate Key Commands
+- BrowserViewController
+	- [ ] disposal of view controllers
+	- [ ] swipe gesture support (+ animation)
 
 Jesus:
 - [ ] Presentation view after installing is missing

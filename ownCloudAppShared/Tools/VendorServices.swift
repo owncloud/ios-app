@@ -43,14 +43,6 @@ public class VendorServices : NSObject {
 		return ""
 	}
 
-	public var lastGitCommit: String {
-		if let gitCommit = LastGitCommit() {
-			return gitCommit
-		}
-
-		return ""
-	}
-
 	public var documentationURL: URL? {
 		return Branding.shared.documentationURL
 	}
