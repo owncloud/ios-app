@@ -517,6 +517,8 @@ class BookmarkViewController: StaticTableViewController {
 						}
 
 						self.save(hudCompletion: hudCompletion)
+
+						Log.debug("\(connection) returned error=\(String(describing: error)) instances=\(String(describing: instances))") // Debug message also has the task to capture connection and avoid it being prematurely dropped
 					})
 				} else {
 					hudCompletion({
