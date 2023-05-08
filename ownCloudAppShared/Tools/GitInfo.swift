@@ -27,8 +27,15 @@ public class GitInfo: NSObject {
 	public lazy var branch: String? = bundle.object(forInfoDictionaryKey: "GitBranch") as? String
 	public lazy var buildDate: String? = bundle.object(forInfoDictionaryKey: "BuildDate") as? String
 	public lazy var versionInfo: String = {
-		return "\(tags ?? "untagged") - \(branch ?? "?")@\(lastCommit ?? "?")"
+		if showVerboseVersionInfo {
+			return "\(tags ?? "untagged") - \(branch ?? "?")@\(lastCommit ?? "?")"
+		}
+
+		return "\(lastCommit ?? "?")"
 	}()
+
+	public lazy var isMainBranch: Bool = (branch == "master") || (branch == "main")
+	public lazy var showVerboseVersionInfo: Bool = !isMainBranch || VendorServices.shared.showBetaWarning
 
 	public init(bundle: Bundle) {
 		self.bundle = bundle
