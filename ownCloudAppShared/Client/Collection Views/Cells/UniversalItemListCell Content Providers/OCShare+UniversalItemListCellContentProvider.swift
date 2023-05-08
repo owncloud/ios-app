@@ -22,18 +22,11 @@ import ownCloudSDK
 extension OCShare: UniversalItemListCellContentProvider {
 	public func provideContent(for cell: UniversalItemListCell, context: ClientContext?, configuration: CollectionViewCellConfiguration?, updateContent: @escaping UniversalItemListCell.ContentUpdater) {
 		let content = UniversalItemListCell.Content(with: self)
-		let isFile = (itemType == .file)
+		var isFile = (itemType == .file)
 		let showManagementView = (configuration?.style.options[.showManagementView] as? Bool) ?? false
 		let withoutDisclosure = (configuration?.style.options[.withoutDisclosure] as? Bool) ?? false
 		// let sharedItemProvider = (configuration?.style.options[.sharedItemProvider] as? ItemProvider)
 		// let sharedItem = sharedItemProvider?()
-
-		// Icon
-		if let mimeType = itemMIMEType, isFile {
-			content.icon = .mime(type: mimeType)
-		} else {
-			content.icon = isFile ? .file : (itemLocation.isDriveRoot ? .drive : .folder)
-		}
 
 		// Title
 		if !showManagementView {
@@ -41,7 +34,18 @@ extension OCShare: UniversalItemListCellContentProvider {
 				content.title = .drive(name: driveName)
 			} else if let name = itemLocation.lastPathComponent {
 				content.title = isFile ? .file(name: name) : .folder(name: name)
+			} else if type == .remote, let name = (name as? NSString)?.lastPathComponent {
+				// For federated shares
+				isFile = name.contains(".") // No other hint (folders also don't have a trailing "/" in their name), so taking best shot based on existance of a .
+				content.title = isFile ? .file(name: name) : .folder(name: name)
 			}
+		}
+
+		// Icon
+		if let mimeType = itemMIMEType, isFile {
+			content.icon = .mime(type: mimeType)
+		} else {
+			content.icon = isFile ? .file : (itemLocation.isDriveRoot ? .drive : .folder)
 		}
 
 		// Details
@@ -177,7 +181,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 		} else {
 			// Retrieve icon
-			if ((category == .withMe) && (state == .accepted)) ||
+			if ((category == .withMe) && (effectiveState == .accepted)) ||
 			   ((category == .byMe) && isFile) {
 				let tokenArray: NSMutableArray = NSMutableArray()
 
@@ -238,11 +242,11 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 		}
 
-		if category == .withMe, let state, state != .accepted {
+		if category == .withMe, let effectiveState, effectiveState != .accepted {
 			var accessories: [UICellAccessory] = []
-			let omitLongActions = (state == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
+			let omitLongActions = (effectiveState == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
 
-			if (state == .pending || state == .declined) && !omitLongActions {
+			if (effectiveState == .pending || effectiveState == .declined) && !omitLongActions {
 				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: true, completionHandler: { error in
@@ -253,7 +257,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 				accessories.append(accessory)
 			}
 
-			if state == .pending, !omitLongActions {
+			if effectiveState == .pending, !omitLongActions {
 				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: false, completionHandler: { error in
@@ -273,7 +277,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			content.accessories = accessories
 		}
 
-		if category == .withMe, let state, state == .accepted {
+		if category == .withMe, let effectiveState, effectiveState == .accepted {
 			content.accessories = [ cell.revealButtonAccessory ]
 		}
 

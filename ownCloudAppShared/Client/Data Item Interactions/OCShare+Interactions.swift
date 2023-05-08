@@ -47,6 +47,14 @@ extension OCShare {
 	func decline(in context: ClientContext) {
 		makeDecision(accept: false, context: context)
 	}
+
+	private var offerAcceptAction: Bool {
+		return ((self.effectiveState == .pending || self.effectiveState == .declined) && (self.category == .withMe))
+	}
+
+	private var offerDeclineAction: Bool {
+		return (self.effectiveState == .pending || self.effectiveState == .accepted  || self.category == .byMe)
+	}
 }
 
 extension OCShare: DataItemSwipeInteraction {
@@ -57,7 +65,7 @@ extension OCShare: DataItemSwipeInteraction {
 
 		var actions: [UIContextualAction] = []
 
-		if self.state == .pending || self.state == .accepted  || self.category == .byMe {
+		if offerDeclineAction {
 			// Decline / Unshare
 			let title = (self.category == .byMe) ? "Unshare".localized : "Decline".localized
 			let action = UIContextualAction(style: .destructive, title: title, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
@@ -69,7 +77,7 @@ extension OCShare: DataItemSwipeInteraction {
 			actions.append(action)
 		}
 
-		if self.state == .pending || self.state == .declined {
+		if offerAcceptAction {
 			// Accept
 			let action = UIContextualAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
@@ -92,7 +100,7 @@ extension OCShare: DataItemContextMenuInteraction {
 
 		var elements: [UIMenuElement] = []
 
-		if self.state == .pending || self.state == .declined {
+		if offerAcceptAction {
 			// Accept
 			let action = UIAction(handler: { [weak self] action in
 				self?.accept(in: context)
@@ -103,7 +111,7 @@ extension OCShare: DataItemContextMenuInteraction {
 			elements.append(action)
 		}
 
-		if self.state == .pending || self.state == .accepted || self.category == .byMe {
+		if offerDeclineAction {
 			// Decline / Unshare
 			let action = UIAction(handler: { [weak self] action in
 				self?.decline(in: context)
@@ -124,7 +132,7 @@ extension OCShare: DataItemSelectionInteraction {
 	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
 		if let context {
 			if category == .withMe {
-				if state == .accepted {
+				if effectiveState == .accepted {
 					_ = revealItem(from: viewController, with: context, animated: true, pushViewController: true, completion: completion)
 					return true
 				}
