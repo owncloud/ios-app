@@ -516,6 +516,9 @@
 
 /* Sharing */
 "Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
 
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";
