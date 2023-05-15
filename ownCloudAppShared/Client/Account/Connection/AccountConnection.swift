@@ -566,8 +566,10 @@ open class AccountConnection: NSObject {
 		themeValues.retrieveThemeJSON { error in
 			if error == nil {
 				themeValues.retrieveLogo { request, error, ongoing, previousResource, newResource in
-                    self.serverLogoUpdated = true
+					self.serverLogoUpdated = true
+
 					let bookmarkUUID = self.bookmark.uuid
+
 					if !ongoing,
 					   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
 					   let newResource = newResource as? OCViewProvider {
