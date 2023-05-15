@@ -177,17 +177,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Not applicable here at the app delegate level.
 		return false
 	}
-//		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-//			let url = userActivity.webpageURL else {
-//				return false
-//		}
-//
-//		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
-//
-//		openPrivateLink(url: url, in: window)
-//
-//		return true
-//	}
 
 	// MARK: UISceneSession Lifecycle
 	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

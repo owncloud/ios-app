@@ -25,11 +25,11 @@ extension AccountController: AccountControllerExtraItems {
 		var sideBarItem: CollectionSidebarAction? = specialItems[.activity] as? CollectionSidebarAction
 
 		if sideBarItem == nil {
-			sideBarItem = CollectionSidebarAction(with: "Status".localized, icon: OCSymbol.icon(forSymbolName: "bolt"), viewControllerProvider: { (context, action) in
-				let activityViewController = ClientActivityViewController(connection: context?.accountConnection)
-				activityViewController.revoke(in: context, when: [ .connectionClosed ])
-				activityViewController.navigationBookmark = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: context?.accountConnection?.bookmark.uuid, specialItem: .activity)
-				return activityViewController
+			sideBarItem = CollectionSidebarAction(with: "Status".localized, icon: OCSymbol.icon(forSymbolName: "bolt"), viewControllerProvider: { [weak self] (context, action) in
+				if let context {
+					return self?.provideExtraItemViewController(for: .activity, in: context)
+				}
+				return nil
 			})
 			sideBarItem?.identifier = specialItemsDataReferences[.activity] as? String
 
@@ -61,7 +61,7 @@ extension AccountController: AccountControllerExtraItems {
 	public func provideExtraItemViewController(for specialItem: SpecialItem, in context: ClientContext) -> UIViewController? {
 		switch specialItem {
 			case .activity:
-				let activityViewController = ClientActivityViewController(connection: context.accountConnection)
+				let activityViewController = ClientActivityViewController(connection: context.accountConnection, clientContext: context)
 				activityViewController.revoke(in: context, when: [ .connectionClosed ])
 				activityViewController.navigationBookmark = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: context.accountConnection?.bookmark.uuid, specialItem: .activity)
 				return activityViewController

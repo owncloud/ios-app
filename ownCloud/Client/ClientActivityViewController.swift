@@ -74,6 +74,8 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
+	var clientContext: ClientContext?
+
 	var consumer: AccountConnectionConsumer?
 	weak var connection: AccountConnection? {
 		willSet {
@@ -96,13 +98,15 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		self.connection = connection
 	}
 
-	init(connection: AccountConnection? = nil) {
+	init(connection: AccountConnection? = nil, clientContext: ClientContext? = nil) {
 		super.init(style: .plain)
 
 		if let connection {
 			consumer = AccountConnectionConsumer(owner: self, statusObserver: self, messageUpdateHandler: self)
 			setConnection(connection)
 		}
+
+		self.clientContext = clientContext
 	}
 
 	required init?(coder: NSCoder) {
@@ -320,13 +324,17 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		   let nodeGenerator = activities[indexPath.row] as? DiagnosticNodeGenerator, nodeGenerator.isDiagnosticNodeGenerationAvailable {
 			return UISwipeActionsConfiguration(actions: [
 				UIContextualAction(style: .normal, title: "Info".localized, handler: { [weak self] (_, _, completionHandler) in
-					let context = OCDiagnosticContext(core: self?.core)
+					let diagnosticContext = OCDiagnosticContext(core: self?.core)
 
-					nodeGenerator.provideDiagnosticNode(for: context, completion: { [weak self] (groupNode, style) in
+					nodeGenerator.provideDiagnosticNode(for: diagnosticContext, completion: { [weak self] (groupNode, style) in
 						guard let groupNode = groupNode else { return }
 
 						OnMainThread {
-							self?.navigationController?.pushViewController(DiagnosticViewController(for: groupNode, context: context, style: style), animated: true)
+							guard let clientContext = self?.clientContext else { return }
+
+							clientContext.pushViewControllerToNavigation(context: clientContext, provider: { context in
+								return DiagnosticViewController(for: groupNode, context: diagnosticContext, clientContext: clientContext, style: style)
+							}, push: true, animated: true)
 						}
 					})
 					completionHandler(true)

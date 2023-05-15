@@ -51,7 +51,7 @@ public class AppStateActionRestoreNavigationBookmark: AppStateAction {
 					return
 				}
 
-				_ = clientContext.pushViewControllerToNavigation(context: clientContext, provider: { context in
+				clientContext.pushViewControllerToNavigation(context: clientContext, provider: { context in
 					return viewController
 				}, push: true, animated: false)
 			})
