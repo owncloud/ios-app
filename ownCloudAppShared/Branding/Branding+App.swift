@@ -6,6 +6,16 @@
 //  Copyright © 2021 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2021, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudApp
 import ownCloudSDK
@@ -27,6 +37,13 @@ extension OCClassSettingsKey {
 	public static let canEditAccount : OCClassSettingsKey = OCClassSettingsKey("can-edit-account")
 	public static let enableReviewPrompt : OCClassSettingsKey = OCClassSettingsKey("enable-review-prompt")
 
+	public static let profileBookmarkName : OCClassSettingsKey = OCClassSettingsKey("profile-bookmark-name")
+	public static let profileURL : OCClassSettingsKey = OCClassSettingsKey("profile-url")
+	public static let profileAllowUrlConfiguration : OCClassSettingsKey = OCClassSettingsKey("profile-allow-url-configuration")
+	public static let profileHelpButtonLabel = OCClassSettingsKey("profile-help-button-label")
+	public static let profileOpenHelpMessage = OCClassSettingsKey("profile-open-help-message")
+	public static let profileHelpURL = OCClassSettingsKey("profile-help-url")
+
 	// Profiles
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
 
@@ -46,10 +63,6 @@ extension Branding : BrandingInitialization {
 			.canAddAccount : true,
 			.canEditAccount : true,
 			.enableReviewPrompt : false
-
-//			.profileDefinitions : [],
-//			.themeGenericColors : [:],
-//			.themeDefinitions : [:]
 		], metadata: [
 			.documentationURL : [
 				.type 		: OCClassSettingsMetadataType.urlString,
@@ -150,6 +163,54 @@ extension Branding : BrandingInitialization {
 				.description	: "Array of dictionaries, each specifying a theme.",
 				.category	: "Branding",
 				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.profileBookmarkName : [
+				.type         : OCClassSettingsMetadataType.string,
+				.label        : "Bookmark Name",
+				.description    : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
+
+			.profileURL : [
+				.type         : OCClassSettingsMetadataType.urlString,
+				.label        : "URL",
+				.description     : "The URL of the server targeted by this profile.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
+
+			.profileHelpURL : [
+				.type         : OCClassSettingsMetadataType.urlString,
+				.label         : "Onboarding URL",
+				.description    : "Optional URL to onboarding resources.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
+
+			.profileOpenHelpMessage: [
+				.type         : OCClassSettingsMetadataType.string,
+				.label        : "Open onboarding URL message",
+				.description     : "Message shown in an alert before opening the onboarding URL.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
+
+			.profileHelpButtonLabel : [
+				.type         : OCClassSettingsMetadataType.string,
+				.label        : "Onboarding button title",
+				.description     : "Text used for the onboarding button title",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
+
+			.profileAllowUrlConfiguration : [
+				.type         : OCClassSettingsMetadataType.boolean,
+				.label         : "Allow URL configuration",
+				.description    : "Indicates if the user can change the server URL for the account.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
 			]
 		])
 	}
@@ -187,8 +248,7 @@ extension BrandingImageName {
 
 extension Branding {
 	public var isBranded: Bool {
-		return (organizationName != nil) && // Organization name must be set
-			((profileDefinitions?.count ?? 0) > 0) // At least one profile needs to have been defined
+		return (organizationName != nil) // Organization name must be set
 	}
 
 	public var documentationURL : URL? {
@@ -258,20 +318,45 @@ extension Branding {
 
 		return definitions
 	}
+
+	public var profileBookmarkName: String? {
+		return computedValue(forClassSettingsKey: .profileBookmarkName) as? String ?? nil
+	}
+
+	public var profileURL: URL? {
+		return url(forClassSettingsKey: .profileURL) ?? nil
+	}
+
+	public var profileAllowUrlConfiguration: Bool? {
+		return computedValue(forClassSettingsKey: .profileAllowUrlConfiguration) as? Bool ?? nil
+	}
+
+	public var profileOpenHelpMessage: String? {
+		return computedValue(forClassSettingsKey: .profileOpenHelpMessage) as? String ?? nil
+	}
+
+	public var profileHelpButtonLabel: String? {
+		return computedValue(forClassSettingsKey: .profileHelpButtonLabel) as? String ?? nil
+	}
+
+	public var profileHelpURL: URL? {
+		return url(forClassSettingsKey: .profileHelpURL) ?? nil
+	}
 }
 
 extension Branding {
 	func generateThemeStyle(from theme: [String : Any], generic: [String : Any]) -> ThemeStyle? {
-		let style = theme["ThemeStyle"] as? String ?? "contrast"
+		let style = theme["ThemeStyle"] as? String ?? ThemeCollectionStyle.light.rawValue
 		let identifier = theme["Identifier"] as? String ?? "com.owncloud.branding"
 		let name = theme["Name"] as? String ?? "ownCloud-branding-theme"
+		let cssRecordStrings = theme["cssRecords"] as? [String]
 
 		if let themeStyle = ThemeCollectionStyle(rawValue: style),
 		   let darkBrandColor = theme["darkBrandColor"] as? String,
 		   let lightBrandColor = theme["lightBrandColor"] as? String {
 			let colors = theme["Colors"] as? NSDictionary
 			let styles = theme["Styles"] as? NSDictionary
-			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles)
+			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
 		}
 
 		return nil
@@ -299,4 +384,8 @@ extension Branding {
 
 		return !isDefault // only true if there's at least one theme
 	}
+}
+
+public extension ThemeCSSSelector {
+	static let welcome = ThemeCSSSelector(rawValue: "welcome")
 }

@@ -21,7 +21,7 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-open class AppRootViewController: EmbeddingViewController {
+open class AppRootViewController: EmbeddingViewController, BrowserNavigationViewControllerDelegate, BrowserNavigationBookmarkRestore {
 	var clientContext: ClientContext
 	var controllerConfiguration: AccountController.Configuration
 
@@ -40,9 +40,11 @@ open class AppRootViewController: EmbeddingViewController {
 	// MARK: - View Controllers
 	var rootContext: ClientContext?
 
-	var leftNavigationController: ThemeNavigationController?
-	var sidebarViewController: ClientSidebarViewController?
-	var contentBrowserController: BrowserNavigationViewController = BrowserNavigationViewController()
+	public var leftNavigationController: ThemeNavigationController?
+	public var sidebarViewController: ClientSidebarViewController?
+	public var contentBrowserController: BrowserNavigationViewController = BrowserNavigationViewController()
+
+	private var contentBrowserControllerObserver: NSKeyValueObservation?
 
 	// MARK: - Message presentation
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
@@ -84,6 +86,8 @@ open class AppRootViewController: EmbeddingViewController {
 	}
 
 	// MARK: - View Controller Events
+	var noBookmarkCondition: DataSourceCondition?
+
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -103,6 +107,7 @@ open class AppRootViewController: EmbeddingViewController {
 		sidebarViewController?.addToolbarItems()
 
 		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
+		leftNavigationController?.cssSelectors = [ .sidebar ]
 		leftNavigationController?.setToolbarHidden(false, animated: false)
 
 		focusedBookmarkObservation = sidebarViewController?.observe(\.focusedBookmark, changeHandler: { [weak self] sidebarViewController, change in
@@ -113,7 +118,46 @@ open class AppRootViewController: EmbeddingViewController {
 		contentBrowserController.sidebarViewController = leftNavigationController
 
 		// Make browser navigation view controller the content
-		contentViewController = contentBrowserController
+		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
+			if condition.fulfilled == true {
+				// No account available
+
+				var addAccountTitle = "Add account".localized
+				if !VendorServices.shared.canAddAccount {
+					addAccountTitle = "Login".localized
+				}
+
+				let messageView = ComposedMessageView.infoBox(additionalElements: [
+					.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128), cssSelectors: [.icon]),
+					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
+					.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
+						if let self = self {
+							BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+						}
+					})),
+					.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
+						if let self = self {
+							self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+						}
+					}), cssSelectors: [.cancel])
+				])
+				messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
+
+				let rootView = ThemeCSSView(withSelectors: [.modal, .welcome])
+				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+
+				let messageViewController = UIViewController()
+				messageViewController.view = rootView
+
+				self?.contentViewController = messageViewController
+			} else {
+				// Account already available
+				self?.contentViewController = self?.contentBrowserController
+			}
+		})
+
+		// Observe browserController contentViewController and update sidebar selection accordingly
+		contentBrowserController.delegate = self
 
 		// Setup app icon badge message count
 		setupAppIconBadgeMessageCount()
@@ -142,6 +186,35 @@ open class AppRootViewController: EmbeddingViewController {
 		super.viewDidDisappear(animated)
 
 		ClientSessionManager.shared.remove(delegate: self)
+	}
+
+	// MARK: - Status Bar style
+	open override var childForStatusBarStyle: UIViewController? {
+		return contentViewController
+	}
+
+	open override var contentViewController: UIViewController? {
+		didSet {
+			setNeedsStatusBarAppearanceUpdate()
+		}
+	}
+
+	// MARK: - BrowserNavigationViewControllerDelegate
+	public func browserNavigation(viewController: ownCloudAppShared.BrowserNavigationViewController, contentViewControllerDidChange toViewController: UIViewController?) {
+		sidebarViewController?.updateSelection(for: toViewController?.navigationBookmark)
+	}
+
+	// MARK: - BrowserNavigationBookmarkRestore
+	public func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: @escaping ((Error?, UIViewController?) -> Void)) {
+		if let bookmarkUUID = navigationBookmark.bookmarkUUID, let accountController = sidebarViewController?.accountController(for: bookmarkUUID) {
+			if let specialItem = navigationBookmark.specialItem,
+			   let viewController = accountController.provideViewController(for: specialItem, in: context) {
+				completion(nil, viewController)
+				return
+			}
+		}
+
+		completion(NSError(ocError: .insufficientParameters), nil)
 	}
 
 	// MARK: - App Badge: Message Counts
@@ -197,7 +270,7 @@ open class AppRootViewController: EmbeddingViewController {
 		Log.log("Show beta warning: \(String(describing: VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
 
 		if VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
-			let lastGitCommit = LastGitCommit(),
+			let lastGitCommit = GitInfo.app.lastCommit,
 			(lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
 			// Beta warning has never been shown before - or has last been shown for a different release
 			let betaAlert = ThemedAlertController(with: "Beta Warning".localized, message: "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.".localized, okLabel: "Agree".localized) {
@@ -339,13 +412,54 @@ extension ClientSidebarViewController {
 
 	// MARK: - Open settings
 	@IBAction func settings() {
-		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
-		self.present(ThemeNavigationController(rootViewController: viewController), animated: true)
+		self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
 	}
 
 	// MARK: - Add account
 	func addBookmark() {
 		BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+	}
+
+	// MARK: - Update selection
+	public func section(for bookmarkUUID: UUID) -> AccountControllerSection? {
+		for section in allSections {
+			if let accountControllerSection = section as? AccountControllerSection,
+			   let sectionBookmark = accountControllerSection.accountController.bookmark,
+			   sectionBookmark.uuid == bookmarkUUID {
+				return accountControllerSection
+			}
+		}
+
+		return nil
+	}
+
+	public func accountController(for bookmarkUUID: UUID) -> AccountController? {
+		return section(for: bookmarkUUID)?.accountController
+	}
+
+	public func itemReferences(for itemReferences: [OCDataItemReference], inSectionFor bookmarkUUID: UUID?) -> [ItemRef]? {
+		if let bookmarkUUID, let section = section(for: bookmarkUUID) {
+			return section.collectionViewController?.wrap(references: itemReferences, forSection: section.identifier)
+		}
+
+		return nil
+	}
+
+	func updateSelection(for navigationBookmark: BrowserNavigationBookmark?) {
+		if let sideBarItemRefs = navigationBookmark?.representationSideBarItemRefs,
+		   let bookmarkUUID = navigationBookmark?.bookmarkUUID,
+		   let selectionItemRefs = itemReferences(for: sideBarItemRefs, inSectionFor: bookmarkUUID),
+		   let highlightAction = CollectionViewAction(kind: .highlight(animated: false, scrollPosition: []), itemReferences: selectionItemRefs) {
+			// Highlight all
+			addActions([
+				highlightAction
+			])
+		} else {
+			// Unhighlight all
+			addActions([
+				CollectionViewAction(kind: .unhighlightAll(animated: false))
+			])
+		}
 	}
 }
 

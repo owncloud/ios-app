@@ -34,8 +34,10 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 		ThemeStyle.registerDefaultStyles()
 		ShareExtensionViewController.shared = self
+		self.cssSelector = .modal
 
 		CollectionViewCellProvider.registerStandardImplementations()
+		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
 	}
 
 	@available(*, unavailable)
@@ -49,9 +51,6 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 		// Setup
 		setupServices()
-
-		// Register for theme
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	func setupServices() {
@@ -295,9 +294,17 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 	// MARK: - Events
 	var willAppearDidInitialRun: Bool = false
+	private var _registered = false
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		// Register for theme
+		if !_registered {
+			_registered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+
+		// Check permission
 		if Branding.shared.isImportMethodAllowed(.shareExtension) {
 			// Share extension allowed
 			if !willAppearDidInitialRun {
@@ -356,9 +363,9 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 	func showErrorMessage(title: String, message: String) {
 		let errorMessageView = ComposedMessageView(elements: [
-			.text(title, style: .system(textStyle: .title3, weight: .semibold), alignment: .centered),
+			.title(title, alignment: .centered),
 			.spacing(5),
-			.text(message, style: .systemSecondary(textStyle: .body), alignment: .centered),
+			.subtitle(message, alignment: .centered),
 			.spacing(15),
 			.button("OK".localized, action: UIAction(handler: { [weak self] action in
 				self?.cancel()
@@ -409,7 +416,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 	// MARK: - Themeable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		view.backgroundColor = collection.css.getColor(.fill, for: view)
 	}
 
 	// MARK: - UserInterfaceContext glue

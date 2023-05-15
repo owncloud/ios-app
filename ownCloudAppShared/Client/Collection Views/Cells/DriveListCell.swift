@@ -180,14 +180,28 @@ extension DriveListCell {
 			var title : String?
 			var subtitle : String?
 
-			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
-				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, driveItem, cellConfiguration in
+				if let presentable = OCDataRenderer.default.renderItem(driveItem, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
 					title = presentable.title
 					subtitle = presentable.subtitle
 
 					resourceManager = cellConfiguration.core?.vault.resourceManager
 
 					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
+
+					// More item button action
+					if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
+						cell.moreAction = OCAction(title: "", icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
+							clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
+								if let item {
+									OnMainThread {
+										moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
+									}
+								}
+								completion(error)
+							})
+						})
+					}
 				}
 			})
 
@@ -205,9 +219,8 @@ extension DriveListCell {
 			}
 		}
 
-		let driveSideBarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let driveSideBarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var title : String?
-			// var subtitle : String?
 			var icon: UIImage?
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
@@ -237,7 +250,9 @@ extension DriveListCell {
 			content.text = title
 			content.image = icon
 
+			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
+			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
@@ -248,7 +263,7 @@ extension DriveListCell {
 				case .sideBar:
 					return collectionView.dequeueConfiguredReusableCell(using: driveSideBarCellRegistration, for: indexPath, item: itemRef)
 
-				case .gridCell:
+				case .gridCell, .gridCellLowDetail, .gridCellNoDetail:
 					return collectionView.dequeueConfiguredReusableCell(using: driveGridCellRegistration, for: indexPath, item: itemRef)
 
 				default:

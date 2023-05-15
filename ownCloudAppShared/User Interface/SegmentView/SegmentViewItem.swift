@@ -27,16 +27,28 @@ public class SegmentViewItem: NSObject {
 	public enum Style {
 		case plain
 		case label
+		case chevron
 		case token
+	}
+
+	public enum Line: Int {
+		case singleLine
+		case primary
+		case secondary
 	}
 
 	open weak var segmentView: SegmentView?
 
 	open var style: Style
 	open var icon: UIImage?
-	open var title: String?
+	open var title: String? {
+		didSet {
+			_view = nil
+		}
+	}
 	open var titleTextStyle: UIFont.TextStyle?
 	open var titleTextWeight: UIFont.Weight?
+	open var titleLinebreakMode: NSLineBreakMode?
 
 	open var representedObject: AnyObject?
 	open weak var weakRepresentedObject: AnyObject?
@@ -45,6 +57,10 @@ public class SegmentViewItem: NSObject {
 	open var insets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 3, leading: 5, bottom: 3, trailing: 5)
 	open var cornerStyle: CornerStyle?
 	open var alpha: CGFloat = 1.0
+
+	open var lines: [Line]? //!< Optional Lines that can be used to separate content into multiple lines (used f.ex. for grid cell layouts to use a single array for single line and multi line views)
+
+	open var embedView: UIView?
 
 	open var gestureRecognizers: [UIGestureRecognizer]?
 
@@ -61,7 +77,7 @@ public class SegmentViewItem: NSObject {
 		return _view
 	}
 
-	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
+	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, linebreakMode: NSLineBreakMode? = nil, lines: [Line]? = nil, view: UIView? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
 		self.style = style
 
 		super.init()
@@ -70,8 +86,29 @@ public class SegmentViewItem: NSObject {
 		self.title = title
 		self.titleTextStyle = titleTextStyle
 		self.titleTextWeight = titleTextWeight
+		self.titleLinebreakMode = linebreakMode
+		self.lines = lines
+		self.embedView = view
 		self.representedObject = representedObject
 		self.weakRepresentedObject = weakRepresentedObject
 		self.gestureRecognizers = gestureRecognizers
+	}
+}
+
+extension [SegmentViewItem] {
+	func filtered(for lines: [SegmentViewItem.Line], includeUntagged: Bool) -> [SegmentViewItem] {
+		return filter({ item in
+			if let itemLines = item.lines {
+				for line in lines {
+					if itemLines.contains(line) {
+						return true
+					}
+				}
+
+				return false
+			}
+
+			return includeUntagged
+		})
 	}
 }

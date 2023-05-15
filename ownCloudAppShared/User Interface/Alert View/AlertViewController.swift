@@ -81,7 +81,7 @@ open class AlertViewController: UIViewController, Themeable {
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = collection.tableBackgroundColor
+		self.view.apply(css: collection.css, properties: [.fill])
 	}
 
 	required public init?(coder: NSCoder) {

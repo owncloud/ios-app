@@ -36,8 +36,8 @@ class ThemeableCollectionViewCell: UICollectionViewCell, Themeable {
 		}
 	}
 
-	open override func willMove(toSuperview newSuperview: UIView?) {
-		super.willMove(toSuperview: newSuperview)
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
 
 		if !themeRegistered {
 			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
@@ -63,7 +63,7 @@ class ThemeableCollectionViewCell: UICollectionViewCell, Themeable {
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.applyThemeCollection(Theme.shared.activeCollection)
+		self.applyThemeCollection(collection, cellState: configurationState)
 
 		self.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: ThemeItemState(selected: self.isSelected))
 	}

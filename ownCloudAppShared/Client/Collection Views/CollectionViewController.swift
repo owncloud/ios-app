@@ -20,7 +20,7 @@ import UIKit
 import ownCloudApp
 import ownCloudSDK
 
-open class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, Themeable {
+open class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDragDelegate, UICollectionViewDropDelegate, Themeable, ThemeCSSAutoSelector {
 	public var clientContext: ClientContext?
 
 	public var supportsHierarchicContent: Bool
@@ -65,7 +65,9 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	deinit {
-		Theme.shared.unregister(client: self)
+		if _themeRegistered {
+			Theme.shared.unregister(client: self)
+		}
 	}
 
 	// MARK: - View configuration
@@ -83,7 +85,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if usesStackViewRoot, let stackView = stackView {
 			collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-			let safeAreaView = UIView()
+			let safeAreaView = ThemeCSSView()
 			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
 			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
 
@@ -175,8 +177,6 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		super.viewDidLoad()
 		configureViews()
 		configureDataSource()
-
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	open func createCollectionViewLayout() -> UICollectionViewLayout {
@@ -209,6 +209,57 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			collectionView.delegate = self
 			collectionView.dragDelegate = self
 			collectionView.dropDelegate = self
+		}
+	}
+
+	// MARK: - Cover view
+	var coverRootView: UIView? {
+		willSet {
+			coverRootView?.removeFromSuperview()
+		}
+
+		didSet {
+			if let coverRootView {
+				view.embed(toFillWith: coverRootView)
+			}
+		}
+	}
+
+	public enum CoverViewLayout {
+		case fill
+		case center
+		case top
+	}
+
+	open func setCoverView(_ coverView: UIView?, layout: CoverViewLayout) {
+		if view != nil {
+			if let coverView {
+				let rootView = UIView()
+				rootView.translatesAutoresizingMaskIntoConstraints = false
+				rootView.backgroundColor = Theme.shared.activeCollection.css.getColor(.fill, for: collectionView)
+
+				switch layout {
+					case .fill:
+						rootView.embed(toFillWith: coverView)
+
+					case .center:
+						rootView.embed(centered: coverView, enclosingAnchors: rootView.safeAreaAnchorSet)
+
+					case .top:
+						rootView.addSubview(coverView)
+						NSLayoutConstraint.activate([
+							coverView.leadingAnchor.constraint(greaterThanOrEqualTo: rootView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+							coverView.trailingAnchor.constraint(greaterThanOrEqualTo: rootView.safeAreaLayoutGuide.trailingAnchor, constant: 20),
+							coverView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
+							coverView.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: 20),
+							coverView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+						])
+				}
+
+				self.coverRootView = rootView
+			} else {
+				self.coverRootView = nil
+			}
 		}
 	}
 
@@ -276,6 +327,29 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 
+		collectionViewDataSource.supplementaryViewProvider = { [weak self] (collectionView, elementKind, indexPath) in
+			// Fetch by section ID (may fail if section is process of being hidden)
+			if let sectionIdentifier = self?.collectionViewDataSource.sectionIdentifier(for: indexPath.section),
+			   let section = self?.sectionsByID[sectionIdentifier], !section.hidden,
+			   let supplementaryItemProvider = CollectionViewSupplementaryCellProvider.providerFor(elementKind),
+			   let supplementaryItem = section.boundarySupplementaryItems?.first(where: { item in
+				   return item.elementKind == elementKind
+			   }) {
+			   	return supplementaryItemProvider.provideCell(for: collectionView, section: section, supplementaryItem: supplementaryItem, indexPath: indexPath)
+			}
+
+			// Fetch by section offset
+			if let section = self?.section(at: indexPath.section),
+			   let supplementaryItemProvider = CollectionViewSupplementaryCellProvider.providerFor(elementKind),
+			   let supplementaryItem = section.boundarySupplementaryItems?.first(where: { item in
+				   return item.elementKind == elementKind
+			   }) {
+			   	return supplementaryItemProvider.provideCell(for: collectionView, section: section, supplementaryItem: supplementaryItem, indexPath: indexPath)
+			}
+
+			return nil
+		}
+
 		// initial data
 		updateSource(animatingDifferences: false)
 	}
@@ -293,6 +367,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	// MARK: - Sections
 	var sections: [CollectionViewSection] = []
 	var sectionsByID: [CollectionViewSection.SectionIdentifier : CollectionViewSection] = [:]
+
+	public var allSections: [CollectionViewSection] {
+		return sections
+	}
 
 	private func associate(section: CollectionViewSection) {
 		section.collectionViewController = self
@@ -527,12 +605,21 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if reloadSectionIDs.count > 0 {
 			performDataSourceUpdate { updateDone in
 				var snapshot = self.collectionViewDataSource.snapshot()
-				snapshot.reloadSections(reloadSectionIDs)
+				let existingSectionIdentifiers = snapshot.sectionIdentifiers
+				let applicableSectionIDs = reloadSectionIDs.filter { sectionID in
+					return existingSectionIdentifiers.contains(sectionID)
+				}
 
-				self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+				if applicableSectionIDs.count > 0 {
+					snapshot.reloadSections(applicableSectionIDs)
 
-				// Notify view controller of content updates
-				self.setContentDidUpdate()
+					self.collectionViewDataSource.apply(snapshot, animatingDifferences: animated)
+
+					// Notify view controller of content updates
+					self.setContentDidUpdate()
+				} else {
+					Log.debug("Reload of sections \(reloadSectionIDs as [String]) requested, but only \(existingSectionIdentifiers as [String]) currently exist. Did nothing.")
+				}
 
 				updateDone()
 			}
@@ -563,6 +650,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		public override var hash: Int {
 			return dataItemReference.hash ^ sectionIdentifier.hash
+		}
+
+		public override var description: String {
+			return "<WrappedItem: \(sectionIdentifier) : \(dataItemReference)>"
 		}
 	}
 
@@ -702,17 +793,55 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	// MARK: - Selection
-	public func select(item: CollectionViewController.ItemRef, withTimeout: TimeInterval? = 0) {
-
-	}
-
-	func performSelection(of item: CollectionViewController.ItemRef, animated: Bool, scrollPosition: UICollectionView.ScrollPosition = .centeredVertically) -> Bool {
-		if let indexPath = collectionViewDataSource.indexPath(for: item) {
-			collectionView.selectItem(at: indexPath, animated: animated, scrollPosition: scrollPosition)
-		}
-
-		return false
-	}
+//	var selectedItemReferences: [ItemRef]?
+//
+//	enum SelectionOperation {
+//		case add
+//		case replace
+//		case toggle
+//		case remove
+//		case clear
+//	}
+//
+//	func recordSelection(ofItemWith itemRef: ItemRef?, operation: SelectionOperation = .replace) {
+//		var effectiveOperation: SelectionOperation = operation
+//
+//		if operation == .toggle, let itemRef {
+//			effectiveOperation = selectedItemReferences?.contains(itemRef) == true ? .remove :. add
+//		}
+//
+//		switch effectiveOperation {
+//			case .add:
+//				if let itemRef {
+//					if selectedItemReferences != nil {
+//						selectedItemReferences?.append(itemRef)
+//					} else {
+//						selectedItemReferences = [ itemRef ]
+//					}
+//				}
+//
+//			case .replace:
+//				if let itemRef {
+//					selectedItemReferences = [ itemRef ]
+//				}
+//
+//			case .remove:
+//				if let itemRef {
+//					selectedItemReferences = selectedItemReferences?.filter({ checkItemRef in
+//						return checkItemRef != itemRef
+//					})
+//				}
+//
+//			case .clear:
+//				selectedItemReferences = nil
+//
+//			default: break
+//		}
+//	}
+//
+//	func recordSelection(ofItemAt indexPath: IndexPath, operation: SelectionOperation = .replace) {
+//		recordSelection(ofItemWith: collectionViewDataSource?.itemIdentifier(for: indexPath), operation: operation)
+//	}
 
 	// MARK: - Collection View Delegate
 	public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -737,6 +866,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
 
+		// recordSelection(ofItemAt: indexPath, operation: .add)
+
 		retrieveItem(at: indexPath, action: { [weak self] record, indexPath, section in
 			// Return early if .selection is not allowed
 			let clientContext = section.clientContext ?? self?.clientContext
@@ -757,6 +888,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 	public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		let interaction : ClientItemInteraction = collectionView.isEditing ? .multiselection : .selection
+
+		// recordSelection(ofItemAt: indexPath, operation: .remove)
 
 		if interaction != .multiselection {
 			return
@@ -1051,8 +1184,15 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	// MARK: - Events
 	private var _navigationBarWasHidden: Bool?
 
+	private var _themeRegistered = false
 	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+
 		if let hideNavigationBar, hideNavigationBar, navigationController?.isNavigationBarHidden != hideNavigationBar {
 			_navigationBarWasHidden = navigationController?.isNavigationBarHidden
 			navigationController?.setNavigationBarHidden(hideNavigationBar, animated: true)
@@ -1066,13 +1206,23 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	// MARK: - Update cell layout
+	public func updateCellLayout(animated: Bool = false) {
+		collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: animated)
+	}
+
 	// MARK: - Themeing
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		if event != .initial {
-			collectionView.setCollectionViewLayout(createCollectionViewLayout(), animated: false)
+			updateCellLayout(animated: false)
 		}
 
-		collectionView.backgroundColor = collection.tableBackgroundColor
+		collectionView.backgroundColor = collection.css.getColor(.fill, for: collectionView)
+		coverRootView?.backgroundColor = collection.css.getColor(.fill, for: collectionView)
+	}
+
+	open var cssAutoSelectors: [ThemeCSSSelector] {
+		return [.collection]
 	}
 }
 

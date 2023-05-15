@@ -82,7 +82,7 @@ public extension OCLocation {
 		return nil
 	}
 
-	func breadcrumbs(in clientContext: ClientContext) -> [OCAction] {
+	func breadcrumbs(in clientContext: ClientContext, includeServerName: Bool = true, includeDriveName: Bool = true) -> [OCAction] {
 		var breadcrumbs: [OCAction] = []
 		var currentLocation = self
 
@@ -121,16 +121,47 @@ public extension OCLocation {
 		}
 
 		// Drive name
-		if let driveID = self.driveID {
+		if let driveID = self.driveID, includeDriveName {
 			let location = OCLocation(driveID: driveID, path: "/")
 			addCrumb(title: location.displayName(in: clientContext), icon: location.displayIcon(in: clientContext), location: location)
 		}
 
 		// Server name
-		if let bookmark = clientContext.core?.bookmark {
+		if let bookmark = clientContext.core?.bookmark, includeServerName {
 			addCrumb(title: bookmark.displayName ?? bookmark.shortName, icon: OCSymbol.icon(forSymbolName: "server.rack"), location: (self.driveID == nil) ? OCLocation.legacyRoot : nil)
 		}
 
 		return breadcrumbs
+	}
+}
+
+extension OCLocation {
+	static func composeSegments(breadcrumbs: [OCAction], in clientContext: ClientContext, segmentConfigurator: ((_ breadcrumb: OCAction, _ segment: SegmentViewItem) -> Void)? = nil) -> [SegmentViewItem] {
+		var segments: [SegmentViewItem] = []
+
+		for breadcrumb in breadcrumbs {
+			if !segments.isEmpty {
+				let seperatorSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "chevron.right"), style: .chevron)
+				seperatorSegment.insets.leading = 0
+				seperatorSegment.insets.trailing = 0
+				segments.append(seperatorSegment)
+			}
+
+			let segment = SegmentViewItem(with: breadcrumb.icon, title: breadcrumb.title, style: .plain, titleTextStyle: .footnote)
+
+			if let segmentConfigurator {
+				segmentConfigurator(breadcrumb, segment)
+			}
+
+			segments.append(segment)
+		}
+
+		segments.last?.titleTextWeight = .semibold
+		segments.last?.gestureRecognizers = nil
+
+		segments.first?.insets.leading = 0
+		segments.last?.insets.trailing = 0
+
+		return segments
 	}
 }

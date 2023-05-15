@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
-		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(GitInfo.app.versionInfo) finished launching with log settings: \(Log.logOptionStatus)")
 
 		// Set up notification categories
 		NotificationManager.shared.registerCategories()
@@ -44,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		ThemeStyle.registerDefaultStyles()
 
 		CollectionViewCellProvider.registerStandardImplementations()
+		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
 
 		ImportFilesController.removeImportDirectory()
 
@@ -80,7 +81,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
-		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
@@ -177,17 +177,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Not applicable here at the app delegate level.
 		return false
 	}
-//		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-//			let url = userActivity.webpageURL else {
-//				return false
-//		}
-//
-//		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
-//
-//		openPrivateLink(url: url, in: window)
-//
-//		return true
-//	}
 
 	// MARK: UISceneSession Lifecycle
 	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
@@ -198,21 +187,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	// MARK: - App Scheme URL handling
-	open func openAppSchemeLink(url: URL, in inWindow: UIWindow? = nil, scene: UIScene? = nil, autoDelay: Bool = true) {
-		guard let window = inWindow ?? (scene as? UIWindowScene)?.windows.first else { return }
+	open func openAppSchemeLink(url: URL, in inWindow: UIWindow? = nil, clientContext: ClientContext? = nil, autoDelay: Bool = true) {
+		guard let window = inWindow ?? (clientContext?.scene as? UIWindowScene)?.windows.first else { return }
 
 		if UIApplication.shared.applicationState != .background, autoDelay {
 			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
 			// with activities of the just instantiated ServerListTableViewController
 			OnMainThread(after: delayForLinkResolution) {
-				self.openAppSchemeLink(url: url, in: window, autoDelay: false)
+				self.openAppSchemeLink(url: url, in: window, clientContext: clientContext, autoDelay: false)
 			}
 
 			return
 		}
 
 		// App is already running, just start link resolution
-		if openPrivateLink(url: url, in: window) { return }
+		if openPrivateLink(url: url, clientContext: clientContext) { return }
 		if openPostBuild(url: url, in: window) { return }
 	}
 
@@ -298,9 +287,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	// MARK: Private Link
-	private func openPrivateLink(url: URL, in window: UIWindow) -> Bool {
-		if url.privateLinkItemID() != nil {
-			url.resolveAndPresent(in: window)
+	private func openPrivateLink(url: URL, clientContext: ClientContext?) -> Bool {
+		if let clientContext, url.privateLinkItemID != nil {
+			url.resolveAndPresentPrivateLink(with: clientContext)
 			return true
 		}
 

@@ -110,7 +110,7 @@ class SecuritySettingsSection: SettingsSection {
 			frequencyRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (row, _) in
 				if let vc = self?.viewController {
 
-					let newVC = StaticTableViewController(style: .grouped)
+					let newVC = StaticTableViewController(style: .insetGrouped)
 					newVC.title = "Lock application".localized
 					let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.".localized)
 
@@ -174,9 +174,7 @@ class SecuritySettingsSection: SettingsSection {
 
 		// Creation of certificate management row
 		certificateManagementRow = StaticTableViewRow(rowWithAction: { (row, _) in
-			let certificateManagementViewController = CertificateManagementViewController(style: UITableView.Style.grouped)
-
-			row.viewController?.navigationController?.pushViewController(certificateManagementViewController, animated: true)
+			row.viewController?.navigationController?.pushViewController(CertificateManagementViewController(style: .insetGrouped), animated: true)
 		}, title: "Certificates".localized, accessoryType: .disclosureIndicator, identifier: "Certificates")
 	}
 

@@ -380,7 +380,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 // MARK: - iOS13 gesture based multiple selection
 
-@available(iOS 13, *) extension PhotoSelectionViewController {
+extension PhotoSelectionViewController {
 	override func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
 		return !DisplaySettings.shared.preventDraggingFiles
 	}

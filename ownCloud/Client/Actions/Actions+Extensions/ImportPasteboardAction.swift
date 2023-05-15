@@ -36,7 +36,7 @@ class ImportPasteboardAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.importpasteboard") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Paste".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -47,6 +47,12 @@ class ImportPasteboardAction : Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		let pasteboard = UIPasteboard.general
+
+		if forContext.items.first?.permissions.contains(.createFolder) == false ||
+		   forContext.items.first?.permissions.contains(.createFile) == false {
+			return .none
+		}
+
 		if pasteboard.numberOfItems > 0 {
 			return .afterMiddle
 		}
@@ -58,7 +64,7 @@ class ImportPasteboardAction : Action {
 	override func run() {
 		var importToRootItem : OCItem?
 
-		if let root = context.query?.rootItem {
+		if let root = context.rootItem {
 			importToRootItem = root
 		} else if let root = context.preferences?["rootItem"] as? OCItem { // KeyCommands send the rootItem via Preferences, because if a table view cell is selected, we need the folder root item
 			importToRootItem = root

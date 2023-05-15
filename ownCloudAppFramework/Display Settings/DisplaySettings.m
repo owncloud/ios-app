@@ -206,6 +206,24 @@
 	}
 }
 
+#pragma mark - Query condition
+- (OCQueryCondition *)queryConditionForDisplaySettings
+{
+	if (!_showHiddenFiles)
+	{
+		return ([OCQueryCondition require:@[
+			// Exclude root folder as item
+			[OCQueryCondition where:OCItemPropertyNamePath isNotEqualTo:@"/"],
+
+			// Exclude hidden files
+			[OCQueryCondition negating:YES condition:[OCQueryCondition where:OCItemPropertyNamePath contains:@"/."]]
+		]]);
+	}
+
+	// Exclude root folder as item
+	return ([OCQueryCondition where:OCItemPropertyNamePath isNotEqualTo:@"/"]);
+}
+
 #pragma mark - Query filter
 - (BOOL)query:(OCQuery *)query shouldIncludeItem:(OCItem *)item
 {

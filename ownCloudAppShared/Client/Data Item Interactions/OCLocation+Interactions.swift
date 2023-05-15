@@ -39,7 +39,7 @@ extension OCLocation : DataItemSelectionInteraction {
 			}
 
 			let viewController = ClientItemViewController(context: context, query: query, location: location)
-
+			viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: location, clientContext: context, restoreAction: .open)
 			viewController.revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
 
 			return viewController
@@ -48,5 +48,44 @@ extension OCLocation : DataItemSelectionInteraction {
 		completion?(true)
 
 		return locationViewController
+	}
+
+	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+		if let core = context?.core {
+			if let item = try? core.cachedItem(at: self) {
+				return item.revealItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
+			}
+		}
+
+		completion?(true)
+
+		return nil
+	}
+}
+
+// MARK: - BrowserNavigationBookmark (re)store
+extension OCLocation: DataItemBrowserNavigationBookmarkReStore {
+	public func store(in bookmarkUUID: UUID?, context: ClientContext?, restoreAction: BrowserNavigationBookmark.BookmarkRestoreAction) -> BrowserNavigationBookmark? {
+		let navigationBookmark = BrowserNavigationBookmark(for: self, in: bookmarkUUID, restoreAction: restoreAction)
+		var storeLocation = self
+
+		// Make sure OCLocation.bookmarkUUID is set
+		if storeLocation.bookmarkUUID == nil, let bookmarkUUID, let locationCopy = copy() as? OCLocation {
+			locationCopy.bookmarkUUID = bookmarkUUID
+			storeLocation = locationCopy
+		}
+
+		navigationBookmark?.location = storeLocation
+
+		return navigationBookmark
+	}
+
+	public static func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: ((Error?, UIViewController?) -> Void)) {
+		if let location = navigationBookmark.location {
+			let viewController = location.openItem(from: viewController, with: context, animated: false, pushViewController: false, completion: nil)
+			completion(nil, viewController)
+		} else {
+			completion(NSError(ocError: .insufficientParameters), nil)
+		}
 	}
 }

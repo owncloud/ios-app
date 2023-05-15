@@ -39,6 +39,8 @@ class DriveHeaderCell: DriveListCell {
 	}
 
 	override func configure() {
+		cssSelectors = [.header, .drive]
+
 		darkBackgroundView.translatesAutoresizingMaskIntoConstraints = false
 		darkBackgroundView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
 
@@ -55,13 +57,12 @@ class DriveHeaderCell: DriveListCell {
 		textOuterSpacing = 16
 
 		coverImageResourceView.fallbackView = nil
+		coverImageResourceView.cssSelector = .cover
 		if let suggestedCellHeight {
 			coverImageHeightConstraint = coverImageResourceView.heightAnchor.constraint(greaterThanOrEqualToConstant: suggestedCellHeight)
 		}
 
 		contentView.insertSubview(darkBackgroundView, belowSubview: titleLabel)
-
-		Theme.shared.register(client: self, applyImmediately: true)
 
 		coverObservation = coverImageResourceView.observe(\ResourceViewHost.contentStatus, options: [.initial], changeHandler: { [weak self] viewHost, _ in
 			self?.darkBackgroundView.isHidden = (viewHost.contentStatus != .fromResource)
@@ -93,7 +94,7 @@ class DriveHeaderCell: DriveListCell {
 	}
 
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
-		coverImageResourceView.backgroundColor = collection.lightBrandColor
+		coverImageResourceView.backgroundColor = collection.css.getColor(.fill, for: coverImageResourceView)
 
 		// Different look (unified with navigation bar, problematic in light mode):
 		// coverImageResourceView.backgroundColor = collection.navigationBarColors.backgroundColor
@@ -112,11 +113,11 @@ class DriveHeaderCell: DriveListCell {
 			titleLabel.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: textOuterSpacing),
 
 			titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: textOuterSpacing),
-			titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -textOuterSpacing),
+			titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -textOuterSpacing).with(priority: .defaultHigh), // make constraint "overridable" for DriveGridCell subclass
 			titleLabel.bottomAnchor.constraint(equalTo: subtitleLabel.topAnchor, constant: -textInterSpacing),
 
 			subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: textOuterSpacing),
-			subtitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -textOuterSpacing),
+			subtitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -textOuterSpacing).with(priority: .defaultHigh), // make constraint "overridable" for DriveGridCell subclass
 			subtitleLabel.bottomAnchor.constraint(equalTo: coverImageResourceView.bottomAnchor, constant: -textOuterSpacing),
 
 			darkBackgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -131,4 +132,9 @@ class DriveHeaderCell: DriveListCell {
 
 		NSLayoutConstraint.activate(constraints)
 	}
+}
+
+extension ThemeCSSSelector {
+	static let drive = ThemeCSSSelector(rawValue: "drive")
+	static let cover = ThemeCSSSelector(rawValue: "cover")
 }

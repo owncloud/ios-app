@@ -104,6 +104,8 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
+
+"Tree" = "Tree";
 "Search folder" = "Search folder";
 "Search tree" = "Search tree";
 "Search from {{folder.name}}" = "Search from {{folder.name}}";
@@ -125,6 +127,12 @@
 "{{remaining}} available" = "{{remaining}} available";
 
 "Show more results" = "Show more results";
+
+/* Item Layouts */
+"List" = "List";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
 
 /* Saved searches */
 "Saved searches" = "Saved searches";
@@ -163,7 +171,6 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Empty folder";
 "No contents" = "No contents";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
 "This folder is empty." = "This folder is empty.";
@@ -186,6 +193,8 @@
 "No matches" = "No matches";
 "The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "There are no results for this search term";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "Status";
 
 "Authorization failed" = "Authorization failed";
@@ -506,12 +515,21 @@
 "Create one file per page" = "Create one file per page";
 
 /* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";
 "Recipients" = "Recipients";
 "Public Link" = "Public Link";
 "Public Links" = "Public Links";
-"Shared by %@" = "Shared by %@";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
 "Add email or name" = "Add email or name";
@@ -601,6 +619,10 @@
 "Shared by me" = "Shared by me";
 "Shared by link" = "Shared by link";
 
+"Share with" = "Share with";
+"Add" = "Add";
+"Save changes" = "Save changes";
+
 /* Quick Access view */
 "Quick Access" = "Quick Access";
 "Collection" = "Collection";
@@ -611,6 +633,10 @@
 "Text" = "Text";
 "Documents" = "Documents";
 "Audio" = "Audio";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -694,10 +720,12 @@
 "Make unavailable offline" = "Make unavailable offline";
 
 "Available Offline" = "Available Offline";
-"No items have been selected for offline availability." = "No items have been selected for offline availability.";
 
-"Overview" = "Overview";
-"All Files" = "All Files";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";

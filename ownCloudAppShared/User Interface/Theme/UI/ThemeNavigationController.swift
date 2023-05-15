@@ -35,15 +35,11 @@ open class ThemeNavigationController: UINavigationController, Themeable {
 	}
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
-		if let object = self.viewControllers.last {
-			if self.presentedViewController == nil, let loginViewController = object as? CustomStatusBarViewControllerProtocol {
-				return loginViewController.statusBarStyle()
-			} else {
-				return Theme.shared.activeCollection.statusBarStyle
-			}
+		if let object = self.viewControllers.last, self.presentedViewController == nil, let loginViewController = object as? CustomStatusBarViewControllerProtocol {
+			return loginViewController.statusBarStyle()
 		}
 
-		return Theme.shared.activeCollection.statusBarStyle
+		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
 	}
 
 	open override var childForStatusBarStyle: UIViewController? {
@@ -52,6 +48,11 @@ open class ThemeNavigationController: UINavigationController, Themeable {
 
 	override open func viewDidLoad() {
 		super.viewDidLoad()
+		applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
+	}
+
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
@@ -75,10 +76,8 @@ open class ThemeNavigationController: UINavigationController, Themeable {
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let style : ThemeItemStyle = style == .splitViewContent ? .content : .defaultForItem
-
-		self.applyThemeCollection(collection, itemStyle: style)
-		self.toolbar.applyThemeCollection(collection, itemStyle: style)
+		self.applyThemeCollection(collection)
+		self.toolbar.applyThemeCollection(collection)
 		self.view.backgroundColor = .clear
 
 		if event == .update {

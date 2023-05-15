@@ -19,11 +19,15 @@
 import UIKit
 import ownCloudSDK
 
+extension ThemeCSSSelector {
+	static let locationBar = ThemeCSSSelector(rawValue: "locationBar")
+}
+
 open class ClientLocationBarController: UIViewController, Themeable {
 	public var location: OCLocation
 	public var clientContext: ClientContext
 
-	public var seperatorView: UIView?
+	public var seperatorView: ThemeCSSView?
 	public var segmentView: SegmentView?
 
 	public init(clientContext: ClientContext, location: OCLocation) {
@@ -37,10 +41,14 @@ open class ClientLocationBarController: UIViewController, Themeable {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	open override func loadView() {
+		view = ThemeCSSView(withSelectors: [.toolbar, .locationBar])
+	}
+
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
-		seperatorView = UIView()
+		seperatorView = ThemeCSSView(withSelectors: [.separator])
 		seperatorView?.translatesAutoresizingMaskIntoConstraints = false
 
 		segmentView = SegmentView(with: composeSegments(location: location, in: clientContext), truncationMode: .truncateTail, scrollable: true, limitVerticalSpaceUsage: true)
@@ -66,25 +74,20 @@ open class ClientLocationBarController: UIViewController, Themeable {
 				segmentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
 			])
 		}
+	}
 
-		Theme.shared.register(client: self, applyImmediately: true)
+	var _themeRegistered: Bool = false
+	open override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
 	}
 
 	func composeSegments(location: OCLocation, in clientContext: ClientContext) -> [SegmentViewItem] {
-		var segments: [SegmentViewItem] = []
-
-		let breadcrumbs = location.breadcrumbs(in: clientContext)
-
-		for breadcrumb in breadcrumbs {
-			if !segments.isEmpty {
-				let seperatorSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "chevron.right"))
-				seperatorSegment.insets.leading = 0
-				seperatorSegment.insets.trailing = 0
-				segments.append(seperatorSegment)
-			}
-
-			let segment = SegmentViewItem(with: breadcrumb.icon, title: breadcrumb.title, style: .plain, titleTextStyle: .footnote)
-
+		return OCLocation.composeSegments(breadcrumbs: location.breadcrumbs(in: clientContext), in: clientContext, segmentConfigurator: { breadcrumb, segment in
+			// Make breadcrumbs tappable using the provided action's .actionBlock
 			if breadcrumb.actionBlock != nil {
 				segment.gestureRecognizers = [
 					ActionTapGestureRecognizer(action: { [weak self] _ in
@@ -94,21 +97,14 @@ open class ClientLocationBarController: UIViewController, Themeable {
 					})
 				]
 			}
-
-			segments.append(segment)
-		}
-
-		segments.last?.titleTextWeight = .semibold
-		segments.last?.gestureRecognizers = nil
-
-		return segments
+		})
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let backgroundFillColor = collection.toolbarColors.backgroundColor ?? collection.tableGroupBackgroundColor
+		seperatorView?.apply(css: collection.css, properties: [.fill])
 
-		view.backgroundColor = backgroundFillColor
-		segmentView?.scrollViewOverlayGradientColor = backgroundFillColor.cgColor
-		seperatorView?.backgroundColor = collection.tableSeparatorColor
+		if let backgroundFillColor = collection.css.getColor(.fill, for: view) {
+			segmentView?.scrollViewOverlayGradientColor = backgroundFillColor.cgColor
+		}
 	}
 }

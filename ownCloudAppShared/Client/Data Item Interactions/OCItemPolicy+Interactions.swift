@@ -19,6 +19,16 @@
 import UIKit
 import ownCloudSDK
 
+extension OCItemPolicy: DataItemSelectionInteraction {
+	public func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool {
+		return false
+	}
+
+	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+		return location?.revealItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
+	}
+}
+
 extension OCItemPolicy: DataItemSwipeInteraction {
 	func canDelete(in clientContext: ClientContext?) -> Bool {
 		if clientContext != nil, clientContext?.core != nil {
@@ -43,7 +53,7 @@ extension OCItemPolicy: DataItemSwipeInteraction {
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
-		deleteAction.image = UIImage(named: "cloud-unavailable-offline")
+		deleteAction.image = OCItem.cloudUnavailableOfflineStatusIcon
 
 		return UISwipeActionsConfiguration(actions: [ deleteAction ])
 	}
@@ -59,7 +69,7 @@ extension OCItemPolicy: DataItemContextMenuInteraction {
 			self?.delete(in: context)
 		})
 		deleteAction.title = "Make unavailable offline".localized
-		deleteAction.image = UIImage(named: "cloud-unavailable-offline")
+		deleteAction.image = OCItem.cloudUnavailableOfflineStatusIcon
 		deleteAction.attributes = .destructive
 
 		return [ deleteAction ]

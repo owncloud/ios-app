@@ -38,20 +38,29 @@ open class BrowserNavigationItem: NSObject {
 
 		return nil
 	}
+	open var viewControllerIfLoaded: UIViewController? {
+		return _viewController
+	}
+
 	open var builder: Builder?
+
 	open var canTrimViewController: Bool {
-		if builder != nil {
+		if builder != nil || navigationBookmark != nil {
 			return true
 		}
 
 		return false
 	}
 
-	init(viewController: UIViewController? = nil, builder: Builder? = nil) {
+	open var navigationBookmark: BrowserNavigationBookmark?
+
+	init(viewController: UIViewController? = nil, builder: Builder? = nil, bookmark: BrowserNavigationBookmark? = nil) {
 		super.init()
 
 		_viewController = viewController
 		self.builder = builder
+
+		self.navigationBookmark = bookmark ?? viewController?.navigationBookmark
 
 		if self.builder == nil, let trimmingSupport = viewController as? BrowserNavigationTrimming {
 			self.builder = trimmingSupport.browserNavigationBuilder

@@ -56,7 +56,12 @@ extension OCSavedSearch {
 			}
 
 			switch scope {
-				case .folder, .container:
+				case .folder:
+					if let path = location.path {
+						requirements.append(OCQueryCondition.where(.parentPath, isEqualTo: path))
+					}
+
+				case .container:
 					if let path = location.path {
 						requirements.append(OCQueryCondition.where(.path, startsWith: path))
 					}
@@ -115,6 +120,29 @@ extension OCSavedSearch {
 }
 
 extension OCSavedSearch: DataItemSelectionInteraction {
+	func buildViewController(with context: ClientContext) -> ClientItemViewController? {
+		if let condition = condition() {
+			let query = OCQuery(condition: condition, inputFilter: nil)
+			DisplaySettings.shared.updateQuery(withDisplaySettings: query)
+
+			let resultsContext = ClientContext(with: context, modifier: { context in
+				context.query = query
+			})
+
+			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: "No matches".localized, emptyItemListMessageLocalized: "No items found matching the search criteria.".localized)
+			if self.useNameAsTitle == true {
+				viewController.navigationTitle = sideBarDisplayName
+			} else {
+				viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
+			}
+			viewController.revoke(in: context, when: .connectionClosed)
+			viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .handleSelection)
+			return viewController
+		}
+
+		return nil
+	}
+
 	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
 		if isTemplate {
 			if let host = viewController as? SearchViewControllerHost {
@@ -123,22 +151,10 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 				return true
 			}
 		} else {
-			if let condition = condition(), let context = context {
-				let query = OCQuery(condition: condition, inputFilter: nil)
-				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
-
-				let resultsContext = ClientContext(with: context, modifier: { context in
-					context.query = query
-				})
+			if let context = context, let viewController = buildViewController(with: context) {
+				let resultsContext = viewController.clientContext
 
 				if context.pushViewControllerToNavigation(context: resultsContext, provider: { context in
-					let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true)
-					if self.useNameAsTitle == true {
-						viewController.navigationTitle = sideBarDisplayName
-					} else {
-						viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
-					}
-					viewController.revoke(in: context, when: .connectionClosed)
 					return viewController
 				}, push: true, animated: true) != nil {
 					completion?(true)
@@ -182,5 +198,25 @@ extension OCSavedSearch: DataItemContextMenuInteraction {
 		deleteAction.attributes = .destructive
 
 		return [ deleteAction ]
+	}
+}
+
+// MARK: - BrowserNavigationBookmark (re)store
+extension OCSavedSearch: DataItemBrowserNavigationBookmarkReStore {
+	public func store(in bookmarkUUID: UUID?, context: ClientContext?, restoreAction: BrowserNavigationBookmark.BookmarkRestoreAction) -> BrowserNavigationBookmark? {
+		let navigationBookmark = BrowserNavigationBookmark(for: self, in: bookmarkUUID, restoreAction: restoreAction)
+
+		navigationBookmark?.savedSearch = self
+
+		return navigationBookmark
+	}
+
+	public static func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: ((Error?, UIViewController?) -> Void)) {
+		if let savedSearch = navigationBookmark.savedSearch, let context {
+			let viewController = savedSearch.buildViewController(with: context)
+			completion(nil, viewController)
+		} else {
+			completion(NSError(ocError: .insufficientParameters), nil)
+		}
 	}
 }

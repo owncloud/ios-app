@@ -50,7 +50,7 @@ open class EmbeddingViewController: UIViewController {
 		view.addSubview(contentViewControllerView)
 	}
 
-	open var contentViewController: UIViewController? {
+	@objc open var contentViewController: UIViewController? {
 		willSet {
 			contentViewController?.willMove(toParent: nil)
 			contentViewController?.view.removeFromSuperview()

@@ -18,7 +18,13 @@
 
 import UIKit
 
-public class SegmentView: ThemeView {
+extension ThemeCSSSelector {
+	static let segments = ThemeCSSSelector(rawValue: "segments")
+}
+
+public class SegmentView: ThemeView, ThemeCSSAutoSelector {
+	public let cssAutoSelectors: [ThemeCSSSelector] = [.segments]
+
 	public enum TruncationMode {
 		case none
 		case clipTail
@@ -40,7 +46,13 @@ public class SegmentView: ThemeView {
 		}
 	}
  	open var itemSpacing: CGFloat = 5
- 	open var truncationMode: TruncationMode = .none
+ 	open var truncationMode: TruncationMode = .none {
+ 		didSet {
+ 			if truncationMode != oldValue {
+ 				recreateAndLayoutItemViews()
+			}
+		}
+	}
  	open var insets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
  	open var limitVerticalSpaceUsage: Bool = false
 
@@ -127,6 +139,7 @@ public class SegmentView: ThemeView {
 	}
 
 	private var itemViews: [UIView] = []
+	private var borderMaskView: UIView?
 	private var scrollView: UIScrollView?
 	private var scrollGradientLeft: GradientView?
 	private var scrollGradientRight: GradientView?
@@ -158,6 +171,11 @@ public class SegmentView: ThemeView {
 			if let view = item.view {
 				itemViews.append(view)
 			}
+		}
+
+		if let lastSegmentView = (itemViews.last as? SegmentViewItemView) {
+			// If the last view is a label, allow it to stretch and fill the space
+			lastSegmentView.titleViewHugging = .defaultHigh
 		}
 
 		// Scroll View
@@ -234,10 +252,14 @@ public class SegmentView: ThemeView {
 					}
 			}
 
-			if let maskView = maskView {
+			if let maskView {
 				maskView.translatesAutoresizingMaskIntoConstraints = false
+				self.borderMaskView = maskView
 				self.embed(toFillWith: maskView)
 				self.mask = maskView
+			} else {
+				self.mask?.removeFromSuperview()
+				self.mask = nil
 			}
 
 			return constraintSet

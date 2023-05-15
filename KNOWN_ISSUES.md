@@ -7,53 +7,27 @@ It should only be used with dedicated test servers, test data - and test devices
 
 ## App
 - in the new browsing experience, some features are not yet available:
-	- a grid view
 	- breadcrumb title
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
-- [x] clicking a file in favorite view doesn't open the viewer (due to lack of context.query - the viewer clases need to be updated to use data sources rather than queries)
-- support for OC10 sharing is incomplete:
-	- lack of actions for accepted shares
-	- federated shares are not yet included in "Shared with me" view
-- spaces support for Shortcuts
+- [x] support for OC10 sharing is incomplete: federated shares support missing
+- [x] spaces support for Shortcuts
 
 Missing:
-- [x] quick access
-- [x] proper iPhone support
 - [ ] static login/branded login UI
-- [ ] state restoration
 - [ ] full inline progress reporting when account databases are updated on first login
 - [ ] progress reporting in active connections
-- [x] migration from the Legacy app clarified: the feature was removed
-- [ ] iPadOS: opening an account in a new window
-	- by context menu (openAccountInWindow)
-	- by drag and drop (see ServerListTableViewController: UITableViewDragDelegate)
-- [ ] account auto connect (also account.auto-connect in ServerListTableViewController)
-- [ ] opening private links (display(itemWithID…:…))
-- [x] account issue handling
-- [x] functional share extension
-- [ ] full themeing/branding support
 - [ ] reinstate Key Commands
+- BrowserViewController
+	- [ ] disposal of view controllers
+	- [ ] swipe gesture support (+ animation)
 
 Jesus:
 - [ ] Presentation view after installing is missing
-- [ ] The icon to hide/show the sidebar is missing in portrait mode.
-- [x] Adding an oCIS account with existing custom spaces makes the app freezes and then crashes
-- [x] If an space is browsed and new space image is added in the web client, app crashes
-- [ ] "Open in new window" option does not work. It does nothing after clicking
-- [x] I miss the option to "Select All" and "Deselect All" in multiselection
-- [x] "Copy" and "Move" operations show empty folder picker. No way to consolidate.
 - [ ] "Cut"/"Paste" only working in space scope
-- [ ] Upper bar (time, hour, battery level, and so on) is black under dark themes, not visible (fixable?)
-
-Matthias:
-- [?] Selecting an OC10 account's root folder twice results in an empty list
 
 Michael:
-- [x] Account deletion by swipe doesn't work
-- [x] Crash searching for accounts to share with
-- [x] Certificate warning when an account refers to a mix of hostnames
 - [ ] UI rendering picking an account for photo uploads on iPhone: prompt full length, button super-compressed.
 
 ## File Provider
@@ -63,11 +37,6 @@ Michael:
 - pre-population of accounts using infinite PROPFIND is not supported
 
 # Evolution roadmap
-- collection views
-	- [x] support sidebars / hierarchies, including expanded state, with dynamic updates from data sources
-	- ItemListCell: replace manual composition of info line below name with SegmentView
-		- allows to show different content there, f.ex. Space and Folder in search
-
 - [x] location picker replaces folder picker
 	- [x] supports picking
 		- [x] accounts
@@ -114,3 +83,5 @@ Michael:
 			- report to user, drop silently, retry (how often/long?)?
 
 - [x] more expressive "Empty folder" message display, based on new .message item type
+
+- show spinner while recreating a scene via "Open in new window"

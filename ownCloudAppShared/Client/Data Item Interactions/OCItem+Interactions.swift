@@ -24,11 +24,8 @@ import UniformTypeIdentifiers
 // MARK: - Selection > Open
 extension OCItem : DataItemSelectionInteraction {
 	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
-		if let context = context, let core = context.core {
+		if let context = context, context.core != nil {
 			let item = self
-
-			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: core.bookmark)
-			viewController?.view.window?.windowScene?.userActivity = activity.openItemUserActivity
 
 			switch item.type {
 				case .collection:
@@ -44,6 +41,7 @@ extension OCItem : DataItemSelectionInteraction {
 							}
 
 							let viewController = ClientItemViewController(context: context, query: query, location: location)
+							viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .open)
 							viewController.revoke(in: context, when: [.connectionClosed, .driveRemoved])
 							return viewController
 						}, push: pushViewController, animated: animated) {
@@ -55,6 +53,7 @@ extension OCItem : DataItemSelectionInteraction {
 				case .file:
 					if let viewController = context.pushViewControllerToNavigation(context: context, provider: { context in
 						let viewController = context.viewItemHandler?.provideViewer(for: self, context: context)
+						viewController?.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .open)
 						viewController?.revoke(in: context, when: [.connectionClosed, .driveRemoved])
 						return viewController
 					}, push: pushViewController, animated: animated) {
@@ -70,16 +69,14 @@ extension OCItem : DataItemSelectionInteraction {
 	}
 
 	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController? {
-		if let context = context, let core = context.core {
-			let activity = OpenItemUserActivity(detailItem: self, detailBookmark: core.bookmark)
-			viewController?.view.window?.windowScene?.userActivity = activity.openItemUserActivity
-
+		if let context = context, context.core != nil {
 			if let parentLocation = location?.parent {
 				let query = OCQuery(for: parentLocation)
 				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 				if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
 					let viewController = ClientItemViewController(context: context, query: query, location: parentLocation, highlightItemReference: self.dataItemReference)
+					viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: parentLocation, clientContext: context, restoreAction: .open)
 					viewController.revoke(in: context, when: [.connectionClosed, .driveRemoved])
 					return viewController
 				}, push: pushViewController, animated: animated) {
@@ -379,5 +376,53 @@ extension OCItem : DataItemDropInteraction {
 		}
 
 		handlingCompletion(allSuccessful)
+	}
+}
+
+// MARK: - BrowserNavigationBookmark (re)store
+extension OCItem: DataItemBrowserNavigationBookmarkReStore {
+	public func store(in bookmarkUUID: UUID?, context: ClientContext?, restoreAction: BrowserNavigationBookmark.BookmarkRestoreAction) -> BrowserNavigationBookmark? {
+		let navigationBookmark = BrowserNavigationBookmark(for: self, in: bookmarkUUID, restoreAction: restoreAction)
+		var storeLocation = self.location
+
+		// Make sure OCLocation.bookmarkUUID is set
+		if storeLocation?.bookmarkUUID == nil, let bookmarkUUID, let locationCopy = storeLocation?.copy() as? OCLocation {
+			locationCopy.bookmarkUUID = bookmarkUUID
+			storeLocation = locationCopy
+		}
+
+		navigationBookmark?.location = storeLocation
+		navigationBookmark?.itemLocalID = localID
+
+		return navigationBookmark
+	}
+
+	public static func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: @escaping ((Error?, UIViewController?) -> Void)) {
+		if let location = navigationBookmark.location, let context, let core = context.core {
+			let refKeeper: NSMutableArray = NSMutableArray()
+
+			if let trackItemToken = core.trackItem(at: location, trackingHandler: { (error, item, isInitial) in
+				if let error {
+					// An error occured
+					completion(error, nil)
+
+					// End tracking
+					refKeeper.removeAllObjects()
+				} else if let item {
+					// Item found
+					OnMainThread {
+						let viewController = item.openItem(from: viewController, with: context, animated: false, pushViewController: false, completion: nil)
+						completion(nil, viewController)
+					}
+
+					// End tracking
+					refKeeper.removeAllObjects()
+				}
+			}) {
+				refKeeper.add(trackItemToken)
+			}
+		} else {
+			completion(NSError(ocError: .insufficientParameters), nil)
+		}
 	}
 }

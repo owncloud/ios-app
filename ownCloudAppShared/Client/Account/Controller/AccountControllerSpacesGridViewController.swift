@@ -17,9 +17,11 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class AccountControllerSpacesGridViewController: CollectionViewController, ViewControllerPusher {
 	var spacesSection: CollectionViewSection
+	var noSpacesCondition: DataSourceCondition?
 
 	init(with context: ClientContext) {
 		let gridContext = ClientContext(with: context)
@@ -28,13 +30,39 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			context.viewControllerPusher = owner as? ViewControllerPusher
 		}
 
-		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: .grid(itemWidthDimension: .fractionalWidth(0.33), itemHeightDimension: .absolute(200), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)))
+		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: AccountControllerSpacesGridViewController.cellLayout(for: .current))
 
 		super.init(context: gridContext, sections: [ spacesSection ], useStackViewRoot: true, hierarchic: false)
 
 		self.revoke(in: gridContext, when: [ .connectionClosed ])
 
 		navigationItem.title = "Spaces".localized
+
+		if let projectDrivesDataSource = context.core?.projectDrivesDataSource {
+			let noSpacesMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "square.grid.2x2")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.title("No spaces".localized, alignment: .centered)
+			])
+
+			noSpacesCondition = DataSourceCondition(.empty, with: projectDrivesDataSource, initial: true, action: { [weak self] condition in
+				let coverView = (condition.fulfilled == true) ? noSpacesMessage : nil
+				self?.setCoverView(coverView, layout: .top)
+			})
+		}
+	}
+
+	static func cellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {
+		return .fillingGrid(minimumWidth: 260, maximumWidth: 300, computeHeight: { width in
+			return floor(width * 3 / 4)
+		}, cellSpacing: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10), sectionInsets: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), center: true)
+	}
+
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+
+		OnMainThread {
+			self.spacesSection.cellLayout = AccountControllerSpacesGridViewController.cellLayout(for: self.traitCollection)
+		}
 	}
 
 	required public init?(coder: NSCoder) {

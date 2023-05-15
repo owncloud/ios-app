@@ -72,7 +72,6 @@ public class ThemeWindow : UIWindow {
 		ThemeWindow.addThemeWindow(self)
 	}
 
-	@available(iOS 13, *)
 	override public init(windowScene: UIWindowScene) {
 		super.init(windowScene: windowScene)
 

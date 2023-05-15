@@ -106,6 +106,8 @@ class CreateDocumentAction: Action {
 				core.suggestUnusedNameBased(on: "New document".localized.appending((fileType.extension != nil) ? ".\(fileType.extension!)" : ""), at: itemLocation, isDirectory: false, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 					guard let suggestedName = suggestedName else { return }
 
+					let fallbackIcon = (fileType.mimeType != nil) ? ResourceItemIcon.iconFor(mimeType: fileType.mimeType!) : .file
+
 					OnMainThread {
 						let documentNameViewController = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
 							if name.contains("/") || name.contains("\\") {
@@ -120,7 +122,7 @@ class CreateDocumentAction: Action {
 
 								return (true, nil, nil)
 							}
-						}, completion: { newFileName, _ in
+						}, fallbackIcon: fallbackIcon, completion: { newFileName, _ in
 							guard let newFileName = newFileName, let core = self.core else {
 								self.completed()
 								return

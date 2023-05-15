@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudUI
+import ownCloudApp
 import ownCloudAppShared
 // UNCOMMENT FOR HOST SIMULATOR: // import ownCloudMocking
 
@@ -30,6 +31,9 @@ class BookmarkViewController: StaticTableViewController {
 	var nameRow : StaticTableViewRow?
 	var nameChanged = false
 
+	var helpSection : StaticTableViewSection?
+	var helpButtonRow : StaticTableViewRow?
+
 	var urlSection : StaticTableViewSection?
 	var urlRow : StaticTableViewRow?
 	var urlChanged = false
@@ -40,7 +44,6 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
-	var tokenInfoView : RoundedInfoView?
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
@@ -67,6 +70,8 @@ class BookmarkViewController: StaticTableViewController {
 	// MARK: - Internal storage
 	var bookmark : OCBookmark?
 	var originalBookmark : OCBookmark?
+
+	var generationOptions: [OCAuthenticationMethodKey : Any]?
 
 	enum BookmarkViewControllerMode {
 		case create
@@ -182,7 +187,10 @@ class BookmarkViewController: StaticTableViewController {
 					self?.composeSectionsAndRows(animated: true)
 				}
 
-				self?.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
+				if let nameRowTextField = self?.nameRow?.textField {
+					let placeholderColor = nameRowTextField.getThemeCSSColor(.stroke, selectors: [.placeholder]) ?? .secondaryLabel
+					nameRowTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : placeholderColor])
+				}
 			}
 		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
@@ -238,8 +246,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
-		tokenInfoView = RoundedInfoView(text: "")
-
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
 		passwordRow?.textField?.delegate = self
@@ -252,16 +258,34 @@ class BookmarkViewController: StaticTableViewController {
 
 		switch mode {
 			case .create:
-				self.navigationItem.title = "Add account".localized
+				self.navigationItem.title = Branding.shared.organizationName ?? "Add account".localized
 				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
-				// Support for bookmark default URL
-				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
-					self.bookmark?.url = URL(string: defaultURLString)
+				// Support for bookmark default name
+				if let defaultNameString = AccountSettingsProvider.shared.defaultBookmarkName {
+					self.bookmark?.name = defaultNameString
 
 					if bookmark != nil {
 						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
 					}
+				}
+
+				// Support for bookmark default URL
+				if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+					self.bookmark?.url = defaultURL
+
+					if bookmark != nil {
+						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+					}
+				}
+
+				if let url = AccountSettingsProvider.shared.profileHelpURL, let title = AccountSettingsProvider.shared.profileHelpButtonLabel {
+					let imageView = UIImageView(image: UIImage(systemName: "questionmark.circle")!)
+					helpButtonRow = StaticTableViewRow(rowWithAction: { staticRow, sender in
+						UIApplication.shared.open(url)
+					}, title: title, alignment: .center, accessoryView: imageView)
+
+					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: AccountSettingsProvider.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
 				}
 
 			case .edit:
@@ -276,16 +300,16 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				self.usernameRow?.enabled =
-					(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
-					((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
+				(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
+				((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
 
 				self.navigationItem.title = "Edit account".localized
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 		}
 
 		// Support for bookmark URL editable
-		if let bookmarkURLEditable = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool, bookmarkURLEditable == false {
-			self.urlRow?.enabled = bookmarkURLEditable
+		if AccountSettingsProvider.shared.URLEditable == false {
+			self.urlRow?.enabled = false
 
 			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
 
@@ -302,6 +326,22 @@ class BookmarkViewController: StaticTableViewController {
 			OnMainThread {
 				self.handleContinue()
 			}
+		}
+
+		let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
+			.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64)),
+			.title(VendorServices.shared.appName, alignment: .centered)
+		])
+		logoAndAppNameView.cssSelector = .info
+		logoAndAppNameView.backgroundView?.cssSelector = .info
+		logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+		logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
+
+		self.tableView.tableHeaderView = logoAndAppNameView
+		self.tableView.layoutTableHeaderView()
+
+		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
+			self.tableView.backgroundView = UIImageView(image: image)
 		}
 	}
 
@@ -342,9 +382,9 @@ class BookmarkViewController: StaticTableViewController {
 
 		//if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
 		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark, bookmark.authenticationData != nil {
-				updateBookmark(bookmark: bookmark)
-			 completeAndDismiss(with: hudCompletion)
-			 return
+			updateBookmark(bookmark: bookmark)
+			completeAndDismiss(with: hudCompletion)
+			return
 		}
 
 		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {
@@ -411,7 +451,7 @@ class BookmarkViewController: StaticTableViewController {
 
 					hud?.present(on: self, label: "Contacting server…".localized)
 
-					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods) in
+					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods, generationOptions) in
 						hudCompletion({
 							// Update URL
 							self.urlRow?.textField?.text = serverURL.absoluteString
@@ -429,6 +469,8 @@ class BookmarkViewController: StaticTableViewController {
 									self?.handleContinue()
 								}
 							}
+
+							self.generationOptions = generationOptions
 
 							if issue != nil {
 								// Parse issue for display
@@ -469,7 +511,7 @@ class BookmarkViewController: StaticTableViewController {
 
 	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
 		if let connectionBookmark = bookmark {
-			var options : [OCAuthenticationMethodKey : Any] = [:]
+			var options : [OCAuthenticationMethodKey : Any] = generationOptions ?? [:]
 
 			let connection = instantiateConnection(for: connectionBookmark)
 
@@ -488,14 +530,25 @@ class BookmarkViewController: StaticTableViewController {
 			hud?.present(on: self, label: "Authenticating…".localized)
 
 			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
-				if error == nil {
+				if error == nil, let authMethodIdentifier, let authMethodData {
 					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
 					self.bookmark?.authenticationData = authMethodData
 					self.bookmark?.scanForAuthenticationMethodsRequired = false
 					OnMainThread {
 						hud?.updateLabel(with: "Fetching user information…".localized)
 					}
-					self.save(hudCompletion: hudCompletion)
+
+					// Retrieve available instances for this account to chose from
+					connection.retrieveAvailableInstances(options: options, authenticationMethodIdentifier: authMethodIdentifier, authenticationData: authMethodData, completionHandler: { error, instances in
+						// No account chooser implemented at this time. If an account is returned, use the URL of the first one.
+						if error == nil, let instance = instances?.first {
+							self.bookmark?.apply(instance)
+						}
+
+						self.save(hudCompletion: hudCompletion)
+
+						Log.debug("\(connection) returned error=\(String(describing: error)) instances=\(String(describing: instances))") // Debug message also has the task to capture connection and avoid it being prematurely dropped
+					})
 				} else {
 					hudCompletion({
 						var issue : OCIssue?
@@ -891,12 +944,18 @@ class BookmarkViewController: StaticTableViewController {
 				authMethodName = localizedAuthMethodName
 			}
 
-			tokenInfoView?.infoText = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName])
+			let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
+				.text("If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName]), style: .system(textStyle: .body, weight: .semibold), alignment: .centered, cssSelectors: [.info])
+			])
+			tokenMessageView.cssSelector = .info
+			tokenMessageView.backgroundView?.cssSelector = .info
+			tokenMessageView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+			tokenMessageView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
-			self.tableView.tableHeaderView = tokenInfoView
+			self.tableView.tableHeaderView = tokenMessageView
 			self.tableView.layoutTableHeaderView()
 		} else {
-			self.tableView.tableHeaderView?.removeFromSuperview()
+			self.tableView.tableHeaderView = nil
 		}
 
 		// Continue button: show always
@@ -913,6 +972,10 @@ class BookmarkViewController: StaticTableViewController {
 			} else {
 				continueBarButtonItem.isEnabled = false
 			}
+		}
+
+		if helpSection?.attached == false {
+			self.insertSection(helpSection!, at: self.sections.count, animated: animated)
 		}
 	}
 
@@ -975,7 +1038,10 @@ class BookmarkViewController: StaticTableViewController {
 				placeholderString = bookmark.shortName
 			}
 
-			self.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
+			if let nameRowTextField = nameRow?.textField {
+				let placeholderColor = nameRowTextField.getThemeCSSColor(.stroke, selectors: [.placeholder]) ?? .secondaryLabel
+				nameRowTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : placeholderColor])
+			}
 		}
 
 		// URL
@@ -992,7 +1058,7 @@ class BookmarkViewController: StaticTableViewController {
 		var password : String?
 
 		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier,
-			OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
+		   OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
 		   let authData = bookmark.authenticationData,
 		   let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier) {
 			userName = authenticationMethodClass.userName(fromAuthenticationData: authData)
@@ -1069,13 +1135,12 @@ extension BookmarkViewController {
 }
 
 // MARK: - OCClassSettings support
+
 extension OCClassSettingsIdentifier {
 	static let bookmark = OCClassSettingsIdentifier("bookmark")
 }
 
 extension OCClassSettingsKey {
-	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
-	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
 	static let prepopulation = OCClassSettingsKey("prepopulation")
 }
 
@@ -1086,34 +1151,14 @@ enum BookmarkPrepopulationMethod : String {
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
-	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
-
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .bookmark {
-			return [
-				.bookmarkURLEditable : true
-			]
-		}
-
 		return nil
 	}
 
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
+
 	static func classSettingsMetadata() -> [OCClassSettingsKey : [OCClassSettingsMetadataKey : Any]]? {
 		return [
-			.bookmarkDefaultURL : [
-				.type 		: OCClassSettingsMetadataType.string,
-				.description	: "The default URL for the creation of new bookmarks.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported
-			],
-
-			.bookmarkURLEditable : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.description	: "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-				.category	: "Bookmarks",
-				.status		: OCClassSettingsKeyStatus.supported
-			],
-
 			.prepopulation : [
 				.type 		: OCClassSettingsMetadataType.string,
 				.description 	: "Controls prepopulation of the local database with the full item set during account setup.",

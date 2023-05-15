@@ -20,27 +20,22 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
+extension OCDrive {
+	func rootLocation(with context: ClientContext?) -> OCLocation {
+		let location = self.rootLocation
+
+		if location.bookmarkUUID == nil {
+			location.bookmarkUUID = context?.core?.bookmark.uuid
+		}
+
+		return location
+	}
+}
+
 // MARK: - Selection > Open
-extension OCDrive : DataItemSelectionInteraction {
+extension OCDrive: DataItemSelectionInteraction {
 	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
-		let driveContext = ClientContext(with: context, modifier: { context in
-			context.drive = self
-		})
-		let query = OCQuery(for: self.rootLocation)
-		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
-
-		let rootFolderViewController = context?.pushViewControllerToNavigation(context: driveContext, provider: { context in
-			let location = self.rootLocation
-
-			if location.bookmarkUUID == nil {
-				location.bookmarkUUID = driveContext.core?.bookmark.uuid
-			}
-
-			return ClientItemViewController(context: context, query: query, location: location).revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
-		}, push: pushViewController, animated: animated)
-
-		completion?(true)
-
-		return rootFolderViewController
+		let rootLocation = self.rootLocation(with: context)
+		return rootLocation.openItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
 	}
 }

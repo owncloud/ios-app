@@ -32,6 +32,10 @@ public extension CollectionViewCellProvider {
 		// Register UniversalItemListCell based cell providers
 		OCItem.registerUniversalCellProvider()		// Cell providers for .item
 		OCShare.registerUniversalCellProvider()		// Cell providers for .share
+		OCShareRole.registerUniversalCellProvider()	// Cell providers for .shareRole
+		OCItemPolicy.registerUniversalCellProvider()	// Cell providers for .itemPolicy
+		OCIdentity.registerUniversalCellProvider()	// Cell providers for .identity
+		OptionItem.registerUniversalCellProvider()	// Cell providers for .optionItem
 
 		// Register cell providers for .presentable
 		registerPresentableCellProvider()
@@ -107,10 +111,11 @@ public extension CollectionViewCellProvider {
 			}
 
 			cell.contentConfiguration = content
+			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 			cell.accessories = hasDisclosureIndicator ? [ .disclosureIndicator() ] : [ ]
 		}
 
-		let presentableSidebarCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let presentableSidebarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var title: String?
 			var image: UIImage?
 			var hasChildren: Bool = false
@@ -132,7 +137,9 @@ public extension CollectionViewCellProvider {
 				content.image = image
 			}
 
+			cell.backgroundConfiguration = .listSidebarCell()
 			cell.contentConfiguration = content
+			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 
 			if hasChildren {
 				let headerDisclosureOption = UICellAccessory.OutlineDisclosureOptions(style: .header)

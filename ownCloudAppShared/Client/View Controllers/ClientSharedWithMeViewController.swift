@@ -29,6 +29,9 @@ class ClientSharedWithMeViewController: CollectionViewController {
 	var declinedSectionDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 	var declinedSection: CollectionViewSection?
 
+	var noItemsCondition: DataSourceCondition?
+	var connectionStatusObservation: NSKeyValueObservation?
+
 	init(context inContext: ClientContext?) {
 		super.init(context: inContext, sections: nil, useStackViewRoot: true)
 		revoke(in: inContext, when: [ .connectionClosed ])
@@ -45,17 +48,6 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource, queryDataSource: OCDataSource? = nil) -> CollectionViewSection {
 			var sectionContext = clientContext
 
-			let headerView = ComposedMessageView(elements: [
-				.spacing(10),
-				.text(title, style: .system(textStyle: .headline), alignment: .leading, insets: .zero)
-			])
-			// headerView.elementInsets = .zero
-
-			compositionDataSource.addSources([
-				OCDataSourceArray(items: [ headerView ]),
-				contentDataSource
-			])
-
 			if let queryDataSource, clientContext?.queryDatasource == nil {
 				sectionContext = ClientContext(with: sectionContext, modifier: { context in
 					context.queryDatasource = queryDataSource
@@ -63,8 +55,13 @@ class ClientSharedWithMeViewController: CollectionViewController {
 				})
 			}
 
-			let section = CollectionViewSection(identifier: identifier, dataSource: compositionDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: sectionContext)
+			let section = CollectionViewSection(identifier: identifier, dataSource: contentDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)), clientContext: sectionContext)
 			section.hideIfEmptyDataSource = contentDataSource
+			section.hidden = true
+
+			section.boundarySupplementaryItems = [
+				.title(title, pinned: true)
+			]
 
 			return section
 		}
@@ -81,6 +78,44 @@ class ClientSharedWithMeViewController: CollectionViewController {
 				acceptedSection!,
 				declinedSection!
 			])
+
+			noItemsCondition = DataSourceCondition(.allOf([
+				DataSourceCondition(.empty, with: pendingDataSource),
+				DataSourceCondition(.empty, with: acceptedDataSource),
+				DataSourceCondition(.empty, with: declinedDataSource)
+			]), initial: true, action: { [weak self] condition in
+				self?.updateCoverMessage()
+			})
 		}
+
+		connectionStatusObservation = clientContext?.core?.observe(\OCCore.connectionStatus, options: .initial, changeHandler: { [weak self] core, change in
+			OnMainThread {
+				self?.updateCoverMessage()
+			}
+		})
+	}
+
+	func updateCoverMessage() {
+		var coverView: UIView?
+
+		if clientContext?.core?.connectionStatus != .online {
+			let offlineMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "network")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.title("Sharing requires an active connection.".localized, alignment: .centered)
+			])
+
+			coverView = offlineMessage
+		}
+
+		if coverView == nil, noItemsCondition?.fulfilled == true {
+			let noShareMessage = ComposedMessageView(elements: [
+				.image(OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+				.title("No items shared with you".localized, alignment: .centered)
+			])
+
+			coverView = noShareMessage
+		}
+
+		setCoverView(coverView, layout: .top)
 	}
 }

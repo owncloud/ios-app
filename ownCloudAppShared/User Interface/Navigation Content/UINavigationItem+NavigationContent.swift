@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 public extension UINavigationItem {
 	var navigationContent: NavigationContent {

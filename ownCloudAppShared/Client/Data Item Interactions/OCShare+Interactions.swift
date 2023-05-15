@@ -23,14 +23,20 @@ import ownCloudApp
 extension OCShare {
 	func makeDecision(accept: Bool, context: ClientContext) {
 		if let core = context.core {
-			core.makeDecision(on: self, accept: accept, completionHandler: { error in
+			let completionHandler: (Error?) -> Void = { error in
 				if let error {
 					OnMainThread {
 						let alertController = ThemedAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: error.localizedDescription, okLabel: "OK".localized, action: nil)
 						context.present(alertController, animated: true)
 					}
 				}
-			})
+			}
+
+			if category == .byMe {
+				core.delete(self, completionHandler: completionHandler)
+			} else {
+				core.makeDecision(on: self, accept: accept, completionHandler: completionHandler)
+			}
 		}
 	}
 
@@ -40,6 +46,14 @@ extension OCShare {
 
 	func decline(in context: ClientContext) {
 		makeDecision(accept: false, context: context)
+	}
+
+	private var offerAcceptAction: Bool {
+		return ((self.effectiveState == .pending || self.effectiveState == .declined) && (self.category == .withMe))
+	}
+
+	private var offerDeclineAction: Bool {
+		return (self.effectiveState == .pending || self.effectiveState == .accepted  || self.category == .byMe)
 	}
 }
 
@@ -51,26 +65,27 @@ extension OCShare: DataItemSwipeInteraction {
 
 		var actions: [UIContextualAction] = []
 
-		if self.state == .pending || self.state == .accepted {
-			// Decline
-			let declineAction = UIContextualAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+		if offerDeclineAction {
+			// Decline / Unshare
+			let title = (self.category == .byMe) ? "Unshare".localized : "Decline".localized
+			let action = UIContextualAction(style: .destructive, title: title, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
 				self?.decline(in: context)
 			})
-			declineAction.image = OCSymbol.icon(forSymbolName: "minus.circle")
+			action.image = OCSymbol.icon(forSymbolName: "minus.circle")
 
-			actions.append(declineAction)
+			actions.append(action)
 		}
 
-		if self.state == .pending || self.state == .declined {
+		if offerAcceptAction {
 			// Accept
-			let acceptAction = UIContextualAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+			let action = UIContextualAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
 				self?.accept(in: context)
 			})
-			acceptAction.image = OCSymbol.icon(forSymbolName: "checkmark")
+			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
-			actions.append(acceptAction)
+			actions.append(action)
 		}
 
 		return UISwipeActionsConfiguration(actions: actions)
@@ -85,27 +100,28 @@ extension OCShare: DataItemContextMenuInteraction {
 
 		var elements: [UIMenuElement] = []
 
-		if self.state == .pending || self.state == .declined {
+		if offerAcceptAction {
 			// Accept
-			let acceptAction = UIAction(handler: { [weak self] action in
+			let action = UIAction(handler: { [weak self] action in
 				self?.accept(in: context)
 			})
-			acceptAction.title = "Accept".localized
-			acceptAction.image = OCSymbol.icon(forSymbolName: "checkmark")
+			action.title = "Accept".localized
+			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
-			elements.append(acceptAction)
+			elements.append(action)
 		}
 
-		if self.state == .pending || self.state == .accepted {
-			// Decline
-			let declineAction = UIAction(handler: { [weak self] action in
+		if offerDeclineAction {
+			// Decline / Unshare
+			let action = UIAction(handler: { [weak self] action in
 				self?.decline(in: context)
 			})
-			declineAction.title = "Decline".localized
-			declineAction.image = OCSymbol.icon(forSymbolName: "minus.circle")
-			declineAction.attributes = .destructive
+			let title = (self.category == .byMe) ? "Unshare".localized : "Decline".localized
+			action.title = title
+			action.image = OCSymbol.icon(forSymbolName: "minus.circle")
+			action.attributes = .destructive
 
-			elements.append(declineAction)
+			elements.append(action)
 		}
 
 		return elements
@@ -113,6 +129,37 @@ extension OCShare: DataItemContextMenuInteraction {
 }
 
 extension OCShare: DataItemSelectionInteraction {
+	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
+		if let context {
+			if category == .withMe {
+				if effectiveState == .accepted {
+					_ = revealItem(from: viewController, with: context, animated: true, pushViewController: true, completion: completion)
+					return true
+				}
+			} else {
+				var editViewController: UIViewController?
+
+				if let otherItemShares, otherItemShares.count > 0, (viewController as? SharingViewController) == nil {
+					// Grouped share
+					if let item = try? context.core?.cachedItem(at: itemLocation) {
+						editViewController = SharingViewController(clientContext: context, item: item)
+					}
+				} else {
+					// Single share
+					editViewController = ShareViewController(mode: .edit, share: self, clientContext: context, completion: { _ in })
+				}
+
+				if let editViewController {
+					let navigationController = ThemeNavigationController(rootViewController: editViewController)
+					context.present(navigationController, animated: true)
+				}
+			}
+		}
+
+		completion?(true)
+		return true
+	}
+
 	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
 		if let item = try? context?.core?.cachedItem(at: itemLocation) {
 			return item.revealItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)

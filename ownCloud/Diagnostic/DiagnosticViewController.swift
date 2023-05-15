@@ -28,6 +28,7 @@ protocol DiagnosticNodeGenerator : OCActivity {
 class DiagnosticViewController: StaticTableViewController {
 
 	var context : OCDiagnosticContext?
+	var clientContext: ClientContext?
 
 	var rootNode : OCDiagnosticNode?
 	var nodes : [OCDiagnosticNode]? {
@@ -41,8 +42,9 @@ class DiagnosticViewController: StaticTableViewController {
 		case hierarchical
 	}
 
-	init(for node: OCDiagnosticNode, context: OCDiagnosticContext?, style: Style = .hierarchical) {
+	init(for node: OCDiagnosticNode, context: OCDiagnosticContext?, clientContext: ClientContext? = nil, style: Style = .hierarchical) {
 		self.context = context
+		self.clientContext = clientContext
 		self.style = style
 
 		super.init(style: .grouped)
@@ -108,9 +110,15 @@ class DiagnosticViewController: StaticTableViewController {
 
 						case .hierarchical:
 							section?.add(row: StaticTableViewRow(rowWithAction: { [weak self, weak context] (_, _) in
-								let viewController = DiagnosticViewController(for: node, context: context, style: self?.style ?? .hierarchical)
+								let viewController = DiagnosticViewController(for: node, context: context, clientContext: self?.clientContext, style: self?.style ?? .hierarchical)
 
-								self?.navigationController?.pushViewController(viewController, animated: true)
+								if let clientContext = self?.clientContext {
+									clientContext.pushViewControllerToNavigation(context: clientContext, provider: { context in
+										return viewController
+									}, push: true, animated: true)
+								} else {
+									self?.navigationController?.pushViewController(viewController, animated: true)
+								}
 							}, title: node.label ?? "", accessoryType: .disclosureIndicator))
 					}
 			}

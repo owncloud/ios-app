@@ -68,7 +68,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
 					OnMainThread {
-						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 						progressView.startAnimating()
 						row.cell?.accessoryView = progressView
 					}

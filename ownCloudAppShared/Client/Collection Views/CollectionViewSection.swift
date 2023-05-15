@@ -25,10 +25,11 @@ public extension OCDataItemType {
 
 public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	public enum CellLayout {
-		case list(appearance: UICollectionLayoutListConfiguration.Appearance, headerMode: UICollectionLayoutListConfiguration.HeaderMode? = nil, headerTopPadding : CGFloat? = nil, footerMode: UICollectionLayoutListConfiguration.FooterMode? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
+		case list(appearance: UICollectionLayoutListConfiguration.Appearance, headerMode: UICollectionLayoutListConfiguration.HeaderMode? = nil, headerTopPadding: CGFloat? = nil, footerMode: UICollectionLayoutListConfiguration.FooterMode? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case fullWidth(itemHeightDimension: NSCollectionLayoutDimension, groupHeightDimension: NSCollectionLayoutDimension, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil)
 		case sideways(item: NSCollectionLayoutItem? = nil, groupSize: NSCollectionLayoutSize? = nil, innerInsets : NSDirectionalEdgeInsets? = nil, edgeSpacing: NSCollectionLayoutEdgeSpacing? = nil, contentInsets: NSDirectionalEdgeInsets? = nil, orthogonalScrollingBehaviour: UICollectionLayoutSectionOrthogonalScrollingBehavior = .continuousGroupLeadingBoundary)
 		case grid(itemWidthDimension: NSCollectionLayoutDimension, itemHeightDimension: NSCollectionLayoutDimension, contentInsets: NSDirectionalEdgeInsets? = nil)
+		case fillingGrid(minimumWidth: CGFloat, maximumWidth: CGFloat? = nil, computeHeight: (_ width: CGFloat) -> CGFloat, cellSpacing: NSDirectionalEdgeInsets? = nil, sectionInsets: NSDirectionalEdgeInsets? = nil, center: Bool = false)
 		case custom(generator: ((_ collectionViewController: CollectionViewController?, _ layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection))
 
 		func collectionLayoutSection(for collectionViewController: CollectionViewController? = nil, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
@@ -48,15 +49,23 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 						config.footerMode = footerMode
 					}
 
-					switch listAppearance {
-						case .plain:
-							config.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+					let css = Theme.shared.activeCollection.css
 
+					var themedBackgroundColor: UIColor?
+					var isGrouped = false
+
+					switch listAppearance {
 						case .grouped, .insetGrouped:
-							config.backgroundColor = Theme.shared.activeCollection.tableGroupBackgroundColor
+							isGrouped = true
 
 						default: break
 					}
+
+					if let collectionViewController, let cssColor = css.getColor(.fill, selectors: isGrouped ? [.grouped] : nil, for: collectionViewController) {
+						themedBackgroundColor = cssColor
+					}
+
+					config.backgroundColor = themedBackgroundColor
 
 					// Leading and trailing swipe actions
 					if let collectionViewController = collectionViewController {
@@ -132,7 +141,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					}
 
 					let layoutSection = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-					if let contentInsets = contentInsets {
+					if let contentInsets {
 						layoutSection.contentInsets = contentInsets
 					}
 					return layoutSection
@@ -184,18 +193,57 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					section.interGroupSpacing = 0
 
 					return section
-//					let itemSize = NSCollectionLayoutSize(widthDimension: itemWidthDimension,
-//									     heightDimension: .fractionalHeight(1.0))
-//					let item = NSCollectionLayoutItem(layoutSize: itemSize)
-//					item.contentInsets = contentInsets ?? NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-//
-//					let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-//									      heightDimension: itemHeightDimension)
-//					let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-//											 subitems: [item])
-//
-//					let section = NSCollectionLayoutSection(group: group)
-//					return section
+
+				case .fillingGrid(let minimumWidth, let maximumWidth, let computeHeight, let cellInsets, let sectionInsets, let center):
+					let effectiveContentSize = layoutEnvironment.container.effectiveContentSize
+					let availableWidth = effectiveContentSize.width - (sectionInsets?.leading ?? 0) - (sectionInsets?.trailing ?? 0)
+					let cellInsets = cellInsets ?? NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+					let sectionInsets = sectionInsets ?? .zero
+					var groupInsets: NSDirectionalEdgeInsets = .zero
+
+					// Determine item size depending on width
+					var totalItemWidth = minimumWidth + cellInsets.leading + cellInsets.trailing
+					var maxItemCount = floor(availableWidth / totalItemWidth)
+
+					if maxItemCount < 1 {
+						maxItemCount = 1
+					}
+
+					if let maximumWidth, maximumWidth > minimumWidth {
+						let maxTotalWidth = floor(availableWidth / maxItemCount)
+						let maximumTotalWidth = maximumWidth + cellInsets.leading + cellInsets.trailing
+						let maxAllowedTotalWidth = maxTotalWidth > maximumTotalWidth ? maximumTotalWidth : maxTotalWidth
+
+						totalItemWidth = maxAllowedTotalWidth
+					}
+
+					if center {
+						let unusedWidth = availableWidth - (maxItemCount * totalItemWidth)
+						let extraLeadingTrailingSpace = floor(unusedWidth / 2.0)
+
+						groupInsets.leading += extraLeadingTrailingSpace
+						groupInsets.trailing += extraLeadingTrailingSpace
+					}
+
+					let itemHeight = computeHeight(totalItemWidth - cellInsets.leading - cellInsets.trailing) + cellInsets.top + cellInsets.bottom
+
+					// Put layout together
+					let itemWidthDimension: NSCollectionLayoutDimension = .absolute(totalItemWidth)
+					let itemHeightDimension: NSCollectionLayoutDimension = .absolute(itemHeight)
+
+					let itemSize = NSCollectionLayoutSize(widthDimension: itemWidthDimension, heightDimension: itemHeightDimension)
+					let item = NSCollectionLayoutItem(layoutSize: itemSize)
+					item.contentInsets = cellInsets
+
+					let group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: itemHeightDimension), subitems: [ item ])
+					group.contentInsets = groupInsets
+
+					let section = NSCollectionLayoutSection(group: group)
+					section.contentInsets = sectionInsets
+
+					section.interGroupSpacing = 0
+
+					return section
 
 				// Custom
 				case .custom(let generator):
@@ -240,10 +288,11 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			return _cellStyle
 		}
 		set {
+			let oldValue = _cellStyle
 			_cellStyle = newValue
 
-			if _cellStyle != newValue {
-				OnMainThread {
+			if _cellStyle != oldValue {
+				OnMainThread(inline: !_animateCellLayoutChange) {
 					self.collectionViewController?.reload(sections: [self], animated: false)
 				}
 			}
@@ -253,7 +302,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	public var cellConfigurationCustomizer : CellConfigurationCustomizer?
 
 	public var animateDifferences: Bool? //!< If not specified, falls back to collectionViewController.animateDifferences
-	public var hidden : Bool = false {
+	public var hidden: Bool = false {
 		didSet {
 			if hidden != oldValue {
 				collectionViewController?.updateSource()
@@ -261,23 +310,26 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		}
 	}
 
-	private var _hideIfEmptyDataSourceSubscription: OCDataSourceSubscription?
+	private var _hideIfEmptyDataSourceCondition: DataSourceCondition?
 	public var hideIfEmptyDataSource: OCDataSource? {
 		willSet {
-			_hideIfEmptyDataSourceSubscription = nil
+			_hideIfEmptyDataSourceCondition = nil
 		}
 		didSet {
-			_hideIfEmptyDataSourceSubscription = hideIfEmptyDataSource?.subscribe(updateHandler: { [weak self] subscription in
-				let snapshot = subscription.snapshotResettingChangeTracking(true)
-
+			_hideIfEmptyDataSourceCondition = DataSourceCondition(.empty, with: hideIfEmptyDataSource, initial: true, action: { condition in
 				OnMainThread { [weak self] in
-					self?.hidden = (snapshot.numberOfItems == 0)
+					self?.hidden = (condition.fulfilled == true)
 				}
-			}, on: .main, trackDifferences: false, performInitialUpdate: true)
+			})
 		}
 	}
 
-	public var cellLayout: CellLayout
+	public var cellLayout: CellLayout {
+		didSet {
+			collectionViewController?.updateCellLayout(animated: _animateCellLayoutChange)
+		}
+	}
+	private var _animateCellLayoutChange = true
 
 	public var expandedItemRefs: [CollectionViewController.ItemRef]
 	private var initialExpandedItems: [OCDataItemReference]?
@@ -299,7 +351,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	deinit {
 		dataSourceSubscription?.terminate()
-		_hideIfEmptyDataSourceSubscription?.terminate()
 	}
 
 	// MARK: - Expand/Collapse
@@ -311,13 +362,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		if let idx = expandedItemRefs.firstIndex(of: item) {
 			expandedItemRefs.remove(at: idx)
 		}
-
-//		if let (itemRef, _) = collectionViewController?.unwrap(item) {
-//			dataSourcesByParentItemRef[itemRef] = nil
-//
-//			dataSourceSubscriptionsByParentItemRef[itemRef]?.terminate()
-//			dataSourceSubscriptionsByParentItemRef[itemRef] = nil
-//		}
 	}
 
 	// MARK: - Data source handling
@@ -419,9 +463,12 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 					cellProvider = CollectionViewCellProvider.providerFor(.presentable)
 				}
 
-				let doHighlight = collectionViewController.highlightItemReference == dataItemRef
+				let doHighlight = (collectionViewController.highlightItemReference == dataItemRef) // ||
+				// 		  (collectionViewController.selectedItemReferences?.contains(collectionItemRef) == true) // Consider setting cell state (selection, etc.) here
 
 				if let cellProvider = cellProvider, let dataSource = contentDataSource {
+					let clientContext = clientContext ?? collectionViewController.clientContext
+
 					let cellConfiguration = CollectionViewCellConfiguration(source: dataSource, core: collectionViewController.clientContext?.core, collectionItemRef: collectionItemRef, record: itemRecord, hostViewController: collectionViewController, style: cellStyle, highlight: doHighlight, clientContext: clientContext)
 
 					if let cellConfigurationCustomizer = cellConfigurationCustomizer {
@@ -432,8 +479,6 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				}
 			}
 		}
-
-		#warning("Consider setting cell state (selection, etc.) here")
 
 		return cell
 	}
@@ -533,8 +578,10 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 											}
 										} else {
 											// Only one item. Append as subitem of parent item.
-											sectionSnapshot.append([wrappedItemToAdd], to: parentItemRef)
-											itemsToAdd.remove(itemToAdd)
+											if let parentItemRef, sectionSnapshot.contains(parentItemRef) { // make sure parent item exists
+												sectionSnapshot.append([wrappedItemToAdd], to: parentItemRef)
+											}
+											itemsToAdd.remove(itemToAdd) // remove in any case, because it can't be added later either if the parent item does not exist
 										}
 									} else {
 										// Item not at position 0
@@ -624,9 +671,24 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		}
 	}
 
+	// MARK: - Supplementary items
+	public var boundarySupplementaryItems: [CollectionViewSupplementaryItem]? {
+		didSet {
+			collectionViewController?.updateCellLayout(animated: _animateCellLayoutChange)
+		}
+	}
+
 	// MARK: - Section layout
 	open func provideCollectionLayoutSection(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-		return cellLayout.collectionLayoutSection(for: self.collectionViewController, layoutEnvironment: layoutEnvironment)
+		let layoutSection = cellLayout.collectionLayoutSection(for: self.collectionViewController, layoutEnvironment: layoutEnvironment)
+
+		if let supplementaryItems = boundarySupplementaryItems?.compactMap({ item in
+			return item.supplementaryItem as? NSCollectionLayoutBoundarySupplementaryItem
+		}) {
+			layoutSection.boundarySupplementaryItems = supplementaryItems
+		}
+
+		return layoutSection
 	}
 
 	// MARK: - Data Item & Versioning conformance
@@ -637,4 +699,22 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 	}
 
 	public let dataItemVersion: OCDataItemVersion = NSNumber(0)
+}
+
+extension CollectionViewSection {
+	func adopt(itemLayout: ItemLayout) {
+		let animateCellLayoutChange = _animateCellLayoutChange
+
+		UIView.performWithoutAnimation {
+			_animateCellLayoutChange = false
+			cellLayout = itemLayout.sectionCellLayout(for: collectionViewController?.traitCollection ?? .current)
+			cellStyle = itemLayout.cellStyle
+			_animateCellLayoutChange = animateCellLayoutChange
+		}
+	}
+}
+
+public extension NSDirectionalEdgeInsets {
+	// CollectionViewSection insets for .insetGrouped sections
+	static let insetGroupedSectionInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 20)
 }

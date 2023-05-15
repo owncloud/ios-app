@@ -128,12 +128,12 @@ public class ClientLocationPicker : NSObject {
 
 		// Create header view if title is specified, but headerView isn't
 		if let headerTitle, headerView == nil {
-			headerViewTitleElement = .text(headerTitle, style: .system(textStyle: .title2, weight: .bold), alignment: .leading)
+			headerViewTitleElement = .text(headerTitle, style: .system(textStyle: .title2, weight: .bold), alignment: .leading, cssSelectors: [.title])
 
 			var elements: [ComposedMessageElement] = [ headerViewTitleElement! ]
 
 			if let headerSubTitle {
-				headerViewSubtitleElement = .text(headerSubTitle, style: .systemSecondary(textStyle: .body), alignment: .leading)
+				headerViewSubtitleElement = .text(headerSubTitle, style: .systemSecondary(textStyle: .body), alignment: .leading, cssSelectors: [.subtitle])
 				elements.append(headerViewSubtitleElement!)
 			}
 
@@ -263,9 +263,11 @@ public class ClientLocationPicker : NSObject {
 			switch location.clientLocationLevel {
 				case .accounts:
 					title = "Accounts".localized
+					viewController.cssSelector = .accountList
 
 				case .account:
 					title = "Account".localized
+					viewController.cssSelector = .accountList
 					if let bookmarkUUID = location.bookmarkUUID {
 						title = OCBookmarkManager.shared.bookmark(for: bookmarkUUID)?.displayName
 					}
@@ -298,11 +300,11 @@ public class ClientLocationPicker : NSObject {
 		// Set up navigation controller and context
 		rootNavigationController = navigationController
 		rootContext = ClientContext(with: baseContext, modifier: { context in
-			context.navigationController = navigationController
 			context.add(permissionHandler: { [weak self] context, dataItemRecord, checkInteraction, viewController in
 				return self?.checkPermission(context: context, dataItemRecord: dataItemRecord, interaction: checkInteraction, viewController: viewController) ?? false
 			})
 			context.viewControllerPusher = nil
+			context.browserController = nil
 			context.navigationController = navigationController
 			context.permissions = [ .selection ]
 			context.itemStyler = { [weak self] (context, _, item) in
@@ -378,4 +380,8 @@ public class ClientLocationPicker : NSObject {
 			choiceHandler(item, location, context, cancelled)
 		}
 	}
+}
+
+extension ThemeCSSSelector {
+	static let accountList = ThemeCSSSelector(rawValue: "accountList")
 }

@@ -334,8 +334,10 @@ open class AccountConnection: NSObject {
 	func handleBusyStatus(progress: Progress?) {
 		OnMainThread(inline: true) {
 			// Build rich status
-			self.status = .busy
-			self.richStatus = AccountConnectionRichStatus(kind: .status, progress: progress, status: .busy)
+			if progress != nil { // nil value indicates the busy status has ended 
+				self.status = .busy
+				self.richStatus = AccountConnectionRichStatus(kind: .status, progress: progress, status: .busy)
+			}
 
 			// Distribute event to consumers
 			self.enumerateConsumers { consumer in
@@ -457,7 +459,22 @@ open class AccountConnection: NSObject {
 
 	// MARK: - Connection status observation
 	var connectionStatusObservation : NSKeyValueObservation?
-	open var connectionStatus: OCCoreConnectionStatus?
+	open var connectionStatus: OCCoreConnectionStatus? {
+		didSet {
+			if connectionStatus != oldValue {
+				if let oldValue {
+					OnMainThread(inline: true) {
+						NavigationRevocationEvent.connectionStateLeft(bookmarkUUID: self.bookmark.uuid, status: oldValue).send()
+					}
+				}
+				if let connectionStatus {
+					OnMainThread(inline: true) {
+						NavigationRevocationEvent.connectionStateEntered(bookmarkUUID: self.bookmark.uuid, status: connectionStatus).send()
+					}
+				}
+			}
+		}
+	}
 	var connectionStatusSummary : ProgressSummary? {
 		willSet {
 			if newValue != nil {
@@ -472,26 +489,36 @@ open class AccountConnection: NSObject {
 		}
 	}
 
+	private var _authFailureStatus: Status?
+
 	func updateConnectionStatusSummary() {
 		var summary : ProgressSummary? = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
 		connectionStatus = core?.connectionStatus
 
-		if let connectionStatus = connectionStatus {
+		if let connectionStatus {
 			var connectionShortDescription = core?.connectionStatusShortDescription
 
 			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription!.hasSuffix(".") ? connectionShortDescription! + " " : connectionShortDescription! + ". ") : ""
 
+			if case .authenticationError(_
+			) = status {
+				_authFailureStatus = status
+			}
+
 			switch connectionStatus {
 				case .online:
 					summary = nil
+					_authFailureStatus = nil
 					status = .online
 
 				case .connecting:
+					_authFailureStatus = nil
 					summary?.message = "Connecting…".localized
 
 				case .offline, .unavailable:
 					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
+					status = _authFailureStatus ?? .coreAvailable
 			}
 
 			if connectionStatus == .online {

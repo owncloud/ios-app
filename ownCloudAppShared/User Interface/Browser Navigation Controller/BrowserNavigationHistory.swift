@@ -35,7 +35,7 @@ open class BrowserNavigationHistory {
 
 	open var items: [BrowserNavigationItem] = []
 	open var currentItem: BrowserNavigationItem? {
-		if items.count > 0, position < items.count - 1, position >= 0 {
+		if items.count > 0, position < items.count, position >= 0 {
 			return items[position]
 		}
 
@@ -56,84 +56,109 @@ open class BrowserNavigationHistory {
 	}
 
 	open func push(item: BrowserNavigationItem, completion: CompletionHandler? = nil) {
-		if position < items.count - 1 {
-			items.removeSubrange((position+1)...items.count-1)
-		}
+		OCSynchronized(self) {
+			if position < items.count - 1 {
+				items.removeSubrange((position+1)...items.count-1)
+			}
 
-		items.append(item)
-		position += 1
+			items.append(item)
+			position += 1
+		}
 
 		present(item: item, with: (position == 0) ? .none : .toNext, completion: completion)
 	}
 
 	@discardableResult open func moveBack(completion: CompletionHandler? = nil) -> BrowserNavigationItem? {
-		if position > 0 {
-			position -= 1
+		var presentItem: BrowserNavigationItem?
 
-			present(item: items[position], with: .toPrevious, completion: completion)
+		OCSynchronized(self) {
+			if position > 0 {
+				position -= 1
+				presentItem = items[position]
+			}
+		}
 
-			return items[position]
+		if let presentItem {
+			present(item: presentItem, with: .toPrevious, completion: completion)
 		} else {
 			completion?(false)
 		}
 
-		return nil
+		return presentItem
 	}
 
 	@discardableResult open func moveForward(completion: CompletionHandler? = nil) -> BrowserNavigationItem? {
-		if position < items.count - 1 {
-			position += 1
+		var presentItem: BrowserNavigationItem?
 
-			present(item: items[position], with: .toNext, completion: completion)
+		OCSynchronized(self) {
+			if position < items.count - 1 {
+				position += 1
+				presentItem = items[position]
+			}
+		}
 
-			return items[position]
+		if let presentItem {
+			present(item: presentItem, with: .toNext, completion: completion)
 		} else {
 			completion?(false)
 		}
 
-		return nil
+		return presentItem
 	}
 
 	open func item(for viewController: UIViewController?) -> BrowserNavigationItem? {
-		for item in items {
-			if item.viewController == viewController {
-				return item
+		var foundItem: BrowserNavigationItem?
+
+		OCSynchronized(self) {
+			for item in items {
+				if item.viewControllerIfLoaded == viewController {
+					foundItem = item
+					break
+				}
 			}
 		}
 
-		return nil
+		return foundItem
 	}
 
 	@discardableResult open func remove(item: BrowserNavigationItem, completion: BrowserNavigationHistory.CompletionHandler?) -> Bool {
-		if let index = items.firstIndex(of: item) {
-			var presentNewItem = (index == position)
-			var direction: Direction = .none
+		var didRemove = false
 
-			if index == position {
-				direction = .toPrevious
-			}
+		OCSynchronized(self) {
+			if let index = items.firstIndex(of: item) {
+				var presentNewItem = (index == position)
+				var direction: Direction = .none
 
-			if index <= position {
-				position -= 1
-			}
-
-			items.remove(at: index)
-
-			if position < 0 {
-				if items.count > 0 {
-					position = 0
-				} else {
-					position = -1
-					presentNewItem = true
+				if index == position {
+					direction = .toPrevious
 				}
-			}
 
-			if presentNewItem {
-				present(item: currentItem, with: direction, completion: completion)
-			} else {
-				completion?(true)
-			}
+				if index <= position {
+					position -= 1
+				}
 
+				items.remove(at: index)
+
+				if position < 0 {
+					if items.count > 0 {
+						position = 0
+					} else {
+						position = -1
+						presentNewItem = true
+					}
+				}
+
+				if presentNewItem {
+					present(item: currentItem, with: direction, completion: completion)
+				} else {
+					completion?(true)
+				}
+
+				didRemove = true
+			}
+		}
+
+		if didRemove {
 			return true
 		}
 

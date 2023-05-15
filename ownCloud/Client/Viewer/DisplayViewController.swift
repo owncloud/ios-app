@@ -110,6 +110,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	private var query : OCQuery?
 	private var itemClaimIdentifier : UUID?
 
+	var clientContext: ClientContext?
+
 	func generateClaim(for item: OCItem) -> OCClaim? {
 		if let core = core {
 			return core.generateTemporaryClaim(for: .view)
@@ -178,12 +180,12 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	// MARK: - Subviews / UI elements
 
 	private var iconImageView = ResourceViewHost()
-	private var progressView = UIProgressView(progressViewStyle: .bar)
+	private var progressView = ThemeCSSProgressView(progressViewStyle: .bar)
 	private var cancelButton = ThemeButton(type: .custom)
-	private var metadataInfoLabel = UILabel()
+	private var metadataInfoLabel = ThemeCSSLabel(withSelectors: [.primary, .metadata])
 	private var showPreviewButton = ThemeButton(type: .custom)
 	private var primaryUnviewableActionButton = ThemeButton(type: .custom)
-	private var infoLabel = UILabel()
+	private var infoLabel = ThemeCSSLabel(withSelectors: [.secondary])
 	private var connectionActivityView = UIActivityIndicatorView(style: .medium)
 
 	// MARK: - Editing delegate
@@ -199,6 +201,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	required init() {
 		super.init(nibName: nil, bundle: nil)
+		cssSelector = .viewer
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -302,13 +305,15 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		])
 	}
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		Theme.shared.register(client: self)
-	}
+	private var _themeRegistered = false
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		if !_themeRegistered {
+			_themeRegistered = true
+			Theme.shared.register(client: self)
+		}
 
 		startQuery()
 
@@ -364,13 +369,13 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		primaryUnviewableAction?.run()
 	}
 
-	@objc func optionsBarButtonPressed(_ sender: UIBarButtonItem) {
-		guard let core = core, let item = item else {
+	@objc func actionsBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let core = core ?? clientContext?.core, let item = item else {
 			return
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreDetailItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
+		let actionContext = ActionContext(viewController: self, clientContext: clientContext, core: core, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)
@@ -487,7 +492,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	var actionBarButtonItem : UIBarButtonItem {
 		let itemName = item?.name ?? ""
-		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(actionsBarButtonPressed))
 		actionsBarButtonItem.tag = moreButtonTag
 		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
 
@@ -731,12 +736,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	// MARK: - Themeable implementation
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		progressView.applyThemeCollection(collection)
-		cancelButton.applyThemeCollection(collection)
-		metadataInfoLabel.applyThemeCollection(collection)
-		showPreviewButton.applyThemeCollection(collection)
-		primaryUnviewableActionButton.applyThemeCollection(collection)
-		infoLabel.applyThemeCollection(collection)
+		// For subclassing
 	}
 
 	// MARK: - Query delegate
@@ -770,4 +770,9 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			}
 		}
 	}
+}
+
+extension ThemeCSSSelector {
+	static let viewer = ThemeCSSSelector(rawValue: "viewer")
+	static let metadata = ThemeCSSSelector(rawValue: "metadata")
 }

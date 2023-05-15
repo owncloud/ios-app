@@ -41,7 +41,7 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 			setNeedsDisplay()
 		}
 	}
-	var fillColor: UIColor {
+	var fillColor: UIColor? {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -54,7 +54,7 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 
 	typealias ThemeColorPicker = (_ theme: Theme, _ collection: ThemeCollection, _ event: ThemeEvent) -> UIColor?
 
-	init(with radius: CornerRadius = .standard, fillColor: UIColor = .systemGroupedBackground, fillColorPicker: ThemeColorPicker? = nil) {
+	init(with radius: CornerRadius = .standard, fillColor: UIColor? = nil, fillColorPicker: ThemeColorPicker? = nil) {
 		self.fillColor = fillColor
 		self.cornerRadius = radius
 
@@ -64,8 +64,8 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 
 		self.fillColorPicker = fillColorPicker
 
-		if fillColorPicker != nil {
-			Theme.shared.register(client: self, applyImmediately: true)
+		if fillColor != nil {
+			_registered = true // Do not register for dynamic coloring when a fill color is provided
 		}
 	}
 
@@ -75,14 +75,29 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 
 	public override func draw(_ rect: CGRect) {
 		let bezierPath = UIBezierPath(roundedRect: bounds, byRoundingCorners: cornerRadius.corners, cornerRadii: cornerRadius.radii)
-		fillColor.setFill()
+		fillColor?.setFill()
 		bezierPath.fill()
 	}
 
+	private var _registered = false
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil, !_registered {
+			_registered = true
+
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+	}
+
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		if let fillColorPicker = fillColorPicker {
+		if let fillColorPicker {
 			if let pickedColor = fillColorPicker(theme, collection, event) {
 				fillColor = pickedColor
+			}
+		} else {
+			if let cssColor = collection.css.getColor(.fill, for: self) {
+				fillColor = cssColor
 			}
 		}
 	}
