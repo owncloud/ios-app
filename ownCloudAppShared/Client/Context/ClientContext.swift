@@ -312,6 +312,7 @@ extension ClientContext {
 		return viewControllerPusher != nil || navigationController != nil
 	}
 
+	@discardableResult
 	public func pushViewControllerToNavigation(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController? {
 		var viewController: UIViewController?
 

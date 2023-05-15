@@ -252,6 +252,7 @@
 
 + (instancetype)forSearchSegment:(NSString *)segmentString
 {
+	NSBundle *localizationBundle = [NSBundle bundleForClass:OCSearchSegment.class];
 	NSString *segmentStringLowercase = nil;
 	NSString *searchSegment = segmentString;
 	BOOL negateCondition = NO;
@@ -284,58 +285,58 @@
 		{
 			if ([keyword isEqual:@"folder"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeCollection)]] withSymbolName:@"folder" localizedDescription:(negateCondition ? OCLocalized(@"No folder") : OCLocalized(@"Folder")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeCollection)]] withSymbolName:@"folder" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No folder") : OCLocalizedViaLocalizationBundle(@"Folder")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"file"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeFile)]] withSymbolName:@"doc" localizedDescription:(negateCondition ? OCLocalized(@"No file") : OCLocalized(@"File")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameType isEqualTo:@(OCItemTypeFile)]] withSymbolName:@"doc" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No file") : OCLocalizedViaLocalizationBundle(@"File")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"image"])
 			{
 				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition anyOf:@[
 						[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"image/"],
 						[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"image"],
-					]]] withSymbolName:@"photo" localizedDescription:(negateCondition ? OCLocalized(@"No image") : OCLocalized(@"Image")) searchSegment:searchSegment]);
+					]]] withSymbolName:@"photo" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No image") : OCLocalizedViaLocalizationBundle(@"Image")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"video"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"video/"]] withSymbolName:@"film" localizedDescription:(negateCondition ? OCLocalized(@"No video") : OCLocalized(@"Video")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"video/"]] withSymbolName:@"film" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No video") : OCLocalizedViaLocalizationBundle(@"Video")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"audio"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"audio/"]] withSymbolName:@"waveform" localizedDescription:(negateCondition ? OCLocalized(@"No audio") : OCLocalized(@"Audio")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType startsWith:@"audio/"]] withSymbolName:@"waveform" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No audio") : OCLocalizedViaLocalizationBundle(@"Audio")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"document"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"x-office/document"]] withSymbolName:@"doc.text" localizedDescription:(negateCondition ? OCLocalized(@"No document") : OCLocalized(@"Document")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"x-office/document"]] withSymbolName:@"doc.text" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No document") : OCLocalizedViaLocalizationBundle(@"Document")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"spreadsheet"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/spreadsheet"]] withSymbolName:@"tablecells" localizedDescription:(negateCondition ? OCLocalized(@"No spreadsheet") : OCLocalized(@"Spreadsheet")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/spreadsheet"]] withSymbolName:@"tablecells" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No spreadsheet") : OCLocalizedViaLocalizationBundle(@"Spreadsheet")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"presentation"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/presentation"]] withSymbolName:@"chart.pie" localizedDescription:(negateCondition ? OCLocalized(@"No presentation") : OCLocalized(@"Presentation")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/presentation"]] withSymbolName:@"chart.pie" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No presentation") : OCLocalizedViaLocalizationBundle(@"Presentation")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"pdf"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType isEqualTo:@"application/pdf"]] withSymbolName:@"doc.richtext" localizedDescription:(negateCondition ? OCLocalized(@"No PDF") : OCLocalized(@"PDF")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameMIMEType isEqualTo:@"application/pdf"]] withSymbolName:@"doc.richtext" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No PDF") : OCLocalizedViaLocalizationBundle(@"PDF")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"today"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeDay:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalized(@"Before today") : OCLocalized(@"Today")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeDay:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"Before today") : OCLocalizedViaLocalizationBundle(@"Today")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"week"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeWeek:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalized(@"Before this week") : OCLocalized(@"This week")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeWeek:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"Before this week") : OCLocalizedViaLocalizationBundle(@"This week")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"month"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeMonth:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalized(@"Before this month") : OCLocalized(@"This month")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeMonth:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"Before this month") : OCLocalizedViaLocalizationBundle(@"This month")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"year"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalized(@"Before this year") : OCLocalized(@"This year")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"Before this year") : OCLocalizedViaLocalizationBundle(@"This year")) searchSegment:searchSegment]);
 			}
 		}
 	}
@@ -393,7 +394,7 @@
 							if ((afterDate = [NSDate dateFromKeywordString:parameter]) != nil)
 							{
 								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:afterDate];
-								AddDescription(condition, @"calendar", negateCondition ? OCLocalized(@"Before") : OCLocalized(@"After"), [afterDate localizedStringWithTemplate:@"MMM d, yy" locale:nil]);
+								AddDescription(condition, @"calendar", negateCondition ? OCLocalizedViaLocalizationBundle(@"Before") : OCLocalizedViaLocalizationBundle(@"After"), [afterDate localizedStringWithTemplate:@"MMM d, yy" locale:nil]);
 							}
 						}
 						else if ([modifierKeyword isEqual:@"before"])
@@ -403,7 +404,7 @@
 							if ((beforeDate = [NSDate dateFromKeywordString:parameter]) != nil)
 							{
 								condition = [OCQueryCondition where:OCItemPropertyNameLastModified isLessThan:beforeDate];
-								AddDescription(condition, @"calendar", negateCondition ? OCLocalized(@"After") : OCLocalized(@"Before"), [beforeDate localizedStringWithTemplate:@"MMM d, yy" locale:nil]);
+								AddDescription(condition, @"calendar", negateCondition ? OCLocalizedViaLocalizationBundle(@"After") : OCLocalizedViaLocalizationBundle(@"Before"), [beforeDate localizedStringWithTemplate:@"MMM d, yy" locale:nil]);
 							}
 						}
 						else if ([modifierKeyword isEqual:@"on"])
@@ -419,7 +420,7 @@
 									[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:onStartDate],
 									[OCQueryCondition where:OCItemPropertyNameLastModified isLessThan:onEndDate]
 								]];
-								AddDescription(condition, @"calendar", negateCondition ? OCLocalized(@"Not on") : OCLocalized(@"On"), [onStartDate localizedStringWithTemplate:@"MMM d, yy" locale:nil]);
+								AddDescription(condition, @"calendar", negateCondition ? OCLocalizedViaLocalizationBundle(@"Not on") : OCLocalizedViaLocalizationBundle(@"On"), [onStartDate localizedStringWithTemplate:@"MMM d, yy" locale:nil]);
 							}
 						}
 						else if ([modifierKeyword isEqual:@"smaller"])
@@ -445,7 +446,7 @@
 						else if ([modifierKeyword isEqual:@"owner"])
 						{
 							condition = [OCQueryCondition where:OCItemPropertyNameOwnerUserName isEqualTo:parameter];
-							AddDescription(condition, @"person.crop.circle", nil, negateCondition ? [OCLocalized(@"Not") stringByAppendingFormat:@" %@", parameter] : parameter);
+							AddDescription(condition, @"person.crop.circle", nil, negateCondition ? [OCLocalizedViaLocalizationBundle(@"Not") stringByAppendingFormat:@" %@", parameter] : parameter);
 						}
 						else if ([modifier isEqual:@""])
 						{
@@ -471,11 +472,11 @@
 									greaterThanDate = [NSDate startOfRelativeDay:-numParam];
 									if (negateCondition)
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"Before today") : ((numParam == 1) ? OCLocalized(@"Before yesterday") : [NSString stringWithFormat:OCLocalized(@">%d days ago"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"Before today") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Before yesterday") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@">%d days ago"), numParam]);
 									}
 									else
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"Today") : ((numParam == 1) ? OCLocalized(@"Since yesterday") : [NSString stringWithFormat:OCLocalized(@"Last %d days"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"Today") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Since yesterday") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@"Last %d days"), numParam]);
 									}
 								}
 								else if ([timeLabel isEqual:@"w"])
@@ -483,11 +484,11 @@
 									greaterThanDate = [NSDate startOfRelativeWeek:-numParam];
 									if (negateCondition)
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"Before this week") : ((numParam == 1) ? OCLocalized(@"Before last week") : [NSString stringWithFormat:OCLocalized(@">%d weeks ago"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"Before this week") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Before last week") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@">%d weeks ago"), numParam]);
 									}
 									else
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"This week") : ((numParam == 1) ? OCLocalized(@"Since last week") : [NSString stringWithFormat:OCLocalized(@"Last %d weeks"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"This week") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Since last week") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@"Last %d weeks"), numParam]);
 									}
 								}
 								else if ([timeLabel isEqual:@"m"])
@@ -495,11 +496,11 @@
 									greaterThanDate = [NSDate startOfRelativeMonth:-numParam];
 									if (negateCondition)
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"Before this month") : ((numParam == 1) ? OCLocalized(@"Before last month") : [NSString stringWithFormat:OCLocalized(@"> %d months ago"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"Before this month") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Before last month") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@"> %d months ago"), numParam]);
 									}
 									else
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"This month") : ((numParam == 1) ? OCLocalized(@"Since last month") : [NSString stringWithFormat:OCLocalized(@"Last %d months"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"This month") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Since last month") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@"Last %d months"), numParam]);
 									}
 								}
 								else if ([timeLabel isEqual:@"y"])
@@ -507,11 +508,11 @@
 									greaterThanDate = [NSDate startOfRelativeYear:-numParam];
 									if (negateCondition)
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"Before this year") : ((numParam == 1) ? OCLocalized(@"Before last year") : [NSString stringWithFormat:OCLocalized(@"> %d years ago"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"Before this year") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Before last year") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@"> %d years ago"), numParam]);
 									}
 									else
 									{
-										localizedDescription = (numParam == 0) ? OCLocalized(@"This year") : ((numParam == 1) ? OCLocalized(@"Since last year") : [NSString stringWithFormat:OCLocalized(@"Last %d years"), numParam]);
+										localizedDescription = (numParam == 0) ? OCLocalizedViaLocalizationBundle(@"This year") : ((numParam == 1) ? OCLocalizedViaLocalizationBundle(@"Since last year") : [NSString stringWithFormat:OCLocalizedViaLocalizationBundle(@"Last %d years"), numParam]);
 									}
 								}
 

@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
-		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(GitInfo.app.versionInfo) finished launching with log settings: \(Log.logOptionStatus)")
 
 		// Set up notification categories
 		NotificationManager.shared.registerCategories()
@@ -177,17 +177,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Not applicable here at the app delegate level.
 		return false
 	}
-//		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-//			let url = userActivity.webpageURL else {
-//				return false
-//		}
-//
-//		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
-//
-//		openPrivateLink(url: url, in: window)
-//
-//		return true
-//	}
 
 	// MARK: UISceneSession Lifecycle
 	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

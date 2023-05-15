@@ -11,14 +11,17 @@ It should only be used with dedicated test servers, test data - and test devices
 - spaces do not yet show a member count or provide access to a list of members
 - subscription of spaces can't be turned on/off yet
 - handling of detached drives with user data in them (see OCVault.detachedDrives)
-- support for OC10 sharing is incomplete: federated shares support missing
-- spaces support for Shortcuts
+- [x] support for OC10 sharing is incomplete: federated shares support missing
+- [x] spaces support for Shortcuts
 
 Missing:
 - [ ] static login/branded login UI
 - [ ] full inline progress reporting when account databases are updated on first login
 - [ ] progress reporting in active connections
 - [ ] reinstate Key Commands
+- BrowserViewController
+	- [ ] disposal of view controllers
+	- [ ] swipe gesture support (+ animation)
 
 Jesus:
 - [ ] Presentation view after installing is missing

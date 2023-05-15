@@ -1052,7 +1052,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						if let savedTemplates = vault.savedSearches?.filter({ savedSearch in
 							return savedSearch.isTemplate
 						}), savedTemplates.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved search templates")
+							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved search templates".localized)
 							savedSearchTemplatesHeaderView.elementInsets = .zero
 
 							suggestionItems.append(savedSearchTemplatesHeaderView)

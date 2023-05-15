@@ -396,7 +396,7 @@
 "Recipients" = "Recipients";
 "Public Link" = "Public Link";
 "Public Links" = "Veřejné odkazy";
-"Shared by %@" = "Shared by %@";
+"Shared by {{owner}}" = "Shared by {{owner}}";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
 "Add email or name" = "Add email or name";

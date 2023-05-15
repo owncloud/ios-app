@@ -104,6 +104,8 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
+
+"Tree" = "Tree";
 "Search folder" = "Search folder";
 "Search tree" = "Search tree";
 "Search from {{folder.name}}" = "Search from {{folder.name}}";
@@ -514,13 +516,20 @@
 
 /* Sharing */
 "Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
 
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";
 "Recipients" = "Recipients";
 "Public Link" = "Public Link";
 "Public Links" = "Public Links";
-"Shared by %@" = "Shared by %@";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
 "Add email or name" = "Add email or name";
@@ -609,6 +618,10 @@
 "Shared with me" = "Shared with me";
 "Shared by me" = "Shared by me";
 "Shared by link" = "Shared by link";
+
+"Share with" = "Share with";
+"Add" = "Add";
+"Save changes" = "Save changes";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";

@@ -1,24 +1,4 @@
 
-tag::account[]
-[cols="2,1,1,2a,1",options=header]
-|=== 
-|Key
-|Type
-|Default
-|Description
-|Status
-
-
-|account.auto-connect
-|bool
-|`false`
-|Skip "Account" screen / automatically open "Files" screen after login
-|supported `candidate`
-
-|===
-end::account[]
-
-
 tag::actions[]
 [cols="2,1,1,2a,1",options=header]
 |=== 
@@ -43,6 +23,9 @@ tag::actions[]
 ! `com.owncloud.action.copy`
 ! Copy
 
+! `com.owncloud.action.createDocument`
+! New document
+
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
@@ -51,6 +34,9 @@ tag::actions[]
 
 ! `com.owncloud.action.delete`
 ! Delete
+
+! `com.owncloud.action.discardscene`
+! Close Window
 
 ! `com.owncloud.action.duplicate`
 ! Duplicate
@@ -78,6 +64,9 @@ tag::actions[]
 
 ! `com.owncloud.action.openin`
 ! Open in
+
+! `com.owncloud.action.openscene`
+! Open in a new Window
 
 ! `com.owncloud.action.pdfpage`
 ! Go to page
@@ -127,6 +116,9 @@ tag::actions[]
 ! `com.owncloud.action.copy`
 ! Copy
 
+! `com.owncloud.action.createDocument`
+! New document
+
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
@@ -135,6 +127,9 @@ tag::actions[]
 
 ! `com.owncloud.action.delete`
 ! Delete
+
+! `com.owncloud.action.discardscene`
+! Close Window
 
 ! `com.owncloud.action.duplicate`
 ! Duplicate
@@ -162,6 +157,9 @@ tag::actions[]
 
 ! `com.owncloud.action.openin`
 ! Open in
+
+! `com.owncloud.action.openscene`
+! Open in a new Window
 
 ! `com.owncloud.action.pdfpage`
 ! Go to page
@@ -192,6 +190,48 @@ tag::actions[]
 
 ! `com.owncloud.action.uploadphotos`
 ! Upload from your photo library
+
+!===
+
+|advanced `candidate`
+
+|action.excludedSystemActivities
+|stringArray
+|
+|List of all operating system activities that should be excluded from OS share sheets in actions such as Open In.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `com.apple.UIKit.activity.AddToReadingList`
+! Add to reading list
+
+! `com.apple.UIKit.activity.AirDrop`
+! AirDrop
+
+! `com.apple.UIKit.activity.AssignToContact`
+! Assign to contact
+
+! `com.apple.UIKit.activity.CopyToPasteboard`
+! Copy to pasteboard
+
+! `com.apple.UIKit.activity.Mail`
+! Mail
+
+! `com.apple.UIKit.activity.MarkupAsPDF`
+! Markup as PDF
+
+! `com.apple.UIKit.activity.Message`
+! Message
+
+! `com.apple.UIKit.activity.OpenInIBooks`
+! Open in (i)Books
+
+! `com.apple.UIKit.activity.Print`
+! Print
+
+! `com.apple.UIKit.activity.SaveToCameraRoll`
+! Save to camera roll
 
 !===
 
@@ -237,13 +277,13 @@ tag::app[]
 
 |app.is-beta-build
 |bool
-|`false`
+|`true`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
 |app.show-beta-warning
 |bool
-|`false`
+|`true`
 |Controls whether a warning should be shown on the first run of a beta version.
 |debugOnly
 
@@ -484,147 +524,6 @@ branding.url-terms-of-use
 |Default values for user defaults. Allows overriding default settings.
 |advanced `candidate`
 
-|`Profile` +
-**Allow URL configuration** +
- +
-branding.profile-allow-url-configuration
-|bool
-|
-|Indicates if the user can change the server URL for the account.
-|advanced `candidate`
-
-|`Profile` +
-**Allowed authentication methods** +
- +
-branding.profile-allowed-authentication-methods
-|stringArray
-|
-|The identifiers of the authentication methods allowed for this profile. Allows to f.ex. force OAuth2, or to use Basic Auth even if OAuth2 is available.
-[cols="1,1"]
-!===
-! Value
-! Description
-! `com.owncloud.basicauth`
-! Basic Auth
-
-! `com.owncloud.oauth2`
-! OAuth2
-
-! `com.owncloud.openid-connect`
-! OpenID Connect
-
-!===
-
-|advanced `candidate`
-
-|`Profile` +
-**Allowed Hosts** +
- +
-branding.profile-allowed-hosts
-|stringArray
-|
-|Domain names (can also include subdomain name), which are allowed as server url when adding a new account.
-|advanced `candidate`
-
-|`Profile` +
-**Bookmark Name** +
- +
-branding.profile-bookmark-name
-|string
-|
-|The name that should be used for the bookmark that's generated from this profile and appears in the account list.
-|advanced `candidate`
-
-|`Profile` +
-**Onboarding button title** +
- +
-branding.profile-help-button-label
-|string
-|
-|Text used for the onboarding button title
-|advanced `candidate`
-
-|`Profile` +
-**Onboarding URL** +
- +
-branding.profile-help-url
-|urlString
-|
-|Optional URL to onboarding resources.
-|advanced `candidate`
-
-|`Profile` +
-**Identifier** +
- +
-branding.profile-identifier
-|string
-|
-|Identifier uniquely identifying the profile.
-|advanced `candidate`
-
-|`Profile` +
-**Name** +
- +
-branding.profile-name
-|string
-|
-|Name of the profile during setup.
-|advanced `candidate`
-
-|`Profile` +
-**Open onboarding URL message** +
- +
-branding.profile-open-help-message
-|string
-|
-|Message shown in an alert before opening the onboarding URL.
-|advanced `candidate`
-
-|`Profile` +
-**Password prompt** +
- +
-branding.profile-password-auth-prompt
-|string
-|
-|Text that is shown when asking the user to enter their password.
-|advanced `candidate`
-
-|`Profile` +
-**Token authentication prompt** +
- +
-branding.profile-token-auth-prompt
-|string
-|
-|Text that is shown to the user before opening the authentication web view (f.ex. for OAuth2, OIDC).
-|advanced `candidate`
-
-|`Profile` +
-**URL** +
- +
-branding.profile-url
-|urlString
-|
-|The URL of the server targeted by this profile.
-|advanced `candidate`
-
-|`Profile` +
-**URL prompt** +
- +
-branding.profile-url-prompt
-|string
-|
-|Text shown above the URL field when setting up an account.
-|advanced `candidate`
-
-|`Profile` +
-**Welcome Message** +
- +
-branding.profile-welcome-message
-|string
-|
-|Welcome message shown during account setup.
-|advanced `candidate`
-
 |===
 end::branding[]
 
@@ -665,22 +564,34 @@ tag::build[]
 |Status
 
 
+|build.app-group-identifier
+|string
+|
+|Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier and updates other, directly signing-relevant parts of the Info.plist. With this value set, fastlane needs the provisioning profiles and certificate with the app group identifier. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.
+|supported `candidate`
+
 |build.custom-app-scheme
 |string
 |`owncloud`
-|Name of the URL scheme to use for private links. Must be provided in Branding.plist at build time. For documentation, please see doc/BUILD_CUSTOMIZATION.md.
+|Name of the URL scheme to use for private links. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.
 |supported `candidate`
 
 |build.custom-auth-scheme
 |string
 |`oc`
-|Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see doc/BUILD_CUSTOMIZATION.md.
+|Name of the URL scheme to use for OAuth2/OIDC authentication. Must be provided in Branding.plist at build time. The authentication redirect URI parameters must also be changed accordingly in Branding.plist and on the server side. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.
 |supported `candidate`
 
 |build.flags
 |string
 |
-|A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see doc/BUILD_CUSTOMIZATION.md.
+|A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.
+|supported `candidate`
+
+|build.oc-app-group-identifier
+|string
+|
+|Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier only. Fastlane does not need the provisioning profile and certificate with the given app group identifer. Needs resigning with the correct provisioning profile and certificate. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.
 |supported `candidate`
 
 |===
@@ -761,10 +672,40 @@ The following placeholders can be used to make it dynamic:
 |Concurrency budgets available for sync actions by action category.
 |advanced `candidate`
 
+|core.add-accept-language-header
+|bool
+|`true`
+|Add an `Accept-Language` HTTP header using the preferred languages set on the device.
+|advanced `candidate`
+
 |core.scan-for-changes-interval
 |int
 |
 |Minimum number of milliseconds until the next scan for changes, measured from the completion of the previous scan. If no value is provided, uses the poll interval provided in the server's capabilities (in milliseconds) if it is greater or equal 5 seconds. Defaults to 10 seconds otherwise.
+|advanced `candidate`
+
+|server-locator.lookup-table
+|dictionary
+|
+|Lookup table that maps users to server URLs
+|advanced `candidate`
+
+|server-locator.use
+|string
+|
+|Use Server Locator
+[cols="1,1"]
+!===
+! Value
+! Description
+! `lookup-table`
+! Locate server via lookup table. Keys can match against the beginning (f.ex. "begins:bob@"), end (f.ex. "ends:@owncloud.org") or regular expression (f.ex. "regexp:")
+
+! `web-finger`
+! Locate server via Webfinger service-instance relation (http://webfinger.owncloud/rel/server-instance) using the entered/provided server URL
+
+!===
+
 |advanced `candidate`
 
 |connection.allow-background-url-sessions
@@ -811,6 +752,12 @@ The following placeholders can be used to make it dynamic:
 !===
 ! Value
 ! Description
+! `action-timeout-simulator`
+! Lets all MOVE/COPY/DELETE/PUT requests fail with a timeout error.
+
+! `auth-race-condition`
+! Responds to all .well-known/webfinger requests with server-instance responses.
+
 ! `five-seconds-of-404`
 ! Return status code 404 for every request for the first five seconds.
 
@@ -825,6 +772,9 @@ The following placeholders can be used to make it dynamic:
 
 ! `simple-apm`
 ! Redirect any request without cookies to a cookie-setting endpoint, where cookies are set - and then redirect back.
+
+! `web-finger`
+! Responds to all .well-known/webfinger requests with server-instance responses.
 
 !===
 
@@ -926,12 +876,6 @@ tag::endpoints[]
 |Endpoint to retrieve basic status information and detect an ownCloud installation.
 |advanced `candidate`
 
-|connection.endpoint-thumbnail
-|string
-|`index.php/apps/files/api/v1/thumbnail`
-|Path of the thumbnail endpoint.
-|advanced `candidate`
-
 |connection.endpoint-user
 |string
 |`ocs/v2.php/cloud/user`
@@ -958,6 +902,217 @@ tag::endpoints[]
 
 |===
 end::endpoints[]
+
+
+tag::extensions[]
+[cols="2,1,1,2a,1",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|extensions.disallowed
+|stringArray
+|`[]`
+|List of all disallowed extensions. If provided, extensions not listed here are allowed.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `action-timeout-simulator`
+! Extension with the identifier action-timeout-simulator.
+
+! `auth-race-condition`
+! Extension with the identifier auth-race-condition.
+
+! `com.owncloud.action.background_update`
+! Extension with the identifier com.owncloud.action.background_update.
+
+! `com.owncloud.action.collaborate`
+! Extension with the identifier com.owncloud.action.collaborate.
+
+! `com.owncloud.action.copy`
+! Extension with the identifier com.owncloud.action.copy.
+
+! `com.owncloud.action.createDocument`
+! Extension with the identifier com.owncloud.action.createDocument.
+
+! `com.owncloud.action.createFolder`
+! Extension with the identifier com.owncloud.action.createFolder.
+
+! `com.owncloud.action.cutpasteboard`
+! Extension with the identifier com.owncloud.action.cutpasteboard.
+
+! `com.owncloud.action.delete`
+! Extension with the identifier com.owncloud.action.delete.
+
+! `com.owncloud.action.discardscene`
+! Extension with the identifier com.owncloud.action.discardscene.
+
+! `com.owncloud.action.duplicate`
+! Extension with the identifier com.owncloud.action.duplicate.
+
+! `com.owncloud.action.favorite`
+! Extension with the identifier com.owncloud.action.favorite.
+
+! `com.owncloud.action.importpasteboard`
+! Extension with the identifier com.owncloud.action.importpasteboard.
+
+! `com.owncloud.action.instant_media_upload`
+! Extension with the identifier com.owncloud.action.instant_media_upload.
+
+! `com.owncloud.action.links`
+! Extension with the identifier com.owncloud.action.links.
+
+! `com.owncloud.action.makeAvailableOffline`
+! Extension with the identifier com.owncloud.action.makeAvailableOffline.
+
+! `com.owncloud.action.makeUnavailableOffline`
+! Extension with the identifier com.owncloud.action.makeUnavailableOffline.
+
+! `com.owncloud.action.markup`
+! Extension with the identifier com.owncloud.action.markup.
+
+! `com.owncloud.action.move`
+! Extension with the identifier com.owncloud.action.move.
+
+! `com.owncloud.action.openin`
+! Extension with the identifier com.owncloud.action.openin.
+
+! `com.owncloud.action.openscene`
+! Extension with the identifier com.owncloud.action.openscene.
+
+! `com.owncloud.action.pdfpage`
+! Extension with the identifier com.owncloud.action.pdfpage.
+
+! `com.owncloud.action.pending_media_upload`
+! Extension with the identifier com.owncloud.action.pending_media_upload.
+
+! `com.owncloud.action.presentationmode`
+! Extension with the identifier com.owncloud.action.presentationmode.
+
+! `com.owncloud.action.rename`
+! Extension with the identifier com.owncloud.action.rename.
+
+! `com.owncloud.action.scan`
+! Extension with the identifier com.owncloud.action.scan.
+
+! `com.owncloud.action.show-exif`
+! Extension with the identifier com.owncloud.action.show-exif.
+
+! `com.owncloud.action.unfavorite`
+! Extension with the identifier com.owncloud.action.unfavorite.
+
+! `com.owncloud.action.unshare`
+! Extension with the identifier com.owncloud.action.unshare.
+
+! `com.owncloud.action.upload.camera_media`
+! Extension with the identifier com.owncloud.action.upload.camera_media.
+
+! `com.owncloud.action.uploadfile`
+! Extension with the identifier com.owncloud.action.uploadfile.
+
+! `com.owncloud.action.uploadphotos`
+! Extension with the identifier com.owncloud.action.uploadphotos.
+
+! `com.owncloud.classic`
+! Extension with the identifier com.owncloud.classic.
+
+! `com.owncloud.dark`
+! Extension with the identifier com.owncloud.dark.
+
+! `com.owncloud.dark.black`
+! Extension with the identifier com.owncloud.dark.black.
+
+! `com.owncloud.light`
+! Extension with the identifier com.owncloud.light.
+
+! `com.owncloud.web.dark`
+! Extension with the identifier com.owncloud.web.dark.
+
+! `five-seconds-of-404`
+! Extension with the identifier five-seconds-of-404.
+
+! `license.Down`
+! Extension with the identifier license.Down.
+
+! `license.ISRunLoopThread`
+! Extension with the identifier license.ISRunLoopThread.
+
+! `license.PocketSVG`
+! Extension with the identifier license.PocketSVG.
+
+! `license.libzip`
+! Extension with the identifier license.libzip.
+
+! `license.openssl`
+! Extension with the identifier license.openssl.
+
+! `license.plcrashreporter`
+! Extension with the identifier license.plcrashreporter.
+
+! `lookup-table`
+! Extension with the identifier lookup-table.
+
+! `only-404`
+! Extension with the identifier only-404.
+
+! `org.owncloud.image`
+! Extension with the identifier org.owncloud.image.
+
+! `org.owncloud.media`
+! Extension with the identifier org.owncloud.media.
+
+! `org.owncloud.pdfViewer.default`
+! Extension with the identifier org.owncloud.pdfViewer.default.
+
+! `org.owncloud.ql_preview`
+! Extension with the identifier org.owncloud.ql_preview.
+
+! `org.owncloud.webview`
+! Extension with the identifier org.owncloud.webview.
+
+! `recovering-apm`
+! Extension with the identifier recovering-apm.
+
+! `reject-downloads-500`
+! Extension with the identifier reject-downloads-500.
+
+! `simple-apm`
+! Extension with the identifier simple-apm.
+
+! `web-finger`
+! Extension with the identifier web-finger.
+
+!===
+
+|advanced `candidate`
+
+|===
+end::extensions[]
+
+
+tag::fileprovider[]
+[cols="2,1,1,2a,1",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|fileprovider.browseable
+|bool
+|`true`
+|Controls whether the account content is available to other apps via File Provider / Files.app.
+|supported `candidate`
+
+|===
+end::fileprovider[]
 
 
 tag::licensing[]
@@ -1141,9 +1296,15 @@ tag::logging[]
 |If set, omits all log messages not tagged with tags in this array.
 |advanced `candidate`
 
-|log.single-lined
+|log.replace-newline
 |bool
 |`true`
+|Controls whether messages spanning more than one line should be logged as a single line, after replacing new line characters with "\n".
+|advanced `candidate`
+
+|log.single-lined
+|bool
+|`false`
 |Controls whether messages spanning more than one line should be broken into their individual lines and each be logged with the complete lead-in/lead-out sequence.
 |advanced `candidate`
 
@@ -1223,6 +1384,12 @@ tag::oidc[]
 |Status
 
 
+|authentication-oauth2.oidc-fallback-on-client-registration-failure
+|bool
+|`true`
+|If client registration is enabled, but registration fails, controls if the error should be ignored and the default client ID and secret should be used instead.
+|supported `candidate`
+
 |authentication-oauth2.oidc-redirect-uri
 |string
 |`oc://ios.owncloud.com`
@@ -1285,6 +1452,12 @@ tag::passcode[]
 |Controls how many passcode digits are at least required for passcode lock.
 |advanced `candidate`
 
+|passcode.share-sheet-biometrical-unlock-by-app
+|dictionary
+|`map[com.air-watch.boxer:map[allow:false] default:map[allow:true]]`
+|Controls the  biometrical unlock availability in the share sheet, with per-app level control.
+|advanced `candidate`
+
 |passcode.use-biometrical-unlock
 |bool
 |`false`
@@ -1318,33 +1491,13 @@ tag::policies[]
 |advanced `candidate`
 
 |item-policy.vacuum-sync-anchor-ttl
-|bool
+|int
 |`60`
 |Number of seconds since the removal of an item after which the metadata entry may be finally removed.
 |debugOnly
 
 |===
 end::policies[]
-
-
-tag::privacy[]
-[cols="2,1,1,2a,1",options=header]
-|=== 
-|Key
-|Type
-|Default
-|Description
-|Status
-
-
-|core.add-accept-language-header
-|bool
-|`true`
-|Add an `Accept-Language` HTTP header using the preferred languages set on the device.
-|advanced `candidate`
-
-|===
-end::privacy[]
 
 
 tag::releasenotes[]
@@ -1425,6 +1578,12 @@ tag::security[]
 
 |recommended `candidate`
 
+|connection.associated-certificates-tracking-rule
+|string
+|
+|Rule that defines the criteria that need to be met by a hostname other than a bookmark's hostname for the associated certificate to be added to the bookmark, tracked for changes and validated by the same rules as the bookmark's primary certificate. No value (default) or a value of `(0 == 1)` disables this feature. A value of `$hostname like "*.mycompany.com"` tracks the certificates for all hosts ending with mycompany.com.
+|advanced `candidate`
+
 |connection.certificate-extended-validation-rule
 |string
 |`bookmarkCertificate == serverCertificate`
@@ -1445,6 +1604,12 @@ Examples of expressions:
 |string
 |`(bookmarkCertificate.publicKeyData == serverCertificate.publicKeyData) OR ((check.parentCertificatesHaveIdenticalPublicKeys == true) AND (serverCertificate.passedValidationOrIsUserAccepted == true)) OR ((bookmarkCertificate.parentCertificate.sha256Fingerprint.asFingerPrintString == "73 0C 1B DC D8 5F 57 CE 5D C0 BB A7 33 E5 F1 BA 5A 92 5B 2A 77 1D 64 0A 26 F7 A4 54 22 4D AD 3B") AND (bookmarkCertificate.rootCertificate.sha256Fingerprint.asFingerPrintString == "06 87 26 03 31 A7 24 03 D9 09 F1 05 E6 9B CF 0D 32 E1 BD 24 93 FF C6 D9 20 6D 11 BC D6 77 07 39") AND (serverCertificate.parentCertificate.sha256Fingerprint.asFingerPrintString == "67 AD D1 16 6B 02 0A E6 1B 8F 5F C9 68 13 C0 4C 2A A5 89 96 07 96 86 55 72 A3 C7 E7 37 61 3D FD") AND (serverCertificate.rootCertificate.sha256Fingerprint.asFingerPrintString == "96 BC EC 06 26 49 76 F3 74 60 77 9A CF 28 C5 A7 CF E8 A3 C0 AA E1 1A 8F FC EE 05 C0 BD DF 08 C6") AND (serverCertificate.passedValidationOrIsUserAccepted == true))`
 |Rule that defines the criteria that need to be met for OCConnection to accept a renewed certificate and update the bookmark's certificate automatically instead of prompting the user. Used when the extended validation rule fails. Set this to `never` if the user should always be prompted when a server's certificate changed.
+|advanced `candidate`
+
+|post-build.allowed-settings
+|stringArray
+|`[]`
+|List of settings (as flat identifiers) that are allowed to be changed post-build via the app's URL scheme. Including a value of "*" allows any setting to be changed. Defaults to an empty array (equalling not allowed). 
 |advanced `candidate`
 
 |user-settings.allow

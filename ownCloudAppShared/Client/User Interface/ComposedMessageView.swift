@@ -433,7 +433,7 @@ public class ComposedMessageView: UIView, Themeable {
 	}
 
 	public init(elements: [ComposedMessageElement]) {
-		super.init(frame: .zero)
+		super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 		self.translatesAutoresizingMaskIntoConstraints = false
 		self.cssSelectors = [.message]
 
