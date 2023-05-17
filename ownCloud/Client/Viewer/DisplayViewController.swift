@@ -181,10 +181,10 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	private var iconImageView = ResourceViewHost()
 	private var progressView = ThemeCSSProgressView(progressViewStyle: .bar)
-	private var cancelButton = ThemeButton(type: .custom)
+	private var cancelButton = ThemeButton(withSelectors: [.cancel])
 	private var metadataInfoLabel = ThemeCSSLabel(withSelectors: [.primary, .metadata])
-	private var showPreviewButton = ThemeButton(type: .custom)
-	private var primaryUnviewableActionButton = ThemeButton(type: .custom)
+	private var showPreviewButton = ThemeButton(withSelectors: [.proceed])
+	private var primaryUnviewableActionButton = ThemeButton(withSelectors: [.proceed])
 	private var infoLabel = ThemeCSSLabel(withSelectors: [.secondary])
 	private var connectionActivityView = UIActivityIndicatorView(style: .medium)
 
