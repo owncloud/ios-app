@@ -285,14 +285,12 @@ public class ComposedMessageElement: NSObject {
 					_view = spacingView
 
 				case .button(let action):
-					let button = ThemeButton()
-					button.translatesAutoresizingMaskIntoConstraints = false
-					button.cssSelectors = cssSelectors
-
 					var buttonConfig = UIButton.Configuration.filled()
 					buttonConfig.title = text
 					buttonConfig.cornerStyle = .large
-					button.configuration = buttonConfig
+
+					let button = ThemeButton(withSelectors: cssSelectors ?? [], configuration: buttonConfig)
+					button.translatesAutoresizingMaskIntoConstraints = false
 
 					button.addAction(action, for: .primaryActionTriggered)
 

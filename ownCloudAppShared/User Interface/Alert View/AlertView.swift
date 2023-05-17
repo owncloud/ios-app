@@ -79,23 +79,25 @@ open class AlertView: ThemeCSSView {
 		var optionIdx : Int = 0
 
 		for option in options {
-			let optionButton = ThemeButton(type: .custom)
+			var cssSelector: ThemeCSSSelector
+
+			switch option.type {
+				case .cancel:
+					cssSelector = .cancel
+
+				case .destructive:
+					cssSelector = .destructive
+
+				case .regular, .default:
+					cssSelector = .confirm
+			}
+
+			let optionButton = ThemeButton(withSelectors: [cssSelector])
 
 			optionButton.setTitle(option.label, for: .normal)
 			optionButton.tag = optionIdx
 			optionButton.translatesAutoresizingMaskIntoConstraints = false
 			optionButton.accessibilityIdentifier = option.accessibilityIdentifier
-
-			switch option.type {
-				case .cancel:
-					optionButton.cssSelector = .cancel
-
-				case .destructive:
-					optionButton.cssSelector = .destructive
-
-				case .regular, .default:
-					optionButton.cssSelector = .confirm
-			}
 
 			optionButton.setContentHuggingPriority(.required, for: .vertical)
 			optionButton.setContentCompressionResistancePriority(.required, for: .vertical)
