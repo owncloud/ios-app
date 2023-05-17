@@ -39,7 +39,7 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 
 	public func cssSelectorsChanged() {
 		if superview != nil {
-			self.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
+			updateConfiguration()
 		}
 	}
 
@@ -121,9 +121,10 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 		}
 	}
 
-	public convenience init(withSelectors: [ThemeCSSSelector]) {
-		self.init()
-		self.cssSelectors = cssSelectors
+	public convenience init(withSelectors: [ThemeCSSSelector], configuration: UIButton.Configuration = .filled()) {
+		self.init(type: .custom)
+		self.configuration = configuration
+		self.cssSelectors = withSelectors
 	}
 
 	public override init(frame: CGRect) {

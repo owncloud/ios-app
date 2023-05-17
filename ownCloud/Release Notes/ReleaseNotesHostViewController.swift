@@ -37,7 +37,7 @@ class ReleaseNotesHostViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.cssSelector = .releaseNotes
+		self.cssSelectors = [.modal, .releaseNotes]
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appBuildNumber), forClassSettingsKey: .lastSeenReleaseNotesVersion)
 
@@ -89,7 +89,6 @@ class ReleaseNotesHostViewController: UIViewController {
 				bottomView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
 			])
 
-			proceedButton.cssSelectors = [.proceed]
 			proceedButton.setTitle("Proceed".localized, for: .normal)
 			proceedButton.translatesAutoresizingMaskIntoConstraints = false
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
