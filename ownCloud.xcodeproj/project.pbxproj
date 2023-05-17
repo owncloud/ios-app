@@ -368,6 +368,7 @@
 		DC89EA6929958DF500BFF393 /* UIViewController+BrowserNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA6829958DF500BFF393 /* UIViewController+BrowserNavigation.swift */; };
 		DC89EA6B29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA6A29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift */; };
 		DC8AA7BE29DC154400BFF393 /* ItemLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */; };
+		DC8BFC0E2A14CAB900BFF393 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC8BFC0D2A14CAB900BFF393 /* PocketSVG */; };
 		DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */; };
 		DC8E99E2297E906200594697 /* OCLicenseQAProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */; };
@@ -1636,6 +1637,7 @@
 				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
 				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
+				DC8BFC0E2A14CAB900BFF393 /* PocketSVG in Frameworks */,
 				DCD8640628115FD600CA6631 /* OpenSSL in Frameworks */,
 				DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */,
 				DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
@@ -3711,6 +3713,7 @@
 				024F3A2024A3AB410083E11E /* CrashReporter */,
 				DCEAF08C28084B3800980B6D /* Down */,
 				DCD8640528115FD600CA6631 /* OpenSSL */,
+				DC8BFC0D2A14CAB900BFF393 /* PocketSVG */,
 			);
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
@@ -5959,6 +5962,11 @@
 			productName = PocketSVG;
 		};
 		DC6C9A122A12859900BFF393 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
+		};
+		DC8BFC0D2A14CAB900BFF393 /* PocketSVG */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
 			productName = PocketSVG;
