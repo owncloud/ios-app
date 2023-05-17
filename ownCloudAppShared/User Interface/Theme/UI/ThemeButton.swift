@@ -44,49 +44,39 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let css = collection.css
-
-		setTitleColor(css.getColor(.stroke,  			    	for: self), for: .normal)
-		setTitleColor(css.getColor(.stroke, selectors: [.highlighted], 	for: self), for: .highlighted)
-		setTitleColor(css.getColor(.stroke, selectors: [.disabled],    	for: self), for: .highlighted)
-
-		updateBackgroundColor()
+		updateConfiguration()
 	}
 
-	public override var isHighlighted: Bool {
-		set(newIsHighlighted) {
-			super.isHighlighted = newIsHighlighted
-			updateBackgroundColor()
-		}
+	open override func updateConfiguration() {
+		guard let configuration else { return }
+		let css = activeThemeCSS
 
-		get {
-			return super.isHighlighted
-		}
-	}
-
-	public override var isEnabled: Bool {
-		set(newIsEnabled) {
-			super.isEnabled = newIsEnabled
-			updateBackgroundColor()
-		}
-
-		get {
-			return super.isEnabled
-		}
-	}
-
-	private func updateBackgroundColor() {
-		let css = Theme.shared.activeCollection.css
+		var updatedConfiguration = configuration.updated(for: self)
+		var cssSelectors: [ThemeCSSSelector]?
 
 		if !isEnabled {
-			backgroundColor = css.getColor(.fill, selectors: [.disabled], for: self)
+			// Disabled
+			cssSelectors = [.disabled]
 		} else {
 			if isHighlighted {
-				backgroundColor = css.getColor(.fill, selectors: [.highlighted], for: self)
-			} else {
-				backgroundColor = css.getColor(.fill, for: self)
+				// Highlighted
+				cssSelectors = [.highlighted]
+			}
+
+			if isSelected {
+				// Selected
+				if cssSelectors != nil {
+					cssSelectors?.append(.selected)
+				} else {
+					cssSelectors = [.selected]
+				}
 			}
 		}
+
+		updatedConfiguration.baseForegroundColor = css.getColor(.stroke, selectors: cssSelectors, for: self)
+		updatedConfiguration.baseBackgroundColor = css.getColor(.fill,   selectors: cssSelectors, for: self)
+
+		self.configuration = updatedConfiguration
 	}
 
 	public override var intrinsicContentSize: CGSize {
