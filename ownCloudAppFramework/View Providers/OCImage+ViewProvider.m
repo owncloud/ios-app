@@ -19,12 +19,46 @@
 #import "OCImage+ViewProvider.h"
 #import "OCCircularImageView.h"
 
+#import <PocketSVG.h>
+
 @implementation OCImage (ViewProvider)
 
 - (void)provideViewForSize:(CGSize)size inContext:(nullable OCViewProviderContext *)context completion:(void(^)(OCView * _Nullable view))completionHandler
 {
 	BOOL isAvatar = [self isKindOfClass:OCAvatar.class];
+	BOOL isSVGImage = [self.mimeType hasPrefix:@"image/svg"];
 
+	if (isSVGImage && (self.data != nil))
+	{
+		NSString *svgString;
+		NSArray<SVGBezierPath *> *svgPaths;
+
+		if ((svgString = [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding]) != nil)
+		{
+			if ((svgPaths = [SVGBezierPath pathsFromSVGString:svgString]) != nil)
+			{
+				// Success
+				dispatch_async(dispatch_get_main_queue(), ^{
+					SVGImageView *imageView = [SVGImageView new];
+
+					imageView.translatesAutoresizingMaskIntoConstraints = NO;
+					imageView.contentMode = UIViewContentModeScaleAspectFit;
+					imageView.paths = svgPaths;
+
+					completionHandler(imageView);
+				});
+
+				return;
+			}
+		}
+
+		// Failure
+		completionHandler(nil);
+
+		return;
+	}
+
+	// Fallback to regular decoding
 	[self requestImageForSize:size scale:0 withCompletionHandler:^(OCImage * _Nullable ocImage, NSError * _Nullable error, CGSize maximumSizeInPoints, UIImage * _Nullable image) {
 		if (image != nil)
 		{
