@@ -121,6 +121,11 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 		}
 	}
 
+	public convenience init(withSelectors: [ThemeCSSSelector]) {
+		self.init()
+		self.cssSelectors = cssSelectors
+	}
+
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 		styleButton()

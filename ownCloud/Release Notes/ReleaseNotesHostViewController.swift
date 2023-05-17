@@ -31,7 +31,7 @@ class ReleaseNotesHostViewController: UIViewController {
 
 	// MARK: - Instance Variables
 	var titleLabel = ThemeCSSLabel(withSelectors: [.title])
-	var proceedButton = ThemeButton()
+	var proceedButton = ThemeButton(withSelectors: [.proceed])
 	var footerButton = UIButton()
 
 	override func viewDidLoad() {
