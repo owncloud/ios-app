@@ -523,7 +523,7 @@ open class AccountConnection: NSObject {
 
 			if connectionStatus == .online {
 				// Connection switched to online - perform actions
-				if Branding.shared.themeJSONURL != nil {
+				if Branding.shared.useThemeJSON {
 					updateServerLogo()
 				} else {
 					updateUserAvatar()
@@ -535,8 +535,8 @@ open class AccountConnection: NSObject {
 	}
 
 	// MARK: - Actions to perform on connect
-    private var userAvatarUpdated : Bool = false
-    private var serverLogoUpdated : Bool = false
+	private var userAvatarUpdated : Bool = false
+	private var serverLogoUpdated : Bool = false
 
 	func updateUserAvatar() {
 		if !userAvatarUpdated, let user = core?.connection.loggedInUser {
@@ -559,7 +559,13 @@ open class AccountConnection: NSObject {
 	}
 
 	func updateServerLogo() {
-		guard let themeJSONURL = Branding.shared.themeJSONURL, !serverLogoUpdated else { return }
+		var themeJSONURL = Branding.shared.themeJSONURL
+
+		if Branding.shared.useThemeJSON, themeJSONURL == nil {
+			themeJSONURL = (self.bookmark.url as NSURL?)?.appendingPathComponent("themes/owncloud/theme.json", isDirectory: false)
+		}
+
+		guard let themeJSONURL, !serverLogoUpdated else { return }
 
 		let themeValues = OCThemeValues(url: themeJSONURL, core: core!)
 

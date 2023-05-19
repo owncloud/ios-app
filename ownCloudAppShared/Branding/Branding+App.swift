@@ -98,8 +98,8 @@ extension Branding : BrandingInitialization {
 
 			.themeJSONURL : [
 				.type		: OCClassSettingsMetadataType.urlString,
-				.label		: "URL to the Theme.json",
-				.description	: "URL to the instance Theme.json file, which can contain instance or app specific branding parameter.",
+				.label		: "URL of the theme.json",
+				.description	: "URL of the instance theme.json file, which can contain instance or app specific branding parameter. Setting this to `auto` will construct the URL by adding `themes/owncloud/theme.json` to the respective server's base address.",
 				.status		: OCClassSettingsKeyStatus.advanced,
 				.category	: "Branding"
 			],
@@ -248,6 +248,7 @@ extension BrandingImageName {
 
 extension Branding {
 	public var isBranded: Bool {
+		return true
 		return (organizationName != nil) // Organization name must be set
 	}
 
@@ -268,7 +269,17 @@ extension Branding {
 	}
 
 	public var themeJSONURL : URL? {
-		return url(forClassSettingsKey: .themeJSONURL)
+		let themeJSONURL = url(forClassSettingsKey: .themeJSONURL)
+
+		if themeJSONURL?.absoluteString == "auto" {
+			return nil
+		}
+
+		return themeJSONURL
+	}
+
+	public var useThemeJSON: Bool {
+		return ((computedValue(forClassSettingsKey: .themeJSONURL) as? URL)?.absoluteString == "auto") || (themeJSONURL != nil)
 	}
 
 	public var feedbackEmailAddress : String? {
