@@ -76,6 +76,16 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 		updatedConfiguration.baseForegroundColor = css.getColor(.stroke, selectors: cssSelectors, for: self)
 		updatedConfiguration.baseBackgroundColor = css.getColor(.fill,   selectors: cssSelectors, for: self)
 
+		switch buttonCornerRadius {
+			case .round:
+				updatedConfiguration.cornerStyle = .capsule
+
+			case .medium: break
+
+			default:
+				updatedConfiguration.background.cornerRadius =  buttonCornerRadius.rawValue
+		}
+
 		self.configuration = updatedConfiguration
 	}
 
@@ -134,6 +144,7 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 
 	required public init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
+		self.configuration = .filled()
 		styleButton()
 	}
 
