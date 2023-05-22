@@ -134,12 +134,12 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 						if let self = self {
 							BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
 						}
-					})),
+					}), image: UIImage(systemName: "plus.circle"), cssSelectors: [.welcome]),
 					.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
 						if let self = self {
 							self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
 						}
-					}), cssSelectors: [.cancel])
+					}), image: UIImage(systemName: "gearshape"), cssSelectors: [.welcome])
 				])
 				messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
 

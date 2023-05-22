@@ -76,6 +76,14 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 		updatedConfiguration.baseForegroundColor = css.getColor(.stroke, selectors: cssSelectors, for: self)
 		updatedConfiguration.baseBackgroundColor = css.getColor(.fill,   selectors: cssSelectors, for: self)
 
+		if let buttonFont {
+			if let title = title(for: .normal) {
+				var attributedTitle: AttributedString = AttributedString(title)
+				attributedTitle.font = buttonFont
+				updatedConfiguration.attributedTitle = attributedTitle
+			}
+		}
+
 		switch buttonCornerRadius {
 			case .round:
 				updatedConfiguration.cornerStyle = .capsule
@@ -104,7 +112,11 @@ open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
 	}
 
-	public var buttonFont : UIFont = UIFont.preferredFont(forTextStyle: .headline)
+	public var buttonFont : UIFont? {
+		didSet {
+			updateConfiguration()
+		}
+	}
 	public var buttonHorizontalPadding : CGFloat = 30 {
 		didSet {
 			invalidateIntrinsicContentSize()
