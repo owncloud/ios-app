@@ -523,7 +523,11 @@ open class AccountConnection: NSObject {
 
 			if connectionStatus == .online {
 				// Connection switched to online - perform actions
-				updateUserAvatar()
+				if Branding.shared.useThemeJSON {
+					updateServerLogo()
+				} else {
+					updateUserAvatar()
+				}
 			}
 		}
 
@@ -532,6 +536,7 @@ open class AccountConnection: NSObject {
 
 	// MARK: - Actions to perform on connect
 	private var userAvatarUpdated : Bool = false
+	private var serverLogoUpdated : Bool = false
 
 	func updateUserAvatar() {
 		if !userAvatarUpdated, let user = core?.connection.loggedInUser {
@@ -550,6 +555,37 @@ open class AccountConnection: NSObject {
 			avatarRequest.lifetime = .singleRun
 
 			core?.vault.resourceManager?.start(avatarRequest)
+		}
+	}
+
+	func updateServerLogo() {
+		var themeJSONURL = Branding.shared.themeJSONURL
+
+		if Branding.shared.useThemeJSON, themeJSONURL == nil {
+			themeJSONURL = (self.bookmark.url as NSURL?)?.appendingPathComponent("themes/owncloud/theme.json", isDirectory: false)
+		}
+
+		guard let themeJSONURL, !serverLogoUpdated else { return }
+
+		let themeValues = OCThemeValues(url: themeJSONURL, core: core!)
+
+		themeValues.retrieveThemeJSON { error in
+			if error == nil {
+				themeValues.retrieveLogo { request, error, ongoing, previousResource, newResource in
+					self.serverLogoUpdated = true
+
+					let bookmarkUUID = self.bookmark.uuid
+
+					if !ongoing,
+					   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID),
+					   let newResource = newResource as? OCViewProvider {
+						bookmark.avatar = newResource
+						OCBookmarkManager.shared.updateBookmark(bookmark)
+					}
+				}
+			} else {
+				self.updateUserAvatar()
+			}
 		}
 	}
 

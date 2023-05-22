@@ -37,6 +37,8 @@
 		39057AA4233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39057AA7233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		3912208223436EB80026C290 /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3912208123436EB80026C290 /* SortMethod.swift */; };
+		3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */ = {isa = PBXBuildFile; fileRef = 3912D8AB29958BF400EDCB9A /* OCThemeValues.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3912D8AE29958BF400EDCB9A /* OCThemeValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 3912D8AC29958BF400EDCB9A /* OCThemeValues.m */; };
 		391C79A824E186DC00CB6333 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6624D848550000E3F9 /* branding-splashscreen.png */; };
 		3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */; };
@@ -341,6 +343,7 @@
 		DC6C0A4929239E560045FF2A /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6C0A4829239E560045FF2A /* AppRootViewController.swift */; };
 		DC6C0A542923FFF30045FF2A /* AccountControllerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6C0A532923FFF30045FF2A /* AccountControllerSection.swift */; };
 		DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */; };
+		DC6C9A132A12859900BFF393 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC6C9A122A12859900BFF393 /* PocketSVG */; };
 		DC6CC3152642C3560040ECAC /* ExternalBrowserBusyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */; };
 		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
 		DC6FDAF72953AD50004F0C7F /* ClientSharedWithMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */; };
@@ -365,6 +368,7 @@
 		DC89EA6929958DF500BFF393 /* UIViewController+BrowserNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA6829958DF500BFF393 /* UIViewController+BrowserNavigation.swift */; };
 		DC89EA6B29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA6A29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift */; };
 		DC8AA7BE29DC154400BFF393 /* ItemLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */; };
+		DC8BFC0E2A14CAB900BFF393 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC8BFC0D2A14CAB900BFF393 /* PocketSVG */; };
 		DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */; };
 		DC8E99E2297E906200594697 /* OCLicenseQAProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */; };
@@ -968,6 +972,8 @@
 		3912208123436EB80026C290 /* SortMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		391220922344C30F0026C290 /* ImportPasteboardAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportPasteboardAction.swift; sourceTree = "<group>"; };
 		391220932344C30F0026C290 /* CutAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutAction.swift; sourceTree = "<group>"; };
+		3912D8AB29958BF400EDCB9A /* OCThemeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCThemeValues.h; sourceTree = "<group>"; };
+		3912D8AC29958BF400EDCB9A /* OCThemeValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCThemeValues.m; sourceTree = "<group>"; };
 		392CFEB62705831700631D2B /* LAContext+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		392DDB1324CF024C009E5406 /* ImportFilesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
 		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
@@ -1631,6 +1637,7 @@
 				024F3A2124A3AB410083E11E /* CrashReporter in Frameworks */,
 				394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
+				DC8BFC0E2A14CAB900BFF393 /* PocketSVG in Frameworks */,
 				DCD8640628115FD600CA6631 /* OpenSSL in Frameworks */,
 				DC080CF1238C8D850044C5D2 /* StoreKit.framework in Frameworks */,
 				DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
@@ -1695,6 +1702,7 @@
 				DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */,
 				DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */,
 				DCC0857B2293F29F008CC05C /* ownCloudSDK.framework in Frameworks */,
+				DC6C9A132A12859900BFF393 /* PocketSVG in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2843,6 +2851,8 @@
 		DCB2C05C250C1ECD001083CA /* Branding */ = {
 			isa = PBXGroup;
 			children = (
+				3912D8AB29958BF400EDCB9A /* OCThemeValues.h */,
+				3912D8AC29958BF400EDCB9A /* OCThemeValues.m */,
 				DC24B27225B9DF31005783E2 /* Branding.m */,
 				DC24B27125B9DF31005783E2 /* Branding.h */,
 				DCB2C05E250C1F9E001083CA /* BrandingClassSettingsSource.m */,
@@ -3657,6 +3667,7 @@
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
+				3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
 				DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */,
@@ -3702,6 +3713,7 @@
 				024F3A2024A3AB410083E11E /* CrashReporter */,
 				DCEAF08C28084B3800980B6D /* Down */,
 				DCD8640528115FD600CA6631 /* OpenSSL */,
+				DC8BFC0D2A14CAB900BFF393 /* PocketSVG */,
 			);
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
@@ -3825,12 +3837,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				DC6C9A112A12858F00BFF393 /* PBXTargetDependency */,
 				DC774E6722F44F65000B11A1 /* PBXTargetDependency */,
 				DCC0857A2293F296008CC05C /* PBXTargetDependency */,
 			);
 			name = ownCloudApp;
 			packageProductDependencies = (
 				DCEAF06C280767CF00980B6D /* OpenSSL */,
+				DC6C9A122A12859900BFF393 /* PocketSVG */,
 			);
 			productName = ownCloudApp;
 			productReference = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */;
@@ -4725,6 +4739,7 @@
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DC3DDF06287E1C0800E5586D /* UIViewController+HostBundleID.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
+				3912D8AE29958BF400EDCB9A /* OCThemeValues.m in Sources */,
 				DCD71E8027427463001592C6 /* BuildOptions.m in Sources */,
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
 				DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */,
@@ -4879,6 +4894,10 @@
 			isa = PBXTargetDependency;
 			name = libzip;
 			targetProxy = DC63207C21FCA71B007EC0A8 /* PBXContainerItemProxy */;
+		};
+		DC6C9A112A12858F00BFF393 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = DC6C9A102A12858F00BFF393 /* PocketSVG */;
 		};
 		DC774E6722F44F65000B11A1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5933,6 +5952,21 @@
 			productName = PocketSVG;
 		};
 		DC04920A258CB06A00DEDC27 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
+		};
+		DC6C9A102A12858F00BFF393 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
+		};
+		DC6C9A122A12859900BFF393 /* PocketSVG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
+			productName = PocketSVG;
+		};
+		DC8BFC0D2A14CAB900BFF393 /* PocketSVG */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DC049197258CAF8200DEDC27 /* XCRemoteSwiftPackageReference "PocketSVG" */;
 			productName = PocketSVG;

@@ -26,6 +26,7 @@ extension OCClassSettingsKey {
 	public static let helpURL : OCClassSettingsKey = OCClassSettingsKey("url-help")
 	public static let privacyURL : OCClassSettingsKey = OCClassSettingsKey("url-privacy")
 	public static let termsOfUseURL : OCClassSettingsKey = OCClassSettingsKey("url-terms-of-use")
+	public static let themeJSONURL : OCClassSettingsKey = OCClassSettingsKey("url-theme-json")
 
 	// Email
 	public static let sendFeedbackAddress : OCClassSettingsKey = OCClassSettingsKey("send-feedback-address")
@@ -58,10 +59,8 @@ extension Branding : BrandingInitialization {
 			.helpURL 	  : "https://owncloud.com/docs-guides/",
 			.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 			.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
-
-				.sendFeedbackAddress : "ios-app@owncloud.com",
-
-				.canAddAccount : true,
+			.sendFeedbackAddress : "ios-app@owncloud.com",
+			.canAddAccount : true,
 			.canEditAccount : true,
 			.enableReviewPrompt : false
 		], metadata: [
@@ -73,139 +72,146 @@ extension Branding : BrandingInitialization {
 				.category	: "Branding"
 			],
 
-				.helpURL : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label		: "Help URL",
-					.description 	: "URL to get help for the app. Opened when selecting \"Help\" in the settings.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding"
-				],
+			.helpURL : [
+				.type 		: OCClassSettingsMetadataType.urlString,
+				.label		: "Help URL",
+				.description 	: "URL to get help for the app. Opened when selecting \"Help\" in the settings.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
+			],
 
-				.privacyURL : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label		: "Privacy URL",
-					.description 	: "URL to get privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding"
-				],
+			.privacyURL : [
+				.type 		: OCClassSettingsMetadataType.urlString,
+				.label		: "Privacy URL",
+				.description 	: "URL to get privacy information for the app. Opened when selecting \"Privacy\" in the settings.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
+			],
 
-				.termsOfUseURL : [
-					.type 		: OCClassSettingsMetadataType.urlString,
-					.label		: "Terms of use URL",
-					.description 	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Branding"
-				],
+			.termsOfUseURL : [
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "Terms of use URL",
+				.description	: "URL to terms of use for the app. Opened when selecting \"Terms Of Use\" in the settings.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
+			],
 
-				.sendFeedbackAddress : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Feedback Email address",
-					.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.themeJSONURL : [
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "URL of the theme.json",
+				.description	: "URL of the instance theme.json file, which can contain instance or app specific branding parameter. Setting this to `auto` will construct the URL by adding `themes/owncloud/theme.json` to the respective server's base address.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
+			],
 
-				.sendFeedbackURL : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Feedback URL",
-					.description	: "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.sendFeedbackAddress : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Feedback Email address",
+				.description	: "Email address to send feedback to. Set to `null` to disable this feature.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.canAddAccount : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.label		: "Allow adding accounts",
-					.description	: "Controls whether the user can add accounts.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.sendFeedbackURL : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Feedback URL",
+				.description	: "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.canEditAccount : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.label		: "Allow editing accounts",
-					.description	: "Controls whether the user can edit accounts.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.canAddAccount : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow adding accounts",
+				.description	: "Controls whether the user can add accounts.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.enableReviewPrompt : [
-					.type 		: OCClassSettingsMetadataType.boolean,
-					.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.canEditAccount : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow editing accounts",
+				.description	: "Controls whether the user can edit accounts.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.profileDefinitions : [
-					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.label		: "Profile definitions",
-					.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.enableReviewPrompt : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Controls whether the app should prompt for an App Store review. Only applies if the app is branded.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.themeGenericColors : [
-					.type 		: OCClassSettingsMetadataType.dictionary,
-					.description	: "Dictionary defining generic colors that can be used in the definitions.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.profileDefinitions : [
+				.type 		: OCClassSettingsMetadataType.dictionaryArray,
+				.label		: "Profile definitions",
+				.description	: "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.themeDefinitions : [
-					.type 		: OCClassSettingsMetadataType.dictionaryArray,
-					.description	: "Array of dictionaries, each specifying a theme.",
-					.category	: "Branding",
-					.status		: OCClassSettingsKeyStatus.advanced
-				],
+			.themeGenericColors : [
+				.type 		: OCClassSettingsMetadataType.dictionary,
+				.description	: "Dictionary defining generic colors that can be used in the definitions.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.profileBookmarkName : [
-					.type         : OCClassSettingsMetadataType.string,
-					.label        : "Bookmark Name",
-					.description    : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.themeDefinitions : [
+				.type 		: OCClassSettingsMetadataType.dictionaryArray,
+				.description	: "Array of dictionaries, each specifying a theme.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
 
-				.profileURL : [
-					.type         : OCClassSettingsMetadataType.urlString,
-					.label        : "URL",
-					.description     : "The URL of the server targeted by this profile.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.profileBookmarkName : [
+				.type         : OCClassSettingsMetadataType.string,
+				.label        : "Bookmark Name",
+				.description    : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
-				.profileHelpURL : [
-					.type         : OCClassSettingsMetadataType.urlString,
-					.label         : "Onboarding URL",
-					.description    : "Optional URL to onboarding resources.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.profileURL : [
+				.type         : OCClassSettingsMetadataType.urlString,
+				.label        : "URL",
+				.description     : "The URL of the server targeted by this profile.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
-				.profileOpenHelpMessage: [
-					.type         : OCClassSettingsMetadataType.string,
-					.label        : "Open onboarding URL message",
-					.description     : "Message shown in an alert before opening the onboarding URL.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.profileHelpURL : [
+				.type         : OCClassSettingsMetadataType.urlString,
+				.label         : "Onboarding URL",
+				.description    : "Optional URL to onboarding resources.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
-				.profileHelpButtonLabel : [
-					.type         : OCClassSettingsMetadataType.string,
-					.label        : "Onboarding button title",
-					.description     : "Text used for the onboarding button title",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				],
+			.profileOpenHelpMessage: [
+				.type         : OCClassSettingsMetadataType.string,
+				.label        : "Open onboarding URL message",
+				.description     : "Message shown in an alert before opening the onboarding URL.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
-				.profileAllowUrlConfiguration : [
-					.type         : OCClassSettingsMetadataType.boolean,
-					.label         : "Allow URL configuration",
-					.description    : "Indicates if the user can change the server URL for the account.",
-					.status        : OCClassSettingsKeyStatus.advanced,
-					.category    : "Branding"
-				]
+			.profileHelpButtonLabel : [
+				.type         : OCClassSettingsMetadataType.string,
+				.label        : "Onboarding button title",
+				.description     : "Text used for the onboarding button title",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
 
+			.profileAllowUrlConfiguration : [
+				.type         : OCClassSettingsMetadataType.boolean,
+				.label         : "Allow URL configuration",
+				.description    : "Indicates if the user can change the server URL for the account.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			]
 		])
 	}
 
@@ -242,6 +248,7 @@ extension BrandingImageName {
 
 extension Branding {
 	public var isBranded: Bool {
+		return true
 		return (organizationName != nil) // Organization name must be set
 	}
 
@@ -259,6 +266,20 @@ extension Branding {
 
 	public var termsOfUseURL : URL? {
 		return url(forClassSettingsKey: .termsOfUseURL)
+	}
+
+	public var themeJSONURL : URL? {
+		let themeJSONURL = url(forClassSettingsKey: .themeJSONURL)
+
+		if themeJSONURL?.absoluteString == "auto" {
+			return nil
+		}
+
+		return themeJSONURL
+	}
+
+	public var useThemeJSON: Bool {
+		return ((computedValue(forClassSettingsKey: .themeJSONURL) as? URL)?.absoluteString == "auto") || (themeJSONURL != nil)
 	}
 
 	public var feedbackEmailAddress : String? {
