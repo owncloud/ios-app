@@ -677,11 +677,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 		property: .fill, value: iconSymbolColor),
 			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
 
-            // Welcome screen
-            ThemeCSSRecord(selectors: [.welcome, .message, .background],    property: .fill,   value: lightBrandColor),
-            ThemeCSSRecord(selectors: [.welcome, .message, .title],     property: .stroke, value: darkBrandSet.labelColor),
-            ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
-            ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .fill,   value: darkBrandColor),
+			// Welcome screen
+			ThemeCSSRecord(selectors: [.welcome, .message, .background],    property: .fill,   value: lightBrandColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .title],     property: .stroke, value: darkBrandSet.labelColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .fill,   value: darkBrandColor),
 
 			// Side Bar
 			// - Interface Style

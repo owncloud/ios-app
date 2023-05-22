@@ -200,7 +200,9 @@ public class PasscodeViewController: UIViewController, Themeable {
 				if button != deleteButton {
 					button.cssSelector = .digit
 				}
-				button.titleLabel?.font = keypadFont
+
+				button.buttonFont = keypadFont
+
 				PointerEffect.install(on: button, effectStyle: .highlight)
 			}
 
