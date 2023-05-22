@@ -160,7 +160,9 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	// MARK: - View Controller
 	override open func viewDidLoad() {
 		super.viewDidLoad()
+
 		extendedLayoutIncludesOpaqueBars = true
+		Theme.shared.register(client: self)
 	}
 
 	public var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
@@ -178,16 +180,10 @@ open class StaticTableViewController: UITableViewController, Themeable {
 		}
 	}
 
-	private var _themeRegistered = false
 	override open func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
 		hasBeenPresentedAtLeastOnce = true
 
-		if !_themeRegistered {
-			_themeRegistered = true
-			Theme.shared.register(client: self)
-		}
+		super.viewWillAppear(animated)
 	}
 
 	deinit {
@@ -265,48 +261,27 @@ open class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Theme support
-	func applyColor(headerFooterView view: UIView, color: UIColor) {
-		if let label = view as? UILabel {
-			label.textColor = color
-		} else if let headerView = view as? UITableViewHeaderFooterView {
-			headerView.textLabel?.textColor = color
-		}
-	}
-
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
-
-		var headerTextColor: UIColor?
-		var footerTextColor: UIColor?
-
-		for sectionIdx in 0..<sections.count {
-			if let headerView = tableView.headerView(forSection: sectionIdx) {
-				if headerTextColor == nil {
-					headerTextColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView)
-				}
-				if let headerTextColor {
-					applyColor(headerFooterView: headerView, color: headerTextColor)
-				}
-			}
-
-			if let footerView = tableView.footerView(forSection: sectionIdx) {
-				if footerTextColor == nil {
-					footerTextColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView)
-				}
-				if let footerTextColor {
-					applyColor(headerFooterView: footerView, color: footerTextColor)
-				}
-			}
-		}
 	}
 
 	public override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		guard let sectionColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionHeader], for: tableView) else { return }
-		applyColor(headerFooterView: view, color: sectionColor)
+		guard let sectionColor = Theme.shared.activeCollection.tableSectionHeaderColor else { return }
+
+		if let label = view as? UILabel {
+			label.textColor = sectionColor
+		} else if let headerView = view as? UITableViewHeaderFooterView {
+			headerView.textLabel?.textColor = sectionColor
+		}
 	}
 
 	public override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-		guard let sectionColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.sectionFooter], for: tableView) else { return }
-		applyColor(headerFooterView: view, color: sectionColor)
+		guard let sectionColor = Theme.shared.activeCollection.tableSectionFooterColor else { return }
+
+		if let label = view as? UILabel {
+			label.textColor = sectionColor
+		} else if let headerView = view as? UITableViewHeaderFooterView {
+			headerView.textLabel?.textColor = sectionColor
+		}
 	}
 }

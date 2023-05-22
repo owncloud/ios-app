@@ -55,6 +55,7 @@ class TextViewController: UIViewController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		textView?.apply(css: collection.css, properties: [.stroke, .fill])
+		textView?.textColor = collection.tableRowColors.labelColor
+		textView?.backgroundColor = collection.tableBackgroundColor
 	}
 }

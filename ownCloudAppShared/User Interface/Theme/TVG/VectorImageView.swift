@@ -28,11 +28,6 @@ public class VectorImageView: UIView, Themeable {
 
 		set(newVectorImage) {
 			_vectorImage = newVectorImage
-			if let imageName = _vectorImage?.imageName {
-				self.cssSelectors = [ .vectorImage, ThemeCSSSelector(rawValue: "\(imageName)VectorImage") ]
-			} else {
-				self.cssSelectors = [ .vectorImage ]
-			}
 			self.updateLayerWithRasteredImage()
 		}
 	}
@@ -85,8 +80,4 @@ public class VectorImageView: UIView, Themeable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		updateLayerWithRasteredImage(viewBounds: self.bounds, themeCollection: collection)
 	}
-}
-
-extension ThemeCSSSelector {
-	static let vectorImage = ThemeCSSSelector(rawValue: "vectorImage")
 }

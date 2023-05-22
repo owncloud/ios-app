@@ -20,6 +20,17 @@ import Foundation
 import ownCloudSDK
 import ownCloudApp
 
+@available(iOS 13.0, *)
+extension UIUserInterfaceStyle {
+	func themeCollectionStyles() -> [ThemeCollectionStyle] {
+		if self == .dark {
+			return [.dark]
+		}
+
+		return [.light, .contrast]
+	}
+}
+
 extension ThemeStyle {
 	public func themeStyleExtension(isDefault: Bool = false, isBranding: Bool = false) -> OCExtension {
 		let features : [String:Any] = [
@@ -105,7 +116,7 @@ extension ThemeStyle {
 					applyStyle = style
 				}
 			} else {
-				if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.light])?.first {
+				if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.contrast])?.first {
 					ThemeStyle.preferredStyle = style
 					applyStyle = style
 				}
@@ -117,7 +128,7 @@ extension ThemeStyle {
 
 			if let themeWindowSubviews = rootView?.subviews {
 				for view in themeWindowSubviews {
-					view.overrideUserInterfaceStyle = themeCollection.css.getUserInterfaceStyle()
+					view.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
 				}
 			}
 
@@ -185,8 +196,9 @@ extension ThemeStyle {
 
 	static public func registerDefaultStyles() {
 		if !Branding.shared.setupThemeStyles() {
-			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension(isDefault: true))
-			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
 		}
 	}
 

@@ -138,7 +138,7 @@ open class FrameViewController: UIViewController, CardPresentationSizing {
 
 extension FrameViewController: Themeable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.headerView.backgroundColor = collection.css.getColor(.fill, for: self.headerView)
-		self.view.backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: self.view)
+		self.headerView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }

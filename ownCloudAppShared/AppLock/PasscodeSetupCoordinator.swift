@@ -162,7 +162,7 @@ public class PasscodeSetupCoordinator {
 					AppLockManager.shared.showLockscreenIfNeeded(setupMode: true)
 				}
 			} else {
-				let alertController = ThemedAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
+				let alertController = UIAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { _ in
 					PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true

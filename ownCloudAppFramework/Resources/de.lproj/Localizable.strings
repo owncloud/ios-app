@@ -8,8 +8,6 @@
 
 "App Store" = "App Store";
 "Purchases are not allowed on this device." = "Käufe sind auf diesem Gerät nicht erlaubt.";
-"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version." = "In-App Käufe werden von Kopien die über das Volume Purchase Program bestellt wurden nicht unterstützt. Kaufen Sie bitte die EMM-Version um Zugriff auf zusätzliche Features zu erhalten.";
-
 "Purchased App Version" = "Gekaufte App-Version";
 "Receipt Date" = "Rechnungsdatum";
 "Manage subscription" = "Abonnement verwalten";
@@ -56,11 +54,6 @@
 "keyword_folder" = "ordner";
 "keyword_image" = "bild";
 "keyword_video" = "video";
-"keyword_audio" = "audio";
-"keyword_document" = "dokument";
-"keyword_spreadsheet" = "tabelle";
-"keyword_presentation" = "präsentation";
-"keyword_pdf" = "pdf";
 "keyword_today" = "heute";
 "keyword_week" = "woche";
 "keyword_month" = "monat";
@@ -69,66 +62,3 @@
 "keyword_w" = "w"; /* short-form for "week" */
 "keyword_m" = "m"; /* short-form for "month" */
 "keyword_y" = "j"; /* short-form for "year" */
-
-/* Search token labels */
-"No folder" = "Kein Ordner";
-"Folder" = "Ordner";
-
-"No file" = "Keine Datei";
-"File" = "Datei";
-
-"No image" = "Kein Bild";
-"Image" = "Bild";
-
-"No video" = "Kein Video";
-"Video" = "Video";
-
-"No audio" = "Kein Audio";
-"Audio" = "Audio";
-
-"Document" = "Dokument";
-"No Document" = "Kein Dokument";
-
-"Spreadsheet" = "Tabelle";
-"No spreadsheet" = "Keine Tabelle";
-
-"Presentation" = "Präsentation";
-"No presentation" = "Keine Präsentation";
-
-"PDF" = "PDF";
-"No PDF" = "Kein PDF";
-
-"Before" = "Vor";
-"After" = "nach";
-
-"Not on" = "Nicht am";
-"On" = "Am";
-"Not" = "Nicht";
-
-"Before today" = "Vor heute";
-"Before yesterday" = "Vor gestern";
-">%d days ago" = "Vor >%d Tagen";
-"Today" = "Heute";
-"Since yesterday" = "Seit gestern";
-"Last %d days" = "Letzte %d Tage";
-
-"Before this week" = "Vor dieser Woche";
-"Before last week" = "Vor letzter Woche";
-">%d weeks ago" = "Vor >%d Wochen";
-"This week" = "Diese Woche";
-"Since last week" = "Seit letzter WOche";
-"Last %d weeks" = "Letzte %d Wochen";
-
-"Before this month" = "Vor diesem Monat";
-"Before last month" = "Vor letztem Monat";
-"> %d months ago" = "Vor > %d Monaten";
-"This month" = "Diesen Monat";
-"Since last month" = "Seit letztem Monat";
-"Last %d months" = "Letzte %d Monate";
-
-"Before this year" = "Vor diesem Jahr";
-"Before last year" = "Vor letztem Jahr";
-"> %d years ago" = "Vor > %d Jahren";
-"This year" = "Dieses Jahr";
-"Since last year" = "Seit letztem Jahr";
-"Last %d years" = "Letzte %d Jahre";

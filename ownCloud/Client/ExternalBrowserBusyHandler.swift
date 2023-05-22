@@ -41,14 +41,14 @@ class ExternalBrowserBusyHandler: UIViewController, Themeable {
 		}
 	}
 
-	var infoLabel = ThemeCSSLabel(withSelectors: [.secondary])
+	var infoLabel = UILabel()
 	var cancelButton = ThemeButton(type: .custom)
 
 	var cancelHandler : (() -> Void)?
 
 	override func loadView() {
 		let backgroundView = UIView()
-		let activityIndicator = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
+		let activityIndicator = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 		activityIndicator.startAnimating()
 
@@ -87,17 +87,13 @@ class ExternalBrowserBusyHandler: UIViewController, Themeable {
 		view = backgroundView
 	}
 
-	private var themeRegistered = false
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		if !themeRegistered {
-			themeRegistered = true
-			Theme.shared.register(client: self)
-		}
+	override func viewDidLoad() {
+		Theme.shared.register(client: self)
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		view.backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: view)
+		view.backgroundColor = collection.tableBackgroundColor
+		infoLabel.textColor = collection.tableRowColors.secondaryLabelColor
 	}
 
 	@objc func cancel() {

@@ -37,15 +37,12 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/NSDate+ComputedTimes.h>
 #import <ownCloudApp/ZIPArchive.h>
 
-#import <ownCloudApp/UIViewController+HostBundleID.h>
-
 #import <ownCloudApp/OCBookmark+FPServices.h>
 #import <ownCloudApp/OCVault+FPServices.h>
 #import <ownCloudApp/OCCore+FPServices.h>
 #import <ownCloudApp/OCFileProviderService.h>
 #import <ownCloudApp/OCFileProviderServiceSession.h>
 #import <ownCloudApp/OCFileProviderServiceStandby.h>
-#import <ownCloudApp/OCFileProviderSettings.h>
 
 #import <ownCloudApp/OCLicenseTypes.h>
 #import <ownCloudApp/OCLicenseManager.h>
@@ -68,8 +65,6 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCLicenseEnterpriseProvider.h>
 
 #import <ownCloudApp/OCLicenseEMMProvider.h>
-
-#import <ownCloudApp/OCLicenseQAProvider.h>
 
 #import <ownCloudApp/OCLicenseEnvironment.h>
 #import <ownCloudApp/OCCore+LicenseEnvironment.h>

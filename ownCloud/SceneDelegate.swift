@@ -19,46 +19,47 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-	// MARK: - Window
+
 	var window: ThemeWindow?
-	weak var scene: UIScene?
 
-	// MARK: - Scene Context
-	lazy var sceneClientContext: ClientContext = {
-		return ClientContext(scene: scene)
-	}()
-
-	// MARK: - AppRootViewController
-	lazy var appRootViewController: AppRootViewController = {
-		return self.buildAppRootViewController()
-	}()
-
-	func buildAppRootViewController() -> AppRootViewController {
-		return AppRootViewController(with: sceneClientContext)
-	}
-
-	// MARK: - UIWindowSceneDelegate
-	// MARK: Sessions
+	// UIWindowScene delegate
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-		self.scene = scene
-
 		// Set up HTTP pipelines
 		OCHTTPPipelineManager.setupPersistentPipelines()
 
-		// Window and AppRootViewController creation
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
+			var navigationController: UINavigationController?
 
-			window?.rootViewController = appRootViewController
-			window?.addSubview(appRootViewController.view)
+			if VendorServices.shared.isBranded {
+				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
+				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
+				navigationController?.setNavigationBarHidden(true, animated: false)
+			} else {
+				var serverListTableViewController : ServerListTableViewController?
+				if OCBookmarkManager.shared.bookmarks.count == 1 {
+					serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
+				} else {
+					serverListTableViewController = ServerListTableViewController(style: .plain)
+				}
+
+				guard let serverListTableViewController = serverListTableViewController else { return }
+
+				serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
+
+				navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
+			}
+			window?.rootViewController = navigationController
+			window?.addSubview((navigationController!.view)!)
 			window?.makeKeyAndVisible()
 		}
 
 		// Was the app launched with registered URL scheme?
 		if let urlContext = connectionOptions.urlContexts.first {
 			if urlContext.url.matchesAppScheme {
-			   	openAppSchemeLink(url: urlContext.url)
+				openPrivateLink(url: urlContext.url, in: scene)
 			} else {
 				ImportFilesController.shared.importFile(ImportFile(url: urlContext.url, fileIsLocalCopy: urlContext.options.openInPlace))
 			}
@@ -70,10 +71,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			} else {
 				configure(window: window, with: userActivity)
 			}
+		} else if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false, let bookmark = OCBookmarkManager.shared.bookmarks.first {
+			connect(to: bookmark)
 		}
 	}
 
-	// MARK: Screen foreground/background events
 	private func set(scene: UIScene, inForeground: Bool) {
 		if let windowScene = scene as? UIWindowScene {
 			for window in windowScene.windows {
@@ -92,34 +94,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		self.set(scene: scene, inForeground: false)
 	}
 
-	// MARK: - State restoration
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
-		var actions: [AppStateAction] = []
-
-		let navigationBookmark = appRootViewController.contentBrowserController.history.currentItem?.navigationBookmark
-
-		for activeConnection in AccountConnectionPool.shared.activeConnections {
-			let connectAction: AppStateAction = .connection(with: activeConnection.bookmark)
-
-			if let navigationBookmark, activeConnection.bookmark.uuid == navigationBookmark.bookmarkUUID {
-				connectAction.children = [
-					.navigate(to: navigationBookmark)
-				]
-			}
-
-			actions.append(connectAction)
-		}
-
-		return AppStateAction(with: actions).userActivity(with: sceneClientContext)
+		return scene.userActivity
 	}
 
 	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
-		if activity.isRestorableActivity {
-			OnMainThread(after: 0.5) {
-				activity.restore(with: [
-					UserActivityOption.clientContext.rawValue : self.sceneClientContext
-				])
+		if let bookmarkUUIDString = activity.userInfo?[OCBookmark.ownCloudOpenAccountAccountUuidKey] as? String,
+		   let bookmarkUUID = UUID(uuidString: bookmarkUUIDString),
+		   let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+			if activity.title == OCBookmark.ownCloudOpenAccountPath {
+				connect(to: bookmark)
+
+				return true
+			} else if activity.title == OpenItemUserActivity.ownCloudOpenItemPath {
+				guard let itemLocalID = activity.userInfo?[OpenItemUserActivity.ownCloudOpenItemUuidKey] as? String else {
+					return false
+				}
+
+				// At first connect to the bookmark for the item
+				connect(to: bookmark, lastVisibleItemId: itemLocalID, activity: activity)
+
+				return true
 			}
+		} else if activity.activityType == ServerListTableViewController.showServerListActivityType {
+			// Show server list
+			window?.windowScene?.userActivity = activity
 
 			return true
 		}
@@ -127,13 +126,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		return false
 	}
 
-	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-		self.scene = scene
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String? = nil, activity: NSUserActivity? = nil) {
+		if let navigationController = window?.rootViewController as? ThemeNavigationController,
+		   let serverListController = navigationController.topViewController as? StateRestorationConnectProtocol {
+			serverListController.connect(to: bookmark, lastVisibleItemId: lastVisibleItemId, animated: false, present: nil)
+			window?.windowScene?.userActivity = activity ?? bookmark.openAccountUserActivity
+		}
+	}
 
+	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
 		if let firstURL = URLContexts.first?.url { // Ensure the set isn't empty
 			if !OCAuthenticationBrowserSessionCustomScheme.handleOpen(firstURL), // No custom scheme URL handling for this URL
 			   firstURL.matchesAppScheme {  // + URL matches app scheme
-			   	openAppSchemeLink(url: firstURL)
+				openPrivateLink(url: firstURL, in: scene)
 			} else {
 				if firstURL.isFileURL, // Ensure the URL is a file URL
 				   ImportFilesController.shared.importAllowed(alertUserOtherwise: true) { // Ensure import is allowed
@@ -146,35 +151,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-		self.scene = scene
-
 		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
 			let url = userActivity.webpageURL else {
 				return
 		}
 
-	   	openAppSchemeLink(url: url)
+		guard let windowScene = scene as? UIWindowScene else { return }
+
+		guard let window =  windowScene.windows.first else { return }
+
+		url.resolveAndPresent(in: window)
 	}
 
-	private func openAppSchemeLink(url: URL) {
-		if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.openAppSchemeLink(url: url, clientContext: sceneClientContext)
-		}
-	}
-}
+	private func openPrivateLink(url:URL, in scene:UIScene?) {
+		if url.privateLinkItemID() != nil {
 
-extension ClientContext: ClientContextProvider {
-	public func provideClientContext(for bookmarkUUID: UUID, completion: (Error?, ownCloudAppShared.ClientContext?) -> Void) {
-		if let sceneDelegate = scene?.delegate as? SceneDelegate,
-		   let sections = sceneDelegate.appRootViewController.sidebarViewController?.allSections {
-			for section in sections {
-				if let accountControllerSection = section as? AccountControllerSection, accountControllerSection.clientContext?.accountConnection?.bookmark.uuid == bookmarkUUID {
-					completion(nil, section.clientContext)
-					return
-				}
-			}
-		}
+			guard let windowScene = scene as? UIWindowScene else { return }
 
-		completion(nil, nil)
+			guard let window =  windowScene.windows.first else { return }
+
+			url.resolveAndPresent(in: window)
+		}
 	}
 }

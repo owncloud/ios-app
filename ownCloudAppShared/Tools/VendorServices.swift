@@ -226,9 +226,3 @@ extension VendorServices : OCClassSettingsSupport {
 		]
 	}
 }
-
-extension VendorServices: OCLicenseQAProviderDelegate {
-	public var isQALicenseUnlockPossible: Bool {
-		return isBetaBuild
-	}
-}

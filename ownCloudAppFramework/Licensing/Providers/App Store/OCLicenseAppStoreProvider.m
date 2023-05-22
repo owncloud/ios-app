@@ -53,11 +53,6 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 @implementation OCLicenseAppStoreProvider
 
-+ (NSURL *)appStoreManagementURL
-{
-	return ([NSURL URLWithString:@"https://apps.apple.com/account/subscriptions"]);
-}
-
 #pragma mark - Init
 - (instancetype)initWithItems:(NSArray<OCLicenseAppStoreItem *> *)items
 {
@@ -192,7 +187,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 									     cancellationDate:iap.cancellationDate];
 			if ((transaction.type == OCLicenseTypeSubscription) && (iap.subscriptionExpirationDate.timeIntervalSinceNow > 0) && ((iap.cancellationDate==nil) || (iap.cancellationDate.timeIntervalSinceNow > 0)))
 			{
-				transaction.links = @{ OCLocalized(@"Manage subscription") : OCLicenseAppStoreProvider.appStoreManagementURL };
+				transaction.links = @{ OCLocalized(@"Manage subscription") : [NSURL URLWithString:@"https://apps.apple.com/account/subscriptions"] };
 			}
 
 			[transactions addObject:transaction];

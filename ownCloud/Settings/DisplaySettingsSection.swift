@@ -50,13 +50,5 @@ class DisplaySettingsSection: SettingsSection {
 				DiagnosticManager.shared.enabled = diagnosticsEnabled
 			}
 		}, title: "Enable diagnostics".localized, value: DiagnosticManager.shared.enabled, identifier: "diagnostics-enabled"))
-
-		if OCLicenseQAProvider.isQAUnlockPossible {
-			self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
-				if let qaUnlockedProFeatures = row.value as? Bool {
-					OCLicenseQAProvider.isQAUnlockEnabled = qaUnlockedProFeatures
-				}
-			}, title: "Enable Pro Features (QA)".localized, value: OCLicenseQAProvider.isQAUnlockEnabled, identifier: "enable-pro-features"))
-		}
 	}
 }

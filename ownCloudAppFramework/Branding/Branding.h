@@ -44,8 +44,6 @@ typedef NSString* BrandingImageName NS_TYPED_EXTENSIBLE_ENUM;
 
 @property(strong,nullable,nonatomic,readonly) NSBundle *appBundle; //!< Bundle of the main app
 
-- (NSArray<NSString *> *)appURLSchemesForBundleURLName:(nullable NSString *)bundleURLName; //!< URL schemes from the app's Info.plist matching the provided CFBundleURLName.
-
 @property(strong) NSDictionary<OCClassSettingsKey, BrandingLegacyKeyPath> *legacyKeyPathsByClassSettingsKeys;
 - (void)registerLegacyKeyPath:(BrandingLegacyKeyPath)keyPath forClassSettingsKey:(OCClassSettingsKey)classSettingsKey;
 

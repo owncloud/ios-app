@@ -358,7 +358,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	}
 
 	@IBAction override func settings() {
-		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: SettingsViewController())
+		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()

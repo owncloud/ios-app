@@ -21,13 +21,12 @@
 import UIKit
 import ownCloudApp
 import ownCloudAppShared
-import StoreKit
 
 class LicenseTransactionsViewController: StaticTableViewController {
 	init() {
 		super.init(style: .grouped)
 
-		self.navigationItem.title = "Purchases & Subscriptions".localized
+		self.navigationItem.title = "Purchases".localized
 
 		self.toolbarItems = [
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
@@ -41,7 +40,7 @@ class LicenseTransactionsViewController: StaticTableViewController {
 	func fetchTransactions() {
 		OCLicenseManager.shared.retrieveAllTransactions(completionHandler: { (error, transactionsByProvider) in
 			if let error = error {
-				let alert = ThemedAlertController(title: "Error fetching transactions".localized, message: error.localizedDescription, preferredStyle: .alert)
+				let alert = UIAlertController(title: "Error fetching transactions".localized, message: error.localizedDescription, preferredStyle: .alert)
 
 				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
@@ -91,23 +90,7 @@ class LicenseTransactionsViewController: StaticTableViewController {
 
 					if let links = transaction.links {
 						for (title, url) in links {
-							section.add(row: StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-								#if !targetEnvironment(macCatalyst)
-								if url == OCLicenseAppStoreProvider.appStoreManagementURL, let windowScene = self?.view.window?.windowScene, !ProcessInfo.processInfo.isiOSAppOnMac {
-									Task {
-										do {
-											try await AppStore.showManageSubscriptions(in: windowScene)
-										} catch {
-											Log.error("Error \(error) showing subscription manager")
-
-											// Fallback to URL
-											UIApplication.shared.open(url, options: [:], completionHandler: nil)
-										}
-									}
-									return
-								}
-								#endif
-
+							section.add(row: StaticTableViewRow(rowWithAction: { (_, _) in
 								UIApplication.shared.open(url, options: [:], completionHandler: nil)
 							}, title: title, alignment: .center))
 						}

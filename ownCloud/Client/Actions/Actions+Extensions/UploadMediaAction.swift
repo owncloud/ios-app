@@ -155,7 +155,7 @@ class UploadMediaAction: UploadBaseAction {
 			if granted {
 				self.presentImageGalleryPicker()
 			} else {
-				let alert = ThemedAlertController.alertControllerForPhotoLibraryAuthorizationInSettings()
+				let alert = UIAlertController.alertControllerForPhotoLibraryAuthorizationInSettings()
 				viewController.present(alert, animated: true)
 				self.completed()
 			}

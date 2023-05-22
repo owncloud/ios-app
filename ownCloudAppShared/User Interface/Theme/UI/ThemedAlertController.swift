@@ -24,7 +24,8 @@ public class ThemedAlertController: UIAlertController, Themeable {
 	override open func viewDidLoad() {
 		super.viewDidLoad()
 
-		applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
+		self.overrideUserInterfaceStyle  = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+		view.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {
@@ -33,10 +34,8 @@ public class ThemedAlertController: UIAlertController, Themeable {
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let css = Theme.shared.activeCollection.css
-
-		self.overrideUserInterfaceStyle = css.getUserInterfaceStyle(for: self)
-		view.tintColor = css.getColor(.stroke, for: self)
+		self.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+		view.tintColor = collection.tableRowColors.labelColor
 	}
 
 	deinit {

@@ -34,8 +34,8 @@ class PresentationModeAction: Action {
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
 		if context.items.first?.cloudStatus == .cloudOnly {
 			return .none
-//		} else if let hostViewController = context.viewController, type(of: hostViewController) === ClientQueryViewController.self {
-//			return .none
+		} else if let hostViewController = context.viewController, type(of: hostViewController) === ClientQueryViewController.self {
+			return .none
 		} else if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
 			return .none
 		}
@@ -51,7 +51,7 @@ class PresentationModeAction: Action {
 		}
 
 		if !DisplaySleepPreventer.shared.isPreventing(for: PresentationModeAction.reason) {
-			let alertController = ThemedAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
+			let alertController = UIAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { (_) in
 				DisplaySleepPreventer.shared.startPreventingDisplaySleep(for: PresentationModeAction.reason)

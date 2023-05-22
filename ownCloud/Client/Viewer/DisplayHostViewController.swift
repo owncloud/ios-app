@@ -20,11 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class DisplayExtensionContext: OCExtensionContext {
-	public var clientContext: ClientContext?
-}
-
 class DisplayHostViewController: UIPageViewController {
+
 	enum PagePosition {
 		case before, after
 	}
@@ -33,7 +30,7 @@ class DisplayHostViewController: UIPageViewController {
 	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
-	public var clientContext : ClientContext?
+	weak var core: OCCore?
 
 	private var initialItem: OCItem
 
@@ -48,80 +45,67 @@ class DisplayHostViewController: UIPageViewController {
 
 	private var playableItems: [OCItem]?
 
-	private var parentFolderQuery: OCQuery?
-
-	private var queryDatasource: OCDataSource?
-	private var queryDatasourceSubscription: OCDataSourceSubscription?
+	private var query: OCQuery
+	private var queryStarted : Bool = false
+	private var queryObservation : NSKeyValueObservation?
 
 	var progressSummarizer : ProgressSummarizer?
 
+	public var clientContext : ClientContext?
+
 	// MARK: - Init & deinit
-	init(clientContext inClientContext: ClientContext? = nil, core: OCCore? = nil, selectedItem: OCItem, queryDataSource inQueryDataSource: OCDataSource? = nil) {
-		var clientContext = inClientContext
-
-		initialItem = selectedItem
-		queryDatasource = inQueryDataSource ?? clientContext?.queryDatasource
-
-		if queryDatasource == nil, let parentLocation = selectedItem.location?.parent, let core = clientContext?.core {
-			// If no data source was given, create one for the parent location
-			let query = OCQuery(for: parentLocation)
-			core.start(query)
-
-			parentFolderQuery = query
-			queryDatasource = parentFolderQuery?.queryResultsDataSource
-
-			clientContext = ClientContext(with: inClientContext)
-			clientContext?.queryDatasource = queryDatasource
-		}
+	init(clientContext: ClientContext? = nil, core: OCCore, selectedItem: OCItem, query: OCQuery) {
+		self.core = core
+		self.initialItem = selectedItem
+		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
-		self.clientContext = ClientContext(with: clientContext, originatingViewController: self)
+		self.clientContext = clientContext
 
-		if let queryDatasource {
-			queryDatasourceSubscription = queryDatasource.subscribe(updateHandler: { [weak self]  subscription in
-				guard let self = self, let queryDataSource = self.queryDatasource else {
-					return
-				}
+		if query.state == .stopped {
+			self.core?.start(query)
+			queryStarted = true
+		}
 
-				let snapshot = subscription.snapshotResettingChangeTracking(true)
-				var allItems : [OCItem] = []
+		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
+			//guard self?.items == nil else { return }
 
-				for itemRef in snapshot.items {
-					if let itemRecord = try? queryDataSource.record(forItemRef: itemRef) {
-						if let item = itemRecord.item as? OCItem {
-							allItems.append(item)
-						}
+			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
+				guard let changeSet = changeSet  else { return }
+				if let queryResult = changeSet.queryResult, let newItems = self?.applyMediaFilesFilter(items: queryResult) {
+					let shallUpdateDatasource = self?.items?.count != newItems.count ? true : false
+
+					self?.items = newItems
+
+					if shallUpdateDatasource {
+						self?.updateDatasource()
 					}
 				}
-
-				self.items = self.applyMediaFilesFilter(items: allItems)
-
-				self.updatePageViewControllerDatasource()
-			}, on: .main, trackDifferences: true, performInitialUpdate: true)
+			}
 		}
+
+		Theme.shared.register(client: self)
 	}
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	private func windDown() {
+	deinit {
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 
-		queryDatasourceSubscription?.terminate()
+		queryObservation?.invalidate()
+		queryObservation = nil
 
-		if let parentFolderQuery {
-			clientContext?.core?.stop(parentFolderQuery)
+		if queryStarted {
+			core?.stop(query)
+			queryStarted = false
 		}
 
 		Theme.shared.unregister(client: self)
-	}
-
-	deinit {
-		windDown()
 	}
 
 	// MARK: - ViewController lifecycle
@@ -150,14 +134,8 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 	}
 
-	private var registered = false
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-
-		if !registered {
-			registered = true
-			Theme.shared.register(client: self)
-		}
 
 		self.autoEnablePageScrolling()
 	}
@@ -202,7 +180,7 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Helper methods
-	private func updatePageViewControllerDatasource() {
+	private func updateDatasource() {
 		OnMainThread { [weak self] in
 			self?.dataSource = nil
 			if let itemCount = self?.items?.count {
@@ -274,8 +252,7 @@ class DisplayHostViewController: UIPageViewController {
 	private func createDisplayViewController(for mimeType: String) -> (DisplayViewController) {
 		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
 		let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
-		let context = DisplayExtensionContext(location: location, requirements: nil, preferences: nil)
-		context.clientContext = clientContext
+		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
 
 		var extensions: [OCExtensionMatch]?
 
@@ -309,7 +286,7 @@ class DisplayHostViewController: UIPageViewController {
 		let newViewController = createDisplayViewController(for: mimeType)
 
 		newViewController.progressSummarizer = progressSummarizer
-		newViewController.core = clientContext?.core
+		newViewController.core = core
 		newViewController.itemIndex = index
 
 		newViewController.item = item
@@ -378,7 +355,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 
 extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		view.backgroundColor = collection.css.getColor(.fill, for: self.view)
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
 

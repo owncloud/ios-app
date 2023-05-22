@@ -75,13 +75,11 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
-	#ifndef DISABLE_PLAIN_HTTP
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	#endif
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This permission is needed for uploading media files to your server.</string>
 	<key>NSCameraUsageDescription</key>
@@ -113,7 +111,8 @@
 		<string>GetFileIntent</string>
 		<string>PathExistsIntent</string>
 		<string>SaveFileIntent</string>
-		<string>com.owncloud.captureRestoreActivityType</string>
+		<string>com.owncloud.ios-app.openAccount</string>
+		<string>com.owncloud.ios-app.openItem</string>
 	</array>
 	<key>OCAppComponentIdentifier</key>
 	<string>app</string>

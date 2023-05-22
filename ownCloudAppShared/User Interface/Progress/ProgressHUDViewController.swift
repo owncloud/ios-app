@@ -120,7 +120,7 @@ open class ProgressHUDViewController: UIViewController {
 	}
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
-		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
+		return Theme.shared.activeCollection.statusBarStyle
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {

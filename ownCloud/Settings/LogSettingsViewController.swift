@@ -84,7 +84,7 @@ class LogSettingsViewController: StaticTableViewController {
 				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 					let logFilesViewController = LogFilesViewController(style: .plain)
 					self?.navigationController?.pushViewController(logFilesViewController, animated: true)
-				}, title: "Browse".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+					}, title: "Browse".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logBrowseSection?.add(row: logsRow)
 				logBrowseSection?.footerTitle = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
 
@@ -92,7 +92,7 @@ class LogSettingsViewController: StaticTableViewController {
 			}
 
 			// Privacy
-			// Reactivate the below code when the code base is reviewed in terms of correct masking of private data
+			// TODO: Reactivate the below code when the code base is reviewed in terms of correct masking of private data
 			#if false
 			if logPrivacySection == nil {
 				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)

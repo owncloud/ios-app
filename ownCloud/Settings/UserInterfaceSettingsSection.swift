@@ -57,7 +57,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 	}
 
 	func pushThemeStyleSelector() {
-		let styleSelectorViewController = StaticTableViewController(style: .insetGrouped)
+		let styleSelectorViewController = StaticTableViewController(style: .grouped)
 		styleSelectorViewController.navigationItem.title = "Theme".localized
 
 		if let styleSelectorSection = styleSelectorViewController.sectionForIdentifier("theme-style-selection") {
@@ -97,6 +97,6 @@ class UserInterfaceSettingsSection: SettingsSection {
 	}
 
 	func pushLogSettings() {
-		self.viewController?.navigationController?.pushViewController(LogSettingsViewController(style: .insetGrouped), animated: true)
+		self.viewController?.navigationController?.pushViewController(LogSettingsViewController(style: .grouped), animated: true)
 	}
 }

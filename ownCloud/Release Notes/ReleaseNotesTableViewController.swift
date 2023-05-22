@@ -29,7 +29,7 @@ class ReleaseNotesTableViewController: StaticTableViewController {
     }
 
 	func prepareReleaseNotes() {
-		if let relevantReleaseNotes = ReleaseNotesDatasource.releaseNotes(for: VendorServices.shared.appVersion), ReleaseNotesDatasource.releaseNotes(for: VendorServices.shared.appVersion) != nil {
+		if let relevantReleaseNotes = ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion), ReleaseNotesDatasource().releaseNotes(for: VendorServices.shared.appVersion) != nil {
 			let section = StaticTableViewSection()
 
 			for aDict in relevantReleaseNotes {
@@ -46,7 +46,7 @@ class ReleaseNotesTableViewController: StaticTableViewController {
 								}
 							}
 
-							if let imageName = releaseNote["ImageName"], let image = ReleaseNotesDatasource.image(for: imageName) {
+							if let imageName = releaseNote["ImageName"], let image = ReleaseNotesDatasource().image(for: imageName) {
 								let row = StaticTableViewRow(rowWithAction: { (_, _) in
 									self.dismissAnimated()
 								}, title: processedTitle, subtitle: processedSubtitle, image: image, imageWidth:50.0, alignment: .left, accessoryType: .none)

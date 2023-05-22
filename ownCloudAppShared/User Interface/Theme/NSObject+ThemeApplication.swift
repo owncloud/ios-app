@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudSDK
 
 public enum ThemeItemStyle {
 	case defaultForItem
@@ -32,12 +31,12 @@ public enum ThemeItemStyle {
 	case destructive
 	case cancel
 
-	// case logo
+	case logo
 	case title
 	case message
 
-//	case welcomeTitle
-//	case welcomeMessage
+	case welcomeTitle
+	case welcomeMessage
 
 	case bigTitle
 	case bigMessage
@@ -47,9 +46,6 @@ public enum ThemeItemStyle {
 
 	case purchase
 	case welcome
-    	case welcomeInformal
-
-    	case content
 }
 
 public enum ThemeItemState {
@@ -64,99 +60,154 @@ public enum ThemeItemState {
 			self = .normal
 		}
 	}
+}
 
-	var cssState: [ThemeCSSSelector] {
-		switch self {
-			case .disabled:
-				return [.disabled]
+public protocol ThemeableSectionHeader : AnyObject {
+	var sectionHeaderColor : UIColor? { get set }
+}
 
-			case .highlighted:
-				return [.highlighted]
-
-			default:
-				return []
-		}
-	}
+public protocol ThemeableSectionFooter : AnyObject {
+	var sectionFooterColor : UIColor? { get set }
 }
 
 public extension NSObject {
-	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal, cellState: UICellConfigurationState? = nil) {
-		let css = collection.css
+	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
+		if let themeButton = self as? ThemeButton {
+			switch itemStyle {
+				case .approval:
+					themeButton.themeColorCollection = collection.approvalColors
 
-		if let button = self as? UIButton, (self as? ThemeButton) == nil {
-			button.apply(css: css, properties: [.stroke])
+				case .neutral:
+					themeButton.themeColorCollection = collection.neutralColors
+
+				case .destructive:
+					themeButton.themeColorCollection = collection.destructiveColors
+
+				case .bigTitle:
+					themeButton.themeColorCollection = collection.neutralColors
+					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 34)
+
+				case .purchase:
+					themeButton.themeColorCollection = collection.purchaseColors
+
+				case .welcome:
+					themeButton.themeColorCollection = collection.loginColors.filledColorPairCollection
+
+				case .informal:
+					themeButton.themeColorCollection = collection.informalColors.filledColorPairCollection
+
+				case .cancel:
+					themeButton.themeColorCollection = collection.cancelColors.filledColorPairCollection
+
+				default:
+					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
+			}
+		} else if let button = self as? UIButton {
+			button.tintColor = collection.navigationBarColors.tintColor
 		}
 
 		if let navigationController = self as? UINavigationController {
-			navigationController.navigationBar.applyThemeCollection(collection)
-			navigationController.view.apply(css: css, properties: [.fill])
+			navigationController.navigationBar.applyThemeCollection(collection, itemStyle: itemStyle)
+			navigationController.view.backgroundColor = collection.tableBackgroundColor
 		}
 
 		if let navigationBar = self as? UINavigationBar {
-			let navigationBarAppearance = collection.navigationBarAppearance(navigationBar: navigationBar)
-			let navigationBarScrollEdgeAppearance = collection.navigationBarAppearance(navigationBar: navigationBar, scrollEdge: true)
+			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
+			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
+			navigationBar.tintColor = collection.navigationBarColors.tintColor
+			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.isTranslucent = false
 
-			navigationBar.tintColor = css.getColor(.stroke, for: navigationBar)
+			let navigationBarAppearance = collection.navigationBarAppearance
 
 			navigationBar.standardAppearance = navigationBarAppearance
 			navigationBar.compactAppearance = navigationBarAppearance
-			navigationBar.scrollEdgeAppearance = navigationBarScrollEdgeAppearance
+			navigationBar.scrollEdgeAppearance = navigationBarAppearance
 		}
 
 		if let toolbar = self as? UIToolbar {
-			let backgroundColor = css.getColor(.fill, for: toolbar)
-			let tintColor = css.getColor(.stroke, for: toolbar)
+			toolbar.barTintColor = collection.toolbarColors.backgroundColor
+			toolbar.tintColor = collection.toolbarColors.tintColor
+		}
 
-			let standardAppearance = UIToolbarAppearance()
-			standardAppearance.backgroundColor = backgroundColor
-			toolbar.standardAppearance = standardAppearance
+		if let tabBar = self as? UITabBar {
+			tabBar.barTintColor = collection.toolbarColors.backgroundColor
+			tabBar.tintColor = collection.toolbarColors.tintColor
+			tabBar.unselectedItemTintColor = collection.toolbarColors.secondaryLabelColor
 
-			let edgeAppearance = UIToolbarAppearance()
-			edgeAppearance.backgroundColor = backgroundColor
-			edgeAppearance.shadowColor = .clear
-			toolbar.scrollEdgeAppearance = edgeAppearance
+			let appearance = UITabBarAppearance()
+			appearance.backgroundColor = collection.toolbarColors.backgroundColor
 
-			toolbar.barTintColor = backgroundColor
-			toolbar.tintColor = tintColor
+			tabBar.standardAppearance = appearance
+			tabBar.scrollEdgeAppearance = appearance
 		}
 
 		if let tableView = self as? UITableView {
-			tableView.backgroundColor = css.getColor(.fill, for: tableView)
-			tableView.separatorColor = css.getColor(.fill, selectors: [.separator], for: tableView)
+			tableView.backgroundColor = tableView.style == .grouped ? collection.tableGroupBackgroundColor : collection.tableBackgroundColor
+			tableView.separatorColor = collection.tableSeparatorColor
+
+			if let themeableSectionHeaderTableView = tableView as? ThemeableSectionHeader {
+				themeableSectionHeaderTableView.sectionHeaderColor = collection.tableSectionHeaderColor
+			}
+
+			if let themeableSectionFooterTableView = tableView as? ThemeableSectionFooter {
+				themeableSectionFooterTableView.sectionFooterColor = collection.tableSectionFooterColor
+			}
 		}
 
 		if let collectionView = self as? UICollectionView {
-			collectionView.apply(css: css, properties: [.fill])
+			collectionView.backgroundColor = collection.tableBackgroundColor
 		}
 
 		if let searchBar = self as? UISearchBar {
-			searchBar.tintColor = css.getColor(.stroke, selectors: [.navigationBar], for: searchBar)
-			searchBar.barStyle = css.getBarStyle(for: searchBar) ?? .default
+			searchBar.tintColor = collection.searchBarColors.tintColor
+			searchBar.barStyle = collection.barStyle
 
+			searchBar.searchTextField.textColor = collection.searchBarColors.labelColor
 			// Ensure search bar icon color is correct
-			searchBar.overrideUserInterfaceStyle = collection.css.getUserInterfaceStyle()
+			searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			searchBar.searchTextField.backgroundColor = collection.searchBarColors.backgroundColor
 
-			searchBar.searchTextField.applyThemeCollection(collection)
+			if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
+				glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+				glassIconView.tintColor = collection.searchBarColors.secondaryLabelColor
+			}
+			if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
+				clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+				clearButton.tintColor = collection.searchBarColors.secondaryLabelColor
+			}
 		}
 
 		if let label = self as? UILabel {
-			var normalColor : UIColor // = collection.tableRowColors.labelColor
-			var highlightColor : UIColor // = collection.tableRowHighlightColors.labelColor
-			let disabledColor : UIColor = css.getColor(.stroke, selectors: [.secondary], for: label) ?? .secondaryLabel // = collection.tableRowColors.secondaryLabelColor
+			var normalColor : UIColor = collection.tableRowColors.labelColor
+			var highlightColor : UIColor = collection.tableRowHighlightColors.labelColor
+			let disabledColor : UIColor = collection.tableRowColors.secondaryLabelColor
 
 			switch itemStyle {
+				case .title, .bigTitle, .system(textStyle: _, weight: _):
+					normalColor = collection.tableRowColors.labelColor
+					highlightColor = collection.tableRowHighlightColors.labelColor
+
+				case .welcomeTitle:
+					normalColor = collection.loginColors.labelColor
+					highlightColor = collection.loginColors.labelColor
+
+				case .welcomeMessage:
+					normalColor = collection.loginColors.secondaryLabelColor
+					highlightColor = collection.loginColors.secondaryLabelColor
+
 				case .message, .bigMessage, .systemSecondary(textStyle: _, weight: _):
-					normalColor = css.getColor(.stroke, selectors: [.secondary], for: label) ?? .secondaryLabel
-					highlightColor = css.getColor(.stroke, selectors: [.secondary], state: [.highlighted], for: label) ?? .tertiaryLabel
-					// normalColor = collection.tableRowColors.secondaryLabelColor
-					// highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
+					normalColor = collection.tableRowColors.secondaryLabelColor
+					highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
+
+				case .logo:
+					normalColor = collection.navigationBarColors.labelColor
+					highlightColor = collection.navigationBarColors.secondaryLabelColor
 
 				default:
-				// case .title, .bigTitle, .system(textStyle: _, weight: _):
-					normalColor = css.getColor(.stroke, selectors: [.primary], for: label) ?? .label
-					highlightColor = css.getColor(.stroke, selectors: [.primary], state: [.highlighted], for: label) ?? .label
-					// normalColor = collection.tableRowColors.labelColor
-					// highlightColor = collection.tableRowHighlightColors.labelColor
+					normalColor = collection.tableRowColors.labelColor
+					highlightColor = collection.tableRowHighlightColors.labelColor
 			}
 
 			switch itemStyle {
@@ -197,39 +248,18 @@ public extension NSObject {
 		}
 
 		if let textField = self as? UITextField {
-			let tintColor = css.getColor(.stroke, for: textField)
-
-			textField.tintColor = tintColor
-			textField.textColor = css.getColor(.stroke, selectors: [.label], state: (textField.isEnabled ? [] : [.disabled]), for: textField)
-			textField.overrideUserInterfaceStyle = css.getUserInterfaceStyle(for: textField)
-			textField.keyboardAppearance = css.getKeyboardAppearance(for: textField)
-
-			if let placeholderString = textField.placeholder, let placeholderTextColor = css.getColor(.stroke, selectors: [.placeholder], for: textField) {
-				textField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : placeholderTextColor])
-			}
-
-			if let clearButton = textField.value(forKey: "clearButton") as? UIButton {
-				clearButton.setImage(OCSymbol.icon(forSymbolName: "xmark.circle.fill"), for: .normal)
-				clearButton.tintColor = tintColor
-			}
-
-			if let searchTextField = textField as? UISearchTextField {
-				if let glassIconView = searchTextField.leftView as? UIImageView {
-					glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-					glassIconView.tintColor = tintColor
-				}
-			}
+			textField.textColor = collection.tableRowColors.labelColor
 		}
 
 		if let cell = self as? UITableViewCell {
-			cell.backgroundColor = css.getColor(.fill, for: cell) // collection.tableRowColors.backgroundColor
-			cell.tintColor = css.getColor(.stroke, for: cell) // collection.lightBrandColor
+			cell.backgroundColor = collection.tableRowColors.backgroundColor
+			cell.tintColor = collection.lightBrandColor
 
 			if cell.selectionStyle != .none {
-				if let highlightedBackgroundColor = css.getColor(.fill, state: [.highlighted], for: cell) { // collection.tableRowHighlightColors.backgroundColor
+				if collection.tableRowHighlightColors.backgroundColor != nil {
 					let backgroundView = UIView()
 
-					backgroundView.backgroundColor = highlightedBackgroundColor
+					backgroundView.backgroundColor = collection.tableRowHighlightColors.backgroundColor
 
 					cell.selectedBackgroundView = backgroundView
 				} else {
@@ -237,68 +267,38 @@ public extension NSObject {
 				}
 			}
 
-			cell.overrideUserInterfaceStyle  = css.getUserInterfaceStyle(for: cell) // collection.interfaceStyle.userInterfaceStyle
+			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		}
 
-		if let cell = self as? UICollectionViewCell {
-			var updateColors = true
+		if let cell = self as? UICollectionViewListCell {
+			var backgroundConfig = cell.backgroundConfiguration
+			backgroundConfig?.backgroundColor = collection.tableRowColors.backgroundColor
+			cell.backgroundConfiguration = backgroundConfig
 
-			if let listCell = cell as? ThemeableCollectionViewListCell {
-				updateColors = listCell.updateColors
-			}
+			cell.tintColor = collection.lightBrandColor
 
-			if updateColors {
-				var stateSelectors: [ThemeCSSSelector] = []
+			cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+		}
 
-				if let cellState {
-					if cellState.isHighlighted { stateSelectors.append(.highlighted) }
-					if cellState.isSelected { stateSelectors.append(.selected) }
-				}
-
-				if let fillColor = css.getColor(.fill, selectors: stateSelectors, for: cell) {
-					var backgroundConfig = (cellState != nil) ? cell.backgroundConfiguration?.updated(for: cellState!) : cell.backgroundConfiguration
-					backgroundConfig?.backgroundColor = fillColor
-					cell.backgroundConfiguration = backgroundConfig
-				}
-
-				if var cellListConfiguration = cell.contentConfiguration as? UIListContentConfiguration {
-					if let textColor = css.getColor(.stroke, selectors: stateSelectors, for: cell) {
-						cellListConfiguration.textProperties.color = textColor
-					}
-
-					var iconSelectors = stateSelectors
-					iconSelectors.append(.icon)
-
-					if let iconColor = css.getColor(.stroke, selectors: iconSelectors, for: cell) {
-						cellListConfiguration.imageProperties.tintColor = iconColor
-					}
-					cell.contentConfiguration = cellListConfiguration
-				}
-
-				cell.tintColor = css.getColor(.stroke, selectors: stateSelectors, for: cell)
-
-				cell.overrideUserInterfaceStyle = (css.get(.style, for: cell)?.value as? UIUserInterfaceStyle) ?? .unspecified
-			}
+		if let progressView = self as? UIProgressView {
+			progressView.tintColor = collection.tintColor
+			progressView.trackTintColor = collection.tableSeparatorColor
 		}
 
 		if let segmentedControl = self as? UISegmentedControl {
-			if let textColor = css.getColor(.stroke, for: segmentedControl) {
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : textColor], for: .normal)
+			var tintColor = collection.tintColor
+
+			if let navigationTintColor = collection.navigationBarColors.tintColor {
+				tintColor = navigationTintColor
 			}
 
-			let tintColor = css.getColor(.fill, for: segmentedControl)
-			segmentedControl.tintColor = tintColor
-
-			if let selectedTextColor = css.getColor(.stroke, state: [.selected], for: segmentedControl) {
-				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : selectedTextColor], for: .selected)
-			}
-
-			let selectedTintColor = css.getColor(.fill, state: [.selected], for: segmentedControl)
-			segmentedControl.selectedSegmentTintColor = selectedTintColor
+			segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : tintColor], for: .normal)
+			segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.backgroundColor!], for: .selected)
+			segmentedControl.selectedSegmentTintColor = tintColor
 		}
 
 		if let visualEffectView = self as? UIVisualEffectView {
-			visualEffectView.overrideUserInterfaceStyle = collection.css.getUserInterfaceStyle()
+			visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 		}
 	}
 }

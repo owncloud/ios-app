@@ -24,8 +24,11 @@ import UniformTypeIdentifiers
 // MARK: - Selection > Open
 extension OCItem : DataItemSelectionInteraction {
 	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
-		if let context = context, context.core != nil {
+		if let context = context, let core = context.core {
 			let item = self
+
+			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: core.bookmark)
+			viewController?.view.window?.windowScene?.userActivity = activity.openItemUserActivity
 
 			switch item.type {
 				case .collection:
@@ -33,31 +36,24 @@ extension OCItem : DataItemSelectionInteraction {
 						let query = OCQuery(for: location)
 						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
-						if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-							let location = item.location
-
-							if location?.bookmarkUUID == nil {
-								location?.bookmarkUUID = context.core?.bookmark.uuid
-							}
-
-							let viewController = ClientItemViewController(context: context, query: query, location: location)
-							viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .open)
-							viewController.revoke(in: context, when: [.connectionClosed, .driveRemoved])
-							return viewController
-						}, push: pushViewController, animated: animated) {
-							completion?(true)
-							return queryViewController
+						let queryViewController = ClientItemViewController(context: context, query: query)
+						if pushViewController {
+							context.navigationController?.pushViewController(queryViewController, animated: animated)
 						}
+
+						completion?(true)
+
+						return queryViewController
 					}
 
 				case .file:
-					if let viewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-						let viewController = context.viewItemHandler?.provideViewer(for: self, context: context)
-						viewController?.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .open)
-						viewController?.revoke(in: context, when: [.connectionClosed, .driveRemoved])
-						return viewController
-					}, push: pushViewController, animated: animated) {
+					if let viewController = context.viewItemHandler?.provideViewer(for: self, context: context) {
+						if pushViewController {
+							context.navigationController?.pushViewController(viewController, animated: animated)
+						}
+
 						completion?(true)
+
 						return viewController
 					}
 			}
@@ -69,20 +65,23 @@ extension OCItem : DataItemSelectionInteraction {
 	}
 
 	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController? {
-		if let context = context, context.core != nil {
+		if let context = context, let core = context.core {
+			let activity = OpenItemUserActivity(detailItem: self, detailBookmark: core.bookmark)
+			viewController?.view.window?.windowScene?.userActivity = activity.openItemUserActivity
+
 			if let parentLocation = location?.parent {
 				let query = OCQuery(for: parentLocation)
 				DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
-				if let queryViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-					let viewController = ClientItemViewController(context: context, query: query, location: parentLocation, highlightItemReference: self.dataItemReference)
-					viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: parentLocation, clientContext: context, restoreAction: .open)
-					viewController.revoke(in: context, when: [.connectionClosed, .driveRemoved])
-					return viewController
-				}, push: pushViewController, animated: animated) {
-					completion?(true)
-					return queryViewController
+				let queryViewController = ClientItemViewController(context: context, query: query, highlightItemReference: self.dataItemReference)
+
+				if pushViewController {
+					context.navigationController?.pushViewController(queryViewController, animated: animated)
 				}
+
+				completion?(true)
+
+				return queryViewController
 			}
 		}
 
@@ -234,7 +233,7 @@ extension OCItem : DataItemDropInteraction {
 				for dragItem in dragItems {
 					if let localDataItem = dragItem.localObject as? LocalDataItem {
 						if let item = localDataItem.dataItem as? OCItem, localDataItem.bookmarkUUID == bookmarkUUID, item.driveID == driveID, let itemLocation = item.location {
-							if (item.path == path) || (itemLocation.parent?.path == path) {
+							if (item.path == path) || (itemLocation.parent.path == path) {
 								return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
 							}
 						}
@@ -333,19 +332,18 @@ extension OCItem : DataItemDropInteraction {
 					useUTI = UTType.data.identifier
 				}
 
-				let finalUTI = useUTI ?? UTType.data.identifier
 				var fileName: String?
 
-				droppedItem.itemProvider.loadFileRepresentation(forTypeIdentifier: finalUTI) { (itemURL, _ error) in
+				droppedItem.itemProvider.loadFileRepresentation(forTypeIdentifier: useUTI!) { (itemURL, _ error) in
 					guard let url = itemURL else { return }
 
 					let fileNameMaxLength = 16
 
-					if finalUTI == UTType.utf8PlainText.identifier {
+					if useUTI == UTType.utf8PlainText.identifier {
 						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
 
-					if finalUTI == UTType.rtf.identifier {
+					if useUTI == UTType.rtf.identifier {
 						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
 						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
 					}
@@ -376,53 +374,5 @@ extension OCItem : DataItemDropInteraction {
 		}
 
 		handlingCompletion(allSuccessful)
-	}
-}
-
-// MARK: - BrowserNavigationBookmark (re)store
-extension OCItem: DataItemBrowserNavigationBookmarkReStore {
-	public func store(in bookmarkUUID: UUID?, context: ClientContext?, restoreAction: BrowserNavigationBookmark.BookmarkRestoreAction) -> BrowserNavigationBookmark? {
-		let navigationBookmark = BrowserNavigationBookmark(for: self, in: bookmarkUUID, restoreAction: restoreAction)
-		var storeLocation = self.location
-
-		// Make sure OCLocation.bookmarkUUID is set
-		if storeLocation?.bookmarkUUID == nil, let bookmarkUUID, let locationCopy = storeLocation?.copy() as? OCLocation {
-			locationCopy.bookmarkUUID = bookmarkUUID
-			storeLocation = locationCopy
-		}
-
-		navigationBookmark?.location = storeLocation
-		navigationBookmark?.itemLocalID = localID
-
-		return navigationBookmark
-	}
-
-	public static func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context: ClientContext?, completion: @escaping ((Error?, UIViewController?) -> Void)) {
-		if let location = navigationBookmark.location, let context, let core = context.core {
-			let refKeeper: NSMutableArray = NSMutableArray()
-
-			if let trackItemToken = core.trackItem(at: location, trackingHandler: { (error, item, isInitial) in
-				if let error {
-					// An error occured
-					completion(error, nil)
-
-					// End tracking
-					refKeeper.removeAllObjects()
-				} else if let item {
-					// Item found
-					OnMainThread {
-						let viewController = item.openItem(from: viewController, with: context, animated: false, pushViewController: false, completion: nil)
-						completion(nil, viewController)
-					}
-
-					// End tracking
-					refKeeper.removeAllObjects()
-				}
-			}) {
-				refKeeper.add(trackItemToken)
-			}
-		} else {
-			completion(NSError(ocError: .insufficientParameters), nil)
-		}
 	}
 }

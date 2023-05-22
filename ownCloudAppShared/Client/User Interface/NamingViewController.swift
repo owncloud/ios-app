@@ -22,7 +22,7 @@ import ownCloudSDK
 public typealias StringValidatorResult = (Bool, String?, String?)
 public typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-open class NamingViewController: UIViewController {
+open class NamingViewController: UIViewController, Themeable {
 	weak open var item: OCItem?
 	weak open var core: OCCore?
 	open var completion: (String?, NamingViewController) -> Void
@@ -52,17 +52,14 @@ open class NamingViewController: UIViewController {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	open var fallbackIcon: OCResource?
-
-	public init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, fallbackIcon: OCResource? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	public init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion
 		self.stringValidator = stringValidator
 		self.defaultName = defaultName
-		self.fallbackIcon = fallbackIcon
 
-		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.css.getBlurEffectStyle()))
+		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.backgroundBlurEffectStyle))
 
 		stackView = UIStackView(frame: .zero)
 
@@ -71,7 +68,7 @@ open class NamingViewController: UIViewController {
 		thumbnailImageView = ResourceViewHost()
 
 		nameContainer = UIView(frame: .zero)
-		nameTextField = ThemeCSSTextField()
+		nameTextField = UITextField(frame: .zero)
 		nameTextField.accessibilityIdentifier = "name-text-field"
 
 		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
@@ -81,14 +78,16 @@ open class NamingViewController: UIViewController {
 		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
 
 		super.init(nibName: nil, bundle: nil)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	convenience public init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, fallbackIcon: OCResource? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
-		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, fallbackIcon: fallbackIcon, completion: completion)
+	convenience public init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, completion: completion)
 	}
 
-	convenience public init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, fallbackIcon: OCResource? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
-		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, fallbackIcon: fallbackIcon, completion: completion)
+	convenience public init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, completion: completion)
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
@@ -97,6 +96,13 @@ open class NamingViewController: UIViewController {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+		Theme.shared.unregister(client: self)
+	}
+
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		nameTextField.backgroundColor = collection.tableBackgroundColor
+		nameTextField.textColor = collection.tableRowColors.labelColor
+		nameTextField.keyboardAppearance = collection.keyboardAppearance
 	}
 
 	override open func viewDidLoad() {
@@ -114,7 +120,7 @@ open class NamingViewController: UIViewController {
 			core.vault.resourceManager?.start(thumbnailRequest)
 		} else {
 			nameTextField.text = defaultName
-			thumbnailImageView.activeViewProvider = (fallbackIcon as? OCViewProvider) ?? ResourceItemIcon.folder
+			thumbnailImageView.activeViewProvider = ResourceItemIcon.folder
 		}
 
 		// Navigation buttons
@@ -144,7 +150,7 @@ open class NamingViewController: UIViewController {
 			thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
 			thumbnailImageView.centerXAnchor.constraint(equalTo: thumbnailContainer.centerXAnchor),
 			thumbnailImageView.centerYAnchor.constraint(equalTo: thumbnailContainer.centerYAnchor)
-		])
+			])
 
 		// Thumbnail container View
 		thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -344,10 +350,6 @@ extension NamingViewController: UITextFieldDelegate {
 
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
 
-		} else if let name = textField.text,
-		  	  let range = name.range(of: ".", options: .backwards),
-			  let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.utf16Offset(in: name)) {
-			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
 		} else {
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
 		}

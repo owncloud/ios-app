@@ -23,7 +23,7 @@ class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .unviewableFileType] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -93,11 +93,8 @@ class OpenInAction: Action {
 				// Store reference to temporary export root URL for later deletion
 				self.temporaryExportURL = temporaryExportFolderURL
 
-				// Obey to excluded activity types
-				let excludedActivityTypes : [UIActivity.ActivityType]? = Action.classSetting(forOCClassSettingsKey: .excludedSystemActivities) as? [UIActivity.ActivityType]
-
 				// UIDocumentInteractionController can only be used with a single file
-				if exportURLs.count == 1, excludedActivityTypes == nil || excludedActivityTypes?.count == 0 {
+				if exportURLs.count == 1 {
 					if let fileURL = exportURLs.first {
 						// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
 						self.interactionControllerDispatchGroup = DispatchGroup()
@@ -120,13 +117,20 @@ class OpenInAction: Action {
 							sourceRect.size.height = 0.0
 
 							self.interactionController?.presentOptionsMenu(from: sourceRect, in: hostViewController.view, animated: true)
+						} else if let sender = self.context.sender as? UITabBarController {
+							var sourceRect = sender.view.frame
+							sourceRect.origin.y = viewController.view.frame.size.height
+							sourceRect.size.width = 0.0
+							sourceRect.size.height = 0.0
+
+							self.interactionController?.presentOptionsMenu(from: sourceRect, in: sender.view, animated: true)
 						} else if let barButtonItem = self.context.sender as? UIBarButtonItem {
 							self.interactionController?.presentOptionsMenu(from: barButtonItem, animated: true)
-//						} else if let cell = self.context.sender as? UITableViewCell, let clientQueryViewController = viewController as? ClientQueryViewController {
-//							if let indexPath = clientQueryViewController.tableView.indexPath(for: cell) {
-//								let cellRect = clientQueryViewController.tableView.rectForRow(at: indexPath)
-//								self.interactionController?.presentOptionsMenu(from: cellRect, in: clientQueryViewController.tableView, animated: true)
-//							}
+						} else if let cell = self.context.sender as? UITableViewCell, let clientQueryViewController = viewController as? ClientQueryViewController {
+							if let indexPath = clientQueryViewController.tableView.indexPath(for: cell) {
+								let cellRect = clientQueryViewController.tableView.rectForRow(at: indexPath)
+								self.interactionController?.presentOptionsMenu(from: cellRect, in: clientQueryViewController.tableView, animated: true)
+							}
 						} else {
 							self.interactionController?.presentOptionsMenu(from: viewController.view.frame, in: viewController.view, animated: true)
 						}
@@ -134,20 +138,24 @@ class OpenInAction: Action {
 				} else {
 					// Handle multiple files with a fallback solution
 					let activityController = UIActivityViewController(activityItems: exportURLs, applicationActivities: nil)
-
-					if let excludedActivityTypes = excludedActivityTypes {
-						// Apply excluded activity types
-						activityController.excludedActivityTypes = excludedActivityTypes
-					}
-
 					activityController.completionWithItemsHandler = { (_, _, _, _) in
 						// Remove temporary export root URL with contents
 						try? FileManager.default.removeItem(at: temporaryExportFolderURL)
 					}
 
 					if UIDevice.current.isIpad {
-						activityController.popoverPresentationController?.sourceView = viewController.view
-						activityController.popoverPresentationController?.sourceRect = viewController.view.frame
+						if let sender = self.context.sender as? UITabBarController {
+							var sourceRect = sender.view.frame
+							sourceRect.origin.y = viewController.view.frame.size.height
+							sourceRect.size.width = 0.0
+							sourceRect.size.height = 0.0
+
+							activityController.popoverPresentationController?.sourceView = sender.view
+							activityController.popoverPresentationController?.sourceRect = sourceRect
+						} else {
+							activityController.popoverPresentationController?.sourceView = viewController.view
+							activityController.popoverPresentationController?.sourceRect = viewController.view.frame
+						}
 					}
 
 					viewController.present(activityController, animated: true, completion: nil)

@@ -63,7 +63,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
 						composedResults?.setInclude((snapshot.numberOfItems >= maxResultCount), for: resultActionSource)
 					}
 				}
-			}, on: .main, trackDifferences: false, performInitialUpdate: true)
+			}, on: .main, trackDifferences: false, performIntialUpdate: true)
 
 			results = composedResults
 		} else {
@@ -160,10 +160,6 @@ open class AccountSearchScope : CustomQuerySearchScope {
 		}
 
 		super.init(with: context, cellStyle: revealCellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
-
-		if let displaySettingsCondition = DisplaySettings.shared.queryConditionForDisplaySettings {
-			additionalRequirementCondition = displaySettingsCondition
-		}
 	}
 
 	open override var savedSearchScope: OCSavedSearchScope? {
@@ -179,13 +175,7 @@ open class DriveSearchScope : AccountSearchScope {
 
 		if context.core?.useDrives == true, let driveID = context.drive?.identifier {
 			self.driveID = driveID
-			let driveCondition = OCQueryCondition.where(.driveID, isEqualTo: driveID)
-
-			if let displaySettingsCondition = DisplaySettings.shared.queryConditionForDisplaySettings {
-				additionalRequirementCondition = .require([displaySettingsCondition, driveCondition])
-			} else {
-				additionalRequirementCondition = driveCondition
-			}
+			additionalRequirementCondition = .where(.driveID, isEqualTo: driveID)
 		}
 	}
 
@@ -210,25 +200,16 @@ open class ContainerSearchScope: AccountSearchScope {
 
 		if context.core?.useDrives == true, let queryLocation = context.query?.queryLocation, let path = queryLocation.path {
 			self.location = queryLocation
-			var containerCondition: OCQueryCondition
 
 			if context.core?.useDrives == true, let driveID = queryLocation.driveID {
-				containerCondition = .require([
+				additionalRequirementCondition = .require([
 					.where(.driveID, isEqualTo: driveID),
-					.where(.path, startsWith: path),
-					.where(.path, isNotEqualTo: path)
+					.where(.path, startsWith: path)
 				])
 			} else {
-				containerCondition = .require([
-					.where(.path, startsWith: path),
-					.where(.path, isNotEqualTo: path)
+				additionalRequirementCondition = .require([
+					.where(.path, startsWith: path)
 				])
-			}
-
-			if let displaySettingsCondition = DisplaySettings.shared.queryConditionForDisplaySettings {
-				additionalRequirementCondition = .require([displaySettingsCondition, containerCondition])
-			} else {
-				additionalRequirementCondition = containerCondition
 			}
 		}
 	}

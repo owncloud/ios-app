@@ -35,8 +35,6 @@ class LicenseOfferButton: ThemeButton {
 		self.buttonHorizontalPadding = 23
 		self.buttonCornerRadius = .round
 
-		self.cssSelector = .purchase
-
 		originalTitle = title
 		self.setTitle(title, for: .normal)
 
@@ -53,8 +51,6 @@ class LicenseOfferButton: ThemeButton {
 
 		self.buttonVerticalPadding = 15
 		self.buttonCornerRadius = .medium
-
-		self.cssSelector = .purchase
 
 		self.setTitle(title, for: .normal)
 

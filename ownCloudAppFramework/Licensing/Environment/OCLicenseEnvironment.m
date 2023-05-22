@@ -40,7 +40,7 @@
 	environment.bookmarkUUID = bookmark.uuid;
 	environment.bookmark = bookmark;
 	environment.hostname = bookmark.url.host;
-	environment.certificate = bookmark.primaryCertificate;
+	environment.certificate = bookmark.certificate;
 
 	return (environment);
 }

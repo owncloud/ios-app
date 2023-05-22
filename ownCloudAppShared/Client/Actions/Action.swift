@@ -1,6 +1,6 @@
 //
 //  Action.swift
-//  ownCloudAppShared
+//  ownCloud
 //
 //  Created by Pablo Carrascal on 30/10/2018.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
@@ -67,8 +67,6 @@ public extension OCExtensionLocationIdentifier {
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
 	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
-	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
-	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
 }
 
 public class ActionExtension: OCExtension {
@@ -501,17 +499,10 @@ open class Action : NSObject {
 		ocAction.identifier = actionExtension.identifier.rawValue
 		if singleVersion {
 			ocAction.version = actionExtension.identifier.rawValue
-			ocAction.supportsDrop = true
 		}
 		ocAction.type = (actionExtension.category == .destructive) ? .destructive : .regular
 
 		return ocAction
-	}
-
-	open func provideBarButtonItem() -> UIBarButtonItem {
-		return UIBarButtonItem(title: actionExtension.name, image: icon, primaryAction: UIAction(handler: { (_) in
-			self.perform()
-		}))
 	}
 
 	// MARK: - Action metadata
@@ -540,7 +531,6 @@ public extension OCClassSettingsIdentifier {
 public extension OCClassSettingsKey {
 	static let allowedActions = OCClassSettingsKey("allowed")
 	static let disallowedActions = OCClassSettingsKey("disallowed")
-	static let excludedSystemActivities = OCClassSettingsKey("excludedSystemActivities")
 }
 
 extension Action : OCClassSettingsSupport {
@@ -586,54 +576,6 @@ extension Action : OCClassSettingsSupport {
 					.description : "List of all disallowed actions. If provided, actions not listed here are allowed.",
 					.category : "Actions",
 					.status	: OCClassSettingsKeyStatus.advanced
-				],
-				.excludedSystemActivities : [
-					.type : OCClassSettingsMetadataType.stringArray,
-					.description : "List of all operating system activities that should be excluded from OS share sheets in actions such as Open In.",
-					.category : "Actions",
-					.status	: OCClassSettingsKeyStatus.advanced,
-					.possibleValues : [
-						[
-							OCClassSettingsMetadataKey.description : "Add to reading list",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.addToReadingList.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Copy to pasteboard",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.copyToPasteboard.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Print",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.print.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Save to camera roll",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.saveToCameraRoll.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Mail",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.mail.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Message",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.message.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Assign to contact",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.assignToContact.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "AirDrop",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.airDrop.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Open in (i)Books",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.openInIBooks.rawValue
-						],
-						[
-							OCClassSettingsMetadataKey.description : "Markup as PDF",
-							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.markupAsPDF.rawValue
-						]
-					]
 				]
 			]
 

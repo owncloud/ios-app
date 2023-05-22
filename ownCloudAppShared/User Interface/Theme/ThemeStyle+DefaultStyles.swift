@@ -33,4 +33,8 @@ extension ThemeStyle {
 	static public var ownCloudDark : ThemeStyle {
 		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: "Dark".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
 	}
+
+	static public var ownCloudClassic : ThemeStyle {
+		return (ThemeStyle(styleIdentifier: "com.owncloud.classic", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Classic".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .contrast))
+	}
 }

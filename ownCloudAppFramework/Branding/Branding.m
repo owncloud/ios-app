@@ -163,35 +163,6 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 	return ([self computedValueForClassSettingsKey:BrandingKeyUserDefaultsDefaultValues]);
 }
 
-- (NSArray<NSString *> *)appURLSchemesForBundleURLName:(nullable NSString *)bundleURLName
-{
-	NSBundle *appBundle;
-	NSMutableArray<NSString *> *appURLSchemes = [NSMutableArray new];
-
-	if ((appBundle = self.appBundle) != nil)
-	{
-		NSArray<NSDictionary *> *urlSchemeDictionaries;
-
-		if ((urlSchemeDictionaries = [appBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"]) != nil)
-		{
-			for (NSDictionary<NSString *, id> *urlSchemesDict in urlSchemeDictionaries)
-			{
-				if ((bundleURLName == nil) || [bundleURLName isEqual:urlSchemesDict[@"CFBundleURLName"]])
-				{
-					NSArray<NSString *> *urlSchemes;
-
-					if ((urlSchemes = urlSchemesDict[@"CFBundleURLSchemes"]) != nil)
-					{
-						[appURLSchemes addObjectsFromArray:urlSchemes];
-					}
-				}
-			}
-		}
-	}
-
-	return (appURLSchemes);
-}
-
 - (NSArray<BrandingFileImportMethod> *)disabledImportMethods
 {
 	return ([self computedValueForClassSettingsKey:BrandingKeyDisabledImportMethods]);

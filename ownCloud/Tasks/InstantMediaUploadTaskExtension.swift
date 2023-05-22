@@ -42,9 +42,9 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		var enqueuedAssetCount = 0
 
 		if  userDefaults.instantUploadPhotos == true {
-			if let location = userDefaults.instantPhotoUploadLocation, let bookmarkUUID = location.bookmarkUUID {
+			if let bookmarkUUID = userDefaults.instantPhotoUploadBookmarkUUID, let path = userDefaults.instantPhotoUploadPath {
 				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-					enqueuedAssetCount += uploadPhotoAssets(for: bookmark, at: location)
+					enqueuedAssetCount += uploadPhotoAssets(for: bookmark, at: OCLocation.legacyRootPath(path))
 				}
 			} else {
 				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant photo upload enabled, but bookmark or path not configured")
@@ -52,9 +52,9 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 
 		if  userDefaults.instantUploadVideos == true {
-			if let location = userDefaults.instantVideoUploadLocation, let bookmarkUUID = location.bookmarkUUID {
+			if let bookmarkUUID = userDefaults.instantVideoUploadBookmarkUUID, let path = userDefaults.instantVideoUploadPath {
 				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-					enqueuedAssetCount += uploadVideoAssets(for: bookmark, at: location)
+					enqueuedAssetCount += uploadVideoAssets(for: bookmark, at: OCLocation.legacyRootPath(path))
 				}
 			} else {
 				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant video upload enabled, but bookmark or path not configured")

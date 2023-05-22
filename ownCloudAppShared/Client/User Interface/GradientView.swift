@@ -19,24 +19,6 @@
 import UIKit
 
 public class GradientView : UIView {
-	public enum Direction {
-		case vertical
-		case horizontal
-
-		var startPoint: CGPoint {
-			switch self {
-				case .vertical: return CGPoint(x: 0.5, y: 0.0)
-				case .horizontal: return CGPoint(x: 0.0, y: 0.5)
-			}
-		}
-		var endPoint: CGPoint {
-			switch self {
-				case .vertical: return CGPoint(x: 0.5, y: 1.0)
-				case .horizontal: return CGPoint(x: 1.0, y: 0.5)
-			}
-		}
-	}
-
 	public var colors: [CGColor] {
 		didSet {
 			gradientLayer?.colors = colors
@@ -50,7 +32,7 @@ public class GradientView : UIView {
 
 	var gradientLayer : CAGradientLayer?
 
-	public init(with colors: [CGColor], locations: [NSNumber], direction: Direction = .vertical) {
+	public init(with colors: [CGColor], locations: [NSNumber]) {
 		self.colors = colors
 		self.locations = locations
 
@@ -61,8 +43,6 @@ public class GradientView : UIView {
 		gradientLayer = CAGradientLayer()
 		gradientLayer?.colors = colors
 		gradientLayer?.locations = locations
-		gradientLayer?.startPoint = direction.startPoint
-		gradientLayer?.endPoint = direction.endPoint
 	}
 
 	required public init?(coder: NSCoder) {
@@ -86,9 +66,15 @@ public class GradientView : UIView {
 }
 
 public class ShadowBarView : GradientView, Themeable {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		if let tableTintColor = collection.tableRowColors.tintColor {
+			self.colors = [tableTintColor.withAlphaComponent(0).cgColor, tableTintColor.withAlphaComponent(0.1).cgColor, tableTintColor.withAlphaComponent(0.25).cgColor]
+		}
+	}
+
 	public init() {
 		super.init(with: [UIColor(hex: 0, alpha: 0).cgColor, UIColor(hex: 0, alpha: 0.10).cgColor, UIColor(hex: 0, alpha: 0.25).cgColor], locations: [0.0, 0.9, 1.0])
-		cssSelector = .shadow
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	required public init?(coder: NSCoder) {
@@ -97,21 +83,5 @@ public class ShadowBarView : GradientView, Themeable {
 
 	deinit {
 		Theme.shared.unregister(client: self)
-	}
-
-	private var _registered: Bool = false
-	public override func didMoveToWindow() {
-		super.didMoveToWindow()
-
-		if window != nil, !_registered {
-			_registered = true
-			Theme.shared.register(client: self, applyImmediately: true)
-		}
-	}
-
-	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		if let shadowColor = collection.css.getColor(.fill, for: self) {
-			self.colors = [shadowColor.withAlphaComponent(0).cgColor, shadowColor.withAlphaComponent(0.1).cgColor, shadowColor.withAlphaComponent(0.25).cgColor]
-		}
 	}
 }

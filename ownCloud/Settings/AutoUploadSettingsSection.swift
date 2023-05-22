@@ -28,19 +28,14 @@ extension UserDefaults {
 	enum AutoUploadKeys : String {
 		case InstantUploadPhotosKey = "instant-upload-photos"
 		case InstantUploadVideosKey = "instant-upload-videos"
-
-		case InstantPhotoUploadLocation = "instant-photo-upload-location"
-		case InstantVideoUploadLocation = "instant-video-upload-location"
-
+		case InstantLegacyUploadBookmarkUUIDKey = "instant-upload-bookmark-uuid"
+		case InstantPhotoUploadBookmarkUUIDKey = "instant-photo-upload-bookmark-uuid"
+		case InstantVideoUploadBookmarkUUIDKey = "instant-video-upload-bookmark-uuid"
+		case InstantLegacyUploadPathKey = "instant-upload-path"
+		case InstantPhotoUploadPathKey = "instant-photo-upload-path"
+		case InstantVideoUploadPathKey = "instant-video-upload-path"
 		case InstantUploadPhotosAfterDateKey = "instant-upload-photos-after-date"
 		case InstantUploadVideosAfterDateKey = "instant-upload-videos-after-date"
-
-		case LegacyInstantLegacyUploadBookmarkUUIDKey = "instant-upload-bookmark-uuid"
-		case LegacyInstantPhotoUploadBookmarkUUIDKey = "instant-photo-upload-bookmark-uuid"
-		case LegacyInstantVideoUploadBookmarkUUIDKey = "instant-video-upload-bookmark-uuid"
-		case LegacyInstantLegacyUploadPathKey = "instant-upload-path"
-		case LegacyInstantPhotoUploadPathKey = "instant-photo-upload-path"
-		case LegacyInstantVideoUploadPathKey = "instant-video-upload-path"
 	}
 
 	public var instantUploadPhotos: Bool {
@@ -63,53 +58,55 @@ extension UserDefaults {
 		}
 	}
 
-	public var instantPhotoUploadLocation: OCLocation? {
+	public var instantPhotoUploadBookmarkUUID: UUID? {
 		set {
-			set(newValue?.data, forKey: AutoUploadKeys.InstantPhotoUploadLocation.rawValue)
+			self.set(newValue?.uuidString, forKey: AutoUploadKeys.InstantPhotoUploadBookmarkUUIDKey.rawValue)
 		}
 
 		get {
-			if let oldBookmarkUUID = legacyInstantPhotoUploadBookmarkUUID,
-			   let oldBookmarkPath = legacyInstantPhotoUploadPath {
-				// Migrate and remove old setting
-				legacyInstantPhotoUploadBookmarkUUID = nil
-				legacyInstantPhotoUploadPath = nil
-
-				let location = OCLocation(bookmarkUUID: oldBookmarkUUID, driveID: nil, path: oldBookmarkPath)
-				set(location.data, forKey: AutoUploadKeys.InstantPhotoUploadLocation.rawValue)
-				return location
+			var uuidString = self.string(forKey: AutoUploadKeys.InstantPhotoUploadBookmarkUUIDKey.rawValue)
+			if uuidString == nil {
+				uuidString = self.string(forKey: AutoUploadKeys.InstantLegacyUploadBookmarkUUIDKey.rawValue)
 			}
-
-			if let locationData = data(forKey: AutoUploadKeys.InstantPhotoUploadLocation.rawValue) {
-				return OCLocation.fromData(locationData)
-			}
-
-			return nil
+			guard let uuid = uuidString else { return nil }
+			return UUID(uuidString: uuid)
 		}
 	}
 
-	public var instantVideoUploadLocation: OCLocation? {
+	public var instantVideoUploadBookmarkUUID: UUID? {
 		set {
-			set(newValue?.data, forKey: AutoUploadKeys.InstantVideoUploadLocation.rawValue)
+			self.set(newValue?.uuidString, forKey: AutoUploadKeys.InstantVideoUploadBookmarkUUIDKey.rawValue)
 		}
 
 		get {
-			if let oldBookmarkUUID = legacyInstantVideoUploadBookmarkUUID,
-			   let oldBookmarkPath = legacyInstantVideoUploadPath {
-				// Migrate and remove old setting
-				legacyInstantVideoUploadBookmarkUUID = nil
-				legacyInstantVideoUploadPath = nil
-
-				let location = OCLocation(bookmarkUUID: oldBookmarkUUID, driveID: nil, path: oldBookmarkPath)
-				set(location.data, forKey: AutoUploadKeys.InstantVideoUploadLocation.rawValue)
-				return location
+			var uuidString = self.string(forKey: AutoUploadKeys.InstantVideoUploadBookmarkUUIDKey.rawValue)
+			if uuidString == nil {
+				uuidString = self.string(forKey: AutoUploadKeys.InstantLegacyUploadBookmarkUUIDKey.rawValue)
 			}
+			guard let uuid = uuidString else { return nil }
+			return UUID(uuidString: uuid)
+		}
+	}
 
-			if let locationData = data(forKey: AutoUploadKeys.InstantVideoUploadLocation.rawValue) {
-				return OCLocation.fromData(locationData)
-			}
+	public var instantPhotoUploadPath: String? {
 
-			return nil
+		set {
+			self.set(newValue, forKey: AutoUploadKeys.InstantPhotoUploadPathKey.rawValue)
+		}
+
+		get {
+			return self.string(forKey: AutoUploadKeys.InstantPhotoUploadPathKey.rawValue) ?? self.string(forKey: AutoUploadKeys.InstantLegacyUploadPathKey.rawValue)
+		}
+	}
+
+	public var instantVideoUploadPath: String? {
+
+		set {
+			self.set(newValue, forKey: AutoUploadKeys.InstantVideoUploadPathKey.rawValue)
+		}
+
+		get {
+			return self.string(forKey: AutoUploadKeys.InstantVideoUploadPathKey.rawValue) ?? self.string(forKey: AutoUploadKeys.InstantLegacyUploadPathKey.rawValue)
 		}
 	}
 
@@ -134,72 +131,15 @@ extension UserDefaults {
 	}
 
 	public func resetInstantPhotoUploadConfiguration() {
-		self.legacyInstantPhotoUploadBookmarkUUID = nil
-		self.legacyInstantPhotoUploadPath = nil
-		self.instantPhotoUploadLocation = nil
+		self.instantPhotoUploadBookmarkUUID = nil
+		self.instantPhotoUploadPath = nil
 		self.instantUploadPhotos = false
 	}
 
 	public func resetInstantVideoUploadConfiguration() {
-		self.legacyInstantVideoUploadBookmarkUUID = nil
-		self.legacyInstantVideoUploadPath = nil
-		self.instantVideoUploadLocation = nil
+		self.instantVideoUploadBookmarkUUID = nil
+		self.instantVideoUploadPath = nil
 		self.instantUploadVideos = false
-	}
-}
-
-// Legacy bookmark UUID + path settings from the pre-OCLocation era
-extension UserDefaults {
-	public var legacyInstantPhotoUploadBookmarkUUID: UUID? {
-		set {
-			self.set(newValue?.uuidString, forKey: AutoUploadKeys.LegacyInstantPhotoUploadBookmarkUUIDKey.rawValue)
-		}
-
-		get {
-			var uuidString = self.string(forKey: AutoUploadKeys.LegacyInstantPhotoUploadBookmarkUUIDKey.rawValue)
-			if uuidString == nil {
-				uuidString = self.string(forKey: AutoUploadKeys.LegacyInstantLegacyUploadBookmarkUUIDKey.rawValue)
-			}
-			guard let uuid = uuidString else { return nil }
-			return UUID(uuidString: uuid)
-		}
-	}
-
-	public var legacyInstantVideoUploadBookmarkUUID: UUID? {
-		set {
-			self.set(newValue?.uuidString, forKey: AutoUploadKeys.LegacyInstantVideoUploadBookmarkUUIDKey.rawValue)
-		}
-
-		get {
-			var uuidString = self.string(forKey: AutoUploadKeys.LegacyInstantVideoUploadBookmarkUUIDKey.rawValue)
-			if uuidString == nil {
-				uuidString = self.string(forKey: AutoUploadKeys.LegacyInstantLegacyUploadBookmarkUUIDKey.rawValue)
-			}
-			guard let uuid = uuidString else { return nil }
-			return UUID(uuidString: uuid)
-		}
-	}
-
-	public var legacyInstantPhotoUploadPath: String? {
-
-		set {
-			self.set(newValue, forKey: AutoUploadKeys.LegacyInstantPhotoUploadPathKey.rawValue)
-		}
-
-		get {
-			return self.string(forKey: AutoUploadKeys.LegacyInstantPhotoUploadPathKey.rawValue) ?? self.string(forKey: AutoUploadKeys.LegacyInstantLegacyUploadPathKey.rawValue)
-		}
-	}
-
-	public var legacyInstantVideoUploadPath: String? {
-
-		set {
-			self.set(newValue, forKey: AutoUploadKeys.LegacyInstantVideoUploadPathKey.rawValue)
-		}
-
-		get {
-			return self.string(forKey: AutoUploadKeys.LegacyInstantVideoUploadPathKey.rawValue) ?? self.string(forKey: AutoUploadKeys.LegacyInstantLegacyUploadPathKey.rawValue)
-		}
 	}
 }
 
@@ -231,7 +171,7 @@ class AutoUploadSettingsSection: SettingsSection {
 						self?.setupPhotoAutoUpload(enabled: switchState)
 					})
 				}
-			}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos, identifier: "auto-upload-photos")
+				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos, identifier: "auto-upload-photos")
 
 			instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
@@ -239,15 +179,15 @@ class AutoUploadSettingsSection: SettingsSection {
 						self?.setupVideoAutoUpload(enabled: switchState)
 					})
 				}
-			}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos, identifier: "auto-upload-videos")
+				}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos, identifier: "auto-upload-videos")
 
 			photoBookmarkAndPathSelectionRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController(for: .photo)
-			}, title: "Photo upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
+				}, title: "Photo upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
 
 			videoBookmarkAndPathSelectionRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController(for: .video)
-			}, title: "Video upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
+				}, title: "Video upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
 
 			self.add(row: instantUploadPhotosRow!)
 			self.add(row: instantUploadVideosRow!)
@@ -264,7 +204,7 @@ class AutoUploadSettingsSection: SettingsSection {
 		} else {
 			userDefaults.instantUploadPhotos = true
 			userDefaults.instantUploadPhotosAfter = Date()
-			if userDefaults.instantPhotoUploadLocation == nil {
+			if userDefaults.instantPhotoUploadPath == nil || userDefaults.instantPhotoUploadBookmarkUUID == nil {
 				showAccountSelectionViewController(for: .photo)
 			} else {
 				updateDynamicUI()
@@ -282,11 +222,11 @@ class AutoUploadSettingsSection: SettingsSection {
 		} else {
 			userDefaults.instantUploadVideos = true
 			userDefaults.instantUploadVideosAfter = Date()
-			if userDefaults.instantVideoUploadLocation == nil {
+			if userDefaults.instantVideoUploadPath == nil || userDefaults.instantVideoUploadBookmarkUUID == nil {
 				showAccountSelectionViewController(for: .video)
 			} else {
-				updateDynamicUI()
-			}
+			   updateDynamicUI()
+		   }
 		}
 
 		NotificationCenter.default.post(name: .OCBookmarkManagerListChanged, object: nil)
@@ -297,10 +237,10 @@ class AutoUploadSettingsSection: SettingsSection {
 		var bookmarkUUID: UUID?
 
 		switch mediaType {
-			case .photo:
-				bookmarkUUID = self.userDefaults.instantPhotoUploadLocation?.bookmarkUUID
-			case .video:
-				bookmarkUUID = self.userDefaults.instantVideoUploadLocation?.bookmarkUUID
+		case .photo:
+			bookmarkUUID = self.userDefaults.instantPhotoUploadBookmarkUUID
+		case .video:
+			bookmarkUUID = self.userDefaults.instantVideoUploadBookmarkUUID
 		}
 
 		if let selectedBookmarkUUID = bookmarkUUID {
@@ -315,14 +255,14 @@ class AutoUploadSettingsSection: SettingsSection {
 		self.remove(rowWithIdentifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
 		self.remove(rowWithIdentifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
 
-		if let bookmark = getSelectedBookmark(for: .photo), let location = userDefaults.instantPhotoUploadLocation, userDefaults.instantUploadPhotos == true {
-			OCItemTracker(for: bookmark, at: location) { (error, _, pathItem) in
+		if let bookmark = getSelectedBookmark(for: .photo), let path = userDefaults.instantPhotoUploadPath, userDefaults.instantUploadPhotos == true {
+			OCItemTracker(for: bookmark, at: .legacyRootPath(path)) { (error, _, pathItem) in
 				guard error == nil else { return }
 
 				OnMainThread {
 					if pathItem != nil {
 						self.add(row: self.photoBookmarkAndPathSelectionRow!)
-						let directory = location.lastPathComponent ?? "?"
+						let directory = URL(fileURLWithPath: path).lastPathComponent
 						self.photoBookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
 					} else {
 						self.userDefaults.resetInstantPhotoUploadConfiguration()
@@ -339,14 +279,14 @@ class AutoUploadSettingsSection: SettingsSection {
 			changeHandler?()
 		}
 
-		if let bookmark = getSelectedBookmark(for: .video), let location = userDefaults.instantVideoUploadLocation, userDefaults.instantUploadVideos == true {
-			OCItemTracker(for: bookmark, at: location) { (error, _, pathItem) in
+		if let bookmark = getSelectedBookmark(for: .video), let path = userDefaults.instantVideoUploadPath, userDefaults.instantUploadVideos == true {
+			OCItemTracker(for: bookmark, at: .legacyRootPath(path)) { (error, _, pathItem) in
 				guard error == nil else { return }
 
 				OnMainThread {
 					if pathItem != nil {
 						self.add(row: self.videoBookmarkAndPathSelectionRow!)
-						let directory = location.lastPathComponent ?? "?"
+						let directory = URL(fileURLWithPath: path).lastPathComponent
 						self.videoBookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
 					} else {
 						self.userDefaults.resetInstantVideoUploadConfiguration()
@@ -382,44 +322,105 @@ class AutoUploadSettingsSection: SettingsSection {
 	}
 
 	private func showAccountSelectionViewController(for mediaType:MediaType) {
-		var prompt: String
 
-		switch mediaType {
-			case .photo:
-				prompt = "Pick a destination for photo uploads".localized
+		let accountSelectionViewController = StaticTableViewController(style: .grouped)
+		let navigationController = ThemeNavigationController(rootViewController: accountSelectionViewController)
 
-			case .video:
-				prompt = "Pick a destination for video uploads".localized
+		accountSelectionViewController.navigationItem.title = "Select account".localized
+		accountSelectionViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+																						   target: accountSelectionViewController,
+																						   action: #selector(accountSelectionViewController.dismissAnimated))
+		accountSelectionViewController.didDismissAction = { [weak self] (viewController) in
+			self?.updateDynamicUI()
 		}
 
-		let locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: "Select Destination".localized, selectPrompt: prompt, requiredPermissions: [ .createFile ], avoidConflictsWith: nil, choiceHandler: { [weak self] (chosenItem, location, _, cancelled) in
-			if let chosenItem, !chosenItem.permissions.contains(.createFile) {
-				OnMainThread { [weak self] in
-					let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
-					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-					self?.viewController?.present(alert, animated: true, completion: nil)
-				}
-			} else {
+		let accountsSection = StaticTableViewSection(headerTitle: "Accounts".localized)
+
+		var bookmarkRows: [StaticTableViewRow] = []
+		let bookmarks = OCBookmarkManager.shared.bookmarks
+
+		guard bookmarks.count > 0 else { return }
+
+		var bookmarkDictionary = [StaticTableViewRow : OCBookmark]()
+
+		for bookmark in bookmarks {
+			let row = StaticTableViewRow(buttonWithAction: { [weak self] (_ row, _ sender) in
+
+				// Store selected bookmark
+				let selectedBookmark = bookmarkDictionary[row]!
 				switch mediaType {
+				case .photo:
+					self?.userDefaults.instantPhotoUploadBookmarkUUID = selectedBookmark.uuid
+					self?.userDefaults.instantPhotoUploadPath = nil
+				case .video:
+					self?.userDefaults.instantVideoUploadBookmarkUUID = selectedBookmark.uuid
+					self?.userDefaults.instantVideoUploadPath = nil
+				}
+
+				// Proceed with upload path selection
+				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (directoryItem) in
+					let path = self?.getDirectoryPath(from: directoryItem)
+					switch mediaType {
 					case .photo:
-						self?.userDefaults.instantPhotoUploadLocation = location
-						if location == nil {
+						self?.userDefaults.instantPhotoUploadPath = path
+						if path == nil {
 							self?.userDefaults.resetInstantPhotoUploadConfiguration()
 						}
-
 					case .video:
-						self?.userDefaults.instantVideoUploadLocation = location
-						if location == nil {
+						self?.userDefaults.instantVideoUploadPath = path
+						if path == nil {
 							self?.userDefaults.resetInstantVideoUploadConfiguration()
 						}
-				}
+					}
 
-				self?.postSettingsChangedNotification()
-				self?.updateDynamicUI()
-			}
+					navigationController.dismiss(animated: true, completion: nil)
+					self?.postSettingsChangedNotification()
+					self?.updateDynamicUI()
+				})
+
+			}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
+
+			bookmarkRows.append(row)
+			bookmarkDictionary[row] = bookmark
+		}
+
+		accountsSection.add(rows: bookmarkRows)
+		accountSelectionViewController.addSection(accountsSection)
+
+		self.viewController?.present(navigationController, animated: true)
+	}
+
+	private func selectUploadPath(for bookmark:OCBookmark, pushIn navigationController:UINavigationController, completion:@escaping (_ directoryItem:OCItem?) -> Void) {
+
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
+										 completionHandler: { [weak navigationController] (core, error) in
+
+											guard let core = core, error == nil else { return }
+
+											OnMainThread {
+												let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, location: .legacyRoot, selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory, _) in
+													OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+													completion(selectedDirectory)
+												})
+												navigationController?.pushViewController(directoryPickerViewController, animated: true)
+											}
 		})
+	}
 
-		locationPicker.present(in: ClientContext(originatingViewController: self.viewController))
+	private func getDirectoryPath(from directoryItem:OCItem?) -> String? {
+
+		guard let item = directoryItem else { return nil }
+
+		if item.permissions.contains(.createFile) {
+			return item.path
+		} else {
+			OnMainThread {
+				let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+				self.viewController?.present(alert, animated: true, completion: nil)
+			}
+		}
+		return nil
 	}
 
 	private func postSettingsChangedNotification() {
@@ -428,7 +429,7 @@ class AutoUploadSettingsSection: SettingsSection {
 
 	private func showAutoUploadDisabledAlert() {
 		let alertController = ThemedAlertController(with: "Auto upload disabled".localized,
-							    message: "Auto upload of media was disabled since configured account / folder was not found".localized)
+												message: "Auto upload of media was disabled since configured account / folder was not found".localized)
 		self.viewController?.present(alertController, animated: true, completion: nil)
 	}
 }

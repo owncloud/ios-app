@@ -187,7 +187,7 @@ open class StaticTableViewSection: NSObject {
 	public func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
 		for row in rows {
 			if row.groupIdentifier == groupIdentifier {
-				if row.cell?.accessoryType == .checkmark {
+				if row.cell?.accessoryType == UITableViewCell.AccessoryType.checkmark {
 					return (row.value)
 				}
 			}

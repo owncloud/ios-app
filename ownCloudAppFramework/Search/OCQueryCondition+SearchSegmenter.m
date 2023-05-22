@@ -623,12 +623,12 @@
 
 }
 
-- (OCSymbolName)symbolName
+- (NSString *)symbolName
 {
 	return (self.userInfo[OCQueryConditionUserInfoKeySymbolName]);
 }
 
-- (void)setSymbolName:(OCSymbolName)symbolName
+- (void)setSymbolName:(NSString *)symbolName
 {
 	[self setValue:symbolName forMutableUserInfoKey:OCQueryConditionUserInfoKeySymbolName];
 }

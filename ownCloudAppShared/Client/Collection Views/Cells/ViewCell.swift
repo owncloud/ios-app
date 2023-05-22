@@ -19,14 +19,8 @@
 import UIKit
 
 class ViewCell: ThemeableCollectionViewListCell {
-	private var _previousSeparatorLayoutGuideConstraints: [NSLayoutConstraint]?
 	var hostedView: UIView? {
 		willSet {
-			if let previousSperatorLayoutGuideConstraints = _previousSeparatorLayoutGuideConstraints {
-				NSLayoutConstraint.deactivate(previousSperatorLayoutGuideConstraints)
-				_previousSeparatorLayoutGuideConstraints = nil
-			}
-
 			if hostedView != newValue {
 				hostedView?.removeFromSuperview()
 			}
@@ -38,7 +32,7 @@ class ViewCell: ThemeableCollectionViewListCell {
 
 				contentView.addSubview(hostedView)
 
-				var constraints : [NSLayoutConstraint] = [
+				NSLayoutConstraint.activate([
 					// Fill cell.contentView
 					// -> these constraints are applied with .defaultHigh priority (not the default of .required) to not trigger
 					//    an unsatisfiable constraints warning in case a cell is re-used and the new view's size conflicts with the
@@ -46,26 +40,11 @@ class ViewCell: ThemeableCollectionViewListCell {
 					hostedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).with(priority: .defaultHigh),
 					hostedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).with(priority: .defaultHigh),
 					hostedView.topAnchor.constraint(equalTo: contentView.topAnchor).with(priority: .defaultHigh),
-					hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).with(priority: .defaultHigh)
-				]
-				var layoutGuideConstraints: [NSLayoutConstraint]?
+					hostedView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).with(priority: .defaultHigh),
 
-				if let customizer = hostedView.separatorLayoutGuideCustomizer {
-					// Use custom constraints
-					layoutGuideConstraints = customizer.customizer(self, hostedView)
-				} else {
-					layoutGuideConstraints = [
-						// Extend cell seperator to contentView.leadingAnchor
-						separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
-					]
-				}
-
-				if let layoutGuideConstraints = layoutGuideConstraints {
-					_previousSeparatorLayoutGuideConstraints = layoutGuideConstraints
-					constraints += layoutGuideConstraints
-				}
-
-				NSLayoutConstraint.activate(constraints)
+					// Extend cell seperator to contentView.leadingAnchor
+					separatorLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+				])
 			}
 		}
 	}
@@ -85,32 +64,5 @@ class ViewCell: ThemeableCollectionViewListCell {
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .view, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
 			return collectionView.dequeueConfiguredReusableCell(using: itemListCellRegistration, for: indexPath, item: itemRef)
 		}))
-	}
-}
-
-class SeparatorLayoutGuideCustomizer : NSObject {
-	typealias Customizer = (_ viewCell: ViewCell, _ view: UIView) -> [NSLayoutConstraint]
-
-	var customizer: Customizer
-
-	init(with customizer: @escaping Customizer) {
-		self.customizer = customizer
-		super.init()
-	}
-}
-
-extension UIView {
-	private struct AssociatedKeys {
-		static var separatorLayoutGuideCustomizerKey = "separatorLayoutGuideCustomizerKey"
-	}
-
-	var separatorLayoutGuideCustomizer: SeparatorLayoutGuideCustomizer? {
-		get {
-			return objc_getAssociatedObject(self, &AssociatedKeys.separatorLayoutGuideCustomizerKey) as? SeparatorLayoutGuideCustomizer
-		}
-
-		set {
-			objc_setAssociatedObject(self, &AssociatedKeys.separatorLayoutGuideCustomizerKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-		}
 	}
 }

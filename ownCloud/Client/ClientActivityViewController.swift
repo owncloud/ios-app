@@ -20,7 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate, ClientActivityCellDelegate, AccountConnectionMessageUpdates, AccountConnectionStatusObserver {
+class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate, ClientActivityCellDelegate {
+
 	enum ActivitySection : Int, CaseIterable {
 		case messageGroups
 		case activities
@@ -74,57 +75,10 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
-	var consumer: AccountConnectionConsumer?
-	weak var connection: AccountConnection? {
-		willSet {
-			if let consumer {
-				connection?.remove(consumer: consumer)
-			}
-		}
-
-		didSet {
-			core = connection?.core
-			messageSelector = connection?.messageSelector
-			if let consumer {
-				connection?.add(consumer: consumer)
-			}
-		}
-	}
-
-	private func setConnection(_ connection: AccountConnection?) {
-		// Work around willSet/didSet not being called when set directly in the initializer
-		self.connection = connection
-	}
-
-	init(connection: AccountConnection? = nil) {
-		super.init(style: .plain)
-
-		if let connection {
-			consumer = AccountConnectionConsumer(owner: self, statusObserver: self, messageUpdateHandler: self)
-			setConnection(connection)
-		}
-	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	private func winddown() {
+	deinit {
 		Theme.shared.unregister(client: self)
 		self.shouldPauseDisplaySleep = false
-		self.connection = nil
 		self.core = nil
-	}
-
-	deinit {
-		winddown()
-	}
-
-	func account(connection: AccountConnection, changedStatusTo status: AccountConnection.Status, initial: Bool) {
-		if core == nil {
-			core = connection.core
-			messageSelector = connection.messageSelector
-		}
 	}
 
 	@objc func handleActivityNotification(_ notification: Notification) {

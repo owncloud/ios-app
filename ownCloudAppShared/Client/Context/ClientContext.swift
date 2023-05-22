@@ -54,17 +54,17 @@ public protocol ContextMenuProvider : AnyObject {
 }
 
 public protocol InlineMessageCenter : AnyObject {
-	func hasInlineMessage(for item: OCDataItem) -> Bool
-	func showInlineMessage(for item: OCDataItem)
+	func hasInlineMessage(for item: OCItem) -> Bool
+	func showInlineMessageFor(item: OCItem)
 }
 
-public protocol ViewControllerPusher: AnyObject {
-	func pushViewController(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController?
-}
-
-public protocol NavigationRevocationHandler: AnyObject {
-	func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController)
-}
+//extension ClientContext {
+//	public enum DropSessionStage : CaseIterable {
+//		case begin
+//		case updated
+//		case end
+//	}
+//}
 
 @objc public protocol DropTargetsProvider : AnyObject {
 	func canProvideDropTargets(for dropSession: UIDropSession, target view: UIView) -> Bool
@@ -80,59 +80,30 @@ public enum ClientItemInteraction {
 	case trailingSwipe
 	case drag
 	case acceptDrop
-
-	case moreOptions
-	case search
-	case addContent
-}
-
-public enum ClientItemAppearance {
-	case regular
-	case disabled
 }
 
 public class ClientContext: NSObject {
-	public typealias PermissionHandler = (_ context: ClientContext?, _ dataItemRecord: OCDataItemRecord?, _ checkInteraction: ClientItemInteraction, _ inViewController: UIViewController?) -> Bool
-
-	public typealias ItemStyler = (_ context: ClientContext?, _ dataItemRecord: OCDataItemRecord?, _ item: OCDataItem?) -> ClientItemAppearance
+	public typealias PermissionHandler = (_ context: ClientContext?, _ dataItemRecord: OCDataItemRecord?, _ checkInteraction: ClientItemInteraction) -> Bool
 
 	public weak var parent: ClientContext?
 
-	// MARK: - Account Connection
-	public weak var accountConnection: AccountConnection?
-
 	// MARK: - Core
-	private weak var _core: OCCore?
-	public weak var core: OCCore? {
-		get {
-			return _core ?? parent?.core ?? accountConnection?.core
-		}
-
-		set {
-			_core = newValue
-		}
-	}
+	public weak var core: OCCore?
 
 	// MARK: - Drive
 	public var drive: OCDrive?
-
 	public weak var query: OCQuery?
-	public weak var queryDatasource: OCDataSource? // Data source with the contents of a .query
 
 	// MARK: - Items
 	public var rootItem : OCDataItem?
 
 	// MARK: - UI objects
-	public weak var scene: UIScene?
 	public weak var rootViewController: UIViewController?
-	public weak var browserController: BrowserNavigationViewController? // Browser navigation controller to push to
 	public weak var navigationController: UINavigationController? // Navigation controller to push to
 	public weak var originatingViewController: UIViewController? // Originating view controller for f.ex. actions
 
 	public weak var progressSummarizer: ProgressSummarizer?
 	public weak var actionProgressHandlerProvider: ActionProgressHandlerProvider?
-
-	public weak var alertQueue: OCAsyncSequentialQueue?
 
 	// MARK: - UI item handling
 	public weak var openItemHandler: OpenItemAction?
@@ -144,19 +115,12 @@ public class ClientContext: NSObject {
 	public weak var inlineMessageCenter: InlineMessageCenter?
 	public weak var dropTargetsProvider: DropTargetsProvider?
 
-	// MARK: - UI Handling
-	public weak var viewControllerPusher: ViewControllerPusher?
-	public weak var navigationRevocationHandler: NavigationRevocationHandler?
-	public weak var bookmarkEditingHandler: AccountAuthenticationHandlerBookmarkEditingHandler?
-
 	// MARK: - Permissions
 	public var permissionHandlers : [PermissionHandler]?
 	public var permissions : [ClientItemInteraction]?
 
 	// MARK: - Display options
 	@objc public dynamic var sortDescriptor: SortDescriptor?
-	public var itemStyler: ItemStyler?
-	public var itemLayout: ItemLayout?
 	/*
 	public var sortMethod : SortMethod? {
 		didSet {
@@ -175,28 +139,22 @@ public class ClientContext: NSObject {
 	public typealias PostInitializationModifier = (_ owner: Any?, _ context: ClientContext) -> Void
 	public var postInitializationModifier: PostInitializationModifier?
 
-	public init(with inParent: ClientContext? = nil, accountConnection inAccountConnection: AccountConnection? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, scene inScene: UIScene? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, alertQueue inAlertQueue: OCAsyncSequentialQueue? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
+	public init(with inParent: ClientContext? = nil, core inCore: OCCore? = nil, drive inDrive: OCDrive? = nil, rootViewController inRootViewController : UIViewController? = nil, originatingViewController inOriginatingViewController: UIViewController? = nil, navigationController inNavigationController: UINavigationController? = nil, progressSummarizer inProgressSummarizer: ProgressSummarizer? = nil, modifier: ((_ context: ClientContext) -> Void)? = nil) {
 		super.init()
 
 		parent = inParent
 
-		accountConnection = inAccountConnection ?? inParent?.accountConnection
 		core = inCore ?? inParent?.core
 
 		drive = inDrive ?? inParent?.drive
 		query = inParent?.query
-		queryDatasource = inParent?.queryDatasource
 
-		scene = inScene ?? inParent?.scene
 		rootViewController = inRootViewController ?? inParent?.rootViewController
-		browserController = inParent?.browserController
 		navigationController = inNavigationController ?? inParent?.navigationController
 		originatingViewController = inOriginatingViewController ?? inParent?.originatingViewController
 
 		progressSummarizer = inProgressSummarizer ?? inParent?.progressSummarizer
 		actionProgressHandlerProvider = inParent?.actionProgressHandlerProvider
-
-		alertQueue = inAlertQueue ?? inParent?.alertQueue
 
 		openItemHandler = inParent?.openItemHandler
 		viewItemHandler = inParent?.viewItemHandler
@@ -206,12 +164,8 @@ public class ClientContext: NSObject {
 		swipeActionsProvider = inParent?.swipeActionsProvider
 		inlineMessageCenter = inParent?.inlineMessageCenter
 		dropTargetsProvider = inParent?.dropTargetsProvider
-		viewControllerPusher = inParent?.viewControllerPusher
-		navigationRevocationHandler = inParent?.navigationRevocationHandler
 
 		sortDescriptor = inParent?.sortDescriptor
-		itemStyler = inParent?.itemStyler
-		itemLayout = inParent?.itemLayout
 
 		permissions = inParent?.permissions
 		permissionHandlers = inParent?.permissionHandlers
@@ -283,7 +237,7 @@ public class ClientContext: NSObject {
 		permissionHandlers?.append(permissionHandler)
 	}
 
-	public func validate(interaction: ClientItemInteraction, for record: OCDataItemRecord, in viewController: UIViewController? = nil) -> Bool {
+	public func validate(interaction: ClientItemInteraction, for record: OCDataItemRecord) -> Bool {
 		if let permissions = permissions {
 			if !permissions.contains(interaction) {
 				return false
@@ -294,7 +248,7 @@ public class ClientContext: NSObject {
 			var allowed = true
 
 			for permissionHandler in permissionHandlers {
-				if !permissionHandler(self, record, interaction, viewController) {
+				if !permissionHandler(self, record, interaction) {
 					allowed = false
 					break
 				}
@@ -304,52 +258,5 @@ public class ClientContext: NSObject {
 		}
 
 		return true
-	}
-}
-
-extension ClientContext {
-	public var canPushViewControllerToNavigation: Bool {
-		return viewControllerPusher != nil || navigationController != nil
-	}
-
-	public func pushViewControllerToNavigation(context: ClientContext?, provider: (_ context: ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController? {
-		var viewController: UIViewController?
-
-		if let browserController {
-			viewController = provider(context ?? self)
-
-			if push, let viewController {
-				browserController.push(viewController: viewController)
-			}
-
-			return viewController
-		}
-
-		if let viewControllerPusher = viewControllerPusher {
-			viewController = viewControllerPusher.pushViewController(context: context, provider: provider, push: push, animated: animated)
-		} else if let navigationController = navigationController {
-			viewController = provider(context ?? self)
-
-			if push, let viewController {
-				navigationController.pushViewController(viewController, animated: animated)
-			}
-		}
-
-		return viewController
-	}
-}
-
-extension ClientContext {
-	public var presentationViewController: UIViewController? {
-		return originatingViewController ?? rootViewController
-	}
-
-	@discardableResult public func present(_ viewControllerToPresent: UIViewController, animated: Bool, completion: (() -> Void)? = nil) -> Bool {
-		if let fromViewController = presentationViewController {
-			fromViewController.present(viewControllerToPresent, animated: animated, completion: completion)
-			return true
-		}
-
-		return false
 	}
 }

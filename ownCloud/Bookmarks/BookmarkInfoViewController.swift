@@ -26,7 +26,6 @@ class BookmarkInfoViewController: StaticTableViewController {
 	var deviceAvailableStorageInfoRow: StaticTableViewRow?
 
 	var bookmark : OCBookmark?
-	var completionHandler: (() -> Void)?
 
 	lazy var byteCounterFormatter: ByteCountFormatter = {
 		let formatter = ByteCountFormatter()
@@ -68,7 +67,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
 					OnMainThread {
-						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 						progressView.startAnimating()
 						row.cell?.accessoryView = progressView
 					}
@@ -170,11 +169,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 	// MARK: - User actions
 	@objc func userActionDone() {
-		let completionHandler = completionHandler
-
-		self.presentingViewController?.dismiss(animated: true, completion: {
-			completionHandler?()
-		})
+		self.presentingViewController?.dismiss(animated: true, completion: nil)
 	}
 
 	// MARK: - Helper methods

@@ -93,12 +93,6 @@ public class PasscodeViewController: UIViewController, Themeable {
 				}
 			}
 
-			if keypadButtonsEnabled {
-				self.cssSelectors = [ .modal, .passcode ]
-			} else {
-				self.cssSelectors = [ .modal, .passcode, .disabled ]
-			}
-
 			self.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
 		}
 	}
@@ -113,18 +107,18 @@ public class PasscodeViewController: UIViewController, Themeable {
 		}
 	}
 
-	var cancelButtonAvailable: Bool {
+	var cancelButtonHidden: Bool {
 		didSet {
-			cancelButton?.isEnabled = cancelButtonAvailable
-			cancelButton?.isHidden = !cancelButtonAvailable
+			cancelButton?.isEnabled = cancelButtonHidden
+			cancelButton?.isHidden = !cancelButtonHidden
 		}
 	}
 
 	var biometricalButtonHidden: Bool = false {
 		didSet {
-			biometricalButton?.isEnabled = !biometricalButtonHidden
-			biometricalButton?.isHidden = biometricalButtonHidden
-			biometricalImageView?.isHidden = biometricalButtonHidden
+			biometricalButton?.isEnabled = biometricalButtonHidden
+			biometricalButton?.isHidden = !biometricalButtonHidden
+			biometricalImageView?.isHidden = !biometricalButtonHidden
 			biometricalImageView?.image = LAContext().biometricsAuthenticationImage()
 		}
 	}
@@ -148,14 +142,12 @@ public class PasscodeViewController: UIViewController, Themeable {
 		self.biometricalHandler = biometricalHandler
 		self.completionHandler = completionHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
-		self.cancelButtonAvailable = hasCancelButton
+		self.cancelButtonHidden = hasCancelButton
 		self.keypadButtonsHidden = false
 		self.screenBlurringEnabled = false
 		self.passcodeLength = requiredLength
 
 		super.init(nibName: "PasscodeViewController", bundle: Bundle(for: PasscodeViewController.self))
-
-		self.cssSelector = .passcode
 
 		self.modalPresentationStyle = .fullScreen
 	}
@@ -170,45 +162,33 @@ public class PasscodeViewController: UIViewController, Themeable {
 
 		self.title = VendorServices.shared.appName
 		self.cancelButton?.setTitle("Cancel".localized, for: .normal)
-		self.cancelButton?.cssSelector =  .cancel
-
-		self.messageLabel?.cssSelector = .title
-		self.passcodeLabel?.cssSelector = .code
-		self.errorMessageLabel?.cssSelector = .subtitle
-		self.timeoutMessageLabel?.cssSelectors = [.title, .timeout]
 
 		self.message = { self.message }()
 		self.errorMessage = { self.errorMessage }()
 		self.timeoutMessage = { self.timeoutMessage }()
 
-		self.cancelButtonAvailable = { self.cancelButtonAvailable }()
+		self.cancelButtonHidden = { self.cancelButtonHidden }()
 		self.keypadButtonsEnabled = { self.keypadButtonsEnabled }()
 		self.keypadButtonsHidden = { self.keypadButtonsHidden }()
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
-		self.biometricalButtonHidden = (!AppLockSettings.shared.biometricalSecurityEnabled || !AppLockSettings.shared.lockEnabled || cancelButtonAvailable) // cancelButtonAvailable is true for setup tasks/settings changes only
+		self.biometricalButtonHidden = !((!AppLockSettings.shared.biometricalSecurityEnabled || !AppLockSettings.shared.lockEnabled) || self.cancelButtonHidden)
 		updateKeypadButtons()
-		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			self.biometricalButton?.accessibilityLabel = biometricalSecurityName
-		}
+        if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
+            self.biometricalButton?.accessibilityLabel = biometricalSecurityName
+        }
 
-		if let keypadButtons {
-			let keypadFont = UIFont.systemFont(ofSize: 34)
-
-			for button in keypadButtons {
-				if button != deleteButton {
-					button.cssSelector = .digit
-				}
-				button.titleLabel?.font = keypadFont
+		if #available(iOS 13.4, *) {
+			for button in keypadButtons! {
 				PointerEffect.install(on: button, effectStyle: .highlight)
 			}
-
-			deleteButton?.cssSelector = .backspace
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+			PointerEffect.install(on: biometricalButton!, effectStyle: .highlight)
 		}
 		PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
 		PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
-		PointerEffect.install(on: biometricalButton!, effectStyle: .highlight)
 	}
 
 	public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -336,23 +316,27 @@ public class PasscodeViewController: UIViewController, Themeable {
 			return .darkContent
 		}
 
-		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
+		return Theme.shared.activeCollection.statusBarStyle
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		lockscreenContainerView?.apply(css: collection.css, properties: [.fill])
+
+		lockscreenContainerView?.backgroundColor = collection.tableBackgroundColor
 
 		messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: keypadButtonsEnabled ? .normal : .disabled)
+		errorMessageLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: keypadButtonsEnabled ? .normal : .disabled)
+		passcodeLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: keypadButtonsEnabled ? .normal : .disabled)
+		timeoutMessageLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: keypadButtonsEnabled ? .normal : .disabled)
 
-		messageLabel?.apply(css: collection.css, properties: [.stroke])
-		errorMessageLabel?.apply(css: collection.css, properties: [.stroke])
-		passcodeLabel?.apply(css: collection.css, properties: [.stroke])
-		timeoutMessageLabel?.apply(css: collection.css, properties: [.stroke])
-
-		if let deleteButton {
-			// Biometrical image should get same tint color as deleteButton
-			biometricalImageView?.tintColor = collection.css.getColor(.stroke, for: deleteButton)
+		for button in keypadButtons! {
+			button.applyThemeCollection(collection, itemStyle: .bigTitle)
 		}
+
+		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: .clear))
+
+		biometricalImageView?.tintColor = collection.tintColor
+
+		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 	}
 }
 
@@ -367,12 +351,4 @@ extension PasscodeViewController: UITextFieldDelegate {
 
 		return false
 	}
-}
-
-extension ThemeCSSSelector {
-	static let passcode = ThemeCSSSelector(rawValue: "passcode")
-	static let digit = ThemeCSSSelector(rawValue: "digit")
-	static let code = ThemeCSSSelector(rawValue: "code")
-	static let backspace = ThemeCSSSelector(rawValue: "backspace")
-	static let timeout = ThemeCSSSelector(rawValue: "timeout")
 }

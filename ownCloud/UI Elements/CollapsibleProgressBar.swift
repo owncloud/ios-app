@@ -27,7 +27,7 @@ private struct CollapsibleProgressBarUpdate {
 class CollapsibleProgressBar: UIView, Themeable {
 	var contentView : UIView = UIView()
 	var fillView : UIView = UIView()
-	var progressView : ThemeCSSProgressView = ThemeCSSProgressView()
+	var progressView : UIProgressView = UIProgressView()
 	var progressLabelView : UILabel = UILabel(frame: CGRect.zero)
 	var contentViewHeight : CGFloat = 0
 	var heightConstraint : NSLayoutConstraint?
@@ -165,15 +165,12 @@ class CollapsibleProgressBar: UIView, Themeable {
 
 	// MARK: - Theming
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let fillColor = collection.css.getColor(.fill, selectors: [.toolbar], for: self) // collection.toolbarColors.backgroundColor
-		let strokeColor = collection.css.getColor(.stroke, selectors: [.toolbar], for: self) // collection.toolbarColors.labelColor
+		fillView.backgroundColor = collection.toolbarColors.backgroundColor
+		contentView.backgroundColor = collection.toolbarColors.backgroundColor
+		progressLabelView.textColor = collection.toolbarColors.labelColor
 
-		fillView.backgroundColor = fillColor
-		contentView.backgroundColor = fillColor
-		progressLabelView.textColor = strokeColor
-
-//		progressView.trackTintColor = collection.toolbarColors.backgroundColor?.lighter(0.1)
-//		progressView.tintColor = collection.toolbarColors.tintColor
+		progressView.trackTintColor = collection.toolbarColors.backgroundColor?.lighter(0.1)
+		progressView.tintColor = collection.toolbarColors.tintColor
 	}
 
 	// MARK: - Collapsing

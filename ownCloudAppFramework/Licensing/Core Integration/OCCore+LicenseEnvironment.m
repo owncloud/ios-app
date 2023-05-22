@@ -24,7 +24,7 @@
 {
 	OCLicenseEnvironment *environment = nil;
 
-	environment = [OCLicenseEnvironment environmentWithIdentifier:nil hostname:self.bookmark.url.host certificate:self.bookmark.primaryCertificate attributes:nil];
+	environment = [OCLicenseEnvironment environmentWithIdentifier:nil hostname:self.bookmark.url.host certificate:self.bookmark.certificate attributes:nil];
 	environment.bookmarkUUID = self.bookmark.uuid;
 	environment.core = self;
 

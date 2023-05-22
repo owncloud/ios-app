@@ -43,8 +43,6 @@ typedef NS_ENUM(NSInteger, OCLicenseAppStoreProviderError)
 
 @property(nullable,strong,readonly,nonatomic) OCLicenseAppStoreReceipt *receipt;
 
-@property(strong,readonly,class) NSURL *appStoreManagementURL;
-
 @property(strong) NSArray<OCLicenseAppStoreItem *> *items;
 
 @property(nonatomic,readonly) BOOL purchasesAllowed;

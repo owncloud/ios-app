@@ -118,7 +118,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 		onboardingSection = StaticTableViewSection(headerTitle: nil, identifier: "onboardingSection")
 		if let message = profile.promptForHelpURL, let title = profile.helpURLButtonString {
-			let (proceedButton, _) = onboardingSection.addButtonFooter(message: message, messageItemStyle: .welcomeMessage, proceedLabel: title, proceedItemStyle: .welcomeInformal, cancelLabel: nil)
+			let (proceedButton, _) = onboardingSection.addButtonFooter(message: message, messageItemStyle: .welcomeMessage, proceedLabel: title, proceedItemStyle: .informal, cancelLabel: nil)
 				proceedButton?.addTarget(self, action: #selector(self.helpAction), for: .touchUpInside)
 		}
 
@@ -419,104 +419,64 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { [weak self] (error, authMethodIdentifier, authMethodData) in
 				guard let self = self else { return }
 				OnMainThread {
-					// HUD dismissal and error presentation
-					func dismissHUDandShowError(error: Error?, issue inIssue: OCIssue?) {
-						// Error
-						OnMainThread {
-							hud?.dismiss(completion: {
-								var issue : OCIssue? = inIssue
-								let nsError = error as NSError?
-
-								if issue == nil {
-									if let embeddedIssue = nsError?.embeddedIssue() {
-										issue = embeddedIssue
-									} else if let error = error {
-										issue = OCIssue(forError: error, level: .error, issueHandler: nil)
-									}
-								}
-
-								if nsError?.isOCError(withCode: .authorizationFailed) == true {
-									// Shake
-									self.navigationController?.view.shakeHorizontally()
-									OnMainThread {
-										self.passwordRow?.textField?.becomeFirstResponder()
-									}
-								} else {
-									if let loginViewController = self.loginViewController, let issue = issue {
-
-										if let busySection = self.busySection, busySection.attached {
-											self.removeSection(busySection)
-										}
-
-										IssuesCardViewController.present(on: loginViewController, issue: issue, completion: { [weak self, weak issue] (response) in
-											switch response {
-											case .cancel:
-												issue?.reject()
-
-											case .approve:
-												issue?.approve()
-												self?.startAuthentication(nil)
-
-											case .dismiss: break
-											}
-										})
-									}
-								}
-							})
-						}
-					}
-
 					self.isAuthenticating = false
 					if let button = sender as? ThemeButton {
 						spinner.removeFromSuperview()
 						button.setTitle("Login".localized, for: .normal)
 						button.isEnabled = true
 					}
+					hud?.dismiss(completion: {
+						if error == nil {
+							bookmark.authenticationMethodIdentifier = authMethodIdentifier
+							bookmark.authenticationData = authMethodData
+							bookmark.name = self.profile.bookmarkName
+							bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] = self.profile.identifier
 
-					if let error = error {
-						// Handle auth data generation error
-						dismissHUDandShowError(error: error, issue: nil)
-					} else {
-						// Auth successful, proceed with generation of bookmark
-						bookmark.authenticationMethodIdentifier = authMethodIdentifier
-						bookmark.authenticationData = authMethodData
-						bookmark.name = self.profile.bookmarkName
-						bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] = self.profile.identifier
+							OCBookmarkManager.shared.addBookmark(bookmark)
 
-						// Connect to enrich bookmark with data on instance and user's displayName
-						OnMainThread {
-							hud?.updateLabel(with: "Fetching user information…".localized)
-						}
+							self.loginViewController?.showFirstScreen()
+							if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false {
+								self.loginViewController?.openBookmark(bookmark)
+							}
+						} else {
+							var issue : OCIssue?
+							let nsError = error as NSError?
 
-						bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
-						let connection = self.instantiateConnection(for: bookmark)
+							if let embeddedIssue = nsError?.embeddedIssue() {
+								issue = embeddedIssue
+							} else if let error = error {
+								issue = OCIssue(forError: error, level: .error, issueHandler: nil)
+							}
 
-						connection.connect { [weak self] (error, issue) in
-							if error == nil {
-								// Add userDisplayName to bookmark
-								bookmark.userDisplayName = connection.loggedInUser?.displayName
-
-								connection.disconnect(completionHandler: {
-									OnMainThread {
-										// Add bookmark to OCBookmarkManager
-										OCBookmarkManager.shared.addBookmark(bookmark)
-
-										// Dismiss HUD and show login screen
-										hud?.dismiss(completion: {
-											self?.loginViewController?.showFirstScreen()
-
-											if ServerListTableViewController.classSetting(forOCClassSettingsKey: .accountAutoConnect) as? Bool ?? false {
-												self?.loginViewController?.openBookmark(bookmark)
-											}
-										})
-									}
-								})
+							if nsError?.isOCError(withCode: .authorizationFailed) == true {
+								// Shake
+								self.navigationController?.view.shakeHorizontally()
+								OnMainThread {
+									self.passwordRow?.textField?.becomeFirstResponder()
+								}
 							} else {
-								// Handle connection error
-								dismissHUDandShowError(error: error, issue: issue)
+								if let loginViewController = self.loginViewController, let issue = issue {
+
+									if let busySection = self.busySection, busySection.attached {
+										self.removeSection(busySection)
+									}
+
+									IssuesCardViewController.present(on: loginViewController, issue: issue, completion: { [weak self, weak issue] (response) in
+										switch response {
+										case .cancel:
+											issue?.reject()
+
+										case .approve:
+											issue?.approve()
+											self?.startAuthentication(nil)
+
+										case .dismiss: break
+										}
+									})
+								}
 							}
 						}
-					}
+					})
 				}
 			})
 		}

@@ -28,10 +28,13 @@ protocol ClientSessionManagerDelegate : AnyObject {
 
 class ClientSessionManager: NSObject {
 	public static let shared : ClientSessionManager = { return ClientSessionManager() }()
+
+	var clientViewControllersByBookmarkUUID : [UUID : NSHashTable<ClientRootViewController>] = [ : ]
+
 	var delegates : NSHashTable<NSObject>
 
 	override init() {
-		delegates = NSHashTable.weakObjects()
+		delegates = NSHashTable()
 
 		super.init()
 
@@ -40,6 +43,30 @@ class ClientSessionManager: NSObject {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .NotificationMessagePresenterShowMessage, object: nil)
+	}
+
+	func startSession(for bookmark: OCBookmark) -> ClientRootViewController? {
+		let clientViewController = ClientRootViewController(bookmark: bookmark)
+
+		if clientViewControllersByBookmarkUUID[bookmark.uuid] == nil {
+			OCSynchronized(self) {
+				self.clientViewControllersByBookmarkUUID[bookmark.uuid] = NSHashTable.weakObjects()
+			}
+		}
+
+		guard let existingViewControllers = clientViewControllersByBookmarkUUID[bookmark.uuid] else {
+			return nil
+		}
+
+		OCSynchronized(self) {
+			existingViewControllers.add(clientViewController)
+		}
+
+		return clientViewController
+	}
+
+	func sessions(for bookmark: OCBookmark) -> NSHashTable<ClientRootViewController>? {
+		return self.clientViewControllersByBookmarkUUID[bookmark.uuid]
 	}
 
 	@objc func showMessage(notification: Notification) {

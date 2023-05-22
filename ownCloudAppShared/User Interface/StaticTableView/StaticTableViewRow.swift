@@ -25,6 +25,7 @@ public typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableView
 
 public enum StaticTableViewRowButtonStyle {
 	case plain
+	case plainNonOpaque
 	case proceed
 	case destructive
 	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
@@ -81,7 +82,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	private var updateViewFromValue : ((_ row: StaticTableViewRow) -> Void)?
 	private var updateViewAppearance : ((_ row: StaticTableViewRow) -> Void)?
 
-	public var cell : ThemeTableViewCell?
+	public var cell : UITableViewCell?
 
 	public var selectable : Bool = true
 
@@ -100,6 +101,8 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	public var viewController: StaticTableViewController? {
 		return section?.viewController
 	}
+
+	private var themeApplierToken : ThemeApplierToken?
 
 	public var index : Int? {
 		return section?.rows.firstIndex(of: self)
@@ -126,10 +129,9 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	override public init() {
 		type = .row
 		super.init()
-		cssSelectors = [.table, .cell]
 	}
 
-	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, recreatedLabelLayout cellLayouter: ThemeTableViewCell.CellLayouter? = nil, leadingAccessoryView: UIView? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, messageStyle: StaticTableViewRowMessageStyle? = nil, recreatedLabelLayout cellLayouter: ThemeTableViewCell.CellLayouter? = nil, leadingAccessoryView: UIView? = nil, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
 
@@ -167,17 +169,14 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			themeCell.accessoryView = accessoryView
 		}
 
-		if let cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
-		themeCell.cellCustomizer = { (cell, styleSet) in
-			let css = styleSet.collection.css
-			let labelColor = css.getColor(.stroke, selectors: [.label], for: cell)
-
-			cell.imageView?.tintColor = labelColor
-			cell.accessoryView?.tintColor = labelColor
-		}
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
+			self?.cell?.accessoryView?.tintColor = themeCollection.tableRowColors.labelColor
+		})
 
 		themeCell.accessibilityIdentifier = identifier
 
@@ -195,58 +194,40 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.identifier = identifier
 
 		self.cell = ThemeTableViewCell(withLabelColorUpdates: false)
-
-		var cellContent = cell?.defaultContentConfiguration()
-		cellContent?.text = title
-		cellContent?.textProperties.alignment = (alignment == .center) ? .center : .natural
-		self.cell?.contentConfiguration = cellContent
+		self.cell?.textLabel?.text = title
+		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryView = accessoryView
 		self.cell?.accessibilityIdentifier = identifier
 
-		if let cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
-		cell?.cellCustomizer = { (cell, styleSet) in
-			let css = styleSet.collection.css
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
-			textColor = css.getColor(.stroke, for: cell) // tableRowColors.labelColor
-			backgroundColor = css.getColor(.fill, for: cell) // tableRowColors.backgroundColor
+			textColor = themeCollection.tableRowColors.labelColor
+			backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-			var contentConfig = cell.contentConfiguration as? UIListContentConfiguration
+			self?.cell?.textLabel?.textColor = textColor
 
-			if let textColor {
-				contentConfig?.textProperties.color = textColor
-				if let selectedTextColor {
-					contentConfig?.textProperties.colorTransformer = UIConfigurationColorTransformer({ [weak cell] (color) in
-						if cell?.configurationState.isHighlighted == true {
-							return selectedTextColor
-						}
-						return textColor
-					})
-				}
+			if selectedTextColor != nil {
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
 			}
 
-			cell.contentConfiguration = contentConfig
+			if backgroundColor != nil {
 
-			var backgroundConfig = cell.backgroundConfiguration
-
-			if let backgroundColor {
-				backgroundConfig?.backgroundColor = backgroundColor
-
-				if let selectedBackgroundColor {
-					backgroundConfig?.backgroundColorTransformer = UIConfigurationColorTransformer({ [weak cell] (color) in
-						if cell?.configurationState.isHighlighted == true {
-							return selectedBackgroundColor
-						}
-						return backgroundColor
-					})
-				}
-
-				cell.backgroundConfiguration = backgroundConfig
+				self?.cell?.backgroundColor = backgroundColor
 			}
-		}
+
+			if selectedBackgroundColor != nil {
+				let selectedBackgroundView = UIView()
+
+				selectedBackgroundView.backgroundColor = selectedBackgroundColor
+
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
+			}
+			}, applyImmediately: true)
 
 		if rowWithAction != nil {
 			self.action = rowWithAction
@@ -255,7 +236,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, imageTintColorKey : String = "labelColor", accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
 		self.init()
 		type = .row
 
@@ -265,12 +246,10 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		guard let cell = self.cell else { return }
 
-		var cellContent = cell.defaultContentConfiguration()
-		cellContent.text = title
-		cellContent.textProperties.alignment = (alignment == .center) ? .center : .natural
-		cellContent.image = image
-		self.cell?.contentConfiguration = cellContent
+		cell.textLabel?.text = title
+		cell.textLabel?.textAlignment = alignment
 		cell.accessoryType = accessoryType
+		self.cell?.imageView?.image = image
 		cell.accessibilityIdentifier = identifier
 		if rowWithAction != nil {
 			self.action = rowWithAction
@@ -293,7 +272,13 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			])
 		}
 
-		PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		if let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
+		})
 	}
 
 	convenience public init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil, withButtonStyle : Bool = false) {
@@ -308,7 +293,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		if let cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -321,18 +306,15 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		if withButtonStyle {
-			cell?.cellCustomizer = { (cell, styleSet) in
-				let css = styleSet.collection.css
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			let textColor = themeCollection.tableRowColors.labelColor
 
-				let textColor = css.getColor(.stroke, for: cell.textLabel) // themeCollection.tableRowColors.labelColor
-				let highlightTextColor = css.getColor(.stroke, state: [.highlighted], for: cell.textLabel) // themeCollection.tableRowHighlightColors.labelColor
+			self?.cell?.textLabel?.textColor = textColor
+			self?.cell?.detailTextLabel?.textColor = textColor
 
-				cell.textLabel?.textColor = textColor
-				cell.detailTextLabel?.textColor = textColor
-
-				cell.textLabel?.highlightedTextColor = highlightTextColor
-				cell.detailTextLabel?.highlightedTextColor = highlightTextColor
-			}
+			self?.cell?.textLabel?.highlightedTextColor = themeCollection.tableRowHighlightColors.labelColor
+			self?.cell?.detailTextLabel?.highlightedTextColor = themeCollection.tableRowHighlightColors.labelColor
+			}, applyImmediately: true)
 		}
 	}
 
@@ -363,7 +345,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
 		}
 
-		if let cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -398,7 +380,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.detailTextLabel?.numberOfLines = 0
 		}
 
-		if let cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
@@ -448,7 +430,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.textFieldAction = action
 		self.value = textValue
 
-		let cellTextField : UITextField = ThemeCSSTextField()
+		let cellTextField : UITextField = UITextField()
 
 		cellTextField.translatesAutoresizingMaskIntoConstraints = false
 
@@ -482,9 +464,16 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.updateViewAppearance = { [weak cellTextField] (row) in
 			cellTextField?.isEnabled = row.enabled
+			cellTextField?.textColor = row.enabled ? Theme.shared.activeCollection.tableRowColors.labelColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
 		}
 
 		self.textField = cellTextField
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			cellTextField.textColor = (self?.enabled == true) ? themeCollection.tableRowColors.labelColor : themeCollection.tableRowColors.secondaryLabelColor
+			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColors.secondaryLabelColor])
+			cellTextField.keyboardAppearance = themeCollection.keyboardAppearance
+		})
 
 		cellTextField.accessibilityLabel = accessibilityLabel
 	}
@@ -529,7 +518,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Labels
-	convenience public init(label: String, accessoryView: UIView? = nil, identifier: String? = nil) {
+	convenience public init(label: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier: String? = nil) {
 		self.init()
 		type = .label
 
@@ -538,6 +527,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
 		self.cell?.textLabel?.numberOfLines = 0
+		self.cell?.textLabel?.textAlignment = alignment
 
 		if accessoryView != nil {
 			self.cell?.accessoryView = accessoryView
@@ -620,25 +610,24 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.init(customView: paddingView, identifier: identifier)
 
-		cell?.cellCustomizer = { [weak titleLabel, weak messageLabel, weak paddingView, weak iconView] (cell, styleSet) in
-			let css = styleSet.collection.css
+		self.themeApplierToken = Theme.shared.add(applier: { [weak titleLabel, weak messageLabel, weak paddingView, weak iconView] (_, themeCollection, _) in
 			var textColor, backgroundColor, tintColor : UIColor?
 
 			switch style {
 				case .plain:
-					textColor = cell.getThemeCSSColor(.stroke) 		// collection.tableRowColors.tintColor
+					textColor = themeCollection.tableRowColors.tintColor
 					tintColor = textColor
-					backgroundColor = cell.getThemeCSSColor(.fill) 		// collection.tableRowColors.backgroundColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case .text:
-					textColor = cell.getThemeCSSColor(.stroke, selectors: [.label, .primary]) // collection.tableRowColors.labelColor
-					tintColor = textColor
-					backgroundColor = cell.getThemeCSSColor(.fill) 			// collection.tableRowColors.backgroundColor
+					textColor = themeCollection.tableRowColors.labelColor
+					tintColor = themeCollection.tableRowColors.labelColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case .confirmation:
-					textColor = css.getColor(.stroke, selectors: [.confirm], for: cell)
+					textColor = themeCollection.approvalColors.normal.foreground
 					tintColor = textColor
-					backgroundColor = css.getColor(.fill, selectors: [.confirm], for: cell)
+					backgroundColor = themeCollection.approvalColors.normal.background
 
 				case .warning:
 					textColor = .black
@@ -646,9 +635,9 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 					backgroundColor = .systemYellow
 
 				case .alert:
-					textColor = css.getColor(.stroke, selectors: [.destructive], for: cell)
+					textColor = themeCollection.destructiveColors.normal.foreground
 					tintColor = textColor
-					backgroundColor = css.getColor(.fill, selectors: [.destructive], for: cell)
+					backgroundColor = themeCollection.destructiveColors.normal.background
 
 				case let .custom(customTextColor, customBackgroundColor, customTintColor):
 					textColor = customTextColor
@@ -657,7 +646,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			}
 
 			if textColor == nil {
-				textColor = cell.getThemeCSSColor(.stroke) ?? .systemPink // collection.tableRowColors.tintColor
+				textColor = themeCollection.tableRowColors.tintColor
 			}
 
 			titleLabel?.tintColor = textColor
@@ -673,7 +662,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 					iconView?.image = iconView?.image?.tinted(with: tintColor)
 				}
 			}
-		}
+		}, applyImmediately: true)
 
 		self.selectable = false
 		self.cell?.selectionStyle = .none
@@ -736,7 +725,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Buttons
 
-	convenience public init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil, accessoryType: UITableViewCell.AccessoryType = .none) {
+	convenience public init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil, accessoryType: UITableViewCell.AccessoryType = .none) {
 		self.init()
 		type = .button
 
@@ -772,27 +761,30 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		if let cell {
+		if let cell = self.cell {
 			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
-		cell?.cellCustomizer = { (cell, styleSet) in
-			let css = styleSet.collection.css
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
 			switch style {
 			case .plain:
-				textColor = css.getColor(.stroke, for: cell) // themeCollection.tableRowColors.labelColor
-				backgroundColor = css.getColor(.fill, for: cell)  // themeCollection.tableRowColors.backgroundColor
+				textColor = themeCollection.tableRowColors.labelColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+			case .plainNonOpaque:
+				textColor = themeCollection.tableRowColors.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 			case .proceed:
-				textColor = css.getColor(.stroke, selectors: [.proceed], for: cell) // themeCollection.neutralColors.normal.foreground
-				backgroundColor = css.getColor(.fill, selectors: [.proceed], for: cell)  // themeCollection.neutralColors.normal.background
-				selectedBackgroundColor = css.getColor(.fill, selectors: [.proceed, .highlighted], for: cell)  // themeCollection.neutralColors.highlighted.background
+				textColor = themeCollection.neutralColors.normal.foreground
+				backgroundColor = themeCollection.neutralColors.normal.background
+				selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
 			case .destructive:
-				textColor = css.getColor(.stroke, selectors: [.destructive, .label], for: cell) // UIColor.red
-				backgroundColor = css.getColor(.fill, for: cell)  // themeCollection.tableRowColors.backgroundColor
+				textColor = UIColor.red
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
 				textColor = customTextColor
@@ -801,18 +793,18 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				selectedBackgroundColor = customSelectedBackgroundColor
 			}
 
-			cell.textLabel?.tintColor = textColor
-			cell.textLabel?.textColor = textColor
-			cell.imageView?.tintColor = textColor
-			cell.accessoryView?.tintColor = textColor
-			cell.tintColor = textColor // themeCollection.tintColor
+			self?.cell?.textLabel?.tintColor = textColor
+			self?.cell?.textLabel?.textColor = textColor
+			self?.cell?.imageView?.tintColor = (imageTintColorKey != nil) ? themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey!) as? UIColor : textColor
+			self?.cell?.accessoryView?.tintColor = textColor
+			self?.cell?.tintColor = themeCollection.tintColor
 
 			if selectedTextColor != nil {
-				cell.textLabel?.highlightedTextColor = selectedTextColor
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
 			}
 
 			if backgroundColor != nil {
-				cell.backgroundColor = backgroundColor
+				self?.cell?.backgroundColor = backgroundColor
 			}
 
 			if selectedBackgroundColor != nil {
@@ -820,9 +812,9 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 				selectedBackgroundView.backgroundColor = selectedBackgroundColor
 
-				cell.selectedBackgroundView = selectedBackgroundView
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
 			}
-		}
+		}, applyImmediately: true)
 
 		self.action = action
 	}
@@ -847,10 +839,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		datePickerView.maximumDate = maximumDate
 		datePickerView.accessibilityIdentifier = identifier
 		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
-
-		if let labelColor = datePickerView.getThemeCSSColor(.stroke, selectors: [.label]) {
-			datePickerView.setValue(labelColor, forKey: "textColor")
-		}
+		datePickerView.setValue(Theme.shared.activeCollection.tableRowColors.labelColor, forKey: "textColor")
 
 		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = .none
@@ -861,7 +850,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		datePickerView.layoutIfNeeded()
 
-		if let cell {
+		if let cell = self.cell {
 			var constraints : [NSLayoutConstraint] = [
 				datePickerView.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor),
 				datePickerView.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor),
@@ -894,7 +883,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		slider.value = value
 		slider.accessibilityIdentifier = identifier
 		slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
-		slider.tintColor = Theme.shared.activeCollection.css.getColor(.stroke, for: slider)
+		slider.tintColor = Theme.shared.activeCollection.tintColor
 
 		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		cell?.selectionStyle = .none
@@ -904,7 +893,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.value = value
 		self.action = action
 
-		if let cell {
+		if let cell = self.cell {
 			NSLayoutConstraint.activate([
 				slider.leftAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.leftAnchor, constant: 20),
 				slider.rightAnchor.constraint(equalTo: cell.contentView.safeAreaLayoutGuide.rightAnchor, constant: -20),
@@ -928,7 +917,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.action = action
 
-		if let cell {
+		if let cell = self.cell {
 			var constraints : [NSLayoutConstraint] = []
 
 			customView.translatesAutoresizingMaskIntoConstraints = false
@@ -952,5 +941,13 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	@objc open func actionTriggered(_ sender: UIView) {
 		action?(self, sender)
+	}
+
+	// MARK: - Deinit
+
+	deinit {
+		if themeApplierToken != nil {
+			Theme.shared.remove(applierForToken: themeApplierToken)
+		}
 	}
 }

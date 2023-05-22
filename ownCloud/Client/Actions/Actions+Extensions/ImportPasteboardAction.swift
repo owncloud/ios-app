@@ -36,7 +36,7 @@ class ImportPasteboardAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.importpasteboard") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Paste".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut, .emptyFolder] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -47,12 +47,6 @@ class ImportPasteboardAction : Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		let pasteboard = UIPasteboard.general
-
-		if forContext.items.first?.permissions.contains(.createFolder) == false ||
-		   forContext.items.first?.permissions.contains(.createFile) == false {
-			return .none
-		}
-
 		if pasteboard.numberOfItems > 0 {
 			return .afterMiddle
 		}
@@ -200,19 +194,18 @@ class ImportPasteboardAction : Action {
 					useUTI = UTType.data.identifier
 				}
 
-				let finalUTI = useUTI ?? UTType.data.identifier
 				var fileName: String?
 
-				item.loadFileRepresentation(forTypeIdentifier: finalUTI) { (url, _ error) in
+				item.loadFileRepresentation(forTypeIdentifier: useUTI!) { (url, _ error) in
 					guard let url = url else { return }
 
 					let fileNameMaxLength = 16
 
-					if finalUTI == UTType.utf8PlainText.identifier {
+					if useUTI == UTType.utf8PlainText.identifier {
 						fileName = try? String(String(contentsOf: url, encoding: .utf8).prefix(fileNameMaxLength) + ".txt")
 					}
 
-					if finalUTI == UTType.rtf.identifier {
+					if useUTI == UTType.rtf.identifier {
 						let options = [NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.rtf]
 						fileName = try? String(NSAttributedString(url: url, options: options, documentAttributes: nil).string.prefix(fileNameMaxLength) + ".rtf")
 					}

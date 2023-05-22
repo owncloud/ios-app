@@ -110,8 +110,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	private var query : OCQuery?
 	private var itemClaimIdentifier : UUID?
 
-	var clientContext: ClientContext?
-
 	func generateClaim(for item: OCItem) -> OCClaim? {
 		if let core = core {
 			return core.generateTemporaryClaim(for: .view)
@@ -180,12 +178,11 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	// MARK: - Subviews / UI elements
 
 	private var iconImageView = ResourceViewHost()
-	private var progressView = ThemeCSSProgressView(progressViewStyle: .bar)
+	private var progressView = UIProgressView(progressViewStyle: .bar)
 	private var cancelButton = ThemeButton(type: .custom)
-	private var metadataInfoLabel = ThemeCSSLabel(withSelectors: [.primary, .metadata])
+	private var metadataInfoLabel = UILabel()
 	private var showPreviewButton = ThemeButton(type: .custom)
-	private var primaryUnviewableActionButton = ThemeButton(type: .custom)
-	private var infoLabel = ThemeCSSLabel(withSelectors: [.secondary])
+	private var infoLabel = UILabel()
 	private var connectionActivityView = UIActivityIndicatorView(style: .medium)
 
 	// MARK: - Editing delegate
@@ -201,7 +198,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	required init() {
 		super.init(nibName: nil, bundle: nil)
-		cssSelector = .viewer
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -225,7 +221,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		PointerEffect.install(on: cancelButton, effectStyle: .highlight)
 		PointerEffect.install(on: showPreviewButton, effectStyle: .highlight)
-		PointerEffect.install(on: primaryUnviewableActionButton, effectStyle: .highlight)
 
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -245,21 +240,14 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		cancelButton.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton.setTitle("Cancel".localized, for: .normal)
-		cancelButton.addTarget(self, action: #selector(cancelDownload(sender:)), for: .primaryActionTriggered)
+		cancelButton.addTarget(self, action: #selector(cancelDownload(sender:)), for: UIControl.Event.touchUpInside)
 
 		view.addSubview(cancelButton)
 
 		showPreviewButton.translatesAutoresizingMaskIntoConstraints = false
 		showPreviewButton.setTitle("Open file".localized, for: .normal)
-		showPreviewButton.addTarget(self, action: #selector(downloadItem), for: .primaryActionTriggered)
+		showPreviewButton.addTarget(self, action: #selector(downloadItem), for: UIControl.Event.touchUpInside)
 		view.addSubview(showPreviewButton)
-
-		let title = primaryUnviewableAction?.actionExtension.name ?? ""
-
-		primaryUnviewableActionButton.translatesAutoresizingMaskIntoConstraints = false
-		primaryUnviewableActionButton.setTitle(title, for: .normal)
-		primaryUnviewableActionButton.addTarget(self, action: #selector(primaryUnviewableActionPressed), for: .primaryActionTriggered)
-		view.addSubview(primaryUnviewableActionButton)
 
 		infoLabel.translatesAutoresizingMaskIntoConstraints = false
 		infoLabel.adjustsFontForContentSizeCategory = true
@@ -292,9 +280,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			showPreviewButton.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			showPreviewButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: verticalSpacing),
 
-			primaryUnviewableActionButton.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			primaryUnviewableActionButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: verticalSpacing),
-
 			infoLabel.centerXAnchor.constraint(equalTo: metadataInfoLabel.centerXAnchor),
 			infoLabel.topAnchor.constraint(equalTo: metadataInfoLabel.bottomAnchor, constant: verticalSpacing),
 			infoLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: horizontalSpacing),
@@ -305,15 +290,13 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		])
 	}
 
-	private var _themeRegistered = false
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		Theme.shared.register(client: self)
+	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-
-		if !_themeRegistered {
-			_themeRegistered = true
-			Theme.shared.register(client: self)
-		}
 
 		startQuery()
 
@@ -365,38 +348,17 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		}
 	}
 
-	@objc func primaryUnviewableActionPressed(sender: Any? = nil) {
-		primaryUnviewableAction?.run()
-	}
-
-	@objc func actionsBarButtonPressed(_ sender: UIBarButtonItem) {
-		guard let core = core ?? clientContext?.core, let item = item else {
+	@objc func optionsBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let core = core, let item = item else {
 			return
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreDetailItem)
-		let actionContext = ActionContext(viewController: self, clientContext: clientContext, core: core, items: [item], location: actionsLocation, sender: sender)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)
 		}
-	}
-
-	var hasPrimaryUnviewableAction : Bool {
-		return primaryUnviewableAction != nil
-	}
-
-	var primaryUnviewableAction : Action? {
-		if let item = item, let core = core {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .unviewableFileType)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: nil)
-
-			let actions = Action.sortedApplicableActions(for: actionContext)
-
-			return actions.first
-		}
-
-		return nil
 	}
 
 	// MARK: - Update control
@@ -421,7 +383,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				switch updateStrategy {
 					case .ask:
 						OnMainThread {
-							let alert = ThemedAlertController(title: NSString(format: "%@ was updated".localized as NSString, item.name ?? "File".localized) as String, message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
+							let alert = UIAlertController(title: String(format: "%@ was updated".localized, item.name ?? "File".localized), message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
 
 							alert.addAction(UIAlertAction(title: "Show new version".localized, style: .default, handler: { [weak self] (_) in
 								self?.updateStrategy = .ask
@@ -492,7 +454,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	var actionBarButtonItem : UIBarButtonItem {
 		let itemName = item?.name ?? ""
-		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(actionsBarButtonPressed))
+		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
 		actionsBarButtonItem.tag = moreButtonTag
 		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
 
@@ -527,20 +489,16 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		case .initial:
 			hideProgressIndicators()
 			showPreviewButton.isHidden = true
-			primaryUnviewableActionButton.isHidden = true
 
 		case .online:
 			connectionActivityView.stopAnimating()
 			hideProgressIndicators()
 			showPreviewButton.isHidden = true
-			primaryUnviewableActionButton.isHidden = true
 
 			if let item = self.item, !canPreviewCurrentItem {
 				if self.core?.localCopy(of:item) == nil {
 					showPreviewButton.isHidden = false
 					showPreviewButton.setTitle("Download".localized, for: .normal)
-				} else {
-					primaryUnviewableActionButton.isHidden = !hasPrimaryUnviewableAction
 				}
 			}
 
@@ -554,7 +512,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			progressView.isHidden = true
 			cancelButton.isHidden = true
 			showPreviewButton.isHidden = true
-			primaryUnviewableActionButton.isHidden = true
 			infoLabel.isHidden = false
 			infoLabel.text = "Network unavailable".localized
 
@@ -568,13 +525,11 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			cancelButton.isHidden = false
 			infoLabel.isHidden = true
 			showPreviewButton.isHidden = true
-			primaryUnviewableActionButton.isHidden = true
 
 		case .downloadFinished:
 			cancelButton.isHidden = true
 			progressView.isHidden = true
 			showPreviewButton.isHidden = true
-			primaryUnviewableActionButton.isHidden = true
 
 			if canPreviewCurrentItem {
 				iconImageView.isHidden = true
@@ -582,8 +537,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				metadataInfoLabel.isHidden = true
 				infoLabel.isHidden = true
 				cancelButton.isHidden = true
-			} else {
-				primaryUnviewableActionButton.isHidden = !hasPrimaryUnviewableAction
 			}
 
 		case .previewFailed:
@@ -736,7 +689,11 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 	// MARK: - Themeable implementation
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		// For subclassing
+		progressView.applyThemeCollection(collection)
+		cancelButton.applyThemeCollection(collection)
+		metadataInfoLabel.applyThemeCollection(collection)
+		showPreviewButton.applyThemeCollection(collection)
+		infoLabel.applyThemeCollection(collection)
 	}
 
 	// MARK: - Query delegate
@@ -770,9 +727,4 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			}
 		}
 	}
-}
-
-extension ThemeCSSSelector {
-	static let viewer = ThemeCSSSelector(rawValue: "viewer")
-	static let metadata = ThemeCSSSelector(rawValue: "metadata")
 }

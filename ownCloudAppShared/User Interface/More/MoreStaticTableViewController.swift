@@ -25,8 +25,6 @@ open class MoreStaticTableViewController: StaticTableViewController {
 	override public init(style: UITableView.Style) {
 		themeApplierTokens = []
 		super.init(style: style)
-
-		cssSelectors = [.more]
 	}
 
 	deinit {
@@ -39,8 +37,8 @@ open class MoreStaticTableViewController: StaticTableViewController {
 
 	open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if let title = (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle {
-			let containerView = ThemeCSSView(withSelectors: [.sectionHeader])
-			let label = ThemeCSSLabel(withSelectors: [.label])
+			let containerView = UIView()
+			let label = UILabel()
 			label.translatesAutoresizingMaskIntoConstraints = false
 			containerView.addSubview(label)
 			NSLayoutConstraint.activate([
@@ -48,7 +46,7 @@ open class MoreStaticTableViewController: StaticTableViewController {
 				label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
 				label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
 				label.rightAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.rightAnchor, constant: -20)
-			])
+				])
 
 			label.attributedText = title
 
@@ -68,7 +66,7 @@ open class MoreStaticTableViewController: StaticTableViewController {
 		if  (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle != nil {
 			return UITableView.automaticDimension
 		}
-		return UITableView.automaticDimension
+		return 0.0
 	}
 
 	open override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -81,6 +79,7 @@ open class MoreStaticTableViewController: StaticTableViewController {
 
 	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+		self.tableView.separatorColor = self.tableView.backgroundColor
 	}
 }
 

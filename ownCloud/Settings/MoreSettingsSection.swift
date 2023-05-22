@@ -88,7 +88,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
-			row.viewController?.navigationController?.pushViewController(AcknowledgementsTableViewController(style: .insetGrouped), animated: true)
+			row.viewController?.navigationController?.pushViewController(AcknowledgementsTableViewController(style: .grouped), animated: true)
 		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
 
 		var buildType = "release".localized

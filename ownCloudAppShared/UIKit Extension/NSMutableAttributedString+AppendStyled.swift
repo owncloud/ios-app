@@ -21,21 +21,19 @@ import UIKit
 public extension NSMutableAttributedString {
 	var boldFont: UIFont { return UIFont.preferredFont(forTextStyle: .headline) }
 	var normalFont: UIFont { return UIFont.preferredFont(forTextStyle: .subheadline) }
-	var smallBoldFont: UIFont { return UIFont.preferredFont(forTextStyle: .subheadline, with: .semibold) }
-	var smallNormalFont: UIFont { return UIFont.preferredFont(forTextStyle: .subheadline) }
 
-	func appendBold(_ value:String, small: Bool = false) -> NSMutableAttributedString {
+	func appendBold(_ value:String) -> NSMutableAttributedString {
 		let attributes:[NSAttributedString.Key : Any] = [
-			.font : small ? smallBoldFont : boldFont
+			.font : boldFont
 		]
 
 		self.append(NSAttributedString(string: value, attributes:attributes))
 		return self
 	}
 
-	func appendNormal(_ value:String, small: Bool = false) -> NSMutableAttributedString {
+	func appendNormal(_ value:String) -> NSMutableAttributedString {
 		let attributes:[NSAttributedString.Key : Any] = [
-			.font : small ? smallNormalFont : normalFont
+			.font : normalFont
 		]
 
 		self.append(NSAttributedString(string: value, attributes:attributes))

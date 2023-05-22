@@ -23,7 +23,7 @@
 #pragma mark - Init
 - (instancetype)initWithUnlockedProductIdentifiers:(NSArray<OCLicenseProductIdentifier> *)unlockedProductIdentifiers
 {
-	if ((self = [super initWithIdentifier:OCLicenseProviderIdentifierEMM]) != nil)
+	if ((self = [super initWithIdentifier:OCLicenseProviderIdentifierEnterprise]) != nil)
 	{
 		_unlockedProductIdentifiers = unlockedProductIdentifiers;
 		self.localizedName = OCLocalized(@"EMM");
@@ -32,25 +32,26 @@
 	return (self);
 }
 
+
 + (BOOL)isEMMVersion
 {
-	NSBundle *appBundle;
+    NSBundle *appBundle;
 
-	if ((appBundle = NSBundle.mainBundle) != nil)
-	{
-		if ([appBundle.bundleURL.pathExtension isEqual:@"appex"])
-		{
-			// Find container app bundle (ownCloud.app/PlugIns/Extension.appex)
-			appBundle = [NSBundle bundleWithURL:appBundle.bundleURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent];
-		}
-
-		return (
-			[appBundle.bundleIdentifier hasSuffix:@".emm"] || // BundleID of the main bundle ending in ".emm"
-			[appBundle.bundleIdentifier hasSuffix:@"-emm"]    // BundleID of the main bundle ending in "-emm"
-			);
-	}
-	
-	return NO;
+    if ((appBundle = NSBundle.mainBundle) != nil)
+    {
+        if ([appBundle.bundleURL.pathExtension isEqual:@"appex"])
+        {
+            // Find container app bundle (ownCloud.app/PlugIns/Extension.appex)
+            appBundle = [NSBundle bundleWithURL:appBundle.bundleURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent];
+        }
+        
+        return (
+            [appBundle.bundleIdentifier hasSuffix:@".emm"] || // BundleID of the main bundle ending in ".emm"
+            [appBundle.bundleIdentifier hasSuffix:@"-emm"]    // BundleID of the main bundle ending in "-emm"
+        );
+    }
+    
+    return NO;
 }
 
 - (void)startProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler

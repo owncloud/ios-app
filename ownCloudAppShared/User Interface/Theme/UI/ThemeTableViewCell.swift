@@ -43,10 +43,8 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 	}
 
 	public typealias CellStyler = (_ cell: ThemeTableViewCell, _ styleSet: CellStyleSet) -> Bool
-	public typealias CellCustomizer = (_ cell: ThemeTableViewCell, _ styleSet: CellStyleSet) -> Void
 
 	public var cellStyler : CellStyler?
-	public var cellCustomizer: CellCustomizer?
 
 	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		if style == .default {
@@ -55,8 +53,6 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 		} else {
 			super.init(style: style, reuseIdentifier: reuseIdentifier)
 		}
-
-		cssSelector = .cell
 	}
 
 	public typealias CellLayouter = (_ cell: ThemeTableViewCell, _ textLabel: UILabel, _ detailLabel : UILabel?) -> Void
@@ -162,13 +158,13 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 		}
 	}
 
-	open override func didMoveToWindow() {
-		super.didMoveToWindow()
+	open override func willMove(toSuperview newSuperview: UIView?) {
+		super.willMove(toSuperview: newSuperview)
 
-		if !themeRegistered, window != nil {
+		if !themeRegistered {
 			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
-			themeRegistered = true
 			Theme.shared.register(client: self, applyImmediately: true)
+			themeRegistered = true
 		}
 	}
 
@@ -181,33 +177,33 @@ open class ThemeTableViewCell: UITableViewCell, Themeable {
 				var doStyle = true
 
 				switch messageStyle {
-					case .plain, .text:
-						textColor = self.getThemeCSSColor(.stroke, selectors: [.label, .primary]) // collection.tableRowColors.labelColor
-						backgroundColor = self.getThemeCSSColor(.fill) 			// collection.tableRowColors.backgroundColor
+					case .plain:
+						textColor = collection.tableRowColors.labelColor
+						backgroundColor = collection.tableRowColors.backgroundColor
+
+					case .text:
+						textColor = collection.tableRowColors.labelColor
+						backgroundColor = collection.tableRowColors.backgroundColor
 
 					case .confirmation:
-						textColor = collection.css.getColor(.stroke, selectors: [.confirm], for: self)
-						backgroundColor = collection.css.getColor(.fill, selectors: [.confirm], for: self)
+						textColor = collection.approvalColors.normal.foreground
+						backgroundColor = collection.approvalColors.normal.background
 
 					case .warning:
 						textColor = .black
 						backgroundColor = .systemYellow
 
 					case .alert:
-						textColor = collection.css.getColor(.stroke, selectors: [.destructive], for: self)
-						backgroundColor = collection.css.getColor(.fill, selectors: [.destructive], for: self)
+						textColor = collection.destructiveColors.normal.foreground
+						backgroundColor = collection.destructiveColors.normal.background
 
 					case let .custom(customTextColor, customBackgroundColor, _):
 						textColor = customTextColor
 						backgroundColor = customBackgroundColor
 				}
 
-				if let cellStyler, cellStyler(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor)) {
+				if let cellStyler = cellStyler, cellStyler(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor)) {
 					doStyle = false
-				}
-
-				if let cellCustomizer {
-					cellCustomizer(self, CellStyleSet(theme: theme, collection: collection, backgroundColor: backgroundColor, textColor: textColor))
 				}
 
 				if doStyle {

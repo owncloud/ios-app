@@ -104,12 +104,20 @@ class DriveListCell: ThemeableCollectionViewListCell {
 		])
 	}
 
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		coverImageResourceView.activeViewProvider = nil
-		title = ""
-		subtitle = ""
-	}
+//	func updateWith(item: OCDataItem?, cellConfiguration: CollectionViewCellConfiguration?) {
+//		var coverImageRequest : OCResourceRequest?
+//
+//		if let item = item,
+//		   let cellConfiguration = cellConfiguration,
+//		   let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
+//			title = presentable.title
+//			subtitle = presentable.subtitle
+//
+//			if let resourceManager = cellConfiguration.core?.vault.resourceManager {
+//				coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
+//			}
+//		}
+//	}
 }
 
 extension DriveListCell {
@@ -174,97 +182,10 @@ extension DriveListCell {
 			}
 		}
 
-		let driveGridCellRegistration = UICollectionView.CellRegistration<DriveGridCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
-			var coverImageRequest : OCResourceRequest?
-			var resourceManager : OCResourceManager?
-			var title : String?
-			var subtitle : String?
-
-			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, driveItem, cellConfiguration in
-				if let presentable = OCDataRenderer.default.renderItem(driveItem, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-					title = presentable.title
-					subtitle = presentable.subtitle
-
-					resourceManager = cellConfiguration.core?.vault.resourceManager
-
-					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
-
-					// More item button action
-					if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
-						cell.moreAction = OCAction(title: "", icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
-							clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
-								if let item {
-									OnMainThread {
-										moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
-									}
-								}
-								completion(error)
-							})
-						})
-					}
-				}
-			})
-
-			cell.title = title
-			cell.subtitle = subtitle
-
-			cell.coverImageResourceView.request = coverImageRequest
-			cell.isRequestingCoverImage = (coverImageRequest != nil)
-
-			cell.collectionItemRef = collectionItemRef
-			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
-
-			if let coverImageRequest = coverImageRequest {
-				resourceManager?.start(coverImageRequest)
-			}
-		}
-
-		let driveSideBarCellRegistration = UICollectionView.CellRegistration<ThemeableCollectionViewListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
-			var title : String?
-			var icon: UIImage?
-
-			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
-				if let drive = item as? OCDrive, let specialType = drive.specialType {
-					switch specialType {
-						case .personal:
-							icon = OCSymbol.icon(forSymbolName: "person")
-
-						case .shares:
-							icon = OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")
-
-						case .space:
-							icon = OCSymbol.icon(forSymbolName: "square.grid.2x2")
-
-						default:
-							icon = OCSymbol.icon(forSymbolName: "square.grid.2x2")
-					}
-				}
-
-				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-					title = presentable.title
-				}
-			})
-
-			var content = cell.defaultContentConfiguration()
-
-			content.text = title
-			content.image = icon
-
-			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
-			cell.contentConfiguration = content
-			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
-		}
-
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in
 			switch cellConfiguration?.style.type {
 				case .header:
 					return collectionView.dequeueConfiguredReusableCell(using: driveHeaderCellRegistration, for: indexPath, item: itemRef)
-
-				case .sideBar:
-					return collectionView.dequeueConfiguredReusableCell(using: driveSideBarCellRegistration, for: indexPath, item: itemRef)
-
-				case .gridCell:
-					return collectionView.dequeueConfiguredReusableCell(using: driveGridCellRegistration, for: indexPath, item: itemRef)
 
 				default:
 					return collectionView.dequeueConfiguredReusableCell(using: driveListCellRegistration, for: indexPath, item: itemRef)

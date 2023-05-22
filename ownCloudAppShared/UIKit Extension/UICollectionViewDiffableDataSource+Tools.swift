@@ -24,10 +24,4 @@ public extension UICollectionViewDiffableDataSource {
 		snapshot.reconfigureItems(items)
 		apply(snapshot, animatingDifferences: animated)
 	}
-
-	func requestReloadOfItems(_ items: [ItemIdentifierType], animated: Bool = true) {
-		var snapshot = snapshot()
-		snapshot.reloadItems(items)
-		apply(snapshot, animatingDifferences: animated)
-	}
 }

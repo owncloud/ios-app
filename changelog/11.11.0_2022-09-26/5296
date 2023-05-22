@@ -1,5 +1,0 @@
-Bugfix: Video Metadata Image
-
-If a video file includes a metadata image, the video file was not visible, because the metadata image was overlaying.
-
-https://github.com/owncloud/enterprise/issues/5296
