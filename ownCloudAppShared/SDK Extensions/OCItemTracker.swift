@@ -74,7 +74,7 @@ public class OCItemTracker: NSObject, OCCoreDelegate {
 	func beginTracking(at inLocation: OCLocation) {
 		var startTracking = false
 
-		var location = inLocation
+		let location = inLocation
 
 		if let core = requestedCore, core.useDrives, location.driveID == nil, let personalDrive = core.personalDrive {
 			location.driveID = personalDrive.rootLocation.driveID
