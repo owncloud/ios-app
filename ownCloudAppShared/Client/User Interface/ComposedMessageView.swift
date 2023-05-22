@@ -29,7 +29,8 @@ public class ComposedMessageElement: NSObject {
 		case progressCircle(progress: Progress? = nil)
 		case activityIndicator(style: UIActivityIndicatorView.Style = .medium, size: CGSize)
 		case spacing(size: CGFloat)
-		case button(action: UIAction)
+        case button(action: UIAction, image: UIImage?)
+        case imageButton(action: UIAction, image: UIImage)
 	}
 
 	public enum Alignment {
@@ -284,10 +285,14 @@ public class ComposedMessageElement: NSObject {
 
 					_view = spacingView
 
-				case .button(let action):
+				case .button(let action, let image):
 					var buttonConfig = UIButton.Configuration.filled()
 					buttonConfig.title = text
 					buttonConfig.cornerStyle = .large
+                    if let image = image {
+                        buttonConfig.image = image
+                        buttonConfig.imagePadding = 10
+                    }
 
 					let button = ThemeButton(withSelectors: cssSelectors ?? [], configuration: buttonConfig)
 					button.translatesAutoresizingMaskIntoConstraints = false
@@ -295,11 +300,24 @@ public class ComposedMessageElement: NSObject {
 					button.addAction(action, for: .primaryActionTriggered)
 
 					_view = button
-			}
-		}
+                
+                case .imageButton(let action, let image):
+                    var buttonConfig = UIButton.Configuration.filled()
+                    buttonConfig.cornerStyle = .large
+                    buttonConfig.image = image
+                    buttonConfig.imagePadding = 10
 
-		return _view
-	}
+                    let button = ThemeButton(withSelectors: cssSelectors ?? [], configuration: buttonConfig)
+                    button.translatesAutoresizingMaskIntoConstraints = false
+
+                    button.addAction(action, for: .primaryActionTriggered)
+
+                    _view = button
+            }
+        }
+
+        return _view
+    }
 
 	public var elementInView: Bool = false {
 		didSet {
@@ -364,13 +382,20 @@ public class ComposedMessageElement: NSObject {
 		return element
 	}
 
-	static public func button(_ title: String, action: UIAction, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
-		let element = ComposedMessageElement(kind: .button(action: action), alignment: alignment, insets: altInsets)
+	static public func button(_ title: String, action: UIAction, image: UIImage? = nil, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+		let element = ComposedMessageElement(kind: .button(action: action, image: image), alignment: alignment, insets: altInsets)
 		element.text = title
 		element.cssSelectors = cssSelectors
 
 		return element
 	}
+
+    static public func imageButton(_ image: UIImage, action: UIAction, alignment: Alignment = .leading, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
+        let element = ComposedMessageElement(kind: .button(action: action, image: image), alignment: alignment, insets: altInsets)
+        element.cssSelectors = cssSelectors
+
+        return element
+    }
 
 	static public func image(_ image: UIImage, size: CGSize?, adaptSizeToRatio: Bool = false, alignment: Alignment = .centered, cssSelectors: [ThemeCSSSelector]? = nil, insets altInsets: NSDirectionalEdgeInsets? = nil) -> ComposedMessageElement {
 		let element = ComposedMessageElement(kind: .image(image: image, imageSize: size, adaptSizeToRatio: adaptSizeToRatio), alignment: alignment, insets: altInsets)
