@@ -1613,6 +1613,80 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.10.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Available Offline Folders</string>
+					<key>Subtitle</key>
+					<string>Shows the contents of the available folders when offline.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.11.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>New Dark Mode Themes</string>
+					<key>Subtitle</key>
+					<string>Two new dark mode themes are available.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintbrush</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>iOS 16: Markup Mode</string>
+					<key>Subtitle</key>
+					<string>Markup mode was not enabled automatically on iOS 16.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>iOS 16: Video Player</string>
+					<key>Subtitle</key>
+					<string>Video player controls were not showing on iOS 16.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Video Player</string>
+					<key>Subtitle</key>
+					<string>Metadata image could overlay the video player canvas.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Passcode Interval</string>
+					<key>Subtitle</key>
+					<string>The passcode lock interval was not taken into use in the share extension.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

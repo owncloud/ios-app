@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DisplaySettings : NSObject <OCClassSettingsSupport, OCQueryFilter>
 
 #pragma mark - Singleton
-@property(class,retain,nonatomic,readonly) DisplaySettings *sharedDisplaySettings;
+@property(class,strong,nonatomic,readonly) DisplaySettings *sharedDisplaySettings;
 
 #pragma mark - Show hidden files
 @property(assign,nonatomic) BOOL showHiddenFiles;
@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Drag files
 @property(assign,nonatomic) BOOL preventDraggingFiles;
+
+#pragma mark - Query condition
+@property(nonatomic,readonly,nullable) OCQueryCondition *queryConditionForDisplaySettings;
 
 #pragma mark - Query updating
 - (void)updateQueryWithDisplaySettings:(OCQuery *)query;

@@ -1,3 +1,57 @@
+Changelog for ownCloud iOS Client [11.11.0] (2022-09-26)
+=======================================
+The following sections list the changes in ownCloud iOS Client 11.11.0 relevant to
+ownCloud admins and users.
+
+[11.11.0]: https://github.com/owncloud/ios-app/compare/milestone/11.10.1...milestone/11.11.0
+
+Summary
+-------
+
+* Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
+* Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+* Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
+
+Details
+-------
+
+* Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
+
+   Respect files.privateLinks capability and do not offer to create private links when
+   privateLinks are not supported.
+
+   https://github.com/owncloud/ios-app/issues/1138
+
+* Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
+
+   Enabling markup mode was broken on iOS 16 because of rearranged navigation bar and toolbar
+   items. Video player controls were not showing on iOS 16. Furthermore when a new theme was
+   chosen, this causes that the UITabBar and UIToolbar does not updates colours.
+
+   https://github.com/owncloud/ios-app/issues/1141
+
+* Bugfix - Share Extension Passcode Lock Interval: [#1156](https://github.com/owncloud/ios-app/issues/1156)
+
+   The passcode lock interval was not taken into use in the share extension.
+
+   https://github.com/owncloud/ios-app/issues/1156
+
+* Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
+
+   If a video file includes a metadata image, the video file was not visible, because the metadata
+   image was overlaying.
+
+   https://github.com/owncloud/enterprise/issues/5296
+
+* Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
+
+   Adds a new dark mode theme which is mostly equal to the web UI dark mode theme. Furthermore it adds
+   a black dark mode theme.
+
+   https://github.com/owncloud/ios-app/issues/1146
+
 Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
@@ -130,11 +184,11 @@ Summary
 
 * Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
 * Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
+* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
 * Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
 * Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
-* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
-* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
 
 Details
 -------
@@ -152,6 +206,20 @@ Details
    Retry requests that failed with a 401 during a token refresh
 
    https://github.com/owncloud/ios-app/pull/1105
+
+* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
+
+   Added support for prepopulation of newly created account bookmarks via infinite PROPFINDs,
+   which speeds up the initial scan
+
+   https://github.com/owncloud/ios-app/issues/950
+
+* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
+
+   Check if only the account name was changed in edit mode: save and dismiss without
+   re-authentication
+
+   https://github.com/owncloud/ios-app/issues/972
 
 * Change - Biometrical Authentication Button: [#1004](https://github.com/owncloud/ios-app/issues/1004)
 
@@ -173,20 +241,6 @@ Details
    user name
 
    https://github.com/owncloud/ios-app/pull/1059
-
-* Change - Infinite PROPFIND support: [#950](https://github.com/owncloud/ios-app/issues/950)
-
-   Added support for prepopulation of newly created account bookmarks via infinite PROPFINDs,
-   which speeds up the initial scan
-
-   https://github.com/owncloud/ios-app/issues/950
-
-* Change - Rename Account (without re-authentication): [#972](https://github.com/owncloud/ios-app/issues/972)
-
-   Check if only the account name was changed in edit mode: save and dismiss without
-   re-authentication
-
-   https://github.com/owncloud/ios-app/issues/972
 
 Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
 =======================================
@@ -234,11 +288,18 @@ ownCloud admins and users.
 Summary
 -------
 
-* Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
 * Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
+* Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
 
 Details
 -------
+
+* Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
+
+   Improved sorting results and localized sorting across query results and database queries,
+   via the SDK's new OCLOCALIZED collation and sort comparator.
+
+   https://github.com/owncloud/ios-app/issues/975
 
 * Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
 
@@ -248,13 +309,6 @@ Details
    infinite OAuth2 token refresh loop via SDK update.
 
    https://github.com/owncloud/ios-app/pull/1068
-
-* Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
-
-   Improved sorting results and localized sorting across query results and database queries,
-   via the SDK's new OCLOCALIZED collation and sort comparator.
-
-   https://github.com/owncloud/ios-app/issues/975
 
 Changelog for ownCloud iOS Client [11.8.0] (2021-12-01)
 =======================================
@@ -390,13 +444,13 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
 * Bugfix - Enabling Markup Edit Mode on iOS 15: [#1012](https://github.com/owncloud/ios-app/issues/1012)
 * Bugfix - Automatic photo upload crash on iOS 15: [#1017](https://github.com/owncloud/ios-app/pull/1017)
 * Bugfix - Open Private Link in Branded Client: [#1031](https://github.com/owncloud/ios-app/issues/1031)
-* Bugfix - (PDF-Viewer) "Go to page" action does not open last page: [#1033](https://github.com/owncloud/ios-app/issues/1033)
 * Bugfix - Open Private Link in Branded App: [#1031](https://github.com/owncloud/ios-app/issues/1031)
+* Bugfix - (PDF-Viewer) "Go to page" action does not open last page: [#1033](https://github.com/owncloud/ios-app/issues/1033)
 * Bugfix - (Branding) iOS 12 crash when entering Settings: [#4701](https://github.com/owncloud/enterprise/issues/4701)
-* Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
 * Change - (Branding) Add build flags support: [#1026](https://github.com/owncloud/ios-app/pull/1026)
 * Change - Added associated domains to resign script: [#1028](https://github.com/owncloud/ios-app/pull/1028)
 * Change - (Branding) Send Feedback via URL: [#1035](https://github.com/owncloud/ios-app/pull/1035)
@@ -407,6 +461,12 @@ Summary
 
 Details
 -------
+
+* Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
+
+   Keyboard does not disappear when using the "Go to page" action on the iPad.
+
+   https://github.com/owncloud/ios-app/issues/894
 
 * Bugfix - Enabling Markup Edit Mode on iOS 15: [#1012](https://github.com/owncloud/ios-app/issues/1012)
 
@@ -430,29 +490,23 @@ Details
 
    https://github.com/owncloud/ios-app/issues/1031
 
-* Bugfix - (PDF-Viewer) "Go to page" action does not open last page: [#1033](https://github.com/owncloud/ios-app/issues/1033)
-
-   The last page of a PDF file could not be opened with the "Go to page" action.
-
-   https://github.com/owncloud/ios-app/issues/1033
-
 * Bugfix - Open Private Link in Branded App: [#1031](https://github.com/owncloud/ios-app/issues/1031)
 
    Private links will now be opened in detail view, if the app client is branded.
 
    https://github.com/owncloud/ios-app/issues/1031
 
+* Bugfix - (PDF-Viewer) "Go to page" action does not open last page: [#1033](https://github.com/owncloud/ios-app/issues/1033)
+
+   The last page of a PDF file could not be opened with the "Go to page" action.
+
+   https://github.com/owncloud/ios-app/issues/1033
+
 * Bugfix - (Branding) iOS 12 crash when entering Settings: [#4701](https://github.com/owncloud/enterprise/issues/4701)
 
    Addresses an issue where a branded build of the app crashes on iOS 12 upon entering Settings.
 
    https://github.com/owncloud/enterprise/issues/4701
-
-* Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
-
-   Keyboard does not disappear when using the "Go to page" action on the iPad.
-
-   https://github.com/owncloud/ios-app/issues/894
 
 * Change - (Branding) Add build flags support: [#1026](https://github.com/owncloud/ios-app/pull/1026)
 
@@ -558,13 +612,19 @@ ownCloud admins and users.
 Summary
 -------
 
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
 * Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
 * Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
-* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
 * Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
 
 Details
 -------
+
+* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
+
+   Views in FileProvider UI (public links, share with user) could not be dismissed on iOS 12
+
+   https://github.com/owncloud/ios-app/issues/986
 
 * Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
 
@@ -573,12 +633,6 @@ Details
 * Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
 
    https://github.com/owncloud/enterprise/issues/4558
-
-* Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
-
-   Views in FileProvider UI (public links, share with user) could not be dismissed on iOS 12
-
-   https://github.com/owncloud/ios-app/issues/986
 
 * Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
 
@@ -597,9 +651,6 @@ ownCloud admins and users.
 Summary
 -------
 
-* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
-* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
-* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 * Bugfix - Changed wording in documentation: [#867](https://github.com/owncloud/ios-app/pull/867)
 * Bugfix - Fix bookmark name editing: [#877](https://github.com/owncloud/ios-app/pull/877)
@@ -612,11 +663,11 @@ Summary
 * Bugfix - Disable Markup Action for Mime-Type Gif: [#952](https://github.com/owncloud/ios-app/issues/952)
 * Bugfix - UI refinements in action card: [#956](https://github.com/owncloud/ios-app/issues/956)
 * Bugfix - State Restoration for Branded Login: [#957](https://github.com/owncloud/ios-app/issues/957)
-* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
-* Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
-* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
-* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
+* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
 * Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
+* Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
 * Change - Unified Branding with MDM support: [#697](https://github.com/owncloud/ios-app/issues/697)
 * Change - Presentation Mode: [#704](https://github.com/owncloud/ios-app/issues/704)
 * Change - Class Settings Metadata Support: [#831](https://github.com/owncloud/ios-app/issues/831)
@@ -633,29 +684,12 @@ Summary
 * Change - File Provider Passcode Protection: [#880](https://github.com/owncloud/ios-app/issues/880)
 * Change - Updated Keyboard Shortcuts: [#902](https://github.com/owncloud/ios-app/issues/902)
 * Change - Added Actions to File Provider: Sharing & Public Links: [#910](https://github.com/owncloud/ios-app/pull/910)
+* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 
 Details
 -------
-
-* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
-
-   - adds a paragraph on top of the Acknowledgements to provide additional context - adds
-   PLCrashReporter license to acknowledgements
-
-   https://github.com/owncloud/enterprise/issues/4284
-
-* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
-
-   - UI fix for branded login on the iPad - Fill color for branded button was not used
-
-   https://github.com/owncloud/enterprise/issues/4367
-   https://github.com/owncloud/enterprise/issues/4366
-
-* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
-
-   In some cases enabling markup mode failed.
-
-   https://github.com/owncloud/enterprise/issues/4468
 
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 
@@ -741,12 +775,32 @@ Details
 
    https://github.com/owncloud/ios-app/issues/957
 
-* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
 
-   - Passcode lock enforcement via class setting. User can be forced to set-up a passcode when he
-   first starts the app - Auto-generated MDM documentation
+   - adds a paragraph on top of the Acknowledgements to provide additional context - adds
+   PLCrashReporter license to acknowledgements
 
-   https://github.com/owncloud/enterprise/issues/4104
+   https://github.com/owncloud/enterprise/issues/4284
+
+* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
+
+   - UI fix for branded login on the iPad - Fill color for branded button was not used
+
+   https://github.com/owncloud/enterprise/issues/4367
+   https://github.com/owncloud/enterprise/issues/4366
+
+* Bugfix - Enabling Markup Mode: [#4468](https://github.com/owncloud/enterprise/issues/4468)
+
+   In some cases enabling markup mode failed.
+
+   https://github.com/owncloud/enterprise/issues/4468
+
+* Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
+
+   User can switch between local folder or local account-wide search. Search terms and filter
+   keywords can be combined inside the search field to get granular search results.
+
+   https://github.com/owncloud/ios-app/issues/53
 
 * Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
 
@@ -755,26 +809,6 @@ Details
    device to give the displayed document more screen real estate.
 
    https://github.com/owncloud/ios-app/issues/428
-
-* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
-
-   The "Go to Page" option for PDF files has been reallocated to the Actions menu, and is also
-   available by tapping on the page label.
-
-   https://github.com/owncloud/enterprise/issues/4448
-
-* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
-
-   Added french localization.
-
-   https://github.com/owncloud/enterprise/issues/4450
-
-* Change - Local account-wide search using custom queries: [#53](https://github.com/owncloud/ios-app/issues/53)
-
-   User can switch between local folder or local account-wide search. Search terms and filter
-   keywords can be combined inside the search field to get granular search results.
-
-   https://github.com/owncloud/ios-app/issues/53
 
 * Change - Unified Branding with MDM support: [#697](https://github.com/owncloud/ios-app/issues/697)
 
@@ -895,6 +929,26 @@ Details
 
    https://github.com/owncloud/ios-app/pull/910
 
+* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+
+   - Passcode lock enforcement via class setting. User can be forced to set-up a passcode when he
+   first starts the app - Auto-generated MDM documentation
+
+   https://github.com/owncloud/enterprise/issues/4104
+
+* Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
+
+   The "Go to Page" option for PDF files has been reallocated to the Actions menu, and is also
+   available by tapping on the page label.
+
+   https://github.com/owncloud/enterprise/issues/4448
+
+* Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
+
+   Added french localization.
+
+   https://github.com/owncloud/enterprise/issues/4450
+
 Changelog for ownCloud iOS Client [11.5.2] (2021-03-03)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
@@ -905,18 +959,12 @@ ownCloud admins and users.
 Summary
 -------
 
-* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 * Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
 
 Details
 -------
-
-* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
-
-   Tap on hyperlinks in PDF documents opens the link.
-
-   https://github.com/owncloud/enterprise/issues/4432
 
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 
@@ -931,6 +979,12 @@ Details
    Hide the Collapsible Progress Bar in detail view and fixed position in file list.
 
    https://github.com/owncloud/ios-app/issues/906
+
+* Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
+
+   Tap on hyperlinks in PDF documents opens the link.
+
+   https://github.com/owncloud/enterprise/issues/4432
 
 Changelog for ownCloud iOS Client [11.5.1] (2021-02-17)
 =======================================
@@ -963,13 +1017,12 @@ ownCloud admins and users.
 Summary
 -------
 
-* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
-* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 * Bugfix - Changed wording in documentation: [#867](https://github.com/owncloud/ios-app/pull/867)
 * Bugfix - Fix bookmark name editing: [#877](https://github.com/owncloud/ios-app/pull/877)
 * Bugfix - Media Player Behaviour: [#884](https://github.com/owncloud/ios-app/pull/884)
-* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
+* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
 * Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
 * Change - Unified Branding with MDM support: [#697](https://github.com/owncloud/ios-app/issues/697)
 * Change - Class Settings Metadata Support: [#831](https://github.com/owncloud/ios-app/issues/831)
@@ -982,23 +1035,10 @@ Summary
 * Change - TLS certificate comparison: [#872](https://github.com/owncloud/ios-app/pull/872)
 * Change - New Issue view / presentation: [#874](https://github.com/owncloud/ios-app/pull/874)
 * Change - Automated Calens Changelog Creation: [#879](https://github.com/owncloud/ios-app/pull/879)
+* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
 
 Details
 -------
-
-* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
-
-   - adds a paragraph on top of the Acknowledgements to provide additional context - adds
-   PLCrashReporter license to acknowledgements
-
-   https://github.com/owncloud/enterprise/issues/4284
-
-* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
-
-   - UI fix for branded login on the iPad - Fill color for branded button was not used
-
-   https://github.com/owncloud/enterprise/issues/4367
-   https://github.com/owncloud/enterprise/issues/4366
 
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 
@@ -1029,12 +1069,19 @@ Details
 
    https://github.com/owncloud/ios-app/pull/884
 
-* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+* Bugfix - Added paragraph on top of Acknowledgements page: [#4284](https://github.com/owncloud/enterprise/issues/4284)
 
-   - Passcode lock enforcement via class setting. User can be forced to set-up a passcode when he
-   first starts the app - Auto-generated MDM documentation
+   - adds a paragraph on top of the Acknowledgements to provide additional context - adds
+   PLCrashReporter license to acknowledgements
 
-   https://github.com/owncloud/enterprise/issues/4104
+   https://github.com/owncloud/enterprise/issues/4284
+
+* Bugfix - Fixed Branded UI on iPad: [#4367](https://github.com/owncloud/enterprise/issues/4367)
+
+   - UI fix for branded login on the iPad - Fill color for branded button was not used
+
+   https://github.com/owncloud/enterprise/issues/4367
+   https://github.com/owncloud/enterprise/issues/4366
 
 * Change - Full Screen PDF View: [#428](https://github.com/owncloud/ios-app/issues/428)
 
@@ -1126,6 +1173,13 @@ Details
    the new CHANGELOG.md into the current branch.
 
    https://github.com/owncloud/ios-app/pull/879
+
+* Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
+
+   - Passcode lock enforcement via class setting. User can be forced to set-up a passcode when he
+   first starts the app - Auto-generated MDM documentation
+
+   https://github.com/owncloud/enterprise/issues/4104
 
 ## Release version 11.4.5 (January 2021)
 

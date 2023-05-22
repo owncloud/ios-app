@@ -27,14 +27,14 @@ extension Action {
 	class public func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
 		guard let core = context.core else { return nil }
 
-		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let tableViewController = MoreStaticTableViewController(style: .insetGrouped)
 		let header = MoreViewHeader(for: item, with: core)
 		let moreViewController = FrameViewController(header: header, viewController: tableViewController)
 
 		if core.connectionStatus == .online {
 			if core.connection.capabilities?.sharingAPIEnabled == 1 {
 				if item.isSharedWithUser || item.isShared {
-					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 					progressView.startAnimating()
 
 					let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
@@ -66,8 +66,6 @@ extension Action {
 			}
 		}
 
-		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
 		let actions = Action.sortedApplicableActions(for: context)
 
 		actions.forEach({
@@ -82,7 +80,7 @@ extension Action {
 
 		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
 
-		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+		tableViewController.addSection(StaticTableViewSection(headerTitle: nil, identifier: "actions-section", rows: actionsRows))
 
 		return moreViewController
 	}
@@ -220,7 +218,7 @@ private extension Action {
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: title, style: .plain, image: nil, imageWidth:nil, imageTintColorKey: nil, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "group")))
+		}, title: title, style: .plain, image: nil, imageWidth:nil, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "group")))
 
 		return addGroupRow
 	}

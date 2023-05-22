@@ -13,6 +13,7 @@ import ownCloudAppShared
 typealias UploadHandler = (OCItem?, Error?) -> Void
 
 extension URL {
+	// MARK: - App scheme matching
 	var matchesAppScheme : Bool {
 		guard
 			let urlTypes = Bundle.main.object(forInfoDictionaryKey: "CFBundleURLTypes") as? [Any],
@@ -26,6 +27,7 @@ extension URL {
 		return false
 	}
 
+	// MARK: - File upload
 	func upload(with core:OCCore?, at rootItem:OCItem, alternativeName:String? = nil, modificationDate:Date? = nil, importByCopy:Bool = false, cellularSwitchIdentifier:OCCellularSwitchIdentifier? = nil, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
 		let fileName = alternativeName != nil ? alternativeName! : self.lastPathComponent
 		var importOptions : [OCCoreOption : Any] = [.importByCopying : importByCopy, .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue]
@@ -67,8 +69,8 @@ extension URL {
 		return progress
 	}
 
-	func privateLinkItemID() -> String? {
-
+	// MARK: - Private link handling (OC10)
+	var privateLinkItemID: String? {
 		// Check if the link URL has format https://<server>/f/<item_id>
 		if self.pathComponents.count > 2 {
 			if self.pathComponents[self.pathComponents.count - 2] == "f" {
@@ -79,9 +81,9 @@ extension URL {
 		return nil
 	}
 
-	@discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?, _ connected:Bool) -> Void) -> Bool {
+	@discardableResult func retrieveLinkedItem(with completion: @escaping (_ item: OCItem?, _ bookmark: OCBookmark?, _ error: Error?, _ connected: Bool) -> Void) -> Bool {
 		// Check if the link is private ones and has item ID
-		guard self.privateLinkItemID() != nil else {
+		guard self.privateLinkItemID != nil else {
 			return false
 		}
 
@@ -135,23 +137,44 @@ extension URL {
 		return true
 	}
 
-	func resolveAndPresent(in window:UIWindow) {
+	func resolveAndPresentPrivateLink(with clientContext: ClientContext) {
+		guard let window = (clientContext.scene as? UIWindowScene)?.windows.first else {
+			return
+		}
 
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 		hud?.present(on: window.rootViewController?.topMostViewController, label: "Resolving link…".localized)
 
 		self.retrieveLinkedItem(with: { (item, bookmark, _, internetReachable) in
-
 			let completion = {
 				if item == nil {
 					let isOffline = internetReachable == false
 					let accountFound = bookmark != nil
-					let alertController = ThemedAlertController.alertControllerForUnresolvedLink(offline: isOffline, accountFound: accountFound)
+					var message = ""
+
+					if !accountFound {
+						message = "Link points to an account bookmark which is not configured in the app.".localized
+					} else if isOffline {
+						message = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.".localized
+					} else {
+						message = "Couldn't resolve a private link since the item is not known to the server.".localized
+					}
+
+					let alertController = ThemedAlertController(title: "Link resolution failed".localized, message: message, preferredStyle: .alert)
+					alertController.addAction(UIAlertAction(title: "OK", style: .default))
+
 					window.rootViewController?.topMostViewController.present(alertController, animated: true)
 
 				} else {
-					if let itemID = item?.localID, let bookmark = bookmark {
-						window.display(itemWithID: itemID, in: bookmark)
+					if let item, let bookmark = bookmark {
+						let stateAction = AppStateAction(with: [
+							.connection(with: bookmark, children: [
+								.reveal(item: item)
+							])
+						])
+
+						stateAction.run(in: clientContext, completion: { error, clientContext in
+						})
 					}
 				}
 			}

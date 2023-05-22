@@ -7,67 +7,29 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
-
-public class SegmentedControl: UISegmentedControl {
-	var oldValue : Int!
-
-	public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent? ) {
-		self.oldValue = self.selectedSegmentIndex
-		super.touchesBegan(touches, with: event)
-	}
-
-	public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent? ) {
-		super.touchesEnded(touches, with: event )
-
-		if self.oldValue == self.selectedSegmentIndex {
-			sendActions(for: UIControl.Event.valueChanged)
-		}
-	}
-}
-
-public enum SortBarSearchScope : Int, CaseIterable {
-	case global
-	case local
-
-	var label : String {
-		var name : String!
-
-		switch self {
-			case .global: name = "Account".localized
-			case .local: name = "Folder".localized
-		}
-
-		return name
-	}
-}
+import ownCloudSDK
 
 public protocol SortBarDelegate: AnyObject {
 
 	var sortDirection: SortDirection { get set }
 	var sortMethod: SortMethod { get set }
-	var searchScope: SortBarSearchScope { get set }
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
-
-	func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SortBarSearchScope)
-
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
-
-	func toggleSelectMode()
+	func sortBar(_ sortBar: SortBar, itemLayout: ItemLayout)
+	func sortBarToggleSelectMode(_ sortBar: SortBar)
 }
 
-public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
-
+public class SortBar: ThemeCSSView {
 	weak public var delegate: SortBarDelegate? {
 		didSet {
 			updateSortButtonTitle()
@@ -79,15 +41,14 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	let leftPadding: CGFloat = 16.0
 	let rightPadding: CGFloat = 20.0
 	let rightSelectButtonPadding: CGFloat = 8.0
-	let rightSearchScopePadding: CGFloat = 15.0
-	let topPadding: CGFloat = 2.0
-	let bottomPadding: CGFloat = 2.0
+	let rightDisplayModeButtonPadding: CGFloat = 8.0
+	let topPadding: CGFloat = 10.0
+	let bottomPadding: CGFloat = 10.0
 
 	// MARK: - Instance variables.
-
 	public var sortButton: UIButton?
-	public var searchScopeSegmentedControl : SegmentedControl?
 	public var selectButton: UIButton?
+	public var changeItemLayoutButton: UIButton?
 	public var allowMultiSelect: Bool = true {
 		didSet {
 			updateSelectButtonVisibility()
@@ -107,30 +68,6 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		selectButton?.isEnabled = showButton
 
 		UIAccessibility.post(notification: .layoutChanged, argument: nil)
-	}
-
-	var showSearchScope: Bool = false {
-		didSet {
-			showSelectButton = !self.showSearchScope
-			self.searchScopeSegmentedControl?.isHidden = false
-			self.searchScopeSegmentedControl?.alpha = oldValue ? 1.0 : 0.0
-
-			// Woraround for Accessibility: remove all elements, when element is hidden, otherwise the elements are still available for accessibility
-			if oldValue == false {
-				for scope in SortBarSearchScope.allCases {
-					searchScopeSegmentedControl?.insertSegment(withTitle: scope.label, at: scope.rawValue, animated: false)
-				}
-				searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
-			} else {
-				self.searchScopeSegmentedControl?.removeAllSegments()
-			}
-
-			UIView.animate(withDuration: 0.3, animations: {
-				self.searchScopeSegmentedControl?.alpha = self.showSearchScope ? 1.0 : 0.0
-			}, completion: { (_) in
-				self.searchScopeSegmentedControl?.isHidden = !self.showSearchScope
-			})
-		}
 	}
 
 	public var sortMethod: SortMethod {
@@ -155,50 +92,41 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		}
 	}
 
-	public var searchScope : SortBarSearchScope {
+	public var itemLayout: ItemLayout = .list {
 		didSet {
-			delegate?.searchScope = searchScope
-			searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
+			switch itemLayout {
+				case .grid: changeItemLayoutButton?.setImage(OCSymbol.icon(forSymbolName: "list.bullet"), for: .normal)
+				case .list: changeItemLayoutButton?.setImage(OCSymbol.icon(forSymbolName: "square.grid.2x2"), for: .normal)
+			}
 		}
 	}
 
 	// MARK: - Init & Deinit
-
-	public init(frame: CGRect = .zero, sortMethod: SortMethod, searchScope: SortBarSearchScope = .local) {
+	public init(frame: CGRect = .zero, sortMethod: SortMethod) {
 		selectButton = UIButton()
+		changeItemLayoutButton = UIButton()
 		sortButton = UIButton(type: .system)
-		searchScopeSegmentedControl = SegmentedControl()
 
 		self.sortMethod = sortMethod
-		self.searchScope = searchScope
 
 		super.init(frame: frame)
+		self.cssSelector = .sortBar
 
-		if let sortButton = sortButton, let searchScopeSegmentedControl = searchScopeSegmentedControl, let selectButton = selectButton {
+		if let sortButton, let selectButton, let changeItemLayoutButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
-			searchScopeSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+			changeItemLayoutButton.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
-			searchScopeSegmentedControl.accessibilityIdentifier = "sort-bar.searchScopeSegmentedControl"
-			searchScopeSegmentedControl.accessibilityLabel = "Search scope".localized
-			searchScopeSegmentedControl.isHidden = !self.showSearchScope
-			searchScopeSegmentedControl.addTarget(self, action: #selector(searchScopeValueChanged), for: .valueChanged)
 
 			self.addSubview(sortButton)
-			self.addSubview(searchScopeSegmentedControl)
 			self.addSubview(selectButton)
-
-			// Sort segmented control
-			NSLayoutConstraint.activate([
-				searchScopeSegmentedControl.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -rightSearchScopePadding),
-				searchScopeSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
-				searchScopeSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding)
-			])
+			self.addSubview(changeItemLayoutButton)
 
 			// Sort Button
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
 			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
+			sortButton.cssSelector = .sorting
 			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
 			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
 			sortButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -237,8 +165,9 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				sortButton.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -rightPadding)
 			])
 
+			// Select Button
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
-			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
+			selectButton.cssSelector = .multiselect
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
 			selectButton.accessibilityLabel = "Enter multiple selection".localized
 			selectButton.isPointerInteractionEnabled = true
@@ -249,11 +178,24 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
+
+			// Disply Mode Button
+			changeItemLayoutButton.setImage(OCSymbol.icon(forSymbolName: "square.grid.2x2"), for: .normal)
+			changeItemLayoutButton.cssSelector = .itemLayout
+			changeItemLayoutButton.addTarget(self, action: #selector(toggleDisplayMode), for: .touchUpInside)
+			changeItemLayoutButton.accessibilityLabel = "Toggle layout".localized
+			changeItemLayoutButton.isPointerInteractionEnabled = true
+
+			NSLayoutConstraint.activate([
+				changeItemLayoutButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+				changeItemLayoutButton.trailingAnchor.constraint(lessThanOrEqualTo: selectButton.leadingAnchor, constant: -rightDisplayModeButtonPadding),
+				changeItemLayoutButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
+				changeItemLayoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
+			])
 		}
 
 		// Finalize view setup
 		self.accessibilityIdentifier = "sort-bar"
-		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
 	}
@@ -262,17 +204,13 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
-
 	// MARK: - Theme support
+	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.sortButton?.apply(css: collection.css, properties: [.stroke])
+		self.selectButton?.apply(css: collection.css, properties: [.stroke])
+		self.changeItemLayoutButton?.apply(css: collection.css, properties: [.stroke])
 
-	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.sortButton?.applyThemeCollection(collection)
-		self.selectButton?.applyThemeCollection(collection)
-		self.searchScopeSegmentedControl?.applyThemeCollection(collection)
-		self.backgroundColor = collection.tableRowColors.backgroundColor
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 	}
 
 	// MARK: - Sort Direction Title
@@ -290,23 +228,21 @@ public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate
 	}
 
 	// MARK: - Actions
-	@objc private func searchScopeValueChanged() {
-		if let selectedIndex = searchScopeSegmentedControl?.selectedSegmentIndex {
-			self.searchScope = SortBarSearchScope(rawValue: selectedIndex)!
-			delegate?.sortBar(self, didUpdateSearchScope: self.searchScope)
-		}
-	}
-
 	@objc private func toggleSelectMode() {
-		delegate?.toggleSelectMode()
+		delegate?.sortBarToggleSelectMode(self)
 	}
 
-	// MARK: - UIPopoverPresentationControllerDelegate
-	@objc open func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return .none
-	}
+	@objc private func toggleDisplayMode() {
+		var newItemLayout: ItemLayout = (itemLayout == .grid) ? .list : .grid
 
-	@objc open func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
-		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		itemLayout = newItemLayout
+		delegate?.sortBar(self, itemLayout: newItemLayout)
 	}
+}
+
+public extension ThemeCSSSelector {
+	static let sortBar = ThemeCSSSelector(rawValue: "sortBar")
+	static let multiselect = ThemeCSSSelector(rawValue: "multiselect")
+	static let itemLayout = ThemeCSSSelector(rawValue: "itemLayout")
+	static let sorting = ThemeCSSSelector(rawValue: "sorting")
 }

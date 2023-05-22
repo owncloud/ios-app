@@ -307,7 +307,6 @@ class ScheduledTaskManager : NSObject {
 
 // MARK: - Background tasks handling for iOS >= 13
 
-@available(iOS 13, *)
 extension ScheduledTaskManager {
 
 	static let backgroundRefreshInterval = TimeInterval(15 * 60)

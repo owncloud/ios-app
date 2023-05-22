@@ -127,7 +127,7 @@ open class GroupSharingEditTableViewController: StaticTableViewController {
 					self?.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
 					})
 				}
-				}, title: "Can Share".localized, subtitle: "", selected: canShare, identifier: "permission-section-share"))
+			}, title: "Can Share".localized, subtitle: "", selected: canShare, identifier: "permission-section-share"))
 		}
 
 		if canEdit || canIncreasePermissions {
@@ -149,7 +149,7 @@ open class GroupSharingEditTableViewController: StaticTableViewController {
 						})
 					}
 				}
-				}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+			}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 		}
 
 		let subtitles = [
@@ -309,7 +309,7 @@ open class GroupSharingEditTableViewController: StaticTableViewController {
 		let section = StaticTableViewSection(headerTitle: "", footerTitle: footer)
 		section.add(rows: [
 			StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
-				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 				progressView.startAnimating()
 
 				row.cell?.accessoryView = progressView

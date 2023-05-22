@@ -30,14 +30,14 @@ class ReleaseNotesHostViewController: UIViewController {
 	private let headerHeight : CGFloat = 60.0
 
 	// MARK: - Instance Variables
-	var titleLabel = UILabel()
+	var titleLabel = ThemeCSSLabel(withSelectors: [.title])
 	var proceedButton = ThemeButton()
 	var footerButton = UIButton()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		Theme.shared.register(client: self)
+		self.cssSelector = .releaseNotes
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appBuildNumber), forClassSettingsKey: .lastSeenReleaseNotesVersion)
 
@@ -89,6 +89,7 @@ class ReleaseNotesHostViewController: UIViewController {
 				bottomView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
 			])
 
+			proceedButton.cssSelectors = [.proceed]
 			proceedButton.setTitle("Proceed".localized, for: .normal)
 			proceedButton.translatesAutoresizingMaskIntoConstraints = false
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
@@ -107,6 +108,7 @@ class ReleaseNotesHostViewController: UIViewController {
 			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			footerButton.titleLabel?.numberOfLines = 0
 			footerButton.titleLabel?.textAlignment = .center
+			footerButton.cssSelectors = [.subtitle]
 			footerButton.translatesAutoresizingMaskIntoConstraints = false
 			footerButton.addTarget(self, action: #selector(rateApp), for: .touchUpInside)
 			bottomView.addSubview(footerButton)
@@ -122,7 +124,7 @@ class ReleaseNotesHostViewController: UIViewController {
 				proceedButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: padding),
 				proceedButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: padding * -1),
 				proceedButton.heightAnchor.constraint(equalToConstant: buttonHeight),
-				proceedButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: smallPadding * -1)
+				proceedButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: smallPadding * -2)
 			])
 
 			NSLayoutConstraint.activate([
@@ -132,6 +134,8 @@ class ReleaseNotesHostViewController: UIViewController {
 				containerView.bottomAnchor.constraint(equalTo: bottomView.topAnchor)
 			])
 		}
+
+		Theme.shared.register(client: self)
 	}
 
 	deinit {
@@ -155,18 +159,14 @@ class ReleaseNotesHostViewController: UIViewController {
 // MARK: - Themeable implementation
 extension ReleaseNotesHostViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-
-		self.view.backgroundColor = collection.tableBackgroundColor
-		titleLabel.applyThemeCollection(collection, itemStyle: .title)
-		proceedButton.backgroundColor = collection.neutralColors.normal.background
-		proceedButton.setTitleColor(collection.neutralColors.normal.foreground, for: .normal)
-		footerButton.setTitleColor(collection.tableRowColors.labelColor, for: .normal)
+		view.apply(css: collection.css, selectors: nil, properties: [.fill])
+		footerButton.apply(css: collection.css, properties: [.stroke])
 	}
 }
 
 class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 
-	var shouldShowReleaseNotes: Bool {
+	static var shouldShowReleaseNotes: Bool {
 		if VendorServices.shared.isBranded {
 			return false
 		} else if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
@@ -204,7 +204,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 		return false
 	}
 
-	func releaseNotes(for version: String) -> [[String:Any]]? {
+	static func releaseNotes(for version: String) -> [[String:Any]]? {
 		if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist") {
 			if let releaseNotesValues = NSDictionary(contentsOfFile: path), let versionsValues = releaseNotesValues["Versions"] as? NSArray {
 
@@ -223,9 +223,13 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 		return nil
 	}
 
-	func image(for key: String) -> UIImage? {
+	static func image(for key: String) -> UIImage? {
 		let homeSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .thin)
 		return UIImage(systemName: key, withConfiguration: homeSymbolConfiguration)?.withRenderingMode(.alwaysTemplate)
+	}
+
+	static func updateLastSeenAppVersion() {
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 	}
 }
 
@@ -263,4 +267,8 @@ extension ReleaseNotesDatasource : OCClassSettingsSupport {
 			]
 		]
 	}
+}
+
+extension ThemeCSSSelector {
+	static let releaseNotes = ThemeCSSSelector(rawValue: "releaseNotes")
 }

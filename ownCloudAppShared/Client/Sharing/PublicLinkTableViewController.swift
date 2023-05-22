@@ -29,6 +29,11 @@ open class PublicLinkTableViewController: SharingTableViewController {
 		return false
 	}
 
+	var privateLinkSharingEnabled : Bool {
+		if let core = core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == true, core.connection.capabilities?.supportsPrivateLinks == true, item.isShareable { return true }
+		return false
+	}
+
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -41,7 +46,9 @@ open class PublicLinkTableViewController: SharingTableViewController {
 		}
 
 		addHeaderView()
-		addPrivateLinkSection()
+		if privateLinkSharingEnabled {
+			addPrivateLinkSection()
+		}
 
 		if publicLinkSharingEnabled {
 			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))
@@ -177,15 +184,17 @@ open class PublicLinkTableViewController: SharingTableViewController {
 						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
 
+							let originalColor = row.cell?.textLabel?.textColor
+
 							row.cell?.textLabel?.text = url.absoluteString
 							row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
-							row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
+							row.cell?.textLabel?.textColor = row.cell?.textLabel?.getThemeCSSColor(.stroke, selectors: [.secondary], state: [.disabled]) ?? .secondaryLabel
 							row.cell?.textLabel?.numberOfLines = 0
 
 							_ = NotificationHUDViewController(on: self, title: "Private Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: {
 								row.cell?.textLabel?.text = "Copy Private Link".localized
 								row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
-								row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tintColor
+								row.cell?.textLabel?.textColor = originalColor
 								row.cell?.textLabel?.numberOfLines = 1
 							})
 						}, title: "Copy Private Link".localized, style: .plain)
@@ -237,9 +246,7 @@ open class PublicLinkTableViewController: SharingTableViewController {
 				}),
 
 				UIContextualAction(style: .normal, title: "Copy".localized, handler: { (_, _, completionHandler) in
-					if let shareURL = share.url {
-						UIPasteboard.general.url = shareURL
-
+					if share.copyToClipboard() {
 						_ = NotificationHUDViewController(on: self, title: share.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 					}
 
@@ -271,12 +278,14 @@ open class PublicLinkTableViewController: SharingTableViewController {
 				var acceptedCloudShares : [OCShare]?
 				var sharedWithMeShares : [OCShare]?
 
-				dispatchGroup.enter()
+				if core.connection.capabilities?.federatedSharingSupported == true {
+					dispatchGroup.enter()
 
-				core.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
-					acceptedCloudShares = shares
-					dispatchGroup.leave()
-				}, allowPartialMatch: true)
+					core.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
+						acceptedCloudShares = shares
+						dispatchGroup.leave()
+					}, allowPartialMatch: true)
+				}
 
 				dispatchGroup.enter()
 

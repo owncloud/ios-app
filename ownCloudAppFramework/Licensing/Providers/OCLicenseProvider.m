@@ -77,12 +77,12 @@
 #pragma mark - Control
 - (void)startProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
 {
-
+	completionHandler(self, nil);
 }
 
 - (void)stopProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
 {
-
+	completionHandler(self, nil);
 }
 
 #pragma mark - IAP Messages

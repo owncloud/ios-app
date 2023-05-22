@@ -28,29 +28,30 @@ extension OCCertificate {
 			var color = UIColor.red
 			var shortDescription = ""
 			var longDescription = ""
+			let css = Theme.shared.activeCollection.css
 
 			switch status {
 
 				case .none:
 					break
 				case .error:
-					color = Theme.shared.activeCollection.errorColor
+					color = css.getColor(.stroke, selectors: [.error], for: nil) ?? .systemRed // Theme.shared.activeCollection.errorColor
 					shortDescription = "Error".localized
 					longDescription = "\("Validation Error".localized) \(error.localizedDescription)"
 				case .reject:
-					color = Theme.shared.activeCollection.errorColor
+					color = css.getColor(.stroke, selectors: [.error], for: nil) ?? .systemRed // Theme.shared.activeCollection.errorColor
 					shortDescription = "Rejected".localized
 					longDescription = "Certificate was rejected by user.".localized
 				case .promptUser:
-					color = Theme.shared.activeCollection.warningColor
+					color = css.getColor(.stroke, selectors: [.warning], for: nil) ?? .systemYellow
 					shortDescription = "Warning".localized
 					longDescription = "Certificate has issues.\nOpen 'Certificate Details' for more informations.".localized
 				case .passed:
-					color = Theme.shared.activeCollection.successColor
+					color = css.getColor(.stroke, selectors: [.success], for: nil) ?? .systemGreen
 					shortDescription = "Passed".localized
 					longDescription = "No issues found. Certificate passed validation.".localized
 				case .userAccepted:
-					color = Theme.shared.activeCollection.warningColor
+					color = css.getColor(.stroke, selectors: [.warning], for: nil) ?? .systemYellow
 					shortDescription = "Accepted".localized
 					longDescription = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.".localized
 			}

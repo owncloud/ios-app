@@ -227,12 +227,13 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 - (NSFileProviderItemCapabilities)capabilities
 {
 	OCItemPermissions permissions = self.permissions;
+	BOOL fileReadable = (self.state == OCItemStateNormal) || (self.localRelativePath != nil);
 
 	switch (self.type)
 	{
 		case OCItemTypeFile:
 			return (
-				NSFileProviderItemCapabilitiesAllowsReading |
+				(fileReadable 					? NSFileProviderItemCapabilitiesAllowsReading 	  : 0) |
 				((permissions & OCItemPermissionWritable) 	? NSFileProviderItemCapabilitiesAllowsWriting     : 0) |
 				((permissions & OCItemPermissionMove)     	? NSFileProviderItemCapabilitiesAllowsReparenting : 0) |
 				((permissions & OCItemPermissionRename)   	? NSFileProviderItemCapabilitiesAllowsRenaming    : 0) |

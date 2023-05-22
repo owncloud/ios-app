@@ -67,7 +67,7 @@ class LicenseOfferView: UIView, Themeable {
 	var titleLabel : UILabel?
 	var descriptionLabel : UILabel?
 
-	var pricingDivider : UIView?
+	var pricingDivider : ThemeCSSView?
 	var pricingLabel : UILabel?
 
 	var purchaseButton : LicenseOfferButton?
@@ -173,7 +173,7 @@ class LicenseOfferView: UIView, Themeable {
 			descriptionLabel.textAlignment = .center
 			pricingLabel.textAlignment = .center
 
-			pricingDivider = UIView()
+			pricingDivider = ThemeCSSView(withSelectors: [.separator])
 			pricingDivider?.translatesAutoresizingMaskIntoConstraints = false
 			guard let pricingDivider = pricingDivider else { return }
 
@@ -226,9 +226,6 @@ class LicenseOfferView: UIView, Themeable {
 		titleLabel?.applyThemeCollection(collection)
 		descriptionLabel?.applyThemeCollection(collection)
 		pricingLabel?.applyThemeCollection(collection)
-		purchaseButton?.applyThemeCollection(collection, itemStyle: .purchase)
-
-		pricingDivider?.backgroundColor = collection.tableSeparatorColor ?? .gray
 	}
 
 	@objc func takeOffer() {
@@ -240,7 +237,7 @@ class LicenseOfferView: UIView, Themeable {
 			OnMainThread {
 				guard let self = self else { return }
 
-				let alertController = UIAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
 
 				let nsError = error as NSError
 				if nsError.domain == OCLicenseAppStoreProviderErrorDomain, nsError.code == OCLicenseAppStoreProviderError.purchasesNotAllowedForVPPCopies.rawValue {

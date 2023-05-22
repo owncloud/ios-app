@@ -27,14 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	private let delayForLinkResolution = 0.2
 
-	var window: ThemeWindow?
-	var serverListTableViewController: ServerListTableViewController?
-	var staticLoginViewController : StaticLoginViewController?
-
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		var navigationController: UINavigationController?
-		var rootViewController : UIViewController?
-
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
@@ -48,35 +41,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCHTTPPipelineManager.setupPersistentPipelines()
 
 		// Set up app
-		window = ThemeWindow(frame: UIScreen.main.bounds)
-
 		ThemeStyle.registerDefaultStyles()
 
 		CollectionViewCellProvider.registerStandardImplementations()
-
-		if VendorServices.shared.isBranded {
-			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
-			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			rootViewController = navigationController
-		} else {
-			if OCBookmarkManager.shared.bookmarks.count == 1 {
-				serverListTableViewController = StaticLoginSingleAccountServerListViewController(style: .insetGrouped)
-			} else {
-				serverListTableViewController = ServerListTableViewController(style: .plain)
-			}
-
-			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
-			rootViewController = navigationController
-		}
-
-		// Only set up window on non-iPad devices and not on macOS 11 (Apple Silicon) which is >= iOS 14
-		if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
-			// do not set the rootViewController for iOS app on Mac
-		} else {
-			window?.rootViewController = rootViewController!
-			window?.makeKeyAndVisible()
-		}
+		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
 
 		ImportFilesController.removeImportDirectory()
 
@@ -175,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		   url.matchesAppScheme { // + URL matches app scheme
 			guard let window = UserInterfaceContext.shared.currentWindow else { return false }
 
-			openPrivateLink(url: url, in: window)
+			openAppSchemeLink(url: url, in: window)
 		} else if url.isFileURL {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
@@ -207,47 +175,143 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-			let url = userActivity.webpageURL else {
-				return false
-		}
-
-		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
-
-		openPrivateLink(url: url, in: window)
-
-		return true
+		// Not applicable here at the app delegate level.
+		return false
 	}
+//		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+//			let url = userActivity.webpageURL else {
+//				return false
+//		}
+//
+//		guard let window = UserInterfaceContext.shared.currentWindow else { return false }
+//
+//		openPrivateLink(url: url, in: window)
+//
+//		return true
+//	}
 
 	// MARK: UISceneSession Lifecycle
-	@available(iOS 13.0, *)
-	func application(_ application: UIApplication,
-					 configurationForConnecting connectingSceneSession: UISceneSession,
-					 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
 		return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
 	}
 
-	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
 	}
 
-	private func openPrivateLink(url:URL, in window:UIWindow) {
-		if UIApplication.shared.applicationState == .background {
-			// If the app is already running, just start link resolution
-			url.resolveAndPresent(in: window)
-		} else {
+	// MARK: - App Scheme URL handling
+	open func openAppSchemeLink(url: URL, in inWindow: UIWindow? = nil, clientContext: ClientContext? = nil, autoDelay: Bool = true) {
+		guard let window = inWindow ?? (clientContext?.scene as? UIWindowScene)?.windows.first else { return }
+
+		if UIApplication.shared.applicationState != .background, autoDelay {
 			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
 			// with activities of the just instantiated ServerListTableViewController
-			OnMainThread(after:delayForLinkResolution) {
-				url.resolveAndPresent(in: window)
+			OnMainThread(after: delayForLinkResolution) {
+				self.openAppSchemeLink(url: url, in: window, clientContext: clientContext, autoDelay: false)
 			}
+
+			return
 		}
+
+		// App is already running, just start link resolution
+		if openPrivateLink(url: url, clientContext: clientContext) { return }
+		if openPostBuild(url: url, in: window) { return }
+	}
+
+	// MARK: Post Build
+	private func openPostBuild(url: URL, in window: UIWindow) -> Bool {
+		// owncloud://pb/[set|clear]/[all|flatID]/?[int|string|sarray]=[value]
+		/*
+			Examples:
+			owncloud://pb/set/branding.app-name?string=ocisCloud
+			owncloud://pb/clear/branding.app-name
+			owncloud://pb/clear/all
+		*/
+		if url.host == "pb" {
+			let components = url.pathComponents
+
+			if components.count >= 3 {
+				let command = components[1]
+				let targetID = components[2]
+				var relaunchReason: String?
+
+				switch command {
+					case "set":
+						if targetID == "all" { break }
+
+						let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+						if let queryItems = urlComponents?.queryItems {
+							for queryItem in queryItems {
+								if let value = queryItem.value {
+									switch queryItem.name {
+										case "int":
+											if let intVal = Int(value) as? NSNumber {
+												let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(intVal, forFlatIdentifier: targetID)
+												if error == nil {
+													relaunchReason = "Changed \(targetID) to int(\(intVal)).".localized
+												}
+											}
+
+										case "string":
+											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(value, forFlatIdentifier: targetID)
+											if error == nil {
+												relaunchReason = "Changed \(targetID) to string(\(value)).".localized
+											}
+
+										case "sarray":
+											let strings = (value as NSString).components(separatedBy: ".")
+											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(strings, forFlatIdentifier: targetID)
+											if error == nil {
+												relaunchReason = "Changed \(targetID) to stringArray(\(strings.joined(separator: ", "))).".localized
+											}
+
+										default: break
+									}
+								}
+							}
+						}
+
+					case "clear":
+						if targetID == "all" {
+							// Clear all post build settings
+							OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.clear()
+							relaunchReason = "Cleared all.".localized
+							break
+						}
+
+						// Clear specific setting
+						let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
+						if error == nil {
+							relaunchReason = "Cleared \(targetID).".localized
+						}
+
+					default: break
+				}
+
+				if let relaunchReason {
+					OnMainThread {
+						self.offerRelaunchForReason(relaunchReason)
+					}
+				}
+			}
+			return true
+		}
+		return false
+	}
+
+	// MARK: Private Link
+	private func openPrivateLink(url: URL, clientContext: ClientContext?) -> Bool {
+		if let clientContext, url.privateLinkItemID != nil {
+			url.resolveAndPresentPrivateLink(with: clientContext)
+			return true
+		}
+
+		return false
 	}
 }
 
 extension UserInterfaceContext : UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
-		return (UIApplication.shared.delegate as? AppDelegate)?.window
+		return provideCurrentWindow()
 	}
 
 	public func provideCurrentWindow() -> UIWindow? {
@@ -281,11 +345,15 @@ extension AppDelegate : NotificationResponseHandler {
 	}
 
 	@objc func offerRelaunchAfterMDMPush() {
+		offerRelaunchForReason("New settings received from MDM".localized)
+	}
+
+	func offerRelaunchForReason(_ reason: String) {
 		NotificationManager.shared.requestAuthorization(options: [.alert, .sound], completionHandler: { (granted, _) in
 			if granted {
 				let content = UNMutableNotificationContent()
 
-				content.title = "New settings received from MDM".localized
+				content.title = reason
 				content.body = "Tap to quit the app.".localized
 
 				let request = UNNotificationRequest(identifier: NotificationManagerComposeIdentifier(AppDelegate.self, "terminate-app"), content: content, trigger: nil)

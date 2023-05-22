@@ -26,6 +26,7 @@ open class CollectionViewCellStyle: NSObject {
 		case tableCell
 		case gridCell
 		case fillSpace
+		case sideBar
 	}
 
 	public struct StyleOptionKey : Hashable {
@@ -40,7 +41,9 @@ open class CollectionViewCellStyle: NSObject {
 		super.init()
 	}
 
-	public convenience init(from style: CollectionViewCellStyle, changing: (CollectionViewCellStyle) -> Void) {
+	public typealias Modifier = (CollectionViewCellStyle) -> Void
+
+	public convenience init(from style: CollectionViewCellStyle, changing: Modifier) {
 		self.init(with: style.type)
 
 		self.options = style.options
@@ -97,7 +100,10 @@ public class CollectionViewCellConfiguration: NSObject {
 				// Request reconfiguration of cell
 				itemRecord.retrieveItem(completionHandler: { error, itemRecord in
 					if let collectionViewController = self.hostViewController {
-						collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+						collectionViewController.performDataSourceUpdate { updateDone in
+							collectionViewController.collectionViewDataSource.requestReconfigurationOfItems([collectionItemRef])
+							updateDone()
+						}
 					}
 				})
 			}

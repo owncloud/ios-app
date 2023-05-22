@@ -118,7 +118,11 @@ extension OCItem {
 
 		if iconName == nil {
 			if self.type == .collection {
-				iconName = "folder"
+				if isRoot, driveID != nil {
+					iconName = "space"
+				} else {
+					iconName = "folder"
+				}
 			} else {
 				iconName = "file"
 			}
@@ -145,6 +149,12 @@ extension OCItem {
 		return OCItem.dateFormatter.string(from: lastModified)
 	}
 
+	public var lastModifiedLocalizedCompact: String {
+		guard let lastModified = self.lastModified else { return "" }
+
+		return OCItem.compactDateFormatter.string(from: lastModified)
+	}
+
 	static private let byteCounterFormatter: ByteCountFormatter = {
 		let byteCounterFormatter = ByteCountFormatter()
 		byteCounterFormatter.allowsNonnumericFormatting = false
@@ -155,6 +165,15 @@ extension OCItem {
 		let dateFormatter: DateFormatter =  DateFormatter()
 		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .medium
+		dateFormatter.locale = Locale.current
+		dateFormatter.doesRelativeDateFormatting = true
+		return dateFormatter
+	}()
+
+	static private let compactDateFormatter: DateFormatter = {
+		let dateFormatter: DateFormatter =  DateFormatter()
+		dateFormatter.timeStyle = .short
+		dateFormatter.dateStyle = .short
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter

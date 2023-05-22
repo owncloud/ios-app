@@ -352,8 +352,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 	}
 
 	@objc func settings() {
-        	let viewController : SettingsViewController = SettingsViewController(style: .grouped)
-        	let navigationViewController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+        	let navigationViewController : ThemeNavigationController = ThemeNavigationController(rootViewController: SettingsViewController())
 
 		self.present(navigationViewController, animated: true, completion: nil)
 	}
@@ -366,7 +365,7 @@ class StaticLoginViewController: UIViewController, Themeable, StateRestorationCo
 			// Set up custom push transition for presentation
 			if let navigationController = self.navigationController {
 				if let error = error {
-					let alert = UIAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+					let alert = ThemedAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
 					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
 					navigationController.present(alert, animated: true)

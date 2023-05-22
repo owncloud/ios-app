@@ -161,36 +161,19 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 			if let scopeViewController = scopeViewController, let scopeViewControllerView = scopeViewController.view {
 				addChild(scopeViewController)
 				view.addSubview(scopeViewControllerView)
-				scopeViewControllerConstraints = [
-					scopeViewControllerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-					scopeViewControllerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-					scopeViewControllerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
-					scopeViewControllerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
-				]
+				scopeViewControllerConstraints = view.embed(toFillWith: scopeViewControllerView, insets: NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 10), enclosingAnchors: view.safeAreaAnchorSet)
 				scopeViewController.didMove(toParent: self)
 			}
 		}
 	}
-	private var scopeViewControllerConstraints : [NSLayoutConstraint]? {
-		willSet {
-			if let scopeViewControllerConstraints = scopeViewControllerConstraints {
-				NSLayoutConstraint.deactivate(scopeViewControllerConstraints)
-			}
-		}
-		didSet {
-			if let scopeViewControllerConstraints = scopeViewControllerConstraints {
-				NSLayoutConstraint.activate(scopeViewControllerConstraints)
-			}
-		}
-	}
+	private var scopeViewControllerConstraints : [NSLayoutConstraint]?
 
 	open override func loadView() {
-		let rootView = UIView()
+		let rootView = ThemeCSSView(withSelectors: [.searchSuggestions])
 
 		scopePopup = PopupButtonController(with: [], selectedChoice: nil, choiceHandler: { [weak self] (choice, _) in
 			self?.activeScope = choice.representedObject as? SearchScope
 		})
-		// scopePopup?.showTitleInButton = false
 
 		var scopePopupButtonConfiguration = UIButton.Configuration.borderless()
 		scopePopupButtonConfiguration.contentInsets.leading = 0
@@ -207,7 +190,6 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
-		Theme.shared.register(client: self, applyImmediately: true)
 
 		searchField.translatesAutoresizingMaskIntoConstraints = false
 		searchField.addTarget(self, action: #selector(searchFieldContentsChanged), for: .editingChanged)
@@ -228,8 +210,15 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		}
 	}
 
+	private var _registered = false
 	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+
+		if !_registered {
+			_registered = true
+			Theme.shared.register(client: self, applyImmediately: true)
+		}
+
 		OnMainThread {
 			self.searchField.becomeFirstResponder()
 		}
@@ -239,23 +228,22 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	var targetNavigationItem: UINavigationItem?
 
 	var niInjected: Bool = false
-	var niTitleView: UIView?
-	var niRightBarButtonItems: [UIBarButtonItem]?
 	var niHidesBackButton: Bool = false
 
 	func injectIntoNavigationItem() {
 		if !niInjected, let targetNavigationItem = targetNavigationItem {
 			// Store content
-			niTitleView = targetNavigationItem.titleView
-			niRightBarButtonItems = targetNavigationItem.rightBarButtonItems
 			niHidesBackButton = targetNavigationItem.hidesBackButton
 
-			// Overwrite content
-			targetNavigationItem.titleView = searchField
-
 			// Alternative implementation as a standard "Cancel" button, more convention compliant, but needs more space: let cancelToolbarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(endSearch))
-			let cancelToolbarButton = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(endSearch))
-			targetNavigationItem.rightBarButtonItems = [ cancelToolbarButton ]
+			let cancelToolbarButton = UIBarButtonItem(image: OCSymbol.icon(forSymbolName: "xmark"), style: .done, target: self, action: #selector(endSearch))
+
+			// Overwrite content
+			targetNavigationItem.navigationContent.add(items: [
+				NavigationContentItem(identifier: "search-left", area: .left, priority: .highest, position: .trailing, items: [ ]),
+				NavigationContentItem(identifier: "search-field", area: .title, priority: .highest, position: .leading, titleView: searchField),
+				NavigationContentItem(identifier: "search-right", area: .right, priority: .highest, position: .trailing, items: [ cancelToolbarButton ])
+			])
 			targetNavigationItem.hidesBackButton = true
 
 			niInjected = true
@@ -265,8 +253,11 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	func restoreNavigationItem() {
 		if niInjected, let targetNavigationItem = targetNavigationItem {
 			// Restore content
-			targetNavigationItem.titleView = niTitleView
-			targetNavigationItem.rightBarButtonItems = niRightBarButtonItems
+			targetNavigationItem.navigationContent.remove(itemsWithIdentifiers: [
+				"search-left",
+				"search-field",
+				"search-right"
+			])
 			targetNavigationItem.hidesBackButton = niHidesBackButton
 			niInjected = false
 		}
@@ -329,7 +320,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 			if oldValue != scopeResults {
 				scopeResultsSubscription = scopeResults?.subscribe(updateHandler: { [weak self] (subscription) in
 					self?.scopeResultsItemCount = subscription.snapshotResettingChangeTracking(true).numberOfItems
-				}, on: .main, trackDifferences: false, performIntialUpdate: true)
+				}, on: .main, trackDifferences: false, performInitialUpdate: true)
 			}
 		}
 	}
@@ -350,7 +341,15 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	// Determine current content
 	func updateCurrentContent() {
-		if searchField.tokens.count == 0, searchField.text?.count == 0 {
+		var searchFieldText = searchField.text ?? ""
+
+		if searchFieldText.count > 0 {
+			// Strip white space and new lines (if pasted) to determine effective length of search term
+			let charSet = CharacterSet.whitespacesAndNewlines
+			searchFieldText = searchFieldText.trimmingCharacters(in: charSet)
+		}
+
+   		if searchField.tokens.count == 0, searchFieldText.count == 0 {
 			currentContent = suggestionContent
 		} else {
 			if scopeResultsItemCount == 0 {
@@ -438,6 +437,10 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	// MARK: - Theme support
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = collection.navigationBarColors.backgroundColor
+		searchField.applyThemeCollection(collection)
 	}
+}
+
+extension ThemeCSSSelector {
+	static let searchSuggestions = ThemeCSSSelector(rawValue: "searchSuggestions")
 }

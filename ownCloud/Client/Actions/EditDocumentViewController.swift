@@ -125,15 +125,28 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 	@objc func enableEditingMode() {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
-		if self.navigationItem.rightBarButtonItems?.count ?? 0 > 2 {
-			guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
-			_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-		} else if UIDevice.current.isIpad, self.navigationItem.rightBarButtonItems?.count ?? 0 == 2 {
-			guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
-			_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-		} else {
-			guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
-			_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+		if #available(iOS 16.0, *) {
+			if self.navigationItem.rightBarButtonItems?.count ?? 0 > 3 {
+				guard let markupButton = self.navigationItem.rightBarButtonItems?[0] else { return }
+				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+			} else if self.toolbarItems?.count ?? 0 > 4 {
+				guard let markupButton = self.toolbarItems?[4] else { return }
+				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+			} else if self.toolbarItems?.count ?? 0 < 4 {
+				guard let markupButton = self.toolbarItems?[2] else { return }
+				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+			}
+		} else if #available(iOS 15.0, *) {
+			if self.navigationItem.rightBarButtonItems?.count ?? 0 > 2 {
+				guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
+				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+			} else if UIDevice.current.isIpad, self.navigationItem.rightBarButtonItems?.count ?? 0 == 2 {
+				guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
+				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+			} else {
+				guard let markupButton = self.navigationItem.rightBarButtonItems?.first else { return }
+				_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+			}
 		}
 	}
 
@@ -235,8 +248,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.navigationController?.navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
-		self.view.backgroundColor = collection.tableBackgroundColor
+		self.navigationController?.navigationBar.applyThemeCollection(collection)
+		self.view.backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: self.view)
 	}
 }
 

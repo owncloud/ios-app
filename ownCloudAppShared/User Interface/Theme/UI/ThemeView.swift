@@ -18,41 +18,32 @@
 
 import UIKit
 
-open class ThemeView: UIView, Themeable {
-	private var hasRegistered : Bool = false
-
-	public init() {
-		super.init(frame: .zero)
-	}
-
-	deinit {
-		if hasRegistered {
-			Theme.shared.unregister(client: self)
-		}
-	}
-
-	required public init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
+open class ThemeView: ThemeCSSView {
+	// Important implementation difference: ThemeCSSView makes the initial themeing calls only when moved to a window (=> becomes part of visible view hiearchy), ThemeView did this when moved to a subview (=> may still be in view setup)
+	private var hasSetupSubviews = false
 
 	override open func didMoveToSuperview() {
+		super.didMoveToSuperview()
+
 		if self.superview != nil {
-			if !hasRegistered {
-				hasRegistered = true
-				Theme.shared.register(client: self, applyImmediately: true)
+			if !hasSetupSubviews {
+				hasSetupSubviews = true
+				setupSubviews()
 			}
 		}
 	}
 
-	private var themeAppliers : [ThemeApplier] = []
+	override open func didMoveToWindow() {
+		if window != nil, !hasSetupSubviews {
+			hasSetupSubviews = true
+			setupSubviews()
+		}
 
-	open func addThemeApplier(_ applier: @escaping ThemeApplier) {
-		themeAppliers.append(applier)
+		super.didMoveToWindow()
 	}
 
-	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		for applier in themeAppliers {
-			applier(theme, collection, event)
-		}
+	open func setupSubviews() {
+		// Override point for subclasses
+		// Themeing is performed at a later time, when moved into a visible view tree (window)
 	}
 }

@@ -20,7 +20,7 @@ import UIKit
 
 open class ThemeableCollectionViewListCell: UICollectionViewListCell, Themeable {
 	private var themeRegistered : Bool = false
-	public var updateLabelColors : Bool = true
+	public var updateColors : Bool = true
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -36,11 +36,13 @@ open class ThemeableCollectionViewListCell: UICollectionViewListCell, Themeable 
 		}
 	}
 
-	open override func willMove(toSuperview newSuperview: UIView?) {
-		super.willMove(toSuperview: newSuperview)
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
 
-		if !themeRegistered {
+		if !themeRegistered, window != nil {
 			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
+			automaticallyUpdatesBackgroundConfiguration = false
+			automaticallyUpdatesContentConfiguration = false
 			Theme.shared.register(client: self, applyImmediately: true)
 			themeRegistered = true
 		}
@@ -59,11 +61,16 @@ open class ThemeableCollectionViewListCell: UICollectionViewListCell, Themeable 
 		}
 	}
 
+	open override func updateConfiguration(using state: UICellConfigurationState) {
+		super.updateConfiguration(using: state)
+		self.applyThemeCollection(Theme.shared.activeCollection, cellState: state)
+	}
+
 	open func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.applyThemeCollection(Theme.shared.activeCollection)
+		self.applyThemeCollection(collection, cellState: configurationState)
 
 		self.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: ThemeItemState(selected: self.isSelected))
 	}

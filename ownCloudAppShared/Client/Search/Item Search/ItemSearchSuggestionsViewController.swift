@@ -134,7 +134,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-search":
 						if let savedSearch = scope.savedSearch as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of search", placeholder: savedSearch.name, completionHandler: { save, name in
+								self?.requestName(title: "Name of saved search".localized, placeholder: "Saved search".localized, completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name
@@ -147,7 +147,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-template":
 						if let savedSearch = scope.savedTemplate as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of template", placeholder: savedSearch.name, completionHandler: { save, name in
+								self?.requestName(title: "Name of template".localized, placeholder: "Search template".localized, completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name
@@ -168,28 +168,20 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			var choices: [PopupButtonChoice] = []
 
 			if (self?.scope as? ItemSearchScope)?.canSaveSearch == true {
-				let saveSearchChoice = PopupButtonChoice(with: "Save as smart folder".localized, image: UIImage(systemName: "folder.badge.gearshape")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-search"))
+				let saveSearchChoice = PopupButtonChoice(with: "Save search".localized, image: OCSymbol.icon(forSymbolName: "folder.badge.gearshape"), representedObject: NSString("save-search"))
 				choices.append(saveSearchChoice)
 			}
 
 			if (self?.scope as? ItemSearchScope)?.canSaveTemplate == true {
-				let saveTemplateChoice = PopupButtonChoice(with: "Save template".localized, image: UIImage(systemName: "plus.square.dashed")?.withRenderingMode(.alwaysTemplate), representedObject: NSString("save-template"))
+				let saveTemplateChoice = PopupButtonChoice(with: "Save as search template".localized, image: OCSymbol.icon(forSymbolName: "plus.square.dashed"), representedObject: NSString("save-template"))
 				choices.append(saveTemplateChoice)
-			}
-
-			if let vault = self?.scope?.clientContext.core?.vault, let savedSearches = vault.savedSearches {
-				for savedSearch in savedSearches {
-					if savedSearch.isTemplate {
-						choices.append(PopupButtonChoice(with: savedSearch.name, image: UIImage(systemName: "square.dashed.inset.filled")?.withRenderingMode(.alwaysTemplate), representedObject: savedSearch))
-					}
-				}
 			}
 
 			return choices
 		}
 
 		var buttonConfiguration = UIButton.Configuration.plain().updated(for: savedSearchPopup!.button)
-		buttonConfiguration.image = UIImage(systemName: "ellipsis.circle")?.withRenderingMode(.alwaysTemplate)
+		buttonConfiguration.image = OCSymbol.icon(forSymbolName: "ellipsis.circle")
 		buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 10, trailing: 5)
 		buttonConfiguration.attributedTitle = nil
 		savedSearchPopup?.adaptButton = false
@@ -245,8 +237,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 
 			for queryCondition in category.options {
 				if let localizedDescription = queryCondition.localizedDescription {
-					let image : UIImage? = (queryCondition.symbolName != nil) ? UIImage(systemName: queryCondition.symbolName!)?.withRenderingMode(.alwaysTemplate) : nil
-					let choice = PopupButtonChoice(with: localizedDescription, image: image, representedObject: queryCondition)
+					let choice = PopupButtonChoice(with: localizedDescription, image: OCSymbol.icon(forSymbolName: queryCondition.symbolName), representedObject: queryCondition)
 					choices.append(choice)
 				}
 			}
@@ -307,6 +298,13 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 
 	func updateFor(_ searchElements: [SearchElement]) {
 		self.searchElements = searchElements
+
+		// Hide saved search popup button
+		var showSavedSearchButton : Bool = false
+		if let searchScope = scope as? ItemSearchScope, searchScope.canSaveSearch || searchScope.canSaveTemplate {
+			showSavedSearchButton = true
+		}
+		savedSearchPopup?.button.isHidden = !showSavedSearchButton
 
 		for category in categories {
 			var categoryHasMatch: Bool = false

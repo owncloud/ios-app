@@ -77,8 +77,6 @@ class ScanPageCell : UICollectionViewCell, Themeable {
 		self.layer.shadowRadius = cellShadowRadius
 		self.layer.shadowOpacity = cellShadowOpacity
 		self.layer.shadowOffset = cellShadowOffset
-
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	required init?(coder: NSCoder) {
@@ -89,8 +87,18 @@ class ScanPageCell : UICollectionViewCell, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
+	private var _hasRegistered = false
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil, !_hasRegistered {
+			_hasRegistered = true
+			Theme.shared.register(client: self)
+		}
+	}
+
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.backgroundColor = collection.tableRowColors.backgroundColor
+		backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: nil)
 	}
 }
 
@@ -131,7 +139,7 @@ class ScanPagesCollectionViewController : UICollectionViewController, UICollecti
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.collectionView.backgroundColor = collection.tableBackgroundColor
+		collectionView.backgroundColor = collection.css.getColor(.fill, selectors: [.table], for: collectionView)
 	}
 
 	required init?(coder: NSCoder) {
@@ -371,7 +379,7 @@ class ScanViewController: StaticTableViewController {
 		formatSegmentedControl?.selectedSegmentIndex = 0
 		formatSegmentedControl?.isUserInteractionEnabled = true
 		formatSegmentedControl?.addTarget(self, action: #selector(updateExportFormat), for: .valueChanged)
-		optionsSection.add(row: StaticTableViewRow(label: "File format".localized, alignment: .left, accessoryView: formatSegmentedControl, identifier: "format"))
+		optionsSection.add(row: StaticTableViewRow(label: "File format".localized, accessoryView: formatSegmentedControl, identifier: "format"))
 
 		// - One file per page
 		oneFilePerPageRow = StaticTableViewRow(switchWithAction: nil, title: "Create one file per page".localized, value: false, identifier: "one-file-per-page")

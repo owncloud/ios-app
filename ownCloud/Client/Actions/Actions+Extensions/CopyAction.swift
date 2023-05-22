@@ -108,34 +108,46 @@ class CopyAction : Action {
 	}
 
 	func showDirectoryPicker() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completed(with: NSError(ocError: .insufficientParameters))
+		guard context.items.count > 0, let clientContext = context.clientContext, let bookmark = context.core?.bookmark else {
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
 		let items = context.items
+		let startLocation: OCLocation = .account(bookmark)
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, location: .legacyRoot, selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
-			if let targetDirectory = selectedDirectory {
-				items.forEach({ (item) in
+		var titleText: String
 
-					if let progress = self.core?.copy(item, to: targetDirectory, withName: item.name!, options: nil, resultHandler: { (error, _, _, _) in
-						if error != nil {
-							self.completed(with: error)
-						} else {
-							self.completed()
-						}
+		if items.count > 1 {
+			titleText = "Copy {{itemCount}} items".localized(["itemCount" : "\(items.count)"])
+		} else {
+			titleText = "Copy \"{{itemName}}\"".localized(["itemName" : items.first?.name ?? "?"])
+		}
 
-					}) {
-						self.publish(progress: progress)
-					}
-				})
+		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: "Copy here".localized, headerTitle: titleText, headerSubTitle: "Select target.".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
+			guard !cancelled, let selectedDirectoryItem else {
+				self.completed(with: NSError(ocError: OCError.cancelled))
+				return
 			}
 
+			items.forEach({ (item) in
+				guard let itemName = item.name else {
+					return
+				}
+
+				if let progress = self.core?.copy(item, to: selectedDirectoryItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.error("Error \(String(describing: error)) copying \(String(describing: itemName)) to \(String(describing: location))")
+					}
+				}) {
+					self.publish(progress: progress)
+				}
+			})
+
+			self.completed()
 		})
 
-		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-		viewController.present(pickerNavigationController, animated: true)
+		locationPicker.present(in: clientContext)
 	}
 
 	func copyToPasteboard() {

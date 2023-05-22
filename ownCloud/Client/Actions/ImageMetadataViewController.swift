@@ -559,7 +559,7 @@ class ImageMetadataViewController: StaticTableViewController {
 	private var imageProperties: [String : Any]?
 
 	private let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
-	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 
 	public init(core inCore: OCCore, item inItem: OCItem, url:URL) {
 		core = inCore

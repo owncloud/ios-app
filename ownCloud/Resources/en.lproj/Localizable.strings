@@ -110,7 +110,7 @@
 "Search space" = "Search space";
 "Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
-"Save search" = "Save search";
+"Enter a search term" = "Enter a search term";
 
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
@@ -121,7 +121,23 @@
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
 "Show more results" = "Show more results";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
 
 /* Search scope */
 "Search scope" = "Search scope";
@@ -147,9 +163,9 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Empty folder";
 "No contents" = "No contents";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
+"This folder is empty." = "This folder is empty.";
 "This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Folder removed";
@@ -169,6 +185,8 @@
 "No matches" = "No matches";
 "The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "There are no results for this search term";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "Status";
 
 "Authorization failed" = "Authorization failed";
@@ -263,6 +281,8 @@
 "Theme" = "Theme";
 "User Interface" = "User Interface";
 "Dark" = "Dark";
+"Dark Blue" = "Dark Blue";
+"Dark Web" = "Dark Web";
 "Light" = "Light";
 "Classic" = "Classic";
 "System" = "System";
@@ -365,15 +385,18 @@
 "Folder name" = "Folder name";
 "Rename" ="Rename";
 "Create folder" ="Create folder";
-"New document" = "New document";
-"Pick a name" = "Pick a name";
-"Pick a document type to create:" = "Pick a document type to create:";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Move here";
+"Select target." = "Select target.";
 "Open in" = "Open in";
-"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
 "Copy" = "Copy";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
 "Copy here" = "Copy here";
+
 "Cannot connect to " = "Cannot connect to ";
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
@@ -385,6 +408,8 @@
 "%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
 "%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
 "Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
+
+"Processing on server" = "Processing on server";
 
 "Preparing…" = "Preparing…";
 
@@ -400,8 +425,18 @@
 "Enable" = "Enable";
 "Exit Full Screen" = "Exit Full Screen";
 
-/* Directory Picker Messages */
-"Move here" = "Move here";
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Add item";
+
+/* App Provider */
+"New document" = "New document";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
 
 /* Preview */
 "Open file" = "Open file";
@@ -563,6 +598,10 @@
 "Share with user/group" = "Share with user/group";
 "Share link" = "Share link";
 
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Shared by link";
+
 /* Quick Access view */
 "Quick Access" = "Quick Access";
 "Collection" = "Collection";
@@ -573,6 +612,10 @@
 "Text" = "Text";
 "Documents" = "Documents";
 "Audio" = "Audio";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -656,10 +699,12 @@
 "Make unavailable offline" = "Make unavailable offline";
 
 "Available Offline" = "Available Offline";
-"No items have been selected for offline availability." = "No items have been selected for offline availability.";
 
-"Overview" = "Overview";
-"All Files" = "All Files";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -744,7 +789,7 @@
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"Purchases" = "Purchases";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Document Scanner";
 "Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
@@ -784,7 +829,15 @@
 "Error importing %@" = "Error importing %@";
 "Error loading item" = "Error loading item";
 "Preparing…" = "Preparing…";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
 "Save here" = "Save here";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
 
 /* Disallowed Import Methods */
 /* - Share Extension */
@@ -798,16 +851,6 @@
 /* - Files.app */
 "Import not allowed" = "Import not allowed";
 "Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
-
-/* Data migration from legacy app */
-"Account Migration" = "Account Migration";
-"App Passcode" = "App Passcode";
-"Instant Upload Settings" = "Instant Upload Settings";
-"Migrating" = "Migrating";
-"Migrated" = "Migrated";
-"Failed to migrate" = "Failed to migrate";
-"Failed to access legacy user data" = "Failed to access legacy user data";
-"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
@@ -943,3 +986,8 @@
 "New settings received from MDM" = "New settings received from MDM";
 "Tap to quit the app." = "Tap to quit the app.";
 "Tap to launch the app." = "Tap to launch the app.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

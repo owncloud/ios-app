@@ -22,19 +22,24 @@ public protocol CustomStatusBarViewControllerProtocol : AnyObject {
 	func statusBarStyle() -> UIStatusBarStyle
 }
 
-open class ThemeNavigationController: UINavigationController {
-	private var themeToken : ThemeApplierToken?
+open class ThemeNavigationController: UINavigationController, Themeable {
+	public enum ThemeNavigationControllerStyle {
+		case regular
+		case splitViewContent
+	}
+
+	public var style: ThemeNavigationControllerStyle = .regular {
+		didSet {
+			applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
+		}
+	}
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
-		if let object = self.viewControllers.last {
-			if self.presentedViewController == nil, let loginViewController = object as? CustomStatusBarViewControllerProtocol {
-				return loginViewController.statusBarStyle()
-			} else {
-				return Theme.shared.activeCollection.statusBarStyle
-			}
+		if let object = self.viewControllers.last, self.presentedViewController == nil, let loginViewController = object as? CustomStatusBarViewControllerProtocol {
+			return loginViewController.statusBarStyle()
 		}
 
-		return Theme.shared.activeCollection.statusBarStyle
+		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
 	}
 
 	open override var childForStatusBarStyle: UIViewController? {
@@ -43,20 +48,13 @@ open class ThemeNavigationController: UINavigationController {
 
 	override open func viewDidLoad() {
 		super.viewDidLoad()
-
-		themeToken = Theme.shared.add(applier: {[weak self] (_, themeCollection, event) in
-			self?.applyThemeCollection(themeCollection)
-			self?.toolbar.applyThemeCollection(themeCollection)
-			self?.view.backgroundColor = .clear
-
-			if event == .update {
-				self?.setNeedsStatusBarAppearanceUpdate()
-			}
-		}, applyImmediately: true)
+		applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 	}
 
-	deinit {
-		Theme.shared.remove(applierForToken: themeToken)
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	open var popLastHandler : ((UIViewController?) -> Bool)?
@@ -75,5 +73,15 @@ open class ThemeNavigationController: UINavigationController {
 		}
 
 		return super.popViewController(animated: animated)
+	}
+
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.applyThemeCollection(collection)
+		self.toolbar.applyThemeCollection(collection)
+		self.view.backgroundColor = .clear
+
+		if event == .update {
+			self.setNeedsStatusBarAppearanceUpdate()
+		}
 	}
 }

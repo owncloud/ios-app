@@ -18,26 +18,7 @@
 
 import UIKit
 
-public protocol ToolAndTabBarToggling : UITabBarController {
-	var toolbar : UIToolbar? { get set }
-}
-
 public extension UIViewController {
-	func populateToolbar(with items:[UIBarButtonItem]) {
-		if let tabBarController = self.tabBarController as? ToolAndTabBarToggling {
-			tabBarController.toolbar?.isHidden = false
-			tabBarController.tabBar.isHidden = true
-			tabBarController.toolbar?.setItems(items, animated: true)
-		}
-	}
-
-	func removeToolbar() {
-		if let tabBarController = self.tabBarController as? ToolAndTabBarToggling {
-			tabBarController.toolbar?.isHidden = true
-			tabBarController.tabBar.isHidden = false
-			tabBarController.toolbar?.setItems(nil, animated: true)
-		}
-	}
 
 	var topMostViewController: UIViewController {
 
@@ -55,4 +36,15 @@ public extension UIViewController {
 
 		 return self
 	 }
+
+	@objc @discardableResult func openURL(_ url: URL) -> Bool {
+		var responder: UIResponder? = self.navigationController
+		while responder != nil {
+			if let application = responder as? UIApplication {
+				return application.perform(#selector(openURL(_:)), with: url) != nil
+			}
+			responder = responder?.next
+		}
+		return true
+	}
 }

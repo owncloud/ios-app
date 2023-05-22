@@ -36,7 +36,7 @@ open class SearchScope: NSObject, SearchElementUpdating {
 	public var scopeViewController: (UIViewController & SearchElementUpdating)?
 
 	static public func modifyingQuery(with context: ClientContext, localizedName: String) -> SearchScope {
-		return SingleFolderSearchScope(with: context, cellStyle: nil, localizedName: localizedName, localizedPlaceholder: "Search folder".localized, icon: UIImage(systemName: "folder"))
+		return SingleFolderSearchScope(with: context, cellStyle: nil, localizedName: localizedName, localizedPlaceholder: "Search folder".localized, icon: OCSymbol.icon(forSymbolName: "folder"))
 	}
 
 	static public func driveSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
@@ -44,7 +44,7 @@ open class SearchScope: NSObject, SearchElementUpdating {
 		if let driveName = context.drive?.name, driveName.count > 0 {
 			placeholder = "Search {{space.name}}".localized(["space.name" : driveName])
 		}
-		return DriveSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: UIImage(systemName: "square.grid.2x2"))
+		return DriveSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"))
 	}
 
 	static public func containerSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
@@ -52,11 +52,11 @@ open class SearchScope: NSObject, SearchElementUpdating {
 		if let path = context.query?.queryLocation?.lastPathComponent, path.count > 0 {
 			placeholder = "Search from {{folder.name}}".localized(["folder.name" : path])
 		}
-		return ContainerSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: UIImage(systemName: "square.stack.3d.up"))
+		return ContainerSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: OCSymbol.icon(forSymbolName: "square.stack.3d.up"))
 	}
 
 	static public func accountSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: "Search account".localized, icon: UIImage(systemName: "person"))
+		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: "Search account".localized, icon: OCSymbol.icon(forSymbolName: "person"))
 	}
 
 	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {

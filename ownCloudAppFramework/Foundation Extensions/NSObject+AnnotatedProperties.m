@@ -53,4 +53,21 @@ static NSString *sOCAnnotatedPropertiesKey = @"AnnotatedProperties";
 	}
 }
 
+- (id)valueForAnnotatedProperty:(NSString *)annotatedPropertyName withGenerator:(id(^)(void))generator
+{
+	id value = nil;
+
+	@synchronized(self)
+	{
+		if ((value = [self valueForAnnotatedProperty:annotatedPropertyName]) == nil)
+		{
+			value = generator();
+
+			[self setValue:value forAnnotatedProperty:annotatedPropertyName];
+		}
+	}
+
+	return (value);
+}
+
 @end

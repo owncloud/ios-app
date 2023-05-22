@@ -127,8 +127,6 @@
 
 	if ((unlockedProduct = [self _unlockedProductForFeature:featureIdentifier]) != nil)
 	{
-		iapMessage = [NSMutableString new];
-
 		for (OCBookmark *bookmark in OCBookmarkManager.sharedBookmarkManager.bookmarks)
 		{
 			if ([((NSDictionary *)bookmark.userInfo[@"statusInfo"])[@"edition"] isEqual:@"Enterprise"])
@@ -147,10 +145,6 @@
 			NSString *subject = (feature.localizedName != nil) ? feature.localizedName : unlockedProduct.localizedName;
 
 			iapMessage = [NSString stringWithFormat:OCLocalized(@"%@ already unlocked for %@."), subject, [serverNames.allObjects componentsJoinedByString:@", "]];
-		}
-		else
-		{
-			iapMessage = nil;
 		}
 	}
 

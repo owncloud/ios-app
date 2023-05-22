@@ -69,13 +69,7 @@ extension OCQueryCondition {
 	func generateSearchToken(fallbackText: String, inputComplete: Bool) -> SearchToken? {
 		// Use existing description and symbol
 		if let firstDescriptiveCondition = firstDescriptiveCondition, let localizedDescription = firstDescriptiveCondition.localizedDescription {
-			var icon : UIImage?
-
-			if let symbolName = firstDescriptiveCondition.symbolName {
-				icon = UIImage(systemName: symbolName)
-			}
-
-			return SearchToken(text: localizedDescription, icon: icon, representedObject: self, inputComplete: inputComplete)
+			return SearchToken(text: localizedDescription, icon: OCSymbol.icon(forSymbolName: firstDescriptiveCondition.symbolName), representedObject: self, inputComplete: inputComplete)
 		}
 
 		// Try to determine a useful icon and description
@@ -89,25 +83,25 @@ extension OCQueryCondition {
 		switch effectiveProperty {
 			case .name:
 				if effectiveOperator == .propertyHasSuffix {
-					icon = UIImage(systemName: "smallcircle.filled.circle")
+					icon = OCSymbol.icon(forSymbolName: "smallcircle.filled.circle")
 				}
 
 			case .driveID:
-				icon = UIImage(systemName: "square.grid.2x2")
+				icon = OCSymbol.icon(forSymbolName: "square.grid.2x2")
 
 			case .mimeType:
-				icon = UIImage(systemName: "photo")
+				icon = OCSymbol.icon(forSymbolName: "photo")
 
 			case .size:
 				switch effectiveOperator {
 					case .propertyGreaterThanValue:
-						icon = UIImage(systemName: "greaterthan")
+						icon = OCSymbol.icon(forSymbolName: "greaterthan")
 
 					case .propertyLessThanValue:
-						icon = UIImage(systemName: "lessthan")
+						icon = OCSymbol.icon(forSymbolName: "lessthan")
 
 					case .propertyEqualToValue:
-						icon = UIImage(systemName: "equal")
+						icon = OCSymbol.icon(forSymbolName: "equal")
 
 					default: break
 				}
@@ -115,7 +109,7 @@ extension OCQueryCondition {
 			case .ownerUserName: break
 
 			case .lastModified:
-				icon = UIImage(systemName: "calendar")
+				icon = OCSymbol.icon(forSymbolName: "calendar")
 
 			default: break
 		}

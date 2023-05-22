@@ -18,7 +18,64 @@
 
 import UIKit
 
-public class ThemeColorPair : NSObject {
+// MARK: - Color Sets
+private struct ThemeColorSet {
+	var labelColor: UIColor
+	var secondaryLabelColor: UIColor
+
+	var iconColor: UIColor	//!< Icons (non-interactive)
+	var tintColor: UIColor	//!< User-interactive buttons, accessories
+
+	var backgroundColor: UIColor
+
+	static func from(backgroundColor: UIColor, tintColor: UIColor, for style: UIUserInterfaceStyle) -> ThemeColorSet {
+		let preferredtTraitCollection = UITraitCollection(userInterfaceStyle: (style == .light) ? .light : .dark)
+		let preferredPrimaryLabelColor = UIColor.label.resolvedColor(with: preferredtTraitCollection)
+		let preferredSecondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: preferredtTraitCollection)
+
+		let alternateTraitCollection = UITraitCollection(userInterfaceStyle: (style == .light) ? .dark : .light)
+		let alternatePrimaryLabelColor = UIColor.label.resolvedColor(with: alternateTraitCollection)
+		let alternateSecondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: alternateTraitCollection)
+
+		let labelColor = backgroundColor.preferredContrastColor(from: [preferredPrimaryLabelColor, alternatePrimaryLabelColor]) ?? preferredPrimaryLabelColor
+		let secondaryLabelColor = backgroundColor.preferredContrastColor(from: [preferredSecondaryLabelColor, alternateSecondaryLabelColor]) ?? preferredSecondaryLabelColor
+		let iconColor = labelColor
+
+		return ThemeColorSet(labelColor: labelColor, secondaryLabelColor: secondaryLabelColor, iconColor: iconColor, tintColor: tintColor, backgroundColor: backgroundColor)
+	}
+
+	func disabledSet(for style: UIUserInterfaceStyle) -> ThemeColorSet {
+		return ThemeColorSet(labelColor: secondaryLabelColor.greyscale, secondaryLabelColor: secondaryLabelColor.greyscale, iconColor: secondaryLabelColor.greyscale, tintColor: tintColor.greyscale, backgroundColor: backgroundColor.greyscale)
+	}
+
+	func highlightedSet(for style: UIUserInterfaceStyle) -> ThemeColorSet {
+		var highlightedColorSet = self
+
+		switch style {
+			case .light: highlightedColorSet.backgroundColor = highlightedColorSet.backgroundColor.darker(0.10)
+			case .dark:  highlightedColorSet.backgroundColor = highlightedColorSet.backgroundColor.lighter(0.15)
+			default: break
+		}
+
+		return highlightedColorSet
+	}
+}
+
+private struct ThemeColorStateSet {
+	var regular: ThemeColorSet
+
+	var selected: ThemeColorSet
+	var highlighted: ThemeColorSet
+	var disabled: ThemeColorSet
+
+	static func from(colorSet: ThemeColorSet, for style: UIUserInterfaceStyle) -> ThemeColorStateSet {
+		let highlightedSet = colorSet.highlightedSet(for: style)
+
+		return ThemeColorStateSet(regular: colorSet, selected: highlightedSet, highlighted: highlightedSet, disabled: colorSet.disabledSet(for: style))
+	}
+}
+
+private class ThemeColorPair : NSObject {
 	@objc public var foreground: UIColor
 	@objc public var background: UIColor
 
@@ -28,7 +85,7 @@ public class ThemeColorPair : NSObject {
 	}
 }
 
-public class ThemeColorPairCollection : NSObject {
+private class ThemeColorPairCollection : NSObject {
 	@objc public var normal : ThemeColorPair
 	@objc public var highlighted : ThemeColorPair
 	@objc public var disabled : ThemeColorPair
@@ -46,7 +103,7 @@ public class ThemeColorPairCollection : NSObject {
 	}
 }
 
-public class ThemeColorCollection : NSObject {
+private class ThemeColorCollection : NSObject {
 	@objc public var backgroundColor : UIColor?
 	@objc public var labelColor : UIColor
 	@objc public var secondaryLabelColor : UIColor
@@ -68,27 +125,18 @@ public class ThemeColorCollection : NSObject {
 public enum ThemeCollectionStyle : String, CaseIterable {
 	case dark
 	case light
-	case contrast
 
 	public var name : String {
 		switch self {
 			case .dark:	return "Dark".localized
 			case .light:	return "Light".localized
-			case .contrast:	return "Contrast".localized
 		}
 	}
-}
-
-public enum ThemeCollectionInterfaceStyle : String, CaseIterable {
-	case dark
-	case light
-	case unspecified
 
 	public var userInterfaceStyle : UIUserInterfaceStyle {
 		switch self {
 			case .dark: return .dark
 			case .light: return .light
-			case .unspecified: return .unspecified
 		}
 	}
 }
@@ -96,71 +144,8 @@ public enum ThemeCollectionInterfaceStyle : String, CaseIterable {
 public class ThemeCollection : NSObject {
 	@objc var identifier : String = UUID().uuidString
 
-	// MARK: - Interface style
-	public var interfaceStyle : ThemeCollectionInterfaceStyle
-	public var keyboardAppearance : UIKeyboardAppearance
-	public var backgroundBlurEffectStyle : UIBlurEffect.Style
-
-	// MARK: - Brand colors
-	@objc public var darkBrandColor: UIColor
-	@objc public var lightBrandColor: UIColor
-
-	// MARK: - Brand color collection
-	@objc public var darkBrandColors : ThemeColorCollection
-	@objc public var lightBrandColors : ThemeColorCollection
-
-	// MARK: - Button / Fill color collections
-	@objc public var approvalColors : ThemeColorPairCollection
-	@objc public var neutralColors : ThemeColorPairCollection
-	@objc public var destructiveColors : ThemeColorPairCollection
-
-	@objc public var purchaseColors : ThemeColorPairCollection
-
-	// MARK: - Label colors
-	@objc public var informativeColor: UIColor
-	@objc public var successColor: UIColor
-	@objc public var warningColor: UIColor
-	@objc public var errorColor: UIColor
-
-	@objc public var tintColor : UIColor
-
-	// MARK: - Table views
-	@objc public var tableBackgroundColor : UIColor
-	@objc public var tableGroupBackgroundColor : UIColor
-	@objc public var tableSectionHeaderColor : UIColor?
-	@objc public var tableSectionFooterColor : UIColor?
-	@objc public var tableSeparatorColor : UIColor?
-	@objc public var tableRowColors : ThemeColorCollection
-	@objc public var tableRowHighlightColors : ThemeColorCollection
-	@objc public var tableRowBorderColor : UIColor?
-
-	// MARK: - Bars
-	@objc public var navigationBarColors : ThemeColorCollection
-	@objc public var toolbarColors : ThemeColorCollection
-	@objc public var statusBarStyle : UIStatusBarStyle
-	@objc public var loginStatusBarStyle : UIStatusBarStyle
-	@objc public var barStyle : UIBarStyle
-
-	// MARK: - SearchBar
-	@objc public var searchBarColors : ThemeColorCollection
-
-	// MARK: - Progress
-	@objc public var progressColors : ThemeColorPair
-
-	// MARK: - Activity View
-	@objc public var activityIndicatorViewStyle : UIActivityIndicatorView.Style
-	@objc public var searchBarActivityIndicatorViewStyle : UIActivityIndicatorView.Style
-
-	// MARK: - Icon colors
-	@objc public var iconColors : [String:String]
-
-	// MARK: - Login colors
-	@objc public var loginColors : ThemeColorCollection
-	@objc public var informalColors : ThemeColorCollection
-	@objc public var cancelColors : ThemeColorCollection
-
-	@objc public var favoriteEnabledColor : UIColor?
-	@objc public var favoriteDisabledColor : UIColor?
+	// MARK: - ThemeCSS
+	public var css: ThemeCSS
 
 	// MARK: - Default Collection
 	static public var defaultCollection : ThemeCollection = {
@@ -181,434 +166,606 @@ public class ThemeCollection : NSObject {
 		return (collection)
 	}()
 
+	private static func generateColorPairs(with baseSelectors:[ThemeCSSSelector], foregroundColor: UIColor, backgroundColor: UIColor) -> [ThemeCSSRecord] {
+		var disabledSelectors = baseSelectors
+		disabledSelectors.append(.disabled)
+		var highlightedSelectors = baseSelectors
+		highlightedSelectors.append(.highlighted)
+
+		let colorPairs: [ThemeCSSRecord] = [
+			ThemeCSSRecord(selectors: baseSelectors,		property: .stroke, value: foregroundColor),
+			ThemeCSSRecord(selectors: baseSelectors,		property: .fill,   value: backgroundColor),
+
+			ThemeCSSRecord(selectors: highlightedSelectors,		property: .stroke, value: foregroundColor),
+			ThemeCSSRecord(selectors: highlightedSelectors,		property: .fill,   value: backgroundColor.lighter(0.25)),
+
+			ThemeCSSRecord(selectors: disabledSelectors,		property: .stroke, value: foregroundColor),
+			ThemeCSSRecord(selectors: disabledSelectors,		property: .fill,   value: backgroundColor.lighter(0.25))
+		]
+
+		return colorPairs
+	}
+
+	private static func generateColorPairs(with baseSelectors:[ThemeCSSSelector], from pairCollection: ThemeColorPairCollection) -> [ThemeCSSRecord] {
+		var disabledSelectors = baseSelectors
+		disabledSelectors.append(.disabled)
+		var highlightedSelectors = baseSelectors
+		highlightedSelectors.append(.highlighted)
+
+		let colorPairs: [ThemeCSSRecord] = [
+			ThemeCSSRecord(selectors: baseSelectors,		property: .stroke, value: pairCollection.normal.foreground),
+			ThemeCSSRecord(selectors: baseSelectors,		property: .fill,   value: pairCollection.normal.background),
+
+			ThemeCSSRecord(selectors: highlightedSelectors,		property: .stroke, value: pairCollection.highlighted.foreground),
+			ThemeCSSRecord(selectors: highlightedSelectors,		property: .fill,   value: pairCollection.highlighted.background),
+
+			ThemeCSSRecord(selectors: disabledSelectors,		property: .stroke, value: pairCollection.disabled.foreground),
+			ThemeCSSRecord(selectors: disabledSelectors,		property: .fill,   value: pairCollection.disabled.background)
+		]
+
+		return colorPairs
+	}
+
 	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil) {
 		var logoFillColor : UIColor?
 
-		self.interfaceStyle = .unspecified
-		self.keyboardAppearance = .default
-		self.backgroundBlurEffectStyle = .regular
+		self.css = ThemeCSS()
 
-		self.darkBrandColor = darkColor
-		self.lightBrandColor = lightColor
+		var interfaceStyle : UIUserInterfaceStyle = .unspecified
+		var keyboardAppearance : UIKeyboardAppearance = .default
+		var backgroundBlurEffectStyle : UIBlurEffect.Style = .regular
 
-		let colors = ThemeColorValueResolver(colorValues: customColors, genericValues: genericColors, themeCollectionStyle: style)
-		let styleResolver = ThemeStyleValueResolver(styleValues: interfaceStyles)
+		var statusBarStyle : UIStatusBarStyle
+		var barStyle : UIBarStyle
 
-		self.darkBrandColors = colors.resolveThemeColorCollection("darkBrandColors", ThemeColorCollection(
-			backgroundColor: darkColor,
-			tintColor: lightColor,
-			labelColor: UIColor.white,
-			secondaryLabelColor: UIColor.lightGray,
-			symbolColor: UIColor.white,
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: darkColor))
-		))
+		let darkBrandColor = darkColor
+		let lightBrandColor = lightColor
 
-		self.lightBrandColors = colors.resolveThemeColorCollection("lightBrandColors", ThemeColorCollection(
+		/*
+			Cells:
+			- cell		-> lightCell
+			- groupedCell	-> lightGroupedCell
+			- sidebarCell	-> darkCell
+			- accountCell	-> darkGroupedCell
+
+			Bars:
+			- topBar
+			- sidebarTopBar
+
+			- bottomBar
+			- sidebarBottomBar
+
+			Buttons:
+			- plain
+			- bordered
+			- confirm
+			- ..
+		*/
+		var lightBrandSet = ThemeColorSet.from(backgroundColor: lightColor, tintColor: darkColor, for: style.userInterfaceStyle)
+		let darkBrandSet = ThemeColorSet.from(backgroundColor: darkColor, tintColor: lightColor, for: style.userInterfaceStyle)
+
+		let styleTraitCollection = UITraitCollection(userInterfaceStyle: interfaceStyle)
+
+		var cellSet: ThemeColorSet
+		var groupedCellSet: ThemeColorSet
+		var collectionBackgroundColor: UIColor
+		var groupedCollectionBackgroundColor: UIColor
+		var accountCellSet: ThemeColorSet
+		var sidebarAccountCellSet: ThemeColorSet
+
+		var navigationBarSet: ThemeColorSet
+		var toolbarSet: ThemeColorSet
+		var contentNavigationBarSet: ThemeColorSet
+		var contentToolbarSet: ThemeColorSet
+
+		var cellStateSet: ThemeColorStateSet
+		var groupedCellStateSet: ThemeColorStateSet
+		var sidebarCellStateSet: ThemeColorStateSet
+
+		var sidebarLogoIconColor: UIColor
+		var sidebarLogoLabel: UIColor
+		var iconSymbolColor: UIColor
+
+		var inlineActionBackgroundColor: UIColor
+		var inlineActionBackgroundColorHighlighted: UIColor
+
+		let tintColor: UIColor = lightBrandColor
+
+		var separatorColor: UIColor = UIColor.opaqueSeparator.resolvedColor(with: styleTraitCollection)
+		var sectionHeaderColor: UIColor
+		var sectionFooterColor: UIColor
+		var groupedSectionHeaderColor: UIColor
+		var groupedSectionFooterColor: UIColor
+
+		var moreHeaderBackgroundColor: UIColor
+
+		var modalBackgroundColor: UIColor
+
+		let lightBrandColors = ThemeColorCollection(
 			backgroundColor: lightColor,
 			tintColor: UIColor.white,
 			labelColor: UIColor.white,
 			secondaryLabelColor: UIColor.lightGray,
 			symbolColor: UIColor.white,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		))
+		)
 
-		self.informativeColor = colors.resolveColor("Label.informativeColor", UIColor.darkGray)
-		self.successColor = colors.resolveColor("Label.successColor", UIColor(hex: 0x27AE60))
-		self.warningColor = colors.resolveColor("Label.warningColor", UIColor(hex: 0xF2994A))
-		self.errorColor = colors.resolveColor("Label.errorColor", UIColor(hex: 0xEB5757))
+		let neutralColors = lightBrandColors.filledColorPairCollection
+		let purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
+		purchaseColors.disabled.background = purchaseColors.disabled.background.greyscale
 
-		self.approvalColors = colors.resolveThemeColorPairCollection("Fill.approvalColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763))))
-		self.neutralColors = colors.resolveThemeColorPairCollection("Fill.neutralColors", lightBrandColors.filledColorPairCollection)
-		self.purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
-		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale
-		self.destructiveColors = colors.resolveThemeColorPairCollection("Fill.destructiveColors", ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red)))
-
-		self.tintColor = colors.resolveColor("tintColor", self.lightBrandColor)
+		var tokenForegroundColor = lightBrandColor
+		var tokenBackgroundColor = UIColor(white: 0, alpha: 0.1)
 
 		// Table view
-		self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", UIColor.white)
-
-		self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.systemGroupedBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)))
-		let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.separator)
-		self.tableSeparatorColor = color
-		self.tableSectionHeaderColor = UIColor.gray
-		self.tableSectionFooterColor = UIColor.gray
-
-		let rowColor : UIColor? = UIColor.black.withAlphaComponent(0.1)
-		self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowColor)
-
-		var defaultTableRowLabelColor = darkColor
-		if VendorServices.shared.isBranded {
-			defaultTableRowLabelColor = UIColor(hex: 0x000000)
-		}
-
-		self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
-			backgroundColor: tableBackgroundColor,
-			tintColor: nil,
-			labelColor: defaultTableRowLabelColor,
-			secondaryLabelColor: UIColor(hex: 0x475770),
-			symbolColor: UIColor(hex: 0x475770),
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		))
-
-		self.tableRowHighlightColors = colors.resolveThemeColorCollection("Table.tableRowHighlightColors", ThemeColorCollection(
-			backgroundColor: UIColor.white.darker(0.1),
-			tintColor: nil,
-			labelColor: darkColor,
-			secondaryLabelColor: UIColor(hex: 0x475770),
-			symbolColor: UIColor(hex: 0x475770),
-			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-		))
-
-		self.favoriteEnabledColor = UIColor(hex: 0xFFCC00)
-		self.favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
+		var progressColors : ThemeColorPair
 
 		// Styles
 		switch style {
 			case .dark:
 				// Interface style
-				self.interfaceStyle = styleResolver.resolveInterfaceStyle(fallback: .dark)
-				self.keyboardAppearance = styleResolver.resolveKeyboardStyle(fallback: .dark)
-				self.backgroundBlurEffectStyle = styleResolver.resolveBlurEffectStyle(fallback: .dark)
+				interfaceStyle = .dark
+				keyboardAppearance = .dark
+				backgroundBlurEffectStyle = .dark
+				statusBarStyle = .lightContent
+				barStyle = .black
+
+				lightBrandSet.labelColor = .white
+				lightBrandSet.secondaryLabelColor = .white
+				lightBrandSet.iconColor = .white
+
+				accountCellSet = lightBrandSet
+				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .init(hex: 0, alpha: 0.5), tintColor: lightBrandColor, for: interfaceStyle)
+				accountCellSet = sidebarAccountCellSet
+
+				navigationBarSet = darkBrandSet
+				toolbarSet = darkBrandSet
+
+				cellSet = ThemeColorSet.from(backgroundColor: UIColor(hex: 0), tintColor: lightColor, for: interfaceStyle)
+				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
+				collectionBackgroundColor = darkColor.darker(0.1)
+
+				groupedCellSet = ThemeColorSet.from(backgroundColor: darkColor, tintColor: lightColor, for: interfaceStyle)
+				groupedCellStateSet = ThemeColorStateSet.from(colorSet: groupedCellSet, for: interfaceStyle)
+				groupedCollectionBackgroundColor = navigationBarSet.backgroundColor.darker(0.3)
+
+				contentNavigationBarSet = cellSet
+				contentToolbarSet = cellSet
+
+				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: darkBrandSet, for: interfaceStyle)
+				sidebarCellStateSet.selected.backgroundColor = sidebarCellStateSet.regular.labelColor
+				sidebarCellStateSet.selected.labelColor = sidebarCellStateSet.regular.backgroundColor
+				sidebarCellStateSet.selected.iconColor = sidebarCellStateSet.regular.backgroundColor
+
+				sidebarLogoIconColor = .white
+				sidebarLogoLabel = .white
+				iconSymbolColor = lightColor
+
+				separatorColor = .darkGray
+
+				sectionHeaderColor = .white
+				sectionFooterColor = .lightGray
+				groupedSectionHeaderColor = .lightGray
+				groupedSectionFooterColor = .lightGray
+
+				moreHeaderBackgroundColor = darkColor.lighter(0.05)
+
+				modalBackgroundColor = darkBrandColor
+
+				inlineActionBackgroundColor = UIColor(white: 1, alpha: 0.10)
+				inlineActionBackgroundColorHighlighted = UIColor(white: 1, alpha: 0.05)
 
 				// Bars
-				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
-				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors)
-				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.darkBrandColors)
-				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
-
-				// Table view
-				self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", navigationBarColors.backgroundColor!.darker(0.1))
-				self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", navigationBarColors.backgroundColor!.darker(0.3))
-				let separatorColor : UIColor? = UIColor.darkGray
-				self.tableSeparatorColor = colors.resolveColor("Table.tableSeparatorColor", separatorColor)
-				let rowBorderColor : UIColor? = UIColor.white.withAlphaComponent(0.1)
-				self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowBorderColor)
-				self.tableRowColors = colors.resolveThemeColorCollection("Table.tableRowColors", ThemeColorCollection(
-					backgroundColor: tableBackgroundColor,
-					tintColor: navigationBarColors.tintColor,
-					labelColor: navigationBarColors.labelColor,
-					secondaryLabelColor: navigationBarColors.secondaryLabelColor,
-					symbolColor: lightColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				))
-
-				self.tableRowHighlightColors = colors.resolveThemeColorCollection("Table.tableRowHighlightColors", ThemeColorCollection(
-					backgroundColor: lightColor.darker(0.2),
-					tintColor: UIColor.white,
-					labelColor: UIColor.white,
-					secondaryLabelColor: UIColor.white,
-					symbolColor: darkColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				))
-
-				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
-				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
-				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
+				tokenForegroundColor = lightBrandColor
+				tokenBackgroundColor = UIColor(white: 1, alpha: 0.1)
 
 				// Progress
-				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3)))
-
-				// Activity
-				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .medium)
-				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .medium)
+				progressColors = ThemeColorPair(foreground: lightBrandColor, background: lightBrandColor.withAlphaComponent(0.3))
 
 				// Logo fill color
-				let logoColor : UIColor? = UIColor.white
-				logoFillColor = colors.resolveColor("Icon.logoFillColor", logoColor)
+				logoFillColor = .white
 
 			case .light:
 				// Interface style
-				self.interfaceStyle = styleResolver.resolveInterfaceStyle(fallback: .light)
-				self.keyboardAppearance = styleResolver.resolveKeyboardStyle(fallback: .light)
-				self.backgroundBlurEffectStyle = styleResolver.resolveBlurEffectStyle(fallback: .light)
+				interfaceStyle = .light
+				keyboardAppearance = .light
+				backgroundBlurEffectStyle = .light
+				statusBarStyle = .darkContent
+				barStyle = .default
 
-				// Bars
-				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", ThemeColorCollection(
-					backgroundColor: UIColor.white.darker(0.05),
-					tintColor: nil,
-					labelColor: darkColor,
-					secondaryLabelColor: UIColor.gray,
-					symbolColor: darkColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				))
+				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .white, tintColor: .white, for: interfaceStyle)
+				accountCellSet = sidebarAccountCellSet
 
-				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.navigationBarColors)
-				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", self.navigationBarColors)
-				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
+				navigationBarSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightColor, for: interfaceStyle)
+				toolbarSet = navigationBarSet
 
-				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .darkContent)
-				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
-				self.barStyle = styleResolver.resolveBarStyle(fallback: .default)
+				cellSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightColor, for: interfaceStyle)
+				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
+				collectionBackgroundColor = cellSet.backgroundColor
 
-				// Progress
-				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
+				groupedCellSet = cellSet
+				groupedCellStateSet = ThemeColorStateSet.from(colorSet: groupedCellSet, for: interfaceStyle)
+				groupedCollectionBackgroundColor = .systemGroupedBackground.resolvedColor(with: styleTraitCollection)
 
-				// Activity
-				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .medium)
-				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .medium)
+				contentNavigationBarSet = cellSet
+				contentToolbarSet = cellSet
 
-				// Logo fill color
-				let logoColor : UIColor? = UIColor.lightGray
-				logoFillColor = colors.resolveColor("Icon.logoFillColor", logoColor)
+				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: lightBrandSet, for: .light)
+				sidebarCellStateSet.regular.backgroundColor = .secondarySystemBackground.resolvedColor(with: styleTraitCollection)
+				sidebarCellStateSet.selected.labelColor = .white
+				sidebarCellStateSet.selected.iconColor = .white
+				sidebarCellStateSet.selected.backgroundColor = darkBrandColor
 
-			case .contrast:
-				// Interface style
-				self.interfaceStyle = styleResolver.resolveInterfaceStyle(fallback: .light)
-				self.keyboardAppearance = styleResolver.resolveKeyboardStyle(fallback: .light)
-				self.backgroundBlurEffectStyle = styleResolver.resolveBlurEffectStyle(fallback: .light)
+				sidebarLogoIconColor = darkBrandColor
+				sidebarLogoLabel = darkBrandColor
+				iconSymbolColor = darkColor
 
-				// Bars
-				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors)
-				let tmpDarkBrandColors = self.darkBrandColors
-            
-                if VendorServices.shared.isBranded {
-                    tmpDarkBrandColors.secondaryLabelColor = UIColor(hex: 0xF7F7F7)
-                }
-				if self.tintColor == UIColor(hex: 0xFFFFFF) {
-					tmpDarkBrandColors.secondaryLabelColor = .lightGray
-				}
-				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", tmpDarkBrandColors)
+				sectionHeaderColor = .label.resolvedColor(with: styleTraitCollection)
+				sectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
+				groupedSectionHeaderColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
+				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
 
-				let defaultSearchBarColor = self.darkBrandColors
-				if VendorServices.shared.isBranded {
-					defaultSearchBarColor.labelColor = UIColor(hex: 0x000000)
-					defaultSearchBarColor.secondaryLabelColor = UIColor.gray
-					defaultSearchBarColor.backgroundColor = UIColor(hex: 0xF7F7F7)
-					self.tableRowColors.symbolColor = darkColor
-					self.tableRowHighlightColors.symbolColor = darkColor
-				}
+				moreHeaderBackgroundColor = cellSet.backgroundColor
 
-				self.searchBarColors = colors.resolveThemeColorCollection("Searchbar", defaultSearchBarColor)
+				modalBackgroundColor = collectionBackgroundColor
 
-				self.loginColors = colors.resolveThemeColorCollection("Login", self.darkBrandColors)
-
-				// Bar styles
-				self.statusBarStyle = styleResolver.resolveStatusBarStyle(for: "statusBarStyle", fallback: .lightContent)
-				self.loginStatusBarStyle = styleResolver.resolveStatusBarStyle(for: "loginStatusBarStyle", fallback: self.statusBarStyle)
-				self.barStyle = styleResolver.resolveBarStyle(fallback: .black)
+				inlineActionBackgroundColor = UIColor(white: 0, alpha: 0.05)
+				inlineActionBackgroundColorHighlighted = UIColor(white: 0, alpha: 0.10)
 
 				// Progress
-				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)))
-
-				// Activity
-				self.activityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "activityIndicatorViewStyle", fallback: .medium)
-				self.searchBarActivityIndicatorViewStyle = styleResolver.resolveActivityIndicatorViewStyle(for: "searchBarActivityIndicatorViewStyle", fallback: .medium)
+				progressColors = ThemeColorPair(foreground: lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
 
 				// Logo fill color
-				logoFillColor = UIColor.lightGray
-
-				if lightBrandColor.isEqual(UIColor(hex: 0xFFFFFF)) {
-					self.neutralColors.normal.background = self.darkBrandColor
-					self.lightBrandColors.filledColorPairCollection.normal.background = self.darkBrandColor
-				}
+				logoFillColor = .lightGray
 		}
 
-		self.informalColors = colors.resolveThemeColorCollection("Informal", self.lightBrandColors)
-		self.cancelColors = colors.resolveThemeColorCollection("Cancel", self.lightBrandColors)
+		// Fixed colors
+		let primaryLabelColor = cellSet.labelColor // UIColor.label.resolvedColor(with: styleTraitCollection)
+		let secondaryLabelColor = cellSet.secondaryLabelColor // UIColor.secondaryLabel.resolvedColor(with: styleTraitCollection)
+		let tertiaryLabelColor = cellSet.secondaryLabelColor // UIColor.tertiaryLabel.resolvedColor(with: styleTraitCollection)
+		let placeholderTextColor = cellSet.secondaryLabelColor // UIColor.placeholderText.resolvedColor(with: styleTraitCollection)
 
-		let iconSymbolColor = self.tableRowColors.symbolColor
+		let primaryBackgroundColor = UIColor.systemBackground.resolvedColor(with: styleTraitCollection)
+		let secondaryBackgroundColor = UIColor.secondarySystemBackground.resolvedColor(with: styleTraitCollection)
+		let tertiaryBackgroundColor = UIColor.tertiarySystemBackground.resolvedColor(with: styleTraitCollection)
 
-		self.iconColors = [
-			"folderFillColor" : colors.resolveColor("Icon.folderFillColor", iconSymbolColor).hexString(),
-			"fileFillColor" : colors.resolveColor("Icon.fileFillColor", iconSymbolColor).hexString(),
-			"logoFillColor" : colors.resolveColor("Icon.logoFillColor", logoFillColor)?.hexString() ?? "#ffffff",
-			"iconFillColor" : colors.resolveColor("Icon.iconFillColor", tableRowColors.tintColor)?.hexString() ?? iconSymbolColor.hexString(),
-			"symbolFillColor" : colors.resolveColor("Icon.symbolFillColor", iconSymbolColor).hexString()
-		]
+		let progressForegroundColor = progressColors.foreground
+		let progressBackgroundColor = progressColors.background
+
+		let favoriteEnabledColor = UIColor(hex: 0xFFCC00)
+		let favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
+
+		// CSS
+		css.add(records: [
+			// Global styles
+			// - Interface Style
+			ThemeCSSRecord(selectors: [.all], 			   	property: .style, value: interfaceStyle),
+
+			// - Blur Effect Style
+			ThemeCSSRecord(selectors: [.all], 			   	property: .blurEffectStyle, value: backgroundBlurEffectStyle),
+
+			// - Status Bar
+			ThemeCSSRecord(selectors: [.all], 			   	property: .statusBarStyle, value: statusBarStyle),
+
+			// - Bar
+			ThemeCSSRecord(selectors: [.all], 			   	property: .barStyle, value: barStyle),
+
+			// - Activity Indicator
+			ThemeCSSRecord(selectors: [.all], 			   	property: .activityIndicatorStyle, value: UIActivityIndicatorView.Style.medium),
+
+			// General
+			// - Seperator
+			ThemeCSSRecord(selectors: [.separator], 			property: .fill,  value: separatorColor),
+
+			// - Navigation Bar
+			ThemeCSSRecord(selectors: [.navigationBar],			property: .stroke, value: navigationBarSet.tintColor),
+			ThemeCSSRecord(selectors: [.navigationBar, .label],		property: .stroke, value: navigationBarSet.labelColor),
+			ThemeCSSRecord(selectors: [.navigationBar],			property: .fill,   value: navigationBarSet.backgroundColor),
+
+			// - Toolbar
+			ThemeCSSRecord(selectors: [.toolbar],				property: .stroke, value: toolbarSet.tintColor),
+			ThemeCSSRecord(selectors: [.toolbar],				property: .fill,   value: toolbarSet.backgroundColor),
+
+			// - Progress
+			ThemeCSSRecord(selectors: [.progress], 				property: .fill,  value: progressBackgroundColor),
+			ThemeCSSRecord(selectors: [.progress], 				property: .stroke,value: progressForegroundColor),
+			ThemeCSSRecord(selectors: [.progress, .button],			property: .fill,  value: tintColor),
+
+			// - Cells
+			ThemeCSSRecord(selectors: [.cell, .sectionHeader],		property: .stroke, value: sectionHeaderColor),
+
+			// - Modal
+			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .fill,   value: modalBackgroundColor),
+			ThemeCSSRecord(selectors: [.modal, .issues, .table],		property: .fill,   value: modalBackgroundColor),
+			ThemeCSSRecord(selectors: [.modal, .issues, .table, .cell],	property: .fill,   value: modalBackgroundColor),
+			ThemeCSSRecord(selectors: [.modal],     	    	   	property: .stroke, value: cellSet.labelColor),
+
+			// - Splitview
+			ThemeCSSRecord(selectors: [.splitView],     	    	   	property: .fill,   value: cellSet.backgroundColor),
+
+			// - Collection View
+			ThemeCSSRecord(selectors: [.collection],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.collection, .highlighted, .cell],  	property: .fill,   value: cellStateSet.highlighted.backgroundColor),
+			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .stroke, value: cellStateSet.regular.tintColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.title], 		property: .stroke, value: cellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .fill,   value: UIColor.clear),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.icon], property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.title],property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.collection, .sectionFooter], 	property: .stroke, value: sectionFooterColor),
+			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.collection, .selectionCheckmark], 			property: .fill,   value: cellStateSet.regular.tintColor),
+			ThemeCSSRecord(selectors: [.collection, .selectionCheckmark], 			property: .stroke, value: cellStateSet.regular.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.collection, .selected, .selectionCheckmark], 		property: .stroke,   value: UIColor.white),
+
+			// - Table View
+			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .table],    	   	property: .fill,   value: groupedCollectionBackgroundColor),
+
+			ThemeCSSRecord(selectors: [.table, .cell],    			property: .stroke, value: cellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.table, .cell],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.table, .highlighted, .cell],     	property: .fill,   value: cellStateSet.highlighted.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.grouped, .table, .cell],			property: .stroke, value: groupedCellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .cell, .label],		property: .stroke, value: groupedCellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .cell],			property: .fill,   value: groupedCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .highlighted, .cell],	property: .fill,   value: groupedCellStateSet.highlighted.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.grouped, .table, .sectionHeader],    	property: .stroke, value: groupedSectionHeaderColor),
+			ThemeCSSRecord(selectors: [.grouped, .table, .sectionFooter],    	property: .stroke, value: groupedSectionFooterColor),
+
+			ThemeCSSRecord(selectors: [.insetGrouped, .table, .cell],		property: .stroke, value: groupedCellStateSet.regular.tintColor), // tableRowColors.tintColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .table, .cell],		property: .fill,   value: groupedCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .table, .highlighted, .cell],	property: .fill,   value: groupedCellStateSet.highlighted.backgroundColor),
+
+			ThemeCSSRecord(selectors: [.table, .sectionHeader],    			property: .stroke, value: sectionHeaderColor),
+			ThemeCSSRecord(selectors: [.table, .sectionFooter],    			property: .stroke, value: sectionFooterColor),
+
+			ThemeCSSRecord(selectors: [.table, .icon],    				property: .stroke, value: cellStateSet.regular.iconColor),
+			ThemeCSSRecord(selectors: [.table, .label, .primary],    		property: .stroke, value: cellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.table, .label, .secondary], 		property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .primary],    	property: .stroke, value: cellStateSet.highlighted.labelColor),
+			ThemeCSSRecord(selectors: [.table, .label, .highlighted, .secondary], 	property: .stroke, value: cellStateSet.highlighted.secondaryLabelColor),
+
+			// - Accessories
+			ThemeCSSRecord(selectors: [.accessory], 			property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.accessory, .accept],		property: .stroke, value: UIColor.systemGreen),
+			ThemeCSSRecord(selectors: [.accessory, .decline],		property: .stroke, value: UIColor.systemRed),
+
+			// - Segment View
+			ThemeCSSRecord(selectors: [.segments], 				property: .fill,   value: UIColor.clear),
+			ThemeCSSRecord(selectors: [.segments, .icon], 			property: .stroke, value: cellSet.iconColor),
+			ThemeCSSRecord(selectors: [.segments, .title],			property: .stroke, value: cellSet.secondaryLabelColor),
+
+			ThemeCSSRecord(selectors: [.segments, .token],			property: .fill,   value: tokenBackgroundColor),
+			ThemeCSSRecord(selectors: [.segments, .token, .icon],		property: .stroke, value: tokenForegroundColor),
+			ThemeCSSRecord(selectors: [.segments, .token, .title],		property: .stroke, value: tokenForegroundColor),
+
+			ThemeCSSRecord(selectors: [.segments, .item, .separator],	property: .fill,   value: nil),
+			ThemeCSSRecord(selectors: [.segments, .item, .separator],	property: .stroke, value: cellSet.secondaryLabelColor),
+
+			// - Messages
+			ThemeCSSRecord(selectors: [.infoBox, .background],		property: .fill, value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.infoBox, .icon],			property: .fill, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.infoBox, .subtitle],		property: .fill, value: secondaryLabelColor),
+
+			ThemeCSSRecord(selectors: [.title],				property: .stroke, value: primaryLabelColor),
+			ThemeCSSRecord(selectors: [.subtitle],				property: .stroke, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.message],				property: .stroke, value: tertiaryLabelColor),
+
+			ThemeCSSRecord(selectors: [.primary],				property: .stroke, value: primaryLabelColor),
+			ThemeCSSRecord(selectors: [.secondary],				property: .stroke, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.tertiary],				property: .stroke, value: tertiaryLabelColor),
+
+			// - Saved Search
+			ThemeCSSRecord(selectors: [.savedSearch],			property: .fill, value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.savedSearch, .cell],		property: .fill, value: groupedCollectionBackgroundColor),
+
+			// - Fills
+			ThemeCSSRecord(selectors: [.primary],				property: .fill, value: primaryBackgroundColor),
+			ThemeCSSRecord(selectors: [.secondary],				property: .fill, value: secondaryBackgroundColor),
+			ThemeCSSRecord(selectors: [.tertiary],				property: .fill, value: tertiaryBackgroundColor),
+
+			// - Text Field
+			ThemeCSSRecord(selectors: [.textField],				property: .fill,   value: collectionBackgroundColor), // Background color
+			ThemeCSSRecord(selectors: [.textField, .label],			property: .stroke, value: cellSet.labelColor), // Text color
+			ThemeCSSRecord(selectors: [.textField, .disabled, .label],	property: .stroke, value: cellSet.secondaryLabelColor), // Disabled text color
+			ThemeCSSRecord(selectors: [.textField, .placeholder],		property: .stroke, value: placeholderTextColor), // Text field placeholder
+
+			// - Search Field
+			ThemeCSSRecord(selectors: [.textField, .searchField],			property: .stroke, value: lightBrandColor), // Search tint color (UI elements other than text)
+			ThemeCSSRecord(selectors: [.textField, .searchField, .label],		property: .stroke, value: primaryLabelColor), // Search text color
+
+			// - Slider
+			ThemeCSSRecord(selectors: [.slider], 				property: .stroke, value: lightBrandColor),
+
+			// - Buttons + Popups
+			ThemeCSSRecord(selectors: [.button],				property: .stroke, value: lightBrandColor),
+			ThemeCSSRecord(selectors: [.popupButton],			property: .stroke, value: lightBrandColor),
+
+			// - Label styles
+			ThemeCSSRecord(selectors: [.label, .destructive],		property: .stroke, value: UIColor.red),
+			ThemeCSSRecord(selectors: [.label, .warning],			property: .stroke, value: UIColor(hex: 0xF2994A)),
+			ThemeCSSRecord(selectors: [.label, .error],			property: .stroke, value: UIColor(hex: 0xEB5757)),
+			ThemeCSSRecord(selectors: [.label, .success],			property: .stroke, value: UIColor(hex: 0x27AE60))
+		])
+
+		// - Fill styles
+		css.add(records: ThemeCollection.generateColorPairs(with: [.destructive], foregroundColor: .white, backgroundColor: .red))
+		css.add(records: ThemeCollection.generateColorPairs(with: [.confirm], 	  foregroundColor: .white, backgroundColor: UIColor(hex: 0x1AC763)))
+		css.add(records: ThemeCollection.generateColorPairs(with: [.cancel], 	  foregroundColor: .white, backgroundColor: lightBrandColor))
+		css.add(records: ThemeCollection.generateColorPairs(with: [.proceed], 	  foregroundColor: .white, backgroundColor: lightBrandColor))
+		css.add(records: ThemeCollection.generateColorPairs(with: [.info], 	  foregroundColor: .white, backgroundColor: lightBrandColor))
+		css.add(records: ThemeCollection.generateColorPairs(with: [.warning], 	  foregroundColor: .black, backgroundColor: .systemYellow))
+
+		css.add(records: ThemeCollection.generateColorPairs(with: [.purchase], 	  from: purchaseColors))
+
+		// - Pass code fill style
+		css.add(records: ThemeCollection.generateColorPairs(with: [.digit], 	  from: neutralColors))
+
+		css.add(records: [
+			ThemeCSSRecord(selectors: [.passcode],				property: .fill,   value: collectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.passcode, .title],			property: .stroke, value: primaryLabelColor),
+			ThemeCSSRecord(selectors: [.passcode, .disabled, .title],	property: .stroke, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.passcode, .code],			property: .stroke, value: neutralColors.normal.background),
+			ThemeCSSRecord(selectors: [.passcode, .disabled, .code],	property: .stroke, value: primaryLabelColor),
+			ThemeCSSRecord(selectors: [.passcode, .subtitle],		property: .stroke, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.passcode, .disabled, .subtitle],	property: .stroke, value: tertiaryLabelColor),
+
+			// - Alert View Controller
+			ThemeCSSRecord(selectors: [.alert],				property: .stroke, value: tintColor),
+
+			// - Action / Drop target (plain) fill style
+			ThemeCSSRecord(selectors: [.action],				property: .fill, value: inlineActionBackgroundColor),
+			ThemeCSSRecord(selectors: [.action, .highlighted],		property: .fill, value: inlineActionBackgroundColorHighlighted),
+
+			// - Drive Header
+			ThemeCSSRecord(selectors: [.header, .drive, .cover],		property: .fill, value: lightBrandColor),
+
+			// - Expandable Resource Cell
+			ThemeCSSRecord(selectors: [.expandable],			property: .fill,   value: collectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.expandable, .button],		property: .stroke, value: tintColor),
+			ThemeCSSRecord(selectors: [.expandable, .textView],		property: .fill,   value: collectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.expandable, .textView],		property: .stroke, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.expandable, .shadow],		property: .fill,   value: cellSet.labelColor),
+
+			// - Location Bar
+			ThemeCSSRecord(selectors: [.locationBar],			property: .fill, value: cellSet.backgroundColor),
+
+			// - Keyboard
+			ThemeCSSRecord(selectors: [.all],				property: .keyboardAppearance, value: keyboardAppearance),
+
+			// - Account Cell
+			ThemeCSSRecord(selectors: [.account],				property: .fill,   value: accountCellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.account, .title],			property: .stroke, value: accountCellSet.labelColor),
+			ThemeCSSRecord(selectors: [.account, .description],		property: .stroke, value: accountCellSet.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.account, .disconnect],		property: .stroke, value: accountCellSet.tintColor),
+			ThemeCSSRecord(selectors: [.account, .disconnect],		property: .fill,   value: accountCellSet.labelColor),
+
+			// - Location Picker
+			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList], 		property: .fill, value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.locationPicker, .collection, .accountList, .cell], 		property: .fill, value: accountCellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.locationPicker, .navigationBar], 				property: .fill, value: groupedCollectionBackgroundColor),
+
+			// - More card header
+			ThemeCSSRecord(selectors: [.more, .header], 					property: .fill,   value: moreHeaderBackgroundColor),
+			ThemeCSSRecord(selectors: [.more, .collection], 				property: .fill,   value: groupedCellStateSet),
+			ThemeCSSRecord(selectors: [.more, .insetGrouped, .table, .cell, .proceed],	property: .stroke, value: UIColor.white),
+
+			ThemeCSSRecord(selectors: [.more, .favorite],			property: .stroke, value: favoriteEnabledColor),
+			ThemeCSSRecord(selectors: [.more, .favorite, .disabled],	property: .stroke, value: favoriteDisabledColor),
+
+			// - TVG icon colors
+			ThemeCSSRecord(selectors: [.vectorImage, .folderColor], 	property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 		property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .logoColor], 		property: .fill, value: logoFillColor ?? UIColor.white),
+			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 		property: .fill, value: iconSymbolColor),
+			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
+
+			// Side Bar
+			// - Interface Style
+			ThemeCSSRecord(selectors: [.sidebar], 			   	property: .style, value: UIUserInterfaceStyle.light),
+
+			// - Status Bar
+			ThemeCSSRecord(selectors: [.sidebar], 			   	property: .statusBarStyle, value: statusBarStyle),
+
+			// - Collection View
+			ThemeCSSRecord(selectors: [.sidebar, .collection, .cell],  	property: .fill,   value: sidebarCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.sidebar, .collection],  	   	property: .fill,   value: sidebarCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.sidebar, .collection, .cell], 	property: .stroke, value: sidebarCellStateSet.regular.labelColor),
+			// ThemeCSSRecord(selectors: [.sidebar, .collection, .label], 	property: .stroke, value: sidebarCellStateSet.regular.labelColor),
+			// ThemeCSSRecord(selectors: [.sidebar, .collection, .icon],  	property: .stroke, value: sidebarCellStateSet.regular.labelColor),
+
+			ThemeCSSRecord(selectors: [.sidebar, .collection, .selected, .cell],  property: .stroke, value: sidebarCellStateSet.selected.labelColor),
+			ThemeCSSRecord(selectors: [.sidebar, .collection, .selected, .cell],  property: .fill, value: sidebarCellStateSet.selected.backgroundColor),
+
+			// - Warning
+			ThemeCSSRecord(selectors: [.sidebar, .warning, .icon], 		property: .stroke, value: UIColor.black), // "Access denied" sidebar icon
+
+			// - Account Cell
+			ThemeCSSRecord(selectors: [.sidebar, .account],			property: .fill,   value: sidebarAccountCellSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.sidebar, .account, .title],		property: .stroke, value: sidebarAccountCellSet.labelColor),
+			ThemeCSSRecord(selectors: [.sidebar, .account, .description],	property: .stroke, value: sidebarAccountCellSet.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.sidebar, .account, .disconnect],	property: .stroke, value: sidebarAccountCellSet.tintColor),
+			ThemeCSSRecord(selectors: [.sidebar, .account, .disconnect],	property: .fill,   value: sidebarAccountCellSet.labelColor),
+
+			// - Navigation Bar
+			ThemeCSSRecord(selectors: [.sidebar, .navigationBar],		property: .stroke, value: lightColor),
+			ThemeCSSRecord(selectors: [.sidebar, .navigationBar],		property: .fill,   value: nil),
+			ThemeCSSRecord(selectors: [.sidebar, .navigationBar, .logo],	property: .stroke, value: sidebarLogoIconColor),
+			ThemeCSSRecord(selectors: [.sidebar, .navigationBar, .logo, .label],property: .stroke, value: sidebarLogoLabel),
+
+			// - Toolbar
+			ThemeCSSRecord(selectors: [.sidebar, .toolbar],			property: .fill,   value: sidebarCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.sidebar, .toolbar],			property: .stroke, value: lightColor),
+
+			// Content Area
+			ThemeCSSRecord(selectors: [.content],				property: .fill,   value: collectionBackgroundColor),
+
+			// - Navigation Bar
+			ThemeCSSRecord(selectors: [.content, .navigationBar],			property: .fill,   value: contentNavigationBarSet.backgroundColor),
+			ThemeCSSRecord(selectors: [.content, .navigationBar],			property: .stroke, value: contentNavigationBarSet.tintColor),
+			ThemeCSSRecord(selectors: [.content, .navigationBar, .label, .title],	property: .stroke, value: contentNavigationBarSet.labelColor),
+
+			// - Toolbar
+			ThemeCSSRecord(selectors: [.content, .toolbar],				property: .stroke, value: contentToolbarSet.tintColor),
+			ThemeCSSRecord(selectors: [.content, .toolbar],				property: .fill,   value: contentToolbarSet.backgroundColor),
+
+			// - Location Bar
+			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .plain],		property: .stroke, value: contentToolbarSet.tintColor),
+			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .stroke, value: contentToolbarSet.secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
+		])
 	}
 
 	convenience override init() {
 		self.init(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8))
 	}
+
+	// MARK: - Icon colors
+	var _iconColors: [String:String]?
+	public var iconColors: [String:String] {
+		if _iconColors == nil {
+			_iconColors = [:]
+
+			_iconColors?["folderFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .folderColor], for: nil)?.hexString()
+			_iconColors?["fileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .fileColor], for: nil)?.hexString()
+			_iconColors?["logoFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .logoColor], for: nil)?.hexString()
+			_iconColors?["iconFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .iconColor], for: nil)?.hexString()
+			_iconColors?["symbolFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .symbolColor], for: nil)?.hexString()
+		}
+
+		return _iconColors ?? [:]
+	}
 }
 
-class ThemeStyleValueResolver : NSObject {
-
-	var styles: NSDictionary?
-
-	init(styleValues : NSDictionary?) {
-		styles = styleValues
-	}
-
-	func resolveStatusBarStyle(for key: String, fallback: UIStatusBarStyle) -> UIStatusBarStyle {
-		if let styleValue = styles?.value(forKeyPath: key) as? String {
-			switch styleValue {
-			case "default":
-				return .default
-			case "lightContent":
-				return .lightContent
-			case "darkContent":
-				return .darkContent
-			default:
-				return fallback
-			}
-		}
-		return fallback
-	}
-
-	func resolveBarStyle(fallback: UIBarStyle) -> UIBarStyle {
-		if let styleValue = styles?.value(forKeyPath: "barStyle") as? String {
-			switch styleValue {
-			case "default":
-				return .default
-			case "black":
-				return .black
-			default:
-				return fallback
-			}
-		}
-		return fallback
-	}
-
-	func resolveActivityIndicatorViewStyle(for key: String, fallback: UIActivityIndicatorView.Style) -> UIActivityIndicatorView.Style {
-		if let styleValue = styles?.value(forKeyPath: key) as? String {
-			switch styleValue {
-			case "medium", "white", "gray":
-				return .medium
-			case "whiteLarge", "large":
-				return .large
-			default:
-				return fallback
-			}
-		}
-		return fallback
-	}
-
-	func resolveKeyboardStyle(fallback: UIKeyboardAppearance) -> UIKeyboardAppearance {
-		if let styleValue = styles?.value(forKeyPath: "keyboardAppearance") as? String {
-			switch styleValue {
-			case "default":
-				return .default
-			case "light":
-				return .light
-			case "dark":
-				return .dark
-			default:
-				return fallback
-			}
-		}
-		return fallback
-	}
-
-	func resolveBlurEffectStyle(fallback: UIBlurEffect.Style) -> UIBlurEffect.Style {
-		if let styleValue = styles?.value(forKeyPath: "backgroundBlurEffectStyle") as? String {
-			switch styleValue {
-			case "regular":
-				return .regular
-			case "light":
-				return .light
-			case "dark":
-				return .dark
-			default:
-				return fallback
-			}
-		}
-		return fallback
-	}
-
-	func resolveInterfaceStyle(fallback: ThemeCollectionInterfaceStyle) -> ThemeCollectionInterfaceStyle {
-		if let styleValue = styles?.value(forKeyPath: "interfaceStyle") as? String {
-			switch styleValue {
-			case "unspecified":
-				return .unspecified
-			case "light":
-				return .light
-			case "dark":
-				return .dark
-			default:
-				return fallback
-			}
-		}
-		return fallback
-	}
-
+extension ThemeCSSSelector {
+	static let folderColor = ThemeCSSSelector(rawValue: "folderColor")
+	static let fileColor = ThemeCSSSelector(rawValue: "fileColor")
+	static let logoColor = ThemeCSSSelector(rawValue: "logoColor")
+	static let iconColor = ThemeCSSSelector(rawValue: "iconColor")
+	static let symbolColor = ThemeCSSSelector(rawValue: "symbolColor")
 }
 
-class ThemeColorValueResolver : NSObject {
-
-	var generic: NSDictionary?
-	var colors: NSDictionary?
-
-	var themeCollectionStyle : ThemeCollectionStyle?
-
-	init(colorValues : NSDictionary?, genericValues: NSDictionary?, themeCollectionStyle: ThemeCollectionStyle? = nil) {
-		colors = colorValues
-		generic = genericValues
-		self.themeCollectionStyle = themeCollectionStyle
-	}
-
-	func resolveColor(_ forKeyPath: String, _ fallback : UIColor) -> UIColor {
-		if let rawColor = colors?.value(forKeyPath: forKeyPath) as? String {
-			if rawColor.contains("."), let genericRawColor = generic?.value(forKeyPath: rawColor) as? String, let decodedHexColor = genericRawColor.colorFromHex {
-				return decodedHexColor
-			} else if let decodedHexColor = rawColor.colorFromHex {
-				return decodedHexColor
-			}
-		}
-		return fallback
-	}
-
-	func resolveColor(_ forKeyPath: String, _ fallback : UIColor? = nil) -> UIColor? {
-		if let rawColor = colors?.value(forKeyPath: forKeyPath) as? String {
-			if rawColor.contains("."), let genericRawColor = generic?.value(forKeyPath: rawColor) as? String, let decodedHexColor = genericRawColor.colorFromHex {
-				return decodedHexColor
-			} else if let decodedHexColor = rawColor.colorFromHex {
-				if forKeyPath.hasPrefix("NavigationBar") {
-				}
-				return decodedHexColor
-			}
-		}
-		return fallback
-	}
-
-	func resolveThemeColorPair(_ forKeyPath: String, _ colorPair : ThemeColorPair) -> ThemeColorPair {
-		let pair = ThemeColorPair(foreground: self.resolveColor(forKeyPath.appending(".foreground"), colorPair.foreground),
-								  background: self.resolveColor(forKeyPath.appending(".background"), colorPair.background))
-
-		return pair
-	}
-
-	func resolveThemeColorCollection(_ forKeyPath: String, _ colorCollection : ThemeColorCollection) -> ThemeColorCollection {
-		let collection = ThemeColorCollection(backgroundColor: self.resolveColor(forKeyPath.appending(".backgroundColor"), colorCollection.backgroundColor),
-											  tintColor: self.resolveColor(forKeyPath.appending(".tintColor"), colorCollection.tintColor),
-											  labelColor: self.resolveColor(forKeyPath.appending(".labelColor"), colorCollection.labelColor),
-											  secondaryLabelColor: self.resolveColor(forKeyPath.appending(".secondaryLabelColor"), colorCollection.secondaryLabelColor),
-											  symbolColor: self.resolveColor(forKeyPath.appending(".symbolColor"), colorCollection.symbolColor),
-											  filledColorPairCollection: self.resolveThemeColorPairCollection(forKeyPath.appending(".filledColorPairCollection"), colorCollection.filledColorPairCollection))
-
-		return collection
-	}
-
-	func resolveThemeColorPairCollection(_ forKeyPath: String, _ colorPairCollection : ThemeColorPairCollection) -> ThemeColorPairCollection {
-		let newColorPairCollection = ThemeColorPairCollection(fromPairCollection: colorPairCollection)
-
-		if let baseForegroundColor = self.resolveColor(forKeyPath.appending(".baseForegroundColor")),
-		   let baseBackgroundColor = self.resolveColor(forKeyPath.appending(".baseBackgroundColor")) {
-			return ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: baseForegroundColor, background: baseBackgroundColor))
-		} else {
-			newColorPairCollection.normal = self.resolveThemeColorPair(forKeyPath.appending(".normal"), colorPairCollection.normal)
-			newColorPairCollection.highlighted = self.resolveThemeColorPair(forKeyPath.appending(".highlighted"), colorPairCollection.highlighted)
-			newColorPairCollection.disabled = self.resolveThemeColorPair(forKeyPath.appending(".disabled"), colorPairCollection.disabled)
-		}
-
-		return newColorPairCollection
-	}
-
-}
-
-@available(iOS 13.0, *)
 extension ThemeCollection {
-	var navigationBarAppearance : UINavigationBarAppearance {
+	func navigationBarAppearance(navigationBar: UINavigationBar, scrollEdge: Bool = false) -> UINavigationBarAppearance {
 		let appearance = UINavigationBarAppearance()
 
 		appearance.configureWithOpaqueBackground()
-		appearance.backgroundColor = navigationBarColors.backgroundColor
-		appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
-		appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
-		appearance.shadowColor = .clear
+
+		if let labelColor = css.getColor(.stroke, selectors: [.label], for: navigationBar) {
+			appearance.titleTextAttributes = [ .foregroundColor : labelColor  ]
+			appearance.largeTitleTextAttributes = [ .foregroundColor : labelColor  ]
+		}
+
+		appearance.backgroundColor = css.getColor(.fill, for: navigationBar)
+
+		if scrollEdge {
+			appearance.shadowColor = .clear
+		}
 
 		return appearance
 	}

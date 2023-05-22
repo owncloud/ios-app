@@ -31,7 +31,7 @@ class DownloadItemsHUDViewController: CardViewController {
 
 	var messageLabel : UILabel
 	var cancelButton : UIButton
-	var progressView : UIProgressView
+	var progressView : ThemeCSSProgressView
 	var progressSummarizer : ProgressSummarizer
 	weak var core : OCCore?
 
@@ -41,8 +41,9 @@ class DownloadItemsHUDViewController: CardViewController {
 		self.completion = completion
 
 		messageLabel = UILabel()
-		progressView = UIProgressView(progressViewStyle: .bar)
+		progressView = ThemeCSSProgressView(progressViewStyle: .bar)
 		cancelButton = ThemeButton()
+		cancelButton.cssSelector = .cancel
 		progressSummarizer = ProgressSummarizer()
 
 		super.init(nibName: nil, bundle: nil)
@@ -207,9 +208,7 @@ class DownloadItemsHUDViewController: CardViewController {
 
 	// MARK: - Themeable
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		progressView.applyThemeCollection(collection)
 		messageLabel.applyThemeCollection(collection)
-		cancelButton.applyThemeCollection(collection)
 
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 	}

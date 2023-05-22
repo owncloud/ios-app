@@ -41,6 +41,11 @@
 	return ((_name != nil) ? _name : _searchTerm);
 }
 
+- (BOOL)isNameUserDefined
+{
+	return (_name != nil);
+}
+
 #pragma mark - Data item & Data item versioning
 - (OCDataItemType)dataItemType
 {

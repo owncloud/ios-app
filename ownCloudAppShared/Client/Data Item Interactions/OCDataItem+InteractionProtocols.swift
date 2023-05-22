@@ -21,6 +21,9 @@ import ownCloudSDK
 
 // MARK: - Selection
 @objc public protocol DataItemSelectionInteraction: OCDataItem {
+	// Allow selection
+	@objc optional func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool
+
 	// Handle selection: suitable for f.ex. actions
 	@objc optional func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((_ success: Bool) -> Void)?) -> Bool
 
@@ -55,4 +58,10 @@ public struct LocalDataItem {
 @objc public protocol DataItemDropInteraction: OCDataItem {
 	@objc optional func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal?
 	func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (_ didSucceed: Bool) -> Void)
+}
+
+// MARK: - BrowserNavigationBookmark restoration
+@objc public protocol DataItemBrowserNavigationBookmarkReStore: OCDataItem {
+	func store(in bookmarkUUID: UUID?, context: ClientContext?, restoreAction: BrowserNavigationBookmark.BookmarkRestoreAction) -> BrowserNavigationBookmark?
+	static func restore(navigationBookmark: BrowserNavigationBookmark, in viewController: UIViewController?, with context:ClientContext?, completion: @escaping ((_ error: Error?, _ viewController: UIViewController?) -> Void))
 }

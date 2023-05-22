@@ -103,8 +103,10 @@ class CreateDocumentAction: Action {
 					return
 				}
 
-				core.suggestUnusedNameBased(on: "New document".localized.appending((fileType.extension != nil) ? ".\(fileType.extension!)" : ""), at: itemLocation, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
+				core.suggestUnusedNameBased(on: "New document".localized.appending((fileType.extension != nil) ? ".\(fileType.extension!)" : ""), at: itemLocation, isDirectory: false, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 					guard let suggestedName = suggestedName else { return }
+
+					let fallbackIcon = (fileType.mimeType != nil) ? ResourceItemIcon.iconFor(mimeType: fileType.mimeType!) : .file
 
 					OnMainThread {
 						let documentNameViewController = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
@@ -120,13 +122,29 @@ class CreateDocumentAction: Action {
 
 								return (true, nil, nil)
 							}
-						}, completion: { newFileName, _ in
+						}, fallbackIcon: fallbackIcon, completion: { newFileName, _ in
 							guard let newFileName = newFileName, let core = self.core else {
 								self.completed()
 								return
 							}
 
 							if let progress = core.connection.createAppFile(of: fileType, in: parentItem, withName: newFileName, completionHandler: { (error, fileID, item) in
+								if let error = error {
+									OnMainThread {
+										let alertController = ThemedAlertController(
+											with: "Error creating {{itemName}}".localized(["itemName" : newFileName]),
+											message: error.localizedDescription,
+											okLabel: "OK".localized,
+											action: nil)
+
+										viewController.present(alertController, animated: true)
+
+										self.completed(with: error)
+									}
+
+									return
+								}
+
 								if error == nil, let query = self.context.clientContext?.query {
 									self.core?.reload(query)
 								}
