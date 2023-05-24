@@ -211,7 +211,7 @@ extension ActionCell {
 					switch action.type {
 						case .warning: cell.cssSelectors = [.warning]
 						case .destructive: cell.cssSelectors = [.destructive]
-						case .regular: cell.cssSelectors = []
+						case .regular: cell.cssSelectors = action.cssSelectors ?? []
 					}
 
 					backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
