@@ -45,6 +45,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 	}
 
 	var selectionChangeObservation: NSKeyValueObservation?
+    var combinedSectionsDatasource: OCDataSourceComposition?
 
 	override public func viewDidLoad() {
 		super.viewDidLoad()
@@ -64,9 +65,31 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 				accountController.destroy() // needs to be called since AccountController keeps a reference to itself otherwise
 			}
 		}, queue: .main)
+        
+        // Combined data source
+         if let accountsControllerSectionSource {
+             let action = OCAction(title: "Bar", icon: OCSymbol.icon(forSymbolName: "tag"), action: { [weak self] _, _, completion in
+                 if let self = self {
+                     self.openHelpURL()
+                 }
+                 completion(nil)
+             })
+             //action.cssSelectors = [.modal]
+             
+             let labelDataSource = OCDataSourceArray(items: [ action ])
+
+             let labelSection = CollectionViewSection(identifier: "help-section", dataSource: labelDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
+             
+             labelSection.boundarySupplementaryItems = [
+                .title("Help".localized, pinned: true)
+                 ]
+             let labelSectionDatasource = OCDataSourceArray(items: [ labelSection ])
+
+             combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, labelSectionDatasource ])
+         }
 
 		// Set up Collection View
-		sectionsDataSource = accountsControllerSectionSource
+		sectionsDataSource = combinedSectionsDatasource ?? accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.titleView = self.buildNavigationLogoView()
 
@@ -77,6 +100,10 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 	deinit {
 		accountsControllerSectionSource?.source = nil // Clear all AccountController instances from the controller and make OCDataSourceMapped call the destroyer
 	}
+    
+    @objc func openHelpURL() {
+        self.openURL(URL(string: "https://www.owncloud.com")!)
+    }
 
 	// MARK: - NavigationRevocationHandler
 	public func handleRevocation(event: NavigationRevocationEvent, context: ClientContext?, for viewController: UIViewController) {
