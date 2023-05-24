@@ -937,8 +937,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		// Use item's DataItemSelectionInteraction
 		if let selectionInteraction = record.item as? DataItemSelectionInteraction {
 			// Try selection first
-			if selectionInteraction.handleSelection?(in: self, with: clientContext, completion: { [weak self] success in
-				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection, clientContext: clientContext) == true {
+			if selectionInteraction.handleSelection?(in: self, with: clientContext, completion: { [weak self] (success, forceDeselection) in
+				if self?.shouldDeselect(record: record, at: indexPath, afterInteraction: .selection, clientContext: clientContext) == true || forceDeselection {
 					self?.collectionView.deselectItem(at: indexPath, animated: true)
 				}
 			}) == true {

@@ -143,11 +143,11 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 		return nil
 	}
 
-	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
+	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool, Bool) -> Void)?) -> Bool {
 		if isTemplate {
 			if let host = viewController as? SearchViewControllerHost {
 				host.searchViewController?.restore(savedTemplate: self)
-				completion?(true)
+				completion?(true, false)
 				return true
 			}
 		} else {
@@ -157,13 +157,13 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 				if context.pushViewControllerToNavigation(context: resultsContext, provider: { context in
 					return viewController
 				}, push: true, animated: true) != nil {
-					completion?(true)
+					completion?(true, false)
 					return true
 				}
 			}
 		}
 
-		completion?(false)
+		completion?(false, false)
 		return false
 	}
 }
