@@ -66,28 +66,29 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 				accountController.destroy() // needs to be called since AccountController keeps a reference to itself otherwise
 			}
 		}, queue: .main)
-        
-        // Combined data source
-        if let accountsControllerSectionSource, let label = Branding.shared.profileHelpButtonLabel, let _ = Branding.shared.profileHelpURL {
-            let action = OCAction(title: label, icon: OCSymbol.icon(forSymbolName: "questionmark.circle"), action: { [weak self] _, _, completion in
-                if let self = self {
-                    self.openHelpURL()
-                }
-                completion(nil)
-            })
-            action.cssSelectors = [.content]
-            
-            let helpDataSource = OCDataSourceArray(items: [ action ])
-            
-            let helpSection = CollectionViewSection(identifier: "help-section", dataSource: helpDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
-            
-            helpSection.boundarySupplementaryItems = [
-                .mediumTitle("Help".localized, pinned: true)
-            ]
-            let labelSectionDatasource = OCDataSourceArray(items: [ helpSection ])
-            
-            combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, labelSectionDatasource ])
-        }
+
+		// Combined data source
+		if let accountsControllerSectionSource, let label = Branding.shared.profileHelpButtonLabel, let _ = Branding.shared.profileHelpURL {
+			let action = OCAction(title: label, icon: OCSymbol.icon(forSymbolName: "questionmark.circle"), action: { [weak self] _, _, completion in
+				if let self = self {
+					self.openHelpURL()
+				}
+				completion(nil)
+			})
+			action.cssSelectors = [.content]
+			action.automaticDeselection = true
+
+			let helpDataSource = OCDataSourceArray(items: [ action ])
+
+			let helpSection = CollectionViewSection(identifier: "help-section", dataSource: helpDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
+
+			helpSection.boundarySupplementaryItems = [
+				.mediumTitle("Help".localized, pinned: true)
+			]
+			let labelSectionDatasource = OCDataSourceArray(items: [ helpSection ])
+
+			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, labelSectionDatasource ])
+		}
 
 		// Set up Collection View
 		sectionsDataSource = combinedSectionsDatasource ?? accountsControllerSectionSource
