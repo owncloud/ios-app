@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 extension OCAction : DataItemSelectionInteraction {
-	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
+	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool, Bool) -> Void)?) -> Bool {
 		guard (self as? CollectionSidebarAction) == nil else {
 			// Use openItem() for CollectionSidebarAction
 			return false
@@ -32,8 +32,10 @@ extension OCAction : DataItemSelectionInteraction {
 			options[.clientContext] = context
 		}
 
+		let automaticDeselection = self.automaticDeselection
+
 		run(options: options, completionHandler: { error in
-			completion?(error == nil)
+			completion?(error == nil, automaticDeselection)
 		})
 
 		return true

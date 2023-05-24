@@ -129,11 +129,13 @@ extension OCShare: DataItemContextMenuInteraction {
 }
 
 extension OCShare: DataItemSelectionInteraction {
-	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
+	public func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool, Bool) -> Void)?) -> Bool {
 		if let context {
 			if category == .withMe {
 				if effectiveState == .accepted {
-					_ = revealItem(from: viewController, with: context, animated: true, pushViewController: true, completion: completion)
+					_ = revealItem(from: viewController, with: context, animated: true, pushViewController: true, completion: { success in
+						completion?(success, false)
+					})
 					return true
 				}
 			} else {
@@ -156,7 +158,7 @@ extension OCShare: DataItemSelectionInteraction {
 			}
 		}
 
-		completion?(true)
+		completion?(true, false)
 		return true
 	}
 
