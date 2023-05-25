@@ -68,26 +68,8 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		}, queue: .main)
 
 		// Combined data source
-		if let accountsControllerSectionSource, let label = Branding.shared.profileHelpButtonLabel, let _ = Branding.shared.profileHelpURL {
-			let action = OCAction(title: label, icon: OCSymbol.icon(forSymbolName: "questionmark.circle"), action: { [weak self] _, _, completion in
-				if let self = self {
-					self.openHelpURL()
-				}
-				completion(nil)
-			})
-			action.cssSelectors = [.content]
-			action.automaticDeselection = true
-
-			let helpDataSource = OCDataSourceArray(items: [ action ])
-
-			let helpSection = CollectionViewSection(identifier: "help-section", dataSource: helpDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
-
-			helpSection.boundarySupplementaryItems = [
-				.mediumTitle("Help".localized, pinned: true)
-			]
-			let labelSectionDatasource = OCDataSourceArray(items: [ helpSection ])
-
-			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, labelSectionDatasource ])
+		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
+			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, sidebarLinksDataSource ])
 		}
 
 		// Set up Collection View
@@ -168,6 +150,35 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 		focusedBookmark = newFocusedBookmark
 	}
+    
+    public var sidebarLinksDataSource: OCDataSourceArray? {
+        if let sidebarLinks = Branding.shared.sidebarLinks {
+            let actions = sidebarLinks.compactMap { link in
+                let action = OCAction(title: link.title, icon: OCSymbol.icon(forSymbolName: link.symbol), action: { [weak self] _, _, completion in
+                    if let self = self {
+                        self.openURL(link.url)
+                    }
+                    completion(nil)
+                })
+                action.automaticDeselection = true
+                
+                return action
+            }
+            
+            let linksDataSource = OCDataSourceArray(items: actions)
+            
+            let linksSection = CollectionViewSection(identifier: "links-section", dataSource: linksDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
+            
+            if let title = Branding.shared.sidebarLinksTitle {
+                linksSection.boundarySupplementaryItems = [
+                    .mediumTitle(title, pinned: true)
+                ]
+            }
+            return OCDataSourceArray(items: [ linksSection ])
+        }
+        
+        return nil
+    }
 }
 
 // MARK: - Branding
@@ -225,10 +236,4 @@ extension ClientSidebarViewController {
 
 		return logoWrapperView
 	}
-    
-    @objc func openHelpURL() {
-        if let url = Branding.shared.profileHelpURL {
-            self.openURL(url)
-        }
-    }
 }
