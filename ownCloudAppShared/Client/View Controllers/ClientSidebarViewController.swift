@@ -154,7 +154,15 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
     public var sidebarLinksDataSource: OCDataSourceArray? {
         if let sidebarLinks = Branding.shared.sidebarLinks {
             let actions = sidebarLinks.compactMap { link in
-                let action = OCAction(title: link.title, icon: OCSymbol.icon(forSymbolName: link.symbol), action: { [weak self] _, _, completion in
+                
+                var image: UIImage?
+                if let symbol = link.symbol, let anImage = OCSymbol.icon(forSymbolName: symbol) {
+                    image = anImage
+                } else if let imageName = link.image, let anImage = UIImage(named: imageName) {
+                    image = anImage.withRenderingMode(.alwaysTemplate).scaledImageFitting(in: CGSize(width: 30, height: 30))
+                }
+                
+                let action = OCAction(title: link.title, icon: image, action: { [weak self] _, _, completion in
                     if let self = self {
                         self.openURL(link.url)
                     }

@@ -376,8 +376,8 @@ extension Branding {
     public var sidebarLinks: Array<SidebarLink>? {
         if let values = computedValue(forClassSettingsKey: .sidebarLinks) as? Array<Dictionary<String, String>> {
             return values.compactMap { link in
-                if let title = link["title"], let symbol = link["symbol"], let urlString = link["url"], let url = URL(string: urlString) {
-                    return SidebarLink(title: title, symbol: symbol, url: url)
+                if let title = link["title"], let urlString = link["url"], let url = URL(string: urlString) {
+                    return SidebarLink(title: title, symbol: link["symbol"], image: link["image"], url: url)
                 }
                 
                 return nil
@@ -394,7 +394,8 @@ extension Branding {
 
 public struct SidebarLink {
     var title: String
-    var symbol: String
+    var symbol: String?
+    var image: String?
     var url: URL
 }
 
