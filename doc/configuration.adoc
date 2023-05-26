@@ -35,9 +35,6 @@ tag::actions[]
 ! `com.owncloud.action.delete`
 ! Delete
 
-! `com.owncloud.action.discardscene`
-! Close Window
-
 ! `com.owncloud.action.duplicate`
 ! Duplicate
 
@@ -46,9 +43,6 @@ tag::actions[]
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
-
-! `com.owncloud.action.links`
-! Links
 
 ! `com.owncloud.action.makeAvailableOffline`
 ! Make available offline
@@ -64,9 +58,6 @@ tag::actions[]
 
 ! `com.owncloud.action.openin`
 ! Open in
-
-! `com.owncloud.action.openscene`
-! Open in a new Window
 
 ! `com.owncloud.action.pdfpage`
 ! Go to page
@@ -128,9 +119,6 @@ tag::actions[]
 ! `com.owncloud.action.delete`
 ! Delete
 
-! `com.owncloud.action.discardscene`
-! Close Window
-
 ! `com.owncloud.action.duplicate`
 ! Duplicate
 
@@ -139,9 +127,6 @@ tag::actions[]
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
-
-! `com.owncloud.action.links`
-! Links
 
 ! `com.owncloud.action.makeAvailableOffline`
 ! Make available offline
@@ -157,9 +142,6 @@ tag::actions[]
 
 ! `com.owncloud.action.openin`
 ! Open in
-
-! `com.owncloud.action.openscene`
-! Open in a new Window
 
 ! `com.owncloud.action.pdfpage`
 ! Go to page
@@ -259,13 +241,13 @@ tag::app[]
 
 |app.enable-review-prompt
 |bool
-|`true`
+|`false`
 |Enable/disable review prompt.
 |advanced `candidate`
 
 |app.recommend-to-friend-enabled
 |bool
-|`true`
+|`false`
 |Enables/disables the recommend to a friend entry in the settings.
 |advanced `candidate`
 
@@ -348,10 +330,22 @@ tag::bookmarks[]
 |Status
 
 
-|bookmark.default-url
+|account-settings.default-name
+|string
+|
+|The default name for the creation of new bookmarks.
+|supported `candidate`
+
+|account-settings.default-url
 |string
 |
 |The default URL for the creation of new bookmarks.
+|supported `candidate`
+
+|account-settings.url-editable
+|bool
+|
+|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
 |supported `candidate`
 
 |bookmark.prepopulation
@@ -373,12 +367,6 @@ tag::bookmarks[]
 
 !===
 
-|supported `candidate`
-
-|bookmark.url-editable
-|bool
-|`true`
-|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
 |supported `candidate`
 
 |===
@@ -450,12 +438,60 @@ branding.can-edit-account
 |Controls whether the app should prompt for an App Store review. Only applies if the app is branded.
 |advanced `candidate`
 
+|**Allow URL configuration** +
+ +
+branding.profile-allow-url-configuration
+|bool
+|
+|Indicates if the user can change the server URL for the account.
+|advanced `candidate`
+
+|**Bookmark Name** +
+ +
+branding.profile-bookmark-name
+|string
+|
+|The name that should be used for the bookmark that's generated from this profile and appears in the account list.
+|advanced `candidate`
+
 |**Profile definitions** +
  +
 branding.profile-definitions
 |dictionaryArray
 |
 |Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.
+|advanced `candidate`
+
+|**Onboarding button title** +
+ +
+branding.profile-help-button-label
+|string
+|
+|Text used for the onboarding button title
+|advanced `candidate`
+
+|**Onboarding URL** +
+ +
+branding.profile-help-url
+|urlString
+|
+|Optional URL to onboarding resources.
+|advanced `candidate`
+
+|**Open onboarding URL message** +
+ +
+branding.profile-open-help-message
+|string
+|
+|Message shown in an alert before opening the onboarding URL.
+|advanced `candidate`
+
+|**URL** +
+ +
+branding.profile-url
+|urlString
+|
+|The URL of the server targeted by this profile.
 |advanced `candidate`
 
 |**Feedback Email address** +
@@ -516,6 +552,14 @@ branding.url-terms-of-use
 |urlString
 |`https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE`
 |URL to terms of use for the app. Opened when selecting "Terms Of Use" in the settings.
+|advanced `candidate`
+
+|**URL of the theme.json** +
+ +
+branding.url-theme-json
+|urlString
+|
+|URL of the instance theme.json file, which can contain instance or app specific branding parameter. Setting this to `auto` will construct the URL by adding `themes/owncloud/theme.json` to the respective server's base address.
 |advanced `candidate`
 
 |branding.user-defaults-default-values
@@ -949,9 +993,6 @@ tag::extensions[]
 ! `com.owncloud.action.delete`
 ! Extension with the identifier com.owncloud.action.delete.
 
-! `com.owncloud.action.discardscene`
-! Extension with the identifier com.owncloud.action.discardscene.
-
 ! `com.owncloud.action.duplicate`
 ! Extension with the identifier com.owncloud.action.duplicate.
 
@@ -963,9 +1004,6 @@ tag::extensions[]
 
 ! `com.owncloud.action.instant_media_upload`
 ! Extension with the identifier com.owncloud.action.instant_media_upload.
-
-! `com.owncloud.action.links`
-! Extension with the identifier com.owncloud.action.links.
 
 ! `com.owncloud.action.makeAvailableOffline`
 ! Extension with the identifier com.owncloud.action.makeAvailableOffline.
@@ -981,9 +1019,6 @@ tag::extensions[]
 
 ! `com.owncloud.action.openin`
 ! Extension with the identifier com.owncloud.action.openin.
-
-! `com.owncloud.action.openscene`
-! Extension with the identifier com.owncloud.action.openscene.
 
 ! `com.owncloud.action.pdfpage`
 ! Extension with the identifier com.owncloud.action.pdfpage.
@@ -1018,20 +1053,11 @@ tag::extensions[]
 ! `com.owncloud.action.uploadphotos`
 ! Extension with the identifier com.owncloud.action.uploadphotos.
 
-! `com.owncloud.classic`
-! Extension with the identifier com.owncloud.classic.
-
 ! `com.owncloud.dark`
 ! Extension with the identifier com.owncloud.dark.
 
-! `com.owncloud.dark.black`
-! Extension with the identifier com.owncloud.dark.black.
-
 ! `com.owncloud.light`
 ! Extension with the identifier com.owncloud.light.
-
-! `com.owncloud.web.dark`
-! Extension with the identifier com.owncloud.web.dark.
 
 ! `five-seconds-of-404`
 ! Extension with the identifier five-seconds-of-404.
@@ -1388,6 +1414,12 @@ tag::oidc[]
 |bool
 |`true`
 |If client registration is enabled, but registration fails, controls if the error should be ignored and the default client ID and secret should be used instead.
+|supported `candidate`
+
+|authentication-oauth2.oidc-prompt
+|string
+|`select_account consent`
+|OpenID Connect Prompt
 |supported `candidate`
 
 |authentication-oauth2.oidc-redirect-uri

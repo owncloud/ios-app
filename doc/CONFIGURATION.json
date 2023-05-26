@@ -1,6 +1,45 @@
 [
   {
     "autoExpansion" : "none",
+    "category" : "Bookmarks",
+    "categoryTag" : "bookmarks",
+    "classIdentifier" : "account-settings",
+    "className" : "ownCloud.AccountSettingsProvider",
+    "description" : "The default name for the creation of new bookmarks.",
+    "flatIdentifier" : "account-settings.default-name",
+    "key" : "default-name",
+    "label" : "account-settings.default-name",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Bookmarks",
+    "categoryTag" : "bookmarks",
+    "classIdentifier" : "account-settings",
+    "className" : "ownCloud.AccountSettingsProvider",
+    "description" : "The default URL for the creation of new bookmarks.",
+    "flatIdentifier" : "account-settings.default-url",
+    "key" : "default-url",
+    "label" : "account-settings.default-url",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Bookmarks",
+    "categoryTag" : "bookmarks",
+    "classIdentifier" : "account-settings",
+    "className" : "ownCloud.AccountSettingsProvider",
+    "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
+    "flatIdentifier" : "account-settings.url-editable",
+    "key" : "url-editable",
+    "label" : "account-settings.url-editable",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
@@ -38,10 +77,6 @@
         "value" : "com.owncloud.action.delete"
       },
       {
-        "description" : "Close Window",
-        "value" : "com.owncloud.action.discardscene"
-      },
-      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -52,10 +87,6 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
-      },
-      {
-        "description" : "Links",
-        "value" : "com.owncloud.action.links"
       },
       {
         "description" : "Make available offline",
@@ -76,10 +107,6 @@
       {
         "description" : "Open in",
         "value" : "com.owncloud.action.openin"
-      },
-      {
-        "description" : "Open in a new Window",
-        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Go to page",
@@ -164,10 +191,6 @@
         "value" : "com.owncloud.action.delete"
       },
       {
-        "description" : "Close Window",
-        "value" : "com.owncloud.action.discardscene"
-      },
-      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -178,10 +201,6 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
-      },
-      {
-        "description" : "Links",
-        "value" : "com.owncloud.action.links"
       },
       {
         "description" : "Make available offline",
@@ -202,10 +221,6 @@
       {
         "description" : "Open in",
         "value" : "com.owncloud.action.openin"
-      },
-      {
-        "description" : "Open in a new Window",
-        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Go to page",
@@ -326,7 +341,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Enable/disable review prompt.",
     "flatIdentifier" : "app.enable-review-prompt",
     "key" : "enable-review-prompt",
@@ -368,7 +383,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Enables/disables the recommend to a friend entry in the settings.",
     "flatIdentifier" : "app.recommend-to-friend-enabled",
     "key" : "recommend-to-friend-enabled",
@@ -493,6 +508,20 @@
     "categoryTag" : "oidc",
     "classIdentifier" : "authentication-oauth2",
     "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : "select_account consent",
+    "description" : "OpenID Connect Prompt",
+    "flatIdentifier" : "authentication-oauth2.oidc-prompt",
+    "key" : "oidc-prompt",
+    "label" : "authentication-oauth2.oidc-prompt",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OIDC",
+    "categoryTag" : "oidc",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
     "defaultValue" : "oc://ios.owncloud.com",
     "description" : "OpenID Connect Redirect URI",
     "flatIdentifier" : "authentication-oauth2.oidc-redirect-uri",
@@ -599,19 +628,6 @@
     "categoryTag" : "bookmarks",
     "classIdentifier" : "bookmark",
     "className" : "ownCloud.BookmarkViewController",
-    "description" : "The default URL for the creation of new bookmarks.",
-    "flatIdentifier" : "bookmark.default-url",
-    "key" : "default-url",
-    "label" : "bookmark.default-url",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "bookmark",
-    "className" : "ownCloud.BookmarkViewController",
     "description" : "Controls prepopulation of the local database with the full item set during account setup.",
     "flatIdentifier" : "bookmark.prepopulation",
     "key" : "prepopulation",
@@ -632,20 +648,6 @@
     ],
     "status" : "supported",
     "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "bookmark",
-    "className" : "ownCloud.BookmarkViewController",
-    "defaultValue" : true,
-    "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-    "flatIdentifier" : "bookmark.url-editable",
-    "key" : "url-editable",
-    "label" : "bookmark.url-editable",
-    "status" : "supported",
-    "type" : "bool"
   },
   {
     "autoExpansion" : "none",
@@ -748,12 +750,90 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "description" : "Indicates if the user can change the server URL for the account.",
+    "flatIdentifier" : "branding.profile-allow-url-configuration",
+    "key" : "profile-allow-url-configuration",
+    "label" : "Allow URL configuration",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+    "flatIdentifier" : "branding.profile-bookmark-name",
+    "key" : "profile-bookmark-name",
+    "label" : "Bookmark Name",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
     "description" : "Array of dictionaries, each specifying a profile. All `Profile` keys can be used in the profile dictionaries.",
     "flatIdentifier" : "branding.profile-definitions",
     "key" : "profile-definitions",
     "label" : "Profile definitions",
     "status" : "advanced",
     "type" : "dictionaryArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "Text used for the onboarding button title",
+    "flatIdentifier" : "branding.profile-help-button-label",
+    "key" : "profile-help-button-label",
+    "label" : "Onboarding button title",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "Optional URL to onboarding resources.",
+    "flatIdentifier" : "branding.profile-help-url",
+    "key" : "profile-help-url",
+    "label" : "Onboarding URL",
+    "status" : "advanced",
+    "type" : "urlString"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "Message shown in an alert before opening the onboarding URL.",
+    "flatIdentifier" : "branding.profile-open-help-message",
+    "key" : "profile-open-help-message",
+    "label" : "Open onboarding URL message",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "The URL of the server targeted by this profile.",
+    "flatIdentifier" : "branding.profile-url",
+    "key" : "profile-url",
+    "label" : "URL",
+    "status" : "advanced",
+    "type" : "urlString"
   },
   {
     "autoExpansion" : "none",
@@ -861,6 +941,19 @@
     "flatIdentifier" : "branding.url-terms-of-use",
     "key" : "url-terms-of-use",
     "label" : "Terms of use URL",
+    "status" : "advanced",
+    "type" : "urlString"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "URL of the instance theme.json file, which can contain instance or app specific branding parameter. Setting this to `auto` will construct the URL by adding `themes/owncloud/theme.json` to the respective server's base address.",
+    "flatIdentifier" : "branding.url-theme-json",
+    "key" : "url-theme-json",
+    "label" : "URL of the theme.json",
     "status" : "advanced",
     "type" : "urlString"
   },
@@ -1553,10 +1646,6 @@
         "value" : "com.owncloud.action.delete"
       },
       {
-        "description" : "Extension with the identifier com.owncloud.action.discardscene.",
-        "value" : "com.owncloud.action.discardscene"
-      },
-      {
         "description" : "Extension with the identifier com.owncloud.action.duplicate.",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -1571,10 +1660,6 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.instant_media_upload.",
         "value" : "com.owncloud.action.instant_media_upload"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.links.",
-        "value" : "com.owncloud.action.links"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.makeAvailableOffline.",
@@ -1595,10 +1680,6 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.openin.",
         "value" : "com.owncloud.action.openin"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.openscene.",
-        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.pdfpage.",
@@ -1645,24 +1726,12 @@
         "value" : "com.owncloud.action.uploadphotos"
       },
       {
-        "description" : "Extension with the identifier com.owncloud.classic.",
-        "value" : "com.owncloud.classic"
-      },
-      {
         "description" : "Extension with the identifier com.owncloud.dark.",
         "value" : "com.owncloud.dark"
       },
       {
-        "description" : "Extension with the identifier com.owncloud.dark.black.",
-        "value" : "com.owncloud.dark.black"
-      },
-      {
         "description" : "Extension with the identifier com.owncloud.light.",
         "value" : "com.owncloud.light"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.web.dark.",
-        "value" : "com.owncloud.web.dark"
       },
       {
         "description" : "Extension with the identifier five-seconds-of-404.",
