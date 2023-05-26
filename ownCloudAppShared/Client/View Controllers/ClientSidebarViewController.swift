@@ -159,7 +159,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 				if let symbol = link.symbol, let anImage = OCSymbol.icon(forSymbolName: symbol) {
 					image = anImage
 				} else if let imageName = link.image, let anImage = UIImage(named: imageName) {
-					image = anImage.withRenderingMode(.alwaysTemplate).scaledImageFitting(in: CGSize(width: 30, height: 30))
+					image = anImage.scaledImageFitting(in: CGSize(width: 30, height: 30))
 				}
 
 				let action = OCAction(title: link.title, icon: image, action: { [weak self] _, _, completion in
