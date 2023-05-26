@@ -27,6 +27,7 @@ public extension OCActionPropertyKey {
 	static let supportsDrop = OCActionPropertyKey(rawValue: "supportsDrop")
 	static let buttonLabel = OCActionPropertyKey(rawValue: "buttonLabel")
 	static let selectable = OCActionPropertyKey(rawValue: "selectable")
+	static let automaticDeselection = OCActionPropertyKey(rawValue: "automaticDeselection")
 }
 
 extension OCAction {
@@ -47,6 +48,16 @@ extension OCAction {
 
 		set {
 			properties[.selectable] = newValue
+		}
+	}
+
+	var automaticDeselection: Bool {
+		get {
+			return properties[.automaticDeselection] as? Bool ?? false
+		}
+
+		set {
+			properties[.automaticDeselection] = newValue
 		}
 	}
 

@@ -125,7 +125,7 @@ open class OptionItem: NSObject, OCDataItem, OCDataItemVersioning, UniversalItem
 		return enabled
 	}
 
-	open func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool) -> Void)?) -> Bool {
+	open func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((Bool, Bool) -> Void)?) -> Bool {
 		if kind != .single {
 			if kind == .toggle {
 				state = !state
@@ -138,7 +138,7 @@ open class OptionItem: NSObject, OCDataItem, OCDataItemVersioning, UniversalItem
 
 		selectAction?(self)
 
-		completion?(true)
+		completion?(true, false)
 		return true
 	}
 

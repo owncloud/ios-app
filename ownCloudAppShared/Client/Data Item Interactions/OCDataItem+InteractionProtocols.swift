@@ -25,7 +25,7 @@ import ownCloudSDK
 	@objc optional func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool
 
 	// Handle selection: suitable for f.ex. actions
-	@objc optional func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((_ success: Bool) -> Void)?) -> Bool
+	@objc optional func handleSelection(in viewController: UIViewController?, with context: ClientContext?, completion: ((_ success: Bool, _ performItemDeselection: Bool) -> Void)?) -> Bool
 
 	// "Open" the item: suitable when pushing view controllers that should be restorable
 	@objc optional func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((_ success: Bool) -> Void)?) -> UIViewController?
