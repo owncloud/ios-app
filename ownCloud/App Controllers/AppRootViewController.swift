@@ -198,6 +198,10 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 			setNeedsStatusBarAppearanceUpdate()
 		}
 	}
+	
+	public override var preferredStatusBarStyle : UIStatusBarStyle {
+		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
+	}
 
 	// MARK: - BrowserNavigationViewControllerDelegate
 	public func browserNavigation(viewController: ownCloudAppShared.BrowserNavigationViewController, contentViewControllerDidChange toViewController: UIViewController?) {
