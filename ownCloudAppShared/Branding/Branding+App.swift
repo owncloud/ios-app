@@ -218,8 +218,8 @@ extension Branding : BrandingInitialization {
 
 			.sidebarLinks : [
 				.type         : OCClassSettingsMetadataType.array,
-				.label         : "Sidebar Links",
-				.description    : "Array with Links, which should appear in the sidebar.",
+				.label         : "Sidebar Link Items",
+				.description    : "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
 				.status        : OCClassSettingsKeyStatus.advanced,
 				.category    : "Branding"
 			],
