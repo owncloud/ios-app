@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 extension ThemeCSSSelector {
 	static let logo = ThemeCSSSelector(rawValue: "logo")
@@ -45,6 +46,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 	}
 
 	var selectionChangeObservation: NSKeyValueObservation?
+	var combinedSectionsDatasource: OCDataSourceComposition?
 
 	override public func viewDidLoad() {
 		super.viewDidLoad()
@@ -65,8 +67,13 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 			}
 		}, queue: .main)
 
+		// Combined data source
+		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
+			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, sidebarLinksDataSource ])
+		}
+
 		// Set up Collection View
-		sectionsDataSource = accountsControllerSectionSource
+		sectionsDataSource = combinedSectionsDatasource ?? accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
 		navigationItem.titleView = self.buildNavigationLogoView()
 
@@ -142,6 +149,43 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		}
 
 		focusedBookmark = newFocusedBookmark
+	}
+
+	public var sidebarLinksDataSource: OCDataSourceArray? {
+		if let sidebarLinks = Branding.shared.sidebarLinks {
+			let actions = sidebarLinks.compactMap { link in
+
+				var image: UIImage?
+				if let symbol = link.symbol, let anImage = OCSymbol.icon(forSymbolName: symbol) {
+					image = anImage
+				} else if let imageName = link.image, let anImage = UIImage(named: imageName) {
+					image = anImage.scaledImageFitting(in: CGSize(width: 30, height: 30))
+				}
+
+				let action = OCAction(title: link.title, icon: image, action: { [weak self] _, _, completion in
+					if let self = self {
+						self.openURL(link.url)
+					}
+					completion(nil)
+				})
+				action.automaticDeselection = true
+
+				return action
+			}
+
+			let linksDataSource = OCDataSourceArray(items: actions)
+
+			let linksSection = CollectionViewSection(identifier: "links-section", dataSource: linksDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
+
+			if let title = Branding.shared.sidebarLinksTitle {
+				linksSection.boundarySupplementaryItems = [
+					.mediumTitle(title, pinned: true)
+				]
+			}
+			return OCDataSourceArray(items: [ linksSection ])
+		}
+
+		return nil
 	}
 }
 

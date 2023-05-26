@@ -44,6 +44,9 @@ extension OCClassSettingsKey {
 	public static let profileOpenHelpMessage = OCClassSettingsKey("profile-open-help-message")
 	public static let profileHelpURL = OCClassSettingsKey("profile-help-url")
 
+	public static let sidebarLinks = OCClassSettingsKey("sidebar-links")
+	public static let sidebarLinksTitle = OCClassSettingsKey("sidebar-links-title")
+
 	// Profiles
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
 
@@ -211,6 +214,22 @@ extension Branding : BrandingInitialization {
 				.description    : "Indicates if the user can change the server URL for the account.",
 				.status        : OCClassSettingsKeyStatus.advanced,
 				.category    : "Branding"
+			],
+
+			.sidebarLinks : [
+				.type         : OCClassSettingsMetadataType.array,
+				.label         : "Sidebar Link Items",
+				.description    : "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
+			],
+
+			.sidebarLinksTitle : [
+				.type         : OCClassSettingsMetadataType.string,
+				.label         : "Sidebar Links Title",
+				.description    : "Title for the sidebar links section.",
+				.status        : OCClassSettingsKeyStatus.advanced,
+				.category    : "Branding"
 			]
 		])
 	}
@@ -248,7 +267,6 @@ extension BrandingImageName {
 
 extension Branding {
 	public var isBranded: Bool {
-		return true
 		return (organizationName != nil) // Organization name must be set
 	}
 
@@ -353,6 +371,31 @@ extension Branding {
 	public var profileHelpURL: URL? {
 		return url(forClassSettingsKey: .profileHelpURL) ?? nil
 	}
+
+	public var sidebarLinks: Array<SidebarLink>? {
+		if let values = computedValue(forClassSettingsKey: .sidebarLinks) as? Array<Dictionary<String, String>> {
+			return values.compactMap { link in
+				if let title = link["title"], let urlString = link["url"], let url = URL(string: urlString) {
+					return SidebarLink(title: title, symbol: link["symbol"], image: link["image"], url: url)
+				}
+
+				return nil
+			}
+		}
+
+		return nil
+	}
+
+	public var sidebarLinksTitle: String? {
+		return computedValue(forClassSettingsKey: .sidebarLinksTitle) as? String ?? nil
+	}
+}
+
+public struct SidebarLink {
+    var title: String
+    var symbol: String?
+    var image: String?
+    var url: URL
 }
 
 extension Branding {

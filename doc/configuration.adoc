@@ -510,6 +510,22 @@ branding.send-feedback-url
 |URL to open when selecting the "Send feedback" option. Allows the use of all placeholders provided in `http.user-agent`.
 |advanced `candidate`
 
+|**Sidebar Links** +
+ +
+branding.sidebar-links
+|array
+|
+|Array with Links, which should appear in the sidebar.
+|advanced `candidate`
+
+|**Sidebar Links Title** +
+ +
+branding.sidebar-links-title
+|string
+|
+|Title for the sidebar links section.
+|advanced `candidate`
+
 |branding.theme-definitions
 |dictionaryArray
 |
