@@ -680,7 +680,7 @@ public class ThemeCollection : NSObject {
 			// Welcome screen
 			ThemeCSSRecord(selectors: [.welcome, .message, .background],    property: .fill,   value: lightBrandColor),
 			ThemeCSSRecord(selectors: [.welcome, .message, .title],     property: .stroke, value: darkBrandSet.labelColor),
-			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: navigationBarSet.backgroundColor),
 			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .fill,   value: darkBrandColor),
 
 			// Side Bar
