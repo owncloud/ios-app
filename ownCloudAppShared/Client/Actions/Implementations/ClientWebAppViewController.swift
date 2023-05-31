@@ -21,13 +21,18 @@ import ownCloudSDK
 import WebKit
 
 open class ClientWebAppViewController: UIViewController, WKUIDelegate {
+	public typealias DoneHandler = (ClientWebAppViewController) -> Void
+
 	public var urlRequest: URLRequest
 	public var webView: WKWebView?
 
 	public var shouldSendCloseEvent: Bool = true
 
-	public init(with urlRequest: URLRequest) {
+	public var doneHandler: DoneHandler?
+
+	public init(with urlRequest: URLRequest, doneHandler: DoneHandler? = nil) {
 		self.urlRequest = urlRequest
+		self.doneHandler = doneHandler
 
 		super.init(nibName: nil, bundle: nil)
 
@@ -105,6 +110,9 @@ open class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		webView?.uiDelegate = nil
 		webView?.removeFromSuperview()
 		webView = nil
+
+		doneHandler?(self)
+		doneHandler = nil
 	}
 
 	private var isDismissed = false

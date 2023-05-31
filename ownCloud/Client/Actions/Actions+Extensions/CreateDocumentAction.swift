@@ -20,7 +20,47 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+public extension OCClassSettingsKey {
+	static let createDocumentMode = OCClassSettingsKey("create-document-mode")
+}
+
+public enum CreateDocumentActionMode: String {
+	case create = "create"
+	case createAndOpen = "create-and-open"
+}
+
 class CreateDocumentAction: Action {
+	private static var _classSettingsRegistered: Bool = false
+	override public class var actionExtension: ActionExtension {
+		if !_classSettingsRegistered {
+			_classSettingsRegistered = true
+
+			self.registerOCClassSettingsDefaults([
+				.createDocumentMode : CreateDocumentActionMode.createAndOpen.rawValue
+			], metadata: [
+				.createDocumentMode : [
+					.type 		: OCClassSettingsMetadataType.string,
+					.label		: "Create Document Mode",
+					.description 	: "Determines behaviour when creating a document.",
+					.status		: OCClassSettingsKeyStatus.advanced,
+					.category	: "Actions",
+					.possibleValues : [
+						[
+							OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.create.rawValue,
+							OCClassSettingsMetadataKey.description 	: "Creates the document."
+						],
+						[
+							OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.createAndOpen.rawValue,
+							OCClassSettingsMetadataKey.description 	: "Creates the document and opens it in a web app for the document format."
+						]
+					]
+				]
+			])
+		}
+
+		return super.actionExtension
+	}
+
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createDocument") }
 	override open class var category : ActionCategory? { return .normal }
 	override open class var name : String? { return "New document".localized }
@@ -82,6 +122,12 @@ class CreateDocumentAction: Action {
 			return
 		}
 
+		var createMode : CreateDocumentActionMode = .createAndOpen
+
+		if let createModeString = classSetting(forOCClassSettingsKey: .createDocumentMode) as? String, let configuredCreateMode = CreateDocumentActionMode(rawValue: createModeString) {
+			createMode = configuredCreateMode
+		}
+
 		OnMainThread {
 			let documentTypesDataSource = OCDataSourceArray()
 			let documentTypesSection = CollectionViewSection(identifier: "documentTypes", dataSource: documentTypesDataSource, cellStyle: .init(with: .fillSpace), cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: self.context.clientContext)
@@ -129,7 +175,7 @@ class CreateDocumentAction: Action {
 							}
 
 							if let progress = core.connection.createAppFile(of: fileType, in: parentItem, withName: newFileName, completionHandler: { (error, fileID, item) in
-								if let error = error {
+								if let error {
 									OnMainThread {
 										let alertController = ThemedAlertController(
 											with: "Error creating {{itemName}}".localized(["itemName" : newFileName]),
@@ -145,8 +191,75 @@ class CreateDocumentAction: Action {
 									return
 								}
 
-								if error == nil, let query = self.context.clientContext?.query {
+								if let query = self.context.clientContext?.query {
 									self.core?.reload(query)
+								}
+
+								switch createMode {
+									case .create: break
+									case .createAndOpen:
+										if let fileID {
+											let tokenStorage = NSMutableArray()
+											var requirements: [OCQueryCondition] = [
+												.where(.fileID, isEqualTo: fileID)
+											]
+
+											if let driveID = itemLocation.driveID {
+												requirements.append(.where(.driveID, isEqualTo: driveID))
+											}
+
+											OnMainThread {
+												let progressHUDViewController = ProgressHUDViewController(on: viewController, label: "Opening…".localized)
+
+												if let trackingToken = core.trackItem(with: .require(requirements), trackingHandler: { [weak self] error, item, isInitial in
+													if error != nil {
+														// Error
+														OnMainThread {
+															progressHUDViewController.dismiss(completion: nil)
+														}
+
+														// End item tracking
+														OCSynchronized(viewController) {
+															tokenStorage.removeAllObjects()
+														}
+													} else if let item {
+														// Open in web app
+														OnMainThread {
+															progressHUDViewController.dismiss(completion: {
+																if let context = self?.context, let core = context.core, let viewController = context.viewController, let openInWebAppActionIdentifier = OpenInWebAppAction.identifier {
+																	let actionContext = ActionContext(viewController: viewController, clientContext: context.clientContext, core: core, items: [item], location: OCExtensionLocation(ofType: .action, identifier: .moreItem), sender: nil)
+																	let actions = Action.sortedApplicableActions(for: actionContext)
+
+																	if let openAction = actions.first(where: { action in
+																		type(of: action).identifier == openInWebAppActionIdentifier
+																	}) {
+																		openAction.run()
+																	}
+																}
+															})
+														}
+
+														// End item tracking
+														OCSynchronized(viewController) {
+															tokenStorage.removeAllObjects()
+														}
+													}
+												}) {
+													OCSynchronized(viewController) {
+														tokenStorage.add(trackingToken)
+													}
+
+													OnMainThread(after: 10, {
+														if tokenStorage.count > 0 {
+															progressHUDViewController.dismiss(completion: nil)
+
+															// End item tracking
+															tokenStorage.removeAllObjects()
+														}
+													})
+												}
+											}
+										}
 								}
 
 								self.completed(with: error)

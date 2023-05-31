@@ -248,7 +248,6 @@ extension BrandingImageName {
 
 extension Branding {
 	public var isBranded: Bool {
-		return true
 		return (organizationName != nil) // Organization name must be set
 	}
 

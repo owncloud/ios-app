@@ -502,8 +502,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 					}
 				}
 
-				iconView.activeViewProvider = iconViewProvider
 				iconView.request = iconRequest
+				if let iconViewProvider {
+					iconView.activeViewProvider = iconViewProvider
+				}
 
 				if let iconRequest {
 					// Start new resource request
