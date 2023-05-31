@@ -161,6 +161,12 @@ public class OpenInWebAppAction: Action {
 			return
 		}
 
+		let doneHandler: ClientWebAppViewController.DoneHandler = { [weak core] webAppViewController in
+			if let parentLocation = item.location?.parent {
+				core?.scheduleUpdateScan(for: parentLocation, waitForNextQueueCycle: true)
+			}
+		}
+
 		// Open in in-app browser
 		core.connection.open(inApp: item, with: app, viewMode: nil, completionHandler: { (error, url, method, headers, parameters, urlRequest) in
 			if let error = error {
@@ -184,7 +190,7 @@ public class OpenInWebAppAction: Action {
 
 			if let urlRequest = urlRequest as? URLRequest {
 				OnMainThread {
-					let webAppViewController = ClientWebAppViewController(with: urlRequest)
+					let webAppViewController = ClientWebAppViewController(with: urlRequest, doneHandler: doneHandler)
 					webAppViewController.navigationItem.title = item.name
 
 					if defaultBrowserOption {

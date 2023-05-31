@@ -443,6 +443,8 @@
 "Pick a document type to create:" = "Pick a document type to create:";
 "Error creating {{itemName}}" = "Error creating {{itemName}}";
 
+"Opening…" = "Opening…";
+
 "Open in {{appName}} (web)" = "Open in {{appName}} (web)";
 "Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
 
@@ -489,18 +491,6 @@
 "%d Item" = "%d Item";
 "%d Items" = "%d Items";
 "Select Items" = "Select Items";
-
-/* Scan */
-"Scan" = "Scan";
-"Scans" = "Scans";
-"Scan document" = "Scan document";
-"Saving" = "Saving";
-"File format" = "File format";
-"Name" = "Name";
-"Save as" = "Save as";
-"Options" = "Options";
-"Scan additional" = "Scan additional";
-"Create one file per page" = "Create one file per page";
 
 /* Scan */
 "Scan" = "Scan";

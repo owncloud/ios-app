@@ -108,10 +108,12 @@ open class ProgressHUDViewController: UIViewController {
 				self.actionWaitGroup.wait()
 
 				OnMainThread {
-					self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-						self?.presenting = false
-						completion?()
-					})
+					if self.presenting {
+						self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
+							self?.presenting = false
+							completion?()
+						})
+					}
 				}
 			}
 		} else {
