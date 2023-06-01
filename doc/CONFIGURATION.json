@@ -158,6 +158,30 @@
     "categoryTag" : "actions",
     "classIdentifier" : "action",
     "className" : "ownCloudAppShared.Action",
+    "defaultValue" : "create-and-open",
+    "description" : "Determines behaviour when creating a document.",
+    "flatIdentifier" : "action.create-document-mode",
+    "key" : "create-document-mode",
+    "label" : "Create Document Mode",
+    "possibleValues" : [
+      {
+        "description" : "Creates the document.",
+        "value" : "create"
+      },
+      {
+        "description" : "Creates the document and opens it in a web app for the document format.",
+        "value" : "create-and-open"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
     "defaultValue" : [
 
     ],
@@ -341,7 +365,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : false,
+    "defaultValue" : true,
     "description" : "Enable/disable review prompt.",
     "flatIdentifier" : "app.enable-review-prompt",
     "key" : "enable-review-prompt",
@@ -369,7 +393,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Controls if the app is built for beta or release purposes.",
     "flatIdentifier" : "app.is-beta-build",
     "key" : "is-beta-build",
@@ -383,7 +407,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : false,
+    "defaultValue" : true,
     "description" : "Enables/disables the recommend to a friend entry in the settings.",
     "flatIdentifier" : "app.recommend-to-friend-enabled",
     "key" : "recommend-to-friend-enabled",
@@ -397,7 +421,7 @@
     "categoryTag" : "app",
     "classIdentifier" : "app",
     "className" : "ownCloudAppShared.VendorServices",
-    "defaultValue" : true,
+    "defaultValue" : false,
     "description" : "Controls whether a warning should be shown on the first run of a beta version.",
     "flatIdentifier" : "app.show-beta-warning",
     "key" : "show-beta-warning",
@@ -868,10 +892,10 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Array with Links, which should appear in the sidebar.",
+    "description" : "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
     "flatIdentifier" : "branding.sidebar-links",
     "key" : "sidebar-links",
-    "label" : "Sidebar Links",
+    "label" : "Sidebar Link Items",
     "status" : "advanced",
     "type" : "array"
   },

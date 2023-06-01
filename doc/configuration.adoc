@@ -93,6 +93,26 @@ tag::actions[]
 
 |advanced `candidate`
 
+|**Create Document Mode** +
+ +
+action.create-document-mode
+|string
+|`create-and-open`
+|Determines behaviour when creating a document.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `create`
+! Creates the document.
+
+! `create-and-open`
+! Creates the document and opens it in a web app for the document format.
+
+!===
+
+|advanced `candidate`
+
 |action.disallowed
 |stringArray
 |`[]`
@@ -241,13 +261,13 @@ tag::app[]
 
 |app.enable-review-prompt
 |bool
-|`false`
+|`true`
 |Enable/disable review prompt.
 |advanced `candidate`
 
 |app.recommend-to-friend-enabled
 |bool
-|`false`
+|`true`
 |Enables/disables the recommend to a friend entry in the settings.
 |advanced `candidate`
 
@@ -259,13 +279,13 @@ tag::app[]
 
 |app.is-beta-build
 |bool
-|`true`
+|`false`
 |Controls if the app is built for beta or release purposes.
 |debugOnly
 
 |app.show-beta-warning
 |bool
-|`true`
+|`false`
 |Controls whether a warning should be shown on the first run of a beta version.
 |debugOnly
 
@@ -510,12 +530,12 @@ branding.send-feedback-url
 |URL to open when selecting the "Send feedback" option. Allows the use of all placeholders provided in `http.user-agent`.
 |advanced `candidate`
 
-|**Sidebar Links** +
+|**Sidebar Link Items** +
  +
 branding.sidebar-links
 |array
 |
-|Array with Links, which should appear in the sidebar.
+|Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)
 |advanced `candidate`
 
 |**Sidebar Links Title** +
