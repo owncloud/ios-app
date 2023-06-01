@@ -439,7 +439,7 @@ class ScanViewController: StaticTableViewController {
 				}
 
 				OnMainThread {
-					progressHUDViewController.dismiss(animated: true, completion: {
+					progressHUDViewController.dismiss(completion: {
 						self.dismiss(animated: true)
 						try? FileManager.default.removeItem(at: tmpURL)
 					})

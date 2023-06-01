@@ -266,13 +266,13 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			dataSourceSubscription?.terminate()
 			dataSourceSubscription = nil
 
-			if let dataSource = dataSource {
+			if let dataSource {
 				combinedChildrenDataSource?.removeSources([dataSource])
 			}
 		}
 
 		didSet {
-			if let dataSource = dataSource {
+			if let dataSource {
 				combinedChildrenDataSource?.addSources([dataSource])
 			}
 			updateDatasourceSubscription()
@@ -366,7 +366,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	// MARK: - Data source handling
 	func updateDatasourceSubscription() {
-		if let dataSource = dataSource {
+		if let dataSource {
 			dataSourceSubscription = dataSource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.handleListUpdates(from: subscription)
 			}, on: .main, trackDifferences: true, performInitialUpdate: true)
