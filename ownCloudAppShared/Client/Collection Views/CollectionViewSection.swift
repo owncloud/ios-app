@@ -266,13 +266,13 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			dataSourceSubscription?.terminate()
 			dataSourceSubscription = nil
 
-			if let dataSource = dataSource {
+			if let dataSource {
 				combinedChildrenDataSource?.removeSources([dataSource])
 			}
 		}
 
 		didSet {
-			if let dataSource = dataSource {
+			if let dataSource {
 				combinedChildrenDataSource?.addSources([dataSource])
 			}
 			updateDatasourceSubscription()
@@ -366,7 +366,7 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 
 	// MARK: - Data source handling
 	func updateDatasourceSubscription() {
-		if let dataSource = dataSource {
+		if let dataSource {
 			dataSourceSubscription = dataSource.subscribe(updateHandler: { [weak self] (subscription) in
 				self?.handleListUpdates(from: subscription)
 			}, on: .main, trackDifferences: true, performInitialUpdate: true)
@@ -545,6 +545,8 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		}
 	}
 
+	private var seenSubscriptions = NSHashTable<OCDataSourceSubscription>.weakObjects()
+
 	func _handleUpdate(for subscription: OCDataSourceSubscription, parentItemRef: CollectionViewController.ItemRef?) {
 		// Handle updates
 		if let collectionViewController = collectionViewController,
@@ -555,7 +557,20 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			let removedItems: Set<OCDataItemReference>? = dataSourceSnapshot.removedItems
 
 			// Insert added items (through direct application of changes, not by using sectionSnapshot.replace(childrenOf:using:) - which would loose states)
-			if let addedItems = dataSourceSnapshot.addedItems, addedItems.count > 0 {
+			var addedItems: [OCDataItemReference]?
+
+			if !seenSubscriptions.contains(subscription) {
+				// First update from subscription -> existing items in .items, not .addedItems
+				seenSubscriptions.add(subscription)
+				addedItems = dataSourceSnapshot.items
+			} else {
+				// Not first update from subscription - all new items in .addedItems
+				if let snapshotAddedItems = dataSourceSnapshot.addedItems, !snapshotAddedItems.isEmpty {
+					addedItems = Array(snapshotAddedItems)
+				}
+			}
+
+			if let addedItems, addedItems.count > 0 {
 				let allItems = dataSourceSnapshot.items
 				var itemsToAdd = Set(addedItems)
 
