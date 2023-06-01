@@ -72,6 +72,22 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 		// Add 10pt space at the top so that the first section's account doesn't "stick" to the top
 		collectionView.contentInset.top += 10
+
+		// Temporary, ugly fix for "empty bookmarks list in sidebar"
+		// Actual issue, as far as understood, is that if that error occurs, the created AccountControllerSections
+		// have no items in them - despite the underlying data sources having them. Until that mystery isn't fully solved
+		// a force-refresh of the underlying (root) datasource is a way to mitigate the issue's negative outcome (no accounts in list)
+		OnMainThread { // Wait for first, regular main thread iteraton
+			OnMainThread(after: 1.0) { // wait one more second
+				// Force refresh the bookmarks data source
+				if self.collectionView.numberOfSections < OCBookmarkManager.shared.bookmarks.count ||
+				   ((self.collectionView.numberOfSections > 0) && (self.collectionView.numberOfItems(inSection: 0) == 0)) {
+					if let bookmarks = OCBookmarkManager.shared.bookmarks as? [OCDataItem & OCDataItemVersioning] {
+						(OCBookmarkManager.shared.bookmarksDatasource as? OCDataSourceArray)?.setVersionedItems(bookmarks)
+					}
+				}
+			}
+		}
 	}
 
 	deinit {

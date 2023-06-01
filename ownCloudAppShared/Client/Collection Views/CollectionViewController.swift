@@ -371,6 +371,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		return sections
 	}
 
+	private func isAssociated(section: CollectionViewSection) -> Bool {
+		return section.collectionViewController == self
+	}
+
 	private func associate(section: CollectionViewSection) {
 		section.collectionViewController = self
 		sectionsByID[section.identifier] = section
@@ -487,6 +491,9 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		for itemRef in snapshot.items {
 			if let itemRecord = try? sectionsDataSource?.record(forItemRef: itemRef), let section = itemRecord.item as? CollectionViewSection {
+				if !isAssociated(section: section) {
+					associate(section: section)
+				}
 				newSections.append(section)
 			}
 		}
