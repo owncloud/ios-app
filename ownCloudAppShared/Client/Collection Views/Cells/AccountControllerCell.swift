@@ -97,11 +97,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			statusIconView.heightAnchor.constraint(equalToConstant: 16),
 
 			titleLabel.trailingAnchor.constraint(equalTo: infoView.leadingAnchor),
-			titleLabel.topAnchor.constraint(equalTo: iconView.topAnchor),
+			titleLabel.topAnchor.constraint(equalTo: iconView.topAnchor, constant: 2),
 
 			detailLabel.trailingAnchor.constraint(equalTo: infoView.leadingAnchor),
 			detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
-			detailLabel.bottomAnchor.constraint(equalTo: iconView.bottomAnchor),
 
 			infoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
 			infoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
@@ -112,8 +111,6 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			disconnectButton.centerYAnchor.constraint(equalTo: infoView.centerYAnchor),
 
 			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20)
-
-			// separatorLayoutGuide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
 		])
 
 		infoView.setContentHuggingPriority(.required, for: .horizontal)
