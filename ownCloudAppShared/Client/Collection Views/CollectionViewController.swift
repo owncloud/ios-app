@@ -82,17 +82,16 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	public func configureLayout() {
-		if usesStackViewRoot, let stackView = stackView {
-			collectionView.translatesAutoresizingMaskIntoConstraints = false
+		collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-			let safeAreaView = ThemeCSSView()
+		if usesStackViewRoot, let stackView = stackView {
+			let safeAreaView = ThemeCSSView(frame: view.bounds)
 			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
 			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
 
 			stackView.addArrangedSubview(safeAreaView)
 		} else {
-			collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-			view.addSubview(collectionView)
+			view.embed(toFillWith: collectionView, enclosingAnchors: view.defaultAnchorSet)
 		}
 	}
 
