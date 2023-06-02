@@ -1625,7 +1625,6 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>star</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
 					<string>ownCloud Infinite Scale support</string>
@@ -1636,7 +1635,6 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>rectangle.grid.2x2.fill</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
 					<string>New Search Capabilities</string>
@@ -1647,7 +1645,6 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>magnifyingglass</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
 					<string>New Navigation</string>
@@ -1658,7 +1655,6 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>arrowtriangle.left.and.line.vertical.and.arrowtriangle.right.fill</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
 					<string>Role-based Sharing Interface</string>
@@ -1669,7 +1665,6 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>square.and.arrow.up</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
 					<string>Grid View Modes</string>
@@ -1680,7 +1675,6 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>square.grid.4x3.fill</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
 					<string>App Provider support</string>
@@ -1691,21 +1685,19 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>ImageName</key>
 					<string>app</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
-					<string>CSS Themeing</string>
+					<string>Improved Theming</string>
 					<key>Subtitle</key>
-					<string>Themeing is now based on CSS principles, with dark and light themes provided out of the box.</string>
+					<string>The updated dark and light themes make use of a new, CSS-based theming system.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
 					<string>paintbrush</string>
 				</dict>
-
 				<dict>
 					<key>Title</key>
-					<string>MDM Advances</string>
+					<string>MDM Enhancements</string>
 					<key>Subtitle</key>
 					<string>Many new MDM parameters.</string>
 					<key>Type</key>
