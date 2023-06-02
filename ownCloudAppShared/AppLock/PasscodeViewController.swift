@@ -43,7 +43,6 @@ public class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var deleteButton: ThemeButton?
 	@IBOutlet public var cancelButton: ThemeButton?
 	@IBOutlet public var biometricalButton: ThemeButton?
-	@IBOutlet public var biometricalImageView: UIImageView?
 	@IBOutlet public var compactHeightPasscodeTextField: UITextField?
 
 	// MARK: - Properties
@@ -124,8 +123,10 @@ public class PasscodeViewController: UIViewController, Themeable {
 		didSet {
 			biometricalButton?.isEnabled = !biometricalButtonHidden
 			biometricalButton?.isHidden = biometricalButtonHidden
-			biometricalImageView?.isHidden = biometricalButtonHidden
-			biometricalImageView?.image = LAContext().biometricsAuthenticationImage()
+
+			if let biometricalImage = LAContext().biometricsAuthenticationImage() {
+				biometricalButton?.setImage(biometricalImage, for: .normal)
+			}
 		}
 	}
 
@@ -197,7 +198,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			let keypadFont = UIFont.systemFont(ofSize: 34)
 
 			for button in keypadButtons {
-				if button != deleteButton {
+				if button != deleteButton, button != biometricalButton {
 					button.cssSelector = .digit
 				}
 
@@ -207,6 +208,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 			}
 
 			deleteButton?.cssSelector = .backspace
+			biometricalButton?.cssSelector = .biometrical
 		}
 		PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
 		PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
@@ -350,11 +352,6 @@ public class PasscodeViewController: UIViewController, Themeable {
 		errorMessageLabel?.apply(css: collection.css, properties: [.stroke])
 		passcodeLabel?.apply(css: collection.css, properties: [.stroke])
 		timeoutMessageLabel?.apply(css: collection.css, properties: [.stroke])
-
-		if let deleteButton {
-			// Biometrical image should get same tint color as deleteButton
-			biometricalImageView?.tintColor = collection.css.getColor(.stroke, for: deleteButton)
-		}
 	}
 }
 
@@ -376,5 +373,6 @@ extension ThemeCSSSelector {
 	static let digit = ThemeCSSSelector(rawValue: "digit")
 	static let code = ThemeCSSSelector(rawValue: "code")
 	static let backspace = ThemeCSSSelector(rawValue: "backspace")
+	static let biometrical = ThemeCSSSelector(rawValue: "biometrical")
 	static let timeout = ThemeCSSSelector(rawValue: "timeout")
 }
