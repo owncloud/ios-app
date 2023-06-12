@@ -129,6 +129,16 @@
 
 			for (OCDrive *drive in vault.subscribedDrives)
 			{
+				OCDriveSpecialType driveSpecialType = drive.specialType;
+
+				// Only map personal space, spaces and Shares Jail (shared with me)
+				if (!([driveSpecialType isEqual:OCDriveSpecialTypePersonal] ||
+				      [driveSpecialType isEqual:OCDriveSpecialTypeSpace] ||
+				      [driveSpecialType isEqual:OCDriveSpecialTypeShares]))
+				{
+					continue;
+				}
+
 				OCLocation *driveRootLocation = drive.rootLocation;
 				driveRootLocation.bookmarkUUID = vault.bookmark.uuid;
 
