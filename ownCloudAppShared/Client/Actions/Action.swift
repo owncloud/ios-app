@@ -90,12 +90,18 @@ public class ActionExtension: OCExtension {
 	}
 }
 
-extension Array where Element: OCItem {
-	var sharedWithUser : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
-	}
-	var isShared : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isShared })
+public extension OCItem {
+	func isSharedWithUser(in context: ClientContext?) -> Bool {
+		if let context, let core = context.core, core.useDrives, let driveID, let drive = core.drive(withIdentifier: driveID) {
+			// On drive-based instances, all items shared with the user are located in the Shares Jail
+			if drive.specialType == .shares {
+				return true
+			}
+
+			return false
+		}
+
+		return isSharedWithUser
 	}
 }
 
@@ -196,7 +202,7 @@ public class ActionContext: OCExtensionContext {
 		}
 		self.itemStorage.removeAll(where: { storedItem in storedItem.localID == item.localID})
 
-		if item.isSharedWithUser {
+		if item.isSharedWithUser(in: clientContext) {
 			self.cachedSharedItems.removeAll(where: { cachedSharedItem in cachedSharedItem.localID == item.localID })
 		}
 
@@ -221,7 +227,7 @@ public class ActionContext: OCExtensionContext {
 
 		self.itemStorage.append(item)
 
-		if item.isSharedWithUser {
+		if item.isSharedWithUser(in: clientContext) {
 			self.cachedSharedItems.append(item)
 		}
 
@@ -257,15 +263,15 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	public func isShareRoot(item:OCItem) -> Bool {
-		guard item.isSharedWithUser else { return false }
+		guard item.isSharedWithUser(in: clientContext) else { return false }
 
 		guard let parent = parent(for: item) else { return true }
 
-		return !parent.isSharedWithUser
+		return !parent.isSharedWithUser(in: clientContext)
 	}
 
 	private func updateCaches() {
-		cachedSharedItems = itemStorage.sharedWithUser
+		cachedSharedItems = itemStorage.filter({ item in item.isSharedWithUser(in: clientContext) })
 		rootItems = itemStorage.filter({ item in item.isRoot }).count
 		deleteableItems = itemStorage.filter({ item in item.permissions.contains(.delete)}).count
 		moveableItems = itemStorage.filter({ item in item.permissions.contains(.move)}).count
