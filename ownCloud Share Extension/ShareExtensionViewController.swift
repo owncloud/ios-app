@@ -53,7 +53,15 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 		setupServices()
 	}
 
+	private static var _servicesHaveBeenSetup = false
 	func setupServices() {
+		// Make sure to setup services only once
+		if ShareExtensionViewController._servicesHaveBeenSetup {
+			return
+		}
+		ShareExtensionViewController._servicesHaveBeenSetup = true
+
+		// Setup services
 		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
