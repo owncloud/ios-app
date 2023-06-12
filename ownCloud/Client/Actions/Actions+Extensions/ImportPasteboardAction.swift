@@ -70,6 +70,10 @@ class ImportPasteboardAction : Action {
 			importToRootItem = root
 		}
 
+		if importToRootItem == nil, context.items.count == 1 {
+			importToRootItem = context.items.first
+		}
+
 		guard context.items.count > 0, let core = self.core, let rootItem = importToRootItem else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
