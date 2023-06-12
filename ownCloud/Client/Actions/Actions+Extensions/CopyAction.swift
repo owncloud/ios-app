@@ -151,7 +151,7 @@ class CopyAction : Action {
 	}
 
 	func copyToPasteboard() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
+		guard context.items.count > 0, let viewController = context.clientContext?.presentationViewController, let core = self.core else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
@@ -182,8 +182,6 @@ class CopyAction : Action {
 
 				viewController?.present(alertController, animated: true)
 			} else {
-				guard let viewController = viewController else { return }
-
 				items.forEach({ (item) in
 					let itemProvider = NSItemProvider()
 					itemProvider.suggestedName = item.name
@@ -252,8 +250,8 @@ class CopyAction : Action {
 				}
 
 				OnMainThread {
-					if let navigationController = viewController.navigationController {
-						_ = NotificationHUDViewController(on: navigationController, title: "Copy".localized, subtitle: String(format: subtitle, itemProviderItems.count))
+					if let presentationViewController = self.context.clientContext?.presentationViewController {
+						_ = NotificationHUDViewController(on: presentationViewController, title: "Copy".localized, subtitle: String(format: subtitle, itemProviderItems.count))
 					}
 				}
 			}
