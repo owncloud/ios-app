@@ -169,7 +169,7 @@ extension URL {
 					if let item, let bookmark = bookmark {
 						let stateAction = AppStateAction(with: [
 							.connection(with: bookmark, children: [
-								.reveal(item: item)
+								((item.type == .collection) ? .open(item: item) : .reveal(item: item))
 							])
 						])
 

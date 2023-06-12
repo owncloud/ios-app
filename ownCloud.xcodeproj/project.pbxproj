@@ -510,6 +510,7 @@
 		DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */; };
 		DCDC20AB2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */; };
+		DCDE444D2A36F56000BFF393 /* AppStateActionOpenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDE444C2A36F56000BFF393 /* AppStateActionOpenItem.swift */; };
 		DCDF58B323CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDF58B223CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift */; };
 		DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		DCE28F602433683700879DEC /* ClientSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE28F5F2433683700879DEC /* ClientSessionManager.swift */; };
@@ -1536,6 +1537,7 @@
 		DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+LicenseEnvironment.m"; sourceTree = "<group>"; };
 		DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEnterpriseProvider.h; sourceTree = "<group>"; };
 		DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEnterpriseProvider.m; sourceTree = "<group>"; };
+		DCDE444C2A36F56000BFF393 /* AppStateActionOpenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateActionOpenItem.swift; sourceTree = "<group>"; };
 		DCDF58B223CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseInAppPurchaseFeatureView.swift; sourceTree = "<group>"; };
 		DCE0FC4823E42ACB0037B4AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCMessage+Extension.swift"; sourceTree = "<group>"; };
@@ -2740,9 +2742,10 @@
 			isa = PBXGroup;
 			children = (
 				DC89EA5B2993A0E000BFF393 /* AppStateActionConnect.swift */,
+				DC081C8A299B9B9000BFF393 /* AppStateActionGoToPersonalFolder.swift */,
+				DCDE444C2A36F56000BFF393 /* AppStateActionOpenItem.swift */,
 				DC89EA6A29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift */,
 				DC081C88299B8E5800BFF393 /* AppStateActionRevealItem.swift */,
-				DC081C8A299B9B9000BFF393 /* AppStateActionGoToPersonalFolder.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -4525,6 +4528,7 @@
 				DCB5D60B25FC14B6004C52D9 /* OCIssue+Extension.swift in Sources */,
 				DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */,
 				DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */,
+				DCDE444D2A36F56000BFF393 /* AppStateActionOpenItem.swift in Sources */,
 				DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC62F569292504510095BB5D /* AccountConnectionPool.swift in Sources */,
