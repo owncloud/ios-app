@@ -195,12 +195,14 @@
 		item = (NSFileProviderItem)[self.vfsCore itemForIdentifier:(OCVFSItemID)identifier error:&returnError];
 	}
 
+	OCLogDebug(@"-itemForIdentifier:error: %@ resolved into %@ / %@", identifier, item, returnError);
+
 	if ((item == nil) && (returnError == nil))
 	{
 		returnError = [NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier];
 	}
 
-	OCLogDebug(@"-itemForIdentifier:error: %@ => %@ / %@", identifier, item, returnError);
+	OCLogDebug(@"-itemForIdentifier:error: %@ returned as %@ / %@", identifier, item, returnError);
 
 	if (outError != NULL)
 	{
@@ -409,12 +411,33 @@
 		 {
 			if ((parentItem = [self itemForIdentifier:item.parentItemIdentifier error:&error]) != nil)
 			{
-				[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)parentItem withContentsOfFileAtURL:changedItemURL isSecurityScoped:NO options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
-					OCLogDebug(@"Upload of update finished with error=%@ item=%@", error, item);
-				}];
+				OCItem *ocItem = OCTypedCast(item, OCItem);
+				OCItem *ocParentItem = OCTypedCast(parentItem, OCItem);
+
+				if ((ocParentItem == nil) && (ocItem != nil))
+				{
+					// If parentItem is returned as a OCVFSNode, fetch the parent folder OCItem from the cache
+					OCLocation *parentLocation = ocItem.location.parentLocation;
+
+					if (parentLocation != nil)
+					{
+						ocParentItem = [self.core cachedItemAtLocation:ocItem.location.parentLocation error:&error];
+					}
+				}
+
+				if ((ocItem != nil) && (ocParentItem != nil))
+				{
+					[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)ocParentItem withContentsOfFileAtURL:changedItemURL isSecurityScoped:NO options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+						OCLogDebug(@"Upload of update finished with error=%@ item=%@", error, item);
+					}];
+
+					return;
+				}
 			}
 		 }
 	}
+
+	OCLogError(@"-itemChangedAtURL: called, but item and/or parentItem couldn't be resolved properly: item=%@, parentItem=%@", item, parentItem);
 
 	// ### Apple template comments: ###
 
