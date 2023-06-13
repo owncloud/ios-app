@@ -31,13 +31,16 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	var didHighlightItemReference: Bool = false
 	var hideNavigationBar: Bool?
 
+	var compressForKeyboard: Bool
+
 	var emptyCellRegistration: UICollectionView.CellRegistration<UICollectionViewCell, CollectionViewController.ItemRef>?
 
-	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false, useWrappedIdentifiers: Bool = false, highlightItemReference: OCDataItemReference? = nil) {
+	public init(context inContext: ClientContext?, sections inSections: [CollectionViewSection]?, useStackViewRoot: Bool = false, hierarchic: Bool = false, compressForKeyboard: Bool = false, useWrappedIdentifiers: Bool = false, highlightItemReference: OCDataItemReference? = nil) {
 		supportsHierarchicContent = hierarchic
 		usesStackViewRoot = useStackViewRoot
 		self.useWrappedIdentifiers = hierarchic ? hierarchic : useWrappedIdentifiers
 		self.highlightItemReference = highlightItemReference
+		self.compressForKeyboard = compressForKeyboard
 
 		super.init(nibName: nil, bundle: nil)
 
@@ -87,7 +90,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if usesStackViewRoot, let stackView = stackView {
 			let safeAreaView = ThemeCSSView(frame: view.bounds)
 			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
-			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
+			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: compressForKeyboard ? safeAreaView.safeAreaWithKeyboardAnchorSet : safeAreaView.safeAreaAnchorSet)
 
 			stackView.addArrangedSubview(safeAreaView)
 		} else {
