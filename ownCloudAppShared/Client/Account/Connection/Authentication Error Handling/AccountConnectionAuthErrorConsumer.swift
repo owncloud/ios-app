@@ -234,6 +234,7 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 								OCSynchronized(self) {
 									self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
 								}
+								self.connection?.updateConnectionStatusSummary() // Trigger status summary update to clear connection._authFailureStatus
 							} else if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
 								// Error updating authentication -> inform the user and provide option to retry
 								context.alertQueue?.async { [weak self] (queueCompletionHandler) in
