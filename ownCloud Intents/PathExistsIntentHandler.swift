@@ -51,7 +51,7 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 			return
 		}
 
-		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: .legacyRootPath(path), waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, item != nil {
 				completion(PathExistsIntentResponse.success(pathExists: true))
 			} else if error?.isAuthenticationError == true {

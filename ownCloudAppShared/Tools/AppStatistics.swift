@@ -108,9 +108,11 @@ public class AppStatistics {
 		}
 
 		if shallRequest {
-			self.lastReviewPromptDate = Date()
 			OnMainThread {
-				SKStoreReviewController.requestReview()
+				if let frontmostWindowScene = ThemeWindow.frontmostThemeWindow?.windowScene {
+					self.lastReviewPromptDate = Date()
+					SKStoreReviewController.requestReview(in: frontmostWindowScene)
+				}
 			}
 		}
 	}

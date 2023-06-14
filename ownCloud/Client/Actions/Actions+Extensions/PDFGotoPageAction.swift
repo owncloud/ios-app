@@ -47,14 +47,6 @@ class PDFGoToPageAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreDetailItem {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "arrow.up.doc")?.withRenderingMode(.alwaysTemplate)
-			} else {
-				return UIImage(named: "ic_pdf_go_to_page")
-			}
-		}
-
-		return nil
+		return UIImage(systemName: "arrow.up.doc")?.withRenderingMode(.alwaysTemplate)
 	}
 }

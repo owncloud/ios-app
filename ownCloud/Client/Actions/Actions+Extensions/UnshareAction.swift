@@ -23,7 +23,7 @@ class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Unshare".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .multiSelection] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -34,6 +34,10 @@ class UnshareAction : Action {
 
 		for sharedItem in forContext.itemsSharedWithUser {
 			if !forContext.isShareRoot(item: sharedItem) {
+				return .none
+			}
+
+			if sharedItem.location?.isDriveRoot == true {
 				return .none
 			}
 		}
@@ -71,21 +75,25 @@ class UnshareAction : Action {
 
 		let unshareItemAndPublishProgress = { (items: [OCItem]) in
 			for item in items {
+				let unshareItem = {
+					_ = self.core?.sharesSharedWithMe(for: item, initialPopulationHandler: { (shares) in
+						let userGroupShares = shares.filter { (share) -> Bool in
+							return share.type != .link
+						}
+						if let share = userGroupShares.first, let progress = self.core?.makeDecision(on: share, accept: false, completionHandler: { (error) in
+							if error != nil {
+								Log.log("Error \(String(describing: error)) unshare \(String(describing: item.path))")
+							}
+						}) {
+							self.publish(progress: progress)
+						}
+
+					}, keepRunning: false)
+				}
+
 				if let owner = item.owner {
 					if !owner.isRemote {
-						_ = self.core?.sharesSharedWithMe(for: item, initialPopulationHandler: { (shares) in
-							let userGroupShares = shares.filter { (share) -> Bool in
-								return share.type != .link
-							}
-							if let share = userGroupShares.first, let progress = self.core?.makeDecision(on: share, accept: false, completionHandler: { (error) in
-								if error != nil {
-									Log.log("Error \(String(describing: error)) unshare \(String(describing: item.path))")
-								}
-							}) {
-								self.publish(progress: progress)
-							}
-
-						}, keepRunning: false)
+						unshareItem()
 					} else {
 						_ = self.core?.acceptedCloudShares(for: item, initialPopulationHandler: { (shares) in
 							let userGroupShares = shares.filter { (share) -> Bool in
@@ -101,6 +109,8 @@ class UnshareAction : Action {
 
 						}, keepRunning: false)
 					}
+				} else if item.isSharedWithUser {
+					unshareItem()
 				}
 			}
 
@@ -121,10 +131,6 @@ class UnshareAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder {
-			return UIImage(named: "trash")
-		}
-
-		return nil
+		return UIImage(named: "trash")?.withRenderingMode(.alwaysTemplate)
 	}
 }

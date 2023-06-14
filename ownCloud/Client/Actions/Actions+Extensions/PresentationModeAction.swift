@@ -34,8 +34,8 @@ class PresentationModeAction: Action {
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
 		if context.items.first?.cloudStatus == .cloudOnly {
 			return .none
-		} else if let hostViewController = context.viewController, type(of: hostViewController) === ClientQueryViewController.self {
-			return .none
+//		} else if let hostViewController = context.viewController, type(of: hostViewController) === ClientQueryViewController.self {
+//			return .none
 		} else if let hostViewController = context.viewController, (hostViewController.navigationController?.isNavigationBarHidden ?? false) {
 			return .none
 		}
@@ -81,14 +81,6 @@ class PresentationModeAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreDetailItem {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "tv")
-			} else {
-				return UIImage(named: "ic_pdf_go_to_page")
-			}
-		}
-
-		return nil
+		return UIImage(systemName: "tv")?.withRenderingMode(.alwaysTemplate)
 	}
 }

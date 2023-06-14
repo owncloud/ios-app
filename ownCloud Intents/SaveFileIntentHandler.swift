@@ -128,10 +128,10 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 		}
 
 		// Check if given save path exists
-		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: .legacyRootPath(path), waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let targetItem = item {
 				// Check if file already exists
-				OCItemTracker(for: bookmark, at: filePath, waitOnlineTimeout: 5) { (error, core, fileItem) in
+				OCItemTracker(for: bookmark, at: .legacyRootPath(filePath), waitOnlineTimeout: 5) { (error, core, fileItem) in
 					if let core = core {
 						if error == nil, let fileItem = fileItem {
 							// File already exists

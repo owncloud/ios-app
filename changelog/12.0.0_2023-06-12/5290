@@ -1,0 +1,5 @@
+Change: Added new build flag
+
+Add DISABLE_PLAIN_HTTP build flag
+
+https://github.com/owncloud/enterprise/issues/5290

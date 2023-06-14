@@ -113,7 +113,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 			self.core = core
 
 			if error == nil {
-				let targetDirectoryQuery = OCQuery(forPath: path)
+				let targetDirectoryQuery = OCQuery(for: OCLocation.legacyRootPath(path))
 				targetDirectoryQuery.delegate = self
 
 				if targetDirectoryQuery.sortComparator == nil {

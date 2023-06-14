@@ -18,6 +18,7 @@
 
 import UIKit
 import CoreServices
+import UniformTypeIdentifiers
 
 import ownCloudSDK
 import ownCloudApp
@@ -161,13 +162,13 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-
-		return [
-			UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_, indexPath) in
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		return UISwipeActionsConfiguration(actions: [
+			UIContextualAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_, _, completionHandler) in
 				self?.removeLogRecord(at: indexPath)
+				completionHandler(true)
 			})
-		]
+		])
 	}
 
 	// MARK: - Table view drag & drop support
@@ -189,7 +190,7 @@ class LogFilesViewController : UITableViewController, UITableViewDragDelegate, T
 
 		if let logURL = logURL {
 			let itemProvider = NSItemProvider()
-			itemProvider.registerFileRepresentation(forTypeIdentifier: kUTTypeUTF8PlainText as String, fileOptions: [], visibility: .all, loadHandler: { (completionHandler) -> Progress? in
+			itemProvider.registerFileRepresentation(forTypeIdentifier: UTType.utf8PlainText.identifier, fileOptions: [], visibility: .all, loadHandler: { (completionHandler) -> Progress? in
 				completionHandler(logURL, true, nil)
 				return nil
 			})

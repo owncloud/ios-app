@@ -32,7 +32,7 @@ open class StaticTableViewSection: NSObject {
 	public var footerView : UIView?
 
 	public var index : Int? {
-		return self.viewController?.sections.index(of: self)
+		return self.viewController?.sections.firstIndex(of: self)
 	}
 
 	public var attached : Bool {
@@ -130,7 +130,7 @@ open class StaticTableViewSection: NSObject {
 
 		// Finds rows to remove
 		for row in rowsToRemove {
-			if let index = rows.index(of: row) {
+			if let index = rows.firstIndex(of: row) {
 				// Save indexes and index paths
 				indexes.insert(index)
 				if sectionIndex != nil {
@@ -187,7 +187,7 @@ open class StaticTableViewSection: NSObject {
 	public func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
 		for row in rows {
 			if row.groupIdentifier == groupIdentifier {
-				if row.cell?.accessoryType == UITableViewCell.AccessoryType.checkmark {
+				if row.cell?.accessoryType == .checkmark {
 					return (row.value)
 				}
 			}

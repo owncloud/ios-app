@@ -36,7 +36,7 @@ open class ProgressHUDViewController: UIViewController {
 		progressContainer = UIView()
 		progressContainer?.translatesAutoresizingMaskIntoConstraints = false
 
-		progressSpinner = UIActivityIndicatorView(style: .whiteLarge)
+		progressSpinner = UIActivityIndicatorView(style: .large)
 		progressSpinner?.translatesAutoresizingMaskIntoConstraints = false
 
 		progressLabel = UILabel()
@@ -108,10 +108,12 @@ open class ProgressHUDViewController: UIViewController {
 				self.actionWaitGroup.wait()
 
 				OnMainThread {
-					self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-						self?.presenting = false
-						completion?()
-					})
+					if self.presenting {
+						self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
+							self?.presenting = false
+							completion?()
+						})
+					}
 				}
 			}
 		} else {
@@ -120,7 +122,7 @@ open class ProgressHUDViewController: UIViewController {
 	}
 
 	override open var preferredStatusBarStyle : UIStatusBarStyle {
-		return Theme.shared.activeCollection.statusBarStyle
+		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
 	}
 
 	override open func viewWillAppear(_ animated: Bool) {

@@ -84,11 +84,11 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling, OC
 
 		self.completionHandler = completion
 
-		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: .legacyRootPath(path), waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let targetItem = item {
 				let folderPath = String(format: "%@%@", path, name)
 				// Check, if the folder already exists in the given path
-				OCItemTracker(for: bookmark, at: folderPath, waitOnlineTimeout: 5) { (error, core, folderPathItem) in
+				OCItemTracker(for: bookmark, at: .legacyRootPath(folderPath), waitOnlineTimeout: 5) { (error, core, folderPathItem) in
 					if error == nil, folderPathItem == nil, let core = core {
 						let waitForCompletion = intent.waitForCompletion as? Bool ?? false
 						let bookmark = core.bookmark

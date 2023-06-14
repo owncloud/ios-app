@@ -30,6 +30,7 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/NSData+Encoding.h>
 #import <ownCloudApp/OCCore+BundleImport.h>
 #import <ownCloudApp/OCBookmark+AppExtensions.h>
+#import <ownCloudApp/OCSearchSegment.h>
 #import <ownCloudApp/OCQueryCondition+SearchSegmenter.h>
 #import <ownCloudApp/NSObject+AnnotatedProperties.h>
 #import <ownCloudApp/NSDate+RFC3339.h>
@@ -44,6 +45,7 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCFileProviderService.h>
 #import <ownCloudApp/OCFileProviderServiceSession.h>
 #import <ownCloudApp/OCFileProviderServiceStandby.h>
+#import <ownCloudApp/OCFileProviderSettings.h>
 
 #import <ownCloudApp/OCLicenseTypes.h>
 #import <ownCloudApp/OCLicenseManager.h>
@@ -67,6 +69,8 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 
 #import <ownCloudApp/OCLicenseEMMProvider.h>
 
+#import <ownCloudApp/OCLicenseQAProvider.h>
+
 #import <ownCloudApp/OCLicenseEnvironment.h>
 #import <ownCloudApp/OCCore+LicenseEnvironment.h>
 
@@ -75,4 +79,17 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/NotificationAuthErrorForwarder.h>
 
 #import <ownCloudApp/Branding.h>
+#import <ownCloudApp/OCThemeValues.h>
 #import <ownCloudApp/AppLockSettings.h>
+
+#import <ownCloudApp/OCViewHost.h>
+#import <ownCloudApp/OCImage+ViewProvider.h>
+#import <ownCloudApp/OCResourceTextPlaceholder+ViewProvider.h>
+#import <ownCloudApp/OCCircularContentView.h>
+#import <ownCloudApp/OCCircularImageView.h>
+#import <ownCloudApp/UIImage+ViewProvider.h>
+
+#import <ownCloudApp/VFSManager.h>
+
+#import <ownCloudApp/OCSavedSearch.h>
+#import <ownCloudApp/OCVault+SavedSearches.h>

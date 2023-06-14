@@ -20,4 +20,20 @@
 
 @implementation FileProviderEnumeratorObserver
 
+- (void)completeEnumeration
+{
+	dispatch_block_t enumerationCompletionHandler;
+
+	@synchronized(self)
+	{
+		enumerationCompletionHandler = _enumerationCompletionHandler;
+		_enumerationCompletionHandler = nil;
+	}
+
+	if (enumerationCompletionHandler != nil)
+	{
+		enumerationCompletionHandler();
+	}
+}
+
 @end

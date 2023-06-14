@@ -20,7 +20,6 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-@available(iOS 13.0, *)
 class OpenSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
@@ -43,17 +42,26 @@ class OpenSceneAction: Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard let viewController = context.viewController else {
-			self.completed(with: NSError(ocError: .insufficientParameters))
-			return
-		}
-
 		if UIDevice.current.isIpad {
-			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
-				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
-				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+			if context.items.count == 1, let item = context.items.first {
+				if let bookmark = context.core?.bookmark,
+				   let clientContext = context.clientContext,
+				   let destinationLocationBookmark = BrowserNavigationBookmark.from(dataItem: item, clientContext: clientContext, restoreAction: .open) {
+					let activity = AppStateAction(with: [
+						.connection(with: bookmark, children: [
+							.navigate(to: destinationLocationBookmark)
+						])
+					]).userActivity(with: clientContext)
+
+					UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+
+					completed(with: nil)
+					return
+				}
 			}
 		}
+
+		completed(with: NSError(ocError: .insufficientParameters))
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {

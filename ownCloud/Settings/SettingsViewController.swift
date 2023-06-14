@@ -23,6 +23,14 @@ import ownCloudAppShared
 
 class SettingsViewController: StaticTableViewController {
 
+	init() {
+		super.init(style: .insetGrouped)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.navigationItem.title = "Settings".localized
@@ -42,8 +50,7 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 
 			#if !DISABLE_APPSTORE_LICENSING
-			if #available(iOS 13, *), // Require iOS 13
-			   !OCLicenseEMMProvider.isEMMVersion, // Do not show purchases in the EMM version
+			if !OCLicenseEMMProvider.isEMMVersion, // Do not show purchases in the EMM version
 			   // Do only show purchases section if there's at least one non-Enterprise account
 			   OCLicenseEnterpriseProvider.numberOfEnterpriseAccounts < OCBookmarkManager.shared.bookmarks.count, !VendorServices.shared.isBranded // Do not show purchases in branded app
 			{

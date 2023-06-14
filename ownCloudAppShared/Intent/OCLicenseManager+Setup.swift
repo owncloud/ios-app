@@ -90,8 +90,11 @@ public extension OCLicenseManager {
 
 		// Set up EMM Provider
 		let emmProvider = OCLicenseEMMProvider(unlockedProductIdentifiers: [.bundlePro])
-
 		add(emmProvider)
+
+		// Set up QA Provider
+		let qaProvider = OCLicenseQAProvider(unlockedProductIdentifiers: [.bundlePro], delegate: VendorServices.shared)
+		add(qaProvider)
 	}
 }
 

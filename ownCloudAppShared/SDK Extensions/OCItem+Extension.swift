@@ -18,105 +18,26 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import CoreServices
+import UniformTypeIdentifiers
 
 extension OCItem {
 
 	public var isPlayable: Bool {
 		guard let mime = self.mimeType else { return false }
 
-		guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mime as CFString, nil) else {
+		guard let uti = UTType(mimeType: mime) else {
 			return false
 		}
 
-		return UTTypeConformsTo(uti.takeUnretainedValue(), kUTTypeAudiovisualContent)
+		return uti.conforms(to: .audiovisualContent)
 	}
 
 	static private let iconNamesByMIMEType : [String:String] = {
-		var mimeTypeToIconMap :  [String:String] = [
-			// List taken from https://github.com/owncloud/core/blob/master/core/js/mimetypelist.js
-			"application/coreldraw": "image",
-			"application/epub+zip": "text",
-			"application/font-sfnt": "image",
-			"application/font-woff": "image",
-			"application/illustrator": "image",
-			"application/javascript": "text/code",
-			"application/json": "text/code",
-			"application/msaccess": "file",
-			"application/msexcel": "x-office/spreadsheet",
-			"application/msonenote": "x-office/document",
-			"application/mspowerpoint": "x-office/presentation",
-			"application/msword": "x-office/document",
-			"application/octet-stream": "file",
-			"application/postscript": "image",
-			"application/rss+xml": "application/xml",
-			"application/vnd.android.package-archive": "package/x-generic",
-			"application/vnd.lotus-wordpro": "x-office/document",
-			"application/vnd.ms-excel": "x-office/spreadsheet",
-			"application/vnd.ms-excel.addin.macroEnabled.12": "x-office/spreadsheet",
-			"application/vnd.ms-excel.sheet.binary.macroEnabled.12": "x-office/spreadsheet",
-			"application/vnd.ms-excel.sheet.macroEnabled.12": "x-office/spreadsheet",
-			"application/vnd.ms-excel.template.macroEnabled.12": "x-office/spreadsheet",
-			"application/vnd.ms-fontobject": "image",
-			"application/vnd.ms-powerpoint": "x-office/presentation",
-			"application/vnd.ms-powerpoint.addin.macroEnabled.12": "x-office/presentation",
-			"application/vnd.ms-powerpoint.presentation.macroEnabled.12": "x-office/presentation",
-			"application/vnd.ms-powerpoint.slideshow.macroEnabled.12": "x-office/presentation",
-			"application/vnd.ms-powerpoint.template.macroEnabled.12": "x-office/presentation",
-			"application/vnd.ms-word.document.macroEnabled.12": "x-office/document",
-			"application/vnd.ms-word.template.macroEnabled.12": "x-office/document",
-			"application/vnd.oasis.opendocument.presentation": "x-office/presentation",
-			"application/vnd.oasis.opendocument.presentation-template": "x-office/presentation",
-			"application/vnd.oasis.opendocument.spreadsheet": "x-office/spreadsheet",
-			"application/vnd.oasis.opendocument.spreadsheet-template": "x-office/spreadsheet",
-			"application/vnd.oasis.opendocument.text": "x-office/document",
-			"application/vnd.oasis.opendocument.text-master": "x-office/document",
-			"application/vnd.oasis.opendocument.text-template": "x-office/document",
-			"application/vnd.oasis.opendocument.text-web": "x-office/document",
-			"application/vnd.openxmlformats-officedocument.presentationml.presentation": "x-office/presentation",
-			"application/vnd.openxmlformats-officedocument.presentationml.slideshow": "x-office/presentation",
-			"application/vnd.openxmlformats-officedocument.presentationml.template": "x-office/presentation",
-			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "x-office/spreadsheet",
-			"application/vnd.openxmlformats-officedocument.spreadsheetml.template": "x-office/spreadsheet",
-			"application/vnd.openxmlformats-officedocument.wordprocessingml.document": "x-office/document",
-			"application/vnd.openxmlformats-officedocument.wordprocessingml.template": "x-office/document",
-			"application/vnd.visio": "x-office/document",
-			"application/vnd.wordperfect": "x-office/document",
-			"application/x-7z-compressed": "package/x-generic",
-			"application/x-bzip2": "package/x-generic",
-			"application/x-cbr": "text",
-			"application/x-compressed": "package/x-generic",
-			"application/x-dcraw": "image",
-			"application/x-deb": "package/x-generic",
-			"application/x-font": "image",
-			"application/x-gimp": "image",
-			"application/x-gzip": "package/x-generic",
-			"application/x-perl": "text/code",
-			"application/x-photoshop": "image",
-			"application/x-php": "text/code",
-			"application/x-rar-compressed": "package/x-generic",
-			"application/x-tar": "package/x-generic",
-			"application/x-tex": "text",
-			"application/xml": "text/html",
-			"application/yaml": "text/code",
-			"application/zip": "package/x-generic",
-			"database": "file",
-			"httpd/unix-directory": "dir",
-			"message/rfc822": "text",
-			"text/css": "text/code",
-			"text/csv": "x-office/spreadsheet",
-			"text/html": "text/code",
-			"text/x-c": "text/code",
-			"text/x-c++src": "text/code",
-			"text/x-h": "text/code",
-			"text/x-java-source": "text/code",
-			"text/x-python": "text/code",
-			"text/x-shellscript": "text/code",
-			"web": "text/code"
-		]
+		var mimeTypeToIconMap: [String:String] = OCItem.mimeTypeToAliasesMap
 
-		mimeTypeToIconMap.keys.forEach {
-			let mimeTypeKey = $0
+		mimeTypeToIconMap.keys.forEach { mimeTypeKey in
 			var mimeType : String? = mimeTypeToIconMap[mimeTypeKey]
 			var referenceMIMEType : String? = mimeType
 
@@ -197,7 +118,11 @@ extension OCItem {
 
 		if iconName == nil {
 			if self.type == .collection {
-				iconName = "folder"
+				if isRoot, driveID != nil {
+					iconName = "space"
+				} else {
+					iconName = "folder"
+				}
 			} else {
 				iconName = "file"
 			}
@@ -224,16 +149,31 @@ extension OCItem {
 		return OCItem.dateFormatter.string(from: lastModified)
 	}
 
+	public var lastModifiedLocalizedCompact: String {
+		guard let lastModified = self.lastModified else { return "" }
+
+		return OCItem.compactDateFormatter.string(from: lastModified)
+	}
+
 	static private let byteCounterFormatter: ByteCountFormatter = {
 		let byteCounterFormatter = ByteCountFormatter()
 		byteCounterFormatter.allowsNonnumericFormatting = false
 		return byteCounterFormatter
 	}()
 
-	static private let dateFormatter: DateFormatter = {
+	static public let dateFormatter: DateFormatter = {
 		let dateFormatter: DateFormatter =  DateFormatter()
 		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .medium
+		dateFormatter.locale = Locale.current
+		dateFormatter.doesRelativeDateFormatting = true
+		return dateFormatter
+	}()
+
+	static public let compactDateFormatter: DateFormatter = {
+		let dateFormatter: DateFormatter =  DateFormatter()
+		dateFormatter.timeStyle = .short
+		dateFormatter.dateStyle = .short
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
@@ -278,7 +218,7 @@ extension OCItem {
 				repeat {
 					lastParentPath = parentPath
 
-					database?.retrieveCacheItems(atPath: parentPath, itemOnly: true, completionHandler: { (_, error, _, items) in
+					database?.retrieveCacheItems(at: OCLocation(driveID: self.driveID, path: parentPath), itemOnly: true, completionHandler: { (_, error, _, items) in
 						if error == nil, let parentItem = items?.first {
 							parentPath = parentItem.path
 
@@ -315,8 +255,8 @@ extension OCItem {
 			}
 
 			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
-				if parentItem == nil, let parentPath = self.path?.parentPath {
-					parentItem = try? core.cachedItem(atPath: parentPath)
+				if parentItem == nil, let parentLocation = self.location?.parent {
+					parentItem = try? core.cachedItem(at: parentLocation)
 				}
 
 				if completionHandler == nil {

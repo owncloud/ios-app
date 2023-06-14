@@ -23,7 +23,7 @@ class MoveAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.move") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
@@ -42,15 +42,35 @@ class MoveAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
+		guard context.items.count > 0, let clientContext = context.clientContext, let bookmark = context.core?.bookmark else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
 		let items = context.items
+		let driveID = items.first?.driveID
+		var startLocation: OCLocation
+		var baseContext: ClientContext?
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
-			guard let selectedDirectory = selectedDirectory else {
+		if let driveID {
+			// Limit to same drive
+			startLocation = .drive(driveID, bookmark: bookmark)
+			baseContext = clientContext
+		} else {
+			// Limit to account
+			startLocation = .account(bookmark)
+		}
+
+		var titleText: String
+
+		if items.count > 1 {
+			titleText = "Move {{itemCount}} items".localized(["itemCount" : "\(items.count)"])
+		} else {
+			titleText = "Move \"{{itemName}}\"".localized(["itemName" : items.first?.name ?? "?"])
+		}
+
+		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: "Move here".localized, headerTitle: titleText, headerSubTitle: "Select target.".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
+			guard !cancelled, let selectedDirectoryItem else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return
 			}
@@ -60,9 +80,9 @@ class MoveAction : Action {
 					return
 				}
 
-				if let progress = self.core?.move(item, to: selectedDirectory, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+				if let progress = self.core?.move(item, to: selectedDirectoryItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
-						Log.error("Error \(String(describing: error)) moving \(String(describing: itemName))")
+						Log.error("Error \(String(describing: error)) moving \(String(describing: itemName)) to \(String(describing: location))")
 					}
 				}) {
 					self.publish(progress: progress)
@@ -72,15 +92,10 @@ class MoveAction : Action {
 			self.completed()
 		})
 
-		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-		viewController.present(pickerNavigationController, animated: true)
+		locationPicker.present(in: clientContext, baseContext: baseContext)
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "folder")
-		}
-
-		return nil
+		return UIImage(named: "folder")?.withRenderingMode(.alwaysTemplate)
 	}
 }

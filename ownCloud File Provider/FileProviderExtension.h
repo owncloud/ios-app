@@ -22,6 +22,7 @@
 @interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCClassSettingsSupport, OCLogTagging>
 {
 	__weak OCCore *_core;
+	NSUInteger _coreRetainCount;
 	OCBookmark *_bookmark;
 }
 

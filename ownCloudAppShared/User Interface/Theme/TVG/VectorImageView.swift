@@ -28,6 +28,11 @@ public class VectorImageView: UIView, Themeable {
 
 		set(newVectorImage) {
 			_vectorImage = newVectorImage
+			if let imageName = _vectorImage?.imageName {
+				self.cssSelectors = [ .vectorImage, ThemeCSSSelector(rawValue: "\(imageName)VectorImage") ]
+			} else {
+				self.cssSelectors = [ .vectorImage ]
+			}
 			self.updateLayerWithRasteredImage()
 		}
 	}
@@ -72,10 +77,16 @@ public class VectorImageView: UIView, Themeable {
 		if let rasterImage = _vectorImage?.image(fitInSize: viewBounds!.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
 			self.layer.contents = rasterImage.cgImage
 			self.layer.contentsGravity = CALayerContentsGravity.resizeAspect
+		} else {
+			self.layer.contents = nil
 		}
 	}
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		updateLayerWithRasteredImage(viewBounds: self.bounds, themeCollection: collection)
 	}
+}
+
+extension ThemeCSSSelector {
+	static let vectorImage = ThemeCSSSelector(rawValue: "vectorImage")
 }

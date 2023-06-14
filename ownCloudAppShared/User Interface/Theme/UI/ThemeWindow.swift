@@ -49,6 +49,22 @@ public class ThemeWindow : UIWindow {
 		return themeWindows
 	}
 
+	static var frontmostThemeWindow : ThemeWindow? {
+		var themeWindow : ThemeWindow?
+
+		OCSynchronized(self) {
+			let themeWindows = _themeWindows.allObjects
+
+			for checkWindow in themeWindows {
+				if checkWindow.themeWindowInForeground {
+					themeWindow = checkWindow
+				}
+			}
+		}
+
+		return themeWindow
+	}
+
 	// MARK: - Lifecycle
 	override public init(frame: CGRect) {
 		super.init(frame: frame)
@@ -56,7 +72,6 @@ public class ThemeWindow : UIWindow {
 		ThemeWindow.addThemeWindow(self)
 	}
 
-	@available(iOS 13, *)
 	override public init(windowScene: UIWindowScene) {
 		super.init(windowScene: windowScene)
 
@@ -75,10 +90,8 @@ public class ThemeWindow : UIWindow {
 	public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 
-		if #available(iOS 13.0, *) {
-			if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-				ThemeStyle.considerAppearanceUpdate()
-			}
+		if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+			ThemeStyle.considerAppearanceUpdate()
 		}
 	}
 }

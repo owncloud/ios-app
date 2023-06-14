@@ -19,6 +19,13 @@
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"
 
+@interface FileProviderExtensionThumbnailRequest ()
+{
+	BOOL _isDone;
+	OCResourceRequestItemThumbnail *_thumbnailRequest;
+}
+@end
+
 @implementation FileProviderExtensionThumbnailRequest
 
 - (void)dealloc
@@ -52,11 +59,14 @@
 
 		if ((core = self.extension.core) != nil)
 		{
-//			if (core.connectionStatus == OCCoreConnectionStatusOnline)
 			[core retrieveItemFromDatabaseForLocalID:(OCLocalID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 				OCLogDebug(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
 
-				if ((itemFromDatabase.type == OCItemTypeCollection) || (itemFromDatabase.thumbnailAvailability == OCItemThumbnailAvailabilityNone))
+				OCResourceManager *resourceManager = core.vault.resourceManager;
+
+				if ((itemFromDatabase.type == OCItemTypeCollection) ||	// No previews for folders
+				    (itemFromDatabase.thumbnailAvailability == OCItemThumbnailAvailabilityNone) || // No thumbnails available for this type
+				    (resourceManager == nil)) // No ResourceManager available for this core
 				{
 					dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
 						self.perThumbnailCompletionHandler(itemIdentifier, nil, nil);
@@ -68,23 +78,32 @@
 				}
 				else
 				{
-					NSProgress *retrieveProgress = [self.extension.core retrieveThumbnailFor:itemFromDatabase maximumSize:self.sizeInPixels scale:1.0 waitForConnectivity:NO retrieveHandler:^(NSError *error, OCCore *core, OCItem *item, OCItemThumbnail *thumbnail, BOOL isOngoing, NSProgress *progress) {
+					OCResourceRequestItemThumbnail *thumbnailRequest = [OCResourceRequestItemThumbnail requestThumbnailFor:itemFromDatabase maximumSize:self.sizeInPixels scale:1.0 waitForConnectivity:NO changeHandler:^(OCResourceRequest * _Nonnull request, NSError * _Nullable error, BOOL isOngoing, OCResource * _Nullable previousResource, OCResource * _Nullable newResource) {
 
 						OCLogDebug(@"Retrieved %ld: %@ -> %d", self.cursorPosition-1, itemFromDatabase.name, isOngoing);
 
 						if (!isOngoing)
 						{
-							dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-								self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : [error translatedError]);
+							OCResourceImage *thumbnailResource = OCTypedCast(newResource, OCResourceImage);
+							OCItemThumbnail *thumbnail = thumbnailResource.thumbnail;
 
-								OCLogDebug(@"Replied %ld: %@ -> thumbnailData=%d, error=%@", self.cursorPosition-1, itemFromDatabase.name, (thumbnail.data != nil), error);
+							dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+								NSError *returnError = (thumbnail==nil) ?
+												((error != nil) ? error.translatedError : OCError(OCErrorInternal)) :
+												nil;
+
+								self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, returnError);
+
+								OCLogDebug(@"Replied %ld: %@ -> thumbnailData=%d, error=%@", self.cursorPosition-1, itemFromDatabase.name, (thumbnail.data != nil), returnError);
 
 								[self requestNextThumbnail];
 							});
 						}
 					}];
 
-					[self.progress addChild:retrieveProgress withPendingUnitCount:1];
+					[resourceManager startRequest:thumbnailRequest];
+
+					self->_thumbnailRequest = thumbnailRequest;
 				}
 			}];
 		}
@@ -112,6 +131,27 @@
 			self.completionHandler(nil);
 		});
 	}
+}
+
+- (void)setProgress:(NSProgress *)progress
+{
+	__weak FileProviderExtensionThumbnailRequest *weakSelf = self;
+
+	progress.cancellationHandler = ^{
+		FileProviderExtensionThumbnailRequest *strongSelf;
+
+		if ((strongSelf = weakSelf) != nil)
+		{
+			OCResourceRequestItemThumbnail *thumbnailRequest;
+
+			if ((thumbnailRequest = strongSelf->_thumbnailRequest) != nil)
+			{
+				[strongSelf.extension.core.vault.resourceManager stopRequest:thumbnailRequest];
+			}
+
+			strongSelf->_thumbnailRequest = nil;
+		}
+	};
 }
 
 - (nonnull NSArray<OCLogTagName> *)logTags

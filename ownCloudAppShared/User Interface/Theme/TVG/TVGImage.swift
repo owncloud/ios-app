@@ -26,6 +26,8 @@ public class TVGImage: NSObject {
 	var bezierPathsByIdentifier : [String:[SVGBezierPath]] = [:]
 	var bezierPathsBoundsByIdentifier : [String:CGRect] = [:]
 
+	var imageName: String?
+
 	public init?(with data: Data) {
 		do {
 			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
@@ -69,6 +71,8 @@ public class TVGImage: NSObject {
 		}
 
 		self.init(with: data)
+
+		imageName = name
 	}
 
 	public func svgString(with variables: [String:String]? = nil) -> String? {
@@ -160,7 +164,7 @@ public class TVGImage: NSObject {
 		var image : UIImage?
 
 		if (fitInSize.width <= 0) || (fitInSize.height <= 0) {
-			Log.error("Image can't be rendered at size \(fitInSize)")
+			Log.debug("Image can't be rendered at size \(fitInSize)")
 			return nil
 		}
 

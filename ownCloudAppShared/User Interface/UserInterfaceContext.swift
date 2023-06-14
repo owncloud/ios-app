@@ -18,7 +18,7 @@
 
 import UIKit
 
-public protocol UserInterfaceContextProvider: class {
+public protocol UserInterfaceContextProvider: AnyObject {
 	func provideRootView() -> UIView? /// provide "root-most" view for app
 
 	func provideCurrentWindow() -> UIWindow? // provide front-most window of the app

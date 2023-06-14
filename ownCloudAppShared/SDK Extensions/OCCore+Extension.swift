@@ -20,59 +20,12 @@ import Foundation
 import ownCloudSDK
 
 extension OCCore {
-
-	public func unifiedShares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
-		let combinedShares : NSMutableArray = NSMutableArray()
-		let dispatchGroup = DispatchGroup()
-
-		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
-			dispatchGroup.enter()
-
-			shareQuery.initialPopulationHandler = { [weak self] query in
-				combinedShares.addObjects(from: query.queryResults)
-				dispatchGroup.leave()
-				self?.stop(query)
-			}
-			start(shareQuery)
-		}
-
-		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: nil) {
-			dispatchGroup.enter()
-
-			shareQuery.initialPopulationHandler = { [weak self] query in
-				let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
-					return share.itemPath == item.path
-				})
-
-				combinedShares.addObjects(from: sharesWithMe)
-				dispatchGroup.leave()
-				self?.stop(query)
-			}
-			start(shareQuery)
-		}
-
-		if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
-			dispatchGroup.enter()
-
-			shareQuery.initialPopulationHandler = { [weak self] query in
-				combinedShares.addObjects(from: query.queryResults)
-				dispatchGroup.leave()
-				self?.stop(query)
-			}
-			start(shareQuery)
-		}
-
-		dispatchGroup.notify(queue: .main, execute: {
-			completionHandler((combinedShares as? [OCShare])!)
-		})
-	}
-
 	@discardableResult private func retrieveShares(for item: OCItem, scope: OCShareScope, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
 		if let shareQuery = OCShareQuery(scope: scope, item: nil) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
-					return (share.itemPath == item.path) ||
-					       (allowPartialMatch && (item.path?.hasPrefix(share.itemPath) == true))
+					return (share.itemLocation == item.location) ||
+					       (allowPartialMatch && (item.location?.isLocated(in: share.itemLocation) == true))
 				})
 				initialPopulationHandler(shares)
 

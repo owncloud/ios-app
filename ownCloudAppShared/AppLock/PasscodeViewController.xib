@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,7 +13,6 @@
             <connections>
                 <outlet property="backgroundBlurView" destination="ZQ4-NE-Hrm" id="GBv-lU-WeS"/>
                 <outlet property="biometricalButton" destination="M8y-Pc-oda" id="VZj-jp-Ioo"/>
-                <outlet property="biometricalImageView" destination="uLV-Sc-Alc" id="JbF-51-aGp"/>
                 <outlet property="cancelButton" destination="g0I-oo-iOZ" id="vc0-3w-JYu"/>
                 <outlet property="compactHeightPasscodeTextField" destination="SOo-MB-t0E" id="BWm-9n-6ao"/>
                 <outlet property="deleteButton" destination="F9C-Vg-uCq" id="Dw1-Fd-gaD"/>
@@ -60,10 +60,10 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view verifyAmbiguity="off" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C0s-hA-da3" userLabel="Keypad" customClass="KeyboardInput" customModule="ownCloudAppShared" customModuleProvider="target">
-                            <rect key="frame" x="45" y="137" width="230" height="315"/>
+                            <rect key="frame" x="36" y="157" width="248" height="339"/>
                             <subviews>
                                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number1Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="85k-O3-nSF" secondAttribute="height" multiplier="1:1" id="Vh0-fP-3Vw"/>
@@ -77,7 +77,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="85" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="91" y="0.0" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number2Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="VzK-5I-Ct8" secondAttribute="height" multiplier="1:1" id="UQj-g6-A3V"/>
@@ -91,7 +91,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="170" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="182" y="0.0" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number3Button"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="Owh-E0-zIP"/>
@@ -105,7 +105,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="85" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="91" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number4Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="IVZ-la-esK" secondAttribute="height" multiplier="1:1" id="RMu-ty-Arw"/>
@@ -118,7 +118,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="85" y="85" width="60" height="60"/>
+                                    <rect key="frame" x="91" y="91" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number5Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="9xg-xz-Tph" secondAttribute="height" multiplier="1:1" id="CUF-qf-Jqe"/>
@@ -132,7 +132,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="170" y="85" width="60" height="60"/>
+                                    <rect key="frame" x="182" y="91" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number6Button"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="lessThanOrEqual" priority="700" constant="70" id="4Up-dH-UDB"/>
@@ -146,7 +146,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="170" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="182" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number7Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="fMx-64-bYq" secondAttribute="height" multiplier="1:1" id="7ly-Lj-IMy"/>
@@ -160,7 +160,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="85" y="170" width="60" height="60"/>
+                                    <rect key="frame" x="91" y="182" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number8Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="qMI-IV-KI3" secondAttribute="height" multiplier="1:1" id="19A-do-8lq"/>
@@ -174,7 +174,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="170" y="170" width="60" height="60"/>
+                                    <rect key="frame" x="182" y="182" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number9Button"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="48Q-nf-LTg" secondAttribute="height" multiplier="1:1" id="3ze-2B-jFg"/>
@@ -188,7 +188,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="85" y="255" width="60" height="60"/>
+                                    <rect key="frame" x="91" y="273" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="number0Button"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="lessThanOrEqual" constant="700" id="Pq5-Dx-0EG"/>
@@ -201,23 +201,8 @@
                                         <action selector="appendDigit:" destination="-1" eventType="touchUpInside" id="fxw-0Q-s08"/>
                                     </connections>
                                 </button>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="faceid" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="uLV-Sc-Alc">
-                                    <rect key="frame" x="8" y="265.5" width="50" height="38.5"/>
-                                </imageView>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M8y-Pc-oda" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="8" y="255" width="60" height="60"/>
-                                    <accessibility key="accessibilityConfiguration" identifier="number0Button"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="M8y-Pc-oda" secondAttribute="height" multiplier="1:1" id="47x-wi-FWl"/>
-                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="700" id="ZuU-m8-h8R"/>
-                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="vWA-oc-OPO"/>
-                                    </constraints>
-                                    <connections>
-                                        <action selector="biometricalAction:" destination="-1" eventType="touchUpInside" id="eXX-Zz-g0B"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9C-Vg-uCq" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
-                                    <rect key="frame" x="170" y="255" width="60" height="60"/>
+                                    <rect key="frame" x="182" y="273" width="66" height="66"/>
                                     <accessibility key="accessibilityConfiguration" identifier="deleteButton"/>
                                     <constraints>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="MaJ-rl-XGF"/>
@@ -230,43 +215,58 @@
                                         <action selector="deleteLastDigit:" destination="-1" eventType="touchUpInside" id="U8w-Eb-TKW"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M8y-Pc-oda" userLabel="biometric" customClass="ThemeRoundedButton" customModule="ownCloudAppShared" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="273" width="66" height="66"/>
+                                    <accessibility key="accessibilityConfiguration" identifier="number0Button"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="M8y-Pc-oda" secondAttribute="height" multiplier="1:1" id="47x-wi-FWl"/>
+                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="70" id="ZuU-m8-h8R"/>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="vWA-oc-OPO"/>
+                                    </constraints>
+                                    <state key="normal">
+                                        <imageReference key="image" image="questionmark" catalog="system" symbolScale="large"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" scale="large" weight="medium"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="biometricalAction:" destination="-1" eventType="touchUpInside" id="eXX-Zz-g0B"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="M8y-Pc-oda" firstAttribute="top" secondItem="fMx-64-bYq" secondAttribute="bottom" constant="25" id="0m2-MP-6Yy"/>
                                 <constraint firstItem="qMI-IV-KI3" firstAttribute="top" secondItem="fMx-64-bYq" secondAttribute="top" id="18A-ZW-jWc"/>
+                                <constraint firstItem="TIO-8z-Ags" firstAttribute="top" secondItem="M8y-Pc-oda" secondAttribute="top" id="1aV-wD-ioj"/>
                                 <constraint firstItem="hgh-7z-Fto" firstAttribute="top" secondItem="IVZ-la-esK" secondAttribute="top" id="2eX-x7-uSc"/>
-                                <constraint firstItem="TIO-8z-Ags" firstAttribute="leading" secondItem="M8y-Pc-oda" secondAttribute="trailing" constant="17" id="2mW-yz-103"/>
+                                <constraint firstItem="TIO-8z-Ags" firstAttribute="leading" secondItem="M8y-Pc-oda" secondAttribute="trailing" constant="25" id="2mW-yz-103"/>
                                 <constraint firstItem="gBp-H8-606" firstAttribute="top" secondItem="85k-O3-nSF" secondAttribute="top" id="3Tp-Ni-Zn9"/>
                                 <constraint firstItem="hgh-7z-Fto" firstAttribute="leading" secondItem="gBp-H8-606" secondAttribute="leading" id="4eO-HV-3x8"/>
                                 <constraint firstItem="85k-O3-nSF" firstAttribute="top" secondItem="C0s-hA-da3" secondAttribute="top" id="6b4-xi-l10"/>
                                 <constraint firstItem="9xg-xz-Tph" firstAttribute="leading" secondItem="VzK-5I-Ct8" secondAttribute="leading" id="8Dd-LE-Tdo"/>
                                 <constraint firstItem="IVZ-la-esK" firstAttribute="leading" secondItem="85k-O3-nSF" secondAttribute="leading" id="8La-7P-NEs"/>
-                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="bottom" secondItem="M8y-Pc-oda" secondAttribute="bottom" constant="-10" id="A2a-6f-VVQ"/>
+                                <constraint firstItem="M8y-Pc-oda" firstAttribute="leading" secondItem="fMx-64-bYq" secondAttribute="leading" id="GYz-uF-DH8"/>
                                 <constraint firstItem="TIO-8z-Ags" firstAttribute="leading" secondItem="qMI-IV-KI3" secondAttribute="leading" id="LEo-oa-jZZ"/>
                                 <constraint firstItem="48Q-nf-LTg" firstAttribute="leading" secondItem="gBp-H8-606" secondAttribute="leading" id="LFW-Rw-tRv"/>
                                 <constraint firstItem="hgh-7z-Fto" firstAttribute="top" secondItem="gBp-H8-606" secondAttribute="bottom" constant="25" id="MYC-9Y-80h"/>
                                 <constraint firstItem="qMI-IV-KI3" firstAttribute="leading" secondItem="VzK-5I-Ct8" secondAttribute="leading" id="NHk-xt-rZG"/>
-                                <constraint firstItem="M8y-Pc-oda" firstAttribute="width" secondItem="M8y-Pc-oda" secondAttribute="height" multiplier="1:1" id="NYK-8F-LkF"/>
                                 <constraint firstItem="VzK-5I-Ct8" firstAttribute="top" secondItem="85k-O3-nSF" secondAttribute="top" id="WBr-Xg-iqr"/>
-                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="leading" secondItem="M8y-Pc-oda" secondAttribute="leading" id="ZId-Xc-K0a"/>
-                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="trailing" secondItem="M8y-Pc-oda" secondAttribute="trailing" constant="-10" id="aJW-ss-ZVn"/>
                                 <constraint firstItem="fMx-64-bYq" firstAttribute="leading" secondItem="85k-O3-nSF" secondAttribute="leading" id="aZi-2h-OhS"/>
                                 <constraint firstItem="48Q-nf-LTg" firstAttribute="top" secondItem="hgh-7z-Fto" secondAttribute="bottom" constant="25" id="f3A-Aw-sE9"/>
                                 <constraint firstItem="9xg-xz-Tph" firstAttribute="top" secondItem="IVZ-la-esK" secondAttribute="top" id="jZI-GP-nv9"/>
                                 <constraint firstItem="F9C-Vg-uCq" firstAttribute="top" secondItem="TIO-8z-Ags" secondAttribute="top" id="jch-1Y-paT"/>
-                                <constraint firstItem="uLV-Sc-Alc" firstAttribute="top" secondItem="M8y-Pc-oda" secondAttribute="top" constant="10" id="k3L-AD-mU9"/>
                                 <constraint firstItem="85k-O3-nSF" firstAttribute="leading" secondItem="C0s-hA-da3" secondAttribute="leading" id="k8s-77-W6O"/>
+                                <constraint firstItem="M8y-Pc-oda" firstAttribute="top" secondItem="fMx-64-bYq" secondAttribute="bottom" constant="25" id="lZl-3i-umA"/>
                                 <constraint firstAttribute="bottom" secondItem="F9C-Vg-uCq" secondAttribute="bottom" id="nPA-7A-BV0"/>
                                 <constraint firstItem="F9C-Vg-uCq" firstAttribute="top" secondItem="48Q-nf-LTg" secondAttribute="bottom" constant="25" id="nUX-x9-pef"/>
                                 <constraint firstItem="48Q-nf-LTg" firstAttribute="top" secondItem="fMx-64-bYq" secondAttribute="top" id="rH4-LI-Rih"/>
                                 <constraint firstAttribute="trailing" secondItem="F9C-Vg-uCq" secondAttribute="trailing" id="rOr-1g-AcY"/>
+                                <constraint firstItem="TIO-8z-Ags" firstAttribute="leading" secondItem="M8y-Pc-oda" secondAttribute="trailing" constant="25" id="sLF-09-FS1"/>
                                 <constraint firstItem="VzK-5I-Ct8" firstAttribute="leading" secondItem="85k-O3-nSF" secondAttribute="trailing" constant="25" id="sdh-dX-xKl"/>
                                 <constraint firstItem="gBp-H8-606" firstAttribute="leading" secondItem="VzK-5I-Ct8" secondAttribute="trailing" constant="25" id="sfk-Fm-Oub"/>
                                 <constraint firstItem="F9C-Vg-uCq" firstAttribute="leading" secondItem="48Q-nf-LTg" secondAttribute="leading" id="um2-Vu-YJz"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oPw-HC-8y2">
-                            <rect key="frame" x="0.0" y="10" width="320" height="107"/>
+                            <rect key="frame" x="0.0" y="30" width="320" height="107"/>
                             <subviews>
                                 <label verifyAmbiguity="ignoreSizes" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Enter code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vti-jb-9pW">
                                     <rect key="frame" x="118.5" y="20" width="83" height="21"/>
@@ -358,46 +358,46 @@
     </objects>
     <designables>
         <designable name="48Q-nf-LTg">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="85k-O3-nSF">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="9xg-xz-Tph">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="F9C-Vg-uCq">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="42" height="66"/>
         </designable>
         <designable name="IVZ-la-esK">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="M8y-Pc-oda">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="31" height="43"/>
         </designable>
         <designable name="TIO-8z-Ags">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="VzK-5I-Ct8">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="fMx-64-bYq">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="g0I-oo-iOZ">
-            <size key="intrinsicContentSize" width="77" height="39"/>
+            <size key="intrinsicContentSize" width="53" height="33"/>
         </designable>
         <designable name="gBp-H8-606">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="hgh-7z-Fto">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
         <designable name="qMI-IV-KI3">
-            <size key="intrinsicContentSize" width="60" height="39"/>
+            <size key="intrinsicContentSize" width="30" height="66"/>
         </designable>
     </designables>
     <resources>
-        <image name="faceid" catalog="system" width="128" height="115"/>
+        <image name="questionmark" catalog="system" width="94" height="128"/>
     </resources>
 </document>

@@ -31,7 +31,7 @@ class ImageDisplayViewController : DisplayViewController {
 	var scrollView: ImageScrollView?
 
 	var activityIndicatorView: UIActivityIndicatorView = {
-		let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
+		let activityIndicator = UIActivityIndicatorView(style: .medium)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 		return activityIndicator
 	}()
@@ -64,7 +64,7 @@ class ImageDisplayViewController : DisplayViewController {
 				let downsampleOptions =  [kCGImageSourceCreateThumbnailFromImageAlways: true,
 										  kCGImageSourceShouldCacheImmediately: true,
 										  kCGImageSourceCreateThumbnailWithTransform: true,
-										  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
+								   kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as [CFString : Any] as CFDictionary
 				serialQueue.async {
 
 					if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {

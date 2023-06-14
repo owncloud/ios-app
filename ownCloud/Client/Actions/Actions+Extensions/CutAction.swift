@@ -25,13 +25,13 @@ class CutAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.cutpasteboard") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Cut".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "X" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.containsRoot {
+		if forContext.containsRoot || !forContext.allItemsMoveable {
 			return .none
 		}
 
@@ -62,7 +62,7 @@ class CutAction : Action {
 			}
 
 			itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
-				let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encode()
+				let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encodedData
 				completionBlock(data, nil)
 				return nil
 			}
@@ -91,14 +91,6 @@ class CutAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "scissors")
-			} else {
-				return UIImage(named: "clipboard")
-			}
-		}
-
-		return nil
+		return UIImage(systemName: "scissors")?.withRenderingMode(.alwaysTemplate)
 	}
 }

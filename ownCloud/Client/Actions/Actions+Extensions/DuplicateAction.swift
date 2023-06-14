@@ -25,13 +25,13 @@ class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "D" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if let rootItem = forContext.query?.rootItem, !rootItem.permissions.contains(.createFile) || !rootItem.permissions.contains(.createFolder) {
+		if let rootItem = forContext.rootItem, !rootItem.permissions.contains(.createFile) || !rootItem.permissions.contains(.createFolder) {
 			return .none
 		}
 
@@ -54,8 +54,8 @@ class DuplicateAction : Action {
 		if let core = self.core {
 			OnBackgroundQueue { [weak core] in
 				for item in duplicateItems {
-					if let core = core, let itemName = item.name, let parentItem = item.parentItem(from: core), let parentPath = parentItem.path {
-						core.suggestUnusedNameBased(on: itemName, atPath: parentPath, isDirectory: item.type == .collection, using: item.type == .collection ? .numbered : .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+					if let core = core, let itemName = item.name, let parentItem = item.parentItem(from: core), let parentLocation = parentItem.location {
+						core.suggestUnusedNameBased(on: itemName, at: parentLocation, isDirectory: item.type == .collection, using: item.type == .collection ? .numbered : .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
 							Log.debug("Duplicating \(item.name ?? "(null)") as \(suggestedName ?? "(null)")")
 
 							if let suggestedName = suggestedName, let progress = core.copy(item, to: parentItem, withName: suggestedName, options: nil, resultHandler: { (error, _, item, _) in
@@ -77,10 +77,6 @@ class DuplicateAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "duplicate-file")
-		}
-
-		return nil
+		return UIImage(named: "duplicate-file")?.withRenderingMode(.alwaysTemplate)
 	}
 }

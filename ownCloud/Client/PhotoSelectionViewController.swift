@@ -22,6 +22,7 @@ import PhotosUI
 import ownCloudApp
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
@@ -32,7 +33,7 @@ private extension UICollectionView {
 
 private extension PHAssetResource {
 	var isRaw: Bool {
-		self.type == .alternatePhoto || self.uniformTypeIdentifier == String(kUTTypeRawImage) || self.uniformTypeIdentifier == AVFileType.dng.rawValue
+		self.type == .alternatePhoto || self.uniformTypeIdentifier == UTType.rawImage.identifier || self.uniformTypeIdentifier == AVFileType.dng.rawValue
 	}
 }
 
@@ -379,7 +380,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 // MARK: - iOS13 gesture based multiple selection
 
-@available(iOS 13, *) extension PhotoSelectionViewController {
+extension PhotoSelectionViewController {
 	override func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
 		return !DisplaySettings.shared.preventDraggingFiles
 	}

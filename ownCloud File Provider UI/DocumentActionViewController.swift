@@ -29,15 +29,26 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	var themeNavigationController : ThemeNavigationController?
 
 	enum ActionExtensionType {
-		case undefined, sharing, links
+		case undefined, sharing
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		OCItem.registerIcons()
 		ThemeStyle.registerDefaultStyles()
-		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
+		// Initially apply theme based on light / dark mode
+		ThemeStyle.considerAppearanceUpdate()
+
+		self.cssSelector = .modal
+
+		CollectionViewCellProvider.registerStandardImplementations()
+		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
+
+		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
+		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
+
+		OCItem.registerIcons()
 	}
 
 	func complete(cancelWith error: Error? = nil) {
@@ -61,21 +72,39 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		}
 	}
 
-	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
+	func prepareNavigationController() {
+		if themeNavigationController == nil {
+			themeNavigationController = ThemeNavigationController()
+			if let themeNavigationController = themeNavigationController {
+				view.addSubview(themeNavigationController.view)
+				addChild(themeNavigationController)
+			}
+		}
+	}
 
-		guard let identifier = itemIdentifiers.first else {
+	override func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier]) {
+		guard let vfsIdentifier = itemIdentifiers.first else {
+			complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
+			return
+		}
+
+		var identifier: NSFileProviderItemIdentifier?
+
+		if let vaultLocation = OCVaultLocation(vfsItemID: OCVFSItemID(rawValue: vfsIdentifier.rawValue)), let localID = vaultLocation.localID {
+			identifier = NSFileProviderItemIdentifier(rawValue: localID)
+		} else {
+			identifier = vfsIdentifier
+		}
+
+		guard let identifier else {
 			complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 			return
 		}
 
 		let collection = Theme.shared.activeCollection
-		self.view.backgroundColor = collection.toolbarColors.backgroundColor
+		view.backgroundColor = collection.css.getColor(.fill, selectors: [.toolbar], for: view)
 
-		themeNavigationController = ThemeNavigationController()
-		if let themeNavigationController = themeNavigationController {
-			view.addSubview(themeNavigationController.view)
-			addChild(themeNavigationController)
-		}
+		prepareNavigationController()
 
 		showCancelLabel(with: "Connecting…".localized)
 
@@ -83,16 +112,12 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		var actionExtensionType : ActionExtensionType = .undefined
 		if actionIdentifier == "com.owncloud.FileProviderUI.Share" {
 			actionExtensionType = .sharing
-			actionTypeLabel = "Share with user/group".localized
-		} else if actionIdentifier == "com.owncloud.FileProviderUI.PublicLinks" {
-			actionExtensionType = .links
-			actionTypeLabel = "Share link".localized
+			actionTypeLabel = "Share".localized
 		}
 
 		OCCoreManager.shared.requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
 			guard let self = self else {
 				// DocumentActionViewController vanished - and .complete() with it - return core immediately
-
 				if let bookmark = core?.bookmark {
 					OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 				}
@@ -107,26 +132,28 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 				guard let core = self.core else { return }
 				var triedConnecting = false
 
+				core.vault.resourceManager?.add(ResourceSourceItemIcons(core: core))
+
 				self.coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (_, _) in
 					guard let self = self else { return }
 
 					OnMainThread {
-						if actionExtensionType == .links, core.connection.capabilities?.sharingAPIEnabled == false, core.connection.capabilities?.publicSharingEnabled == false, item.isShareable == false {
-							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
-						} else if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false {
+						if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false || item.isShareable == false {
 							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
 						} else if core.connectionStatus == .online {
 							self.coreConnectionStatusObservation?.invalidate()
 							self.coreConnectionStatusObservation = nil
 
 							if actionExtensionType == .sharing {
-								let groupSharingController = GroupSharingTableViewController(core: core, item: item)
-								groupSharingController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissView))
-								self.themeNavigationController?.viewControllers = [groupSharingController]
-							} else if actionExtensionType == .links {
-								let publicLinkController = PublicLinkTableViewController(core: core, item: item)
-								publicLinkController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissView))
-								self.themeNavigationController?.viewControllers = [publicLinkController]
+								let clientContext = ClientContext(core: core)
+
+								let sharingViewController = SharingViewController(clientContext: clientContext, item: item)
+								sharingViewController.navigationItem.navigationContent.add(items: [
+									NavigationContentItem(identifier: "done", area: .right, priority: .standard, position: .trailing, items: [
+										UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissView))
+									])
+								])
+								self.themeNavigationController?.viewControllers = [sharingViewController]
 							}
 						} else if core.connectionStatus == .connecting {
 							triedConnecting = true
@@ -151,6 +178,12 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	}
 
 	override func prepare(forError error: Error) {
+		if !OCFileProviderSettings.browseable {
+			prepareNavigationController()
+			showCancelLabel(with: "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.".localized)
+			return
+		}
+
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
 			AppLockManager.shared.biometricCancelLabel = "Cancel".localized
@@ -163,6 +196,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 			AppLockManager.shared.showLockscreenIfNeeded()
 		} else {
+			prepareNavigationController()
 			showCancelLabel(with: "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized)
 		}
 	}
@@ -182,11 +216,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	}
 
 	@objc func dismissView() {
-		if #available(iOS 13.0, *) {
-			self.dismiss(animated: true) {
-				self.complete()
-			}
-		} else {
+		self.dismiss(animated: true) {
 			self.complete()
 		}
 	}

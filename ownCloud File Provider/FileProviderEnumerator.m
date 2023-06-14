@@ -53,7 +53,7 @@
 
 - (void)invalidate
 {
-	OCLogDebug(@"##### INVALIDATE %@", _query.queryPath);
+	OCLogDebug(@"##### INVALIDATE %@", _query.queryLocation);
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:DisplaySettingsChanged object:nil];
 
@@ -197,7 +197,7 @@
 				else
 				{
 					// Start query
-					self->_query = [OCQuery queryForPath:queryPath];
+					self->_query = [OCQuery queryForLocation:[OCLocation legacyRootPath:queryPath]];
 					self->_query.includeRootItem = queryPath.isRootPath; // Include the root item only for the root folder. If it's not included, no folder can be created in the root directory. If a non-root folder is included in a query result for its content, the Files Duplicate action will loop infinitely.
 					self->_query.delegate = self;
 
@@ -220,7 +220,7 @@
 						}
 					}
 
-					OCLogDebug(@"##### START QUERY FOR %@", self->_query.queryPath);
+					OCLogDebug(@"##### START QUERY FOR %@", self->_query.queryLocation);
 
 					[self->_query attachMeasurement:self->_measurement];
 
@@ -284,7 +284,7 @@
 					{
 						NSArray <OCItem *> *queryResults = query.queryResults;
 
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, queryResults);
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryLocation.path, queryResults);
 
 						observer.didProvideInitialItems = YES;
 
@@ -329,7 +329,7 @@
 	{
 		if (_changeObservers.count > 0)
 		{
-			OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryPath, query.queryResults);
+			OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryLocation.path, query.queryResults);
 
 			for (FileProviderEnumeratorObserver *observer in _changeObservers)
 			{
@@ -344,7 +344,7 @@
 
 - (void)queryHasChangesAvailable:(OCQuery *)query
 {
-	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query.queryPath, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
 
 	if ( (query.state == OCQueryStateContentsFromCache) ||
 	    ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) ||

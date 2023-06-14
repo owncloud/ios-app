@@ -23,7 +23,7 @@ import ownCloudAppShared
 
 class MediaUploadJob : NSObject, NSSecureCoding {
 
-	var targetPath: String?
+	var targetLocation : OCLocation? /// Target parent location of the upload
 	var scheduledUploadLocalID: OCLocalID?
 
 	static var supportsSecureCoding: Bool {
@@ -31,17 +31,21 @@ class MediaUploadJob : NSObject, NSSecureCoding {
 	}
 
 	func encode(with coder: NSCoder) {
-		coder.encode(targetPath, forKey: "targetPath")
+		coder.encode(targetLocation, forKey: "targetLocation")
 		coder.encode(scheduledUploadLocalID, forKey: "scheduledUploadLocalID")
 	}
 
 	required init?(coder: NSCoder) {
-		self.targetPath = coder.decodeObject(forKey: "targetPath") as? String
+		if let targetPath = coder.decodeObject(of: NSString.self, forKey: "targetPath") {
+			self.targetLocation = OCLocation.legacyRootPath(targetPath as String)
+		} else {
+			self.targetLocation = coder.decodeObject(of: OCLocation.self, forKey: "targetLocation")
+		}
 		self.scheduledUploadLocalID = coder.decodeObject(forKey: "scheduledUploadLocalID") as? OCLocalID
 	}
 
-	init(_ path:String) {
-		self.targetPath = path
+	init(_ targetLocation: OCLocation) {
+		self.targetLocation = targetLocation
 	}
 }
 
@@ -80,19 +84,19 @@ class MediaUploadStorage : NSObject, NSSecureCoding {
 		jobs = [String : [MediaUploadJob]]()
 	}
 
-	func addJob(with assetID:String, targetPath:String) {
+	func addJob(with assetID:String, targetLocation: OCLocation) {
 		if !queue.contains(assetID) {
 			self.queue.append(assetID)
 		}
 		var existingJobs: [MediaUploadJob] = jobs[assetID] != nil ? jobs[assetID]! : [MediaUploadJob]()
-		if existingJobs.filter({$0.targetPath == targetPath}).count == 0 {
-			existingJobs.append(MediaUploadJob(targetPath))
+		if existingJobs.filter({ (existingJob) in existingJob.targetLocation == targetLocation}).count == 0 {
+			existingJobs.append(MediaUploadJob(targetLocation))
 		}
 		jobs[assetID] = existingJobs
 	}
 
-	func removeJob(with assetID:String, targetPath:String) {
-		if let remainingJobs = jobs[assetID]?.filter({$0.targetPath != targetPath}) {
+	func removeJob(with assetID:String, targetLocation: OCLocation) {
+		if let remainingJobs = jobs[assetID]?.filter({ (existingJob) in existingJob.targetLocation != targetLocation}) {
 			jobs[assetID] = remainingJobs
 			if remainingJobs.count == 0 {
 				if let assetIdQueueIndex = queue.firstIndex(of: assetID) {
@@ -102,8 +106,8 @@ class MediaUploadStorage : NSObject, NSSecureCoding {
 		}
 	}
 
-	func update(localItemID:OCLocalID, assetId:String, targetPath:String) {
-		jobs[assetId]?.filter({$0.targetPath == targetPath}).first?.scheduledUploadLocalID = localItemID
+	func update(localItemID:OCLocalID, assetId:String, targetLocation: OCLocation) {
+		jobs[assetId]?.filter({ (job) in job.targetLocation == targetLocation}).first?.scheduledUploadLocalID = localItemID
 	}
 }
 

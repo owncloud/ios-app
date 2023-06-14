@@ -40,7 +40,7 @@ class MakeUnavailableOfflineAction: Action {
 		for item in context.items {
 			if let itemPolicies = core.retrieveAvailableOfflinePoliciesCovering(item, completionHandler: nil) {
 				if itemPolicies.contains(where: { (itemPolicy) -> Bool in
-					return (itemPolicy.path == item.path) || (itemPolicy.localID == item.localID)
+					return (itemPolicy.location == item.location) || (itemPolicy.localID == item.localID)
 				}) {
 					position = .middle
 				}
@@ -60,7 +60,7 @@ class MakeUnavailableOfflineAction: Action {
 		for item in context.items {
 			if let itemPolicies = core.retrieveAvailableOfflinePoliciesCovering(item, completionHandler: nil) {
 				for itemPolicy in itemPolicies {
-					if (itemPolicy.path == item.path) || (itemPolicy.localID == item.localID) {
+					if (itemPolicy.location == item.location) || (itemPolicy.localID == item.localID) {
 						core.removeAvailableOfflinePolicy(itemPolicy, completionHandler: nil)
 					}
 				}
@@ -80,10 +80,6 @@ class MakeUnavailableOfflineAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "available-offline")
-		}
-
-		return nil
+		return UIImage(named: "available-offline")?.withRenderingMode(.alwaysTemplate)
 	}
 }

@@ -66,7 +66,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	// This is used just to pass the selection callback to PhotoSelectionViewController when an album is selected
 	var selectionCallback: PhotosSelectedCallback?
 
-	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 
 	// MARK: - UIViewController lifecycle
 

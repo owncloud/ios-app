@@ -92,12 +92,7 @@
 
 - (NSError *)translatedError
 {
-	if (@available(iOS 13, *))
-	{
-		return ([self resolvedErrorWithTranslation:YES]);
-	}
-
-	return ([self resolvedErrorWithTranslation:NO]);
+	return ([self resolvedErrorWithTranslation:YES]);
 }
 
 @end

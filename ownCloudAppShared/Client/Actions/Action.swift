@@ -1,6 +1,6 @@
 //
 //  Action.swift
-//  ownCloud
+//  ownCloudAppShared
 //
 //  Created by Pablo Carrascal on 30/10/2018.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
@@ -60,11 +60,15 @@ public extension OCExtensionLocationIdentifier {
 	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreDetailItem") //!< Present in "more" card view for a single item in detail view
 	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
-	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
+	static let emptyFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("emptyFolder") //!< Present in "more" options for a whole folder
+	static let multiSelection: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("multiSelection") //!< Present as action when selecting multiple items
+	static let dropAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("dropAction") //!< Present action as drop target when items are dragged
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
 	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
+	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
+	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
 }
 
 public class ActionExtension: OCExtension {
@@ -86,12 +90,18 @@ public class ActionExtension: OCExtension {
 	}
 }
 
-extension Array where Element: OCItem {
-	var sharedWithUser : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
-	}
-	var isShared : [OCItem] {
-		return self.filter({ (item) -> Bool in return item.isShared })
+public extension OCItem {
+	func isSharedWithUser(in context: ClientContext?) -> Bool {
+		if let context, let core = context.core, core.useDrives, let driveID, let drive = core.drive(withIdentifier: driveID) {
+			// On drive-based instances, all items shared with the user are located in the Shares Jail
+			if drive.specialType == .shares {
+				return true
+			}
+
+			return false
+		}
+
+		return isSharedWithUser
 	}
 }
 
@@ -108,6 +118,8 @@ public class ActionContext: OCExtensionContext {
 	private var cachedSharedItems = [OCItem]()
 	private var cachedParentFolders = [OCLocalID : OCItem]()
 	private var itemStorage: [OCItem]
+
+	public var clientContext : ClientContext?
 
 	public var items: [OCItem] {
 		get {
@@ -149,8 +161,12 @@ public class ActionContext: OCExtensionContext {
 		return false
 	}
 
+	public var rootItem: OCItem? {
+		return query?.rootItem ?? (clientContext?.rootItem as? OCItem)
+	}
+
 	// MARK: - Init & Deinit.
-	public init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 
 		itemStorage = items
 
@@ -160,6 +176,8 @@ public class ActionContext: OCExtensionContext {
 		self.sender = sender
 		self.core = core
 		self.location = location
+
+		self.clientContext = clientContext
 
 		self.query = query
 		self.requirements = requirements
@@ -182,10 +200,10 @@ public class ActionContext: OCExtensionContext {
 		guard self.itemStorage.contains(item) else {
 			return
 		}
-		self.itemStorage.removeAll(where: {$0.localID == item.localID})
+		self.itemStorage.removeAll(where: { storedItem in storedItem.localID == item.localID})
 
-		if item.isSharedWithUser {
-			self.cachedSharedItems.removeAll(where: { $0.localID == item.localID })
+		if item.isSharedWithUser(in: clientContext) {
+			self.cachedSharedItems.removeAll(where: { cachedSharedItem in cachedSharedItem.localID == item.localID })
 		}
 
 		if item.isRoot, rootItems > 0 {
@@ -196,7 +214,7 @@ public class ActionContext: OCExtensionContext {
 			deleteableItems -= 1
 		}
 
-		if item.permissions.contains(.move), deleteableItems > 0 {
+		if item.permissions.contains(.move), moveableItems > 0 {
 			moveableItems -= 1
 		}
 	}
@@ -209,7 +227,7 @@ public class ActionContext: OCExtensionContext {
 
 		self.itemStorage.append(item)
 
-		if item.isSharedWithUser {
+		if item.isSharedWithUser(in: clientContext) {
 			self.cachedSharedItems.append(item)
 		}
 
@@ -245,18 +263,18 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	public func isShareRoot(item:OCItem) -> Bool {
-		guard item.isSharedWithUser else { return false }
+		guard item.isSharedWithUser(in: clientContext) else { return false }
 
 		guard let parent = parent(for: item) else { return true }
 
-		return !parent.isSharedWithUser
+		return !parent.isSharedWithUser(in: clientContext)
 	}
 
 	private func updateCaches() {
-		cachedSharedItems = itemStorage.sharedWithUser
-		rootItems = itemStorage.filter({ $0.isRoot }).count
-		deleteableItems = itemStorage.filter({$0.permissions.contains(.delete)}).count
-		moveableItems = itemStorage.filter({$0.permissions.contains(.move)}).count
+		cachedSharedItems = itemStorage.filter({ item in item.isSharedWithUser(in: clientContext) })
+		rootItems = itemStorage.filter({ item in item.isRoot }).count
+		deleteableItems = itemStorage.filter({ item in item.permissions.contains(.delete)}).count
+		moveableItems = itemStorage.filter({ item in item.permissions.contains(.move)}).count
 	}
 }
 
@@ -271,18 +289,8 @@ open class Action : NSObject {
 	class open var features : [String : Any]? { return nil }
 
 	// MARK: - Extension creation
-	class open var actionExtension : ActionExtension {
-		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
-			if let actionExtension = rawExtension as? ActionExtension,
-				let actionContext   = context as? ActionContext {
-				return self.init(for: actionExtension, with: actionContext)
-			}
-
-			return nil
-		}
-
-		let customMatcher : OCExtensionCustomContextMatcher  = { (context, priority) -> OCExtensionPriority in
-
+	class public var actionCustomContextMatcher : OCExtensionCustomContextMatcher {
+		return { (context, priority) -> OCExtensionPriority in
 			// Make sure we have valid context and extension was not filtered out due to location mismatch
 			guard let actionContext = context as? ActionContext, priority != .noMatch else {
 				return priority
@@ -312,8 +320,19 @@ open class Action : NSObject {
 
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
 		}
+	}
 
-		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: keyCommand, keyModifierFlags: keyModifierFlags)
+	class open var actionExtension : ActionExtension {
+		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
+			if let actionExtension = rawExtension as? ActionExtension,
+				let actionContext   = context as? ActionContext {
+				return self.init(for: actionExtension, with: actionContext)
+			}
+
+			return nil
+		}
+
+		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: actionCustomContextMatcher, keyCommand: keyCommand, keyModifierFlags: keyModifierFlags)
 	}
 
 	// MARK: - Extension matching
@@ -475,6 +494,36 @@ open class Action : NSObject {
 		return alertAction
 	}
 
+	open func provideOCAction(singleVersion: Bool = false, with additionalCompletionHandler: (() -> Void)? = nil) -> OCAction {
+		let icon = self.icon?.paddedTo(width: 36, height: nil)
+		var name = actionExtension.name
+
+		if !isLicensed {
+			name += " " + proLabel
+		}
+
+		let ocAction = OCAction(title: name, icon: icon, action: { _, options, completionHandler in
+			self.perform()
+			completionHandler(nil)
+			additionalCompletionHandler?()
+		})
+
+		ocAction.identifier = actionExtension.identifier.rawValue
+		if singleVersion {
+			ocAction.version = actionExtension.identifier.rawValue
+			ocAction.supportsDrop = true
+		}
+		ocAction.type = (actionExtension.category == .destructive) ? .destructive : .regular
+
+		return ocAction
+	}
+
+	open func provideBarButtonItem() -> UIBarButtonItem {
+		return UIBarButtonItem(title: actionExtension.name, image: icon, primaryAction: UIAction(handler: { (_) in
+			self.perform()
+		}))
+	}
+
 	// MARK: - Action metadata
 	class open func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		return nil
@@ -494,13 +543,14 @@ open class Action : NSObject {
 
 }
 
-extension OCClassSettingsIdentifier {
+public extension OCClassSettingsIdentifier {
 	static let action = OCClassSettingsIdentifier("action")
 }
 
-extension OCClassSettingsKey {
+public extension OCClassSettingsKey {
 	static let allowedActions = OCClassSettingsKey("allowed")
 	static let disallowedActions = OCClassSettingsKey("disallowed")
+	static let excludedSystemActivities = OCClassSettingsKey("excludedSystemActivities")
 }
 
 extension Action : OCClassSettingsSupport {
@@ -512,8 +562,8 @@ extension Action : OCClassSettingsSupport {
 
 	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
-			.allowedActions : [],
-			.disallowedActions : []
+			.allowedActions : [] as [String],
+			.disallowedActions : [] as [String]
 		]
 	}
 
@@ -546,6 +596,54 @@ extension Action : OCClassSettingsSupport {
 					.description : "List of all disallowed actions. If provided, actions not listed here are allowed.",
 					.category : "Actions",
 					.status	: OCClassSettingsKeyStatus.advanced
+				],
+				.excludedSystemActivities : [
+					.type : OCClassSettingsMetadataType.stringArray,
+					.description : "List of all operating system activities that should be excluded from OS share sheets in actions such as Open In.",
+					.category : "Actions",
+					.status	: OCClassSettingsKeyStatus.advanced,
+					.possibleValues : [
+						[
+							OCClassSettingsMetadataKey.description : "Add to reading list",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.addToReadingList.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Copy to pasteboard",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.copyToPasteboard.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Print",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.print.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Save to camera roll",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.saveToCameraRoll.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Mail",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.mail.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Message",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.message.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Assign to contact",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.assignToContact.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "AirDrop",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.airDrop.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Open in (i)Books",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.openInIBooks.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Markup as PDF",
+							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.markupAsPDF.rawValue
+						]
+					]
 				]
 			]
 

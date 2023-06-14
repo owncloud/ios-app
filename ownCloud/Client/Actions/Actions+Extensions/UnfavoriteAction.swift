@@ -30,7 +30,10 @@ class UnfavoriteAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.filter({return $0.isRoot}).count > 0 {
+		if forContext.core?.connection.capabilities?.supportsFavorites == false {
+			return .none
+		}
+		if forContext.items.filter({return $0.isRoot}).count > 0, forContext.allItemsDeleteable {
 			return .none
 		} else if forContext.items.count > 0, let item = forContext.items.first, item.isFavorite == false {
 			return .none
@@ -55,10 +58,6 @@ class UnfavoriteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .contextMenuItem {
-			return UIImage(named: "star")
-		}
-
-		return nil
+		return UIImage(named: "star")?.withRenderingMode(.alwaysTemplate)
 	}
 }

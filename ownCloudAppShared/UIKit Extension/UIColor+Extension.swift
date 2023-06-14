@@ -100,10 +100,44 @@ extension UIColor {
 
 		return (String(format: "\(leadIn)%02x%02x%02x", Int(selfRed*255.0), Int(selfGreen*255.0), Int(selfBlue*255.0)))
 	}
-    
-    public func isLight() -> Bool {
-        guard let components = cgColor.components, components.count > 2 else {return false}
-        let brightness = ((components[0] * 299) + (components[1] * 587) + (components[2] * 114)) / 1000
-        return (brightness > 0.5)
-    }
+
+	public var brightness: CGFloat? {
+		guard let components = cgColor.components, components.count > 2 else { return nil }
+		return ((components[0] * 299) + (components[1] * 587) + (components[2] * 114)) / 1000
+	}
+
+	public func isLight() -> Bool {
+		if let brightness, brightness > 0.5 {
+			return true
+		}
+		return false
+	}
+
+	public func contrast(to otherColor: UIColor) -> CGFloat? {
+		if let brightness, let otherBrightness = otherColor.brightness {
+			if brightness > otherBrightness {
+				return (brightness + 0.05) / (otherBrightness + 0.05)
+			} else {
+				return (otherBrightness + 0.05) / (brightness + 0.05)
+			}
+		}
+
+		return nil
+	}
+
+	public func preferredContrastColor(from colors: [UIColor]) -> UIColor? {
+		var highestContrastColor: UIColor?
+		var highestContrast: CGFloat = 0
+
+		for color in colors {
+			if let contrast = contrast(to: color) {
+				if (contrast > highestContrast) || (highestContrastColor == nil) {
+					highestContrastColor = color
+					highestContrast = contrast
+				}
+			}
+		}
+
+		return highestContrastColor
+	}
 }

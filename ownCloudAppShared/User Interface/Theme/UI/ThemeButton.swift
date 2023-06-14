@@ -25,60 +25,76 @@ public enum ThemeButtonCornerRadiusStyle : CGFloat {
 }
 
 @IBDesignable
-open class ThemeButton : UIButton {
-	internal var _themeColorCollection : ThemeColorPairCollection?
-	public var themeColorCollection : ThemeColorPairCollection? {
-		set(colorCollection) {
-			_themeColorCollection = colorCollection
+open class ThemeButton : UIButton, Themeable, ThemeCSSChangeObserver {
+	private var themeRegistered = false
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
 
-			if _themeColorCollection != nil {
-				self.setTitleColor(_themeColorCollection?.normal.foreground, for: .normal)
-				self.setTitleColor(_themeColorCollection?.highlighted.foreground, for: .highlighted)
-				self.setTitleColor(_themeColorCollection?.disabled.foreground, for: .disabled)
+		if !themeRegistered, window != nil {
+			// Postpone registration with theme until we actually need to. Makes sure self.applyThemeCollection() can take all properties into account
+			Theme.shared.register(client: self, applyImmediately: true)
+			themeRegistered = true
+		}
+	}
 
-				self.updateBackgroundColor()
+	public func cssSelectorsChanged() {
+		if superview != nil {
+			updateConfiguration()
+		}
+	}
+
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		updateConfiguration()
+	}
+
+	open override func updateConfiguration() {
+		guard let configuration else { return }
+		let css = activeThemeCSS
+
+		var updatedConfiguration = configuration.updated(for: self)
+		var cssSelectors: [ThemeCSSSelector]?
+
+		if !isEnabled {
+			// Disabled
+			cssSelectors = [.disabled]
+		} else {
+			if isHighlighted {
+				// Highlighted
+				cssSelectors = [.highlighted]
 			}
-		}
 
-		get {
-			return _themeColorCollection
-		}
-	}
-
-	public override var isHighlighted: Bool {
-		set(newIsHighlighted) {
-			super.isHighlighted = newIsHighlighted
-			updateBackgroundColor()
-		}
-
-		get {
-			return super.isHighlighted
-		}
-	}
-
-	public override var isEnabled: Bool {
-		set(newIsEnabled) {
-			super.isEnabled = newIsEnabled
-			updateBackgroundColor()
-		}
-
-		get {
-			return super.isEnabled
-		}
-	}
-
-	private func updateBackgroundColor() {
-		if _themeColorCollection != nil {
-			if !self.isEnabled {
-				self.backgroundColor = _themeColorCollection?.disabled.background
-			} else {
-				if self.isHighlighted {
-					self.backgroundColor = _themeColorCollection?.highlighted.background
+			if isSelected {
+				// Selected
+				if cssSelectors != nil {
+					cssSelectors?.append(.selected)
 				} else {
-					self.backgroundColor = _themeColorCollection?.normal.background
+					cssSelectors = [.selected]
 				}
 			}
 		}
+
+		updatedConfiguration.baseForegroundColor = css.getColor(.stroke, selectors: cssSelectors, for: self)
+		updatedConfiguration.baseBackgroundColor = css.getColor(.fill,   selectors: cssSelectors, for: self)
+
+		if let buttonFont {
+			if let title = title(for: .normal) {
+				var attributedTitle: AttributedString = AttributedString(title)
+				attributedTitle.font = buttonFont
+				updatedConfiguration.attributedTitle = attributedTitle
+			}
+		}
+
+		switch buttonCornerRadius {
+			case .round:
+				updatedConfiguration.cornerStyle = .capsule
+
+			case .medium: break
+
+			default:
+				updatedConfiguration.background.cornerRadius =  buttonCornerRadius.rawValue
+		}
+
+		self.configuration = updatedConfiguration
 	}
 
 	public override var intrinsicContentSize: CGSize {
@@ -96,7 +112,11 @@ open class ThemeButton : UIButton {
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
 	}
 
-	public var buttonFont : UIFont = UIFont.preferredFont(forTextStyle: .headline)
+	public var buttonFont : UIFont? {
+		didSet {
+			updateConfiguration()
+		}
+	}
 	public var buttonHorizontalPadding : CGFloat = 30 {
 		didSet {
 			invalidateIntrinsicContentSize()
@@ -123,6 +143,12 @@ open class ThemeButton : UIButton {
 		}
 	}
 
+	public convenience init(withSelectors: [ThemeCSSSelector], configuration: UIButton.Configuration = .filled()) {
+		self.init(type: .custom)
+		self.configuration = configuration
+		self.cssSelectors = withSelectors
+	}
+
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 		styleButton()
@@ -130,6 +156,7 @@ open class ThemeButton : UIButton {
 
 	required public init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
+		self.configuration = .filled()
 		styleButton()
 	}
 

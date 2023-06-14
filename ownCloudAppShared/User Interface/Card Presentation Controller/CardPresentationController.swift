@@ -147,9 +147,8 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		overStretchView.backgroundColor = collection.tableGroupBackgroundColor
-		dragHandleView.backgroundColor = collection.tableSeparatorColor
-
+		overStretchView.backgroundColor = collection.css.getColor(.fill, selectors: [.grouped, .table], for:overStretchView)
+		dragHandleView.backgroundColor = collection.css.getColor(.fill, selectors: [.separator], for:dragHandleView)
 	}
 
 	private func offset(for position: CardPosition, translatedBy: CGFloat = 0, allowOverStretch: Bool = false) -> CGFloat {
@@ -417,7 +416,7 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 
 // MARK: - Convenience addition to UIViewController
 extension UIViewController {
-	open func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
+	public func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
 		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self, withHandle: withHandle, dismissable: dismissable)
 
 		viewController.transitioningDelegate = animator // .transitioningDelegate is only weak!

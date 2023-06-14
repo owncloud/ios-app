@@ -40,7 +40,7 @@ public class AppLockManager: NSObject {
 		get {
 			if let archivedData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainLockedDate) {
 				guard let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSDate.self, from: archivedData) else { return nil }
-				return value as? Date
+				return value as Date
 			}
 
 			return nil
@@ -59,7 +59,7 @@ public class AppLockManager: NSObject {
 		get {
 			if let archivedData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainUnlocked) {
 				guard let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: archivedData)?.boolValue else { return false}
-				return value ?? false
+				return value
 			}
 
 			return false
@@ -269,15 +269,12 @@ public class AppLockManager: NSObject {
 						var appLockWindow : AppLockWindow
 						let passcodeViewController = passwordViewController()
 
-						if #available(iOS 13, *) {
-							if let windowScene = themeWindow.windowScene {
-								appLockWindow = AppLockWindow(windowScene: windowScene)
-							} else {
-								appLockWindow = AppLockWindow(frame: UIScreen.main.bounds)
-							}
+						if let windowScene = themeWindow.windowScene {
+							appLockWindow = AppLockWindow(windowScene: windowScene)
 						} else {
 							appLockWindow = AppLockWindow(frame: UIScreen.main.bounds)
 						}
+
 						/*
 						Workaround to the lack of status bar animation when returning true for prefersStatusBarHidden in
 						PasscodeViewController.

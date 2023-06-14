@@ -24,23 +24,15 @@ public enum ThemeEvent {
 	case update
 }
 
-public protocol Themeable : class {
+public protocol Themeable : NSObject {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent)
 }
 
 public typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _ event: ThemeEvent) -> Void
 public typealias ThemeApplierToken = Int
 
-final class WeakThemeable {
-	weak var weakClient : Themeable?
-
-	init(_ client: Themeable) {
-		weakClient = client
-	}
-}
-
 public class Theme: NSObject {
-	private var weakClients : [WeakThemeable] = []
+	private var weakClients : NSHashTable = NSHashTable<NSObject>.weakObjects()
 
 	private var appliers : [ThemeApplierToken : ThemeApplier] = [:]
 	private var applierSerial : ThemeApplierToken = 0
@@ -64,6 +56,7 @@ public class Theme: NSObject {
 		let sharedInstance = Theme()
 
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.Down", bundleOf: Theme.self, title: "Down", resourceName: "Down", fileExtension: "LICENSE"))
 
 		return sharedInstance
 	}()
@@ -71,7 +64,7 @@ public class Theme: NSObject {
 	// MARK: - Client register / unregister
 	public func register(client: Themeable, applyImmediately: Bool = true) {
 		OCSynchronized(self) {
-			weakClients.append(WeakThemeable(client))
+			weakClients.add(client)
 		}
 
 		if applyImmediately {
@@ -81,14 +74,7 @@ public class Theme: NSObject {
 
 	public func unregister(client : Themeable) {
 		OCSynchronized(self) {
-			if let clientIndex = weakClients.index(where: { (themable) -> Bool in
-				if themable.weakClient != nil {
-					return themable.weakClient === client
-				}
-				return false
-			}) {
-				weakClients.remove(at: clientIndex)
-			}
+			weakClients.remove(client)
 		}
 	}
 
@@ -103,7 +89,7 @@ public class Theme: NSObject {
 
 	public func add(resource: ThemeResource) {
 		OCSynchronized(self) {
-			weakClients.insert(WeakThemeable(resource), at: 0)
+			weakClients.add(resource)
 
 			if resource.identifier != nil {
 				resourcesByIdentifier[resource.identifier!] = resource
@@ -143,7 +129,7 @@ public class Theme: NSObject {
 		return image
 	}
 
-	public func tvgImage(for identifier: String) -> TVGImage? {
+	public func tvgImage(for identifier: String, autoregisterIfMissing: Bool = true) -> TVGImage? {
 		var image : TVGImage?
 
 		OCSynchronized(self) {
@@ -154,6 +140,11 @@ public class Theme: NSObject {
 					}
 				}
 			}
+		}
+
+		if image == nil, autoregisterIfMissing {
+			Theme.shared.add(tvgResourceFor: identifier)
+			return tvgImage(for: identifier, autoregisterIfMissing: false)
 		}
 
 		return image
@@ -217,9 +208,9 @@ public class Theme: NSObject {
 	public func applyThemeCollection(_ collection: ThemeCollection) {
 		OCSynchronized(self) {
 			// Apply theme to clients
-			for client in weakClients {
-				if client.weakClient != nil {
-					client.weakClient?.applyThemeCollection(theme: self, collection: collection, event: .update)
+			for client in weakClients.allObjects {
+				if let client = client as? Themeable {
+					client.applyThemeCollection(theme: self, collection: collection, event: .update)
 				}
 			}
 
@@ -229,23 +220,9 @@ public class Theme: NSObject {
 			}
 
 			// Globally change color values for UI elements
-			if #available(iOS 13, *) {
-			} else {
-				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchBarColors.backgroundColor
-				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: collection.searchBarColors.secondaryLabelColor]
-				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchBarColors.tintColor
-			}
-			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.keyboardAppearance
-			if #available(iOS 13, *) {
-				if VendorServices.shared.isBranded {
-					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
-				} else {
-					UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
-				}
-			} else {
-				UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
-			}
-			UITextField.appearance().tintColor = collection.searchBarColors.tintColor
+			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).keyboardAppearance = collection.css.getKeyboardAppearance(selectors: [.all], for: nil)
+			UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.css.getColor(.stroke, selectors: [.alert], for: nil)
+			UITextField.appearance().tintColor = collection.css.getColor(.stroke, selectors: [.textField], for: nil) // searchBarColors.tintColor
 		}
 	}
 

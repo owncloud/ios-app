@@ -22,7 +22,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 	open var cancelled : Bool = false
 	open var cancelHandler : (() -> Void)?
 
-	open var progressView : UIProgressView
+	open var progressView : ThemeCSSProgressView
 	open var activityIndicator : UIActivityIndicatorView
 	open var label : UILabel
 	open var titleLabel : UILabel?
@@ -65,14 +65,10 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 	}
 
 	public init(initialTitleLabel: String? = nil, initialProgressLabel: String?, progress : Progress?, cancelLabel: String? = nil, cancelHandler: (() -> Void)? = nil) {
-		progressView = UIProgressView(progressViewStyle: .bar)
+		progressView = ThemeCSSProgressView(progressViewStyle: .bar)
 		progressView.translatesAutoresizingMaskIntoConstraints = false
 
-		if #available(iOS 13, *) {
-			activityIndicator = UIActivityIndicatorView(style: .large)
-		} else {
-			activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-		}
+		activityIndicator = UIActivityIndicatorView(style: .large)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 		activityIndicator.isHidden = true
 
@@ -99,7 +95,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		self.cancelHandler = cancelHandler
 
 		if cancelHandler != nil {
-			cancelButton = ThemeButton(type: .system)
+			cancelButton = ThemeButton(withSelectors: [.cancel])
 			cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 
 			cancelButton?.setTitle(cancelLabel ?? "Cancel".localized, for: .normal)
@@ -174,7 +170,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 			])
 		} else {
 			constraints.append(contentsOf: [
-				label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing),
+				label.topAnchor.constraint(equalTo: centerView.topAnchor, constant: outerSpacing)
 			])
 		}
 
@@ -212,13 +208,11 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 	}
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = collection.tableBackgroundColor
+	 	self.view.backgroundColor = collection.css.getColor(.fill, for: self.view) ?? .white
 
-		self.progressView.applyThemeCollection(collection)
 		self.titleLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
 		self.label.applyThemeCollection(collection)
-		self.cancelButton?.applyThemeCollection(collection)
-		self.activityIndicator.style = collection.activityIndicatorViewStyle
+		self.activityIndicator.style = collection.css.getActivityIndicatorStyle(for: self.activityIndicator) ?? .medium
 	}
 
 	open func update(progress: Float? = nil, text: String? = nil) {

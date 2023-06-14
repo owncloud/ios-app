@@ -138,7 +138,7 @@ public class ProgressSummarizer: NSObject {
 		OCSynchronized(self) {
 			Log.debug("Stop tracking progress \(String(describing: progress)) (remove=\(remove))")
 
-			if let trackedProgressIndex = trackedProgress.index(of: progress) {
+			if let trackedProgressIndex = trackedProgress.firstIndex(of: progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isCancelled", context: observerContext)
@@ -149,7 +149,7 @@ public class ProgressSummarizer: NSObject {
 					trackedProgress.remove(at: trackedProgressIndex)
 
 					if progress.eventType != .none {
-						if let progressByTypeIndex = trackedProgressByType[progress.eventType]?.index(of: progress) {
+						if let progressByTypeIndex = trackedProgressByType[progress.eventType]?.firstIndex(of: progress) {
 							trackedProgressByType[progress.eventType]?.remove(at: progressByTypeIndex)
 
 							let remainingProgressByType = (trackedProgressByType[progress.eventType]?.count ?? 0)
@@ -272,7 +272,7 @@ public class ProgressSummarizer: NSObject {
 		OCSynchronized(self) {
 			Log.debug("Pop fallback summary \(String(describing: summary))")
 
-			if let index = fallbackSummaries.index(of: summary) {
+			if let index = fallbackSummaries.firstIndex(of: summary) {
 				fallbackSummaries.remove(at: index)
 
 				if index == 0 {
@@ -318,7 +318,7 @@ public class ProgressSummarizer: NSObject {
 		OCSynchronized(self) {
 			Log.debug("Pop priority summary \(String(describing: summary))")
 
-			if let index = prioritySummaries.index(of: summary) {
+			if let index = prioritySummaries.firstIndex(of: summary) {
 				prioritySummaries.remove(at: index)
 
 				if prioritySummaries.count == 0 {
@@ -340,7 +340,7 @@ public class ProgressSummarizer: NSObject {
 
 	public func removeObserver(_ observer: AnyObject) {
 		OCSynchronized(self) {
-			if let removeIndex : Int = observers.index(where: { (observerRecord) -> Bool in
+			if let removeIndex : Int = observers.firstIndex(where: { (observerRecord) -> Bool in
 				return observerRecord.observer === observer
 			}) {
 				observers.remove(at: removeIndex)

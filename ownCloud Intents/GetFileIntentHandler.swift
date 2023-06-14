@@ -84,7 +84,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling, OCCoreDelega
 
 		self.completionHandler = completion
 
-		OCItemTracker(for: bookmark, at: path, waitOnlineTimeout: 5) { (error, core, item) in
+		OCItemTracker(for: bookmark, at: .legacyRootPath(path), waitOnlineTimeout: 5) { (error, core, item) in
 			if error == nil, let item = item {
 				if core?.localCopy(of: item) == nil {
 					OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in

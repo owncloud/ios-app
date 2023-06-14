@@ -85,7 +85,7 @@ class FileProviderInterfaceManager: NSObject {
 					let domainIdentifierString = domain.identifier.rawValue
 					var removeDomain : Bool = false
 
-					if let removeAtIndex = bookmarkUUIDStrings.index(of: domainIdentifierString) {
+					if let removeAtIndex = bookmarkUUIDStrings.firstIndex(of: domainIdentifierString) {
 						// Domain is already registered for this bookmark -> check if name also still matches
 						if displayNamesByUUIDString[domainIdentifierString] == domain.displayName {
 							// Identical -> no changes needed for this bookmark

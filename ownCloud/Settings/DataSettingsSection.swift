@@ -97,7 +97,7 @@ class DataSettingsSection: SettingsSection {
 
 	// MARK: - Cellular settings UI
 	func pushCellularSettings() {
-		let cellularSettingsViewController = CellularSettingsViewController(style: .grouped)
+		let cellularSettingsViewController = CellularSettingsViewController(style: .insetGrouped)
 
 		cellularSettingsViewController.changeHandler = { [weak self] in
 			self?.cellularRow?.cell?.detailTextLabel?.text = self?.cellularSummary
@@ -108,7 +108,7 @@ class DataSettingsSection: SettingsSection {
 
 	// MARK: - Local copy expiration UI
 	func pushLocalCopyExpirationSettings() {
-		let localCopyExpirationViewController = StaticTableViewController(style: .grouped)
+		let localCopyExpirationViewController = StaticTableViewController(style: .insetGrouped)
 		let localCopyExpirationSelectionSection = StaticTableViewSection(headerTitle: "Delete unused local copies".localized, footerTitle: "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.".localized)
 
 		var timeIntervals : [Int] = [
@@ -146,7 +146,7 @@ class DataSettingsSection: SettingsSection {
 		}
 
 		let offsetForTimeInterval : (Int) -> Int = { (timeInterval) in
-			if let offset = timeIntervals.index(of: timeInterval) {
+			if let offset = timeIntervals.firstIndex(of: timeInterval) {
 				return offset
 			}
 

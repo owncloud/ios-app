@@ -20,33 +20,42 @@ import Foundation
 import MobileCoreServices
 import ownCloudSDK
 import ownCloudAppShared
+import UniformTypeIdentifiers
 
+class OCItemPasteboardValue : NSObject, NSSecureCoding {
+	static var supportsSecureCoding: Bool = true
 
+	var item : OCItem?
+	var bookmarkUUID : String?
 
-struct OCItemPasteboardValue {
-	var item : OCItem
-	var bookmarkUUID : String
-}
+	static func decode(data: Data) -> OCItemPasteboardValue? {
+		if let value = try? NSKeyedUnarchiver.unarchivedObject(ofClass: OCItemPasteboardValue.self, from: data) {
+			return value
+		}
 
-extension OCItemPasteboardValue {
-	func encode() -> Data {
-		let data = NSMutableData()
-		let archiver = NSKeyedArchiver(forWritingWith: data)
-		archiver.encode(item, forKey: "item")
-		archiver.encode(bookmarkUUID, forKey: "bookmarkUUID")
-		archiver.finishEncoding()
-		return data as Data
+		return nil
 	}
 
-	init?(data: Data) {
-		let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-		defer {
-			unarchiver.finishDecoding()
-		}
-		guard let item = unarchiver.decodeObject(forKey: "item") as? OCItem else { return nil }
-		guard let bookmarkUUID = unarchiver.decodeObject(forKey: "bookmarkUUID") as? String else { return nil }
+	func encode(with coder: NSCoder) {
+		coder.encode(item, forKey: "item")
+		coder.encode(bookmarkUUID as NSString?, forKey: "bookmarkUUID")
+	}
+
+	init(item: OCItem?, bookmarkUUID: String?) {
+		super.init()
 		self.item = item
 		self.bookmarkUUID = bookmarkUUID
+	}
+
+	required init?(coder: NSCoder) {
+		super.init()
+
+		item = coder.decodeObject(of: OCItem.self, forKey: "item")
+		bookmarkUUID = coder.decodeObject(of: NSString.self, forKey: "bookmarkUUID") as String?
+	}
+
+	var encodedData : Data? {
+		return try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: true)
 	}
 }
 
@@ -54,7 +63,7 @@ class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .toolbar, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "C" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -95,46 +104,54 @@ class CopyAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreDetailItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "copy-file")
-		}
-
-		return nil
+		return UIImage(named: "copy-file")?.withRenderingMode(.alwaysTemplate)
 	}
 
 	func showDirectoryPicker() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completed(with: NSError(ocError: .insufficientParameters))
+		guard context.items.count > 0, let clientContext = context.clientContext, let bookmark = context.core?.bookmark else {
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
 		let items = context.items
+		let startLocation: OCLocation = .account(bookmark)
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory, _) in
-			if let targetDirectory = selectedDirectory {
-				items.forEach({ (item) in
+		var titleText: String
 
-					if let progress = self.core?.copy(item, to: targetDirectory, withName: item.name!, options: nil, resultHandler: { (error, _, _, _) in
-						if error != nil {
-							self.completed(with: error)
-						} else {
-							self.completed()
-						}
+		if items.count > 1 {
+			titleText = "Copy {{itemCount}} items".localized(["itemCount" : "\(items.count)"])
+		} else {
+			titleText = "Copy \"{{itemName}}\"".localized(["itemName" : items.first?.name ?? "?"])
+		}
 
-					}) {
-						self.publish(progress: progress)
-					}
-				})
+		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: "Copy here".localized, headerTitle: titleText, headerSubTitle: "Select target.".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
+			guard !cancelled, let selectedDirectoryItem else {
+				self.completed(with: NSError(ocError: OCError.cancelled))
+				return
 			}
 
+			items.forEach({ (item) in
+				guard let itemName = item.name else {
+					return
+				}
+
+				if let progress = self.core?.copy(item, to: selectedDirectoryItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.error("Error \(String(describing: error)) copying \(String(describing: itemName)) to \(String(describing: location))")
+					}
+				}) {
+					self.publish(progress: progress)
+				}
+			})
+
+			self.completed()
 		})
 
-		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-		viewController.present(pickerNavigationController, animated: true)
+		locationPicker.present(in: clientContext)
 	}
 
 	func copyToPasteboard() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
+		guard context.items.count > 0, let viewController = context.clientContext?.presentationViewController, let core = self.core else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
@@ -165,8 +182,6 @@ class CopyAction : Action {
 
 				viewController?.present(alertController, animated: true)
 			} else {
-				guard let viewController = viewController else { return }
-
 				items.forEach({ (item) in
 					let itemProvider = NSItemProvider()
 					itemProvider.suggestedName = item.name
@@ -176,8 +191,7 @@ class CopyAction : Action {
 
 					// Prepare Items for internal use
 					itemProvider.registerDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCopyKey, visibility: .ownProcess) { (completionBlock) -> Progress? in
-						let data = OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encode()
-						completionBlock(data, nil)
+						completionBlock(OCItemPasteboardValue(item: item, bookmarkUUID: uuid).encodedData, nil)
 						return nil
 					}
 
@@ -185,8 +199,7 @@ class CopyAction : Action {
 					if item.type == .file { // only files can be added to the globale pasteboard
 						guard let itemMimeType = item.mimeType else { return }
 
-						let mimeTypeCF = itemMimeType as CFString
-						guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() as String? else { return }
+						guard let rawUti = UTType(mimeType: itemMimeType)?.identifier else { return }
 
 						itemProvider.registerFileRepresentation(forTypeIdentifier: rawUti, fileOptions: [], visibility: .all, loadHandler: { [weak core] (completionHandler) -> Progress? in
 							var progress : Progress?
@@ -237,8 +250,8 @@ class CopyAction : Action {
 				}
 
 				OnMainThread {
-					if let navigationController = viewController.navigationController {
-						_ = NotificationHUDViewController(on: navigationController, title: "Copy".localized, subtitle: String(format: subtitle, itemProviderItems.count))
+					if let presentationViewController = self.context.clientContext?.presentationViewController {
+						_ = NotificationHUDViewController(on: presentationViewController, title: "Copy".localized, subtitle: String(format: subtitle, itemProviderItems.count))
 					}
 				}
 			}

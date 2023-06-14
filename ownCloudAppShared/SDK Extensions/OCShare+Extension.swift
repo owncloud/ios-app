@@ -67,4 +67,12 @@ extension OCShare {
 
 		return permissionsDescription.joined(separator:", ")
 	}
+
+	func copyToClipboard() -> Bool {
+		if let url {
+			UIPasteboard.general.url = url
+			return true
+		}
+		return false
+	}
 }

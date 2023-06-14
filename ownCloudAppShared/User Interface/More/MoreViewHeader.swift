@@ -20,13 +20,12 @@ import UIKit
 import ownCloudSDK
 
 open class MoreViewHeader: UIView {
-	private var iconView: UIImageView
+	private var iconView: ResourceViewHost
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
 	private var favoriteButton: UIButton
 	public var activityIndicator : UIActivityIndicatorView
-	private var showsIcon : Bool = true
 
 	public var thumbnailSize = CGSize(width: 60, height: 60)
 	public let favoriteSize = CGSize(width: 44, height: 44)
@@ -42,22 +41,20 @@ open class MoreViewHeader: UIView {
 	public init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
 		self.item = item
 		self.core = core
-		self.showFavoriteButton = favorite
+		self.showFavoriteButton = favorite && core.bookmark.hasCapability(.favorites)
 		self.showActivityIndicator = showActivityIndicator
 
-		iconView = UIImageView()
+		iconView = ResourceViewHost()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
-		activityIndicator = UIActivityIndicatorView(style: .white)
+		activityIndicator = UIActivityIndicatorView(style: .medium)
 		self.adaptBackgroundColor = adaptBackgroundColor
 
 		super.init(frame: .zero)
 
 		self.translatesAutoresizingMaskIntoConstraints = false
-
-		Theme.shared.register(client: self)
 
 		render()
 	}
@@ -69,18 +66,16 @@ open class MoreViewHeader: UIView {
 		self.item = OCItem()
 		self.url = url
 
-		iconView = UIImageView()
+		iconView = ResourceViewHost()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
-		activityIndicator = UIActivityIndicatorView(style: .white)
+		activityIndicator = UIActivityIndicatorView(style: .medium)
 
 		super.init(frame: .zero)
 
 		self.translatesAutoresizingMaskIntoConstraints = false
-
-		Theme.shared.register(client: self)
 
 		render()
 	}
@@ -90,6 +85,8 @@ open class MoreViewHeader: UIView {
 	}
 
 	private func render() {
+		cssSelectors = [.more, .header]
+
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -140,9 +137,7 @@ open class MoreViewHeader: UIView {
 			updateFavoriteButtonImage()
 			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
 			self.addSubview(favoriteButton)
-			if #available(iOS 13.4, *) {
-				favoriteButton.isPointerInteractionEnabled = true
-			}
+			favoriteButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
 				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),
@@ -182,7 +177,19 @@ open class MoreViewHeader: UIView {
 				print("Error: \(error)")
 			}
 		} else {
-			titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+			var itemName = item.name
+
+			if item.isRoot {
+				if let core, core.useDrives, let driveID = item.driveID {
+					if let drive = core.drive(withIdentifier: driveID) {
+						itemName = drive.name
+					}
+				} else {
+					itemName = "Files".localized
+				}
+			}
+
+			titleLabel.attributedText = NSAttributedString(string: itemName ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 			let byteCountFormatter = ByteCountFormatter()
 			byteCountFormatter.countStyle = .file
@@ -199,26 +206,10 @@ open class MoreViewHeader: UIView {
 			detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 		}
 
-		self.iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
+		let iconRequest = OCResourceRequestItemThumbnail.request(for: item, maximumSize: thumbnailSize, scale: 0, waitForConnectivity: true, changeHandler: nil)
+		self.iconView.request = iconRequest
+		core?.vault.resourceManager?.start(iconRequest)
 
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.showsIcon = false
-							self.iconView.image = image
-						}
-					}
-				})
-			}
-
-			_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
-				displayThumbnail(thumbnail)
-			})
-		}
 		titleLabel.numberOfLines = 0
 	}
 
@@ -249,13 +240,25 @@ open class MoreViewHeader: UIView {
 
 	public func updateFavoriteButtonImage() {
 		if item.isFavorite == true {
+			favoriteButton.cssSelectors = [.favorite]
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
-			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			favoriteButton.accessibilityLabel = "Unfavorite item".localized
 		} else {
+			favoriteButton.cssSelectors = [.disabled, .favorite]
 			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
-			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
 			favoriteButton.accessibilityLabel = "Favorite item".localized
+		}
+
+		favoriteButton.tintColor = Theme.shared.activeCollection.css.getColor(.stroke, for: favoriteButton)
+	}
+
+	private var _hasRegistered = false
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil, !_hasRegistered {
+			_hasRegistered = true
+			Theme.shared.register(client: self)
 		}
 	}
 }
@@ -264,14 +267,12 @@ extension MoreViewHeader: Themeable {
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		titleLabel.applyThemeCollection(collection)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message)
-		activityIndicator.style = collection.activityIndicatorViewStyle
+		activityIndicator.style = collection.css.getActivityIndicatorStyle(for: activityIndicator) ?? .medium
 
 		if adaptBackgroundColor {
-			backgroundColor = collection.tableBackgroundColor
+			backgroundColor = collection.css.getColor(.fill, for: self)
 		}
 
-		if showsIcon {
-			iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
-		}
+		updateFavoriteButtonImage()
 	}
 }

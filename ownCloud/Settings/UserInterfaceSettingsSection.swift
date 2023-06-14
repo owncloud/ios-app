@@ -57,7 +57,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 	}
 
 	func pushThemeStyleSelector() {
-		let styleSelectorViewController = StaticTableViewController(style: .grouped)
+		let styleSelectorViewController = StaticTableViewController(style: .insetGrouped)
 		styleSelectorViewController.navigationItem.title = "Theme".localized
 
 		if let styleSelectorSection = styleSelectorViewController.sectionForIdentifier("theme-style-selection") {
@@ -68,11 +68,10 @@ class UserInterfaceSettingsSection: SettingsSection {
 		if let availableStyles = ThemeStyle.availableStyles {
 			var themeIdentifiersByName : [[String:Any]] = []
 			var selectedValue = ThemeStyle.preferredStyle.identifier
-			if #available(iOS 13.0, *) {
-				themeIdentifiersByName = [["System Appeareance".localized : "com.owncloud.system"]]
-				if ThemeStyle.followSystemAppearance {
-					selectedValue = "com.owncloud.system"
-				}
+
+			themeIdentifiersByName = [["System Appeareance".localized : "com.owncloud.system"]]
+			if ThemeStyle.followSystemAppearance {
+				selectedValue = "com.owncloud.system"
 			}
 
 			for style in availableStyles {
@@ -98,6 +97,6 @@ class UserInterfaceSettingsSection: SettingsSection {
 	}
 
 	func pushLogSettings() {
-		self.viewController?.navigationController?.pushViewController(LogSettingsViewController(style: .grouped), animated: true)
+		self.viewController?.navigationController?.pushViewController(LogSettingsViewController(style: .insetGrouped), animated: true)
 	}
 }

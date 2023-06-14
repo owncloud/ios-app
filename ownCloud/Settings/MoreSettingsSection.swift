@@ -88,7 +88,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
-			row.viewController?.navigationController?.pushViewController(AcknowledgementsTableViewController(style: .grouped), animated: true)
+			row.viewController?.navigationController?.pushViewController(AcknowledgementsTableViewController(style: .insetGrouped), animated: true)
 		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
 
 		var buildType = "release".localized
@@ -102,7 +102,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		let localizedFooter = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)".localized
-		let footerTitle = String(format: localizedFooter, VendorServices.shared.appName, appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown".localized)
+		let footerTitle = String(format: localizedFooter, VendorServices.shared.appName, appSuffix, buildType, VendorServices.shared.appVersion, "\(VendorServices.shared.appBuildNumber) (\(GitInfo.app.buildDate ?? ""))", GitInfo.app.versionInfo, GitInfo.sdk.versionInfo)
 
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle

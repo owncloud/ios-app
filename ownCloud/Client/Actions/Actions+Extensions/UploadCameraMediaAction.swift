@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 import CoreServices
+import UniformTypeIdentifiers
 import ImageIO
 import AVFoundation
 
@@ -145,7 +146,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 			// Generate a timestamp string which will be used in the name of uploaded media
 			let timeStamp = CameraViewPresenter.dateFormatter.string(from: Date())
 
-			if type == String(kUTTypeImage) {
+			if type == UTType.image.identifier {
 				// Retrieve UIImage
 				image = info[.originalImage] as? UIImage
 
@@ -184,7 +185,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 					Log.log(tagged: ["CAMERA_UPLOAD"], "Finalized writing image with UTI \(uti) to disk")
 				}
 
-			} else if type == String(kUTTypeMovie) {
+			} else if type == UTType.movie.identifier {
 				guard let videoURL = info[.mediaURL] as? URL else { return }
 
 				let fileName = "Video-\(timeStamp)"
@@ -230,12 +231,7 @@ class UploadCameraMediaAction: UploadBaseAction, UIImagePickerControllerDelegate
 	// MARK: - Action implementation
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction {
-			let image = UIImage(named: "camera")?.withRenderingMode(.alwaysTemplate)
-			return image
-		}
-
-		return nil
+		return UIImage(named: "camera")?.withRenderingMode(.alwaysTemplate)
 	}
 
 	override func run() {

@@ -22,9 +22,12 @@ import ownCloudApp
 import ownCloudAppShared
 
 class ServerListBookmarkCell : ThemeTableViewCell {
+	static private let iconSideLength : CGFloat = 40
+
 	public var titleLabel : UILabel = UILabel()
 	public var detailLabel : UILabel = UILabel()
-	public var iconView : UIImageView = UIImageView()
+	public var logoFallbackView : UIImageView = UIImageView()
+	public var iconView : ResourceViewHost = ResourceViewHost(fallbackSize: CGSize(width: ServerListBookmarkCell.iconSideLength, height: ServerListBookmarkCell.iconSideLength))
 	public var infoView : UIView = UIView()
 
 	public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -39,17 +42,18 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 	func prepareViewAndConstraints() {
 		self.selectionStyle = .default
 
-		if #available(iOS 13.4, *) {
-			PointerEffect.install(on: self.contentView, effectStyle: .hover)
-		}
+		PointerEffect.install(on: self.contentView, effectStyle: .hover)
 
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
+		logoFallbackView.translatesAutoresizingMaskIntoConstraints = false
 		infoView.translatesAutoresizingMaskIntoConstraints = false
 
-		iconView.contentMode = .scaleAspectFit
-		iconView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
+		logoFallbackView.contentMode = .scaleAspectFit
+		logoFallbackView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
+
+		iconView.fallbackView = logoFallbackView
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
@@ -65,7 +69,8 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		contentView.addSubview(infoView)
 
 		NSLayoutConstraint.activate([
-			iconView.widthAnchor.constraint(equalToConstant: 40),
+			iconView.widthAnchor.constraint(equalToConstant: ServerListBookmarkCell.iconSideLength),
+			iconView.heightAnchor.constraint(equalToConstant: ServerListBookmarkCell.iconSideLength),
 			iconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
 			iconView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -85,7 +90,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		])
 
 		infoView.setContentHuggingPriority(.required, for: .horizontal)
-		iconView.setContentHuggingPriority(.required, for: .vertical)
+		logoFallbackView.setContentHuggingPriority(.required, for: .vertical)
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
@@ -107,6 +112,8 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 				titleLabel.text = bookmark.shortName
 				detailLabel.text = bookmark.url?.absoluteString
 				accessibilityIdentifier = "server-bookmark-cell"
+
+				iconView.activeViewProvider = bookmark.avatar
 
 				if directMessageCountTrackingEnabled {
 					messageSelector = MessageSelector(from: .global, filter: { (message) -> Bool in
@@ -165,7 +172,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 		if !VendorServices.shared.isBranded {
-			self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
+			self.logoFallbackView.image = self.logoFallbackView.image?.tinted(with: collection.tableRowColors.labelColor)
 		}
 	}
 
@@ -177,7 +184,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 		if !VendorServices.shared.isBranded {
-			self.iconView.image = self.iconView.image?.tinted(with: collection.tableRowColors.labelColor)
+			self.logoFallbackView.image = self.logoFallbackView.image?.tinted(with: collection.tableRowColors.labelColor)
 		}
 	}
 }

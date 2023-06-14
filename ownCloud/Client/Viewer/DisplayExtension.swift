@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import CoreServices
+import UniformTypeIdentifiers
 
 protocol DisplayExtension where Self: DisplayViewController {
 
@@ -31,7 +32,7 @@ protocol DisplayExtension where Self: DisplayViewController {
 	static var customMatcher: OCExtensionCustomContextMatcher? {get}
 }
 
-extension DisplayExtension where Self: DisplayViewController {
+extension DisplayExtension {
 	static var displayExtension: OCExtension {
 		let rawIdentifier: OCExtensionIdentifier =  OCExtensionIdentifier(rawValue: displayExtensionIdentifier)
 		var locationIdentifiers: [OCExtensionLocationIdentifier] = []
@@ -44,21 +45,23 @@ extension DisplayExtension where Self: DisplayViewController {
 		}
 
 		let displayExtension = OCExtension(identifier: rawIdentifier, type: .viewer, locations: locationIdentifiers, features: features, objectProvider: { (_ rawExtension, _ context, _ error) -> Any? in
-			return Self()
+			let displayViewController = Self()
+			displayViewController.clientContext = (context as? DisplayExtensionContext)?.clientContext
+			return displayViewController
 		}, customMatcher:customMatcher)
 
 		return displayExtension
 	}
 
-	static func mimeTypeConformsTo(mime: String, utTypeClass: CFString) -> Bool {
+	static func mimeTypeConformsTo(mime: String, utType: UTType) -> Bool {
 		// Quick check if mime type looks plausible to avoid expensive lookups done by CoreServices APIs
 		guard !mime.contains(" ") && mime.contains("/") else { return false }
 
-		guard let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mime as CFString, nil) else {
+		guard let uti = UTType(mimeType: mime) else {
 			return false
 		}
 
-		return UTTypeConformsTo(uti.takeUnretainedValue(), utTypeClass)
+		return uti.conforms(to: utType)
 	}
 }
 
