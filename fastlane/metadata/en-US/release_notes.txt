@@ -24,4 +24,3 @@ The updated dark and light themes make use of a new, CSS-based theming system.
 
 • MDM Enhancements
 Many new MDM parameters.
-

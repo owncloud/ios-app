@@ -19,8 +19,7 @@ Follow us, stay up-to-date and get in touch with us.
 
 Install instructions, user guides and everything you need about ownCloud.
 
-* [Admin Manual](https://doc.owncloud.org/server/latest/admin_manual/)
-* [User Manual](https://doc.owncloud.org/server/latest/user_manual/)
+* [Documentationl](https://doc.owncloud.com/)
 
 ### ownCloud FAQ
 
