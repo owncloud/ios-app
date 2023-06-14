@@ -109,23 +109,6 @@ class MediaDisplayViewController : DisplayViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		playerViewController = AVPlayerViewController()
-
-		guard let playerViewController = playerViewController else { return }
-
-		addChild(playerViewController)
-		self.view.addSubview(playerViewController.view)
-		playerViewController.didMove(toParent: self)
-
-		playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
-
-		NSLayoutConstraint.activate([
-			playerViewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-			playerViewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-			playerViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-			playerViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-		])
-
 		NotificationCenter.default.addObserver(self, selector: #selector(handleDidEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAVPlayerItem(notification:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
@@ -169,6 +152,25 @@ class MediaDisplayViewController : DisplayViewController {
 	private var timeControlStatusObservation: NSKeyValueObservation?
 
 	override func renderItem(completion: @escaping (Bool) -> Void) {
+		if playerViewController == nil {
+			playerViewController = AVPlayerViewController()
+
+			if let playerViewController {
+				addChild(playerViewController)
+				self.view.addSubview(playerViewController.view)
+				playerViewController.didMove(toParent: self)
+
+				playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+				NSLayoutConstraint.activate([
+					playerViewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+					playerViewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+					playerViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+					playerViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+				])
+			}
+		}
+
 		if let directURL = itemDirectURL {
 			playerItemStatusObservation?.invalidate()
 			playerItemStatusObservation = nil
@@ -186,7 +188,7 @@ class MediaDisplayViewController : DisplayViewController {
 			if player == nil {
 				player = AVPlayer(playerItem: playerItem)
 				player?.allowsExternalPlayback = true
-				if let playerViewController = self.playerViewController {
+				if let playerViewController {
 					playerViewController.updatesNowPlayingInfoCenter = false
 
 					if UIApplication.shared.applicationState == .active {
@@ -296,12 +298,18 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 	}
 
+	private var isInBackground: Bool = false {
+		didSet {
+			playerViewController?.player = isInBackground ? nil : player
+		}
+	}
+
 	@objc private func handleDidEnterBackgroundNotification() {
-		playerViewController?.player = nil
+		isInBackground = true
 	}
 
 	@objc private func handleWillEnterForegroundNotification() {
-		playerViewController?.player = player
+		isInBackground = false
 	}
 
 	@objc private func handleAVPlayerItem(notification:Notification) {
