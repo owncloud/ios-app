@@ -1,0 +1,5 @@
+Change: Spaces/Drives / Graph API support
+
+Adds support for spaces/drives / Graph API.
+
+https://github.com/owncloud/ios-sdk/pull/92

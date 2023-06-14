@@ -1,0 +1,5 @@
+Change: Unified Onboarding and Account Setup
+
+Migrated the branded onboarding process into the vanilla add account view.
+
+https://github.com/owncloud/ios-app/pull/1208

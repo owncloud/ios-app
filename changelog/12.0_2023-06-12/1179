@@ -1,0 +1,5 @@
+Change: Postbuild Settings
+
+Postbuild settings allow modification of branding and class settings via URL scheme, allowing to quickly iterate during development without the need to rebuild the app.
+
+https://github.com/owncloud/ios-app/pull/1179

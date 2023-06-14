@@ -1,0 +1,5 @@
+Change: App Provider support
+
+Create and edit new documents through app providers on servers that support them.
+
+https://github.com/owncloud/ios-app/issues/1127
