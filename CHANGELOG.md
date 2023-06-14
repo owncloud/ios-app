@@ -1,3 +1,118 @@
+Changelog for ownCloud iOS Client [12.0.0] (2023-06-12)
+=======================================
+The following sections list the changes in ownCloud iOS Client 12.0.0 relevant to
+ownCloud admins and users.
+
+[12.0.0]: https://github.com/owncloud/ios-app/compare/milestone/11.11.1...milestone/12.0.0
+
+Summary
+-------
+
+* Change - Spaces/Drives / Graph API support: [#92](https://github.com/owncloud/ios-sdk/pull/92)
+* Change - Gridview implementation: [#744](https://github.com/owncloud/ios-app/issues/744)
+* Change - App Provider support: [#1127](https://github.com/owncloud/ios-app/issues/1127)
+* Change - New Navigation: [#1162](https://github.com/owncloud/ios-app/pull/1162)
+* Change - Postbuild Settings: [#1179](https://github.com/owncloud/ios-app/pull/1179)
+* Change - CSS theming: [#1194](https://github.com/owncloud/ios-app/pull/1194)
+* Change - Support saving folder searches: [#1205](https://github.com/owncloud/ios-app/pull/1205)
+* Change - Unified Onboarding and Account Setup: [#1208](https://github.com/owncloud/ios-app/pull/1208)
+* Change - New sharing UI with role support: [#4848](https://github.com/owncloud/ocis/issues/4848#issuecomment-1283678879)
+* Change - Support Webfinger based lookup server: [#4849](https://github.com/owncloud/enterprise/issues/4849)
+* Change - Added new build flag: [#5290](https://github.com/owncloud/enterprise/issues/5290)
+* Change - Disallow Extensions via MDM: [#5308](https://github.com/owncloud/enterprise/issues/5308)
+* Change - Disable access to File Provider via MDM: [#5371](https://github.com/owncloud/enterprise/issues/5371)
+* Change - Dynamic Instance Logo: [#5505](https://github.com/owncloud/enterprise/issues/5505)
+
+Details
+-------
+
+* Change - Spaces/Drives / Graph API support: [#92](https://github.com/owncloud/ios-sdk/pull/92)
+
+   Adds support for spaces/drives / Graph API.
+
+   https://github.com/owncloud/ios-sdk/pull/92
+
+* Change - Gridview implementation: [#744](https://github.com/owncloud/ios-app/issues/744)
+
+   Implements a dynamically adapting grid layout used for item grid view.
+
+   https://github.com/owncloud/ios-app/issues/744
+
+* Change - App Provider support: [#1127](https://github.com/owncloud/ios-app/issues/1127)
+
+   Create and edit new documents through app providers on servers that support them.
+
+   https://github.com/owncloud/ios-app/issues/1127
+
+* Change - New Navigation: [#1162](https://github.com/owncloud/ios-app/pull/1162)
+
+   Navigate via the new sidebar, breadcrumbs and browser controls.
+
+   https://github.com/owncloud/ios-app/pull/1162
+
+* Change - Postbuild Settings: [#1179](https://github.com/owncloud/ios-app/pull/1179)
+
+   Postbuild settings allow modification of branding and class settings via URL scheme,
+   allowing to quickly iterate during development without the need to rebuild the app.
+
+   https://github.com/owncloud/ios-app/pull/1179
+
+* Change - CSS theming: [#1194](https://github.com/owncloud/ios-app/pull/1194)
+
+   ThemeCSS brings CSS-style styling to the UIViewController/UIView tree, by allowing to
+   attach CSS-style selectors to them via new cssSelector and cssSelectors properties.
+
+   https://github.com/owncloud/ios-app/pull/1194
+
+* Change - Support saving folder searches: [#1205](https://github.com/owncloud/ios-app/pull/1205)
+
+   Support for saving folder-scoped searches
+
+   https://github.com/owncloud/ios-app/pull/1205
+
+* Change - Unified Onboarding and Account Setup: [#1208](https://github.com/owncloud/ios-app/pull/1208)
+
+   Migrated the branded onboarding process into the vanilla add account view.
+
+   https://github.com/owncloud/ios-app/pull/1208
+
+* Change - New sharing UI with role support: [#4848](https://github.com/owncloud/ocis/issues/4848#issuecomment-1283678879)
+
+   New sharing UI with support for share roles and a modern layout.
+
+   https://github.com/owncloud/ocis/issues/4848#issuecomment-1283678879
+
+* Change - Support Webfinger based lookup server: [#4849](https://github.com/owncloud/enterprise/issues/4849)
+
+   Allows using webfinger or a lookup table to locate and use an alternative server based on the
+   user name.
+
+   https://github.com/owncloud/enterprise/issues/4849
+
+* Change - Added new build flag: [#5290](https://github.com/owncloud/enterprise/issues/5290)
+
+   Add DISABLE_PLAIN_HTTP build flag
+
+   https://github.com/owncloud/enterprise/issues/5290
+
+* Change - Disallow Extensions via MDM: [#5308](https://github.com/owncloud/enterprise/issues/5308)
+
+   Add option to disallow extensions, show action for unviewable filetypes
+
+   https://github.com/owncloud/enterprise/issues/5308
+
+* Change - Disable access to File Provider via MDM: [#5371](https://github.com/owncloud/enterprise/issues/5371)
+
+   Adds a new MDM option fileprovider.browseable
+
+   https://github.com/owncloud/enterprise/issues/5371
+
+* Change - Dynamic Instance Logo: [#5505](https://github.com/owncloud/enterprise/issues/5505)
+
+   Use the instance logo as account avatar logo.
+
+   https://github.com/owncloud/enterprise/issues/5505
+
 Changelog for ownCloud iOS Client [11.11.1] (2022-10-30)
 =======================================
 The following sections list the changes in ownCloud iOS Client 11.11.1 relevant to
