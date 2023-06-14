@@ -1,0 +1,5 @@
+Bugfix: Enabling Markup Mode
+
+Enabling markup mode crashed on iOS 16.
+
+https://github.com/owncloud/ios-app/issues/1141
