@@ -557,7 +557,7 @@ public extension ComposedMessageView {
 	static func infoBox(image: UIImage? = nil, title: String? = nil, subtitle: String? = nil, additionalElements: [ComposedMessageElement]? = nil, withRoundedBackgroundView: Bool = true) -> ComposedMessageView {
 		var elements: [ComposedMessageElement] = []
 
-		if let image = image {
+		if let image {
 			let imageElement: ComposedMessageElement = .image(image, size: CGSize(width: 48, height: 48), alignment: .centered, cssSelectors: [.icon])
 			imageElement.insets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10)
 			elements.append(imageElement)

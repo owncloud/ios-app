@@ -71,6 +71,41 @@ class MediaDisplayViewController : DisplayViewController {
 		NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 	}
 
+	var showLoadingIndicator: Bool = false {
+		didSet {
+			if oldValue != showLoadingIndicator {
+				if showLoadingIndicator {
+					// Show loading indicator
+					let indeterminateProgress: Progress = .indeterminate()
+					indeterminateProgress.isCancellable = false
+
+					let messageView = ComposedMessageView.infoBox(additionalElements: [
+						.spacing(25),
+						.progressCircle(with: indeterminateProgress),
+						.spacing(25),
+						.title("Loading…".localized, alignment: .centered)
+					], withRoundedBackgroundView: true)
+
+					loadingIndicator = messageView
+				} else {
+					// Remove loading indicator
+					loadingIndicator = nil
+				}
+			}
+		}
+	}
+
+	private var loadingIndicator: ComposedMessageView? {
+		willSet {
+			loadingIndicator?.removeFromSuperview()
+		}
+		didSet {
+			if let loadingIndicator {
+				view.embed(centered: loadingIndicator)
+			}
+		}
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -131,6 +166,8 @@ class MediaDisplayViewController : DisplayViewController {
 		return (OCAppIdentity.shared.userDefaults?.downloadMediaFiles ?? false)
 	}
 
+	private var timeControlStatusObservation: NSKeyValueObservation?
+
 	override func renderItem(completion: @escaping (Bool) -> Void) {
 		if let directURL = itemDirectURL {
 			playerItemStatusObservation?.invalidate()
@@ -157,42 +194,18 @@ class MediaDisplayViewController : DisplayViewController {
 					}
 				}
 
-				// Add artwork to the player overlay if corresponding meta data item is available in the asset
-                		if !(player?.isVideoAvailable ?? false), let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
-				   let imageData = artworkMetadataItem.dataValue,
-				   let overlayView = playerViewController?.contentOverlayView {
+				// Start with the loading indicator active
+				showLoadingIndicator = true
 
-					if let artworkImage = UIImage(data: imageData) {
-
-						// Construct image view overlay for AVPlayerViewController
-						let imageView = UIImageView(image: artworkImage)
-						imageView.translatesAutoresizingMaskIntoConstraints = false
-						imageView.contentMode = .scaleAspectFit
-						playerViewController?.contentOverlayView?.addSubview(imageView)
-
-						NSLayoutConstraint.activate([
-							imageView.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
-							imageView.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
-							imageView.topAnchor.constraint(equalTo: overlayView.topAnchor),
-							imageView.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
-						])
-
-						// Create MPMediaItemArtwork to be shown in 'now playing' in the lock screen
-						mediaItemArtwork = MPMediaItemArtwork(boundsSize: artworkImage.size, requestHandler: { (_) -> UIImage in
-							return artworkImage
-						})
-					}
-				}
-
-				// Extract title meta-data item
-				mediaItemTitle = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyTitle}).first?.value as? String
-
-				// Extract artist meta-data item
-				mediaItemArtist = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtist}).first?.value as? String
+				// .. it will be updated as soon as the player starts playing ..
+				timeControlStatusObservation = player?.observe(\AVPlayer.timeControlStatus, changeHandler: { [weak self] player, change in
+					self?.updateLoadingIndicator()
+				})
 
 				// Setup player status observation handler
 				playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
 					if player.status == .readyToPlay {
+						self?.updateMediaMetadata()
 
 						self?.setupRemoteTransportControls()
 
@@ -200,7 +213,11 @@ class MediaDisplayViewController : DisplayViewController {
 						try? AVAudioSession.sharedInstance().setActive(true)
 
 						if (self?.hasFocus)! {
+							// .. with playback starting here.
 							self?.player?.play()
+						} else {
+							// .. or the loading indicator being updated when the file is ready to play, here.
+							self?.updateLoadingIndicator()
 						}
 
 						self?.updateNowPlayingInfoCenter()
@@ -216,6 +233,55 @@ class MediaDisplayViewController : DisplayViewController {
 		} else {
 			completion(false)
 		}
+	}
+
+	private func updateLoadingIndicator() {
+		if let player {
+			let showLoadingIndicator = (player.timeControlStatus == .waitingToPlayAtSpecifiedRate)
+
+			OnMainThread(inline: true) {
+				self.showLoadingIndicator = showLoadingIndicator
+			}
+		}
+	}
+
+	private func updateMediaMetadata() {
+		guard let asset = playerItem?.asset else { return }
+
+		// Add artwork to the player overlay if corresponding meta data item is available in the asset
+		if !(player?.isVideoAvailable ?? false), let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
+		   let imageData = artworkMetadataItem.dataValue,
+		   let overlayView = playerViewController?.contentOverlayView {
+
+			if let artworkImage = UIImage(data: imageData) {
+
+				// Construct image view overlay for AVPlayerViewController
+				OnMainThread(inline: true) { [weak self] in
+					let imageView = UIImageView(image: artworkImage)
+					imageView.translatesAutoresizingMaskIntoConstraints = false
+					imageView.contentMode = .scaleAspectFit
+					self?.playerViewController?.contentOverlayView?.addSubview(imageView)
+
+					NSLayoutConstraint.activate([
+						imageView.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
+						imageView.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+						imageView.topAnchor.constraint(equalTo: overlayView.topAnchor),
+						imageView.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
+					])
+				}
+
+				// Create MPMediaItemArtwork to be shown in 'now playing' in the lock screen
+				mediaItemArtwork = MPMediaItemArtwork(boundsSize: artworkImage.size, requestHandler: { (_) -> UIImage in
+					return artworkImage
+				})
+			}
+		}
+
+		// Extract title meta-data item
+		mediaItemTitle = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyTitle}).first?.value as? String
+
+		// Extract artist meta-data item
+		mediaItemArtist = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtist}).first?.value as? String
 	}
 
 	private func present(error:Error?) {
