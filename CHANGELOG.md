@@ -1,3 +1,25 @@
+Changelog for ownCloud iOS Client [12.0.1] (2023-06-15)
+=======================================
+The following sections list the changes in ownCloud iOS Client 12.0.1 relevant to
+ownCloud admins and users.
+
+[12.0.1]: https://github.com/owncloud/ios-app/compare/milestone/12.0.0...milestone/12.0.1
+
+Summary
+-------
+
+* Bugfix - Several Bug Fixes: [#1220](https://github.com/owncloud/ios-app/pull/1220)
+
+Details
+-------
+
+* Bugfix - Several Bug Fixes: [#1220](https://github.com/owncloud/ios-app/pull/1220)
+
+   Fixed keyboard, media streaming, full screen mode, offline indicator, duplicated sharing
+   option, and UI issues.
+
+   https://github.com/owncloud/ios-app/pull/1220
+
 Changelog for ownCloud iOS Client [12.0.0] (2023-06-12)
 =======================================
 The following sections list the changes in ownCloud iOS Client 12.0.0 relevant to
