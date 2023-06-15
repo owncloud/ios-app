@@ -303,7 +303,7 @@ public class ClientLocationPicker : NSObject {
 			context.add(permissionHandler: { [weak self] context, dataItemRecord, checkInteraction, viewController in
 				return self?.checkPermission(context: context, dataItemRecord: dataItemRecord, interaction: checkInteraction, viewController: viewController) ?? false
 			})
-			context.viewControllerPusher = nil
+			context.viewControllerPusher = self
 			context.browserController = nil
 			context.navigationController = navigationController
 			context.permissions = [ .selection ]
@@ -379,6 +379,30 @@ public class ClientLocationPicker : NSObject {
 
 			choiceHandler(item, location, context, cancelled)
 		}
+	}
+}
+
+// MARK: - ViewControllerPusher
+// Implemented solely to disable .compressForKeyboard for the collection views in the picker, as the usage of the keyboardLayoutGuide
+// inexplicably leads to a bogus BottomBar layout when pushing the first "Files" view controller
+extension ClientLocationPicker : ViewControllerPusher {
+	public func pushViewController(context: ClientContext?, provider: (ClientContext) -> UIViewController?, push: Bool, animated: Bool) -> UIViewController? {
+		if let context {
+			let viewController = provider(context)
+
+			if let collectionViewController = viewController as? CollectionViewController {
+				// Disable .compressForKeyboard for CollectionViewController
+				collectionViewController.compressForKeyboard = false
+			}
+
+			if push, let viewController {
+				context.navigationController?.pushViewController(viewController, animated: animated)
+			}
+
+			return viewController
+		}
+
+		return nil
 	}
 }
 

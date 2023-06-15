@@ -90,7 +90,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if usesStackViewRoot, let stackView = stackView {
 			let safeAreaView = ThemeCSSView(frame: view.bounds)
 			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
-			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: compressForKeyboard ? safeAreaView.safeAreaWithKeyboardAnchorSet : safeAreaView.safeAreaAnchorSet)
+			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
 
 			stackView.addArrangedSubview(safeAreaView)
 		} else {
@@ -169,8 +169,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		if usesStackViewRoot {
 			createStackView()
-			if let stackView = stackView {
-				view.embed(toFillWith: stackView, enclosingAnchors: view.defaultAnchorSet)
+			if let stackView {
+				view.embed(toFillWith: stackView, enclosingAnchors: compressForKeyboard ? view.safeAreaWithKeyboardAnchorSet : view.safeAreaAnchorSet)
 			}
 		}
 	}
