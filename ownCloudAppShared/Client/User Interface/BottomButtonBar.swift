@@ -129,7 +129,7 @@ open class BottomButtonBar: ThemeCSSView {
 		constraints.append(contentsOf: [
 			promptLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
 			promptLabel.trailingAnchor.constraint(lessThanOrEqualTo: leadingButtonAnchor, constant: -20),
-			promptLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+			promptLabel.centerYAnchor.constraint(equalTo: selectButton.centerYAnchor),
 
 			selectButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
 			selectButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),

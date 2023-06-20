@@ -46,6 +46,10 @@ public extension UIView {
 		return AnchorSet(leadingAnchor: safeAreaLayoutGuide.leadingAnchor, trailingAnchor: safeAreaLayoutGuide.trailingAnchor, topAnchor: safeAreaLayoutGuide.topAnchor, bottomAnchor: safeAreaLayoutGuide.bottomAnchor, centerXAnchor: safeAreaLayoutGuide.centerXAnchor, centerYAnchor: safeAreaLayoutGuide.centerYAnchor)
 	}
 
+	var safeAreaWithKeyboardAnchorSet : AnchorSet {
+		return AnchorSet(leadingAnchor: safeAreaLayoutGuide.leadingAnchor, trailingAnchor: safeAreaLayoutGuide.trailingAnchor, topAnchor: safeAreaLayoutGuide.topAnchor, bottomAnchor: keyboardLayoutGuide.topAnchor, centerXAnchor: safeAreaLayoutGuide.centerXAnchor, centerYAnchor: safeAreaLayoutGuide.centerYAnchor)
+	}
+
 	@discardableResult func embedHorizontally(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, limitHeight: Bool = false, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
 		var viewIdx : Int = 0
 		var previousView: UIView?

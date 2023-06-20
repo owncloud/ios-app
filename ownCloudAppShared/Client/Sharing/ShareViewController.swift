@@ -198,7 +198,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			sections.append(optionsSection)
 		}
 
-		super.init(context: shareControllerContext, sections: sections, useStackViewRoot: true)
+		super.init(context: shareControllerContext, sections: sections, useStackViewRoot: true, compressForKeyboard: true)
 
 		self.cssSelector = .grouped
 

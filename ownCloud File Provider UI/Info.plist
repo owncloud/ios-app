@@ -30,7 +30,7 @@
 				<key>NSExtensionFileProviderActionIdentifier</key>
 				<string>com.owncloud.FileProviderUI.Share</string>
 				<key>NSExtensionFileProviderActionName</key>
-				<string>Share</string>
+				<string>Share by cloud</string>
 			</dict>
 		</array>
 		<key>NSExtensionMainStoryboard</key>

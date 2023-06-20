@@ -211,7 +211,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		emptySection = CollectionViewSection(identifier: "empty", dataSource: emptySectionDataSource, cellStyle: .init(with: .fillSpace), cellLayout: .fullWidth(itemHeightDimension: .estimated(54), groupHeightDimension: .estimated(54), edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(0), top: .fixed(10), trailing: .fixed(0), bottom: .fixed(10)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)), clientContext: itemControllerContext)
 		sections.append(emptySection!)
 
-		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true, highlightItemReference: highlightItemReference)
+		super.init(context: itemControllerContext, sections: sections, useStackViewRoot: true, compressForKeyboard: true, highlightItemReference: highlightItemReference)
 
 		// Track query state and recompute content state when it changes
 		stateObservation = itemsListDataSource?.observe(\OCDataSource.state, options: [], changeHandler: { [weak self] query, change in

@@ -85,6 +85,8 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		sideBarSeperatorView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(sideBarSeperatorView)
 
+		navigationBarTopConstraint = navigationBarTopConstraint(for: navigationBarHidden)
+
 		NSLayoutConstraint.activate([
 			contentContainerView.topAnchor.constraint(equalTo: view.topAnchor),
 			contentContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -101,7 +103,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 			sideBarSeperatorView.leadingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: -1),
 			sideBarSeperatorView.widthAnchor.constraint(equalToConstant: 1),
 
-			navigationView.topAnchor.constraint(equalTo: contentContainerView.safeAreaLayoutGuide.topAnchor),
+			navigationBarTopConstraint!,
 			navigationView.leadingAnchor.constraint(equalTo: contentContainerView.safeAreaLayoutGuide.leadingAnchor),
 			navigationView.trailingAnchor.constraint(equalTo: contentContainerView.safeAreaLayoutGuide.trailingAnchor)
 		])
@@ -122,6 +124,39 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		navigationController?.isNavigationBarHidden = true
+	}
+
+	// MARK: - Navigation Bar
+	private var navigationBarTopConstraint: NSLayoutConstraint?
+	private func navigationBarTopConstraint(for hidden: Bool) -> NSLayoutConstraint {
+		if hidden {
+			return navigationView.bottomAnchor.constraint(equalTo: contentContainerView.topAnchor)
+		}
+
+		return navigationView.topAnchor.constraint(equalTo: contentContainerView.safeAreaLayoutGuide.topAnchor)
+	}
+
+	open var navigationBarHidden: Bool = false
+	open func setNavigationBarHidden(_ hidden: Bool, animated: Bool, completion: (() -> Void)? = nil) {
+		let updateLayout = {
+			self.navigationBarTopConstraint?.isActive = false
+			self.navigationBarTopConstraint = self.navigationBarTopConstraint(for: hidden)
+			self.navigationBarTopConstraint?.isActive = true
+		}
+
+		OnMainThread(inline: true) {
+			if animated {
+				UIView.animate(withDuration: 0.3, animations: {
+					updateLayout()
+					self.view.layoutIfNeeded()
+				}, completion: { _ in
+					completion?()
+				})
+			} else {
+				updateLayout()
+				completion?()
+			}
+		}
 	}
 
 	// MARK: - Push & Navigation
@@ -517,5 +552,21 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 extension BrowserNavigationViewController: UINavigationBarDelegate {
 	public func position(for bar: UIBarPositioning) -> UIBarPosition {
 		return .topAttached
+	}
+}
+
+public extension UIViewController {
+	var browserNavigationViewController: BrowserNavigationViewController? {
+		var viewController: UIViewController? = self
+
+		while viewController != nil {
+			if let browserNavigationViewController = viewController as? BrowserNavigationViewController {
+				return browserNavigationViewController
+			}
+
+			viewController = viewController?.parent
+		}
+
+		return nil
 	}
 }

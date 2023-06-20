@@ -372,8 +372,8 @@ extension Branding {
 		return url(forClassSettingsKey: .profileHelpURL) ?? nil
 	}
 
-	public var sidebarLinks: Array<SidebarLink>? {
-		if let values = computedValue(forClassSettingsKey: .sidebarLinks) as? Array<Dictionary<String, String>> {
+	public var sidebarLinks: [SidebarLink]? {
+		if let values = computedValue(forClassSettingsKey: .sidebarLinks) as? [[String:String]] {
 			return values.compactMap { link in
 				if let title = link["title"], let urlString = link["url"], let url = URL(string: urlString) {
 					return SidebarLink(title: title, symbol: link["symbol"], image: link["image"], url: url)

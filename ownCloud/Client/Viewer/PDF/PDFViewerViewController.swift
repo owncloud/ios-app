@@ -116,7 +116,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 
 	private var fullScreen: Bool = false {
 		didSet {
-			self.navigationController?.setNavigationBarHidden(fullScreen, animated: true)
+			browserNavigationViewController?.setNavigationBarHidden(fullScreen, animated: true)
 			isFullScreenModeEnabled = fullScreen
 			pageCountButton.isHidden = fullScreen
 			pageCountContainerView.isHidden = fullScreen
