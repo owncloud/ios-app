@@ -221,6 +221,10 @@ do
     echo ""
 done
 
+echo "${SUCCESS}Remove all extended attributes…${NC}"
+xattr -cr "${APPDIR}/"
+echo ""
+
 echo "${SUCCESS}Resign App, Extensions and Frameworks…${NC}"
 echo ""
 
