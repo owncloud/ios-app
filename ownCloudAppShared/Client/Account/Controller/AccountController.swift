@@ -89,6 +89,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			case searchImages
 			case searchVideos
 			case searchAudios
+			case recents
 
 		case activity
 	}
@@ -403,7 +404,16 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Quick access
 			if configuration.showQuickAccess {
 				var quickAccessItems: [OCDataItem & OCDataItemVersioning] = []
-
+				
+				// Recents
+				if specialItems[.recents] == nil {
+					specialItems[.recents] = OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":1w :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true)
+					
+					if let sideBarItem = specialItems[.recents] {
+						quickAccessItems.append(sideBarItem)
+					}
+				}
+				
 				// Favorites
 				if bookmark?.hasCapability(.favorites) == true {
 					if specialItems[.favoriteItems] == nil {
