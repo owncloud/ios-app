@@ -68,6 +68,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			OCQueryCondition.fromSearchTerm(":audio")!
 		]),
 		Category(name: "Date".localized, selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+			OCQueryCondition.fromSearchTerm(":recent")!,
 			OCQueryCondition.fromSearchTerm(":today")!,
 			OCQueryCondition.fromSearchTerm(":week")!,
 			OCQueryCondition.fromSearchTerm(":month")!,
