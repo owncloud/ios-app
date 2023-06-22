@@ -65,6 +65,7 @@
 "keyword_week" = "woche";
 "keyword_month" = "monat";
 "keyword_year" = "jahr";
+"keyword_recent" = "kürzlich";
 "keyword_d" = "t"; /* short-form for "day" */
 "keyword_w" = "w"; /* short-form for "week" */
 "keyword_m" = "m"; /* short-form for "month" */
@@ -132,3 +133,6 @@
 "This year" = "Dieses Jahr";
 "Since last year" = "Seit letztem Jahr";
 "Last %d years" = "Letzte %d Jahre";
+
+"Recently used" = "Kürzlich verwendet";
+"Not recently used" = "Nicht kürzlich verwendet";
