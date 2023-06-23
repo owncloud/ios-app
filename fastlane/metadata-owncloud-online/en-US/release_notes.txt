@@ -1,3 +1,7 @@
-• Bug Fixes
-Fixed keyboard, media streaming, full screen mode, offline indicator, duplicated sharing option, and UI issues.
+Bug Fixes
+
+• Added missing Recents Group
+• Unable to authenticate using OpenID Connect
+• Attach files from third-party apps
+• Solves "Content unavailable" in Files.app
 
