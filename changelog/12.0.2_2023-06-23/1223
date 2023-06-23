@@ -1,0 +1,5 @@
+Bugfix: Files.app
+
+Solves "Content unavailable" in Files.app
+
+https://github.com/owncloud/ios-app/pull/1223

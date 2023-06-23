@@ -1724,6 +1724,53 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.0.2</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Bug Fixes</string>
+					<key>Subtitle</key>
+					<string>Added missing Recents Group</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Bug Fixes</string>
+					<key>Subtitle</key>
+					<string>Unable to authenticate using OpenID Connect</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Bug Fixes</string>
+					<key>Subtitle</key>
+					<string>Attach files from third-party apps</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Bug Fixes</string>
+					<key>Subtitle</key>
+					<string>Solves &quot;Content unavailable&quot; in Files.app</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
