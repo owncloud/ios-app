@@ -59,7 +59,20 @@
 
 		if ((core = self.extension.core) != nil)
 		{
-			[core retrieveItemFromDatabaseForLocalID:(OCLocalID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+			OCLocalID localID = (OCLocalID)itemIdentifier;
+
+			// Translate item identifiers
+			OCVaultLocation *location;
+
+			if ((location = [[OCVaultLocation alloc] initWithVFSItemID:itemIdentifier]) != nil)
+			{
+				if (location.localID != nil)
+				{
+					localID = location.localID;
+				}
+			}
+
+			[core retrieveItemFromDatabaseForLocalID:localID completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 				OCLogDebug(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
 
 				OCResourceManager *resourceManager = core.vault.resourceManager;

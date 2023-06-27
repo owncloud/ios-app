@@ -1,3 +1,46 @@
+Changelog for ownCloud iOS Client [12.0.2] (2023-06-23)
+=======================================
+The following sections list the changes in ownCloud iOS Client 12.0.2 relevant to
+ownCloud admins and users.
+
+[12.0.2]: https://github.com/owncloud/ios-app/compare/milestone/12.0.1...milestone/12.0.2
+
+Summary
+-------
+
+* Bugfix - Unable to authenticate using OpenID Connect: [#1219](https://github.com/owncloud/ios-app/issues/1219)
+* Bugfix - Files.app: [#1223](https://github.com/owncloud/ios-app/pull/1223)
+* Bugfix - Recent files view: [#1225](https://github.com/owncloud/ios-app/pull/1225)
+* Bugfix - Attach files from third-party apps: [#1228](https://github.com/owncloud/ios-app/pull/1228)
+
+Details
+-------
+
+* Bugfix - Unable to authenticate using OpenID Connect: [#1219](https://github.com/owncloud/ios-app/issues/1219)
+
+   It was not able to authenticate using OpenID Connect
+
+   https://github.com/owncloud/ios-app/issues/1219
+
+* Bugfix - Files.app: [#1223](https://github.com/owncloud/ios-app/pull/1223)
+
+   Solves "Content unavailable" in Files.app
+
+   https://github.com/owncloud/ios-app/pull/1223
+
+* Bugfix - Recent files view: [#1225](https://github.com/owncloud/ios-app/pull/1225)
+
+   Added Quick Access item "Recents", which was missing in version 12.0.1
+
+   https://github.com/owncloud/ios-app/pull/1225
+
+* Bugfix - Attach files from third-party apps: [#1228](https://github.com/owncloud/ios-app/pull/1228)
+
+   Attaching files in third-party apps via file provider were not possible, if file was not
+   downloaded.
+
+   https://github.com/owncloud/ios-app/pull/1228
+
 Changelog for ownCloud iOS Client [12.0.1] (2023-06-15)
 =======================================
 The following sections list the changes in ownCloud iOS Client 12.0.1 relevant to

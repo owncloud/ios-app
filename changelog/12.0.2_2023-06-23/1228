@@ -1,0 +1,5 @@
+Bugfix: Attach files from third-party apps
+
+Attaching files in third-party apps via file provider were not possible, if file was not downloaded.
+
+https://github.com/owncloud/ios-app/pull/1228
