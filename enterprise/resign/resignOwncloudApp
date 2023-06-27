@@ -57,6 +57,7 @@ APPTEMP="$BUILD_DIR/apptemp"
 APPPAYLOAD="$APPTEMP/Payload"
 APPDIR="$APPPAYLOAD/ownCloud.app"
 PROVISIONING_DIR="Provisioning Files"
+CURRENT_PATH=$(pwd)
 
 DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/App.mobileprovision"
 FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/FileProvider.mobileprovision"
@@ -69,6 +70,12 @@ declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPRO
 declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
 declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud File Provider UI.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex" );
 declare -a BUNDLEIDS=();
+
+# Abort script if script is running in a path which contains "Library", because this could cause resource fork problems
+if [[ $CURRENT_PATH == *"/Library/"* ]]; then
+  echo "${WARN}Error: The script cannot be executed in the path /Library/ or one of its subfolders.${NC}"
+  exit 1
+fi
 
 # Delete previous temporal app folder if exist
 if [ -d  "$APPTEMP" ]; then
@@ -220,10 +227,6 @@ do
     rm -rf "${LOCATIONS[$i]}/_CodeSignature"
     echo ""
 done
-
-echo "${SUCCESS}Remove all extended attributes…${NC}"
-xattr -cr "${APPDIR}/"
-echo ""
 
 echo "${SUCCESS}Resign App, Extensions and Frameworks…${NC}"
 echo ""
