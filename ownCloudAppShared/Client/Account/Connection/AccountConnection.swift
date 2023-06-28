@@ -408,7 +408,7 @@ open class AccountConnection: NSObject {
 		var actionExtensions : [OCExtension] = []
 
 		if let core = core {
-			if let apps = core.appProvider?.apps {
+			if let appProvider = core.appProvider, appProvider.supportsOpen, let apps = appProvider.apps {
 				for app in apps {
 					// Pre-load app icon
 					if let appIconRequest = app.iconResourceRequest {

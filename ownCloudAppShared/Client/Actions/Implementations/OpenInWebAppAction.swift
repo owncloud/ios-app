@@ -24,6 +24,7 @@ public extension OCClassSettingsKey {
 }
 
 public enum OpenInWebAppActionMode: String {
+	case auto = "auto"
 	case defaultBrowser = "default-browser"
 	case inApp = "in-app"
 	case inAppWithDefaultBrowserOption = "in-app-with-default-browser-option"
@@ -36,7 +37,7 @@ public class OpenInWebAppAction: Action {
 			_classSettingsRegistered = true
 
 			self.registerOCClassSettingsDefaults([
-				.openInWebAppMode : OpenInWebAppActionMode.inApp.rawValue
+				.openInWebAppMode : OpenInWebAppActionMode.auto.rawValue
 			], metadata: [
 				.openInWebAppMode : [
 					.type 		: OCClassSettingsMetadataType.string,
@@ -45,6 +46,10 @@ public class OpenInWebAppAction: Action {
 					.status		: OCClassSettingsKeyStatus.advanced,
 					.category	: "Actions",
 					.possibleValues : [
+						[
+							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.auto.rawValue,
+							OCClassSettingsMetadataKey.description 	: "Open using `\(OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue)`, unless the respective endpoint is not available - in which case `\(OpenInWebAppActionMode.defaultBrowser.rawValue)` is used instead. If no endpoint to open the document is available, an error message is shown."
+						],
 						[
 							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.defaultBrowser.rawValue,
 							OCClassSettingsMetadataKey.description 	: "Open in default browser app. May require user to sign in."
@@ -137,10 +142,22 @@ public class OpenInWebAppAction: Action {
 
 	// MARK: - Action implementation
 	override public func run() {
-		var openMode : OpenInWebAppActionMode = .inApp
+		var openMode : OpenInWebAppActionMode = .auto
 
 		if let openInWebAppMode = classSetting(forOCClassSettingsKey: .openInWebAppMode) as? String, let configuredOpenMode = OpenInWebAppActionMode(rawValue: openInWebAppMode) {
 			openMode = configuredOpenMode
+		}
+
+		if let appProvider = context.core?.appProvider, openMode == .auto {
+			if appProvider.supportsOpenDirect {
+				if appProvider.supportsOpenInWeb {
+					openMode = .inAppWithDefaultBrowserOption
+				} else {
+					openMode = .inApp
+				}
+			} else if appProvider.supportsOpenInWeb {
+				openMode = .defaultBrowser
+			}
 		}
 
 		switch openMode {
@@ -152,6 +169,21 @@ public class OpenInWebAppAction: Action {
 
 			case .inAppWithDefaultBrowserOption:
 				openInInAppBrowser(withDefaultBrowserOption: true)
+
+			case .auto:
+				// No open mode available, return error
+				if let viewController = context.viewController, let item = context.items.first {
+					let appName = self.app?.name ?? "app"
+					let itemName = item.name ?? "item"
+
+					let alertController = ThemedAlertController(
+						with: "Error opening {{itemName}} in {{appName}}".localized(["itemName" : itemName, "appName" : appName]),
+						message: "Opening documents is not supported by the app provider on this instance.".localized,
+						okLabel: "OK".localized,
+						action: nil)
+
+					viewController.present(alertController, animated: true)
+				}
 		}
 	}
 
@@ -243,7 +275,8 @@ public class OpenInWebAppAction: Action {
 
 	override public var icon: UIImage? {
 		if let remoteIcon = (app?.iconResourceRequest?.resource as? OCResourceImage)?.image?.image {
-			return remoteIcon
+			let iconSize = CGSize(width: 32, height: 32)
+			return remoteIcon.scaledImageFitting(in: iconSize).paddedTo(width: iconSize.width, height: iconSize.height)
 		}
 
 		return super.icon

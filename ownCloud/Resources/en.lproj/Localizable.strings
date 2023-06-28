@@ -447,6 +447,7 @@
 
 "Open in {{appName}} (web)" = "Open in {{appName}} (web)";
 "Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
 
 /* Preview */
 "Open file" = "Open file";
