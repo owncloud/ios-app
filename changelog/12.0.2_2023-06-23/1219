@@ -1,0 +1,5 @@
+Bugfix: Unable to authenticate using OpenID Connect
+
+It was not able to authenticate using OpenID Connect
+
+https://github.com/owncloud/ios-app/issues/1219

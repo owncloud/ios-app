@@ -65,6 +65,7 @@
 "keyword_week" = "week";
 "keyword_month" = "month";
 "keyword_year" = "year";
+"keyword_recent" = "recent";
 "keyword_d" = "d"; /* short-form for "day" */
 "keyword_w" = "w"; /* short-form for "week" */
 "keyword_m" = "m"; /* short-form for "month" */
@@ -132,3 +133,7 @@
 "This year" = "This year";
 "Since last year" = "Since last year";
 "Last %d years" = "Last %d years";
+
+"Recently used" = "Recently used";
+"Not recently used" = "Not recently used";
+

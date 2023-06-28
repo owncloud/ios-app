@@ -207,6 +207,7 @@
 			TranslateKeyword(@"week"),
 			TranslateKeyword(@"month"),
 			TranslateKeyword(@"year"),
+			TranslateKeyword(@"recent"),
 
 			// Modifier keywords
 			TranslateKeyword(@"type"),
@@ -337,6 +338,10 @@
 			else if ([keyword isEqual:@"year"])
 			{
 				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastModified isGreaterThan:[NSDate startOfRelativeYear:0]]] withSymbolName:@"calendar" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"Before this year") : OCLocalizedViaLocalizationBundle(@"This year")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"recent"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameLastUsed isGreaterThan:[NSCalendar.currentCalendar dateByAddingUnit:NSCalendarUnitWeekOfYear value:-1 toDate:NSDate.date options:0]]] withSymbolName:@"clock.arrow.circlepath" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"Not recently used") : OCLocalizedViaLocalizationBundle(@"Recently used")) searchSegment:searchSegment]);
 			}
 		}
 	}

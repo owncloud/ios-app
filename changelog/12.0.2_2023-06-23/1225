@@ -1,0 +1,5 @@
+Bugfix: Recent files view
+
+Added Quick Access item "Recents", which was missing in version 12.0.1
+
+https://github.com/owncloud/ios-app/pull/1225
