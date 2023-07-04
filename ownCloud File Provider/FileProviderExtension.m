@@ -933,12 +933,16 @@
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
+	OCLogDebug(@"##### Enumerator request for %@", containerItemIdentifier);
+
 	if (!OCFileProviderSettings.browseable)
 	{
 		if (error != NULL)
 		{
 			*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
 		}
+
+		OCLogDebug(@"##### Enumerator request for %@: FileProvider disabled: %@", containerItemIdentifier, ((error != NULL) ? *error : nil));
 
 		return (nil);
 	}
@@ -961,6 +965,8 @@
 					*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
 				}
 
+				OCLogDebug(@"##### Enumerator request for %@: unauthenticated return(1): %@", containerItemIdentifier, ((error != NULL) ? *error : nil));
+
 				return (nil);
 			}
 		} else if ((unlockData != nil) && ![[NSKeyedUnarchiver unarchivedObjectOfClass:NSNumber.class fromData:unlockData error:NULL] boolValue]) {
@@ -968,6 +974,8 @@
 			{
 				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
 			}
+
+			OCLogDebug(@"##### Enumerator request for %@: unauthenticated return(2): %@", containerItemIdentifier, ((error != NULL) ? *error : nil));
 
 			return (nil);
 		}
@@ -980,8 +988,12 @@
 			*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
 		}
 
+		OCLogDebug(@"##### Enumerator request for %@: missing domain ID: %@", containerItemIdentifier, ((error != NULL) ? *error : nil));
+
 		return (nil);
 	}
+
+	id<NSFileProviderEnumerator> enumerator = nil;
 
 	if (![containerItemIdentifier isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier])
 	{
@@ -1000,6 +1012,8 @@
 					*error = coreError;
 				}
 
+				OCLogDebug(@"##### Enumerator request for %@: missing core: %@", containerItemIdentifier, ((error != NULL) ? *error : nil));
+
 				return (nil);
 			}
 
@@ -1007,10 +1021,12 @@
 			containerItemIdentifier = OCVFSItemIDRoot;
 		}
 
-		return ([[FileProviderContentEnumerator alloc] initWithVFSCore:self.vfsCore containerItemIdentifier:containerItemIdentifier]);
+		enumerator = [[FileProviderContentEnumerator alloc] initWithVFSCore:self.vfsCore containerItemIdentifier:containerItemIdentifier];
 	}
 
-	return (nil);
+	OCLogDebug(@"##### Enumerator request for %@: returned %@/%@", containerItemIdentifier, enumerator, ((error != NULL) ? *error : nil));
+
+	return (enumerator);
 
 	// ### Apple template comments: ###
 
