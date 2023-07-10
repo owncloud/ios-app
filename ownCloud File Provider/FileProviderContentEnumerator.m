@@ -220,19 +220,21 @@
 	OCVFSItemID containerItemIdentifier = _containerItemIdentifier;
 	NSString *contentRequestUUID = [containerItemIdentifier stringByAppendingFormat:@"#%@", NSUUID.UUID.UUIDString];
 
-	OCLogDebug(@"Starting content request %@", contentRequestUUID);
+	OCLogDebug(@"[QUEUE] Queuing content request %@", contentRequestUUID);
 
 	[FileProviderContentEnumerator.queue async:^(dispatch_block_t  _Nonnull completionHandler) {
 		FileProviderContentEnumerator *strongSelf = weakSelf;
 
+		OCWLogDebug(@"[START] Starting content request %@", contentRequestUUID);
+
 		// Add completion handler call debugging
 		completionHandler = ^{
-			OCWLogDebug(@"Completion handler called for request %@, stack trace: %@", contentRequestUUID, NSThread.callStackSymbols);
+			OCWLogDebug(@"[CMPHL] Completion handler called for request %@, stack trace: %@", contentRequestUUID, NSThread.callStackSymbols);
 			completionHandler();
 		};
 
 		if (strongSelf == nil) {
-			OCWLogDebug(@"Content Enumerator deallocated before content could be returned for %@", contentRequestUUID);
+			OCWLogDebug(@"[CMPLT] Content Enumerator deallocated before content could be returned for %@", contentRequestUUID);
 			errorHandler(OCErrorWithDescription(OCErrorInternal, @"Content Enumerator deallocated before content could be returned"));
 
 			completionHandler();
@@ -240,11 +242,15 @@
 		}
 
 		[strongSelf.vfsCore provideContentForContainerItemID:containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
+			OCWLogDebug(@"[HAND1] Handling response for content request %@", contentRequestUUID);
+
 			dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
 				FileProviderContentEnumerator *strongSelf = weakSelf;
 
+				OCWLogDebug(@"[HAND2] Handling response for content request %@", contentRequestUUID);
+
 				if (strongSelf == nil) {
-					OCWLogDebug(@"Content Enumerator deallocated before content could be returned for %@", contentRequestUUID);
+					OCWLogDebug(@"[ERROR] Content Enumerator deallocated before content could be returned for %@", contentRequestUUID);
 					errorHandler(OCErrorWithDescription(OCErrorInternal, @"Content Enumerator deallocated before content could be returned"));
 
 					completionHandler();
@@ -253,7 +259,7 @@
 
 				if (error != nil)
 				{
-					OCWLogDebug(@"Content Enumerator VFS response error %@ for %@", error, contentRequestUUID);
+					OCWLogDebug(@"[ERROR] Content Enumerator VFS response error %@ for %@", error, contentRequestUUID);
 					errorHandler(error);
 					completionHandler();
 				}
@@ -262,7 +268,7 @@
 					if (content.isSnapshot)
 					{
 						// Content is a snapshot, so there's no need to keep the content around - it can be sent now
-						OCWLogDebug(@"Content Enumerator VFS snapshot response for %@", contentRequestUUID);
+						OCWLogDebug(@"[CMPLT] Content Enumerator VFS snapshot response for %@", contentRequestUUID);
 						contentConsumer(content);
 						completionHandler();
 					}
@@ -272,20 +278,20 @@
 						if (strongSelf.content != nil)
 						{
 							// Content already available
-							OCWLogDebug(@"Content Enumerator VFS immediately available content response for %@", contentRequestUUID);
+							OCWLogDebug(@"[CMPLT] Content Enumerator VFS immediately available content response for %@", contentRequestUUID);
 							contentConsumer(strongSelf.content);
 							completionHandler();
 						}
 						else
 						{
 							// Content to be provided by observer
-							OCWLogDebug(@"Content Enumerator VFS provided asynchronously for %@", contentRequestUUID);
+							OCWLogDebug(@"[REQST] Content Enumerator VFS provided asynchronously for %@", contentRequestUUID);
 							strongSelf.content = content; // effectively sets it to nil, since this can only be reached following (strongSelf.content == nil)
 
 							if (!observerQueuer(completionHandler))
 							{
 								// No observer available - unexpected, so complete with an error
-								OCWLogDebug(@"No content observer available for %@", contentRequestUUID);
+								OCWLogDebug(@"[ERROR] No content observer available for %@", contentRequestUUID);
 								errorHandler(OCErrorWithDescription(OCErrorInternal, @"No content observer available"));
 
 								completionHandler();
