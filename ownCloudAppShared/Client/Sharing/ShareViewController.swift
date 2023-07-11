@@ -268,7 +268,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 			NSLayoutConstraint.activate([
 				deleteButton.leadingAnchor.constraint(equalTo: bottomButtonBar.leadingAnchor, constant: 20),
-				deleteButton.centerYAnchor.constraint(equalTo: bottomButtonBar.selectButton.centerYAnchor)
+				deleteButton.trailingAnchor.constraint(equalTo: bottomButtonBar.cancelButton.leadingAnchor, constant: -20),
+				deleteButton.centerYAnchor.constraint(equalTo: bottomButtonBar.cancelButton.centerYAnchor)
 			])
 		}
 
