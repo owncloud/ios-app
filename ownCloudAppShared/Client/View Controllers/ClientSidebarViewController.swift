@@ -218,17 +218,9 @@ extension ClientSidebarViewController {
 			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
 		}
 
-		let logoLabel = ThemeCSSLabel()
-		logoLabel.translatesAutoresizingMaskIntoConstraints = false
-		logoLabel.text = VendorServices.shared.appName
-		logoLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-		logoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-		logoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-
 		let logoContainer = ThemeCSSView(withSelectors: [.logo])
 		logoContainer.translatesAutoresizingMaskIntoConstraints = false
 		logoContainer.addSubview(logoImageView)
-		logoContainer.addSubview(logoLabel)
 		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
 		logoContainer.setContentHuggingPriority(.required, for: .vertical)
 
@@ -239,14 +231,7 @@ extension ClientSidebarViewController {
 			logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
 			logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
 			logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
-			logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
-			logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
-			logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
-
-			logoImageView.leadingAnchor.constraint(equalTo: logoContainer.leadingAnchor),
-			logoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: logoImageView.trailingAnchor, multiplier: 1),
-			logoLabel.trailingAnchor.constraint(equalTo: logoContainer.trailingAnchor),
-
+			logoImageView.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
 			logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
 			logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
 			logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
