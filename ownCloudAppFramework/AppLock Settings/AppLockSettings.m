@@ -85,7 +85,7 @@
 		
 		OCClassSettingsKeyRequiredPasscodeDigits : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
-			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the user MUST establish a passcode upon app installation, if a device passcode is set.",
+			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
 			OCClassSettingsMetadataKeyCategory	: @"Passcode"
 		},
@@ -290,7 +290,7 @@
 	LAContext *context = [[LAContext alloc] init];
 	NSError *error = nil;
 
-	if (isPasscodeEnforcedByDevice != nil && isPasscodeEnforcedByDevice.boolValue == YES && [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error]) {
+	if (isPasscodeEnforcedByDevice != nil && isPasscodeEnforcedByDevice.boolValue == NO && [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error]) {
 		return (YES);
 	} else if (isPasscodeEnforced != nil) {
 		return (isPasscodeEnforced.boolValue);
