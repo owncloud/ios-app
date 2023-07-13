@@ -23,6 +23,7 @@ import ownCloudApp
 extension OCSavedSearchUserInfoKey {
 	static let customIconName = OCSavedSearchUserInfoKey(rawValue: "customIconName")
 	static let useNameAsTitle = OCSavedSearchUserInfoKey(rawValue: "useNameAsTitle")
+	static let useSortDescriptor = OCSavedSearchUserInfoKey(rawValue: "useSortDescriptor")
 }
 
 extension OCSavedSearch {
@@ -108,6 +109,20 @@ extension OCSavedSearch {
 		}
 	}
 
+	var useSortDescriptor: SortDescriptor? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.useSortDescriptor : newValue]
+			} else {
+				userInfo?[.useSortDescriptor] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.useSortDescriptor] as? SortDescriptor
+		}
+	}
+
 	func withCustomIcon(name: String) -> OCSavedSearch {
 		customIconName = name
 		return self
@@ -117,16 +132,25 @@ extension OCSavedSearch {
 		useNameAsTitle = useIt
 		return self
 	}
+
+	func useSortDescriptor(_ sortDescriptor: SortDescriptor) -> OCSavedSearch {
+		useSortDescriptor = sortDescriptor
+		return self
+	}
 }
 
 extension OCSavedSearch: DataItemSelectionInteraction {
 	func buildViewController(with context: ClientContext) -> ClientItemViewController? {
 		if let condition = condition() {
 			let query = OCQuery(condition: condition, inputFilter: nil)
+			let useSortDescriptor = useSortDescriptor
 			DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 			let resultsContext = ClientContext(with: context, modifier: { context in
 				context.query = query
+				if let useSortDescriptor {
+					context.sortDescriptor = useSortDescriptor
+				}
 			})
 
 			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: "No matches".localized, emptyItemListMessageLocalized: "No items found matching the search criteria.".localized)

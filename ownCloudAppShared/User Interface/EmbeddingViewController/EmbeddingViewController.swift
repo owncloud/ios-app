@@ -59,7 +59,7 @@ open class EmbeddingViewController: UIViewController {
 			contentViewControllerConstraints = nil
 		}
 		didSet {
-			if let contentViewController = contentViewController, let contentViewControllerView = contentViewController.view {
+			if let contentViewController, let contentViewControllerView = contentViewController.view {
 				addChild(contentViewController)
 				addContentViewControllerSubview(contentViewControllerView)
 				contentViewControllerView.translatesAutoresizingMaskIntoConstraints = false
