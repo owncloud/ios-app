@@ -248,4 +248,18 @@ public class SortDescriptor: NSObject {
 	public var comparator: OCSort {
 		return method.comparator(direction: direction)
 	}
+
+	public static var defaultSortDescriptor: SortDescriptor {
+		get {
+			let defaultSortMethod: SortMethod = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? .alphabetically
+			let defaultSortDirection: SortDirection = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? .ascendant
+
+			return SortDescriptor(method: defaultSortMethod, direction: defaultSortDirection)
+		}
+
+		set {
+			UserDefaults.standard.setValue(newValue.method.rawValue, forKey: "sort-method")
+			UserDefaults.standard.setValue(newValue.direction.rawValue, forKey: "sort-direction")
+		}
+	}
 }

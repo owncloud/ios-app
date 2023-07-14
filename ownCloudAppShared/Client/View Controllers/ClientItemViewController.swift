@@ -84,6 +84,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		let vcUUID = UUID()
 		viewControllerUUID = vcUUID
 
+		sortDescriptor = inContext?.sortDescriptor ?? .defaultSortDescriptor
+
 		let itemControllerContext = ClientContext(with: inContext, modifier: { context in
 			// Add permission handler limiting interactions for specific items and scenarios
 			context.add(permissionHandler: { (context, record, interaction, viewController) in
@@ -147,10 +149,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 
 			context.query = (owner as? ClientItemViewController)?.query
-			if let sortMethod = (owner as? ClientItemViewController)?.sortMethod,
-			   let sortDirection = (owner as? ClientItemViewController)?.sortDirection {
-				// Set default sort descriptor
-				context.sortDescriptor = SortDescriptor(method: sortMethod, direction: sortDirection)
+			if let sortDescriptor = (owner as? ClientItemViewController)?.sortDescriptor {
+				context.sortDescriptor = sortDescriptor
 			}
 
 			context.originatingViewController = owner as? UIViewController
@@ -302,7 +302,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		// Initialize sort method
-		handleSortMethodChange()
+		applySortDescriptor()
 
 		// Update title
 		updateNavigationTitleFromContext()
@@ -337,10 +337,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		updateNavigationBarButtonItems()
 
 		// Setup sort bar
-		sortBar = SortBar(sortMethod: sortMethod)
+		sortBar = SortBar(sortDescriptor: sortDescriptor)
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.delegate = self
-		sortBar?.sortMethod = sortMethod
 		sortBar?.itemLayout = clientContext?.itemLayout ?? .list
 		sortBar?.showSelectButton = true
 
@@ -706,40 +705,21 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	// MARK: - Sorting
 	open var sortBar: SortBar?
-	open var sortMethod: SortMethod {
-		set {
-			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
-			handleSortMethodChange()
-		}
+	open var sortDescriptor: SortDescriptor
 
-		get {
-			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabetically
-			return sort
-		}
+	public func sortBar(_ sortBar: SortBar, didChangeSortDescriptor newSortDescriptor: SortDescriptor) {
+		sortDescriptor = newSortDescriptor
+
+		clientContext?.sortDescriptor = newSortDescriptor
+		itemSection?.clientContext?.sortDescriptor = newSortDescriptor // Also needs to change the sortDescriptor for the itemSection's clientContext, since that is what will be used when creating ClientItemViewControllers for subfolders, etc.
+
+		SortDescriptor.defaultSortDescriptor = newSortDescriptor // Change default ONLY for user-initiated changes
+
+		applySortDescriptor()
 	}
-	open var sortDirection: SortDirection {
-		set {
-			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
-		}
 
-		get {
-			let direction = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
-			return direction
-		}
-	}
-	open func handleSortMethodChange() {
-		let sortDescriptor = SortDescriptor(method: sortMethod, direction: sortDirection)
-
-		clientContext?.sortDescriptor = sortDescriptor
+	open func applySortDescriptor() {
 		query?.sortComparator = sortDescriptor.comparator
-	}
-
-	public func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
- 		sortMethod = didUpdateSortMethod
-
- 		let comparator = sortMethod.comparator(direction: sortDirection)
-
- 		query?.sortComparator = comparator
 	}
 
 	public func sortBar(_ sortBar: SortBar, itemLayout: ItemLayout) {
