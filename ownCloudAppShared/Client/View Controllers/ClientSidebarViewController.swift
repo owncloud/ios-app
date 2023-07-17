@@ -67,6 +67,8 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 			}
 		}, queue: .main)
 
+		accountsControllerSectionSource?.trackItemVersions = true
+
 		// Combined data source
 		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
 			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, sidebarLinksDataSource ])
