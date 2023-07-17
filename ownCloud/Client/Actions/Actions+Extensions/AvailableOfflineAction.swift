@@ -30,8 +30,19 @@ class AvailableOfflineAction: Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
-		guard context.items.count > 0 else {
+		guard context.items.count > 0, let core = context.core else {
 			return .none
+		}
+
+		for item in context.items {
+			if let itemLocation = item.location, let policies = core.retrieveAvailableOfflinePoliciesCovering(item, completionHandler: nil) {
+				for policy in policies {
+					// Only show if item is not already available offline via parent item
+					if let policyLocation = policy.location, itemLocation.isLocated(in: policyLocation) && itemLocation != policyLocation {
+						return .none
+					}
+				}
+			}
 		}
 
 		return .middle
