@@ -17,6 +17,9 @@ tag::actions[]
 !===
 ! Value
 ! Description
+! `com.owncloud.action.availableOffline`
+! Make available offline
+
 ! `com.owncloud.action.collaborate`
 ! Sharing
 
@@ -43,12 +46,6 @@ tag::actions[]
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
-
-! `com.owncloud.action.makeAvailableOffline`
-! Make available offline
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Available Offline
 
 ! `com.owncloud.action.markup`
 ! Markup
@@ -121,6 +118,9 @@ action.create-document-mode
 !===
 ! Value
 ! Description
+! `com.owncloud.action.availableOffline`
+! Make available offline
+
 ! `com.owncloud.action.collaborate`
 ! Sharing
 
@@ -147,12 +147,6 @@ action.create-document-mode
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
-
-! `com.owncloud.action.makeAvailableOffline`
-! Make available offline
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Available Offline
 
 ! `com.owncloud.action.markup`
 ! Markup
@@ -1008,6 +1002,9 @@ tag::extensions[]
 ! `auth-race-condition`
 ! Extension with the identifier auth-race-condition.
 
+! `com.owncloud.action.availableOffline`
+! Extension with the identifier com.owncloud.action.availableOffline.
+
 ! `com.owncloud.action.background_update`
 ! Extension with the identifier com.owncloud.action.background_update.
 
@@ -1040,12 +1037,6 @@ tag::extensions[]
 
 ! `com.owncloud.action.instant_media_upload`
 ! Extension with the identifier com.owncloud.action.instant_media_upload.
-
-! `com.owncloud.action.makeAvailableOffline`
-! Extension with the identifier com.owncloud.action.makeAvailableOffline.
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Extension with the identifier com.owncloud.action.makeUnavailableOffline.
 
 ! `com.owncloud.action.markup`
 ! Extension with the identifier com.owncloud.action.markup.
