@@ -23,7 +23,7 @@ import ownCloudAppShared
 class AvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.availableOffline") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Available offline".localized }
+	override class var name : String? { return "Make available offline".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
