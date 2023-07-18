@@ -187,7 +187,7 @@ platform :ios do
           puts("Build EMM iOS App…")
           # Set EMM App-Icon for App Build
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
-          sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+          sh "mv ../ownCloud/Resources/Theming/com.owncloud.ios-app.emm/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
           # Build App
           owncloud_emm_build()
@@ -224,27 +224,27 @@ platform :ios do
 
         # Moving the ownCloud.online Branding.plist to the correct place
         sh "mv ../ownCloud/Resources/Theming/Branding.plist ../ownCloud/Resources/Theming/Branding-regular.plist"
-        sh "mv ../ownCloud/Resources/Theming/Branding-owncloud-online.plist ../ownCloud/Resources/Theming/Branding.plist"
+        sh "mv ../ownCloud/Resources/Theming/online.owncloud.ios-app/Branding.plist ../ownCloud/Resources/Theming/Branding.plist"
 
         # Set ownCloud.online Splashscreen Background for App Build
         sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background.png ../ownCloud/Resources/Theming/branding-splashscreen-background-regular.png"
-        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen-background.png"
+        sh "mv ../ownCloud/Resources/Theming/online.owncloud.ios-app/branding-splashscreen-background.png ../ownCloud/Resources/Theming/branding-splashscreen-background.png"
 
         # Set ownCloud.online Splashscreen Logo for App Build
         sh "mv ../ownCloud/Resources/Theming/branding-splashscreen.png ../ownCloud/Resources/Theming/branding-splashscreen-regular.png"
-        sh "mv ../ownCloud/Resources/Theming/branding-splashscreen-owncloud-online.png ../ownCloud/Resources/Theming/branding-splashscreen.png"
+        sh "mv ../ownCloud/Resources/Theming/online.owncloud.ios-app/branding-splashscreen.png ../ownCloud/Resources/Theming/branding-splashscreen.png"
 
         # Set ownCloud.online Branded Login Logo for App Build
         sh "mv ../ownCloud/Resources/Theming/branding-login-logo.png ../ownCloud/Resources/Theming/branding-login-logo-regular.png"
-        sh "mv ../ownCloud/Resources/Theming/branding-login-logo-owncloud-online.png ../ownCloud/Resources/Theming/branding-login-logo.png"
+        sh "mv ../ownCloud/Resources/Theming/online.owncloud.ios-app/branding-login-logo.png ../ownCloud/Resources/Theming/branding-login-logo.png"
 
         # Set ownCloud.online Branded Login Background for App Build
         sh "mv ../ownCloud/Resources/Theming/branding-login-background.png ../ownCloud/Resources/Theming/branding-login-background-regular.png"
-        sh "mv ../ownCloud/Resources/Theming/branding-login-background-owncloud-online.png ../ownCloud/Resources/Theming/branding-login-background.png"
+        sh "mv ../ownCloud/Resources/Theming/online.owncloud.ios-app/branding-login-background.png ../ownCloud/Resources/Theming/branding-login-background.png"
 
         # Set ownCloud.online App-Icon for App Build
         sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
-        sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-ownCloud-online.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+        sh "mv ../ownCloud/Resources/Theming/online.owncloud.ios-app/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
         # Build App
         owncloud_online_build()
