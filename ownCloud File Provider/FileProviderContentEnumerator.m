@@ -261,7 +261,6 @@
 				{
 					OCWLogDebug(@"[ERROR] Content Enumerator VFS response error %@ for %@", error, contentRequestUUID);
 					errorHandler(error);
-					completionHandler();
 				}
 				else
 				{
@@ -270,7 +269,6 @@
 						// Content is a snapshot, so there's no need to keep the content around - it can be sent now
 						OCWLogDebug(@"[CMPLT] Content Enumerator VFS snapshot response for %@", contentRequestUUID);
 						contentConsumer(content);
-						completionHandler();
 					}
 					else
 					{
@@ -280,7 +278,6 @@
 							// Content already available
 							OCWLogDebug(@"[CMPLT] Content Enumerator VFS immediately available content response for %@", contentRequestUUID);
 							contentConsumer(strongSelf.content);
-							completionHandler();
 						}
 						else
 						{
@@ -288,17 +285,17 @@
 							OCWLogDebug(@"[REQST] Content Enumerator VFS provided asynchronously for %@", contentRequestUUID);
 							strongSelf.content = content; // effectively sets it to nil, since this can only be reached following (strongSelf.content == nil)
 
-							if (!observerQueuer(completionHandler))
+							if (!observerQueuer(nil))
 							{
 								// No observer available - unexpected, so complete with an error
 								OCWLogDebug(@"[ERROR] No content observer available for %@", contentRequestUUID);
 								errorHandler(OCErrorWithDescription(OCErrorInternal, @"No content observer available"));
-
-								completionHandler();
 							}
 						}
 					}
 				}
+
+				completionHandler();
 			});
 		}];
 	}];
