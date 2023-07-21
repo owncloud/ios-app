@@ -4,7 +4,7 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
 ## App IDs and Provisioning Files
 
-1. You need to generate the following App IDs with `App Groups` and `Associated Domains` enabled on the Apple Developer Portal `Identifiers` section:
+1. You need to generate the following App IDs with the Capabilities `App Groups` and `Associated Domains` enabled on the Apple Developer Portal `Identifiers` section:
 
    - `com.yourcompany.ios-app`
 
