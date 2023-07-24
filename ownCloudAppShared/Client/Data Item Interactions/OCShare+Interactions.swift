@@ -148,9 +148,10 @@ extension OCShare: DataItemSelectionInteraction {
 					}
 				} else {
 					// Single share
-					editViewController = ShareViewController(mode: .edit, share: self, clientContext: context, completion: { _ in })
+					let item: OCItem? = try? context.core?.cachedItem(at: itemLocation)
+					editViewController = ShareViewController(mode: .edit, share: self, item: item, clientContext: context, completion: { _ in })
 				}
-
+				
 				if let editViewController {
 					let navigationController = ThemeNavigationController(rootViewController: editViewController)
 					context.present(navigationController, animated: true)

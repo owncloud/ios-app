@@ -91,6 +91,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	var recipientSearchController: OCRecipientSearchController?
 	var recipientsSectionDatasource: OCDataSourceComposition?
 	var recipientsSection: CollectionViewSection?
+	
+	var itemSection: CollectionViewSection?
+	var itemSectionDatasource: OCDataSourceArray?
 
 	var rolesSectionOptionGroup: OptionGroup?
 	var rolesSectionDatasource: OCDataSourceArray?
@@ -123,6 +126,19 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.item = (item != nil) ? item! : ((location != nil) ? try? clientContext.core?.cachedItem(at: location!) : nil)
 		self.mode = mode
 		self.completionHandler = completion
+		
+		// Item section
+		let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
+			context.permissions = []
+		})
+
+		if let item = item {
+			itemSectionDatasource = OCDataSourceArray(items: [item])
+			itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
+			if let section = itemSection {
+				sections.append(section)
+			}
+		}
 
 		// Managament section cell style
 		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
