@@ -20,7 +20,6 @@
 #import <ownCloudApp/ownCloudApp.h>
 
 #import "FileProviderExtension.h"
-#import "FileProviderEnumerator.h"
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
 #import "NSError+MessageResolution.h"

@@ -72,6 +72,8 @@
 		_enumerationObservers = [NSMutableArray new];
 		_changeObservers = [NSMutableArray new];
 
+		_didReturnAnyContentQueries = [NSHashTable weakObjectsHashTable];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_displaySettingsChanged:) name:DisplaySettingsChanged object:nil];
 	}
 
@@ -568,8 +570,11 @@
 #pragma mark - Content distribution
 - (BOOL)provideItemsToEnumerationObserver:(id<NSFileProviderEnumerationObserver>)enumerationObserver fromContent:(OCVFSContent *)content
 {
-	if (((content.query.state == OCQueryStateContentsFromCache) || ((content.query.state == OCQueryStateWaitingForServerReply) && (content.query.queryResults.count > 0)) || (content.query.state == OCQueryStateIdle))
-	    || ((content.query == nil) && (content != nil)))
+	if (( (content.query.state == OCQueryStateContentsFromCache) ||
+	     ((content.query.state == OCQueryStateWaitingForServerReply) && (content.query.queryResults.count > 0)) ||
+	      (content.query.state == OCQueryStateIdle)
+	    ) ||
+	    ((content.query == nil) && (content != nil)))
 	{
 		NSArray <OCItem *> *queryResults = content.query.queryResults;
 		OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuid.UUIDString;
@@ -577,6 +582,11 @@
 		for (OCItem *item in queryResults)
 		{
 			item.bookmarkUUID = bookmarkUUIDString;
+		}
+
+		if (content.query != nil)
+		{
+			[_didReturnAnyContentQueries addObject:content.query];
 		}
 
 		OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, enumerationObserver, content.query.queryLocation.path, queryResults);
@@ -613,6 +623,11 @@
 		item.bookmarkUUID = bookmarkUUIDString;
 	}
 
+	if (content.query != nil)
+	{
+		[_didReturnAnyContentQueries addObject:content.query];
+	}
+
 	NSFileProviderSyncAnchor syncAnchor = [content.core.latestSyncAnchor syncAnchorData];
 
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -624,14 +639,14 @@
 }
 
 #pragma mark - OCQuery delegate
-- (void)queryHasChangesAvailable:(OCQuery *)query
+- (void)_updateFromQuery:(OCQuery *)query
 {
-	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
-
 	if ( (query.state == OCQueryStateContentsFromCache) ||
 	    ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) ||
 	     (query.state == OCQueryStateIdle))
 	{
+		OCLogDebug(@"##### Serving query %@ for %@ content. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query, query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+
 		dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
 			// Send content to enumeration observers
 			NSArray<FileProviderEnumeratorObserver *> *enumerationObservers = [self->_enumerationObservers copy];
@@ -645,7 +660,6 @@
 				}
 			}
 
-
 			// Send content to change observers
 			NSArray<FileProviderEnumeratorObserver *> *changeObservers = [self->_changeObservers copy];
 
@@ -658,6 +672,32 @@
 				}
 			}
 		});
+	}
+}
+
+- (void)queryHasChangesAvailable:(OCQuery *)query
+{
+	OCLogDebug(@"##### Query %@ for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query, query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+
+	[self _updateFromQuery:query];
+}
+
+- (void)queryHasChangedState:(OCQuery *)query
+{
+	OCLogDebug(@"##### Query %@ for %@ has changed state. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query, query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+
+	BOOL didReturnContentForQueryBefore = [_didReturnAnyContentQueries containsObject:query];
+	BOOL isEmptyQueryResult = (query.queryResults.count == 0);
+
+	// This catches the following special case:
+	// - query has no results (f.ex. empty folder)
+	// -> query had no results when returning from the database and waiting for a reply (=> does not provide items to FP)
+	// -> query returns from PROPFIND and changes state to idle, but still has no results (=> chance that only state changes, no additional call to -queryHasChangesAvailable:, because it has not)
+	// -> query does not return any results -> Files.app shows spinner indefinitely (=> now, the state change to idle with an empty result set triggers a return of items
+	if ((query.state == OCQueryStateIdle) && !didReturnContentForQueryBefore && isEmptyQueryResult)
+	{
+		OCLogDebug(@"Would have updated %@", query);
+		// [self _updateFromQuery:query];
 	}
 }
 

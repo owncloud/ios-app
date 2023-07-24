@@ -1494,8 +1494,6 @@
 		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC6564820C9B7E400110A97 /* FileProviderExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtension.h; sourceTree = "<group>"; };
 		DCC6564920C9B7E400110A97 /* FileProviderExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtension.m; sourceTree = "<group>"; };
-		DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumerator.h; sourceTree = "<group>"; };
-		DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumerator.m; sourceTree = "<group>"; };
 		DCC6565120C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud_File_Provider.entitlements; sourceTree = "<group>"; };
 		DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySleepPreventer.swift; sourceTree = "<group>"; };
@@ -3085,8 +3083,6 @@
 				DC27A1A320CBEF85008ACB6C /* OCBookmark+FileProvider.h */,
 				DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */,
 				DC27A1A620CC095C008ACB6C /* OCCore+FileProviderTools.h */,
-				DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */,
-				DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */,
 				DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */,
 				DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */,
 				DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */,
