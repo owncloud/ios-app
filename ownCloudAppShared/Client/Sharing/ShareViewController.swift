@@ -220,25 +220,20 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		collectionView.contentInset = extraContentInset
 
 		// Set navigation bar title
-		let itemDisplayName = location?.displayName(in: clientContext)
 		var navigationTitle: String?
-
-		if let itemDisplayName {
-			navigationTitle = "Share {{itemName}}".localized([ "itemName" : itemDisplayName ])
-		} else {
-			switch mode {
-				case .create:
-					navigationTitle = "Share".localized
-
-				case .edit:
-					navigationTitle = "Edit".localized
-			}
+		
+		switch mode {
+		case .create:
+			navigationTitle = (type == .link) ? "Create link".localized : "Invite".localized
+			
+		case .edit:
+			navigationTitle = "Edit".localized
 		}
 		navigationItem.titleLabelText = navigationTitle
-
+		
 		// Add bottom button bar
 		let title = (mode == .create) ? ((type == .link) ? "Create link".localized : "Invite".localized) : "Save changes".localized
-
+		
 		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, cancelButtonTitle: "Cancel".localized, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
 			self?.save()
 		}), cancelAction: UIAction(handler: { [weak self] _ in
@@ -250,27 +245,22 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		bottomButtonBarViewController.view = bottomButtonBar
 
 		// - Add delete button for existing shares
-		if mode == .edit, let bottomButtonBar {
+		if mode == .edit {
 			var deleteButtonConfig = UIButton.Configuration.borderedProminent()
 			deleteButtonConfig.title = "Unshare".localized
 			deleteButtonConfig.cornerStyle = .large
 			deleteButtonConfig.baseBackgroundColor = .systemRed
 			deleteButtonConfig.baseForegroundColor = .white
-
+			
 			let deleteButton = UIButton()
-			deleteButton.translatesAutoresizingMaskIntoConstraints = false
 			deleteButton.configuration = deleteButtonConfig
 			deleteButton.addAction(UIAction(handler: { [weak self] action in
 				self?.deleteShare()
 			}), for: .primaryActionTriggered)
-
-			bottomButtonBar.addSubview(deleteButton)
-
-			NSLayoutConstraint.activate([
-				deleteButton.leadingAnchor.constraint(equalTo: bottomButtonBar.leadingAnchor, constant: 20),
-				deleteButton.trailingAnchor.constraint(equalTo: bottomButtonBar.cancelButton.leadingAnchor, constant: -20),
-				deleteButton.centerYAnchor.constraint(equalTo: bottomButtonBar.cancelButton.centerYAnchor)
-			])
+			
+			let unshare = UIBarButtonItem(customView: deleteButton)
+			
+			self.navigationItem.rightBarButtonItem = unshare
 		}
 
 		self.addStacked(child: bottomButtonBarViewController, position: .bottom)
