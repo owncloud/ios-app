@@ -289,8 +289,8 @@
 	
 	LAContext *context = [[LAContext alloc] init];
 	NSError *error = nil;
-
-	if (isPasscodeEnforcedByDevice != nil && isPasscodeEnforcedByDevice.boolValue == NO && [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error]) {
+	
+	if (isPasscodeEnforcedByDevice != nil && isPasscodeEnforcedByDevice.boolValue == YES && [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error] == NO) {
 		return (YES);
 	} else if (isPasscodeEnforced != nil) {
 		return (isPasscodeEnforced.boolValue);
