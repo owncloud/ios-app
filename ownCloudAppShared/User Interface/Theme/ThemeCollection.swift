@@ -737,6 +737,13 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .stroke, value: contentToolbarSet.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
 		])
+
+		// System colors
+		css.addSystemColors()
+
+		// Theme colors
+		css.add(color: lightBrandColor, address: "theme.color.light")
+		css.add(color: darkBrandColor, 	address: "theme.color.dark")
 	}
 
 	convenience override init() {

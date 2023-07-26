@@ -306,6 +306,7 @@
 		DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */; };
 		DC576EC022647A070087316D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC576EC222647A070087316D /* Localizable.strings */; };
 		DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */; };
+		DC5D58FF2A7166A300BFF393 /* ThemeCSS+SystemColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D58FE2A7166A300BFF393 /* ThemeCSS+SystemColors.swift */; };
 		DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */; };
 		DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A729802B0900905EC8 /* NavigationContent.swift */; };
 		DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */; };
@@ -1309,6 +1310,7 @@
 		DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellularSettingsViewController.swift; sourceTree = "<group>"; };
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSidebarViewController.swift; sourceTree = "<group>"; };
+		DC5D58FE2A7166A300BFF393 /* ThemeCSS+SystemColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeCSS+SystemColors.swift"; sourceTree = "<group>"; };
 		DC5D9E742496512400BFFE8E /* MessageQueueExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueExample.swift; sourceTree = "<group>"; };
 		DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+NavigationContent.swift"; sourceTree = "<group>"; };
 		DC60F2A729802B0900905EC8 /* NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContent.swift; sourceTree = "<group>"; };
@@ -2834,6 +2836,7 @@
 				DCB1B89E29C7378200BFF393 /* ThemeCSS.swift */,
 				DCB1B8A329C73DB800BFF393 /* ThemeCSSRecord.swift */,
 				DCB1B8A629C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift */,
+				DC5D58FE2A7166A300BFF393 /* ThemeCSS+SystemColors.swift */,
 				DCB1B8A129C7379C00BFF393 /* NSObject+ThemeCSS.swift */,
 				DCB1B8C329C8A84000BFF393 /* UIView+ThemeCSS.swift */,
 				DCB1B8AC29C89E0F00BFF393 /* Views */,
@@ -4516,6 +4519,7 @@
 				DC298C9F2934D6D9009FA87F /* AccountAuthenticationUpdaterPasswordPromptViewController.swift in Sources */,
 				DCB1B8A229C7379C00BFF393 /* NSObject+ThemeCSS.swift in Sources */,
 				DCB1B8C429C8A84000BFF393 /* UIView+ThemeCSS.swift in Sources */,
+				DC5D58FF2A7166A300BFF393 /* ThemeCSS+SystemColors.swift in Sources */,
 				DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */,
 				DC3F0C2529828AE300C832DB /* OCLocation+Breadcrumbs.swift in Sources */,
 				DC0A358024C0E43C00FB58FC /* NSObject+ThemeApplication.swift in Sources */,
