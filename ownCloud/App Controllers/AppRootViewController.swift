@@ -144,6 +144,14 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 				messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
 
 				let rootView = ThemeCSSView(withSelectors: [.modal, .welcome])
+
+				if let image = Branding.shared.brandedImageNamed(.loginBackground) {
+					messageView.isOpaque = false
+					let backgroundImageView = UIImageView(image: image)
+					backgroundImageView.contentMode = .scaleAspectFill
+					rootView.embed(toFillWith: backgroundImageView)
+				}
+
 				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
 
 				let messageViewController = UIViewController()
