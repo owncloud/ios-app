@@ -129,6 +129,8 @@ class BookmarkViewController: StaticTableViewController {
 		// Super init
 		super.init(style: .grouped)
 
+		self.cssSelector = .bookmarkEditor
+
 		// Accessibility Identifiers
 		continueBarButtonItem.accessibilityIdentifier = "continue-bar-button"
 		saveBarButtonItem.accessibilityIdentifier = "save-bar-button"
@@ -1272,4 +1274,8 @@ public extension OCAuthenticationMethod {
 		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
 
+}
+
+extension ThemeCSSSelector {
+	static let bookmarkEditor = ThemeCSSSelector(rawValue: "bookmarkEditor")
 }
