@@ -90,6 +90,9 @@ open class BottomButtonBar: ThemeCSSView {
 		promptLabel.translatesAutoresizingMaskIntoConstraints = false
 		bottomSeparatorLine.translatesAutoresizingMaskIntoConstraints = false
 
+		selectButton.setContentCompressionResistancePriority(.required, for: .vertical)
+		cancelButton.setContentCompressionResistancePriority(.required, for: .vertical)
+
 		var constraints: [NSLayoutConstraint] = []
 		var leadingButtonAnchor = selectButton.leadingAnchor
 
