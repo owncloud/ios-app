@@ -350,10 +350,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		self.tableView.tableHeaderView = logoAndAppNameView
 		self.tableView.layoutTableHeaderView()
-
-		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
-			self.tableView.backgroundView = UIImageView(image: image)
-		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
