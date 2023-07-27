@@ -85,13 +85,11 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 			func sizeThatFills(srcSize: CGSize, dstSize: CGSize) -> CGSize {
 				var fillSize = srcSize
 
-				if fillSize.width < dstSize.width {
-					fillSize.height = fillSize.height * fillSize.width / dstSize.width
-					fillSize.width = dstSize.width
-				}
+				fillSize.height = fillSize.height * dstSize.width / fillSize.width
+				fillSize.width = dstSize.width
 
 				if fillSize.height < dstSize.height {
-					fillSize.width = fillSize.width * fillSize.height / dstSize.height
+					fillSize.width = fillSize.width * dstSize.height / fillSize.height
 					fillSize.height = dstSize.height
 				}
 
@@ -99,12 +97,12 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 			}
 
 			let bounds = bounds
-			let fitSize = sizeThatFills(srcSize: fillImage.size, dstSize: bounds.size)
+			let fillSize = sizeThatFills(srcSize: fillImage.size, dstSize: bounds.size)
 			var drawRect: CGRect = CGRect()
 
-			drawRect.origin.x = bounds.origin.x + (bounds.size.width - fitSize.width) / 2.0
-			drawRect.origin.y = bounds.origin.y + (bounds.size.height - fitSize.height) / 2.0
-			drawRect.size = fitSize
+			drawRect.origin.x = bounds.origin.x + (bounds.size.width - fillSize.width) / 2.0
+			drawRect.origin.y = bounds.origin.y + (bounds.size.height - fillSize.height) / 2.0
+			drawRect.size = fillSize
 
 			bezierPath.addClip()
 			fillImage.draw(in: drawRect)
