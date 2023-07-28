@@ -25,18 +25,21 @@ import ownCloudAppShared
 
 typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
 
+enum BookmarkViewControllerMode {
+	   case create
+	   case edit
+   }
+
 class BookmarkViewController: StaticTableViewController {
 	// MARK: - UI elements
 	var nameSection : StaticTableViewSection?
 	var nameRow : StaticTableViewRow?
-	var nameChanged = false
 
 	var helpSection : StaticTableViewSection?
 	var helpButtonRow : StaticTableViewRow?
 
 	var urlSection : StaticTableViewSection?
 	var urlRow : StaticTableViewRow?
-	var urlChanged = false
 	var certificateRow : StaticTableViewRow?
 
 	var credentialsSection : StaticTableViewSection?
@@ -44,11 +47,10 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
-	var showOAuthInfoHeader = false
-	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
+	var bookmarkProvider: BookmarkProvider
+	var showOAuthInfoHeader = false
 
-	var userActionCompletionHandler : BookmarkViewControllerUserActionCompletionHandler?
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
@@ -69,14 +71,6 @@ class BookmarkViewController: StaticTableViewController {
 
 	// MARK: - Internal storage
 	var bookmark : OCBookmark?
-	var originalBookmark : OCBookmark?
-
-	var generationOptions: [OCAuthenticationMethodKey : Any]?
-
-	enum BookmarkViewControllerMode {
-		case create
-		case edit
-	}
 
 	private var mode : BookmarkViewControllerMode
 
@@ -91,17 +85,9 @@ class BookmarkViewController: StaticTableViewController {
 		return _cookieStorage
 	}
 
-	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
-		let connection = OCConnection(bookmark: bmark)
-
-		connection.hostSimulator = OCHostSimulatorManager.shared.hostSimulator(forLocation: .accountSetup, for: self)
-		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
-
-		return connection
-	}
-
 	// MARK: - Init & Deinit
 	init(_ editBookmark: OCBookmark?, removeAuthDataFromCopy: Bool = false) {
+		bookmarkProvider = BookmarkProvider(editBookmark)
 		// Determine mode
 		if editBookmark != nil {
 			mode = .edit
@@ -124,10 +110,12 @@ class BookmarkViewController: StaticTableViewController {
 			bookmark?.authenticationData = nil
 		}
 
-		originalBookmark = editBookmark // Save original bookmark (if any)
+		bookmarkProvider.originalBookmark = editBookmark // Save original bookmark (if any)
 
 		// Super init
 		super.init(style: .grouped)
+		bookmarkProvider.parentViewController = self
+		bookmarkProvider.bookmarkViewController = self
 
 		// Accessibility Identifiers
 		continueBarButtonItem.accessibilityIdentifier = "continue-bar-button"
@@ -136,7 +124,7 @@ class BookmarkViewController: StaticTableViewController {
 		// Name section + row
 		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
 			if let textField = sender as? UITextField, action == .changed {
-				self?.nameChanged = true
+				self?.bookmarkProvider.nameChanged = true
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
 		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
@@ -148,7 +136,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField, action == .changed {
 				var placeholderString = "Name".localized
 				var changedBookmark = false
-				self?.urlChanged = true
+				self?.bookmarkProvider.urlChanged = true
 
 				// Disable Continue button if there is no url
 				if textField.text != "" {
@@ -219,6 +207,10 @@ class BookmarkViewController: StaticTableViewController {
 				self?.composeSectionsAndRows(animated: true)
 			}
 		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
+		
+		bookmarkProvider.urlRow = urlRow
+		bookmarkProvider.usernameRow = usernameRow
+		bookmarkProvider.passwordRow = passwordRow
 
 		addPasswordManagerButton()
 
@@ -230,7 +222,7 @@ class BookmarkViewController: StaticTableViewController {
 				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
 					if OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 						self?.showOAuthInfoHeader = true
-						self?.showedOAuthInfoHeader = true
+						self?.bookmarkProvider.showedOAuthInfoHeader = true
 					}
 				}
 
@@ -364,434 +356,6 @@ class BookmarkViewController: StaticTableViewController {
 		}
 	}
 
-	// MARK: - Continue
-	@objc func handleContinue() {
-		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
-
-		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
-			OnMainThread {
-				if hud?.presenting == true {
-					hud?.dismiss(completion: completion)
-				} else {
-					completion?()
-				}
-			}
-		}
-
-		// Check if only account name was changed in edit mode: save and dismiss without re-authentication
-
-		//if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
-		if mode == .edit, nameChanged, !urlChanged, let bookmark = bookmark, bookmark.authenticationData != nil {
-			updateBookmark(bookmark: bookmark)
-			completeAndDismiss(with: hudCompletion)
-			return
-		}
-
-		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {
-			handleContinueURLProbe(hud: hud, hudCompletion: hudCompletion)
-			return
-		}
-
-		if bookmark?.authenticationData == nil {
-			var proceed = true
-			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
-				if OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
-					// Only proceed, if OAuth Info Header was shown to the user, before continue was pressed
-					// Statement here is only important for http connections and token based auth
-					if showedOAuthInfoHeader == false {
-						proceed = false
-						showedOAuthInfoHeader = true
-					}
-				}
-			}
-			if proceed == true {
-				handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
-			}
-
-			return
-		}
-	}
-
-	func handleContinueURLProbe(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		if let urlString = urlRow?.value as? String {
-			var username : NSString?, password: NSString?
-			var protocolWasPrepended : ObjCBool = false
-
-			// Normalize URL
-			if let serverURL = NSURL(username: &username, password: &password, afterNormalizingURLString: urlString, protocolWasPrepended: &protocolWasPrepended) as URL? {
-				// Check for zero-length host name
-				if (serverURL.host == nil) || ((serverURL.host != nil) && (serverURL.host?.count==0)) {
-					// Missing hostname
-					let alertController = ThemedAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
-
-					alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-					self.present(alertController, animated: true, completion: nil)
-
-					self.urlRow?.cell?.shakeHorizontally()
-
-					return
-				}
-
-				// Save username and password for possible later use if they were part of the URL
-				if username != nil {
-					usernameRow?.value = username
-				}
-
-				if password != nil {
-					passwordRow?.value = password
-				}
-
-				// Probe URL
-				bookmark?.url = serverURL
-
-				if let connectionBookmark = bookmark {
-					let connection = instantiateConnection(for: connectionBookmark)
-					let previousCertificate = bookmark?.primaryCertificate
-
-					hud?.present(on: self, label: "Contacting server…".localized)
-
-					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods, generationOptions) in
-						hudCompletion({
-							// Update URL
-							self.urlRow?.textField?.text = serverURL.absoluteString
-
-							let continueToNextStep : () -> Void = { [weak self] in
-								self?.bookmark?.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
-								self?.composeSectionsAndRows(animated: true) {
-									self?.updateInputFocus()
-								}
-
-								if self?.bookmark?.primaryCertificate == previousCertificate,
-								   let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier,
-								   OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) == true {
-
-									self?.handleContinue()
-								}
-							}
-
-							self.generationOptions = generationOptions
-
-							if issue != nil {
-								// Parse issue for display
-								if let issue = issue {
-									let displayIssues = issue.prepareForDisplay()
-
-									if displayIssues.isAtLeast(level: .warning) {
-										// Present issues if the level is >= warning
-										IssuesCardViewController.present(on: self, issue: issue, displayIssues: displayIssues, completion: { [weak self, weak issue] (response) in
-											switch response {
-												case .cancel:
-													issue?.reject()
-													self?.bookmark?.url = nil
-
-												case .approve:
-													issue?.approve()
-													continueToNextStep()
-
-												case .dismiss:
-													self?.bookmark?.url = nil
-											}
-										})
-									} else {
-										// Do not present issues
-										issue.approve()
-										continueToNextStep()
-									}
-								}
-							} else {
-								continueToNextStep()
-							}
-						})
-					}
-				}
-			}
-		}
-	}
-
-	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		if let connectionBookmark = bookmark {
-			var options : [OCAuthenticationMethodKey : Any] = generationOptions ?? [:]
-
-			let connection = instantiateConnection(for: connectionBookmark)
-
-			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
-				if OCAuthenticationMethod.isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
-					options[.usernameKey] = usernameRow?.value ?? ""
-					options[.passphraseKey] = passwordRow?.value ?? ""
-				}
-			}
-
-			options[.presentingViewControllerKey] = self
-			options[.requiredUsernameKey] = connectionBookmark.userName
-
-			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
-
-			hud?.present(on: self, label: "Authenticating…".localized)
-
-			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
-				if error == nil, let authMethodIdentifier, let authMethodData {
-					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
-					self.bookmark?.authenticationData = authMethodData
-					self.bookmark?.scanForAuthenticationMethodsRequired = false
-					OnMainThread {
-						hud?.updateLabel(with: "Fetching user information…".localized)
-					}
-
-					// Retrieve available instances for this account to chose from
-					connection.retrieveAvailableInstances(options: options, authenticationMethodIdentifier: authMethodIdentifier, authenticationData: authMethodData, completionHandler: { error, instances in
-						// No account chooser implemented at this time. If an account is returned, use the URL of the first one.
-						if error == nil, let instance = instances?.first {
-							self.bookmark?.apply(instance)
-						}
-
-						self.save(hudCompletion: hudCompletion)
-
-						Log.debug("\(connection) returned error=\(String(describing: error)) instances=\(String(describing: instances))") // Debug message also has the task to capture connection and avoid it being prematurely dropped
-					})
-				} else {
-					hudCompletion({
-						var issue : OCIssue?
-						let nsError = error as NSError?
-
-						if let embeddedIssue = nsError?.embeddedIssue() {
-							issue = embeddedIssue
-						} else if let error = error {
-							issue = OCIssue(forError: error, level: .error, issueHandler: nil)
-						}
-
-						if nsError?.isOCError(withCode: .authorizationFailed) == true {
-							// Shake
-							self.navigationController?.view.shakeHorizontally()
-							self.updateInputFocus(fallbackRow: self.passwordRow)
-						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
-							// User cancelled authorization, no reaction needed
-						} else if let issue = issue {
-							IssuesCardViewController.present(on: self, issue: issue, completion: { [weak self, weak issue] (response) in
-								switch response {
-									case .cancel:
-										issue?.reject()
-
-									case .approve:
-										issue?.approve()
-										self?.handleContinue()
-
-									case .dismiss: break
-								}
-							})
-						}
-					})
-				}
-			}
-		}
-	}
-
-	func completeAndDismiss(with hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		guard let userActionCompletionHandler = self.userActionCompletionHandler else { return }
-
-		self.userActionCompletionHandler = nil
-
-		OnMainThread {
-			hudCompletion({
-				OnMainThread {
-					userActionCompletionHandler(self.bookmark, true)
-				}
-				self.presentingViewController?.dismiss(animated: true, completion: nil)
-			})
-		}
-	}
-
-	// MARK: - User actions
-	@objc func userActionCancel() {
-		let userActionCompletionHandler = self.userActionCompletionHandler
-		self.userActionCompletionHandler = nil
-
-		self.presentingViewController?.dismiss(animated: true, completion: {
-			OnMainThread {
-				userActionCompletionHandler?(nil, false)
-			}
-		})
-	}
-
-	@objc func userActionSave() {
-		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
-
-		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
-			OnMainThread {
-				if hud?.presenting == true {
-					hud?.dismiss(completion: completion)
-				} else {
-					completion?()
-				}
-			}
-		}
-
-		hud?.present(on: self, label: "Updating connection…".localized)
-
-		save(hudCompletion: hudCompletion)
-	}
-
-	func updateBookmark(bookmark: OCBookmark) {
-		originalBookmark?.setValuesFrom(bookmark)
-		if let originalBookmark = originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-			Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
-		}
-	}
-
-	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		guard let bookmark = self.bookmark else { return }
-
-		if isBookmarkComplete(bookmark: bookmark) {
-			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
-			let connection = instantiateConnection(for: bookmark)
-
-			connection.connect { [weak self] (error, issue) in
-				if let strongSelf = self {
-					if error == nil {
-						let serverSupportsInfinitePropfind = connection.capabilities?.davPropfindSupportsDepthInfinity
-						let isDriveBased = connection.capabilities?.spacesEnabled ?? false
-
-						bookmark.userDisplayName = connection.loggedInUser?.displayName
-
-						connection.disconnect(completionHandler: {
-
-							let done = { (_ doAddBookmark: Bool) in
-								if doAddBookmark {
-									OCBookmarkManager.shared.addBookmark(bookmark)
-								}
-
-								let userActionCompletionHandler = strongSelf.userActionCompletionHandler
-								strongSelf.userActionCompletionHandler = nil
-
-								OnMainThread {
-									hudCompletion({
-										OnMainThread {
-											userActionCompletionHandler?(bookmark, true)
-										}
-										strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-									})
-								}
-							}
-
-							switch strongSelf.mode {
-								case .create:
-									// Add bookmark
-									OnMainThread {
-										var prepopulationMethod : BookmarkPrepopulationMethod?
-
-										// Determine prepopulation method
-										if prepopulationMethod == nil, let prepopulationMethodClassSetting = BookmarkViewController.classSetting(forOCClassSettingsKey: .prepopulation) as? String {
-											prepopulationMethod = BookmarkPrepopulationMethod(rawValue: prepopulationMethodClassSetting)
-										}
-
-										if prepopulationMethod == nil, serverSupportsInfinitePropfind?.boolValue == true {
-											prepopulationMethod = .streaming
-										}
-
-										if prepopulationMethod == nil {
-											prepopulationMethod = .doNot
-										}
-
-										if isDriveBased.boolValue {
-											// Drive-based accounts do not support prepopulation yet
-											prepopulationMethod = .doNot
-										}
-
-										// Prepopulation y/n?
-										if let prepopulationMethod = prepopulationMethod, prepopulationMethod != .doNot {
-											// Perform prepopulation
-											var progressViewController : ProgressIndicatorViewController?
-											var prepopulateProgress : Progress?
-											let prepopulateCompletionHandler = {
-												// Wrap up
-												OCBookmarkManager.shared.addBookmark(bookmark)
-
-												OnMainThread {
-													progressViewController?.dismiss(animated: true, completion: {
-														done(false)
-													})
-												}
-											}
-
-											// Perform prepopulation method
-											switch prepopulationMethod {
-												case .streaming:
-													prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
-														prepopulateCompletionHandler()
-													})
-
-												case .split:
-													prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
-														prepopulateCompletionHandler()
-													})
-
-												default:
-													done(true)
-											}
-
-											// Present progress
-											if let prepopulateProgress = prepopulateProgress {
-
-												progressViewController = ProgressIndicatorViewController(initialTitleLabel: "Preparing account".localized, initialProgressLabel: "Please wait…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
-													prepopulateProgress.cancel()
-												})
-												progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
-												if let progressViewController = progressViewController {
-													self?.topMostViewController.present(progressViewController, animated: true, completion: nil)
-												}
-											}
-
-										} else {
-											// No prepopulation
-											done(true)
-										}
-									}
-
-								case .edit:
-									// Update original bookmark
-									self?.originalBookmark?.setValuesFrom(bookmark)
-									if let originalBookmark = self?.originalBookmark, !OCBookmarkManager.shared.updateBookmark(originalBookmark) {
-										Log.error("Changes to \(originalBookmark) not saved as it's not tracked by OCBookmarkManager!")
-									}
-
-									done(false)
-							}
-						})
-					} else {
-						OnMainThread {
-							hudCompletion({
-								if let issue = issue {
-									self?.bookmark?.authenticationData = nil
-
-									IssuesCardViewController.present(on: strongSelf, issue: issue, completion: { [weak self, weak issue] (response) in
-										switch response {
-											case .cancel:
-												issue?.reject()
-
-											case .approve:
-												issue?.approve()
-												self?.handleContinue()
-
-											case .dismiss: break
-										}
-									})
-								} else {
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-								}
-							})
-						}
-					}
-				}
-			}
-		} else {
-			hudCompletion({ [weak self] in
-				if let strongSelf = self {
-					strongSelf.handleContinue()
-				}
-			})
-		}
-	}
-
 	// MARK: - Update section and row composition
 	func composeSectionsAndRows(animated: Bool = true, completion: (() -> Void)? = nil) {
 		if animated {
@@ -822,7 +386,7 @@ class BookmarkViewController: StaticTableViewController {
 		if bookmark?.primaryCertificate != nil {
 			if certificateRow != nil, certificateRow?.attached == false {
 				urlSection?.add(row: certificateRow!, animated: animated)
-				showedOAuthInfoHeader = true
+				bookmarkProvider.showedOAuthInfoHeader = true
 				bookmark?.primaryCertificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
 					OnMainThread {
 						guard let accessoryView = self.certificateRow?.additionalAccessoryView as? BorderedLabel else { return }
@@ -959,7 +523,7 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Continue button: show always
-		if isBookmarkComplete(bookmark: self.bookmark) {
+		if bookmarkProvider.isBookmarkComplete(bookmark: self.bookmark) {
 			if self.mode == .create {
 				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 			} else {
@@ -1075,9 +639,6 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	// MARK: - Tools
-	func isBookmarkComplete(bookmark: OCBookmark?) -> Bool {
-		return (bookmark?.url != nil) && (bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.authenticationData != nil)
-	}
 
 	// MARK: - Keyboard AccessoryView
 	@objc func toogleTextField (_ sender: UIBarButtonItem) {
@@ -1108,7 +669,7 @@ extension BookmarkViewController {
 		}
 
 		let bookmarkViewController : BookmarkViewController = BookmarkViewController(editBookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
-		bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
+		bookmarkViewController.bookmarkProvider.userActionCompletionHandler = { (bookmark, success) in
 			if success, let bookmark = bookmark {
 				if let error = autosolveErrorOnSuccess as Error? {
 					OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
@@ -1126,7 +687,7 @@ extension BookmarkViewController {
 		hostViewController.present(navigationController, animated: true, completion: {
 			OnMainThread {
 				if performContinue {
-					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+					bookmarkViewController.bookmarkProvider.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
 					bookmarkViewController.handleContinue()
 				}
 			}
@@ -1185,6 +746,18 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 // MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
+	
+	@objc func userActionCancel() {
+		bookmarkProvider.userActionCancel()
+	}
+	
+	@objc func handleContinue() {
+		bookmarkProvider.handleContinue()
+	}
+	
+	@objc func userActionSave() {
+		bookmarkProvider.userActionSave()
+	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if self.navigationItem.rightBarButtonItem == continueBarButtonItem {

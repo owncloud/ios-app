@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>branding.profile-url</key>
+	<string>demo.owncloud.com</string>
+	<key>bookmark.url-editable</key>
+	<false/>
+	<key>branding.can-add-account</key>
+	<false/>
+	<key>branding.can-edit-account</key>
+	<false/>
+	<key>branding.organization-name</key>
+	<string>ownCloud</string>
+</dict>
 </plist>

@@ -132,7 +132,15 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
 					.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
 						if let self = self {
-							BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+							print("-->>>>>")
+							print(AccountSettingsProvider.shared.defaultURL)
+							if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+								let provider = BookmarkProvider(nil, url: defaultURL)
+								provider.parentViewController = self
+								provider.handleContinue()
+							} else {
+								BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
+							}
 						}
 					}), image: UIImage(systemName: "plus.circle"), cssSelectors: [.welcome]),
 					.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
