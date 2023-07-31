@@ -113,6 +113,8 @@
 "Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
 "Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
 
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
@@ -521,6 +523,8 @@
 "Shared with {{recipients}}" = "Shared with {{recipients}}";
 "Expires {{expirationDate}}" = "Expires {{expirationDate}}";
 "Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Invite";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
 "Add email or name" = "Add email or name";
