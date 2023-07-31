@@ -560,7 +560,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				details.append(SegmentViewItem(view: button))
 			}
 
-			let content = UniversalItemListCell.Content(with: .text("Password"), iconSymbolName: "key.fill", accessories: accessories)
+			let content = UniversalItemListCell.Content(with: .text("Password".localized), iconSymbolName: "key.fill", accessories: accessories)
 			content.details = details
 
 			if passwordOption == nil {
@@ -647,7 +647,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		let passwordPrompt = UIAlertController(title: "Enter password".localized, message: nil, preferredStyle: .alert)
 
 		passwordPrompt.addTextField(configurationHandler: { textField in
-			textField.placeholder = "password".localized
+			textField.placeholder = "Password".localized
 			textField.isSecureTextEntry = true
 		})
 
