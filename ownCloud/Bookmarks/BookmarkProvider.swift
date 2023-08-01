@@ -84,7 +84,6 @@ class BookmarkProvider {
 
 	// MARK: - Continue
 	@objc func handleContinue() {
-		print("--> handle Continue")
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
@@ -112,13 +111,12 @@ class BookmarkProvider {
 			if let urlRow = urlRow {
 				url = urlRow.textField?.text
 			}
-			print("--> handleContinueURLProbe")
+			
 			handleContinueURLProbe(urlString: url ?? "",hud: hud, hudCompletion: hudCompletion)
 			return
 		}
 
 		if bookmark?.authenticationData == nil {
-			print("--> authenticationData == buk")
 			var proceed = true
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 				if OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
@@ -185,7 +183,6 @@ class BookmarkProvider {
 							let continueToNextStep : () -> Void = { [weak self] in
 								self?.bookmark?.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
 								
-								print("-->continueToNextStep \(self?.bookmark?.authenticationMethodIdentifier)")
 								self?.handleContinue()
 								
 								self?.bookmarkViewController?.composeSectionsAndRows(animated: true) {
@@ -251,7 +248,7 @@ class BookmarkProvider {
 				}
 			}
 
-			options[.presentingViewControllerKey] = self
+			options[.presentingViewControllerKey] = self.parentViewController
 			options[.requiredUsernameKey] = connectionBookmark.userName
 
 			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
