@@ -4,11 +4,11 @@
 <dict>
 	<key>branding.profile-url</key>
 	<string>demo.owncloud.com</string>
-	<key>bookmark.url-editable</key>
+	<key>branding.profile-allow-url-configuration</key>
 	<false/>
-	<key>branding.can-add-account</key>
+	<key>-branding.can-add-account</key>
 	<false/>
-	<key>branding.can-edit-account</key>
+	<key>-branding.can-edit-account</key>
 	<false/>
 	<key>branding.organization-name</key>
 	<string>ownCloud</string>

@@ -23,14 +23,9 @@ class BookmarkProvider {
 	var parentViewController: UIViewController?
 	var bookmarkViewController: BookmarkViewController?
 	
-	var urlRow : StaticTableViewRow?
-	var usernameRow : StaticTableViewRow?
-	var passwordRow : StaticTableViewRow?
-	var showedOAuthInfoHeader : Bool = false
 	var urlChanged = false
 	var nameChanged = false
 	
-
 	// MARK: - Connection instantiation
 	private var _cookieStorage : OCHTTPCookieStorage?
 	var cookieStorage : OCHTTPCookieStorage? {
@@ -44,7 +39,6 @@ class BookmarkProvider {
 	
 	// MARK: - Init & Deinit
 	init(_ editBookmark: OCBookmark?, url: URL? = nil, removeAuthDataFromCopy: Bool = false) {
-		
 		if editBookmark != nil {
 			mode = .edit
 
@@ -108,7 +102,7 @@ class BookmarkProvider {
 		if (bookmark?.url == nil) || (bookmark?.authenticationMethodIdentifier == nil) {
 			
 			var url = bookmark?.url?.absoluteString
-			if let urlRow = urlRow {
+			if let urlRow = bookmarkViewController?.urlRow {
 				url = urlRow.textField?.text
 			}
 			
@@ -122,15 +116,15 @@ class BookmarkProvider {
 				if OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 					// Only proceed, if OAuth Info Header was shown to the user, before continue was pressed
 					// Statement here is only important for http connections and token based auth
-					/*if showedOAuthInfoHeader == false {
+					if bookmarkViewController?.showOAuthInfoHeader == false {
 						proceed = false
-						showedOAuthInfoHeader = true
-					}*/
+						bookmarkViewController?.showOAuthInfoHeader = true
+					}
 				}
 			}
 			proceed = true
 			if proceed == true {
-				handleContinueAuthentication(username: usernameRow?.textField?.text, password: passwordRow?.textField?.text,hud: hud, hudCompletion: hudCompletion)
+				handleContinueAuthentication(username: bookmarkViewController?.usernameRow?.textField?.text, password: bookmarkViewController?.passwordRow?.textField?.text, hud: hud, hudCompletion: hudCompletion)
 			}
 
 			return
@@ -152,18 +146,18 @@ class BookmarkProvider {
 
 					parentViewController?.present(alertController, animated: true, completion: nil)
 
-					self.urlRow?.cell?.shakeHorizontally()
+					self.bookmarkViewController?.urlRow?.cell?.shakeHorizontally()
 
 					return
 				}
 
 				// Save username and password for possible later use if they were part of the URL
 				if username != nil {
-					usernameRow?.value = username
+					bookmarkViewController?.usernameRow?.value = username
 				}
 
 				if password != nil {
-					passwordRow?.value = password
+					bookmarkViewController?.passwordRow?.value = password
 				}
 
 				// Probe URL
@@ -178,7 +172,7 @@ class BookmarkProvider {
 					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods, generationOptions) in
 						hudCompletion({
 							// Update URL
-							self.urlRow?.textField?.text = serverURL.absoluteString
+							self.bookmarkViewController?.urlRow?.textField?.text = serverURL.absoluteString
 
 							let continueToNextStep : () -> Void = { [weak self] in
 								self?.bookmark?.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
@@ -289,7 +283,7 @@ class BookmarkProvider {
 						if nsError?.isOCError(withCode: .authorizationFailed) == true {
 							// Shake
 							self.parentViewController?.navigationController?.view.shakeHorizontally()
-							self.bookmarkViewController?.updateInputFocus(fallbackRow: self.passwordRow)
+							self.bookmarkViewController?.updateInputFocus(fallbackRow: self.bookmarkViewController?.passwordRow)
 						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
 							// User cancelled authorization, no reaction needed
 						} else if let issue = issue, let parentViewController = self.parentViewController {

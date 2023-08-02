@@ -207,10 +207,6 @@ class BookmarkViewController: StaticTableViewController {
 				self?.composeSectionsAndRows(animated: true)
 			}
 		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
-		
-		bookmarkProvider.urlRow = urlRow
-		bookmarkProvider.usernameRow = usernameRow
-		bookmarkProvider.passwordRow = passwordRow
 
 		addPasswordManagerButton()
 
@@ -222,7 +218,6 @@ class BookmarkViewController: StaticTableViewController {
 				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
 					if OCAuthenticationMethod.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 						self?.showOAuthInfoHeader = true
-						self?.bookmarkProvider.showedOAuthInfoHeader = true
 					}
 				}
 
@@ -386,7 +381,7 @@ class BookmarkViewController: StaticTableViewController {
 		if bookmark?.primaryCertificate != nil {
 			if certificateRow != nil, certificateRow?.attached == false {
 				urlSection?.add(row: certificateRow!, animated: animated)
-				bookmarkProvider.showedOAuthInfoHeader = true
+				showOAuthInfoHeader = true
 				bookmark?.primaryCertificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
 					OnMainThread {
 						guard let accessoryView = self.certificateRow?.additionalAccessoryView as? BorderedLabel else { return }
@@ -687,7 +682,7 @@ extension BookmarkViewController {
 		hostViewController.present(navigationController, animated: true, completion: {
 			OnMainThread {
 				if performContinue {
-					bookmarkViewController.bookmarkProvider.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+					//bookmarkViewController.bookmarkProvider.showOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
 					bookmarkViewController.handleContinue()
 				}
 			}

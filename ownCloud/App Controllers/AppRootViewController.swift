@@ -123,7 +123,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 				// No account available
 
 				var addAccountTitle = "Add account".localized
-				if !VendorServices.shared.canAddAccount {
+				if let _ = AccountSettingsProvider.shared.defaultURL, !AccountSettingsProvider.shared.URLEditable {
 					addAccountTitle = "Login".localized
 				}
 
@@ -132,9 +132,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
 					.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
 						if let self = self {
-							print("-->>>>>")
-							print(AccountSettingsProvider.shared.defaultURL)
-							if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+							if let defaultURL = AccountSettingsProvider.shared.defaultURL, !AccountSettingsProvider.shared.URLEditable {
 								let provider = BookmarkProvider(nil, url: defaultURL)
 								provider.parentViewController = self
 								provider.handleContinue()
