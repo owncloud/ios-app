@@ -390,7 +390,7 @@ public class ThemeCollection : NSObject {
 				contentNavigationBarSet = cellSet
 				contentToolbarSet = cellSet
 
-				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: lightBrandSet, for: .light)
+				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
 				sidebarCellStateSet.regular.backgroundColor = .secondarySystemBackground.resolvedColor(with: styleTraitCollection)
 				sidebarCellStateSet.selected.labelColor = .white
 				sidebarCellStateSet.selected.iconColor = .white
