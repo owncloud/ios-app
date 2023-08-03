@@ -91,9 +91,6 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	var recipientSearchController: OCRecipientSearchController?
 	var recipientsSectionDatasource: OCDataSourceComposition?
 	var recipientsSection: CollectionViewSection?
-	
-	var itemSection: CollectionViewSection?
-	var itemSectionDatasource: OCDataSourceArray?
 
 	var rolesSectionOptionGroup: OptionGroup?
 	var rolesSectionDatasource: OCDataSourceArray?
@@ -128,16 +125,13 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.completionHandler = completion
 		
 		// Item section
-		let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
-			context.permissions = []
-		})
-
 		if let item = item {
-			itemSectionDatasource = OCDataSourceArray(items: [item])
-			itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
-			if let section = itemSection {
-				sections.append(section)
-			}
+			let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
+				context.permissions = []
+			})
+			var itemSectionDatasource = OCDataSourceArray(items: [item])
+			var itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
+			sections.append(itemSection)
 		}
 
 		// Managament section cell style
@@ -262,19 +256,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// - Add delete button for existing shares
 		if mode == .edit {
-			var deleteButtonConfig = UIButton.Configuration.borderedProminent()
-			deleteButtonConfig.title = "Unshare".localized
-			deleteButtonConfig.cornerStyle = .large
-			deleteButtonConfig.baseBackgroundColor = .systemRed
-			deleteButtonConfig.baseForegroundColor = .white
-			
-			let deleteButton = UIButton()
-			deleteButton.configuration = deleteButtonConfig
-			deleteButton.addAction(UIAction(handler: { [weak self] action in
-				self?.deleteShare()
-			}), for: .primaryActionTriggered)
-			
-			let unshare = UIBarButtonItem(customView: deleteButton)
+			let unshare = UIBarButtonItem(title: "Unshare".localized, style: .plain, target: self, action: #selector(deleteShare))
+			unshare.tintColor = .red
 			
 			self.navigationItem.rightBarButtonItem = unshare
 		}
@@ -755,7 +738,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 	}
 
-	func deleteShare() {
+	@objc func deleteShare() {
 		guard let core = clientContext?.core, let share else {
 			self.showError(NSError(ocError: .internal))
 			return
