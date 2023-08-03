@@ -54,7 +54,7 @@
 {
 	return (@{
 		OCClassSettingsKeyPasscodeEnforced : @(NO),
-		OCClassSettingsKeyRequiredPasscodeDigits : @(NO),
+		OCClassSettingsKeyPasscodeEnforcedByDevice : @(NO),
 		OCClassSettingsKeyRequiredPasscodeDigits : @(4),
 		OCClassSettingsKeyMaximumPasscodeDigits : @(6),
 		OCClassSettingsKeyPasscodeUseBiometricalUnlock : @(NO),
@@ -83,7 +83,7 @@
 			OCClassSettingsMetadataKeyCategory	: @"Passcode"
 		},
 		
-		OCClassSettingsKeyRequiredPasscodeDigits : @{
+		OCClassSettingsKeyPasscodeEnforcedByDevice : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
 			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
