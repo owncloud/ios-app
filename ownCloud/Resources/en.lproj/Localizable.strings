@@ -113,6 +113,8 @@
 "Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
 "Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
 
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
@@ -277,6 +279,8 @@
 "Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
 "%ld digit code" = "%ld digit code";
 "Enter a new code with %ld digits" = "Enter a new code with %ld digits";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
 
 "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "beta";
@@ -521,6 +525,8 @@
 "Shared with {{recipients}}" = "Shared with {{recipients}}";
 "Expires {{expirationDate}}" = "Expires {{expirationDate}}";
 "Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Invite";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
 "Add email or name" = "Add email or name";
