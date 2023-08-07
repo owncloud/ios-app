@@ -182,21 +182,29 @@
 #pragma mark - ItemIdentifier & URL lookup
 - (NSFileProviderItem)itemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)outError
 {
-	__block NSFileProviderItem item = nil;
-	__block NSError *returnError = nil;
+	NSFileProviderItem item = nil;
+	NSError *returnError = nil;
 
-	if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier] || [identifier isEqual:OCVFSItemIDRoot])
+	if (identifier == nil)
 	{
-		item = (NSFileProviderItem)self.vfsCore.rootNode;
+		returnError = OCError(OCErrorInvalidParameter);
 	}
-	else
+
+	if (returnError == nil)
 	{
-		item = (NSFileProviderItem)[self.vfsCore itemForIdentifier:(OCVFSItemID)identifier error:&returnError];
+		if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier] || [identifier isEqual:OCVFSItemIDRoot])
+		{
+			item = (NSFileProviderItem)self.vfsCore.rootNode;
+		}
+		else
+		{
+			item = (NSFileProviderItem)[self.vfsCore itemForIdentifier:(OCVFSItemID)identifier error:&returnError];
+		}
 	}
 
 	OCLogDebug(@"-itemForIdentifier:error: %@ resolved into %@ / %@", identifier, item, returnError);
 
-	if ((item == nil) && (returnError == nil))
+	if ((item == nil) && (returnError == nil) && (identifier != nil))
 	{
 		returnError = [NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier];
 	}
@@ -208,14 +216,15 @@
 		*outError = [returnError translatedError];
 	}
 
-	return item;
+	return (item);
 }
 
 - (OCItem *)ocItemForIdentifier:(NSFileProviderItemIdentifier)identifier vfsNode:(OCVFSNode **)outNode error:(NSError *__autoreleasing  _Nullable *)outError
 {
 	id item;
+	NSError *resolutionError = nil;
 
-	if ((item = [self itemForIdentifier:identifier error:outError]) != nil)
+	if ((item = [self itemForIdentifier:identifier error:&resolutionError]) != nil)
 	{
 		if ([item isKindOfClass:OCItem.class])
 		{
@@ -238,11 +247,22 @@
 		}
 	}
 
-	OCLogDebug(@"-ocItemForIdentifier:%@ could not find/return OCItem", identifier);
+	OCLogDebug(@"-ocItemForIdentifier:%@ could not find/return OCItem (resolutionError=%@)", identifier, resolutionError);
 
 	if (outError != NULL)
 	{
-		*outError = [[NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier] translatedError];
+		NSError *error;
+
+		if (identifier != nil)
+		{
+			error = [NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier];
+		}
+		else
+		{
+			error = (resolutionError != nil) ? resolutionError : OCError(OCErrorInvalidParameter);
+		}
+
+		*outError = [error translatedError];
 	}
 
 	return (nil);

@@ -18,6 +18,7 @@
 
 #import "AppLockSettings.h"
 #import "Branding.h"
+#import <LocalAuthentication/LocalAuthentication.h>
 
 @implementation AppLockSettings
 
@@ -53,6 +54,7 @@
 {
 	return (@{
 		OCClassSettingsKeyPasscodeEnforced : @(NO),
+		OCClassSettingsKeyPasscodeEnforcedByDevice : @(NO),
 		OCClassSettingsKeyRequiredPasscodeDigits : @(4),
 		OCClassSettingsKeyMaximumPasscodeDigits : @(6),
 		OCClassSettingsKeyPasscodeUseBiometricalUnlock : @(NO),
@@ -80,7 +82,14 @@
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
 			OCClassSettingsMetadataKeyCategory	: @"Passcode"
 		},
-
+		
+		OCClassSettingsKeyPasscodeEnforcedByDevice : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeBoolean,
+			OCClassSettingsMetadataKeyDescription 	: @"Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusAdvanced,
+			OCClassSettingsMetadataKeyCategory	: @"Passcode"
+		},
+		
 		OCClassSettingsKeyRequiredPasscodeDigits : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeInteger,
 			OCClassSettingsMetadataKeyDescription 	: @"Controls how many passcode digits are at least required for passcode lock.",
@@ -276,8 +285,14 @@
 - (BOOL)isPasscodeEnforced
 {
 	NSNumber *isPasscodeEnforced = [self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeEnforced];
-
-	if (isPasscodeEnforced != nil) {
+	NSNumber *isPasscodeEnforcedByDevice = [self classSettingForOCClassSettingsKey:OCClassSettingsKeyPasscodeEnforcedByDevice];
+	
+	LAContext *context = [[LAContext alloc] init];
+	NSError *error = nil;
+	
+	if (isPasscodeEnforcedByDevice != nil && isPasscodeEnforcedByDevice.boolValue == YES && [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error] == NO) {
+		return (YES);
+	} else if (isPasscodeEnforced != nil) {
 		return (isPasscodeEnforced.boolValue);
 	}
 
@@ -316,6 +331,7 @@
 OCClassSettingsIdentifier OCClassSettingsIdentifierPasscode = @"passcode";
 
 OCClassSettingsKey OCClassSettingsKeyPasscodeEnforced = @"enforced";
+OCClassSettingsKey OCClassSettingsKeyPasscodeEnforcedByDevice = @"enforced-by-device";
 OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits = @"requiredPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits = @"maximumPasscodeDigits";
 OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay = @"lockDelay";
