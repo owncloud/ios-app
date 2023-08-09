@@ -130,6 +130,8 @@
 
 "Show more results" = "Show more results";
 
+"An error occurred" = "An error occurred";
+
 /* Item Layouts */
 "List" = "List";
 "Grid" = "Grid";
