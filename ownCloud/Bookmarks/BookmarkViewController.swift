@@ -44,9 +44,12 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
+	var activeTextField: UITextField?
+
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
-	var activeTextField: UITextField?
+	var tokenHelpSection : StaticTableViewSection?
+	var tokenHelpRow: StaticTableViewRow?
 
 	var userActionCompletionHandler : BookmarkViewControllerUserActionCompletionHandler?
 
@@ -128,6 +131,8 @@ class BookmarkViewController: StaticTableViewController {
 
 		// Super init
 		super.init(style: .grouped)
+
+		self.cssSelector = .bookmarkEditor
 
 		// Accessibility Identifiers
 		continueBarButtonItem.accessibilityIdentifier = "continue-bar-button"
@@ -223,6 +228,10 @@ class BookmarkViewController: StaticTableViewController {
 		addPasswordManagerButton()
 
 		tokenInfoRow = StaticTableViewRow(label: "", identifier: "row-credentials-token-info")
+
+		// Token help
+		tokenHelpRow = StaticTableViewRow(label: "", identifier: "row-token-help")
+		tokenHelpSection =  StaticTableViewSection(headerTitle: "", footerTitle: nil, identifier: "section-token-help", rows: [ tokenHelpRow! ])
 
 		deleteAuthDataButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 			if self?.bookmark?.authenticationData != nil {
@@ -329,20 +338,18 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
-			.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64)),
-			.title(VendorServices.shared.appName, alignment: .centered)
+			.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64), cssSelectors: [.icon]),
+			.title(VendorServices.shared.appName, alignment: .centered, cssSelectors: [.title])
 		])
-		logoAndAppNameView.cssSelector = .info
-		logoAndAppNameView.backgroundView?.cssSelector = .info
+
+		logoAndAppNameView.cssSelectors = [.welcome, .message]
 		logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
 		logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
+		(logoAndAppNameView.backgroundView as? RoundCornerBackgroundView)?.fillImage = Branding.shared.brandedImageNamed(.loginBackground)
+
 		self.tableView.tableHeaderView = logoAndAppNameView
 		self.tableView.layoutTableHeaderView()
-
-		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginBackground) {
-			self.tableView.backgroundView = UIImageView(image: image)
-		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -944,18 +951,19 @@ class BookmarkViewController: StaticTableViewController {
 				authMethodName = localizedAuthMethodName
 			}
 
-			let tokenMessageView = ComposedMessageView.infoBox(additionalElements: [
-				.text("If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName]), style: .system(textStyle: .body, weight: .semibold), alignment: .centered, cssSelectors: [.info])
-			])
-			tokenMessageView.cssSelector = .info
-			tokenMessageView.backgroundView?.cssSelector = .info
-			tokenMessageView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
-			tokenMessageView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
+			let messageText = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName])
 
-			self.tableView.tableHeaderView = tokenMessageView
-			self.tableView.layoutTableHeaderView()
+			tokenHelpRow?.value = messageText
+
+			OnMainThread {
+				if self.tokenHelpSection?.attached == false {
+					self.insertSection(self.tokenHelpSection!, at: 0, animated: animated)
+				}
+			}
 		} else {
-			self.tableView.tableHeaderView = nil
+			if tokenHelpSection?.attached == true {
+				removeSection(tokenHelpSection!, animated: animated)
+			}
 		}
 
 		// Continue button: show always
@@ -1272,4 +1280,8 @@ public extension OCAuthenticationMethod {
 		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
 
+}
+
+extension ThemeCSSSelector {
+	static let bookmarkEditor = ThemeCSSSelector(rawValue: "bookmarkEditor")
 }
