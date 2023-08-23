@@ -1,0 +1,27 @@
+name: Localizable.strings to UTF8
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches:
+    - fix/*
+    - feature/*
+    - milestone/*
+
+jobs:
+  build:
+    runs-on: macos-latest
+    name: Localizable.strings to UTF8
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Xcode version
+        run: /usr/bin/xcodebuild -version
+      - name: Run Localizations To UTF8
+        run: ./localizations_to_utf8.sh
+        working-directory: ./tools/LocalizationsToUTF8/
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: converted Localizable.strings to UTF8
+          file_pattern: '*.strings'

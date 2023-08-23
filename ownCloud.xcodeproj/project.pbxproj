@@ -310,6 +310,7 @@
 		DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */; };
 		DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A729802B0900905EC8 /* NavigationContent.swift */; };
 		DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */; };
+		DC61450C2A96497D00BFF393 /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC61450B2A96497D00BFF393 /* LocalizationTests.swift */; };
 		DC6179E728E0578400C7C4E0 /* OCFileProviderSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6179E528E0578400C7C4E0 /* OCFileProviderSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC6179E828E0578400C7C4E0 /* OCFileProviderSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6179E628E0578400C7C4E0 /* OCFileProviderSettings.m */; };
 		DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */ = {isa = PBXBuildFile; fileRef = DC625140225C904700736874 /* NSError+MessageResolution.m */; };
@@ -1316,6 +1317,7 @@
 		DC60F2A729802B0900905EC8 /* NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContent.swift; sourceTree = "<group>"; };
 		DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContentItem.swift; sourceTree = "<group>"; };
 		DC60F2AB29812A9B00905EC8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DC61450B2A96497D00BFF393 /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
 		DC6179E528E0578400C7C4E0 /* OCFileProviderSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderSettings.h; sourceTree = "<group>"; };
 		DC6179E628E0578400C7C4E0 /* OCFileProviderSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderSettings.m; sourceTree = "<group>"; };
 		DC62513F225C904700736874 /* NSError+MessageResolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+MessageResolution.h"; sourceTree = "<group>"; };
@@ -1826,6 +1828,7 @@
 		233BDEB3204FEFE500C06732 /* ownCloudTests */ = {
 			isa = PBXGroup;
 			children = (
+				DC61450A2A96495800BFF393 /* Localization */,
 				DC26ADBD2550C02F0059680D /* Metadata */,
 				233BDEB6204FEFE500C06732 /* Info.plist */,
 			);
@@ -2515,6 +2518,14 @@
 				DC60F2A929802D5800905EC8 /* NavigationContentItem.swift */,
 			);
 			path = "Navigation Content";
+			sourceTree = "<group>";
+		};
+		DC61450A2A96495800BFF393 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				DC61450B2A96497D00BFF393 /* LocalizationTests.swift */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		DC62F56A2925059E0095BB5D /* Connection */ = {
@@ -4440,6 +4451,7 @@
 			files = (
 				39057AA4233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				DC26ADDE2550C0B20059680D /* MetadataDocumentationTests.swift in Sources */,
+				DC61450C2A96497D00BFF393 /* LocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
