@@ -54,6 +54,11 @@
             value = "${PROJECT_DIR}/doc/CONFIGURATION.json"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "OC_LOCALIZATION_ROOT"
+            value = "${PROJECT_DIR}/ownCloud/Resources"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
