@@ -500,6 +500,7 @@
 		DCD864122811FC5700CA6631 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD864112811FC5700CA6631 /* GradientView.swift */; };
 		DCD954DF247D62FA00E184E6 /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
+		DCDA83852A9CE6C300BFF393 /* InitialSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDA83842A9CE6C300BFF393 /* InitialSetupViewController.swift */; };
 		DCDBB60A2525305600FAD707 /* NotificationAuthErrorForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */; };
 		DCDC0ACF23CD186400DFE36D /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -1525,6 +1526,7 @@
 		DCD864112811FC5700CA6631 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
 		DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCLicenseManager+Internal.h"; sourceTree = "<group>"; };
+		DCDA83842A9CE6C300BFF393 /* InitialSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialSetupViewController.swift; sourceTree = "<group>"; };
 		DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationAuthErrorForwarder.h; sourceTree = "<group>"; };
 		DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationAuthErrorForwarder.m; sourceTree = "<group>"; };
 		DCDC0AD023CD18D200DFE36D /* OCLicenseManager+Setup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+Setup.swift"; sourceTree = "<group>"; };
@@ -2946,6 +2948,7 @@
 				DCB6B1EA292B7C2400D27573 /* AppRootViewController+ItemActions.swift */,
 				DCB6B1F4292CC46B00D27573 /* AccountController+ItemActions.swift */,
 				DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */,
+				DCDA83842A9CE6C300BFF393 /* InitialSetupViewController.swift */,
 			);
 			path = "App Controllers";
 			sourceTree = "<group>";
@@ -4419,6 +4422,7 @@
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,
 				DC62514C225D254500736874 /* UploadBaseAction.swift in Sources */,
 				4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */,
+				DCDA83852A9CE6C300BFF393 /* InitialSetupViewController.swift in Sources */,
 				23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */,
 				DCDF58B323CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift in Sources */,
 				DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */,

@@ -682,6 +682,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.welcome, .message, .title],      property: .stroke, value: darkBrandSet.labelColor),
 			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
 			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .fill,   value: darkBrandColor),
+			ThemeCSSRecord(selectors: [.welcome],			     property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
 
 			// Side Bar
 			// - Interface Style
