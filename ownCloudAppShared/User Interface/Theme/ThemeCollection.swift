@@ -679,8 +679,10 @@ public class ThemeCollection : NSObject {
 
 			// Welcome screen
 			ThemeCSSRecord(selectors: [.welcome, .message, .background], property: .fill,   value: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)),
-			ThemeCSSRecord(selectors: [.welcome, .message, .title],      property: .stroke, value: darkBrandSet.labelColor),
-			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
+//			ThemeCSSRecord(selectors: [.welcome, .message, .title],      property: .stroke, value: darkBrandSet.labelColor),
+//			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .title],      property: .stroke, value: UIColor.white),
+			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: UIColor.white),
 			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .fill,   value: darkBrandColor),
 			ThemeCSSRecord(selectors: [.welcome],			     property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
 
