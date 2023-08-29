@@ -194,12 +194,12 @@ public class PasscodeSetupCoordinator {
 	public func showDigitsCountSelectionUI() {
 		var title = "Passcode option".localized
 		var message = "Please choose how many digits you want to use for the passcode lock?".localized
-		
+
 		if AppLockSettings.shared.isPasscodeEnforced {
 			title = "Passcode setup".localized
 			message = "To use the app, you need to create a passcode.".localized + "\n\n" + message
 		}
-		
+
 		let alertController = ThemedAlertController(title: title, message: message, preferredStyle: .alert)
 
 		if let popoverController = alertController.popoverPresentationController {

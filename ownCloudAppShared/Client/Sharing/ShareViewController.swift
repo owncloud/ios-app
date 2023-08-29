@@ -123,14 +123,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.item = (item != nil) ? item! : ((location != nil) ? try? clientContext.core?.cachedItem(at: location!) : nil)
 		self.mode = mode
 		self.completionHandler = completion
-		
+
 		// Item section
 		if let item = item {
 			let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
 				context.permissions = []
 			})
-			var itemSectionDatasource = OCDataSourceArray(items: [item])
-			var itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
+			let itemSectionDatasource = OCDataSourceArray(items: [item])
+			let itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
 			sections.append(itemSection)
 		}
 
@@ -231,19 +231,19 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// Set navigation bar title
 		var navigationTitle: String?
-		
+
 		switch mode {
 		case .create:
 			navigationTitle = (type == .link) ? "Create link".localized : "Invite".localized
-			
+
 		case .edit:
 			navigationTitle = "Edit".localized
 		}
 		navigationItem.titleLabelText = navigationTitle
-		
+
 		// Add bottom button bar
 		let title = (mode == .create) ? ((type == .link) ? "Create link".localized : "Invite".localized) : "Save changes".localized
-		
+
 		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, cancelButtonTitle: "Cancel".localized, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
 			self?.save()
 		}), cancelAction: UIAction(handler: { [weak self] _ in
@@ -258,7 +258,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		if mode == .edit {
 			let unshare = UIBarButtonItem(title: "Unshare".localized, style: .plain, target: self, action: #selector(deleteShare))
 			unshare.tintColor = .red
-			
+
 			self.navigationItem.rightBarButtonItem = unshare
 		}
 

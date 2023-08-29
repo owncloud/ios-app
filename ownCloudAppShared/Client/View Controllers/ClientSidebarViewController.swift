@@ -221,14 +221,14 @@ extension ClientSidebarViewController {
 			// Keep aspect ratio + scale logo to 90% of available height
 			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
 		}
-		
+
 		let logoLabel = ThemeCSSLabel()
 		logoLabel.translatesAutoresizingMaskIntoConstraints = false
 		logoLabel.text = VendorServices.shared.appName
 		logoLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 		logoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 		logoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-		
+
 		let logoContainer = ThemeCSSView(withSelectors: [.logo])
 		logoContainer.translatesAutoresizingMaskIntoConstraints = false
 		logoContainer.addSubview(logoImageView)
