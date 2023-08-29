@@ -52,7 +52,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		super.viewDidLoad()
 
 		// Set up AccountsControllerSource
-		accountsControllerSectionSource = OCDataSourceMapped(source: OCBookmarkManager.shared.bookmarksDatasource, creator: { [weak self] (_, bookmarkDataItem) in
+		accountsControllerSectionSource = OCDataSourceMapped(source: nil, creator: { [weak self] (_, bookmarkDataItem) in
 			if let bookmark = bookmarkDataItem as? OCBookmark, let self = self, let clientContext = self.clientContext {
 				let controller = AccountController(bookmark: bookmark, context: clientContext, configuration: self.controllerConfiguration)
 
@@ -66,6 +66,9 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 				accountController.destroy() // needs to be called since AccountController keeps a reference to itself otherwise
 			}
 		}, queue: .main)
+
+		accountsControllerSectionSource?.trackItemVersions = true
+		accountsControllerSectionSource?.source = OCBookmarkManager.shared.bookmarksDatasource
 
 		// Combined data source
 		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
