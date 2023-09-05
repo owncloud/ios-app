@@ -74,7 +74,7 @@ class CreateDocumentAction: Action {
 			return .none
 		}
 
-		if forContext.items.first?.type != OCItemType.collection {
+		if forContext.items.first?.type != .collection {
 			return .none
 		}
 
@@ -82,10 +82,12 @@ class CreateDocumentAction: Action {
 			return .none
 		}
 
-		if forContext.core?.appProvider?.types?.contains(where: { fileType in
-			return fileType.allowCreation
-		}) == true {
-			return .first
+		if let appProvider = forContext.core?.appProvider, appProvider.supportsCreateDocument {
+			if appProvider.types?.contains(where: { fileType in
+				return fileType.allowCreation
+			}) == true {
+				return .first
+			}
 		}
 
 		return .none

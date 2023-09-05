@@ -72,6 +72,8 @@
 		_enumerationObservers = [NSMutableArray new];
 		_changeObservers = [NSMutableArray new];
 
+		_didReturnAnyContentQueries = [NSHashTable weakObjectsHashTable];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_displaySettingsChanged:) name:DisplaySettingsChanged object:nil];
 	}
 
@@ -217,59 +219,85 @@
 - (void)requestContentWithErrorHandler:(void(^)(NSError *))errorHandler contentConsumer:(void(^)(OCVFSContent *))contentConsumer observerQueuer:(BOOL(^)(dispatch_block_t completionHandler))observerQueuer
 {
 	__weak FileProviderContentEnumerator *weakSelf = self;
+	OCVFSItemID containerItemIdentifier = _containerItemIdentifier;
+	NSString *contentRequestUUID = [containerItemIdentifier stringByAppendingFormat:@"#%@", NSUUID.UUID.UUIDString];
+
+	OCLogDebug(@"[QUEUE] Queuing content request %@", contentRequestUUID);
 
 	[FileProviderContentEnumerator.queue async:^(dispatch_block_t  _Nonnull completionHandler) {
 		FileProviderContentEnumerator *strongSelf = weakSelf;
 
+		OCWLogDebug(@"[START] Starting content request %@", contentRequestUUID);
+
+		// Add completion handler call debugging
+		completionHandler = ^{
+			OCWLogDebug(@"[CMPHL] Completion handler called for request %@, stack trace: %@", contentRequestUUID, NSThread.callStackSymbols);
+			completionHandler();
+		};
+
 		if (strongSelf == nil) {
+			OCWLogDebug(@"[CMPLT] Content Enumerator deallocated before content could be returned for %@", contentRequestUUID);
+			errorHandler(OCErrorWithDescription(OCErrorInternal, @"Content Enumerator deallocated before content could be returned"));
+
 			completionHandler();
 			return;
 		}
 
-		[strongSelf.vfsCore provideContentForContainerItemID:strongSelf->_containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
+		[strongSelf.vfsCore provideContentForContainerItemID:containerItemIdentifier changesFromSyncAnchor:nil completionHandler:^(NSError * _Nullable error, OCVFSContent * _Nullable content) {
+			OCWLogDebug(@"[HAND1] Handling response for content request %@", contentRequestUUID);
+
 			dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
 				FileProviderContentEnumerator *strongSelf = weakSelf;
 
+				OCWLogDebug(@"[HAND2] Handling response for content request %@", contentRequestUUID);
+
 				if (strongSelf == nil) {
+					OCWLogDebug(@"[ERROR] Content Enumerator deallocated before content could be returned for %@", contentRequestUUID);
+					errorHandler(OCErrorWithDescription(OCErrorInternal, @"Content Enumerator deallocated before content could be returned"));
+
 					completionHandler();
 					return;
 				}
 
 				if (error != nil)
 				{
+					OCWLogDebug(@"[ERROR] Content Enumerator VFS response error %@ for %@", error, contentRequestUUID);
 					errorHandler(error);
-					completionHandler();
 				}
 				else
 				{
 					if (content.isSnapshot)
 					{
 						// Content is a snapshot, so there's no need to keep the content around - it can be sent now
+						OCWLogDebug(@"[CMPLT] Content Enumerator VFS snapshot response for %@", contentRequestUUID);
 						contentConsumer(content);
-						completionHandler();
 					}
 					else
 					{
 						// Content is self-updating, so we can send it
 						if (strongSelf.content != nil)
 						{
+							// Content already available
+							OCWLogDebug(@"[CMPLT] Content Enumerator VFS immediately available content response for %@", contentRequestUUID);
 							contentConsumer(strongSelf.content);
-							completionHandler();
 						}
 						else
 						{
-							if (observerQueuer(completionHandler))
+							// Content to be provided by observer
+							OCWLogDebug(@"[REQST] Content Enumerator VFS provided asynchronously for %@", contentRequestUUID);
+							strongSelf.content = content; // effectively sets it to nil, since this can only be reached following (strongSelf.content == nil)
+
+							if (!observerQueuer(nil))
 							{
-								strongSelf.content = content;
-							}
-							else
-							{
-								strongSelf.content = content;
-								completionHandler();
+								// No observer available - unexpected, so complete with an error
+								OCWLogDebug(@"[ERROR] No content observer available for %@", contentRequestUUID);
+								errorHandler(OCErrorWithDescription(OCErrorInternal, @"No content observer available"));
 							}
 						}
 					}
 				}
+
+				completionHandler();
 			});
 		}];
 	}];
@@ -542,8 +570,11 @@
 #pragma mark - Content distribution
 - (BOOL)provideItemsToEnumerationObserver:(id<NSFileProviderEnumerationObserver>)enumerationObserver fromContent:(OCVFSContent *)content
 {
-	if (((content.query.state == OCQueryStateContentsFromCache) || ((content.query.state == OCQueryStateWaitingForServerReply) && (content.query.queryResults.count > 0)) || (content.query.state == OCQueryStateIdle))
-	    || ((content.query == nil) && (content != nil)))
+	if (( (content.query.state == OCQueryStateContentsFromCache) ||
+	     ((content.query.state == OCQueryStateWaitingForServerReply) && (content.query.queryResults.count > 0)) ||
+	      (content.query.state == OCQueryStateIdle)
+	    ) ||
+	    ((content.query == nil) && (content != nil)))
 	{
 		NSArray <OCItem *> *queryResults = content.query.queryResults;
 		OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuid.UUIDString;
@@ -551,6 +582,11 @@
 		for (OCItem *item in queryResults)
 		{
 			item.bookmarkUUID = bookmarkUUIDString;
+		}
+
+		if (content.query != nil)
+		{
+			[_didReturnAnyContentQueries addObject:content.query];
 		}
 
 		OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, enumerationObserver, content.query.queryLocation.path, queryResults);
@@ -587,6 +623,11 @@
 		item.bookmarkUUID = bookmarkUUIDString;
 	}
 
+	if (content.query != nil)
+	{
+		[_didReturnAnyContentQueries addObject:content.query];
+	}
+
 	NSFileProviderSyncAnchor syncAnchor = [content.core.latestSyncAnchor syncAnchorData];
 
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -598,14 +639,14 @@
 }
 
 #pragma mark - OCQuery delegate
-- (void)queryHasChangesAvailable:(OCQuery *)query
+- (void)_updateFromQuery:(OCQuery *)query
 {
-	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
-
 	if ( (query.state == OCQueryStateContentsFromCache) ||
 	    ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) ||
 	     (query.state == OCQueryStateIdle))
 	{
+		OCLogDebug(@"##### Serving query %@ for %@ content. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query, query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+
 		dispatch_async(FileProviderContentEnumerator.dispatchQueue, ^{
 			// Send content to enumeration observers
 			NSArray<FileProviderEnumeratorObserver *> *enumerationObservers = [self->_enumerationObservers copy];
@@ -619,7 +660,6 @@
 				}
 			}
 
-
 			// Send content to change observers
 			NSArray<FileProviderEnumeratorObserver *> *changeObservers = [self->_changeObservers copy];
 
@@ -632,6 +672,32 @@
 				}
 			}
 		});
+	}
+}
+
+- (void)queryHasChangesAvailable:(OCQuery *)query
+{
+	OCLogDebug(@"##### Query %@ for %@ has changes. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query, query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+
+	[self _updateFromQuery:query];
+}
+
+- (void)queryHasChangedState:(OCQuery *)query
+{
+	OCLogDebug(@"##### Query %@ for %@ has changed state. Query state: %lu, SinceSyncAnchor: %@, Changes available: %d", query, query.queryLocation.path, (unsigned long)query.state, query.querySinceSyncAnchor, query.hasChangesAvailable);
+
+	BOOL didReturnContentForQueryBefore = [_didReturnAnyContentQueries containsObject:query];
+	BOOL isEmptyQueryResult = (query.queryResults.count == 0);
+
+	// This catches the following special case:
+	// - query has no results (f.ex. empty folder)
+	// -> query had no results when returning from the database and waiting for a reply (=> does not provide items to FP)
+	// -> query returns from PROPFIND and changes state to idle, but still has no results (=> chance that only state changes, no additional call to -queryHasChangesAvailable:, because it has not)
+	// -> query does not return any results -> Files.app shows spinner indefinitely (=> now, the state change to idle with an empty result set triggers a return of items
+	if ((query.state == OCQueryStateIdle) && !didReturnContentForQueryBefore && isEmptyQueryResult)
+	{
+		OCLogDebug(@"Would have updated %@", query);
+		// [self _updateFromQuery:query];
 	}
 }
 

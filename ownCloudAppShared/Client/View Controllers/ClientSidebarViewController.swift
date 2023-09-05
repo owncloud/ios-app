@@ -52,7 +52,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		super.viewDidLoad()
 
 		// Set up AccountsControllerSource
-		accountsControllerSectionSource = OCDataSourceMapped(source: OCBookmarkManager.shared.bookmarksDatasource, creator: { [weak self] (_, bookmarkDataItem) in
+		accountsControllerSectionSource = OCDataSourceMapped(source: nil, creator: { [weak self] (_, bookmarkDataItem) in
 			if let bookmark = bookmarkDataItem as? OCBookmark, let self = self, let clientContext = self.clientContext {
 				let controller = AccountController(bookmark: bookmark, context: clientContext, configuration: self.controllerConfiguration)
 
@@ -66,6 +66,9 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 				accountController.destroy() // needs to be called since AccountController keeps a reference to itself otherwise
 			}
 		}, queue: .main)
+
+		accountsControllerSectionSource?.trackItemVersions = true
+		accountsControllerSectionSource?.source = OCBookmarkManager.shared.bookmarksDatasource
 
 		// Combined data source
 		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
@@ -211,6 +214,7 @@ extension ClientSidebarViewController {
 		let logoImage = UIImage(named: "branding-login-logo")
 		let logoImageView = UIImageView(image: logoImage)
 		logoImageView.cssSelector = .icon
+		logoImageView.accessibilityLabel = VendorServices.shared.appName
 		logoImageView.contentMode = .scaleAspectFit
 		logoImageView.translatesAutoresizingMaskIntoConstraints = false
 		if let logoImage = logoImage {
@@ -228,29 +232,39 @@ extension ClientSidebarViewController {
 		let logoContainer = ThemeCSSView(withSelectors: [.logo])
 		logoContainer.translatesAutoresizingMaskIntoConstraints = false
 		logoContainer.addSubview(logoImageView)
-		logoContainer.addSubview(logoLabel)
 		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
 		logoContainer.setContentHuggingPriority(.required, for: .vertical)
 
 		let logoWrapperView = ThemeCSSView()
 		logoWrapperView.addSubview(logoContainer)
 
-		NSLayoutConstraint.activate([
-			logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
-			logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
-			logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
-			logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
-			logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
-			logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
-
-			logoImageView.leadingAnchor.constraint(equalTo: logoContainer.leadingAnchor),
-			logoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: logoImageView.trailingAnchor, multiplier: 1),
-			logoLabel.trailingAnchor.constraint(equalTo: logoContainer.trailingAnchor),
-
-			logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
-			logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
-			logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
-		])
+		if VendorServices.shared.isBranded {
+			NSLayoutConstraint.activate([
+				logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+				logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+				logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+				logoImageView.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
+				logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
+				logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
+				logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
+			])
+		} else {
+			logoContainer.addSubview(logoLabel)
+			NSLayoutConstraint.activate([
+				logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+				logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+				logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+				logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+				logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+				logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+				logoImageView.leadingAnchor.constraint(equalTo: logoContainer.leadingAnchor),
+				logoLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: logoImageView.trailingAnchor, multiplier: 1),
+				logoLabel.trailingAnchor.constraint(equalTo: logoContainer.trailingAnchor),
+				logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
+				logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
+				logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
+			])
+		}
 
 		logoWrapperView.addThemeApplier({ (_, collection, _) in
 			if !VendorServices.shared.isBranded, let logoColor = collection.css.getColor(.stroke, for: logoImageView) {

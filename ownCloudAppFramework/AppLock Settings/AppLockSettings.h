@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern OCClassSettingsIdentifier OCClassSettingsIdentifierPasscode;
 
 extern OCClassSettingsKey OCClassSettingsKeyPasscodeEnforced;
+extern OCClassSettingsKey OCClassSettingsKeyPasscodeEnforcedByDevice;
 extern OCClassSettingsKey OCClassSettingsKeyRequiredPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyMaximumPasscodeDigits;
 extern OCClassSettingsKey OCClassSettingsKeyPasscodeLockDelay;

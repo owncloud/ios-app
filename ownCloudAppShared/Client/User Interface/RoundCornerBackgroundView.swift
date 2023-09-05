@@ -51,6 +51,11 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 			setNeedsDisplay()
 		}
 	}
+	public var fillImage: UIImage? {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
 
 	typealias ThemeColorPicker = (_ theme: Theme, _ collection: ThemeCollection, _ event: ThemeEvent) -> UIColor?
 
@@ -75,6 +80,34 @@ public class RoundCornerBackgroundView: UIView, Themeable {
 
 	public override func draw(_ rect: CGRect) {
 		let bezierPath = UIBezierPath(roundedRect: bounds, byRoundingCorners: cornerRadius.corners, cornerRadii: cornerRadius.radii)
+
+		if let fillImage {
+			func sizeThatFills(srcSize: CGSize, dstSize: CGSize) -> CGSize {
+				var fillSize = srcSize
+
+				fillSize.height = fillSize.height * dstSize.width / fillSize.width
+				fillSize.width = dstSize.width
+
+				if fillSize.height < dstSize.height {
+					fillSize.width = fillSize.width * dstSize.height / fillSize.height
+					fillSize.height = dstSize.height
+				}
+
+				return fillSize
+			}
+
+			let bounds = bounds
+			let fillSize = sizeThatFills(srcSize: fillImage.size, dstSize: bounds.size)
+			var drawRect: CGRect = CGRect()
+
+			drawRect.origin.x = bounds.origin.x + (bounds.size.width - fillSize.width) / 2.0
+			drawRect.origin.y = bounds.origin.y + (bounds.size.height - fillSize.height) / 2.0
+			drawRect.size = fillSize
+
+			bezierPath.addClip()
+			fillImage.draw(in: drawRect)
+		}
+
 		fillColor?.setFill()
 		bezierPath.fill()
 	}

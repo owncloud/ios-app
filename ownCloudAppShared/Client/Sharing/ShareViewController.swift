@@ -124,6 +124,16 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.mode = mode
 		self.completionHandler = completion
 
+		// Item section
+		if let item = item {
+			let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
+				context.permissions = []
+			})
+			let itemSectionDatasource = OCDataSourceArray(items: [item])
+			let itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
+			sections.append(itemSection)
+		}
+
 		// Managament section cell style
 		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
 		managementCellStyle.options = [
@@ -220,19 +230,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		collectionView.contentInset = extraContentInset
 
 		// Set navigation bar title
-		let itemDisplayName = location?.displayName(in: clientContext)
 		var navigationTitle: String?
 
-		if let itemDisplayName {
-			navigationTitle = "Share {{itemName}}".localized([ "itemName" : itemDisplayName ])
-		} else {
-			switch mode {
-				case .create:
-					navigationTitle = "Share".localized
+		switch mode {
+		case .create:
+			navigationTitle = (type == .link) ? "Create link".localized : "Invite".localized
 
-				case .edit:
-					navigationTitle = "Edit".localized
-			}
+		case .edit:
+			navigationTitle = "Edit".localized
 		}
 		navigationItem.titleLabelText = navigationTitle
 
@@ -250,26 +255,11 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		bottomButtonBarViewController.view = bottomButtonBar
 
 		// - Add delete button for existing shares
-		if mode == .edit, let bottomButtonBar {
-			var deleteButtonConfig = UIButton.Configuration.borderedProminent()
-			deleteButtonConfig.title = "Unshare".localized
-			deleteButtonConfig.cornerStyle = .large
-			deleteButtonConfig.baseBackgroundColor = .systemRed
-			deleteButtonConfig.baseForegroundColor = .white
+		if mode == .edit {
+			let unshare = UIBarButtonItem(title: "Unshare".localized, style: .plain, target: self, action: #selector(deleteShare))
+			unshare.tintColor = .red
 
-			let deleteButton = UIButton()
-			deleteButton.translatesAutoresizingMaskIntoConstraints = false
-			deleteButton.configuration = deleteButtonConfig
-			deleteButton.addAction(UIAction(handler: { [weak self] action in
-				self?.deleteShare()
-			}), for: .primaryActionTriggered)
-
-			bottomButtonBar.addSubview(deleteButton)
-
-			NSLayoutConstraint.activate([
-				deleteButton.leadingAnchor.constraint(equalTo: bottomButtonBar.leadingAnchor, constant: 20),
-				deleteButton.centerYAnchor.constraint(equalTo: bottomButtonBar.selectButton.centerYAnchor)
-			])
+			self.navigationItem.rightBarButtonItem = unshare
 		}
 
 		self.addStacked(child: bottomButtonBarViewController, position: .bottom)
@@ -560,7 +550,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				details.append(SegmentViewItem(view: button))
 			}
 
-			let content = UniversalItemListCell.Content(with: .text("Password"), iconSymbolName: "key.fill", accessories: accessories)
+			let content = UniversalItemListCell.Content(with: .text("Password".localized), iconSymbolName: "key.fill", accessories: accessories)
 			content.details = details
 
 			if passwordOption == nil {
@@ -647,7 +637,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		let passwordPrompt = UIAlertController(title: "Enter password".localized, message: nil, preferredStyle: .alert)
 
 		passwordPrompt.addTextField(configurationHandler: { textField in
-			textField.placeholder = "password".localized
+			textField.placeholder = "Password".localized
 			textField.isSecureTextEntry = true
 		})
 
@@ -748,7 +738,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 	}
 
-	func deleteShare() {
+	@objc func deleteShare() {
 		guard let core = clientContext?.core, let share else {
 			self.showError(NSError(ocError: .internal))
 			return

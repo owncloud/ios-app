@@ -1,0 +1,5 @@
+Bugfix: Copy Item not working
+
+Copy and paste to a Space was not working
+
+https://github.com/owncloud/enterprise/issues/5889

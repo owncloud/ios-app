@@ -1,0 +1,5 @@
+Bugfix: Open in Web for ownCloud 10
+
+Open in Web feature was not available for ownCloud 10 instances in the app.
+
+https://github.com/owncloud/enterprise/issues/5747

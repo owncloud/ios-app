@@ -749,11 +749,11 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
-				Log.log("DisplayViewController.queryHasChangesAvailable: \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
+				Log.log("DisplayViewController.queryHasChangesAvailable: \(changeSet?.queryResult?.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
 
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
-						if let firstItem = changeSet?.queryResult.first {
+						if let firstItem = changeSet?.queryResult?.first {
 							self?.item = firstItem
 						} else {
 							// No item available
