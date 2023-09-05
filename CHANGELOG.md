@@ -1,3 +1,73 @@
+Changelog for ownCloud iOS Client [12.0.3] (2023-08-31)
+=======================================
+The following sections list the changes in ownCloud iOS Client 12.0.3 relevant to
+ownCloud admins and users.
+
+[12.0.3]: https://github.com/owncloud/ios-app/compare/milestone/12.0.2...milestone/12.0.3
+
+Summary
+-------
+
+* Bugfix - Upload-Metadata: [#1227](https://github.com/owncloud/ios-app/issues/1227)
+* Bugfix - Open Folder in Files.app: [#1240](https://github.com/owncloud/ios-app/issues/1240)
+* Bugfix - Connection name: [#1254](https://github.com/owncloud/ios-app/issues/1254)
+* Bugfix - Unable to access files from Files.app: [#1262](https://github.com/owncloud/ios-app/issues/1262)
+* Bugfix - File Provider Crash: [#1266](https://github.com/owncloud/ios-app/issues/1266)
+* Bugfix - Translation: [#1269](https://github.com/owncloud/ios-app/pull/1269)
+* Bugfix - Open in Web for ownCloud 10: [#5747](https://github.com/owncloud/enterprise/issues/5747)
+* Bugfix - Copy Item not working: [#5889](https://github.com/owncloud/enterprise/issues/5889)
+
+Details
+-------
+
+* Bugfix - Upload-Metadata: [#1227](https://github.com/owncloud/ios-app/issues/1227)
+
+   TUS -H Upload-Metadata: mtime missing
+
+   https://github.com/owncloud/ios-app/issues/1227
+
+* Bugfix - Open Folder in Files.app: [#1240](https://github.com/owncloud/ios-app/issues/1240)
+
+   In some cases it was not possible to open Folder using iOS Files.app.
+
+   https://github.com/owncloud/ios-app/issues/1240
+
+* Bugfix - Connection name: [#1254](https://github.com/owncloud/ios-app/issues/1254)
+
+   Connection name doesn't change immediately
+
+   https://github.com/owncloud/ios-app/issues/1254
+
+* Bugfix - Unable to access files from Files.app: [#1262](https://github.com/owncloud/ios-app/issues/1262)
+
+   In some cases it was not possible to access files from the Files.app.
+
+   https://github.com/owncloud/ios-app/issues/1262
+
+* Bugfix - File Provider Crash: [#1266](https://github.com/owncloud/ios-app/issues/1266)
+
+   IOS invokes a FileProvider method with a nil value, which causes a crash.
+
+   https://github.com/owncloud/ios-app/issues/1266
+
+* Bugfix - Translation: [#1269](https://github.com/owncloud/ios-app/pull/1269)
+
+   Updated translations from Transifex.
+
+   https://github.com/owncloud/ios-app/pull/1269
+
+* Bugfix - Open in Web for ownCloud 10: [#5747](https://github.com/owncloud/enterprise/issues/5747)
+
+   Open in Web feature was not available for ownCloud 10 instances in the app.
+
+   https://github.com/owncloud/enterprise/issues/5747
+
+* Bugfix - Copy Item not working: [#5889](https://github.com/owncloud/enterprise/issues/5889)
+
+   Copy and paste to a Space was not working
+
+   https://github.com/owncloud/enterprise/issues/5889
+
 Changelog for ownCloud iOS Client [12.0.2] (2023-06-23)
 =======================================
 The following sections list the changes in ownCloud iOS Client 12.0.2 relevant to
