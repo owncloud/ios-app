@@ -442,4 +442,5 @@ extension Branding {
 
 public extension ThemeCSSSelector {
 	static let welcome = ThemeCSSSelector(rawValue: "welcome")
+	static let accountSetup = ThemeCSSSelector(rawValue: "accountSetup")
 }

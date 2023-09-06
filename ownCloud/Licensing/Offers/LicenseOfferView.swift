@@ -204,7 +204,7 @@ class LicenseOfferView: UIView, Themeable {
 
 		if let purchaseButton = purchaseButton {
 			let progress = Progress.indeterminate()
-			progress?.isCancellable = false
+			progress.isCancellable = false
 
 			purchaseBusyView = ProgressView()
 			purchaseBusyView?.translatesAutoresizingMaskIntoConstraints = false

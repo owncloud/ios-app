@@ -78,7 +78,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		// Set up Collection View
 		sectionsDataSource = combinedSectionsDatasource ?? accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
-		navigationItem.titleView = self.buildNavigationLogoView()
+		navigationItem.titleView = ClientSidebarViewController.buildNavigationLogoView()
 
 		// Add 10pt space at the top so that the first section's account doesn't "stick" to the top
 		collectionView.contentInset.top += 10
@@ -210,7 +210,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 // MARK: - Branding
 extension ClientSidebarViewController {
-	func buildNavigationLogoView() -> ThemeCSSView {
+	static public func buildNavigationLogoView() -> ThemeCSSView {
 		let logoImage = UIImage(named: "branding-login-logo")
 		let logoImageView = UIImageView(image: logoImage)
 		logoImageView.cssSelector = .icon

@@ -215,7 +215,7 @@
          <EnvironmentVariable
             key = "oc:log.enabled-components"
             value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.colored"

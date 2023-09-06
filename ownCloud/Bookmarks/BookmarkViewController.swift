@@ -1108,39 +1108,52 @@ class BookmarkViewController: StaticTableViewController {
 // MARK: - Convenience for presentation
 extension BookmarkViewController {
 	static func showBookmarkUI(on hostViewController: UIViewController, edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
-		var editBookmark = bookmark
+		if bookmark != nil {
+			var editBookmark = bookmark
 
-		if let bookmark {
-			// Retrieve latest version of bookmark from OCBookmarkManager
-			if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuid.uuidString) {
-				editBookmark = latestStoredBookmarkVersion
-			}
-		}
-
-		let bookmarkViewController : BookmarkViewController = BookmarkViewController(editBookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
-		bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
-			if success, let bookmark = bookmark {
-				if let error = autosolveErrorOnSuccess as Error? {
-					OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+			if let bookmark {
+				// Retrieve latest version of bookmark from OCBookmarkManager
+				if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuid.uuidString) {
+					editBookmark = latestStoredBookmarkVersion
 				}
+			}
 
-				if attemptLoginOnSuccess {
+			let bookmarkViewController : BookmarkViewController = BookmarkViewController(editBookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
+			bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
+				if success, let bookmark = bookmark {
+					if let error = autosolveErrorOnSuccess as Error? {
+						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+					}
+
+					if attemptLoginOnSuccess {
+						AccountConnectionPool.shared.connection(for: bookmark)?.connect()
+					}
+				}
+			}
+
+			let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
+			navigationController.isModalInPresentation = true
+
+			hostViewController.present(navigationController, animated: true, completion: {
+				OnMainThread {
+					if performContinue {
+						bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+						bookmarkViewController.handleContinue()
+					}
+				}
+			})
+		} else {
+			let setupViewController = BookmarkSetupViewController(configuration: .newBookmarkConfiguration, headerTitle: "Add account".localized, cancelHandler: {
+				hostViewController.dismiss(animated: true)
+			}, doneHandler: { bookmark in
+				hostViewController.dismiss(animated: true)
+				if attemptLoginOnSuccess, let bookmark {
 					AccountConnectionPool.shared.connection(for: bookmark)?.connect()
 				}
-			}
+			})
+
+			hostViewController.present(setupViewController, animated: true, completion: nil)
 		}
-
-		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
-		navigationController.isModalInPresentation = true
-
-		hostViewController.present(navigationController, animated: true, completion: {
-			OnMainThread {
-				if performContinue {
-					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
-					bookmarkViewController.handleContinue()
-				}
-			}
-		})
 	}
 }
 
