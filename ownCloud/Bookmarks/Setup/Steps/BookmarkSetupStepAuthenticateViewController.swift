@@ -71,6 +71,18 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 		updateState()
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		guard case let .authenticate(withCredentials: withCredentials, username: _, password: _) = step else {
+			return
+		}
+
+		if withCredentials {
+			usernameField?.becomeFirstResponder()
+		}
+	}
+
 	func updateState() {
 		guard case let .authenticate(withCredentials: withCredentials, username: _, password: _) = step else {
 			return

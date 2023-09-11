@@ -387,7 +387,9 @@ extension ClientSidebarViewController {
 
 	// MARK: - Open settings
 	@IBAction func settings() {
-		self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+		let navigationViewController = ThemeNavigationController(rootViewController: SettingsViewController())
+		navigationViewController.modalPresentationStyle = .fullScreen
+		present(navigationViewController, animated: true)
 	}
 
 	// MARK: - Add account

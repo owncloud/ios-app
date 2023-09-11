@@ -25,6 +25,7 @@ class BookmarkComposerConfiguration {
 	var bookmark: OCBookmark?
 
 	var hasIntro: Bool = false
+	var hasSettings: Bool = false
 
 	var url: URL?
 	var urlEditable: Bool = true
@@ -32,18 +33,26 @@ class BookmarkComposerConfiguration {
 	var name: String?
 	var nameEditable: Bool = true
 
-	init(bookmark: OCBookmark? = nil, hasIntro: Bool = false, url: URL? = nil, urlEditable: Bool, name: String? = nil, nameEditable: Bool) {
+	var helpButtonLabel: String?
+	var helpButtonURL: URL?
+	var helpMessage: String?
+
+	init(bookmark: OCBookmark? = nil, hasIntro: Bool = true, hasSettings: Bool = true, url: URL? = nil, urlEditable: Bool = true, name: String? = nil, nameEditable: Bool, helpButtonLabel: String? = nil, helpButtonURL: URL? = nil, helpMessage: String? = nil) {
 		self.bookmark = bookmark
 		self.hasIntro = hasIntro
+		self.hasSettings = hasSettings
 		self.url = url
 		self.urlEditable = urlEditable
 		self.name = name
 		self.nameEditable = nameEditable
+		self.helpButtonLabel = helpButtonLabel
+		self.helpButtonURL = helpButtonURL
+		self.helpMessage = helpMessage
 	}
 }
 
 extension BookmarkComposerConfiguration {
 	static var newBookmarkConfiguration: BookmarkComposerConfiguration {
-		return BookmarkComposerConfiguration(url: Branding.shared.profileURL, urlEditable: Branding.shared.profileAllowUrlConfiguration ?? true, name: Branding.shared.profileBookmarkName, nameEditable: true)
+		return BookmarkComposerConfiguration(url: Branding.shared.profileURL, urlEditable: Branding.shared.profileAllowUrlConfiguration ?? true, name: Branding.shared.profileBookmarkName, nameEditable: true, helpButtonLabel: Branding.shared.profileHelpButtonLabel, helpButtonURL: Branding.shared.profileHelpURL, helpMessage: Branding.shared.profileOpenHelpMessage)
 	}
 }

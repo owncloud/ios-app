@@ -20,12 +20,20 @@ import UIKit
 import ownCloudAppShared
 
 class BookmarkSetupStepIntroViewController: BookmarkSetupStepViewController {
+	var hasSettings: Bool {
+		return setupViewController?.configuration.hasSettings == true
+	}
+
 	override func loadView() {
 		super.loadView()
 
 		var logoImage = AccountSettingsProvider.shared.logo
 
 		continueButtonLabelText = "Start setup".localized
+
+		if hasSettings {
+			backButtonLabelText = "Settings".localized
+		}
 
 		if let tintImageColor = Theme.shared.activeCollection.css.getThemeCSSColor(.fill, selectors: [.accountSetup, .welcome, .icon]) {
 			if let tintedLogoImage = logoImage.tinted(with: tintImageColor) {
@@ -44,7 +52,17 @@ class BookmarkSetupStepIntroViewController: BookmarkSetupStepViewController {
 		contentView = messageView
 	}
 
+	override var hasBackButton: Bool {
+		return hasSettings
+	}
+
 	override func handleContinue() {
 		setupViewController?.composer?.doneIntro()
+	}
+
+	override func handleBack() {
+		let navigationViewController = ThemeNavigationController(rootViewController: SettingsViewController())
+		navigationViewController.modalPresentationStyle = .fullScreen
+		present(navigationViewController, animated: true)
 	}
 }

@@ -31,6 +31,8 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 	var headerTitle: String?
 
+	var helpMessageView: ComposedMessageView?
+
 	init(configuration: BookmarkComposerConfiguration, headerTitle: String? = nil, cancelHandler: CancelHandler? = nil, doneHandler: DoneHandler? = nil) {
 		self.configuration = configuration
 
@@ -120,6 +122,40 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 				cancelButton.leadingAnchor.constraint(greaterThanOrEqualTo: logoContainerView.trailingAnchor, constant: 20),
 				cancelButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20),
 				cancelButton.centerYAnchor.constraint(equalTo: logoContainerView.centerYAnchor)
+			])
+		}
+
+		// Add help message
+		if configuration.helpButtonURL != nil || configuration.helpMessage != nil {
+			var helpElements: [ComposedMessageElement] = [
+				// .title("Help".localized)
+			]
+
+			if let helpButtonURL = configuration.helpButtonURL {
+				helpElements += [
+					.button(configuration.helpButtonLabel ?? "Open help page".localized, action: UIAction(handler: { action in
+						UIApplication.shared.open(helpButtonURL)
+					}), image: UIImage(systemName: "questionmark.circle"))
+				]
+			}
+
+			if let helpMessage = configuration.helpMessage {
+				helpElements += [
+					.subtitle(helpMessage, alignment: .centered)
+				]
+			}
+
+			let helpMessageView = ComposedMessageView(elements: helpElements)
+			helpMessageView.cssSelectors = [ .help ]
+			helpMessageView.elementInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 10, trailing: 15)
+			helpMessageView.setContentHuggingPriority(.required, for: .vertical)
+
+			contentView.addSubview(helpMessageView)
+
+			NSLayoutConstraint.activate([
+				helpMessageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+				helpMessageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+				helpMessageView.bottomAnchor.constraint(equalTo: contentView.keyboardLayoutGuide.topAnchor)
 			])
 		}
 

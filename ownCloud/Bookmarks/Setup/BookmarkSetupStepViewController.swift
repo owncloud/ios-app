@@ -53,11 +53,17 @@ class BookmarkSetupStepViewController: UIViewController {
 			continueButton.configuration = buttonConfiguration
 		}
 	}
+	var backButtonLabelText: String? = "Back".localized {
+		didSet {
+			var buttonConfiguration = backButton.configuration
+			buttonConfiguration?.title = backButtonLabelText
+			backButton.configuration = buttonConfiguration
+		}
+	}
 
 	var titleLabel: UILabel?
 	var messageLabel: UILabel?
 	var continueButton: UIButton = UIButton()
-
 	var backButton: UIButton = UIButton()
 
 	var contentContainerView: UIView?
@@ -135,9 +141,9 @@ class BookmarkSetupStepViewController: UIViewController {
 		views.append(continueButton)
 
 		// Back button
-		if canGoBack {
+		if hasBackButton {
 			buttonConfiguration = UIButton.Configuration.plain()
-			buttonConfiguration.title = "Back".localized
+			buttonConfiguration.title = backButtonLabelText
 			buttonConfiguration.cornerStyle = .large
 
 			backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -181,6 +187,10 @@ class BookmarkSetupStepViewController: UIViewController {
 	}
 
 	func handleContinue() {
+	}
+
+	var hasBackButton: Bool {
+		return canGoBack
 	}
 
 	var canGoBack: Bool {
@@ -227,8 +237,4 @@ class BookmarkSetupStepViewController: UIViewController {
 		return textField
 	}
 
-}
-
-extension ThemeCSSSelector {
-	static let step = ThemeCSSSelector(rawValue: "step")
 }

@@ -38,6 +38,11 @@ class BookmarkSetupStepEnterURLViewController: BookmarkSetupStepViewController {
 		updateState()
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		urlTextField?.becomeFirstResponder()
+	}
+
 	func updateState() {
 		if let urlString = urlTextField?.text, urlString.count > 0, NSURL(username: nil, password: nil, afterNormalizingURLString: urlString, protocolWasPrepended: nil) != nil {
 			continueButton.isEnabled = true

@@ -462,6 +462,21 @@
             value = "string:MyBrandName"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-help-button-label"
+            value = "string:Help page"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-open-help-message"
+            value = "string:Click the button above to open the help page."
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-help-url"
+            value = "string:https://www.owncloud.com/"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption

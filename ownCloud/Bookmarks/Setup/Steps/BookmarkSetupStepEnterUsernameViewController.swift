@@ -36,6 +36,11 @@ class BookmarkSetupStepEnterUsernameViewController: BookmarkSetupStepViewControl
 		updateState()
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		usernameField?.becomeFirstResponder()
+	}
+
 	func updateState() {
 		if let username = usernameField?.text, username.count > 0 {
 			continueButton.isEnabled = true
