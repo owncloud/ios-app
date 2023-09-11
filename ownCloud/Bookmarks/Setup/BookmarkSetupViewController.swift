@@ -145,6 +145,9 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 		var stepViewController: UIViewController?
 
 		switch step {
+			case .intro:
+				stepViewController = BookmarkSetupStepIntroViewController(with: self, step: step)
+
 			case .enterURL(urlString: _):
 				stepViewController = BookmarkSetupStepEnterURLViewController(with: self, step: step)
 

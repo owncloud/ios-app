@@ -689,6 +689,7 @@ public class ThemeCollection : NSObject {
 			// Account Setup
 			ThemeCSSRecord(selectors: [.accountSetup, .message, .title],	property: .stroke, value: UIColor.white),
 			ThemeCSSRecord(selectors: [.accountSetup, .header,  .title],	property: .stroke, value: UIColor.white),
+			ThemeCSSRecord(selectors: [.accountSetup, .welcome, .icon], 	property: .fill,   value: darkBrandColor),
 			ThemeCSSRecord(selectors: [.accountSetup],      		property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
 
 			// Side Bar

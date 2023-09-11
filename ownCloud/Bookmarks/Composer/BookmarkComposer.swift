@@ -23,13 +23,18 @@ import ownCloudAppShared
 class BookmarkComposer: NSObject {
 	// MARK: - Steps
 	enum Step: Equatable, Hashable {
+		case intro
 		case enterUsername
 		case enterURL(urlString: String?)
 		case authenticate(withCredentials: Bool, username: String?, password: String?)
 		case chooseServer(fromInstances: [OCServerInstance])
-		// case name(withDefault: String)
 		case prepopulate
 		case finished
+	}
+
+	struct UndoAction {
+		var action: (_ composer: BookmarkComposer) -> Void
+		var byUser: Bool
 	}
 
 	var configuration: BookmarkComposerConfiguration
@@ -50,6 +55,10 @@ class BookmarkComposer: NSObject {
 		if bookmark.scanForAuthenticationMethodsRequired == true {
 			bookmark.authenticationMethodIdentifier = nil
 			bookmark.authenticationData = nil
+		}
+
+		if let name = configuration.name {
+			bookmark.name = name
 		}
 	}
 
@@ -77,6 +86,7 @@ class BookmarkComposer: NSObject {
 	}
 
 	// MARK: - Setup steps
+	private var didShowIntro: Bool = false
 	private var username: String?
 	private var password: String?
 	private var instances: [OCServerInstance]?
@@ -85,10 +95,35 @@ class BookmarkComposer: NSObject {
 	private var isDriveBased: Bool?
 	private var generationOptions: [OCAuthenticationMethodKey : Any]?
 
+	// MARK: .intro
+	func doneIntro() {
+		didShowIntro = true
+
+		self.pushUndoAction(undoAction: UndoAction(action: { composer in
+			composer.didShowIntro = false
+		}, byUser: true))
+
+		self.updateState()
+	}
+
+	// MARK: .enterUsername
+	func enterUsername(_ username: String, byUser: Bool = true, completion: @escaping Completion) {
+		bookmark.serverLocationUserName = username
+		self.username = username
+
+		self.pushUndoAction(undoAction: UndoAction(action: { composer in
+			composer.bookmark.serverLocationUserName = nil
+			composer.username = nil
+		}, byUser: byUser))
+
+		completion(nil, nil, nil)
+		self.updateState()
+	}
+
 	// MARK: .enterURL
 	typealias Completion = (_ error: Error?, _ issue: OCIssue?, _ issueCompletionHandler: IssuesCardViewController.CompletionHandler?) -> Void
 
-	func enterURL(_ urlString: String, completion: @escaping Completion) {
+	func enterURL(_ urlString: String, byUser: Bool = true, completion: @escaping Completion) {
 		var username : NSString?, password: NSString?
 		var protocolWasPrepended : ObjCBool = false
 
@@ -125,7 +160,7 @@ class BookmarkComposer: NSObject {
 
 			let continueToNextStep : () -> Void = { [weak self] in
 				self?.bookmark.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
-				self?.pushUndoAction(undoAction: { composer in
+				self?.pushUndoAction(undoAction: UndoAction(action: { composer in
 					composer.username = nil
 					composer.password = nil
 
@@ -133,7 +168,7 @@ class BookmarkComposer: NSObject {
 					composer.bookmark.authenticationMethodIdentifier = nil
 
 					composer.generationOptions = nil
-				})
+				}, byUser: byUser))
 				self?.updateState()
 			}
 
@@ -166,20 +201,6 @@ class BookmarkComposer: NSObject {
 				continueToNextStep()
 			}
 		}
-	}
-
-	// MARK: .enterUsername
-	func enterUsername(_ username: String, completion: @escaping Completion) {
-		bookmark.serverLocationUserName = username
-		self.username = username
-
-		self.pushUndoAction(undoAction: { composer in
-			composer.bookmark.serverLocationUserName = nil
-			composer.username = nil
-		})
-
-		completion(nil, nil, nil)
-		self.updateState()
 	}
 
 	// MARK: .authenticate
@@ -238,7 +259,7 @@ class BookmarkComposer: NSObject {
 						// server instance needs to be chosen
 						if self.instances?.count == 1, let onlyInstance = self.instances?.first {
 							// If only one instance is returned, choose it right away
-							self.chooseServer(instance: onlyInstance, completion: continueCompletion)
+							self.chooseServer(instance: onlyInstance, byUser: false, completion: continueCompletion)
 						} else {
 							continueCompletion(nil, nil, nil)
 						}
@@ -322,7 +343,7 @@ class BookmarkComposer: NSObject {
 	}
 
 	// MARK: .chooseServer
-	func chooseServer(instance: OCServerInstance, completion: @escaping Completion) {
+	func chooseServer(instance: OCServerInstance, byUser: Bool = true, completion: @escaping Completion) {
 		// Apply instance
 		self.bookmark.apply(instance)
 
@@ -408,14 +429,21 @@ class BookmarkComposer: NSObject {
 		undoStack.removeAll()
 	}
 
-	func pushUndoAction(undoAction: @escaping UndoAction) {
+	func pushUndoAction(undoAction: UndoAction) {
 		undoStack.append(undoAction)
 	}
 
 	func undoLastStep() {
 		if undoStack.count > 0 {
-			let undoAction = undoStack.removeLast()
-			undoAction(self)
+			while undoStack.last != nil {
+				let undoAction = undoStack.removeLast()
+				undoAction.action(self)
+
+				if undoAction.byUser {
+					break
+				}
+			}
+
 			updateState()
 		}
 	}
@@ -438,14 +466,14 @@ class BookmarkComposer: NSObject {
 		}
 	}
 
-	typealias UndoAction = (_ composer: BookmarkComposer) -> Void
-
 	func updateState() {
-		if OCServerLocator.useServerLocatorIdentifier != nil, bookmark.serverLocationUserName == nil {
+		if configuration.hasIntro, !didShowIntro {
+			currentStep = .intro
+		} else if OCServerLocator.useServerLocatorIdentifier != nil, bookmark.serverLocationUserName == nil {
 			currentStep = .enterUsername
 		} else if bookmark.url == nil {
 			if let absoluteURL = configuration.url?.absoluteString, !configuration.urlEditable {
-				enterURL(absoluteURL, completion: { [weak self] error, issue, issueCompletionHandler in
+				enterURL(absoluteURL, byUser: false, completion: { [weak self] error, issue, issueCompletionHandler in
 					if let self {
 						self.delegate?.present(composer: self, error: error, issue: issue, issueCompletionHandler: issueCompletionHandler)
 					}

@@ -31,6 +31,8 @@ class BookmarkSetupStepEnterURLViewController: BookmarkSetupStepViewController {
 			self?.updateState()
 		}), placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Server URL".localized, borderStyle: .roundedRect)
 
+		urlTextField?.text = setupViewController?.composer?.configuration.url?.absoluteString
+
 		contentView = urlTextField
 
 		updateState()

@@ -21,8 +21,10 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-class BookmarkComposerConfiguration: NSObject {
+class BookmarkComposerConfiguration {
 	var bookmark: OCBookmark?
+
+	var hasIntro: Bool = false
 
 	var url: URL?
 	var urlEditable: Bool = true
@@ -30,8 +32,9 @@ class BookmarkComposerConfiguration: NSObject {
 	var name: String?
 	var nameEditable: Bool = true
 
-	init(bookmark: OCBookmark? = nil, url: URL? = nil, urlEditable: Bool, name: String? = nil, nameEditable: Bool) {
+	init(bookmark: OCBookmark? = nil, hasIntro: Bool = false, url: URL? = nil, urlEditable: Bool, name: String? = nil, nameEditable: Bool) {
 		self.bookmark = bookmark
+		self.hasIntro = hasIntro
 		self.url = url
 		self.urlEditable = urlEditable
 		self.name = name
@@ -41,6 +44,6 @@ class BookmarkComposerConfiguration: NSObject {
 
 extension BookmarkComposerConfiguration {
 	static var newBookmarkConfiguration: BookmarkComposerConfiguration {
-		return BookmarkComposerConfiguration(url: Branding.shared.profileURL, urlEditable: true, name: Branding.shared.profileBookmarkName, nameEditable: true)
+		return BookmarkComposerConfiguration(url: Branding.shared.profileURL, urlEditable: Branding.shared.profileAllowUrlConfiguration ?? true, name: Branding.shared.profileBookmarkName, nameEditable: true)
 	}
 }

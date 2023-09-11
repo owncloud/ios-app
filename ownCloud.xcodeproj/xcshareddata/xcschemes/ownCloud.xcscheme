@@ -338,11 +338,6 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:server-locator.use"
-            value = "string:web-finger"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
             key = "oc:connection.allowed-authentication-methods"
             value = "[openid-connect,oauth2]"
             isEnabled = "NO">
@@ -445,6 +440,26 @@
          <EnvironmentVariable
             key = "oc:branding.url-theme-json"
             value = "string:auto"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:server-locator.use"
+            value = "string:web-finger"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-url"
+            value = "string:https://lookup.example.com/"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-allow-url-configuration"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-bookmark-name"
+            value = "string:MyBrandName"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

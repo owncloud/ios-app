@@ -249,6 +249,7 @@
 		DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
 		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
+		DC28297E2AAF02A800BFF393 /* BookmarkSetupStepIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC28297D2AAF02A800BFF393 /* BookmarkSetupStepIntroViewController.swift */; };
 		DC28F826294B733700AC4013 /* OCItemPolicy+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC28F825294B733700AC4013 /* OCItemPolicy+Interactions.swift */; };
 		DC28F828294BB5ED00AC4013 /* SortedItemDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC28F827294BB5ED00AC4013 /* SortedItemDataSource.swift */; };
 		DC298C922934CF56009FA87F /* AccountConnectionErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298C8C2934B3E7009FA87F /* AccountConnectionErrorHandler.swift */; };
@@ -1262,6 +1263,7 @@
 		DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+FileProviderTools.m"; sourceTree = "<group>"; };
 		DC27A1E720CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtensionThumbnailRequest.h; sourceTree = "<group>"; };
 		DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtensionThumbnailRequest.m; sourceTree = "<group>"; };
+		DC28297D2AAF02A800BFF393 /* BookmarkSetupStepIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSetupStepIntroViewController.swift; sourceTree = "<group>"; };
 		DC28F825294B733700AC4013 /* OCItemPolicy+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+Interactions.swift"; sourceTree = "<group>"; };
 		DC28F827294BB5ED00AC4013 /* SortedItemDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedItemDataSource.swift; sourceTree = "<group>"; };
 		DC298C8C2934B3E7009FA87F /* AccountConnectionErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountConnectionErrorHandler.swift; sourceTree = "<group>"; };
@@ -2336,6 +2338,7 @@
 		DC2323E72AA865DD00BFF393 /* Steps */ = {
 			isa = PBXGroup;
 			children = (
+				DC28297D2AAF02A800BFF393 /* BookmarkSetupStepIntroViewController.swift */,
 				DC2323E52AA865A700BFF393 /* BookmarkSetupStepEnterURLViewController.swift */,
 				DC5908742AA87A1700BFF393 /* BookmarkSetupStepEnterUsernameViewController.swift */,
 				DC5908762AA87ABF00BFF393 /* BookmarkSetupStepAuthenticateViewController.swift */,
@@ -4355,6 +4358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC3DEC7B22AFA1F000F3352D /* DownloadItemsHUDViewController.swift in Sources */,
+				DC28297E2AAF02A800BFF393 /* BookmarkSetupStepIntroViewController.swift in Sources */,
 				39EF06B325D6C3FC001E1E19 /* PresentationModeAction.swift in Sources */,
 				DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */,
 				4CB8ADE322DF6BA700F1FEBC /* PHAsset+Upload.swift in Sources */,
