@@ -46,7 +46,13 @@ class BookmarkSetupStepViewController: UIViewController {
 
 	var stepTitle: String?
 	var stepMessage: String?
-	var continueButtonLabelText: String? = "Proceed".localized
+	var continueButtonLabelText: String? = "Proceed".localized {
+		didSet {
+			var buttonConfiguration = continueButton.configuration
+			buttonConfiguration?.title = continueButtonLabelText
+			continueButton.configuration = buttonConfiguration
+		}
+	}
 
 	var titleLabel: UILabel?
 	var messageLabel: UILabel?

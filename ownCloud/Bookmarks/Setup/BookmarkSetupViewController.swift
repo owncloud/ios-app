@@ -132,6 +132,10 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 		composer?.updateState()
 	}
 
+	override var preferredStatusBarStyle : UIStatusBarStyle {
+		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
+	}
+
 	// MARK: - Steps view controller and layout
 	func viewController(for step: BookmarkComposer.Step) -> UIViewController? {
 		if let stepViewController = stepControllerByStep[step] {

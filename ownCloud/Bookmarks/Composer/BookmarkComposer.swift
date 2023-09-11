@@ -81,7 +81,7 @@ class BookmarkComposer: NSObject {
 	private var password: String?
 	private var instances: [OCServerInstance]?
 	private var supportsInfinitePropfind: Bool?
-	private var performedInfinitePropfind: Bool = false
+	private var performedPrepopulation: Bool = false
 	private var isDriveBased: Bool?
 	private var generationOptions: [OCAuthenticationMethodKey : Any]?
 
@@ -221,6 +221,8 @@ class BookmarkComposer: NSObject {
 					}
 
 					let continueCompletion : Completion = { (error, issue, issueCompletionHandler) in
+						self.hudMessage = nil
+
 						completion(error,issue,issueCompletionHandler)
 
 						if error == nil, issue == nil {
@@ -289,6 +291,8 @@ class BookmarkComposer: NSObject {
 
 			// Handle errors
 			guard error == nil, issue == nil else {
+				self?.hudMessage = nil
+
 				completion(error, issue, { [weak self, weak issue] (response) in
 					switch response {
 						case .cancel:
@@ -311,6 +315,7 @@ class BookmarkComposer: NSObject {
 			strongSelf.supportsInfinitePropfind = connection.capabilities?.davPropfindSupportsDepthInfinity?.boolValue ?? false
 
 			connection.disconnect(completionHandler: {
+				self?.hudMessage = nil
 				completion(nil, nil, nil)
 			})
 		}
@@ -350,6 +355,8 @@ class BookmarkComposer: NSObject {
 			prepopulationMethod = .doNot
 		}
 
+		performedPrepopulation = true
+
 		// Prepopulation y/n?
 		if let prepopulationMethod, prepopulationMethod != .doNot {
 			// Perform prepopulation
@@ -358,19 +365,20 @@ class BookmarkComposer: NSObject {
 			// Perform prepopulation method
 			switch prepopulationMethod {
 				case .streaming:
-					performedInfinitePropfind = true
-					prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { _ in
+					prepopulateProgress = bookmark.prepopulate(streamCompletionHandler: { [weak self] _ in
 						completion(nil, nil, nil)
+						self?.updateState()
 					})
 
 				case .split:
-					performedInfinitePropfind = true
-					prepopulateProgress = bookmark.prepopulate(completionHandler: { _ in
+					prepopulateProgress = bookmark.prepopulate(completionHandler: { [weak self] _ in
 						completion(nil, nil, nil)
+						self?.updateState()
 					})
 
 				default:
 					completion(nil, nil, nil)
+					self.updateState()
 			}
 
 			// Present progress
@@ -379,6 +387,8 @@ class BookmarkComposer: NSObject {
 
 		// No prepopulation
 		completion(nil, nil, nil)
+		self.updateState()
+
 		return nil
 	}
 
@@ -447,7 +457,7 @@ class BookmarkComposer: NSObject {
 			currentStep = .authenticate(withCredentials: bookmark.isTokenBased == false, username: username, password: password)
 		} else if let instances, instances.count > 0 {
 			currentStep = .chooseServer(fromInstances: instances)
-		} else if supportsInfinitePropfind == true, !performedInfinitePropfind {
+		} else if supportsInfinitePropfind == true, !performedPrepopulation {
 			currentStep = .prepopulate
 		} else {
 			currentStep = .finished
