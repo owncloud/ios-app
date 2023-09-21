@@ -104,7 +104,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 
 		// Build sidebar
 		sidebarViewController = ClientSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
-		sidebarViewController?.addToolbarItems()
+		sidebarViewController?.addToolbarItems(addAccount: Branding.shared.canAddAccount)
 
 		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
 		leftNavigationController?.cssSelectors = [ .sidebar ]
