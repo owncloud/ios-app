@@ -25,11 +25,11 @@ class BookmarkComposer: NSObject {
 	enum Step: Equatable, Hashable {
 		case intro
 		case enterUsername
-		case enterURL(urlString: String?)
-		case authenticate(withCredentials: Bool, username: String?, password: String?)
+		case serverURL(urlString: String?)
+		case oidc(withCredentials: Bool, username: String?, password: String?)
 		case chooseServer(fromInstances: [OCServerInstance])
-		case prepopulate
-		case finished
+		case infinitePropfind
+		case completed
 	}
 
 	struct UndoAction {
@@ -479,16 +479,16 @@ class BookmarkComposer: NSObject {
 					}
 				})
 			} else {
-				currentStep = .enterURL(urlString: configuration.url?.absoluteString)
+				currentStep = .serverURL(urlString: configuration.url?.absoluteString)
 			}
 		} else if bookmark.authenticationData == nil {
-			currentStep = .authenticate(withCredentials: bookmark.isTokenBased == false, username: username, password: password)
+			currentStep = .oidc(withCredentials: bookmark.isTokenBased == false, username: username, password: password)
 		} else if let instances, instances.count > 0 {
 			currentStep = .chooseServer(fromInstances: instances)
 		} else if supportsInfinitePropfind == true, !performedPrepopulation {
-			currentStep = .prepopulate
+			currentStep = .infinitePropfind
 		} else {
-			currentStep = .finished
+			currentStep = .completed
 		}
 	}
 

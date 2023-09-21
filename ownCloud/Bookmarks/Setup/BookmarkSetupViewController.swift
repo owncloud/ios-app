@@ -184,24 +184,29 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 			case .intro:
 				stepViewController = BookmarkSetupStepIntroViewController(with: self, step: step)
 
-			case .enterURL(urlString: _):
+			case .serverURL(urlString: _):
 				stepViewController = BookmarkSetupStepEnterURLViewController(with: self, step: step)
 
 			case .enterUsername:
 				stepViewController = BookmarkSetupStepEnterUsernameViewController(with: self, step: step)
 
-			case .authenticate(withCredentials: _, username: _, password: _):
+			case .oidc(withCredentials: _, username: _, password: _):
 				stepViewController = BookmarkSetupStepAuthenticateViewController(with: self, step: step)
 
 			case .chooseServer(fromInstances: _):
 				// Do not support server choice for now (also see present(composer:step:)
 				break
 
-			case .prepopulate:
+			case .infinitePropfind:
 				stepViewController = BookmarkSetupStepPrepopulateViewController(with: self, step: step)
 
-			case .finished:
+			case .completed:
+			if Branding.shared.canEditAccount {
 				stepViewController = BookmarkSetupStepFinishedViewController(with: self, step: step)
+			} else {
+				let bookmark = composer?.addBookmark()
+				done(bookmark: bookmark)
+			}
 		}
 
 		(stepViewController as? BookmarkSetupStepViewController)?.setupViewController = self

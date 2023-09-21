@@ -23,7 +23,7 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 	var passwordField: UITextField?
 
 	override func loadView() {
-		guard case let .authenticate(withCredentials: withCredentials, username: prefillUsername, password: prefillPassword) = step else {
+		guard case let .oidc(withCredentials: withCredentials, username: prefillUsername, password: prefillPassword) = step else {
 			return
 		}
 
@@ -74,7 +74,7 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
-		guard case let .authenticate(withCredentials: withCredentials, username: _, password: _) = step else {
+		guard case let .oidc(withCredentials: withCredentials, username: _, password: _) = step else {
 			return
 		}
 
@@ -84,7 +84,7 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 	}
 
 	func updateState() {
-		guard case let .authenticate(withCredentials: withCredentials, username: _, password: _) = step else {
+		guard case let .oidc(withCredentials: withCredentials, username: _, password: _) = step else {
 			return
 		}
 
