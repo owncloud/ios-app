@@ -77,54 +77,70 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 		logoImageView.contentMode = .scaleAspectFit
 		logoImageView.translatesAutoresizingMaskIntoConstraints = false
 
-		if let logoImage {
-			// Keep aspect ratio + scale logo to 90% of available height
-			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
-		}
-
-		let logoTitle = ThemeCSSLabel(withSelectors: [.title])
-		logoTitle.translatesAutoresizingMaskIntoConstraints = false
-		logoTitle.font = .preferredFont(forTextStyle: .title2, with: .bold)
-		logoTitle.text = headerTitle ?? Branding.shared.appDisplayName
-
-		let logoContainerView = UIView()
-		logoContainerView.translatesAutoresizingMaskIntoConstraints = false
-		logoContainerView.cssSelector = .header
-		logoContainerView.addSubview(logoImageView)
-		logoContainerView.addSubview(logoTitle)
-
-		logoContainerView.embedHorizontally(views: [logoImageView, logoTitle], insets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) { _, _ in
-			return 10
-		}
-
-		contentView.addSubview(logoContainerView)
-
-		NSLayoutConstraint.activate([
-			logoContainerView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-			logoContainerView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.trailingAnchor),
-			logoContainerView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor).with(priority: .defaultHigh),
-			logoContainerView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
-			logoContainerView.heightAnchor.constraint(equalToConstant: 40)
-		])
-
 		// Add cancel button
 		if cancelHandler != nil {
-			let cancelButton = ThemeCSSButton(withSelectors: [.cancel])
-			cancelButton.translatesAutoresizingMaskIntoConstraints = false
-			cancelButton.setTitle("Cancel".localized, for: .normal)
-			cancelButton.addAction(UIAction(handler: { [weak self] _ in
+			let navigationView = UINavigationBar()
+			navigationView.translatesAutoresizingMaskIntoConstraints = false
+			
+			let cancelBarButton = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction(handler: { [weak self] action in
 				self?.cancel()
-			}), for: .primaryActionTriggered)
-
-			contentView.addSubview(cancelButton)
-
+			}))
+			let navigationItem = UINavigationItem(title: headerTitle ?? Branding.shared.appDisplayName)
+			navigationItem.rightBarButtonItem = cancelBarButton
+			navigationView.setItems([navigationItem], animated: false)
+			
+			contentView.addSubview(navigationView)
+			contentView.addSubview(logoImageView)
+			
 			NSLayoutConstraint.activate([
-				cancelButton.leadingAnchor.constraint(greaterThanOrEqualTo: logoContainerView.trailingAnchor, constant: 20),
-				cancelButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-				cancelButton.centerYAnchor.constraint(equalTo: logoContainerView.centerYAnchor)
+				navigationView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+				navigationView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
+				navigationView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor),
+				
+				logoImageView.widthAnchor.constraint(equalToConstant: 128),
+				logoImageView.heightAnchor.constraint(equalToConstant: 128),
+				logoImageView.topAnchor.constraint(equalTo: navigationView.safeAreaLayoutGuide.bottomAnchor, constant: 20.0),
+				logoImageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor)
+			])
+		} else {
+			var title = headerTitle
+			if !Branding.shared.isBranded, title == "" {
+				title = Branding.shared.appDisplayName
+			}
+			
+			let logoTitle = ThemeCSSLabel(withSelectors: [.title])
+			logoTitle.translatesAutoresizingMaskIntoConstraints = false
+			logoTitle.font = .preferredFont(forTextStyle: .title3, with: .bold)
+			logoTitle.text = title
+			logoTitle.textAlignment = .center
+			
+			let logoContainerView = UIView()
+			logoContainerView.translatesAutoresizingMaskIntoConstraints = false
+			logoContainerView.cssSelector = .header
+			logoContainerView.addSubview(logoTitle)
+			logoContainerView.addSubview(logoImageView)
+			
+			logoContainerView.embedHorizontally(views: [logoTitle], insets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) { _, _ in
+				return 10
+			}
+			
+			contentView.addSubview(logoContainerView)
+			logoContainerView.addSubview(logoImageView)
+			
+			NSLayoutConstraint.activate([
+				logoContainerView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.leadingAnchor),
+				logoContainerView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.trailingAnchor),
+				logoContainerView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor).with(priority: .defaultHigh),
+				logoContainerView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
+				logoContainerView.heightAnchor.constraint(equalToConstant: 40),
+				
+				logoImageView.widthAnchor.constraint(equalToConstant: 128),
+				logoImageView.heightAnchor.constraint(equalToConstant: 128),
+				logoImageView.topAnchor.constraint(equalTo: logoTitle.safeAreaLayoutGuide.bottomAnchor, constant: 20.0),
+				logoImageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor)
 			])
 		}
-
+			
 		// Add help message
 		if configuration.helpButtonURL != nil || configuration.helpMessage != nil {
 			var helpElements: [ComposedMessageElement] = [

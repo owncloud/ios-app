@@ -121,9 +121,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
 			if condition.fulfilled == true {
 				// No account available
-				var configuration = BookmarkComposerConfiguration.newBookmarkConfiguration
+				let configuration = BookmarkComposerConfiguration.newBookmarkConfiguration
 				configuration.hasIntro = true
-				self?.contentViewController = BookmarkSetupViewController(configuration: configuration, headerTitle: "Account setup".localized)
+				self?.contentViewController = BookmarkSetupViewController(configuration: configuration, headerTitle: nil)
 				// self?.contentViewController = InitialSetupViewController()
 			} else {
 				// Account already available

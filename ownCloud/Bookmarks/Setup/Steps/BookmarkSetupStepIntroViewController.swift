@@ -27,22 +27,13 @@ class BookmarkSetupStepIntroViewController: BookmarkSetupStepViewController {
 	override func loadView() {
 		super.loadView()
 
-		var logoImage = AccountSettingsProvider.shared.logo
-
 		continueButtonLabelText = "Start setup".localized
 
 		if hasSettings {
 			backButtonLabelText = "Settings".localized
 		}
 
-		if let tintImageColor = Theme.shared.activeCollection.css.getThemeCSSColor(.fill, selectors: [.accountSetup, .welcome, .icon]) {
-			if let tintedLogoImage = logoImage.tinted(with: tintImageColor) {
-				logoImage = tintedLogoImage
-			}
-		}
-
 		let messageView = ComposedMessageView(elements: [
-			.image(logoImage, size: CGSize(width: 128, height: 128), adaptSizeToRatio: true, cssSelectors: [.icon], insets: .zero),
 			.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)),
 			.subtitle("The following steps will guide you through the setup process.".localized, alignment: .centered, cssSelectors: [.message])
 		])
