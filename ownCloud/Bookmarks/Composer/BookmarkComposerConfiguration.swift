@@ -53,6 +53,6 @@ class BookmarkComposerConfiguration {
 
 extension BookmarkComposerConfiguration {
 	static var newBookmarkConfiguration: BookmarkComposerConfiguration {
-		return BookmarkComposerConfiguration(url: Branding.shared.profileURL, urlEditable: Branding.shared.profileAllowUrlConfiguration ?? true, name: Branding.shared.profileBookmarkName, nameEditable: true, helpButtonLabel: Branding.shared.profileHelpButtonLabel, helpButtonURL: Branding.shared.profileHelpURL, helpMessage: Branding.shared.profileOpenHelpMessage)
+		return BookmarkComposerConfiguration(url: Branding.shared.profileURL, urlEditable: Branding.shared.profileAllowUrlConfiguration ?? true, name: Branding.shared.profileBookmarkName, nameEditable: Branding.shared.canEditAccount, helpButtonLabel: Branding.shared.profileHelpButtonLabel, helpButtonURL: Branding.shared.profileHelpURL, helpMessage: Branding.shared.profileOpenHelpMessage)
 	}
 }

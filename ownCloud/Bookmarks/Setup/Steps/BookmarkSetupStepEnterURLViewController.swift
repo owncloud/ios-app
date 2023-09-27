@@ -33,6 +33,8 @@ class BookmarkSetupStepEnterURLViewController: BookmarkSetupStepViewController {
 
 		urlTextField?.text = setupViewController?.composer?.configuration.url?.absoluteString
 
+		focusTextFields = [ urlTextField! ]
+
 		contentView = urlTextField
 
 		updateState()

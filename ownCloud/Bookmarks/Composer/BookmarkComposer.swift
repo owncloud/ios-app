@@ -26,7 +26,7 @@ class BookmarkComposer: NSObject {
 		case intro
 		case enterUsername
 		case serverURL(urlString: String?)
-		case oidc(withCredentials: Bool, username: String?, password: String?)
+		case authenticate(withCredentials: Bool, username: String?, password: String?)
 		case chooseServer(fromInstances: [OCServerInstance])
 		case infinitePropfind
 		case completed
@@ -482,7 +482,7 @@ class BookmarkComposer: NSObject {
 				currentStep = .serverURL(urlString: configuration.url?.absoluteString)
 			}
 		} else if bookmark.authenticationData == nil {
-			currentStep = .oidc(withCredentials: bookmark.isTokenBased == false, username: username, password: password)
+			currentStep = .authenticate(withCredentials: bookmark.isTokenBased == false, username: username, password: password)
 		} else if let instances, instances.count > 0 {
 			currentStep = .chooseServer(fromInstances: instances)
 		} else if supportsInfinitePropfind == true, !performedPrepopulation {

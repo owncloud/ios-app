@@ -20,7 +20,21 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class BookmarkSetupStepViewController: UIViewController {
+extension BookmarkComposer.Step {
+	var cssSelector: ThemeCSSSelector {
+		switch self {
+			case .intro: return ThemeCSSSelector(rawValue: "intro")
+			case .enterUsername: return ThemeCSSSelector(rawValue: "enterUsername")
+			case .serverURL(urlString: _):  return ThemeCSSSelector(rawValue: "serverURL")
+			case .authenticate(withCredentials: _, username: _, password: _): return ThemeCSSSelector(rawValue: "authenticate")
+			case .chooseServer(fromInstances: _): return ThemeCSSSelector(rawValue: "chooseServer")
+			case .infinitePropfind: return ThemeCSSSelector(rawValue: "infinitePropfind")
+			case .completed: return ThemeCSSSelector(rawValue: "completed")
+		}
+	}
+}
+
+class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 	weak var setupViewController: BookmarkSetupViewController?
 	var backgroundView: ThemeCSSView
 	var step: BookmarkComposer.Step
@@ -96,10 +110,10 @@ class BookmarkSetupStepViewController: UIViewController {
 		var views: [UIView] = topViews ?? []
 
 		let contentView = UIView()
-		contentView.cssSelectors = [.step]
+		contentView.cssSelectors = [.step, step.cssSelector]
 
 		// Title & message
-		if let stepTitle {
+		if let stepTitle = textOverride(for: "title") ?? stepTitle {
 			titleLabel = ThemeCSSLabel(withSelectors: [.title])
 			titleLabel?.translatesAutoresizingMaskIntoConstraints = false
 			titleLabel?.text = stepTitle
@@ -109,7 +123,7 @@ class BookmarkSetupStepViewController: UIViewController {
 			views.append(titleLabel!)
 		}
 
-		if let stepMessage {
+		if let stepMessage = textOverride(for: "message") ?? stepMessage {
 			messageLabel = ThemeCSSLabel(withSelectors: [.message])
 			messageLabel?.translatesAutoresizingMaskIntoConstraints = false
 			messageLabel?.text = stepMessage
@@ -237,4 +251,41 @@ class BookmarkSetupStepViewController: UIViewController {
 		return textField
 	}
 
+	var focusTextFields: [UITextField]? {
+		didSet {
+			if let focusTextFields {
+				for textField in focusTextFields {
+					textField.delegate = self
+				}
+			}
+		}
+	}
+
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		if let focusTextFields, let position = focusTextFields.firstIndex(of: textField) {
+			if position < (focusTextFields.count-1) {
+				let nextTextField = focusTextFields[position+1]
+				nextTextField.becomeFirstResponder()
+
+				return false
+			}
+		}
+
+		if continueButton.isEnabled {
+			handleContinue()
+		}
+
+		return false
+	}
+
+	func textOverride(for label: String) -> String? {
+		let key = "setup-\(step.cssSelector.rawValue)-\(label)"
+		let localization = key.localized
+
+		if localization != key {
+			return localization
+		}
+
+		return nil
+	}
 }

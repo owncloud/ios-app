@@ -31,6 +31,8 @@ class BookmarkSetupStepEnterUsernameViewController: BookmarkSetupStepViewControl
 		}), autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Username".localized, borderStyle: .roundedRect)
 		usernameField?.textContentType = .username
 
+		focusTextFields = [ usernameField! ]
+
 		contentView = usernameField
 
 		updateState()

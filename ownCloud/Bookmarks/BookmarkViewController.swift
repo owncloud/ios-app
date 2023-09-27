@@ -1143,7 +1143,7 @@ extension BookmarkViewController {
 				}
 			})
 		} else {
-			let setupViewController = BookmarkSetupViewController(configuration: .newBookmarkConfiguration, headerTitle: "Add account".localized, cancelHandler: {
+			let setupViewController = BookmarkSetupViewController(configuration: .newBookmarkConfiguration, cancelHandler: {
 				hostViewController.dismiss(animated: true)
 			}, doneHandler: { bookmark in
 				hostViewController.dismiss(animated: true)
@@ -1151,8 +1151,10 @@ extension BookmarkViewController {
 					AccountConnectionPool.shared.connection(for: bookmark)?.connect()
 				}
 			})
+			setupViewController.navigationItem.titleLabelText = "Add account".localized
 
-			hostViewController.present(setupViewController, animated: true, completion: nil)
+			let navigationViewController = ThemeNavigationController(rootViewController: setupViewController)
+			hostViewController.present(navigationViewController, animated: true, completion: nil)
 		}
 	}
 }

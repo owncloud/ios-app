@@ -29,16 +29,16 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 	var visibleContentContainerView: UIView = UIView()
 
-	var headerTitle: String?
-
 	var helpMessageView: ComposedMessageView?
 
-	init(configuration: BookmarkComposerConfiguration, headerTitle: String? = nil, cancelHandler: CancelHandler? = nil, doneHandler: DoneHandler? = nil) {
+	private var centerHelperView: UIView = UIView()
+	private var logoView: UIView?
+
+	init(configuration: BookmarkComposerConfiguration, cancelHandler: CancelHandler? = nil, doneHandler: DoneHandler? = nil) {
 		self.configuration = configuration
 
 		super.init(nibName: nil, bundle: nil)
 
-		self.headerTitle = headerTitle
 		self.doneHandler = doneHandler
 		self.cancelHandler = cancelHandler
 
@@ -60,6 +60,9 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 		contentView.embed(toFillWith: backgroundView)
 		contentView.embed(toFillWith: visibleContentContainerView, enclosingAnchors: contentView.safeAreaWithKeyboardAnchorSet)
 
+		centerHelperView.translatesAutoresizingMaskIntoConstraints = false
+		contentView.addSubview(centerHelperView)
+
 		self.cssSelectors = [.modal, .accountSetup]
 
 		// Add login background image
@@ -69,83 +72,63 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 			backgroundView.embed(toFillWith: backgroundImageView)
 		}
 
-		// Add brand title
+		// Add logo
+		let maxLogoSize = CGSize(width: 128, height: 128)
 		let logoImage = UIImage(named: "branding-login-logo")
-		let logoImageView = UIImageView(image: logoImage)
-		logoImageView.cssSelector = .icon
-		logoImageView.accessibilityLabel = VendorServices.shared.appName
-		logoImageView.contentMode = .scaleAspectFit
-		logoImageView.translatesAutoresizingMaskIntoConstraints = false
+		var logoImageSize: CGSize?
+		if let logoImage {
+			logoImageSize = UIImage.sizeThatFits(logoImage.size, into: maxLogoSize)
+			logoView = UIImageView(image: logoImage)
+		}
+
+		if let logoView = logoView as? UIImageView, let logoImageSize {
+			logoView.cssSelector = .icon
+			logoView.accessibilityLabel = VendorServices.shared.appName
+			logoView.contentMode = .scaleAspectFit
+			logoView.translatesAutoresizingMaskIntoConstraints = false
+
+			contentView.addSubview(logoView)
+
+			NSLayoutConstraint.activate([
+				centerHelperView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor).with(priority: .defaultLow),
+				centerHelperView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor).with(priority: .defaultLow),
+
+				centerHelperView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor).with(priority: .defaultLow),
+				centerHelperView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1),
+
+				logoView.topAnchor.constraint(equalTo: centerHelperView.topAnchor),
+				logoView.centerXAnchor.constraint(equalTo: centerHelperView.centerXAnchor),
+				logoView.widthAnchor.constraint(equalToConstant: logoImageSize.width),
+				logoView.heightAnchor.constraint(lessThanOrEqualToConstant: logoImageSize.height)
+			])
+		}
 
 		// Add cancel button
 		if cancelHandler != nil {
-			let navigationView = UINavigationBar()
-			navigationView.translatesAutoresizingMaskIntoConstraints = false
-			
-			let cancelBarButton = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction(handler: { [weak self] action in
-				self?.cancel()
-			}))
-			let navigationItem = UINavigationItem(title: headerTitle ?? Branding.shared.appDisplayName)
-			navigationItem.rightBarButtonItem = cancelBarButton
-			navigationView.setItems([navigationItem], animated: false)
-			
-			contentView.addSubview(navigationView)
-			contentView.addSubview(logoImageView)
-			
-			NSLayoutConstraint.activate([
-				navigationView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
-				navigationView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-				navigationView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor),
-				
-				logoImageView.widthAnchor.constraint(equalToConstant: 128),
-				logoImageView.heightAnchor.constraint(equalToConstant: 128),
-				logoImageView.topAnchor.constraint(equalTo: navigationView.safeAreaLayoutGuide.bottomAnchor, constant: 20.0),
-				logoImageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor)
-			])
-		} else {
-			var title = headerTitle
-			if !Branding.shared.isBranded, title == "" {
-				title = Branding.shared.appDisplayName
+			if navigationController != nil {
+				navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction(handler: { [weak self] action in
+					self?.cancel()
+				}))
+			} else {
+				let cancelButton = ThemeCSSButton(withSelectors: [.cancel])
+				cancelButton.translatesAutoresizingMaskIntoConstraints = false
+				cancelButton.setTitle("Cancel".localized, for: .normal)
+				cancelButton.addAction(UIAction(handler: { [weak self] _ in
+					self?.cancel()
+				}), for: .primaryActionTriggered)
+
+				contentView.addSubview(cancelButton)
+
+				NSLayoutConstraint.activate([
+					cancelButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+					cancelButton.topAnchor.constraint(equalTo:  contentView.safeAreaLayoutGuide.topAnchor, constant: 20)
+				])
 			}
-			
-			let logoTitle = ThemeCSSLabel(withSelectors: [.title])
-			logoTitle.translatesAutoresizingMaskIntoConstraints = false
-			logoTitle.font = .preferredFont(forTextStyle: .title3, with: .bold)
-			logoTitle.text = title
-			logoTitle.textAlignment = .center
-			
-			let logoContainerView = UIView()
-			logoContainerView.translatesAutoresizingMaskIntoConstraints = false
-			logoContainerView.cssSelector = .header
-			logoContainerView.addSubview(logoTitle)
-			logoContainerView.addSubview(logoImageView)
-			
-			logoContainerView.embedHorizontally(views: [logoTitle], insets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)) { _, _ in
-				return 10
-			}
-			
-			contentView.addSubview(logoContainerView)
-			logoContainerView.addSubview(logoImageView)
-			
-			NSLayoutConstraint.activate([
-				logoContainerView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-				logoContainerView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.safeAreaLayoutGuide.trailingAnchor),
-				logoContainerView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor).with(priority: .defaultHigh),
-				logoContainerView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
-				logoContainerView.heightAnchor.constraint(equalToConstant: 40),
-				
-				logoImageView.widthAnchor.constraint(equalToConstant: 128),
-				logoImageView.heightAnchor.constraint(equalToConstant: 128),
-				logoImageView.topAnchor.constraint(equalTo: logoTitle.safeAreaLayoutGuide.bottomAnchor, constant: 20.0),
-				logoImageView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor)
-			])
 		}
-			
+
 		// Add help message
 		if configuration.helpButtonURL != nil || configuration.helpMessage != nil {
-			var helpElements: [ComposedMessageElement] = [
-				// .title("Help".localized)
-			]
+			var helpElements: [ComposedMessageElement] = []
 
 			if let helpButtonURL = configuration.helpButtonURL {
 				helpElements += [
@@ -206,7 +189,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 			case .enterUsername:
 				stepViewController = BookmarkSetupStepEnterUsernameViewController(with: self, step: step)
 
-			case .oidc(withCredentials: _, username: _, password: _):
+			case .authenticate(withCredentials: _, username: _, password: _):
 				stepViewController = BookmarkSetupStepAuthenticateViewController(with: self, step: step)
 
 			case .chooseServer(fromInstances: _):
@@ -217,12 +200,12 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 				stepViewController = BookmarkSetupStepPrepopulateViewController(with: self, step: step)
 
 			case .completed:
-			if Branding.shared.canEditAccount {
-				stepViewController = BookmarkSetupStepFinishedViewController(with: self, step: step)
-			} else {
-				let bookmark = composer?.addBookmark()
-				done(bookmark: bookmark)
-			}
+				if composer?.configuration.nameEditable == true {
+					stepViewController = BookmarkSetupStepFinishedViewController(with: self, step: step)
+				} else {
+					let bookmark = composer?.addBookmark()
+					done(bookmark: bookmark)
+				}
 		}
 
 		(stepViewController as? BookmarkSetupStepViewController)?.setupViewController = self
@@ -233,7 +216,23 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 	}
 
 	override func constraintsForEmbedding(contentViewController: UIViewController) -> [NSLayoutConstraint] {
-		return visibleContentContainerView.embed(centered: contentViewController.view!, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), constraintsOnly: true)
+		let contentViewControllerView = contentViewController.view!
+		var constraints: [NSLayoutConstraint]
+
+		if let logoView {
+			constraints = visibleContentContainerView.embed(centered: centerHelperView, minimumInsets: NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20), constraintsOnly: true)
+
+			constraints += [
+				contentViewControllerView.topAnchor.constraint(equalTo: logoView.safeAreaLayoutGuide.bottomAnchor, constant: 10),
+				contentViewControllerView.bottomAnchor.constraint(equalTo: centerHelperView.safeAreaLayoutGuide.bottomAnchor),
+				contentViewControllerView.leadingAnchor.constraint(equalTo: centerHelperView.safeAreaLayoutGuide.leadingAnchor),
+				contentViewControllerView.trailingAnchor.constraint(equalTo: centerHelperView.safeAreaLayoutGuide.trailingAnchor)
+			]
+		} else {
+			constraints = visibleContentContainerView.embed(centered: contentViewControllerView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), constraintsOnly: true)
+		}
+
+		return constraints
 	}
 
 	// MARK: - HUD message
@@ -243,6 +242,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 			if newValue == nil {
 				contentViewController?.view.isHidden = false
+				logoView?.isHidden = false
 			}
 		}
 
@@ -250,6 +250,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 			if let hudMessageView {
 				visibleContentContainerView.embed(centered: hudMessageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
 				contentViewController?.view.isHidden = true
+				logoView?.isHidden = true
 			}
 		}
 	}
