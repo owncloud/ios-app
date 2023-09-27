@@ -39,6 +39,8 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 	var backgroundView: ThemeCSSView
 	var step: BookmarkComposer.Step
 
+	var cacheViewController: Bool = true
+
 	init(with setupViewController: BookmarkSetupViewController, step: BookmarkComposer.Step) {
 		self.setupViewController = setupViewController
 		self.step = step

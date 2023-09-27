@@ -37,7 +37,7 @@ class BookmarkComposerConfiguration {
 	var helpButtonURL: URL?
 	var helpMessage: String?
 
-	init(bookmark: OCBookmark? = nil, hasIntro: Bool = true, hasSettings: Bool = true, url: URL? = nil, urlEditable: Bool = true, name: String? = nil, nameEditable: Bool, helpButtonLabel: String? = nil, helpButtonURL: URL? = nil, helpMessage: String? = nil) {
+	init(bookmark: OCBookmark? = nil, hasIntro: Bool = false, hasSettings: Bool = true, url: URL? = nil, urlEditable: Bool = true, name: String? = nil, nameEditable: Bool, helpButtonLabel: String? = nil, helpButtonURL: URL? = nil, helpMessage: String? = nil) {
 		self.bookmark = bookmark
 		self.hasIntro = hasIntro
 		self.hasSettings = hasSettings

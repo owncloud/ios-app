@@ -210,7 +210,9 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 		(stepViewController as? BookmarkSetupStepViewController)?.setupViewController = self
 
-		stepControllerByStep[step] = stepViewController
+		if (stepViewController as? BookmarkSetupStepViewController)?.cacheViewController == true {
+			stepControllerByStep[step] = stepViewController
+		}
 
 		return stepViewController
 	}

@@ -22,6 +22,15 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 	var usernameField: UITextField?
 	var passwordField: UITextField?
 
+	override init(with setupViewController: BookmarkSetupViewController, step: BookmarkComposer.Step) {
+		super.init(with: setupViewController, step: step)
+		cacheViewController = false
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	override func loadView() {
 		guard case let .authenticate(withCredentials: withCredentials, username: prefillUsername, password: prefillPassword) = step else {
 			return

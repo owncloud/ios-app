@@ -158,18 +158,23 @@ class BookmarkComposer: NSObject {
 		connection.prepareForSetup(options: nil) { [weak self] (issue, _, _, preferredAuthenticationMethods, generationOptions) in
 			self?.hudMessage = nil
 
-			let continueToNextStep : () -> Void = { [weak self] in
-				self?.bookmark.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
-				self?.pushUndoAction(undoAction: UndoAction(action: { composer in
-					composer.username = nil
-					composer.password = nil
+			let continueToNextStep : (_ allowRetry: Bool) -> Void = { [weak self] (allowRetry) in
+				if let preferredAuthenticationMethods, preferredAuthenticationMethods.count > 0 {
+					self?.bookmark.authenticationMethodIdentifier = preferredAuthenticationMethods.first
+					self?.pushUndoAction(undoAction: UndoAction(action: { composer in
+						composer.username = nil
+						composer.password = nil
 
-					composer.bookmark.url = nil
-					composer.bookmark.authenticationMethodIdentifier = nil
+						composer.bookmark.url = nil
+						composer.bookmark.authenticationMethodIdentifier = nil
+						composer.bookmark.certificateStore?.removeAllCertificates()
 
-					composer.generationOptions = nil
-				}, byUser: byUser))
-				self?.updateState()
+						composer.generationOptions = nil
+					}, byUser: byUser))
+					self?.updateState()
+				} else if allowRetry {
+					self?.enterURL(urlString, completion: completion)
+				}
 			}
 
 			self?.generationOptions = generationOptions
@@ -186,7 +191,7 @@ class BookmarkComposer: NSObject {
 
 							case .approve:
 								issue?.approve()
-								continueToNextStep()
+								continueToNextStep(true)
 
 							case .dismiss:
 								self?.bookmark.url = nil
@@ -195,10 +200,10 @@ class BookmarkComposer: NSObject {
 				} else {
 					// Do not present issues
 					issue.approve()
-					continueToNextStep()
+					continueToNextStep(true)
 				}
 			} else {
-				continueToNextStep()
+				continueToNextStep(false)
 			}
 		}
 	}
@@ -453,8 +458,6 @@ class BookmarkComposer: NSObject {
 		didSet {
 			if oldValue != currentStep, let currentStep {
 				delegate?.present(composer: self, step: currentStep)
-
-				Log.debug("BookmarkComposer.currentStep=\(currentStep)")
 			}
 		}
 	}
