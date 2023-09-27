@@ -25,8 +25,10 @@ class CertificateSummaryView: ThemeCSSView {
 	init(with certificate: OCCertificate?, httpHostname: String?) {
 		super.init()
 
+		cssSelector = .certificateSummary
+
 		button.translatesAutoresizingMaskIntoConstraints = false
-		self.embed(toFillWith: button)
+		embed(toFillWith: button)
 
 		button.addAction(UIAction(handler: { [weak self] _ in
 			self?.showCertificate()
@@ -107,6 +109,7 @@ class CertificateSummaryView: ThemeCSSView {
 	func update() {
 		var buttonConfiguration : UIButton.Configuration = .borderless()
 		buttonConfiguration.baseForegroundColor = statusColor
+		buttonConfiguration.baseBackgroundColor = .clear
 		buttonConfiguration.image = self.statusImage
 		buttonConfiguration.title = certificate?.hostName ?? httpHostname
 		buttonConfiguration.buttonSize = .mini

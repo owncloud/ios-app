@@ -703,6 +703,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.accountSetup, .help, .button], 	property: .fill,   value: UIColor.clear),
 			ThemeCSSRecord(selectors: [.accountSetup],      		property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
 			ThemeCSSRecord(selectors: [.accountSetup],			property: .fill,   value: darkBrandColor),
+			ThemeCSSRecord(selectors: [.certificateSummary],		property: .fill,   value: UIColor.clear),
 
 			// Side Bar
 			// - Interface Style

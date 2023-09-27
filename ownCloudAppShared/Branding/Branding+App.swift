@@ -445,4 +445,5 @@ public extension ThemeCSSSelector {
 	static let accountSetup = ThemeCSSSelector(rawValue: "accountSetup")
 	static let step = ThemeCSSSelector(rawValue: "step")
 	static let help = ThemeCSSSelector(rawValue: "help")
+	static let certificateSummary = ThemeCSSSelector(rawValue: "certificateSummary")
 }
