@@ -117,6 +117,8 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		logoFallbackView.setContentHuggingPriority(.required, for: .vertical)
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+
+		disconnectButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 	}
 
 	override init(frame: CGRect) {

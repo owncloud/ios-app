@@ -224,6 +224,11 @@ class BookmarkComposer: NSObject {
 		options[.presentingViewControllerKey] = presentingViewController
 		options[.requiredUsernameKey] = bookmark.userName
 
+		// Pre-fill already provided username in case of a server locator being used
+		if options[.requiredUsernameKey] == nil, let serverLocationUserName = bookmark.serverLocationUserName {
+			options[.usernameKey] = serverLocationUserName
+		}
+
 		guard let bookmarkAuthenticationMethodIdentifier = bookmark.authenticationMethodIdentifier else { return }
 
 		hudMessage = "Authenticating…".localized
