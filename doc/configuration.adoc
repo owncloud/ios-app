@@ -1502,6 +1502,12 @@ tag::passcode[]
 |Controls wether the user MUST establish a passcode upon app installation.
 |advanced `candidate`
 
+|passcode.enforced-by-device
+|bool
+|`false`
+|Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.
+|advanced `candidate`
+
 |passcode.lockDelay
 |int
 |
