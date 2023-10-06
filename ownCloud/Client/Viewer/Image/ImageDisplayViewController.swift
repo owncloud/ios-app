@@ -220,6 +220,13 @@ extension ImageDisplayViewController: DisplayExtension {
 extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		if gestureRecognizer == tapToZoomGestureRecognizer,
+		   scrollView?.hasActiveImageAnalysisSelection == true, // allow selection when VisionKit image analysis is active
+		   let otherGestureRecognizer = otherGestureRecognizer as? UITapGestureRecognizer,
+		   otherGestureRecognizer.numberOfTapsRequired == 2 {
+			return true
+		}
+
 		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return true
 		}
