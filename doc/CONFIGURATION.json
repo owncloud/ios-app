@@ -53,6 +53,10 @@
     "label" : "action.allowed",
     "possibleValues" : [
       {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Sharing",
         "value" : "com.owncloud.action.collaborate"
       },
@@ -87,14 +91,6 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
-      },
-      {
-        "description" : "Make available offline",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Available Offline",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
       },
       {
         "description" : "Markup",
@@ -191,6 +187,10 @@
     "label" : "action.disallowed",
     "possibleValues" : [
       {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Sharing",
         "value" : "com.owncloud.action.collaborate"
       },
@@ -225,14 +225,6 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
-      },
-      {
-        "description" : "Make available offline",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Available Offline",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
       },
       {
         "description" : "Markup",
@@ -1668,6 +1660,10 @@
         "value" : "auth-race-condition"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.availableOffline.",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.background_update.",
         "value" : "com.owncloud.action.background_update"
       },
@@ -1710,14 +1706,6 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.instant_media_upload.",
         "value" : "com.owncloud.action.instant_media_upload"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.makeAvailableOffline.",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.makeUnavailableOffline.",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.markup.",

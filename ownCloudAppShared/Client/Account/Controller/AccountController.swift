@@ -407,7 +407,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 				// Recents
 				if specialItems[.recents] == nil {
-					specialItems[.recents] = OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true)
+					specialItems[.recents] = OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascendant))
 				}
 				if let sideBarItem = specialItems[.recents] {
 					quickAccessItems.append(sideBarItem)

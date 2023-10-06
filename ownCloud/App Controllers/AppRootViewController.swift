@@ -124,7 +124,6 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 				let configuration = BookmarkComposerConfiguration.newBookmarkConfiguration
 				configuration.hasIntro = true
 				self?.contentViewController = BookmarkSetupViewController(configuration: configuration)
-				// self?.contentViewController = InitialSetupViewController()
 			} else {
 				// Account already available
 				self?.contentViewController = self?.contentBrowserController

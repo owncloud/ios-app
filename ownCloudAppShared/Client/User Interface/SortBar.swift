@@ -20,11 +20,7 @@ import UIKit
 import ownCloudSDK
 
 public protocol SortBarDelegate: AnyObject {
-
-	var sortDirection: SortDirection { get set }
-	var sortMethod: SortMethod { get set }
-
-	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
+	func sortBar(_ sortBar: SortBar, didChangeSortDescriptor: SortDescriptor)
 	func sortBar(_ sortBar: SortBar, itemLayout: ItemLayout)
 	func sortBarToggleSelectMode(_ sortBar: SortBar)
 }
@@ -70,26 +66,30 @@ public class SortBar: ThemeCSSView {
 		UIAccessibility.post(notification: .layoutChanged, argument: nil)
 	}
 
-	public var sortMethod: SortMethod {
+	public var sortDescriptor: SortDescriptor {
 		didSet {
-			if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
-				if oldValue == sortMethod {
-					if delegate?.sortDirection == .ascendant {
-						delegate?.sortDirection = .descendant
-					} else {
-						delegate?.sortDirection = .ascendant
-					}
-				} else {
-					delegate?.sortDirection = .ascendant // Reset sort direction when switching sort methods
-				}
-			}
 			updateSortButtonTitle()
-
-			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName) as String
-			sortButton?.sizeToFit()
-
-			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
 		}
+	}
+
+	func userSelectedSortMethod(_ newSortMethod: SortMethod) {
+		var sortDirection = sortDescriptor.direction
+
+		if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
+			if sortDescriptor.method == newSortMethod {
+				if sortDirection == .ascendant {
+					sortDirection = .descendant
+				} else {
+					sortDirection = .ascendant
+				}
+			} else {
+				sortDirection = .ascendant // Reset sort direction when switching sort methods
+			}
+		}
+
+		sortDescriptor = SortDescriptor(method: newSortMethod, direction: sortDirection)
+
+		delegate?.sortBar(self, didChangeSortDescriptor: sortDescriptor)
 	}
 
 	public var itemLayout: ItemLayout = .list {
@@ -100,12 +100,12 @@ public class SortBar: ThemeCSSView {
 	}
 
 	// MARK: - Init & Deinit
-	public init(frame: CGRect = .zero, sortMethod: SortMethod) {
+	public init(frame: CGRect = .zero, sortDescriptor: SortDescriptor) {
 		selectButton = UIButton()
 		changeItemLayoutButton = UIButton(type: .system)
 		sortButton = UIButton(type: .system)
 
-		self.sortMethod = sortMethod
+		self.sortDescriptor = sortDescriptor
 
 		super.init(frame: frame)
 		self.cssSelector = .sortBar
@@ -137,8 +137,8 @@ public class SortBar: ThemeCSSView {
 						let title = method.localizedName
 						var sortDirectionTitle = ""
 
-						if self?.delegate?.sortMethod == method {
-							if self?.delegate?.sortDirection == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
+						if self?.sortDescriptor.method == method {
+							if self?.sortDescriptor.direction == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
 								sortDirectionTitle = " ↓"
 							} else {
 								sortDirectionTitle = " ↑"
@@ -146,7 +146,7 @@ public class SortBar: ThemeCSSView {
 						}
 
 						let menuItem = UIAction(title: "\(title)\(sortDirectionTitle)", image: nil, attributes: []) { [weak self] _ in
-							self?.sortMethod = method
+							self?.userSelectedSortMethod(method)
 						}
 
 						menuItems.append(menuItem)
@@ -229,12 +229,15 @@ public class SortBar: ThemeCSSView {
 
 	// MARK: - Sort Direction Title
 	func updateSortButtonTitle() {
-		let sortButtonTitle = sortDirectionTitle(sortMethod.localizedName)
+		let method = sortDescriptor.method
+		let sortButtonTitle = sortDirectionTitle(method.localizedName)
 		sortButton?.setTitle(sortButtonTitle, for: .normal)
+		sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, method.localizedName) as String
+		sortButton?.sizeToFit()
 	}
 
 	func sortDirectionTitle(_ title: String) -> String {
-		if delegate?.sortDirection == .descendant {
+		if sortDescriptor.direction == .descendant {
 			return String(format: "%@ ↓", title)
 		} else {
 			return String(format: "%@ ↑", title)

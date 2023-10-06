@@ -104,6 +104,7 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
+"last used" = "last used";
 
 "Tree" = "Tree";
 "Search folder" = "Search folder";
