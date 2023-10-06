@@ -1,7 +1,3 @@
-Bug Fixes
-
-• Added missing Recents Group
-• Unable to authenticate using OpenID Connect
-• Attach files from third-party apps
-• Solves "Content unavailable" in Files.app
+• Bug Fixes
+Fixed File Provider, App Provider and layout issues.
 

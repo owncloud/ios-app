@@ -1,0 +1,1013 @@
+/*
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit account" = "Muuda kontot";
+"Add account" = "Lisa konto";
+"Server URL" = "Serveri URL";
+"https://example.com" = "https://example.com";
+"Continue" = "Jätka";
+"Name" = "Nimi";
+"Example Server" = "Näidisserver";
+"Show Certificate Details" = "Näita sertifikaadi üksikasju";
+"Connect" = "Ühenda";
+"Delete Authentication Data" = "Kustuta autentimise andmed";
+"Authentication" = "Autentimine";
+"Username" = "Kasutajanimi";
+"Password" = "Parool";
+"Certificate Details" = "Sertifikaadi üksikasjad";
+"Cancel" = "Loobu";
+"Approve" = "Kiida heaks";
+"Error" = "Viga";
+"Issues" = "Vead";
+"Review Connection" = "Ühenduse ülevaatamine";
+"Authenticated via" = "Autenditud läbi";
+"Authenticated as %@ via %@" = "Autenditud kui %@ %@ kaudu";
+"Edit" = "Muuda";
+"Credentials" = "Kasutajatunnused";
+"Rejected" = "Tagasi lükatud";
+"Passed" = "Läbitud";
+"Accepted" = "Vastu võetud";
+"Validation Error" = "Valideerimise viga";
+"Certificate was rejected by user." = "Kasutaja lükkas sertifikaadi tagasi.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Sertifikaadiga on probleeme.\nAva 'Sertifikaadi üksikasjad' lisainfo saamiseks.";
+"No issues found. Certificate passed validation." = "Probleeme ei leitud. Sertifikaat läbis valideerimise.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Sertifikaadiga esineb probleeme, kuid kasutaja on selle aktsepteerinud.\nAva 'Sertifikaadi üksikasjad' lisainfo saamiseks.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
+
+"Error opening %@" = "Viga %@ avamisel";
+
+"Contacting server…" = "Serveriga ühendumine...";
+"Authenticating…" = "Autentimine...";
+
+"Fetching user information…" = "Kasutaja info tõmbamine...";
+"Updating connection…" = "Ühenduse uuendamine...";
+
+"Preparing account" = "Konto ettevalmistamine";
+"Please wait…" = "Palun oota...";
+"Skip" = "Jäta vahele";
+
+"Missing hostname" = "Hostinimi puudub";
+"The entered URL does not include a hostname." = "Sisestatud URL ei sisalda hostinime.";
+"Add account" = "Lisa konto";
+"Server name" = "Serveri nimi";
+"Server Password" = "Serveri parool";
+"Server Username" = "Serveri kasutajanimi";
+"Show accounts" = "Kuva kontosid";
+"Setup complete" = "Seadistamine lõpetatud";
+"Edit Login" = "Muuda sisselogimist";
+"Manage Storage" = "Mahu haldamine";
+"Access Files" = "Juurdepääs failidele";
+"Log out" = "Logi välja";
+"Retry" = "Proovi uuesti";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Järjehoidja Metaandmed";
+
+/* Client */
+"Browse" = "Sirvi";
+"Files" = "Failid";
+"Disconnect" = "Ühenda lahti";
+"Connecting…" = "Ühendamine...";
+"Connected." = "Ühendatud.";
+"Select" = "Vali";
+"Done" = "Valmis";
+
+"Folder" = "Kaust";
+
+"Stopped" = "Peatatud";
+"Started…" = "Alustatud...";
+"Contents from cache." = "Sisu vahemälust.";
+"Waiting for server response…" = "Serveri vastuse ootamine...";
+"This folder no longer exists." = "Seda kausta pole enam olemas.";
+"Everything up-to-date." = "Kõik on ajakohane.";
+"Please wait…" = "Palun oota...";
+"Sort by %@" = "Sorteerida %@ järgi";
+"Sort by" = "Sorteeri";
+
+"name" = "nimi";
+"kind" = "liik";
+"size" = "suurus";
+"date" = "kuupäev";
+
+"Tree" = "Tree";
+"Search folder" = "Otsi kaustast";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
+"Search account" = "Otsi kontot";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
+"Pending" = "Ootel";
+"Show parent paths" = "Näita baasradu";
+"Reveal in folder" = "Avalda kaustas";
+
+"%@ of %@ used" = "%@ %@-st kasutatud";
+"Total: %@" = "Kokku: %@";
+"%@ item | " = "%@ objekt |";
+"%@ items | " = "%@ objekti |";
+
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Show more results" = "Kuva rohkem tulemusi";
+
+"An error occurred" = "Tekkis viga";
+
+/* Item Layouts */
+"List" = "Nimekiri";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
+
+/* Search scope */
+"Search scope" = "Otsingu ulatus";
+"Toggle Search Scope" = "Otsingu ulatuse muutmine";
+
+/* Static Login Setup */
+"Server error" = "Serveri viga";
+"The server doesn't support any allowed authentication method." = "Server ei toeta ühtegi lubatud autentimismeetodit.";
+"The server doesn't support any known and allowed authentication method found." = "Server ei toeta ühtegi teadaolevat ja lubatud autentimismeetodit.";
+"Retry detection" = "Taaskorduse tuvastamine";
+"Enter your username and password" = "Sisestage oma kasutajanimi ja parool";
+"Please log in to authorize the app." = "Rakenduse autoriseerimiseks logige sisse.";
+"Welcome to %@" = "Tere tulemast %@";
+"Please enter a server URL" = "Palun sisestage serveri URL";
+"Please pick a profile to begin setup" = "Palun valige profiil, et alustada seadistamist";
+
+/* Single Account */
+"You are connected as\n%@" = "Olete ühendatud kui\n%@";
+"Login" = "Logi sisse";
+"Wrong URL" = "Vale URL";
+"Please enter a valid URL" = "Palun sisestage kehtiv URL";
+"Missing Profile URL" = "Profiili URL puudub";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "Profiilil '%@' ei ole URL seadistatud.\nPalun esitage URL seadistuse või MDM-i kaudu.";
+
+/* Client Messages */
+"No contents" = "No contents";
+"This folder contains no files or folders." = "See kaust ei sisalda faile ega kaustu.";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
+
+"Folder removed" = "Kaust on eemaldatud";
+"This folder no longer exists on the server." = "Seda kausta pole serveris enam olemas.";
+"Are you sure you want to delete this item from the server?" = "Olete kindel, et soovite selle objekti serverist kustutada? ";
+"Are you sure you want to delete these items from the server?" = "Olete kindel, et soovite neid objekte serverist kustutada? ";
+"Multiple items" = "Mitu kirjet";
+"Deleting '%@'" = "'%@' kustutamine";
+"Renaming to %@" = "%@ ümbernimetamine";
+"Upload from your photo library" = "Laadige üles oma fotokogust";
+"Missing permissions" = "Puuduvad õigused";
+"This permission is needed to upload photos and videos from your photo library." = "See luba on vajalik fotode ja videote üleslaadimiseks teie fotokogust.";
+"Not now" = "Mitte kohe";
+"Upload file" = "Laadi fail üles";
+"Upload files" = "Laadi faile üles";
+
+"No matches" = "Vasteid ei ole";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
+"There are no results for this search term" = "Selle otsisõna kohta ei ole tulemusi";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
+"Status" = "Staatus";
+
+"Authorization failed" = "Autoriseerimine ebaõnnestus";
+"The account has been disabled." = "Sinu konto on välja lülitatud.";
+"The server declined access with the credentials stored for this connection." = "Server keeldus juurdepääsust selle ühenduse jaoks salvestatud kasutajaandmetega.";
+"Access denied" = "Ligipääs keelatud";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Ühenduse juurdepääsutunnuse kehtivusaeg on lõppenud või muutunud kehtetuks. Juurdepääsu taastamiseks logige uuesti sisse.";
+"No authentication data has been found for this connection." = "Selle ühenduse jaoks ei ole autentimisandmeid leitud.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Autentimine %@-ga ei ole enam lubatud. Vajalik on uuesti autentimine.";
+"Sign in" = "Logi sisse";
+"Continue offline" = "Jätka ilma võrguühenduseta";
+"Media upload in the previous session was incomplete since the application was terminated" = "Meedia üleslaadimine eelmises sessioonis oli mittetäielik, kuna rakendus lõpetati";
+
+"Waiting for response from login session in external browser…" = "Vastuse ootamine välise brauseri sisselogimise sessioonilt... ";
+
+"All done" = "Tehtud";
+"No pending messages or ongoing actions." = "Ootel sõnumid või käimasolevad toimingud puuduvad.";
+
+"Show all" = "Näita kõiki";
+"+ %ld more" = "+ %ld veel";
+"Apply choice to all similar issues" = "Rakenda valik kõigi sarnaste probleemide puhul";
+"Apply to all" = "Rakenda kõigile";
+
+/* Server List*/
+"Cancel" = "Loobu";
+"OK" = "OK";
+
+"'%@' is currently locked" = "'%@' on praegu lukustatud";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Hetkel käsil on käsil toiming, mis takistab ühenduse loomist '%@' -ga. Palun proovi hiljem uuesti.";
+"Do you really want to disconnect from your '%@' account?" = "Kas soovite tõesti katkestada ühenduse oma kontoga '%@'?";
+"This will remove all locally stored file copies from your device." = "See eemaldab kõik kohalikus seadmes salvestatud failikoopiad teie seadmest.";
+"Really delete '%@'?" = "Kas tõesti kustutada '%@'?";
+"Do you want to log out from '%@'?" = "Kas soovite välja logida '%@'-st?";
+"This will also delete all locally stored file copies." = "Sellega kustutatakse ka kõik lokaalselt salvestatud failikoopiad.";
+"Delete" = "Kustuta";
+"Remove" = "Eemalda";
+"Removing of '%@' failed" = "'%@' eemaldamine ebaõnnestus";
+"Accounts" = "Kontod";
+
+"Help" = "Abiinfo";
+"Feedback" = "Tagasiside";
+"Welcome" = "Tere tulemast";
+"Thanks for choosing %@! \n Start by adding your account." = "Täname, et valisid %@! \nAlusta oma konto lisamisega.";
+
+/* Settings Messages */
+
+"Security" = "Turvalisus";
+"Passcode Lock" = "Pääsukoodi lukk";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
+"Unlock using %@?" = "Ava kasutades %@?";
+"Videos" = "Videod";
+"Photos" = "Fotod";
+"Wifi only" = "Ainult Wifi";
+"Settings" = "Seaded";
+"Lock application" = "Lukusta rakendus";
+"Upload videos via WiFi only" = "Laadi videod üles ainult WiFi-t kasutades";
+"Upload pictures via WiFi only" = "Laadi pildid üles ainult WiFi-t kasutades";
+"More" = "Rohkem";
+"Documentation" = "Dokumentatsioon";
+"Send feedback" = "Saada tagasiside";
+"Recommend to a friend" = "Soovita sõbrale";
+"Privacy Policy" = "Privaatsus";
+"Terms Of Use" = "Kasutustingimused";
+"Acknowledgements" = "Kinnitused";
+"license" = "litsents";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Selle rakenduse osad võivad kasutada järgmist autoriõigustega kaitstud materjali, mille kasutamist käesolevaga kinnitatakse.";
+"Video upload path" = "Videote üleslaadimise asukoht";
+"Photo upload path" = "Fotode üleslaadimise rada";
+"Immediately" = "Koheselt";
+"After 1 minute" = "1 minuti pärast";
+"After 5 minutes" = "5 minuti pärast";
+"After 30 minutes" = "30 minuti pärast";
+"After %ld seconds" = "Pärast %ld sekundit";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "Kui valite \"Koheselt\", lukustatakse rakendus, kui see ei ole enam esiplaanil.";
+"Please configure an email account" = "Palun seadistage e-posti konto";
+"You need to configure an email account first to be able to send emails." = "E-kirjade saatmiseks peate kõigepealt e-posti konto seadistama.";
+"Do you want to open the following URL?" = "Kas soovite avada järgmise URL-i?";
+"Passcode option" = "Pääsukoodi võimalus";
+"Please choose how many digits you want to use for the passcode lock?" = "Palun valige, mitmekohalist numbrit soovite pääsukoodina kasutada?";
+"%ld digit code" = "%ld-kohaline kood";
+"Enter a new code with %ld digits" = "Sisestage uus %ld-kohaline kood";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
+
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ versioon %@ build %@\n(rakendus: %@, sdk: %@)";
+"beta" = "beeta";
+"release" = "väljalase";
+"App Version" = "Rakenduse versioon";
+"Version information were copied to the clipboard" = "Versiooni teave kopeeriti lõikelauale";
+
+
+/* User Interface Settings */
+"Theme" = "Teema";
+"User Interface" = "Kasutajaliides";
+"Dark" = "Tume";
+"Dark Blue" = "Tumesinine";
+"Dark Web" = "Dark Web";
+"Light" = "Hele";
+"Classic" = "Klassikaline";
+"System" = "Süsteem";
+"System Appeareance" = "Süsteemi välimus";
+
+/* Log settings */
+"Log Files" = "Logifailid";
+"Browse log files" = "Sirvige logifaile";
+"Share" = "Jaga";
+"Delete all log files?" = "Kustutada kõik logifailid?";
+"Delete all" = "Kustuta kõik";
+
+"Log Level" = "Logimise tase";
+"Log Destinations" = "Logi sihtkoht";
+"Privacy" = "Privaatsus";
+
+"Logging" = "Logimine";
+"Enable logging" = "Luba logimine";
+"Options" = "Valikud";
+
+"Off" = "Väljas";
+"Info" = "Info";
+"Default" = "Vaikeväärtus";
+"Warning" = "Hoiatus";
+"Error" = "Viga";
+
+"Share log file" = "Jagage logifaili";
+"Reset log file" = "Lähtesta logifail";
+
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Kui on aktiveeritud, võivad logid mõjutada jõudlust ja sisaldada tundlikku teavet. Logisid ei edastata siiski automaatselt %@ serveritele. Logide jagamine teistega on kasutaja ainuvastutus.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "Seadmes säilitatakse 10 viimast arhiveeritud logi, kusjuures iga logi hõlmab kuni 24 tunni kasutust. Jagamisel pidage meeles, et logid võivad sisaldada tundlikku teavet, näiteks serveri URL-id ja kasutajaspetsiifilised andmed.";
+
+"Mask private data" = "Privaatsete andmete varjamine";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Selle valiku sisse lülitamisel üritatakse privaatseid andmeid varjata, nii et need ei kajastu üheski logis. Kuna logimine on aga arendus- ja silumisfunktsioon, ei saa me garanteerida, et logifail on privaatsete andmeteta isegi siis, kui see valik on sisse lülitatud. Seetõttu vaadake enne jagamist palun kõik logifailid läbi ja veenduge, et see ei sisaldaks andmeid, mida te ei soovi jagada.";
+
+"No log file found" = "Logifaili ei leitud";
+"The log file can't be shared because no log file could be found or the log file is empty." = "Logifaili ei saa jagada, sest logifaili ei leitud või logifail on tühi.";
+"Enable log file" = "Luba logifaili kasutamine";
+
+"Really reset log file?" = "Kas tõesti lähtestada logifail?";
+"This action can't be undone." = "Seda tegevust ei saa tühistada.";
+
+/* Data usage settings */
+"Data usage" = "Andmekasutus";
+"Delete unused local copies" = "Kustutada kasutamata kohalikud koopiad";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Aeg, mis on mõõdetud alates vastava faili selle seadme kaudu üleslaadimisest, redigeerimisest, allalaadimisest või vaatamisest. Ei kehti funktsiooni Available Offline kaudu alla laaditud failidele. Kohalikud koopiad võidakse kustutada enne etteantud aja möödumist, nt. kuna serveris on faili uuem versioon või võrguühenduseta koopiate käsitsi kustutamisel. Samuti ei tohi kohalikke koopiaid pärast etteantud aja möödumist kustutada, nt. kui sellega tehakse mõni toiming, fail endiselt kasutusel või faili hoidvat kontot pole rakenduses kasutatud.";
+"never" = "mitte kunagi";
+"after %@" = "peale %@";
+"Decrease Slider Value" = "Vähendage liuguri väärtust";
+"Increase Slider Value" = "Suurendage liuguri väärtust";
+
+"Cellular Data Usage" = "Mobiilside andmekasutus";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Mõnda mobiilset andmesidet võidakse siiski kasutada. Mobiilse andmeside kasutamise täielikuks vältimiseks lülitage seadete rakenduses kogu rakenduse juurdepääs mobiilsidevõrgule välja.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Mobiilse andmeside kasutamine on MDM-i seadistuse kaudu keelatud. Lisateabe saamiseks võtke ühendust oma administraatoriga.";
+"General" = "Üldine";
+"By feature" = "Funktsiooni järgi";
+
+"off" = "väljas";
+"enabled" = "sisse lülitatud";
+
+/* Display settings */
+"Advanced settings" = "Lisavalikud";
+"Show hidden files and folders" = "Näita peidetud faile ja kaustu";
+"Show folders on top" = "Näita kaustu üleval";
+"Disable gestures" = "Lülita žestid välja";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Väldi failide, kaustade ja hulgivalikute lohistamist süseemseid žeste kasutades";
+
+/* Advanced settings */
+"Enable diagnostics" = "Diagnostika sisselülitamine";
+
+/* Passcode Messages */
+
+"Enter code" = "Sisesta kood";
+"Repeat code" = "Korda koodi";
+"Delete code" = "Kustuta kood";
+"The entered codes are different" = "Sisestatud koodid on erinevad";
+"Incorrect code" = "Vale kood";
+"Please try again in %@" = "Palun proovige %@ pärast uuesti";
+"Unlock %@" = "Lukusta lahti %@";
+"Biometric authentication failed" = "Biomeetriline autentimine ebaõnnestus";
+"You are required to set the passcode" = "Peate määrama pääsukoodi";
+
+/* Certificate management */
+
+"Certificates" = "Sertifikaadid";
+"User-approved certificates" = "Kasutaja kinnitatud sertifikaadid";
+
+"Approved" = "Heaks kiidetud";
+"Auto-approved" = "Automaatselt kinnitatud";
+"Revoke approval" =  "Tühista kinnitus";
+
+/* Actions */
+
+"Forbidden Characters" = "Keelatud märgid";
+"File name cannot contain / or \\" = "Faili nimi ei tohi sisaldada / või \\";
+"Item with same name already exists" = "Samanimeline objekt on juba olemas";
+"An item with the same name already exists in this location." = "Samanimeline objekt on selles kohas juba olemas.";
+"New Folder" = "Uus kaust";
+"Folder name" = "Kausta nimi";
+"Rename" ="Nimeta ümber";
+"Create folder" ="Loo kaust";
+"Duplicate" = "Klooni";
+"Move" = "Liiguta";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Liiguta siia";
+"Select target." = "Select target.";
+"Open in" = "Ava";
+"Copy" = "Kopeeri";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
+"Copy here" = "Kopeeri siia";
+
+"Cannot connect to " = "Ei saa ühenduda";
+" couldn't download file(s)" = "faili(e) ei saanud alla laadida";
+"Actions" = "Tegevused";
+"copy" = "kopeeri";
+"Close Window" = "Sulge aken";
+"Open in a new Window" = "Ava uues aknas";
+"Open in Window" = "Ava aknas";
+"Take photo or video" = "Tehke foto või video";
+"%ld Item was copied to the clipboard" = "%ld Objekt kopeeriti lõikelauale";
+"%ld Items were copied to the clipboard" = "%ld Objektid kopeeriti lõikelauale";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Pange tähele: kaustu saab kleepida ainult rakendusse %@ ja samale kontole.";
+
+"Processing on server" = "Processing on server";
+
+"Preparing…" = "Ettevalmistamine...";
+
+"No actions available" = "Ühtegi toimingut pole saadaval";
+"No actions are available for this folder, possibly because of missing permissions." = "Selle kausta jaoks pole toimingud saadaval, tõenäoliselt puuduvate õiguste tõttu.";
+
+"Close actions menu" = "Sulgege toimingute menüü";
+"Favorited" = "Lemmikud";
+"Favorite item" = "Lisa lemmikuks";
+"Unfavorite item" = "Eemalda lemmikutest";
+"Presentation Mode" = "Esitlusrežiim";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Esitlusrežiimi sisselülitamine takistab ekraani puhkerežiimi kuni vaate sulgemiseni.";
+"Enable" = "Lülita sisse";
+"Exit Full Screen" = "Välju täisekraanilt";
+
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Lisa kirje";
+
+/* App Provider */
+"New document" = "Uus dokument";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Vali loodava dokumendi tüüp:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
+
+/* Preview */
+"Open file" = "Ava fail";
+"Network unavailable" = "Võrguühendus pole saadaval";
+"Error" = "Viga";
+"Could not get the picture" = "Pildi hankimine ebaõnnestus";
+"Downloading" = "Allalaadimine";
+"File couldn't be opened" = "Faili ei saanud avada";
+"Connecting..." = "Ühendamine...";
+
+"File" = "Fail";
+"%@ was updated" = "%@ uuendatud";
+"Would you like to view the updated version?" = "Kas soovite uuendatud versiooni vaadata?";
+"Show new version" = "Näita uut versiooni";
+"Refresh without asking" = "Värskendage ilma küsimata";
+"Ignore updates" = "Ignoreeri uuendusi";
+
+/* PDF Viewer */
+"Resume" = "Jätka";
+"Go to page" = "Mine leheküljele";
+"Page" = "Lehekülg";
+"This document has %@ pages" = "Sellel dokumendil on %@ lehekülge";
+"%@ of %@" = "%@ %@-st";
+"Invalid Page" = "Vigane lehekülg";
+"The entered page number doesn't exist" = "Sisestatud leheküljenumbrit ei ole olemas";
+"Search PDF" = "Otsi PDF-ist";
+"Outline" = "Ülevaade";
+"Find Next" = "Leia järgmine";
+"Find Previous" = "Leia eelmine";
+"Close Search" = "Sulge otsing";
+
+/* Photo Upload */
+"Upload" = "Lae üles";
+"Select All" = "Vali kõik";
+"Deselect All" = "Tühista valikud";
+"All Photos" = "Kõik fotod";
+"Albums" = "Albumid";
+"Importing from photo library" = "Importimine fotokogust";
+"Media import" = "Meedia importimine";
+"%@ of %@" = "%@ %@-st";
+"Selected folder lacks file creation permission" = "Valitud kaustal puudub faili loomise õigus";
+"%d Item" = "%d Objekt";
+"%d Items" = "%d Objekti";
+"Select Items" = "Vali objektid";
+
+/* Scan */
+"Scan" = "Skanni";
+"Scans" = "Skannimised";
+"Scan document" = "Skanni dokument";
+"Saving" = "Salvestamine";
+"File format" = "Failivorming";
+"Name" = "Nimi";
+"Save as" = "Salvesta kui";
+"Options" = "Valikud";
+"Scan additional" = "Skanni lisaks";
+"Create one file per page" = "Loo üks fail lehekülje kohta";
+
+/* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
+"Searching Shares…" = "Jagamiste otsimine...";
+"Recipient" = "Saaja";
+"Recipients" = "Saajad";
+"Public Link" = "Avalik link";
+"Public Links" = "Avalikud lingid";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Kutsu";
+"Invite Recipient" = "Kutse saaja";
+"Recipients" = "Saajad";
+"Add email or name" = "Lisa e-post või nimi";
+"Users" = "Kasutajad";
+"Groups" = "Grupid";
+"Start typing to search users, groups and remote users." = "Alusta tippimist kasutajate, rühmade ja kaugkasutajate otsimiseks.";
+"(Group)" = "(Grupp)";
+"Adding User to Share failed" = "Kasutaja lisamine jagamisele ebaõnnestus";
+"Permissions" = "Õigused";
+"Invited: %@" = "Kutsutud: %@";
+"Created: %@" = "Loodud: %@";
+"Allows the users you share with to re-share" = "Võimaldab kasutajatel, kellega te jagate, edasi jagada";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Võimaldab kasutajatel, kellega jagate, teie jagatud faile redigeerida ja koostööd teha";
+"Allows the users you share with to create new files and add them to the share" = "Võimaldab kasutajatel, kellega te jagate, luua uusi faile ja lisada neid jagamistele";
+"Allows uploading a new version of a shared file and replacing it" = "Võimaldab jagatud faili uue versiooni üleslaadimist ja asendamist";
+"Allows the users you share with to delete shared files" = "Võimaldab kasutajatel, kellega te jagate, kustutada jagatud faile";
+"Setting permission failed" = "Õiguste seadistamine ebaõnnestus";
+"Shared with" = "Jagatud kasutajaga";
+"Remove Recipient failed" = "Vastuvõtja eemaldamine ebaõnnestus";
+"Remove Recipient" = "Eemalda saaja";
+"Create" = "Lisa";
+"Change" = "Muuda";
+"Recipients can view or download contents." = "Vastuvõtjad saavad sisu vaadata või alla laadida.";
+"Recipients can view, download, edit, delete and upload contents." = "Vastuvõtjad saavad sisu vaadata, alla laadida, muuta, kustutada ja üles laadida.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Failide vastuvõtmine mitmelt saatjalt ilma kausta sisu avalikustamata.";
+"Download / View" = "Laadi alla / Vaata";
+"Download / View / Upload" = "Laadi alla / Vaata / Laadi üles";
+"Upload only (File Drop)" = "Ainult üleslaadimine (File Drop)";
+"Creating public link failed" = "Avaliku lingi loomine ebaõnnestus";
+"Create Public Link" = "Loo avalik link";
+"Links" = "Lingid";
+"Link" = "Link";
+"Setting expiration date failed" = "Aegumiskuupäeva määramine ebaõnnestus";
+"Expiration date" = "Aegumise kuupäev";
+"Copy Public Link" = "Kopeeri avalik link";
+"Delete Public Link" = "Kustuta avalik link";
+"Deleting Public Link failed" = "Avaliku lingi kustutamine ebaõnnestus";
+"Deleting password failed" = "Parooli kustutamine ebaõnnestus";
+"Setting password failed" = "Parooli määramine ebaõnnestus";
+"Type to update password" = "Parooli värskendamiseks tippige";
+"Cannot change permission" = "Õigust ei saa muuta";
+"Before you can set the permission\n%@,\n you must enter a password." = "Enne õiguste seadistamist\n%@, \npeate sisestama salasõna.";
+"Password Protected" = "Parooliga kaitstud";
+"Pending Federated Invites" = "Ootel ühendatud kutsed";
+"Pending Invites" = "Ootel kutsed";
+"Shared with you" = "Sinuga jagatud";
+"Shared with others" = "Teistega jagatud";
+"Shares" = "Jagamised";
+"Copy Private Link" = "Kopeeri privaatne link";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Ainult need inimesed, kellel on juurdepääs failile/kaustale, saavad seda kasutada. Kasutage seda püsilingina enda jaoks või teiste suunamiseks jagatud failidele.";
+"Accept Share failed" = "Jagamise aktsepteerimine ebaõnnestus";
+"Decline Share failed" = "Jagamisest keeldumine ebaõnnestus";
+"Accept" = "Nõustu";
+"Decline" = "Lükka tagasi";
+"Declined" = "Tagasi lükatud";
+"Decline Share" = "Lükka jagamine tagasi";
+"Unshare" = "Lõpeta jagamine";
+"Unshare failed" = "Jagamise katkestamine ebaõnnestus";
+"Are you sure you want to unshare these items?" = "Kas olete kindel, et soovite nende objektide jagamise tühistada?";
+"Are you sure you want to unshare this item?" = "Kas olete kindel, et soovite selle objekti jagamise tühistada?";
+"Share" = "Jaga";
+"Read" = "Lugemine";
+"Can Share" = "Saab jagada";
+"Can Edit" = "Saab muuta";
+"Can Edit and Change" = "Saab Redigeerida ja Muuta";
+"Can Create" = "Saab Luua";
+"Can Change" = "Saab muuta";
+"Can Delete" = "Saab kustutada";
+"Accept Invite %@" = "Kutse aktsepteerimine %@";
+"Decline Invite %@" = "Kutsest keeldumine %@";
+"Decline cannot be undone." = "Keeldumist ei saa tagasi võtta.";
+"Sharing" = "Jagamine";
+"You" = "Sina";
+"Share this file" = "Jaga seda faili";
+"Share this folder" = "Jaga seda kausta";
+"shared" = "jagatud";
+"Owner" = "Omanik";
+"Private Link" = "Privaatne link";
+"Created Public Link" = "Loo Avalik Link";
+"URL was copied to the clipboard" = "URL kopeeriti lõikelauale";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ pole saadaval, kui see konto on võrguühenduseta. Enne selle toimingu tegemist avage rakendus ja logige sisse oma kontole.";
+"%@ is not available for this item." = "%@ ei ole selle objekti puhul saadaval.";
+"Share with user/group" = "Jagage kasutajaga/grupiga";
+"Share link" = "Jaga linki";
+
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Jagatud lingiga";
+
+"Share with" = "Jaga";
+"Add" = "Lisa";
+"Save changes" = "Salvesta muudatused";
+
+/* Quick Access view */
+"Quick Access" = "Kiire ligipääs";
+"Collection" = "Kogu";
+"Recents" = "Hiljutised";
+"Favorites"= "Lemmikud";
+"Images" = "Pildid";
+"PDF Documents" = "PDF dokumendid";
+"Text" = "Tekst";
+"Documents" = "Dokumendid";
+"Audio" = "Helid";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
+
+/* Media files settings */
+"Media Files" = "Meediafailid";
+"Download instead of streaming" = "Voogesituse asemel laadige alla";
+
+/* Photo upload settings */
+"Media Upload" = "Meedia üleslaadimine";
+"Media Export" = "Meedia eksport";
+"Auto Upload" = "Automaatne üleslaadimine";
+"Convert HEIC to JPEG" = "HEIC teisendamine JPEG-ks";
+"Convert videos to MP4" = "Videote teisendamine MP4-ks";
+"Preserve original media file names" = "Säilitage algsed meediafailide nimed";
+"Auto Upload Photos" = "Laadi fotod automaatselt üles";
+"Auto Upload Videos" = "Automaatne videote üleslaadimine";
+"Account" = "Konto";
+"Accounts" = "Kontod";
+"Select account" = "Vali konto";
+"Photo upload path" = "Fotode üleslaadimise rada";
+"Video upload path" = "Videote üleslaadimise asukoht";
+"Select Upload Path" = "Valige üleslaadimise rada";
+"Auto upload of media was disabled since configured account / folder was not found" = "Meedia automaatne üleslaadimine lülitati välja, kuna konfigureeritud kontot/kausta ei leitud";
+"Importing %@ media files for upload" = "%@ meediafaili importimine üleslaadimiseks";
+"Photo upload" = "Foto üleslaadimine";
+"Video upload" = "Video üleslaadimine";
+
+/* Background media uploads */
+"Background uploads (Lab Version)" = "Taustal üleslaadimine (Lab Versioon)";
+"Background uploads" = "Üleslaadmised taustal";
+"Use background refresh" = "Kasutage taustavärskendust";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Luba sellel rakendusel uuendada sisu taustal, kui see on Wi-Fi's või mobiilivõrgus.";
+"Enable background uploads" = "Luba taustal üleslaadimine";
+"Use background location updates" = "Kasutage asukohavärskendusi taustal";
+"Background upload notifications" = "Taustal üleslaadimise teavitused";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "Kui soovite, et meedia üleslaadimine taustal oleks usaldusväärsem, peaksite lubama asukohavärskendused taustal.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Meedia üleslaadimine taustal tugineb asukohavärskendustel ja lakkab töötamast, kui asukoha hankimise õigused tühistatakse.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Vastasel juhul sõltuks meedia taustal üleslaadimine taustavärskendustehnoloogia abil sellest, kui sageli rakendust kasutatakse.";
+"Location permission denied" = "Asukoha ligipääs keelatud";
+"Please re-enable location acquisition in system settings" = "Palun lülitage asukoha määramine süsteemi seadetes uuesti sisse";
+"Scheduled upload of %ld media assets" = "%ld meediavara ajastatud üleslaadimine";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "%ld kausta loomine…";
+"Moving %ld items…" = "%ld objekti teisaldamine…";
+"Copying %ld items…" = "%ld objekti kopeerimine…";
+"Deleting %ld items…" = "%ld objekti kustutamine…";
+"Uploading %ld files…" = "%ld faili üleslaadimine...";
+"Downloading %ld files…" = "%ld faili allalaadimine...";
+"Updating %ld items…" = "%ld objekti uuendamine…";
+
+/* Offline storage management */
+"Free on %@" = "Vaba ruumi %@-l";
+"unknown" = "tundmatu";
+"Offline files use" = "Kohalikult salvestatud failid kasutavad ";
+"Compacting of '%@' failed" = "%@ kokkupakkimine ebaõnnestus";
+"Include available offline files" = "Lisage saadaolevad kohalikult salvestatud failid";
+"Delete all Offline Files" = "Kustuta kõik kohalikult salvestatud failid";
+"Manage" = "Halda";
+"Storage" = "Salvestusmaht";
+"Compacting" = "Pakkimine";
+
+"Really include available offline files?" = "Kas lisada saadaolevad kohalikult salvestatud failid?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Failid ja kaustad, mis on märgitud kui Saadaval ilma Võrguühenduseta, muutuvad kättesaamatuks. Need laaditakse uuesti alla, kui järgmine kord oma kontole sisse logite (ühendus on vajalik).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Eemaldab allalaaditud failid ja nende objektide kohalikud koopiad, mis on märgitud kui Saadaval ilma Võrguühenduseta. Viimased laaditakse uuesti alla, kui järgmine kord kontole sisse logite (ühendus on vajalik).";
+
+/* Diagnostic */
+"Diagnostic Overview" = "Diagnostika ülevaade";
+"Diagnostics" = "Diagnostika";
+"Share Diagnostics" = "Jagage diagnostikat";
+"Action executed" = "Toiming sooritatud";
+
+"Update Status" = "Uuenda staatust";
+"Completed update scans" = "Lõpetatud uuenduste skaneerimisi";
+"Total update scans" = "Uuenduste skaneerimisi kokku";
+
+/* Available offline */
+"Root folder" = "Peakaust";
+"at" = "kell";
+"(no match)" = "(pole vastet)";
+
+"Make available offline" = "Teha kättesaadavaks võrguühenduseta";
+"Make unavailable offline" = "Tee saadavaks ilma võrguühenduseta";
+
+"Available Offline" = "Saadaval ilma võrguühenduseta";
+
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
+
+/* Single Account */
+"You are connected as\n%@" = "Olete ühendatud kui\n%@";
+
+/* Release Notes */
+"Proceed" = "Jätka";
+"New in %@" = "Uut %@-s";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Täname, et kasutasite %@-i.\nKui teile meeldib meie rakendus, jätke AppStore'is arvustus.\n❤️";
+"Thank you for using %@.\n" = "Täname, et kasutasite %@-i.\n";
+
+/* Key Commands */
+"Select Next" = "Vali järgmine";
+"Select Previous" = "Vali eelmine";
+"Open Selected" = "Ava vaitud";
+"Change Sort Order" = "Muuda sorteerimise järjekorda";
+"Search" = "Otsi";
+"Back" = "Tagasi";
+"Save" = "Salvesta";
+"Sort by %@" = "Sorteerida %@ järgi";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Vali viimane kirje lehel";
+"Scroll to Top" = "Keri üles";
+"Scroll to Bottom" = "Keri alla";
+"Copy to Clipboard" = "Kopeeri lõikelauale";
+"Import from Clipboard" = "Impordi lõikelaualt";
+"Choose destination directory…" = "Vali sihtkaust";
+"Next" = "Järgmine";
+"Previous" = "Eelmine";
+"Favorite" = "Lemmik";
+"Cut" = "Lõika";
+"Paste" = "Kleebi";
+"Play/Pause" = "Esita/Paus";
+"Skip Back" = "Mine tagasi";
+"Skip Ahead" = "Mine edasi";
+"Go to Beginning" = "Mine algusesse";
+"Mute/Unmute" = "Vaigista/Tühista vaigistus";
+"Full Screen" = "Täisekraan";
+"Switch Theme Style" = "Vahetage teema stiili";
+
+/* Markup */
+"How should this file be saved?" = "Kuidas seda faili salvestada?";
+"Overwrite original" = "Kirjuta algne üle";
+"Save as copy" = "Salvesta koopiana";
+"Discard changes" = "Loobu muudatustest";
+"Markup" = "Märgista";
+"Crop or Rotate" = "Lõika või pööra";
+"Saving edited file failed" = "Muudetud faili salvestamine ebaõnnestus";
+"File no longer exists" = "Faili pole enam olemas";
+
+/* Licensing */
+"Unlocked" = "Avatud";
+"Unlock" = "Ava";
+
+"Subscribe Now" = "Telli kohe";
+"Free" = "Vaba";
+
+"%@ / %@" = "%@ / %@";
+"after free %@ trial" = "pärast tasuta %@ prooviperioodi";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Proovi %@ tasuta.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Pärast %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ – alustades kohe";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Pro funktsioonid";
+
+/* Licensing: App Store */
+"Restore purchases" = "Taasta ostud";
+"Restoring purchases…" = "Ostude taastamine...";
+"Error restoring purchases" = "Viga ostude taastamisel";
+"Error loading product info from App Store"= "Viga tooteinfo laadimisel App Store'ist";
+"Purchase failed" = "Ost ebaõnnestus";
+"More information" = "Rohkem informatsiooni";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Suurettevõte";
+
+/* Licensing: Settings */
+"In-App Purchases" = "Rakendusesisesed ostud";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
+"Error fetching transactions" = "Viga tehingute hankimisel";
+"Document Scanner" = "Dokumendi skaneerija";
+"Scan documents and photos with your camera." = "Skaneerige dokumente ja fotosid oma kaameraga.";
+"Shortcuts Actions" = "Otseteed Toimingud";
+"Use ownCloud actions in Shortcuts." = "Kasutage ownCloudi toiminguid otseteede all.";
+"Markup Documents" = "Märgistage Dokumendid";
+"Markup photos and PDF files." = "Märgistage fotod ja PDF failid";
+"Unlock all Pro Features." = "Avage kõik Pro funktsioonid.";
+
+"Purchased App Version" = "Tasuline Rakenduse Versioon";
+"Receipt Date" = "Kviitungi kuupäev";
+"Manage subscription" = "Halda tellimusi";
+"Purchases are not allowed on this device." = "Selles seadmes ei ole ostud lubatud.";
+"Type" = "Tüüp";
+"Quantity" = "Kogus";
+"Product" = "Toode";
+"Date" = "Kuupäev";
+"Cancelled" = "Tühistatud";
+"Ends" = "Lõpeb";
+"none" = "pole";
+"trial" = "prooviperiood";
+"purchase" = "osta";
+"subscription" = "tellimus";
+"Photo Pro Features" = "Foto Pro funktsioonid";
+"Image metadata, extended upload options" = "Foto metaandmed, laiendatud üleslaadimisvalikud";
+"Purchase" = "Osta";
+"Subscribe" = "Telli";
+
+"No accounts found" = "Kontosid ei leitud";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "Praeguse litsentsi staatuse täpseks määramiseks lisage esmalt üks või mitu kontot.";
+
+/* Share Sheet */
+"Save File" = "Salvesta fail";
+"Choose an account and folder to import into." = "Valige importimiseks konto ja kaust.";
+"No account configured.\nSetup an new account in the app to save to." = "Kontot pole seadistatud.\nSeadistage rakenduses uus konto, kuhu salvestada.";
+"Importing item %ld of %ld" = "Objekti %ld importimine %ld-st";
+"Error importing %@" = "Viga importimisel  %@";
+"Error loading item" = "Viga objekti laadimisel";
+"Preparing…" = "Ettevalmistamine...";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
+"Save here" = "Salvesta siia";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Jagamise laiendus välja lülitatud";
+"Importing files through the Share Extension is not allowed on this device." = "Failide importimine jagamislaienduse kaudu pole selles seadmes lubatud.";
+
+/* - Open with */
+"Opening not allowed" = "Avamine ei ole lubatud";
+"Importing files through opening is not allowed on this device." = "Failide importimine avamise kaudu pole selles seadmes lubatud.";
+
+/* - Files.app */
+"Import not allowed" = "Importimine pole lubatud";
+"Importing files through the File Provider is not allowed on this device." = "Failide importimine läbi FileProvideri ei ole sellel seadmel toetatud.";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Sisestage mitu valikut";
+
+/* Universal Links */
+"Resolving link…" = "Lingi lahendamine...";
+"Link resolution failed" = "Lingi lahendamine ebaõnnestus";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Privaatset linki ei saanud lahendada, kuna olete võrguühenduseta ja vastavat objekti ei ole kohalikus seadmes vahemällu salvestatud.";
+"Couldn't resolve a private link since the item is not known to the server." = "Privaatset linki ei saanud lahendada, kuna objekt pole serverile teada.";
+"Link points to an account bookmark which is not configured in the app." = "Link osutab konto järjehoidjale, mis ei ole rakenduses konfigureeritud.";
+
+/* Photo meta-data */
+"Image metadata" = "Pildi metadata";
+"Image details" = "Pildi üksikasjad";
+"Profile" = "Profiil";
+"Size" = "Suurus";
+"Density" = "Tihedus";
+"Color model" = "Värvimudel";
+"%@ (%d bits/channel)" = "%@ (%dbitti / kanal) ";
+"Histogram" = "Histogramm";
+
+"Camera details" = "Kaamera üksikasjad";
+"Capture settings" = "Jäädvustamise seaded";
+"Time" = "Aeg";
+"EXIF aux info" = "EXIF lisainfo";
+"Authoring" =  "Loome";
+"TIFF" = "TIFF";
+
+"Lens make" = "Objektiivi mark";
+"Lens model" = "Objektiivi mudel";
+"Lens info" = "Objektiivi info";
+"Focal length" = "Fookuskaugus";
+"Focal length @ 35 mm" = "Fookuskaugus @ 35 mm";
+
+"Shutter speed" = "Säriaeg";
+"Aperture" = "Ava";
+"ISO" = "Valgustundlikkus";
+
+/* EXIF: exposure program */
+"Program" = "Programm";
+"Not defined" = "Määratlemata";
+"Manual" = "Manuaalne";
+"Normal" = "Tavaline";
+"Aperture priority" = "Ava prioriteet";
+"Shutter priority" = "Katiku prioriteet";
+"Creative" = "Loominguline";
+"Action" = "Tegevus";
+"Portrait" = "Portree";
+"Landscape" = "Maastikuvaade";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Mõõtmine";
+"unknown" = "tundmatu";
+"Average" = "Keskmine";
+"CenterWeightedAverage" = "Kaalutud keskmine";
+"Spot" = "Punkt";
+"MultiSpot" = "MultiSpot";
+"Pattern" = "Muster";
+"Partial" = "Osaline";
+
+/* EXIF: flash mode */
+"Flash" = "Välk";
+"Fired" = "Sähvas";
+"Didn't fire" = "Ei sähvanud";
+"No strobe return detection" = "Strobo tagastusvalguse tuvastus puudub";
+"Strobe return light not detected" = "Strobo tagastusvalgust ei tuvastatud";
+"Strobe return light detected" = "Strobo tagastusvalgus tuvastati";
+"Compulsory flash firing" = "Kohustuslik välgutamine";
+"Compulsory flash supression" = "Kohustuslik välgu summutamine";
+"Auto mode" = "Automaatrežiim";
+"Red eye detection supported" = "Punase silma tuvastamine toetatud";
+"not present" = "puudub";
+
+/* EXIF: white balance */
+"White balance" = "Valge tasakaal";
+"Auto" = "Auto";
+"Manual" = "Manuaalne";
+
+"Exposure bias" = "Säri kompensatsioon";
+"Uncalibrated" = "Kalibreerimata";
+"Original date" = "Algne kuupäev";
+"Digitized date" = "Digitaliseeritud kuupäev";
+
+"Color space" = "Värviruum";
+
+/* EXIF: aux info */
+"Lens ID" = "Objektiivi ID";
+"Lens serial" = "Objektiivi seerianumber";
+"Serial number" = "Seerianumber";
+"Flash compensation" = "Välgu kompenseerimine";
+"Owner" = "Omanik";
+"Firmware" = "Püsivara";
+"Keywords" = "Märksõnad";
+"Copyright" = "Autoriõigused";
+
+/* IPTC meta data */
+"Contact info" = "Kontaktinfo";
+"Usage terms" = "Kasutustingimused";
+"Scene" = "Stseen";
+"Description" = "Kirjeldus";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Fotomeetriline interpretatsioon";
+"none" = "pole";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS Asukoht";
+"Coordinates" = "Koordinaadid";
+"Altitude" = "Kõrgus merepinnast ";
+"Place" = "Asukoht";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Laiendatud üleslaadimise seaded";
+"Prefer unedited photos" = "Eelistage töötlemata fotosid";
+"Prefer RAW photos" = "Eelistage RAW-fotosid";
+"Prefer original videos" = "Eelistage originaalvideosid";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Piiratud juurdepääs fotodele";
+"Access for the media selected for upload is limited" = "Juurdepääs üleslaadimiseks valitud meediale on piiratud";
+"No Access to the media selected for upload" = "Juurdepääs üleslaadimiseks valitud meediale puudub";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "See seade ei toeta pääsukoodide kaitset.\nKeelake rakenduse seadetes pääsukoodilukk.";
+
+/* MDM settings push */
+"New settings received from MDM" = "MDM-ist saadi uued seaded";
+"Tap to quit the app." = "Rakenduse lõpetamiseks puudutage valikut.";
+"Tap to launch the app." = "Rakenduse avamiseks puudutage valikut.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

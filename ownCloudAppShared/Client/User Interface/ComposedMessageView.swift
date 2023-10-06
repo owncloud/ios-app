@@ -600,7 +600,7 @@ public extension ComposedMessageView {
 	}
 }
 
-extension ThemeCSSSelector {
+public extension ThemeCSSSelector {
 	static let infoBox = ThemeCSSSelector(rawValue: "infoBox")
 	static let message = ThemeCSSSelector(rawValue: "message")
 }

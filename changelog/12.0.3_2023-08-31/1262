@@ -1,0 +1,5 @@
+Bugfix: Unable to access files from Files.app
+
+In some cases it was not possible to access files from the Files.app.
+
+https://github.com/owncloud/ios-app/issues/1262

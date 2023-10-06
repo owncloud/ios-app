@@ -1,0 +1,5 @@
+Bugfix: File Provider Crash
+
+iOS invokes a FileProvider method with a nil value, which causes a crash.
+
+https://github.com/owncloud/ios-app/issues/1266

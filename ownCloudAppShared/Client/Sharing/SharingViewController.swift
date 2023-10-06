@@ -194,7 +194,7 @@ open class SharingViewController: CollectionViewController {
 
 		if managementClientContext.core?.connection.capabilities?.supportsPrivateLinks == true {
 			linkActions.append(
-				OCAction(title: "Copy Private Link", icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self] _, _, completion in
+				OCAction(title: "Copy Private Link".localized, icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self] _, _, completion in
 					if let item = self?.item, let core = self?.clientContext?.core {
 						core.retrievePrivateLink(for: item, completionHandler: { (error, url) in
 							guard let url = url else { return }

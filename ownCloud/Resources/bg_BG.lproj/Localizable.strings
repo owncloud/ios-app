@@ -1,0 +1,1013 @@
+/*
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit account" = "Редактиране на профил";
+"Add account" = "Добавяне на профил";
+"Server URL" = "URL адрес на сървъра";
+"https://example.com" = "https://example.com";
+"Continue" = "Продължаване";
+"Name" = "Име";
+"Example Server" = "Примерен сървър";
+"Show Certificate Details" = "Показване на подробности за сертификата";
+"Connect" = "Свързване";
+"Delete Authentication Data" = "Изтриване на данните за удостоверяване";
+"Authentication" = "Удостоверяване";
+"Username" = "Потребителско име";
+"Password" = "Парола";
+"Certificate Details" = "Подробности за сертификата";
+"Cancel" = "Отказ";
+"Approve" = "Одобряване";
+"Error" = "Грешка";
+"Issues" = "Въпроси";
+"Review Connection" = "Преглед на връзката";
+"Authenticated via" = "Удостоверяване чрез";
+"Authenticated as %@ via %@" = "Удостоверяване %@ като чрез %@";
+"Edit" = "Редактиране";
+"Credentials" = "Идентификационни данни";
+"Rejected" = "Отхвърлено";
+"Passed" = "Преминато";
+"Accepted" = "Прието";
+"Validation Error" = "Грешка при потвърждаване";
+"Certificate was rejected by user." = "Сертификатът е отхвърлен от потребителя.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Сертификатът има проблеми.\nЗа повече информация отворете \"Подробности за сертификата\".";
+"No issues found. Certificate passed validation." = "Няма открити проблеми. Сертификатът е преминал успешно проверката.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Сертификатът може да има проблеми, но е приет от потребителя.\nЗа повече информация отворете \"Подробности за сертификата\".";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
+
+"Error opening %@" = "Грешка при отваряне на %@";
+
+"Contacting server…" = "Свързване със сървъра...";
+"Authenticating…" = "Удостоверяване...";
+
+"Fetching user information…" = "Извличане на информация за потребителя...";
+"Updating connection…" = "Актуализиране на връзката...";
+
+"Preparing account" = "Подготовка на профил";
+"Please wait…" = "Моля, изчакайте...";
+"Skip" = "Пропусни";
+
+"Missing hostname" = "Липсващо име на хост";
+"The entered URL does not include a hostname." = "Въведеният URL адрес не съдържа име на хост.";
+"Add account" = "Добавяне на профил";
+"Server name" = "Име на сървъра";
+"Server Password" = "Парола за сървъра";
+"Server Username" = "Потребителско име за сървъра";
+"Show accounts" = "Показване на профилите";
+"Setup complete" = "Настройката е завършена";
+"Edit Login" = "Редактиране на потребителския вход";
+"Manage Storage" = "Управление на хранилището";
+"Access Files" = "Достъп до файловете";
+"Log out" = "Изход";
+"Retry" = "Повторение";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Метаданни на отметките";
+
+/* Client */
+"Browse" = "Преглед";
+"Files" = "Файлове";
+"Disconnect" = "Прекъсване";
+"Connecting…" = "Свързване...";
+"Connected." = "Свързано.";
+"Select" = "Избиране";
+"Done" = "Завършено";
+
+"Folder" = "Папка";
+
+"Stopped" = "Спряно";
+"Started…" = "Започва...";
+"Contents from cache." = "Съдържание от кеша.";
+"Waiting for server response…" = "Изчаква се отговор от сървъра...";
+"This folder no longer exists." = "Тази папка вече не съществува.";
+"Everything up-to-date." = "Всичко е актуално.";
+"Please wait…" = "Моля, изчакайте...";
+"Sort by %@" = "Подреждане по %@";
+"Sort by" = "Подреждане по";
+
+"name" = "име";
+"kind" = "вид";
+"size" = "размер";
+"date" = "дата";
+
+"Tree" = "Tree";
+"Search folder" = "Търсене на папка";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
+"Search account" = "Търсене в профила";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
+"Pending" = "Чакащо";
+"Show parent paths" = "Показване на родителските пътища";
+"Reveal in folder" = "Откриване в папка";
+
+"%@ of %@ used" = "%@ от %@ използвани";
+"Total: %@" = "Общо: %@";
+"%@ item | " = "%@ елемент |";
+"%@ items | " = "%@ елемента |";
+
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Show more results" = "Показване на повече резултати";
+
+"An error occurred" = "Възникна грешка";
+
+/* Item Layouts */
+"List" = "Списък";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
+
+/* Search scope */
+"Search scope" = "Обхват на търсенето";
+"Toggle Search Scope" = "Превключване на обхвата на търсенето";
+
+/* Static Login Setup */
+"Server error" = "Сървърна грешка";
+"The server doesn't support any allowed authentication method." = "Сървърът не поддържа нито един разрешен метод за удостоверяване.";
+"The server doesn't support any known and allowed authentication method found." = "Сървърът не поддържа нито един открит познат и разрешен метод за удостоверяване.";
+"Retry detection" = "Повторен опит за откриване";
+"Enter your username and password" = "Въведете вашето потребителско име и парола";
+"Please log in to authorize the app." = "Моля, влезте, за да упълномощите приложението.";
+"Welcome to %@" = "Добре дошли в %@";
+"Please enter a server URL" = "Моля, въведете URL адрес на сървъра";
+"Please pick a profile to begin setup" = "Моля, изберете профил за да започнете с настройката";
+
+/* Single Account */
+"You are connected as\n%@" = "Свързани сте като\n%@";
+"Login" = "Вход";
+"Wrong URL" = "Грешен URL адрес";
+"Please enter a valid URL" = "Моля, въведете валиден URL адрес";
+"Missing Profile URL" = "Липсващ URL адрес за профила";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "Профилът '%@' няма конфигуриран URL адрес.\nМоля, задайте URL адрес чрез конфигурацията или MDM.";
+
+/* Client Messages */
+"No contents" = "No contents";
+"This folder contains no files or folders." = "Тази папка не съдържа файлове и/или папки.";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
+
+"Folder removed" = "Папката е премахната";
+"This folder no longer exists on the server." = "Тази папка вече не съществува на сървъра.";
+"Are you sure you want to delete this item from the server?" = "Сигурни ли сте, че искате да изтриете този елемент от сървъра?";
+"Are you sure you want to delete these items from the server?" = "Сигурни ли сте, че искате да изтриете тези елементи от сървъра?";
+"Multiple items" = "Множество елементи";
+"Deleting '%@'" = "Изтриване на '%@'";
+"Renaming to %@" = "Преименуване в %@";
+"Upload from your photo library" = "Качване от вашата библиотека със снимки";
+"Missing permissions" = "Липсват необходимите права";
+"This permission is needed to upload photos and videos from your photo library." = "Тези права са необходими, за да качвате снимки и видеоклипове от вашата библиотека със снимки.";
+"Not now" = "Не сега";
+"Upload file" = "Качване на файл";
+"Upload files" = "Качване на файлове";
+
+"No matches" = "Няма съвпадения";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
+"There are no results for this search term" = "Няма резултати от търсенето за тази дума";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
+"Status" = "Статус";
+
+"Authorization failed" = "Упълномощаването е неуспешно";
+"The account has been disabled." = "Този профил е деактивиран.";
+"The server declined access with the credentials stored for this connection." = "Сървърът отказа достъп с идентификационните данни, съхранени за тази връзка.";
+"Access denied" = "Достъпът е отказан";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Токенът за достъп на връзката е изтекъл или е станал невалиден. Влезте отново, за да възстановите достъпа.";
+"No authentication data has been found for this connection." = "За тази връзка не са намерени данни за удостоверяване.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Удостоверяването с %@ вече не е възможно. Необходимо е повторно удостоверяване.";
+"Sign in" = "Влезте";
+"Continue offline" = "Продължете офлайн";
+"Media upload in the previous session was incomplete since the application was terminated" = "Качването на мултимедия в предишната сесия не е било завършено, тъй като приложението е било спряно";
+
+"Waiting for response from login session in external browser…" = "Изчакване на отговор от сесията за вход във външния браузър...";
+
+"All done" = "Всичко е готово";
+"No pending messages or ongoing actions." = "Няма чакащи съобщения или текущи действия.";
+
+"Show all" = "Показване на всички";
+"+ %ld more" = "+ още %ld";
+"Apply choice to all similar issues" = "Прилагане на избора към всички подобни въпроси";
+"Apply to all" = "Приложи към всички";
+
+/* Server List*/
+"Cancel" = "Отказ";
+"OK" = "ОК";
+
+"'%@' is currently locked" = "'%@' в момента е заключен";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "В момента се извършва операция, която не позволява свързването с '%@'. Моля, опитайте отново по-късно.";
+"Do you really want to disconnect from your '%@' account?" = "Наистина ли искате да прекъснете връзката с профила си в '%@'?";
+"This will remove all locally stored file copies from your device." = "Това ще премахне всички локално съхранени копия на файлове от вашето устройство.";
+"Really delete '%@'?" = "Наистина ли ще изтриете '%@'?";
+"Do you want to log out from '%@'?" = "Искате ли да излезете от '%@'?";
+"This will also delete all locally stored file copies." = "Това ще доведе и до изтриване на всички локално съхранени копия на файлове.";
+"Delete" = "Изтриване";
+"Remove" = "Премахване";
+"Removing of '%@' failed" = "Премахването на '%@' е неуспешно";
+"Accounts" = "Профили";
+
+"Help" = "Помощ";
+"Feedback" = "Обратна връзка";
+"Welcome" = "Добре дошли";
+"Thanks for choosing %@! \n Start by adding your account." = "Благодарим ви за избора %@! \nЗапочнете с добавяне на вашия профил.";
+
+/* Settings Messages */
+
+"Security" = "Сигурност";
+"Passcode Lock" = "Заключване с парола";
+"Face ID" = "Лицево разпознаване Face ID";
+"Touch ID" = "Пръстов отпечатък Touch ID";
+"Unlock using %@?" = "Отключване чрез %@?";
+"Videos" = "Видеоклипове";
+"Photos" = "Снимки";
+"Wifi only" = "Само през Wi-Fi";
+"Settings" = "Настройки";
+"Lock application" = "Заключване на приложението";
+"Upload videos via WiFi only" = "Качване на видео само през WiFi";
+"Upload pictures via WiFi only" = "Качване на снимки само през WiFi";
+"More" = "Още";
+"Documentation" = "Документация";
+"Send feedback" = "Изпращане на обратна връзка";
+"Recommend to a friend" = "Препоръчай на приятел";
+"Privacy Policy" = "Политика за поверителност";
+"Terms Of Use" = "Условия за ползване";
+"Acknowledgements" = "Благодарности";
+"license" = "Лиценз";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Части от това приложение може да използват следния защитен с авторски права материал, чието използване се потвърждава с настоящото.";
+"Video upload path" = "Път за качване на видео";
+"Photo upload path" = "Път за качване на снимки";
+"Immediately" = "Веднага";
+"After 1 minute" = "След 1 минута";
+"After 5 minutes" = "След 5 минути";
+"After 30 minutes" = "След 30 минути";
+"After %ld seconds" = "След %ld секунди";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "Ако изберете \"Веднага\", приложението ще бъде заключено, когато вече не е на преден план.";
+"Please configure an email account" = "Моля, конфигурирайте имейл профил";
+"You need to configure an email account first to be able to send emails." = "За да можете да изпращате имейли, първо трябва да конфигурирате имейл профил.";
+"Do you want to open the following URL?" = "Искате ли да отворите този URL адрес?";
+"Passcode option" = "Опция за парола";
+"Please choose how many digits you want to use for the passcode lock?" = "Моля, изберете колко цифри искате да използвате за заключване с парола?";
+"%ld digit code" = "%ld цифрен код";
+"Enter a new code with %ld digits" = "Въведете нов код с %ld цифри";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
+
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@%@версия %@ компилация%@ \n(app: %@, sdk: %@)";
+"beta" = "бета";
+"release" = "издание";
+"App Version" = "Версия на приложението";
+"Version information were copied to the clipboard" = "Информацията за версията беше копирана в клипборда";
+
+
+/* User Interface Settings */
+"Theme" = "Тема";
+"User Interface" = "Потребителски интерфейс";
+"Dark" = "Тъмна";
+"Dark Blue" = "Тъмно синьо";
+"Dark Web" = "Тъмна мрежа";
+"Light" = "Светла";
+"Classic" = "Класическа";
+"System" = "Система";
+"System Appeareance" = "Външен вид на системата";
+
+/* Log settings */
+"Log Files" = "Регистрационни файлове";
+"Browse log files" = "Преглед на регистрационните файлове";
+"Share" = "Споделяне";
+"Delete all log files?" = "Изтриване на всички регистрационни файлове?";
+"Delete all" = "Изтриване на всичко";
+
+"Log Level" = "Нива на дневника";
+"Log Destinations" = "Дестинации за регистрационните файлове";
+"Privacy" = "Поверителност";
+
+"Logging" = "Регистрация";
+"Enable logging" = "Активиране на регистрацията";
+"Options" = "Опции";
+
+"Off" = "Изключено";
+"Info" = "Информация";
+"Default" = "По подразбиране";
+"Warning" = "Предупреждение";
+"Error" = "Грешка";
+
+"Share log file" = "Споделяне на регистрационния файл";
+"Reset log file" = "Възстановяване на регистрационния файл";
+
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Когато са активирани, дневниците могат да повлияят на производителността и да съдържат чувствителна информация. Въпреки това дневниците не подлежат на автоматично подаване към %@ сървърите. Споделянето на дневници с други лица е отговорност единствено на потребителя.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "Последните 10 архивирани дневника се съхраняват в устройството, като всеки дневник обхваща до 24 часа използване. Когато споделяте, моля, имайте предвид, че дневниците могат да съдържат чувствителна информация, като например URL адреси на сървъри и специфична за потребителя информация.";
+
+"Mask private data" = "Маскиране на лични данни";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Активирането на тази опция ще направи опит за маскиране на личните данни, така че те да не станат част от дневника. Тъй като воденето на дневник е функция за разработка и отстраняване на грешки  не можем да гарантираме, че регистрационният файл няма да съдържа лични данни, дори ако тази опция е активирана. Затова, моля прегледайте всеки регистрационен файл и се уверете, че няма данни, които не желаете да споделяте преди да го споделите с някого.";
+
+"No log file found" = "Не е намерен регистрационен файл";
+"The log file can't be shared because no log file could be found or the log file is empty." = "Регистрационният файл не може да бъде споделен, защото не може да бъде намерен, или е празен.";
+"Enable log file" = "Активиране на регистрационния файл";
+
+"Really reset log file?" = "Наистина ли искате да нулирате регистрационния файл?";
+"This action can't be undone." = "Това действие не може да бъде отменено.";
+
+/* Data usage settings */
+"Data usage" = "Използване на данни";
+"Delete unused local copies" = "Изтриване на неизползваните локални копия";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Време, измерено от качването, редактирането, изтеглянето или преглеждането на съответния файл чрез това устройство. Не се отнася за файлове, изтеглени чрез функцията Налично офлайн. Локалните копия могат да бъдат изтрити преди изтичането на дадения период от време, напр. поради наличието на по-нова версия на файла на сървъра - или чрез ръчното изтриване на офлайн копията. Също така локалните копия не могат да бъдат изтривани след изтичането на дадения период от време, напр. ако върху тях е извършено някакво действие, файлът все още се използва - или профилът, в който се намира файлът не е бил използван в приложението.";
+"never" = "никога";
+"after %@" = "след %@";
+"Decrease Slider Value" = "Намаляване на стойността с плъзгача";
+"Increase Slider Value" = "Увеличаване на стойността с плъзгача";
+
+"Cellular Data Usage" = "Използване на мобилни данни";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Възможно е все още да се използват някои мобилни данни. За да избегнете напълно използването на мобилни данни, изключете достъпа до мобилни мрежи за цялото приложение в Настройки.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Използването на мобилни данни е деактивирано чрез конфигурацията MDM. Моля, свържете се с администратор за повече информация.";
+"General" = "Общи";
+"By feature" = "По функция";
+
+"off" = "изключено";
+"enabled" = "активирано";
+
+/* Display settings */
+"Advanced settings" = "Разширени настройки";
+"Show hidden files and folders" = "Показване на скритите файлове и папки";
+"Show folders on top" = "Показване на папките в горната част";
+"Disable gestures" = "Деактивиране на жестове";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Предотвратяване на плъзгането на файлове и папки и множественото избиране с помощта на определени от системата жестове";
+
+/* Advanced settings */
+"Enable diagnostics" = "Активиране на диагностика";
+
+/* Passcode Messages */
+
+"Enter code" = "Въведете код";
+"Repeat code" = "Повторете кода";
+"Delete code" = "Изтриване на код";
+"The entered codes are different" = "Въведените кодове са различни";
+"Incorrect code" = "Грешен код";
+"Please try again in %@" = "Моля, опитайте отново в %@";
+"Unlock %@" = "Отключване на %@";
+"Biometric authentication failed" = "Биометричното удостоверяване е неуспешно";
+"You are required to set the passcode" = "Необходимо е да зададете парола";
+
+/* Certificate management */
+
+"Certificates" = "Сертификати";
+"User-approved certificates" = "Сертификати, одобрени от потребителя";
+
+"Approved" = "Одобрено";
+"Auto-approved" = "Автоматично одобрени";
+"Revoke approval" =  "Отмяна на одобрението";
+
+/* Actions */
+
+"Forbidden Characters" = "Забранени символи";
+"File name cannot contain / or \\" = "Името на файла не може да съдържа / или \\";
+"Item with same name already exists" = "Вече съществува елемент със същото име";
+"An item with the same name already exists in this location." = "На това място вече съществува елемент със същото име.";
+"New Folder" = "Нова папка";
+"Folder name" = "Име на папката";
+"Rename" ="Преименуване";
+"Create folder" ="Създаване на папка";
+"Duplicate" = "Копие";
+"Move" = "Преместване";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Преместване тук";
+"Select target." = "Select target.";
+"Open in" = "Отваряне в";
+"Copy" = "Копиране";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
+"Copy here" = "Копиране тук";
+
+"Cannot connect to " = "Не можете да се свържете с ";
+" couldn't download file(s)" = "неуспех при изтеглянето на файл( ове)";
+"Actions" = "Действия";
+"copy" = "копиране";
+"Close Window" = "Затваряне на прозореца";
+"Open in a new Window" = "Отваряне в нов прозорец";
+"Open in Window" = "Отваряне в прозорец";
+"Take photo or video" = "Направете снимка или видео";
+"%ld Item was copied to the clipboard" = "%ld Елемент беше копиран в клипборда";
+"%ld Items were copied to the clipboard" = "%ld Елемента бяха копирани в клипборда";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Моля, обърнете внимание: Папките могат да се поставят само в %@ приложението и в същия профил.";
+
+"Processing on server" = "Processing on server";
+
+"Preparing…" = "Подготовка...";
+
+"No actions available" = "Няма налични действия";
+"No actions are available for this folder, possibly because of missing permissions." = "Няма налични действия за тази папка, вероятно поради липсващи разрешения.";
+
+"Close actions menu" = "Затваряне на менюто за действия";
+"Favorited" = "Любими";
+"Favorite item" = "Любим елемент";
+"Unfavorite item" = "Нелюбим елемент";
+"Presentation Mode" = "Режим на презентация";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Активирането на режим на презентация ще предотврати преминаването на дисплея в режим на заспиване, докато изгледът не бъде затворен.";
+"Enable" = "Активиране";
+"Exit Full Screen" = "Излизане от цял екран";
+
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Добавяне на елемент";
+
+/* App Provider */
+"New document" = "Нов документ";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
+
+/* Preview */
+"Open file" = "Отваряне на файл";
+"Network unavailable" = "Няма достъп до мрежата";
+"Error" = "Грешка";
+"Could not get the picture" = "Получаването на снимката е неуспешно";
+"Downloading" = "Изтегляне";
+"File couldn't be opened" = "Файлът не може да бъде отворен";
+"Connecting..." = "Свързване...";
+
+"File" = "Файл";
+"%@ was updated" = "%@ беше актуализирана";
+"Would you like to view the updated version?" = "Искате ли да видите актуализираната версия?";
+"Show new version" = "Показване на новата версия";
+"Refresh without asking" = "Опресняване без запитване";
+"Ignore updates" = "Игнориране на актуализациите";
+
+/* PDF Viewer */
+"Resume" = "Продължаване";
+"Go to page" = "Към страницата";
+"Page" = "Страница";
+"This document has %@ pages" = "Този документ съдържа %@ страници";
+"%@ of %@" = "%@ от %@";
+"Invalid Page" = "Невалидна страница";
+"The entered page number doesn't exist" = "Въведеният номер на страница не съществува";
+"Search PDF" = "Търсене на PDF";
+"Outline" = "Контур";
+"Find Next" = "Намиране на следващ";
+"Find Previous" = "Намиране на предишен";
+"Close Search" = "Затваряне на търсенето";
+
+/* Photo Upload */
+"Upload" = "Качване";
+"Select All" = "Избиране на всичко";
+"Deselect All" = "Премахване на избора от всички";
+"All Photos" = "Всички снимки";
+"Albums" = "Албуми";
+"Importing from photo library" = "Импортиране от библиотека със снимки";
+"Media import" = "Импортиране на медия";
+"%@ of %@" = "%@ от %@";
+"Selected folder lacks file creation permission" = "Избраната папка няма разрешение за създаване на файлове";
+"%d Item" = "%d елемент";
+"%d Items" = "%d елемента";
+"Select Items" = "Избор на елементи";
+
+/* Scan */
+"Scan" = "Сканиране";
+"Scans" = "Сканирания";
+"Scan document" = "Сканиране на документ";
+"Saving" = "Запазване";
+"File format" = "Файлов формат";
+"Name" = "Име";
+"Save as" = "Запазване като";
+"Options" = "Опции";
+"Scan additional" = "Допълнително сканиране";
+"Create one file per page" = "Създаване на отделен файл на страница";
+
+/* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
+"Searching Shares…" = "Търсене на споделяния...";
+"Recipient" = "Получател";
+"Recipients" = "Получатели";
+"Public Link" = "Публична връзка";
+"Public Links" = "Публични връзки";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Invite";
+"Invite Recipient" = "Поканете получател";
+"Recipients" = "Получатели";
+"Add email or name" = "Добавете имейл или име";
+"Users" = "Потребители";
+"Groups" = "Групи";
+"Start typing to search users, groups and remote users." = "Започнете да пишете, за да търсите потребители, групи и отдалечени потребители.";
+"(Group)" = "(Групово)";
+"Adding User to Share failed" = "Неуспешно добавяне на потребител за споделяне";
+"Permissions" = "Разрешения";
+"Invited: %@" = "Поканени: %@";
+"Created: %@" = "Създадено: %@";
+"Allows the users you share with to re-share" = "Позволява на потребителите, с които споделяте да споделят отново";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Позволява на потребителите, с които споделяте да редактират вашите споделени файлове и да си сътрудничат";
+"Allows the users you share with to create new files and add them to the share" = "Позволява на потребителите, с които споделяте да създават нови файлове и да ги добавят към споделянето";
+"Allows uploading a new version of a shared file and replacing it" = "Позволява качване на нова версия на споделен файл и заместването му";
+"Allows the users you share with to delete shared files" = "Позволява на потребителите, с които споделяте да изтриват споделените файлове";
+"Setting permission failed" = "Неуспешно задаване на разрешение";
+"Shared with" = "Споделено с";
+"Remove Recipient failed" = "Премахването на получателя е неуспешно";
+"Remove Recipient" = "Премахване на получателя";
+"Create" = "Създаване";
+"Change" = "Промяна";
+"Recipients can view or download contents." = "Получателите могат да преглеждат или изтеглят съдържанието.";
+"Recipients can view, download, edit, delete and upload contents." = "Получателите могат да преглеждат, изтеглят, редактират, изтриват и качват съдържание.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Получаване на файлове от множество получатели без да се разкрива съдържанието на папката.";
+"Download / View" = "Изтегляне / Преглед";
+"Download / View / Upload" = "Изтегляне / Преглед / Качване";
+"Upload only (File Drop)" = "Само качване (пускане на файл)";
+"Creating public link failed" = "Създаването на публична връзка е неуспешно";
+"Create Public Link" = "Създаване на публична връзка";
+"Links" = "Връзки";
+"Link" = "Връзка";
+"Setting expiration date failed" = "Не бе успешно задаването на дата за изтичане на валидност";
+"Expiration date" = "Дата за изтичане на валидността";
+"Copy Public Link" = "Копиране на публичната връзка";
+"Delete Public Link" = "Изтриване на публична връзка";
+"Deleting Public Link failed" = "Изтриването на публичната връзка е неуспешно";
+"Deleting password failed" = "Изтриването на паролата е неуспешно";
+"Setting password failed" = "Задаването на парола е неуспешно";
+"Type to update password" = "Въведете, за да актуализирате паролата";
+"Cannot change permission" = "Не може да се промени разрешението";
+"Before you can set the permission\n%@,\n you must enter a password." = "Преди да зададете разрешението\n%@,\nтрябва да въведете парола.";
+"Password Protected" = "Защитено с парола";
+"Pending Federated Invites" = "Чакащи федеративни покани";
+"Pending Invites" = "Чакащи покани";
+"Shared with you" = "Споделено с вас";
+"Shared with others" = "Споделено с други";
+"Shares" = "Споделяния";
+"Copy Private Link" = "Копиране на поверителната връзка";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Само хора, които имат достъп до файла/папката могат да го използват. Използвайте го като постоянна връзка за себе си или за да насочвате други към споделените файлове.";
+"Accept Share failed" = "Приемането на споделянето е неуспешно";
+"Decline Share failed" = "Отказът на споделянето е неуспешен";
+"Accept" = "Приемане";
+"Decline" = "Отказване";
+"Declined" = "Отхвърляне";
+"Decline Share" = "Отказ от споделяне";
+"Unshare" = "Прекратяване на споделянето";
+"Unshare failed" = "Прекратяването на споделянето е неуспешно";
+"Are you sure you want to unshare these items?" = "Сигурни ли сте, че искате да прекратите споделянето на тези елементи?";
+"Are you sure you want to unshare this item?" = "Сигурни ли сте, че искате да прекратите споделянето на този елемент?";
+"Share" = "Споделяне";
+"Read" = "Прочетете";
+"Can Share" = "Може да споделя";
+"Can Edit" = "Може да редактира";
+"Can Edit and Change" = "Може да редактира и променя";
+"Can Create" = "Може да създава";
+"Can Change" = "Може да променя";
+"Can Delete" = "Може да изтрива";
+"Accept Invite %@" = "Приемане на покана %@";
+"Decline Invite %@" = "Отхвърляне на покана %@";
+"Decline cannot be undone." = "Отказът не може да бъде отменен.";
+"Sharing" = "Споделяне";
+"You" = "Вие";
+"Share this file" = "Споделяне на този файл";
+"Share this folder" = "Споделяне на тази папка";
+"shared" = "споделено";
+"Owner" = "Собственик";
+"Private Link" = "Поверителна връзка";
+"Created Public Link" = "Създаване на публична връзка";
+"URL was copied to the clipboard" = "URL адреса е копиран в клипборда";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ не е наличен, когато този профил е офлайн. Моля, отворете приложението и влезте в профила си, за да извършите това действие.";
+"%@ is not available for this item." = "%@ не е налично за този елемент.";
+"Share with user/group" = "Споделяне с потребител/група";
+"Share link" = "Връзка за споделяне";
+
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Споделено чрез връзка";
+
+"Share with" = "Споделяне с";
+"Add" = "Добавяне";
+"Save changes" = "Запазване на промените";
+
+/* Quick Access view */
+"Quick Access" = "Бърз достъп";
+"Collection" = "Колекция";
+"Recents" = "Последни";
+"Favorites"= "Любими";
+"Images" = "Изображения";
+"PDF Documents" = "PDF документи";
+"Text" = "Текст";
+"Documents" = "Документи";
+"Audio" = "Аудио";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
+
+/* Media files settings */
+"Media Files" = "Медийни файлове";
+"Download instead of streaming" = "Изтегляне вместо поточно предаване";
+
+/* Photo upload settings */
+"Media Upload" = "Качване на медия";
+"Media Export" = "Експортиране на медии";
+"Auto Upload" = "Автоматично качване";
+"Convert HEIC to JPEG" = "Конвертиране на HEIC в JPEG";
+"Convert videos to MP4" = "Конвертиране на видеоклипове в MP4";
+"Preserve original media file names" = "Запазване на оригиналните имена на мултимедийните файлове";
+"Auto Upload Photos" = "Автоматично качване на снимки";
+"Auto Upload Videos" = "Автоматично качване на видеоклипове";
+"Account" = "Профил";
+"Accounts" = "Профили";
+"Select account" = "Избор на профил";
+"Photo upload path" = "Път за качване на снимки";
+"Video upload path" = "Път за качване на видео";
+"Select Upload Path" = "Избор на път за качване";
+"Auto upload of media was disabled since configured account / folder was not found" = "Автоматичното качване на медия е деактивирано, тъй като не е намерен конфигурираният профил/папка";
+"Importing %@ media files for upload" = "Импортиране на %@ медийни файла за качване";
+"Photo upload" = "Качване на снимка";
+"Video upload" = "Качване на видео";
+
+/* Background media uploads */
+"Background uploads (Lab Version)" = "Качвания във фонов режим (лабораторна версия)";
+"Background uploads" = "Качвания във фонов режим";
+"Use background refresh" = "Използване на опресняване във фонов режим ";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Разрешаване на приложението да опреснява съдържанието във фонов режим, когато е свързано с Wi-Fi или мобилна мрежа.";
+"Enable background uploads" = "Активиране на качвания във фонов режим";
+"Use background location updates" = "Използване на актуализации на местоположението във фонов режим";
+"Background upload notifications" = "Известия за качване във фонов режим";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "Ако искате качването на медийни файлове във фонов режим да бъде по-надеждно, трябва да разрешите актуализациите на местоположението на заден план.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Качването на медийни файлове във фонов режим зависи от актуализациите на местоположението и ще спре да работи, ако разрешението за достъп до местоположението бъде спряно.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "В противен случай качването на медийни файлове във фонов режим с помощта на технологията за опресняване на заден план ще зависи от това колко често използвате приложението.";
+"Location permission denied" = "Разрешението за местоположение е отказано";
+"Please re-enable location acquisition in system settings" = "Моля, разрешете отново достъп до местоположението в системните настройки";
+"Scheduled upload of %ld media assets" = "Планирано е качване на %ld медийни активи";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "Създаване на %ld папки...";
+"Moving %ld items…" = "Преместване на %ld елемента...";
+"Copying %ld items…" = "Копиране на %ld елемента...";
+"Deleting %ld items…" = "Изтриване на %ld елемента...";
+"Uploading %ld files…" = "Качване на %ld файла...";
+"Downloading %ld files…" = "Изтегляне на %ld файла...";
+"Updating %ld items…" = "Актуализиране на %ld файла...";
+
+/* Offline storage management */
+"Free on %@" = "Безплатно на %@";
+"unknown" = "неизвестен";
+"Offline files use" = "Използване на файловете офлайн";
+"Compacting of '%@' failed" = "Уплътняването на '%@' е неуспешно";
+"Include available offline files" = "Включване на файловете налични офлайн";
+"Delete all Offline Files" = "Изтриване на всички офлайн файлове";
+"Manage" = "Управление";
+"Storage" = "Хранилище";
+"Compacting" = "Уплътняване";
+
+"Really include available offline files?" = "Наистина ли ще включите наличните офлайн файлове?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Файловете и папките, маркирани като Налични офлайн, ще станат недостъпни. Те ще бъдат изтеглени повторно следващия път, когато влезете в профила си (изисква се свързаност).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Премахва изтеглени файлове и локални копия на елементи, маркирани като Налични офлайн. Последните ще бъдат изтеглени отново при следващото влизане в профила ви (изисква се свързаност).";
+
+/* Diagnostic */
+"Diagnostic Overview" = "Преглед на диагностиката";
+"Diagnostics" = "Диагностика";
+"Share Diagnostics" = "Споделяне на диагностиката";
+"Action executed" = "Действието е изпълнено";
+
+"Update Status" = "Актуализиране на статуса";
+"Completed update scans" = "Завършено е сканирането за актуализация";
+"Total update scans" = "Общо сканирания за актуализации";
+
+/* Available offline */
+"Root folder" = "Основна папка";
+"at" = "в";
+"(no match)" = "(без съвпадение)";
+
+"Make available offline" = "Предоставяне на достъп офлайн";
+"Make unavailable offline" = "Да се направи недостъпен офлайн";
+
+"Available Offline" = "Налично офлайн";
+
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
+
+/* Single Account */
+"You are connected as\n%@" = "Свързани сте като\n%@";
+
+/* Release Notes */
+"Proceed" = "Продължете";
+"New in %@" = "Нови в %@";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Благодарим ви, че използвате %@.\nАко нашето приложение ви харесва, моля оставете отзив в AppStore.\n❤️";
+"Thank you for using %@.\n" = "Благодарим ви, че използвате %@.\n";
+
+/* Key Commands */
+"Select Next" = "Избор и напред";
+"Select Previous" = "Избор на предишното";
+"Open Selected" = "Отваряне на избраното";
+"Change Sort Order" = "Промяна на реда на подреждане";
+"Search" = "Търсене";
+"Back" = "Назад";
+"Save" = "Запазване";
+"Sort by %@" = "Подреждане по %@";
+"Tab %@" = "Раздел %@";
+"Select Last Item on Page" = "Избор на последния елемент от страницата";
+"Scroll to Top" = "Превъртане нагоре";
+"Scroll to Bottom" = "Превъртане надолу";
+"Copy to Clipboard" = "Копиране в клипборда";
+"Import from Clipboard" = "Импортиране от клипборда";
+"Choose destination directory…" = "Изберете директория за дестинация...";
+"Next" = "Напред";
+"Previous" = "Предишна";
+"Favorite" = "Любими";
+"Cut" = "Изрязване";
+"Paste" = "Поставяне";
+"Play/Pause" = "Възпроизвеждане/пауза";
+"Skip Back" = "Прескачане назад";
+"Skip Ahead" = "Прескачане напред";
+"Go to Beginning" = "Към началото";
+"Mute/Unmute" = "Заглушаване/Включване на звука";
+"Full Screen" = "Цял екран";
+"Switch Theme Style" = "Превключване на стила на темата";
+
+/* Markup */
+"How should this file be saved?" = "Как трябва да бъде запазен този файл?";
+"Overwrite original" = "Презаписване на оригинала";
+"Save as copy" = "Запазване като копие";
+"Discard changes" = "Отхвърляне на промените";
+"Markup" = "Отбелязване";
+"Crop or Rotate" = "Изрязване или завъртане";
+"Saving edited file failed" = "Запазването на редактирания файл е неуспешно";
+"File no longer exists" = "Файлът вече не съществува";
+
+/* Licensing */
+"Unlocked" = "Отключен";
+"Unlock" = "Отключване";
+
+"Subscribe Now" = "Абонирайте се сега";
+"Free" = "Безплатно";
+
+"%@ / %@" = "%@ / %@";
+"after free %@ trial" = "след безплатен %@ пробен период";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Изпробвайте %@ безплатно.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "След това %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@  - започване веднага";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Професионални функции";
+
+/* Licensing: App Store */
+"Restore purchases" = "Възстановяване на покупки";
+"Restoring purchases…" = "Възстановяване на покупките...";
+"Error restoring purchases" = "Грешка при възстановяване на покупките";
+"Error loading product info from App Store"= "Грешка при зареждане от App Store на информацията за продукта";
+"Purchase failed" = "Покупката е неуспешна";
+"More information" = "Повече информация";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Корпоративно";
+
+/* Licensing: Settings */
+"In-App Purchases" = "Покупки в приложението";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
+"Error fetching transactions" = "Грешка при извличането на транзакции";
+"Document Scanner" = "Скенер за документи";
+"Scan documents and photos with your camera." = "Сканирайте документи и снимки с камерата си.";
+"Shortcuts Actions" = "Преки пътища и действия";
+"Use ownCloud actions in Shortcuts." = "Използвайте Преки пътища за действия в ownCloud.";
+"Markup Documents" = "Отбелязване на документи";
+"Markup photos and PDF files." = "Отбелязване на снимки и PDF файлове";
+"Unlock all Pro Features." = "Отключете всички професионални функции.";
+
+"Purchased App Version" = "Закупена версия на приложението";
+"Receipt Date" = "Дата на квитанцията";
+"Manage subscription" = "Управление на абонамента";
+"Purchases are not allowed on this device." = "Покупките не са разрешени на това устройство.";
+"Type" = "Тип";
+"Quantity" = "Количество";
+"Product" = "Продукт";
+"Date" = "Дата";
+"Cancelled" = "Отменено";
+"Ends" = "Край";
+"none" = "няма";
+"trial" = "пробен период";
+"purchase" = "закупуване";
+"subscription" = "абонамент";
+"Photo Pro Features" = "Функции на Photo Pro";
+"Image metadata, extended upload options" = "Метаданни за изображения, разширени възможности за качване";
+"Purchase" = "Покупка";
+"Subscribe" = "Абонамент";
+
+"No accounts found" = "Няма намерени профили";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "За да определите точно текущия си лицензионен статус, първо трябва да добавите един или повече профили.";
+
+/* Share Sheet */
+"Save File" = "Запазване на файл";
+"Choose an account and folder to import into." = "Изберете профил и папка, в които да импортирате.";
+"No account configured.\nSetup an new account in the app to save to." = "Няма конфигуриран профил.\nНастройте нов профил в приложението, в който да запазвате.";
+"Importing item %ld of %ld" = "Импортиране на елемент %ld от %ld";
+"Error importing %@" = "Грешка при импортиране %@";
+"Error loading item" = "Грешка при зареждането на елемента";
+"Preparing…" = "Подготовка...";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
+"Save here" = "Запазване тук";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Деактивиране на разширението за споделяне";
+"Importing files through the Share Extension is not allowed on this device." = "Импортирането на файлове чрез разширението Споделяне не е разрешено на това устройство.";
+
+/* - Open with */
+"Opening not allowed" = "Отварянето не е разрешено";
+"Importing files through opening is not allowed on this device." = "Импортирането на файлове чрез отваряне не е разрешено на това устройство.";
+
+/* - Files.app */
+"Import not allowed" = "Импортирането не е разрешено";
+"Importing files through the File Provider is not allowed on this device." = "Импортирането на файлове чрез услугата Доставчик на файлове не е разрешено на това устройство.";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Въвеждане на множествена селекция";
+
+/* Universal Links */
+"Resolving link…" = "Разрешаване на връзката...";
+"Link resolution failed" = "Неуспешно разрешаване на връзката";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Неуспешно е разрешаването на поверителната връзка, тъй като сте офлайн и съответният елемент не е кеширан локално.";
+"Couldn't resolve a private link since the item is not known to the server." = "Неуспешно е разрешаването на поверителната връзка, тъй като елементът е неизвестен за сървъра.";
+"Link points to an account bookmark which is not configured in the app." = "Връзката сочи към отметка на профил, което не е конфигурирано в приложението.";
+
+/* Photo meta-data */
+"Image metadata" = "Метаданни на изображението";
+"Image details" = "Подробности за изображението";
+"Profile" = "Профил";
+"Size" = "Размер";
+"Density" = "Плътност";
+"Color model" = "Цветови модел";
+"%@ (%d bits/channel)" = "%@ (%d бита/канал)";
+"Histogram" = "Хистограма";
+
+"Camera details" = "Подробности за камерата";
+"Capture settings" = "Настройки за заснемане";
+"Time" = "Време";
+"EXIF aux info" = "EXIF aux информация";
+"Authoring" =  "Авторство";
+"TIFF" = "TIFF";
+
+"Lens make" = "Производител на обектива";
+"Lens model" = "Модел на обектива";
+"Lens info" = "Информация за обектива";
+"Focal length" = "Фокусно разстояние";
+"Focal length @ 35 mm" = "Фокусно разстояние @ 35 mm";
+
+"Shutter speed" = "Скорост на затвора";
+"Aperture" = "Бленда";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Програма";
+"Not defined" = "Неопределен";
+"Manual" = "Ръчен";
+"Normal" = "Нормален";
+"Aperture priority" = "Режим на блендата";
+"Shutter priority" = "Режим на затвора";
+"Creative" = "Творчески";
+"Action" = "Действие";
+"Portrait" = "Портрет";
+"Landscape" = "Пейзаж";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Измерване";
+"unknown" = "неизвестен";
+"Average" = "Средна стойност";
+"CenterWeightedAverage" = "Централно претеглена средна стойност";
+"Spot" = "Точка";
+"MultiSpot" = "Множество точки";
+"Pattern" = "Модел";
+"Partial" = "Частично";
+
+/* EXIF: flash mode */
+"Flash" = "Светкавица";
+"Fired" = "Изгаряне";
+"Didn't fire" = "Без изгаряне";
+"No strobe return detection" = "Няма открит върнат отблясък";
+"Strobe return light not detected" = "Не е открит светлинен отблясък";
+"Strobe return light detected" = "Открит е върнат светлинен отблясък";
+"Compulsory flash firing" = "Задължителна светкавица";
+"Compulsory flash supression" = "Задължително потискане на светкавицата";
+"Auto mode" = "Автоматичен режим";
+"Red eye detection supported" = "Поддържа се разпознаване на червените очи";
+"not present" = "не присъства";
+
+/* EXIF: white balance */
+"White balance" = "Баланс на бялото";
+"Auto" = "Автоматично";
+"Manual" = "Ръчен";
+
+"Exposure bias" = "Изкривяване на експозицията";
+"Uncalibrated" = "Некалибрирано";
+"Original date" = "Оригинална дата";
+"Digitized date" = "Дигитализирана дата";
+
+"Color space" = "Цветово пространство";
+
+/* EXIF: aux info */
+"Lens ID" = "ID на обектива";
+"Lens serial" = "Серийна версия на обектива";
+"Serial number" = "Сериен номер";
+"Flash compensation" = "Компенсация на светкавицата";
+"Owner" = "Собственик";
+"Firmware" = "Фърмуер";
+"Keywords" = "Ключови думи";
+"Copyright" = "Авторско право";
+
+/* IPTC meta data */
+"Contact info" = "Информация за контакт";
+"Usage terms" = "Условия за ползване";
+"Scene" = "Сцена";
+"Description" = "Описание";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Фотометрична интерпретация";
+"none" = "няма";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS местоположение";
+"Coordinates" = "Координати";
+"Altitude" = "Надморска височина";
+"Place" = "Място";
+"E" = "Е";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Разширени настройки за качване";
+"Prefer unedited photos" = "Предпочитам нередактирани снимки";
+"Prefer RAW photos" = "Предпочитам снимки в RAW формат";
+"Prefer original videos" = "Предпочитам оригинални видеоклипове";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Ограничен достъп до снимки";
+"Access for the media selected for upload is limited" = "Достъпът е ограничен до медията избрана за качване";
+"No Access to the media selected for upload" = "Няма достъп до избраната за качване медия";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Защитата с парола не се поддържа на това устройство.\nМоля, деактивирайте заключването с парола от настройките на приложението.";
+
+/* MDM settings push */
+"New settings received from MDM" = "Получени са нови настройки от MDM";
+"Tap to quit the app." = "Докоснете, за да спрете приложението.";
+"Tap to launch the app." = "Докоснете за да стартирате приложението.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

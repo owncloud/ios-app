@@ -64,6 +64,18 @@ public extension String {
 			}
 		}
 
+		if self.hasPrefix("#"), self.count == 9 {
+			// Format: #RRGGBBAA
+			if let hexRGB = UInt(self.replacingOccurrences(of: "#", with: ""), radix: 16) {
+				return UIColor(hexa: hexRGB)
+			}
+		} else if self.count == 8 {
+			// Format: RRGGBBAA
+			if let hexRGB = UInt(self, radix: 16) {
+				return UIColor(hexa: hexRGB)
+			}
+		}
+
 		return nil
 	}
 }

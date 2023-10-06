@@ -390,7 +390,7 @@ public class ThemeCollection : NSObject {
 				contentNavigationBarSet = cellSet
 				contentToolbarSet = cellSet
 
-				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: lightBrandSet, for: .light)
+				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
 				sidebarCellStateSet.regular.backgroundColor = .secondarySystemBackground.resolvedColor(with: styleTraitCollection)
 				sidebarCellStateSet.selected.labelColor = .white
 				sidebarCellStateSet.selected.iconColor = .white
@@ -678,10 +678,13 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
 
 			// Welcome screen
-			ThemeCSSRecord(selectors: [.welcome, .message, .background],    property: .fill,   value: lightBrandColor),
-			ThemeCSSRecord(selectors: [.welcome, .message, .title],     property: .stroke, value: darkBrandSet.labelColor),
-			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .background], property: .fill,   value: UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)),
+//			ThemeCSSRecord(selectors: [.welcome, .message, .title],      property: .stroke, value: darkBrandSet.labelColor),
+//			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: darkBrandSet.labelColor),
+			ThemeCSSRecord(selectors: [.welcome, .message, .title],      property: .stroke, value: UIColor.white),
+			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .stroke, value: UIColor.white),
 			ThemeCSSRecord(selectors: [.welcome, .message, .button],     property: .fill,   value: darkBrandColor),
+			ThemeCSSRecord(selectors: [.welcome],			     property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
 
 			// Side Bar
 			// - Interface Style
@@ -737,6 +740,13 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .stroke, value: contentToolbarSet.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
 		])
+
+		// System colors
+		css.addSystemColors()
+
+		// Theme colors
+		css.add(color: lightBrandColor, address: "theme.color.light")
+		css.add(color: darkBrandColor, 	address: "theme.color.dark")
 	}
 
 	convenience override init() {
