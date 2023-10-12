@@ -71,8 +71,20 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		accountsControllerSectionSource?.source = OCBookmarkManager.shared.bookmarksDatasource
 
 		// Combined data source
-		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
-			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, sidebarLinksDataSource ])
+		if let accountsControllerSectionSource {
+			var sources: [OCDataSource] = [ accountsControllerSectionSource ]
+
+			if let brandingElementDataSource {
+				sources.insert(brandingElementDataSource, at: 0)
+			}
+
+			if let sidebarLinksDataSource {
+				sources.append(sidebarLinksDataSource)
+			}
+
+			if sources.count > 1 {
+				combinedSectionsDatasource = OCDataSourceComposition(sources: sources)
+			}
 		}
 
 		// Set up Collection View
@@ -170,6 +182,24 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		focusedBookmark = newFocusedBookmark
 	}
 
+	public var brandingElementDataSource: OCDataSourceArray? {
+		if Branding.shared.isBranded {
+			let logoSize = CGSize(width: 128, height: 64)
+			let brandView = BrandView(showBackground: true, showLogo: true, logoMaxSize: logoSize, roundedCorners: true, assetSuffix: .sidebar)
+
+			NSLayoutConstraint.activate([
+				brandView.heightAnchor.constraint(equalToConstant: logoSize.height)
+			])
+
+			let elementDataSource = OCDataSourceArray(items: [ brandView ])
+			let section = CollectionViewSection(identifier: "branding-elements", dataSource: elementDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
+
+			return OCDataSourceArray(items: [ section ])
+		}
+
+		return nil
+	}
+
 	public var sidebarLinksDataSource: OCDataSourceArray? {
 		if let sidebarLinks = Branding.shared.sidebarLinks {
 			let actions = sidebarLinks.compactMap { link in
@@ -231,7 +261,6 @@ extension ClientSidebarViewController {
 
 		let logoContainer = ThemeCSSView(withSelectors: [.logo])
 		logoContainer.translatesAutoresizingMaskIntoConstraints = false
-		logoContainer.addSubview(logoImageView)
 		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
 		logoContainer.setContentHuggingPriority(.required, for: .vertical)
 
@@ -239,16 +268,18 @@ extension ClientSidebarViewController {
 		logoWrapperView.addSubview(logoContainer)
 
 		if VendorServices.shared.isBranded {
+			logoContainer.addSubview(logoLabel)
 			NSLayoutConstraint.activate([
-				logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
-				logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
-				logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
-				logoImageView.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
+				logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+				logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+				logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+				logoLabel.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
 				logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
 				logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
 				logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
 			])
 		} else {
+			logoContainer.addSubview(logoImageView)
 			logoContainer.addSubview(logoLabel)
 			NSLayoutConstraint.activate([
 				logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),

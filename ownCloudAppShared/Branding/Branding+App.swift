@@ -256,13 +256,18 @@ extension Branding : BrandingInitialization {
 }
 
 extension BrandingImageName {
-	public static let loginLogo : BrandingImageName = BrandingImageName("branding-login-logo")
-	public static let loginBackground : BrandingImageName = BrandingImageName("branding-login-background")
+	public static let brandLogo : BrandingImageName = BrandingImageName("branding-login-logo")
+	public static let brandBackground : BrandingImageName = BrandingImageName("branding-login-background")
 
 	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen")
 	public static let splashscreenBackground : BrandingImageName = BrandingImageName("branding-splashscreen-background")
 
 	public static let bookmarkIcon : BrandingImageName = BrandingImageName("branding-bookmark-icon")
+}
+
+extension BrandingAssetSuffix {
+	public static let setup: BrandingAssetSuffix = BrandingAssetSuffix("setup")
+	public static let sidebar: BrandingAssetSuffix = BrandingAssetSuffix("sidebar")
 }
 
 extension Branding {
@@ -446,4 +451,5 @@ public extension ThemeCSSSelector {
 	static let step = ThemeCSSSelector(rawValue: "step")
 	static let help = ThemeCSSSelector(rawValue: "help")
 	static let certificateSummary = ThemeCSSSelector(rawValue: "certificateSummary")
+	static let brand = ThemeCSSSelector(rawValue: "brand")
 }

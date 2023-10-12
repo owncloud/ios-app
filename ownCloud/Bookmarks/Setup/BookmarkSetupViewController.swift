@@ -54,10 +54,9 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 		visibleContentContainerView.translatesAutoresizingMaskIntoConstraints = false
 
-		let backgroundView = ThemeCSSView(withSelectors: [.background])
-		backgroundView.translatesAutoresizingMaskIntoConstraints = false
+		let brandBackground = BrandView(showBackground: true, showLogo: false, roundedCorners: false, assetSuffix: .setup)
 
-		contentView.embed(toFillWith: backgroundView)
+		contentView.embed(toFillWith: brandBackground)
 		contentView.embed(toFillWith: visibleContentContainerView, enclosingAnchors: contentView.safeAreaWithKeyboardAnchorSet)
 
 		centerHelperView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,28 +64,11 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 		self.cssSelectors = [.modal, .accountSetup]
 
-		// Add login background image
-		if let image = Branding.shared.brandedImageNamed(.loginBackground) {
-			let backgroundImageView = UIImageView(image: image)
-			backgroundImageView.contentMode = .scaleAspectFill
-			backgroundView.embed(toFillWith: backgroundImageView)
-		}
-
 		// Add logo
-		let maxLogoSize = CGSize(width: 128, height: 128)
-		let logoImage = UIImage(named: "branding-login-logo")
-		var logoImageSize: CGSize?
-		if let logoImage {
-			logoImageSize = UIImage.sizeThatFits(logoImage.size, into: maxLogoSize)
-			logoView = UIImageView(image: logoImage)
-		}
+		let maxLogoSize = CGSize(width: 256, height: 128)
+		logoView = BrandView(showBackground: false, showLogo: true, logoMaxSize: maxLogoSize, fitToLogo: true, roundedCorners: false, assetSuffix: .setup)
 
-		if let logoView = logoView as? UIImageView, let logoImageSize {
-			logoView.cssSelector = .icon
-			logoView.accessibilityLabel = VendorServices.shared.appName
-			logoView.contentMode = .scaleAspectFit
-			logoView.translatesAutoresizingMaskIntoConstraints = false
-
+		if let logoView {
 			contentView.addSubview(logoView)
 
 			NSLayoutConstraint.activate([
@@ -97,9 +79,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 				centerHelperView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1),
 
 				logoView.topAnchor.constraint(equalTo: centerHelperView.topAnchor),
-				logoView.centerXAnchor.constraint(equalTo: centerHelperView.centerXAnchor),
-				logoView.widthAnchor.constraint(equalToConstant: logoImageSize.width),
-				logoView.heightAnchor.constraint(lessThanOrEqualToConstant: logoImageSize.height)
+				logoView.centerXAnchor.constraint(equalTo: centerHelperView.centerXAnchor)
 			])
 		}
 
@@ -250,7 +230,12 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 		didSet {
 			if let hudMessageView {
-				visibleContentContainerView.embed(centered: hudMessageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+				visibleContentContainerView.addSubview(hudMessageView)
+				NSLayoutConstraint.activate([
+					hudMessageView.centerYAnchor.constraint(equalTo: visibleContentContainerView.centerYAnchor),
+					hudMessageView.leadingAnchor.constraint(equalTo: visibleContentContainerView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+					hudMessageView.trailingAnchor.constraint(equalTo: visibleContentContainerView.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+				])
 				contentViewController?.view.isHidden = true
 				logoView?.isHidden = true
 			}
@@ -309,10 +294,13 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 				let indeterminateProgress = Progress.indeterminate()
 				indeterminateProgress.isCancellable = false
 
-				self.hudMessageView = ComposedMessageView(elements: [
-					.progressCircle(with: indeterminateProgress),
-					.title(hudMessage)
+				let messageView = ComposedMessageView.infoBox(additionalElements: [
+					.progressCircle(with: indeterminateProgress, alignment: .centered),
+					.spacing(10),
+					.text(hudMessage, style: .system(textStyle: .headline, weight: .bold), alignment: .centered)
 				])
+				messageView.cssSelectors = [ .step ]
+				self.hudMessageView = messageView
 			} else {
 				self.hudMessageView = nil
 			}

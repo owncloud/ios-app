@@ -510,7 +510,6 @@
 		DCD864122811FC5700CA6631 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD864112811FC5700CA6631 /* GradientView.swift */; };
 		DCD954DF247D62FA00E184E6 /* MessageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
-		DCDA83852A9CE6C300BFF393 /* InitialSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDA83842A9CE6C300BFF393 /* InitialSetupViewController.swift */; };
 		DCDBB60A2525305600FAD707 /* NotificationAuthErrorForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */; };
 		DCDC0ACF23CD186400DFE36D /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -574,6 +573,7 @@
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCEA7F41282D3B110050A3C0 /* VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCEA7F3F282D3B110050A3C0 /* VFSManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCEA7F42282D3B110050A3C0 /* VFSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCEA7F40282D3B110050A3C0 /* VFSManager.m */; };
+		DCEA89822AD84D6000BFF393 /* BrandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA89812AD84D6000BFF393 /* BrandView.swift */; };
 		DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF06C280767CF00980B6D /* OpenSSL */; };
 		DCEAF08A2808254800980B6D /* DriveListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEAF0892808254800980B6D /* DriveListCell.swift */; };
 		DCEAF08D28084B3800980B6D /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = DCEAF08C28084B3800980B6D /* Down */; };
@@ -1553,7 +1553,6 @@
 		DCD864112811FC5700CA6631 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewController.swift; sourceTree = "<group>"; };
 		DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCLicenseManager+Internal.h"; sourceTree = "<group>"; };
-		DCDA83842A9CE6C300BFF393 /* InitialSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialSetupViewController.swift; sourceTree = "<group>"; };
 		DCDBB60225252FDA00FAD707 /* NotificationAuthErrorForwarder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationAuthErrorForwarder.h; sourceTree = "<group>"; };
 		DCDBB60325252FDA00FAD707 /* NotificationAuthErrorForwarder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationAuthErrorForwarder.m; sourceTree = "<group>"; };
 		DCDC0AD023CD18D200DFE36D /* OCLicenseManager+Setup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+Setup.swift"; sourceTree = "<group>"; };
@@ -1603,6 +1602,7 @@
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		DCEA7F3F282D3B110050A3C0 /* VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSManager.h; sourceTree = "<group>"; };
 		DCEA7F40282D3B110050A3C0 /* VFSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VFSManager.m; sourceTree = "<group>"; };
+		DCEA89812AD84D6000BFF393 /* BrandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandView.swift; sourceTree = "<group>"; };
 		DCEAF0892808254800980B6D /* DriveListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveListCell.swift; sourceTree = "<group>"; };
 		DCEC3DE3242F665D0076B43C /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferView.swift; sourceTree = "<group>"; };
@@ -2368,6 +2368,7 @@
 			isa = PBXGroup;
 			children = (
 				DC24B2AA25BA316D005783E2 /* Branding+App.swift */,
+				DCEA89812AD84D6000BFF393 /* BrandView.swift */,
 			);
 			path = Branding;
 			sourceTree = "<group>";
@@ -3007,7 +3008,6 @@
 				DCB6B1EA292B7C2400D27573 /* AppRootViewController+ItemActions.swift */,
 				DCB6B1F4292CC46B00D27573 /* AccountController+ItemActions.swift */,
 				DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */,
-				DCDA83842A9CE6C300BFF393 /* InitialSetupViewController.swift */,
 			);
 			path = "App Controllers";
 			sourceTree = "<group>";
@@ -4494,7 +4494,6 @@
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,
 				DC62514C225D254500736874 /* UploadBaseAction.swift in Sources */,
 				4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */,
-				DCDA83852A9CE6C300BFF393 /* InitialSetupViewController.swift in Sources */,
 				DC2323E62AA865A700BFF393 /* BookmarkSetupStepEnterURLViewController.swift in Sources */,
 				23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */,
 				DCDF58B323CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift in Sources */,
@@ -4605,6 +4604,7 @@
 				DC46F69028DCA1B8008280CA /* SavedSearchCell.swift in Sources */,
 				DC66A9F4279EEBF900792AC8 /* ThemeView.swift in Sources */,
 				DCDE444D2A36F56000BFF393 /* AppStateActionOpenItem.swift in Sources */,
+				DCEA89822AD84D6000BFF393 /* BrandView.swift in Sources */,
 				DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
 				DC62F569292504510095BB5D /* AccountConnectionPool.swift in Sources */,

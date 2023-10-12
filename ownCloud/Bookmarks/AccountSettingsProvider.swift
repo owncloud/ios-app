@@ -70,7 +70,7 @@ class AccountSettingsProvider: NSObject {
 	}
 
 	var logo: UIImage {
-		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.loginLogo) {
+		if Branding.shared.isBranded, let image = Branding.shared.brandedImageNamed(.brandLogo) {
 			return image
 		}
 
