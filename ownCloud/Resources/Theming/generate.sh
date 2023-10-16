@@ -24,5 +24,5 @@ if [ -d "$theming_dir" ]; then
 	--context config=$current_dir$theming_dir/Branding.json \
 	--out $current_dir$theming_dir/Branding.plist
 else
-    echo "Directory $theming_dir does not exist. Maybe this script is executed in the wrong path."
+    echo "Directory $theming_dir does not exist. Please execute this script in the root path of the ios-app repository."
 fi
