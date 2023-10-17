@@ -1107,6 +1107,19 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Build",
+    "categoryTag" : "build",
+    "classIdentifier" : "build",
+    "className" : "BuildOptions",
+    "description" : "Sets a custom version number for the app.",
+    "flatIdentifier" : "build.version-number",
+    "key" : "version-number",
+    "label" : "build.version-number",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Connection",
     "categoryTag" : "connection",
     "classIdentifier" : "connection",

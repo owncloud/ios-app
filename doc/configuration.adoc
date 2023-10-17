@@ -668,6 +668,12 @@ tag::build[]
 |Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier only. Fastlane does not need the provisioning profile and certificate with the given app group identifer. Needs resigning with the correct provisioning profile and certificate. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.
 |supported `candidate`
 
+|build.version-number
+|string
+|
+|Sets a custom version number for the app.
+|supported `candidate`
+
 |===
 end::build[]
 
