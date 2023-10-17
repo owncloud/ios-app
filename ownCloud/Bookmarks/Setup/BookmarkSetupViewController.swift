@@ -51,6 +51,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 	override func loadView() {
 		let contentView = UIView()
+		contentView.translatesAutoresizingMaskIntoConstraints = false
 
 		visibleContentContainerView.translatesAutoresizingMaskIntoConstraints = false
 

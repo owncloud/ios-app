@@ -687,23 +687,21 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.welcome],			     property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
 
 			// Account Setup
-			ThemeCSSRecord(selectors: [.accountSetup, .message, .title],	property: .stroke, value: UIColor.white),
-			ThemeCSSRecord(selectors: [.accountSetup, .header,  .title],	property: .stroke, value: UIColor.white),
-			ThemeCSSRecord(selectors: [.accountSetup, .welcome, .icon], 	property: .fill,   value: darkBrandColor),
-			ThemeCSSRecord(selectors: [.accountSetup, .step, .title], 	property: .stroke, value: UIColor.label),
-			ThemeCSSRecord(selectors: [.accountSetup, .step, .message], 	property: .stroke, value: UIColor.secondaryLabel),
-			ThemeCSSRecord(selectors: [.accountSetup, .step, .background],	property: .fill,   value: UIColor.systemBackground),
-			// ThemeCSSRecord(selectors: [.accountSetup, .step, .title], 	property: .stroke, value: UIColor.black),
-			// ThemeCSSRecord(selectors: [.accountSetup, .step, .message], 	property: .stroke, value: UIColor.lightGray),
-			// ThemeCSSRecord(selectors: [.accountSetup, .step, .background],	property: .fill,   value: UIColor.white),
-			ThemeCSSRecord(selectors: [.accountSetup, .step, .button],      property: .stroke, value: UIColor.white),
-			ThemeCSSRecord(selectors: [.accountSetup, .step, .button],      property: .fill,   value: darkBrandColor),
-			ThemeCSSRecord(selectors: [.accountSetup, .help, .subtitle], 	property: .stroke, value: UIColor.lightGray),
-			ThemeCSSRecord(selectors: [.accountSetup, .help, .button], 	property: .stroke, value: lightBrandColor),
-			ThemeCSSRecord(selectors: [.accountSetup, .help, .button], 	property: .fill,   value: UIColor.clear),
-			ThemeCSSRecord(selectors: [.accountSetup],      		property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
-			ThemeCSSRecord(selectors: [.accountSetup],			property: .fill,   value: darkBrandColor),
-			ThemeCSSRecord(selectors: [.certificateSummary],		property: .fill,   value: UIColor.clear),
+			ThemeCSSRecord(selectors: [.accountSetup, .message, .title],		property: .stroke, value: UIColor.white),
+			ThemeCSSRecord(selectors: [.accountSetup, .header,  .title],		property: .stroke, value: UIColor.white),
+			ThemeCSSRecord(selectors: [.accountSetup, .welcome, .icon], 		property: .fill,   value: darkBrandColor),
+			ThemeCSSRecord(selectors: [.accountSetup, .step, .title], 		property: .stroke, value: primaryLabelColor),
+			ThemeCSSRecord(selectors: [.accountSetup, .step, .message], 		property: .stroke, value: secondaryLabelColor),
+			ThemeCSSRecord(selectors: [.accountSetup, .step, .background],		property: .fill,   value: collectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.accountSetup, .step, .button, .filled],	property: .stroke, value: UIColor.white),
+			ThemeCSSRecord(selectors: [.accountSetup, .step, .button, .filled],	property: .fill,   value: lightBrandColor),
+			ThemeCSSRecord(selectors: [.accountSetup, .help, .subtitle], 		property: .stroke, value: UIColor.lightGray),
+			ThemeCSSRecord(selectors: [.accountSetup, .help, .button], 		property: .stroke, value: lightBrandColor),
+			ThemeCSSRecord(selectors: [.accountSetup, .help, .button], 		property: .fill,   value: UIColor.clear),
+			ThemeCSSRecord(selectors: [.accountSetup],				property: .fill,   value: darkBrandColor),
+			ThemeCSSRecord(selectors: [.accountSetup],      			property: .statusBarStyle, value: UIStatusBarStyle.lightContent),
+
+			ThemeCSSRecord(selectors: [.certificateSummary],			property: .fill,   value: UIColor.clear),
 
 			// Side Bar
 			// - Interface Style

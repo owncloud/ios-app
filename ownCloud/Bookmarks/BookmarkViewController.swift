@@ -348,7 +348,7 @@ class BookmarkViewController: StaticTableViewController {
 		logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
 		logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
-		(logoAndAppNameView.backgroundView as? RoundCornerBackgroundView)?.fillImage = Branding.shared.brandedImageNamed(.brandBackground)
+		(logoAndAppNameView.backgroundView as? RoundCornerBackgroundView)?.fillImage = Branding.shared.brandedImageNamed(.brandBackground) ?? Branding.shared.brandedImageNamed(.legacyBrandBackground)
 
 		self.tableView.tableHeaderView = logoAndAppNameView
 		self.tableView.layoutTableHeaderView()

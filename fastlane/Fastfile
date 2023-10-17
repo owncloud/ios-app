@@ -548,7 +548,7 @@ end
     # Check, if Branding.plist file exists and handle custom set values
     if File.exist?("../" + themePath)
       # Check for custom app version number
-        tmpCustomAppVersionNumber = get_info_plist_value(path: themePath, key: "app.version-number")
+        tmpCustomAppVersionNumber = get_info_plist_value(path: themePath, key: "build.version-number")
         if tmpCustomAppVersionNumber && !tmpCustomAppVersionNumber.empty?
           customAppVersionNumber = tmpCustomAppVersionNumber
 

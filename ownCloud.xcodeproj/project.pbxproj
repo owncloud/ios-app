@@ -65,8 +65,8 @@
 		396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396C82FA2319AFDD00938262 /* CollaborateAction.swift */; };
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754F22327A33500119FCB /* OpenSceneAction.swift */; };
-		398393BE246D63B0001A212B /* branding-login-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BC246D63B0001A212B /* branding-login-background.png */; };
-		398393BF246D63B0001A212B /* branding-login-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BD246D63B0001A212B /* branding-login-logo.png */; };
+		398393BE246D63B0001A212B /* branding-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BC246D63B0001A212B /* branding-background.png */; };
+		398393BF246D63B0001A212B /* branding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BD246D63B0001A212B /* branding-logo.png */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		399697F5260255B100E5AEBA /* PDFGotoPageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399697F1260255B100E5AEBA /* PDFGotoPageAction.swift */; };
 		399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220922344C30F0026C290 /* ImportPasteboardAction.swift */; };
@@ -1037,8 +1037,8 @@
 		397754E123279EED00119FCB /* OCItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+Extension.swift"; sourceTree = "<group>"; };
 		397754F22327A33500119FCB /* OpenSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenSceneAction.swift; sourceTree = "<group>"; };
 		397E276B23D05A5400117B07 /* ServerListToolCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListToolCell.swift; sourceTree = "<group>"; };
-		398393BC246D63B0001A212B /* branding-login-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-login-background.png"; path = "ownCloud/Resources/Theming/branding-login-background.png"; sourceTree = SOURCE_ROOT; };
-		398393BD246D63B0001A212B /* branding-login-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-login-logo.png"; path = "ownCloud/Resources/Theming/branding-login-logo.png"; sourceTree = SOURCE_ROOT; };
+		398393BC246D63B0001A212B /* branding-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-background.png"; path = "ownCloud/Resources/Theming/branding-background.png"; sourceTree = SOURCE_ROOT; };
+		398393BD246D63B0001A212B /* branding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-logo.png"; path = "ownCloud/Resources/Theming/branding-logo.png"; sourceTree = SOURCE_ROOT; };
 		3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePathItemIntentHandler.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		39880BAA233B5236006EA539 /* eu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eu; path = eu.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2095,8 +2095,8 @@
 			children = (
 				391130102A20E3F100C22DD2 /* branding-sidebar-link-icon.png */,
 				39F48A6524D847D70000E3F9 /* branding-bookmark-icon.png */,
-				398393BC246D63B0001A212B /* branding-login-background.png */,
-				398393BD246D63B0001A212B /* branding-login-logo.png */,
+				398393BC246D63B0001A212B /* branding-background.png */,
+				398393BD246D63B0001A212B /* branding-logo.png */,
 				39F48A6624D848550000E3F9 /* branding-splashscreen.png */,
 				39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */,
 				3931206A2326451900E8DFBA /* Branding.plist */,
@@ -4176,9 +4176,9 @@
 			files = (
 				39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */,
 				3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */,
-				398393BE246D63B0001A212B /* branding-login-background.png in Resources */,
+				398393BE246D63B0001A212B /* branding-background.png in Resources */,
 				3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */,
-				398393BF246D63B0001A212B /* branding-login-logo.png in Resources */,
+				398393BF246D63B0001A212B /* branding-logo.png in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
 				392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */,
 				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,

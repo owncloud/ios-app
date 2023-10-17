@@ -91,7 +91,7 @@ open class BrandView: UIView {
 
 		if showBackground {
 			// Add background
-			if let backgroundImage = Branding.shared.brandedImageNamed(.brandBackground, assetSuffix: assetSuffix) {
+			if let backgroundImage = Branding.shared.brandedImageNamed(.brandBackground, assetSuffix: assetSuffix) ?? Branding.shared.brandedImageNamed(.legacyBrandBackground, assetSuffix: assetSuffix) {
 				// Add background image
 				backgroundImageView = UIImageView(image: backgroundImage)
 				backgroundImageView?.translatesAutoresizingMaskIntoConstraints = false
@@ -127,7 +127,7 @@ open class BrandView: UIView {
 		logoImageView = nil
 
 		if showLogo {
-			if let logoImage = Branding.shared.brandedImageNamed(.brandLogo, assetSuffix: assetSuffix) {
+			if let logoImage = Branding.shared.brandedImageNamed(.brandLogo, assetSuffix: assetSuffix) ?? Branding.shared.brandedImageNamed(.legacyBrandLogo, assetSuffix: assetSuffix) {
 				logoImageView = UIImageView(image: logoImage)
 				logoImageView?.translatesAutoresizingMaskIntoConstraints = false
 				logoImageView?.contentMode = .scaleAspectFit
@@ -157,5 +157,11 @@ open class BrandView: UIView {
 				}
 			}
 		}
+	}
+}
+
+extension BrandView: DataItemSelectionInteraction {
+	public func allowSelection(in viewController: UIViewController?, section: CollectionViewSection?, with context: ClientContext?) -> Bool {
+		return false
 	}
 }
