@@ -129,6 +129,8 @@
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
 "{{remaining}} available" = "{{remaining}} available";
 
+"Loading…" = "Loading…";
+
 "Show more results" = "Show more results";
 
 "An error occurred" = "An error occurred";
