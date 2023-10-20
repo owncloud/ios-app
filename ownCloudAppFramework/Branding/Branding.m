@@ -75,6 +75,7 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 		_brandingPlistURL = [appBundle URLForResource:@"Branding" withExtension:@"plist"];
 
 		_allowBranding = YES;
+		_allowThemeSelection = YES;
 
 		NSData *brandingPlistData;
 

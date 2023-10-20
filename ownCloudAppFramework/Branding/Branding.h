@@ -42,6 +42,7 @@ typedef NSString* BrandingAssetSuffix NS_TYPED_EXTENSIBLE_ENUM;
 
 @property(strong,nonatomic,readonly,class) Branding *sharedBranding;
 @property(assign,nonatomic) BOOL allowBranding; //!< YES if branding is allowed. If NO, computedValueForClassSettingsKey returns only default values.
+@property(assign,nonatomic) BOOL allowThemeSelection; //!< YES if theme selection is allowed
 
 @property(strong,nullable,nonatomic,readonly) NSBundle *appBundle; //!< Bundle of the main app
 

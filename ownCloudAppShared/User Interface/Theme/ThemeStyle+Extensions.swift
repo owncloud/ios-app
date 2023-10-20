@@ -187,6 +187,8 @@ extension ThemeStyle {
 		if !Branding.shared.setupThemeStyles() {
 			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension(isDefault: true))
 			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.systemLight.themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.systemDark.themeStyleExtension())
 		}
 	}
 

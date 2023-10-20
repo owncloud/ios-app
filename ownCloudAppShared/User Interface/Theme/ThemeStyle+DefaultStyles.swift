@@ -29,8 +29,14 @@ extension ThemeStyle {
 	static public var ownCloudLight : ThemeStyle {
 		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Light".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
 	}
-
 	static public var ownCloudDark : ThemeStyle {
 		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: "Dark".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
+	}
+
+	static public var systemLight : ThemeStyle {
+		return (ThemeStyle(styleIdentifier: "system.light", darkStyleIdentifier: "system.dark", localizedName: VendorServices.shared.isBranded ? "Light".localized : "System Light".localized, lightColor: .tintColor, darkColor: .label, themeStyle: .light, useSystemColors: true))
+	}
+	static public var systemDark : ThemeStyle {
+		return (ThemeStyle(styleIdentifier: "system.dark", localizedName: VendorServices.shared.isBranded ? "Dark".localized : "System Dark".localized, lightColor: .tintColor, darkColor: .secondarySystemGroupedBackground, themeStyle: .dark, useSystemColors: true))
 	}
 }

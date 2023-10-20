@@ -425,20 +425,26 @@ extension Branding {
 	}
 
 	public func setupThemeStyles() -> Bool {
-		var extractedThemeStyles : [ThemeStyle] = []
+		var brandingThemeStyles : [ThemeStyle] = []
+
+		allowThemeSelection = !isBranded
 
 		if let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
 			let generic = self.computedValue(forClassSettingsKey: .themeGenericColors) as? [String : Any] ?? [:]
 			for themeStyleDefinition in themeStyleDefinitions {
 				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition, generic: generic) {
-					extractedThemeStyles.append(themeStyle)
+					brandingThemeStyles.append(themeStyle)
 				}
 			}
+		} else if isBranded {
+			brandingThemeStyles.append(ThemeStyle.systemLight)
+			brandingThemeStyles.append(ThemeStyle.systemDark)
+			allowThemeSelection = true
 		}
 
 		var isDefault = true
 
-		for themeStyle in extractedThemeStyles {
+		for themeStyle in brandingThemeStyles {
 			let themeStyleExtension = themeStyle.themeStyleExtension(isDefault: isDefault)
 			OCExtensionManager.shared.addExtension(themeStyleExtension)
 			isDefault = false
