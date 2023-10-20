@@ -1154,6 +1154,7 @@ extension BookmarkViewController {
 			setupViewController.navigationItem.titleLabelText = "Add account".localized
 
 			let navigationViewController = ThemeNavigationController(rootViewController: setupViewController)
+			navigationViewController.modalPresentationStyle = .fullScreen
 			hostViewController.present(navigationViewController, animated: true, completion: nil)
 		}
 	}
