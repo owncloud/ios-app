@@ -477,6 +477,11 @@
             value = "string:https://www.owncloud.com/"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:action.allow-image-interactions"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption
