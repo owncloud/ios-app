@@ -462,6 +462,9 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.navigationBar, .label],		property: .stroke, value: navigationBarSet.labelColor),
 			ThemeCSSRecord(selectors: [.navigationBar],			property: .fill,   value: navigationBarSet.backgroundColor),
 
+			ThemeCSSRecord(selectors: [.navigationBar, .popupButton, .icon],property: .stroke, value: navigationBarSet.tintColor),
+			ThemeCSSRecord(selectors: [.navigationBar, .popupButton, .icon],property: .fill,   value: UIColor(white: 0.5, alpha: 0.3)),
+
 			// - Toolbar
 			ThemeCSSRecord(selectors: [.toolbar],				property: .stroke, value: toolbarSet.tintColor),
 			ThemeCSSRecord(selectors: [.toolbar],				property: .fill,   value: toolbarSet.backgroundColor),

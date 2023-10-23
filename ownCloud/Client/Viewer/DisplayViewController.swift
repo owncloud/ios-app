@@ -120,7 +120,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		return nil
 	}
 
-	var item: OCItem? {
+	@objc dynamic var item: OCItem? {
 		didSet {
 			if itemClaimIdentifier == nil, // No claim registered by the DisplayViewController for the item yet
 			let item = item, let core = core,
@@ -477,8 +477,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	}
 
 	// MARK: - UI management
-	@objc var displayTitle : String?
-	@objc var displayBarButtonItems : [UIBarButtonItem]?
+	@objc dynamic var displayTitle : String?
+	@objc dynamic var displayBarButtonItems : [UIBarButtonItem]?
 
 	private func updateDisplayTitleAndButtons() {
 		if let itemName = item?.name {

@@ -408,6 +408,8 @@
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
+		DCA05A602AE6603E00BFF393 /* ClientLocationPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA05A5F2AE6603E00BFF393 /* ClientLocationPopupButton.swift */; };
+		DCA05A622AE664F200BFF393 /* OCAction+UIAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA05A612AE664F200BFF393 /* OCAction+UIAction.swift */; };
 		DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */; };
 		DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA2EDE3279B1789001F04E6 /* ResourceItemIcon.swift */; };
 		DCA35D3F24CEDA5200DBE2B0 /* DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */; };
@@ -1438,6 +1440,8 @@
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerAccess.swift; sourceTree = "<group>"; };
 		DC9C1AEB247C76470067895A /* MessageGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupCell.swift; sourceTree = "<group>"; };
+		DCA05A5F2AE6603E00BFF393 /* ClientLocationPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLocationPopupButton.swift; sourceTree = "<group>"; };
+		DCA05A612AE664F200BFF393 /* OCAction+UIAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCAction+UIAction.swift"; sourceTree = "<group>"; };
 		DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSourceItemIcons.swift; sourceTree = "<group>"; };
 		DCA2EDE3279B1789001F04E6 /* ResourceItemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceItemIcon.swift; sourceTree = "<group>"; };
 		DCA35D3E24CEDA5200DBE2B0 /* DiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticViewController.swift; sourceTree = "<group>"; };
@@ -1996,6 +2000,7 @@
 		397754E023279EC100119FCB /* SDK Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DCA05A612AE664F200BFF393 /* OCAction+UIAction.swift */,
 				399EA72525E6565900B6FF11 /* OCCore+Extension.swift */,
 				399EA71A25E6561D00B6FF11 /* OCShare+Extension.swift */,
 				DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */,
@@ -2531,6 +2536,7 @@
 			isa = PBXGroup;
 			children = (
 				DC8E99E4297EEB2800594697 /* ClientLocationBarController.swift */,
+				DCA05A5F2AE6603E00BFF393 /* ClientLocationPopupButton.swift */,
 				DC3F0C2429828AE300C832DB /* OCLocation+Breadcrumbs.swift */,
 			);
 			path = "Location Breadcrumbs";
@@ -4689,6 +4695,7 @@
 				DCB1B89F29C7378200BFF393 /* ThemeCSS.swift in Sources */,
 				DC0A357C24C0E43C00FB58FC /* ThemeCollection.swift in Sources */,
 				DC28F828294BB5ED00AC4013 /* SortedItemDataSource.swift in Sources */,
+				DCA05A602AE6603E00BFF393 /* ClientLocationPopupButton.swift in Sources */,
 				DC298C992934D3F8009FA87F /* AlertViewController.swift in Sources */,
 				DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */,
 				DCBAEAE829A568D500BFF393 /* TitleSupplementaryCell.swift in Sources */,
@@ -4730,6 +4737,7 @@
 				3912208223436EB80026C290 /* SortMethod.swift in Sources */,
 				DCE4E43F24C19D370051722F /* UIAlertController+OCIssue.swift in Sources */,
 				DC298CA929362523009FA87F /* ClientLocationPicker.swift in Sources */,
+				DCA05A622AE664F200BFF393 /* OCAction+UIAction.swift in Sources */,
 				DC0A359524C0E5F900FB58FC /* UIImage+Extension.swift in Sources */,
 				DC89EA6B29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift in Sources */,
 				DC66A9F8279F467200792AC8 /* UIKeyCommand+Extension.swift in Sources */,

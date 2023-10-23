@@ -151,6 +151,14 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 		composer?.updateState()
 	}
 
+	override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+		return [.portrait, .portraitUpsideDown]
+	}
+
+	override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+		return .portrait
+	}
+
 	override var preferredStatusBarStyle : UIStatusBarStyle {
 		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
 	}

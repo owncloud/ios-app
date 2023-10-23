@@ -162,6 +162,15 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		ClientSessionManager.shared.remove(delegate: self)
 	}
 
+	// MARK: - Interface orientations
+	open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+		if let contentViewController {
+			return contentViewController.supportedInterfaceOrientations
+		}
+
+		return super.supportedInterfaceOrientations
+	}
+
 	// MARK: - Status Bar style
 	open override var childForStatusBarStyle: UIViewController? {
 		return contentViewController
@@ -170,6 +179,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 	open override var contentViewController: UIViewController? {
 		didSet {
 			setNeedsStatusBarAppearanceUpdate()
+			if #available(iOS 16, *) {
+				setNeedsUpdateOfSupportedInterfaceOrientations()
+			}
 		}
 	}
 
