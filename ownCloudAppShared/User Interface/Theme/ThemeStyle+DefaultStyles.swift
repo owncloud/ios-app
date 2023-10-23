@@ -33,10 +33,10 @@ extension ThemeStyle {
 		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: "Dark".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
 	}
 
-	static public var systemLight : ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "system.light", darkStyleIdentifier: "system.dark", localizedName: VendorServices.shared.isBranded ? "Light".localized : "System Light".localized, lightColor: .tintColor, darkColor: .label, themeStyle: .light, useSystemColors: true))
+	static public func systemLight(with tintColor: UIColor? = nil) -> ThemeStyle {
+		return (ThemeStyle(styleIdentifier: "system.light", darkStyleIdentifier: "system.dark", localizedName: VendorServices.shared.isBranded ? "Light".localized : "System Light".localized, lightColor: tintColor ?? .tintColor, darkColor: .label, themeStyle: .light, useSystemColors: true, systemTintColor: tintColor))
 	}
-	static public var systemDark : ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "system.dark", localizedName: VendorServices.shared.isBranded ? "Dark".localized : "System Dark".localized, lightColor: .tintColor, darkColor: .secondarySystemGroupedBackground, themeStyle: .dark, useSystemColors: true))
+	static public func systemDark(with tintColor: UIColor? = nil) -> ThemeStyle {
+		return (ThemeStyle(styleIdentifier: "system.dark", localizedName: VendorServices.shared.isBranded ? "Dark".localized : "System Dark".localized, lightColor: tintColor ?? .tintColor, darkColor: .secondarySystemGroupedBackground, themeStyle: .dark, useSystemColors: true, systemTintColor: tintColor))
 	}
 }

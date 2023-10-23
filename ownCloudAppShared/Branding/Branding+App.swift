@@ -51,8 +51,9 @@ extension OCClassSettingsKey {
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
 
 	// Themes
-	public static let themeGenericColors : OCClassSettingsKey = OCClassSettingsKey("theme-generic-colors")
-	public static let themeDefinitions : OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+	public static let themeGenericColors: OCClassSettingsKey = OCClassSettingsKey("theme-generic-colors")
+	public static let themeDefinitions: OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+	public static let themeTintColor: OCClassSettingsKey = OCClassSettingsKey("theme-tint-color")
 }
 
 extension Branding : BrandingInitialization {
@@ -164,6 +165,14 @@ extension Branding : BrandingInitialization {
 			.themeDefinitions : [
 				.type 		: OCClassSettingsMetadataType.dictionaryArray,
 				.description	: "Array of dictionaries, each specifying a theme.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.themeTintColor : [
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Theme Tint Color",
+				.description	: "Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.",
 				.category	: "Branding",
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
@@ -437,8 +446,14 @@ extension Branding {
 				}
 			}
 		} else if isBranded {
-			brandingThemeStyles.append(ThemeStyle.systemLight)
-			brandingThemeStyles.append(ThemeStyle.systemDark)
+			var tintColor: UIColor?
+
+			if let tintColorString = self.computedValue(forClassSettingsKey: .themeTintColor) as? String {
+				tintColor = tintColorString.colorFromHex
+			}
+
+			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor))
+			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor))
 			allowThemeSelection = true
 		}
 

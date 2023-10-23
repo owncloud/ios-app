@@ -206,7 +206,7 @@ public class ThemeCollection : NSObject {
 		return colorPairs
 	}
 
-	init(darkBrandColor inDarkColor: UIColor, lightBrandColor inLightColor: UIColor, style: ThemeCollectionStyle = .dark, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil, useSystemColors: Bool = false) {
+	init(darkBrandColor inDarkColor: UIColor, lightBrandColor inLightColor: UIColor, style: ThemeCollectionStyle = .dark, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil, useSystemColors: Bool = false, systemTintColor: UIColor? = nil) {
 		var logoFillColor : UIColor?
 
 		self.css = ThemeCSS()
@@ -222,6 +222,8 @@ public class ThemeCollection : NSObject {
 
 		let darkBrandColor = inDarkColor.resolvedColor(with: styleTraitCollection)
 		let lightBrandColor = inLightColor.resolvedColor(with: styleTraitCollection)
+
+		let resolvedSystemTintColor: UIColor = systemTintColor ?? .tintColor.resolvedColor(with: styleTraitCollection)
 
 		/*
 			Cells:
@@ -333,7 +335,7 @@ public class ThemeCollection : NSObject {
 				contentToolbarSet = cellSet
 
 				sidebarCellStateSet = ThemeColorStateSet.from(colorSet: darkBrandSet, for: interfaceStyle)
-				sidebarCellStateSet.selected.backgroundColor = useSystemColors ? .tintColor.resolvedColor(with: styleTraitCollection) :  sidebarCellStateSet.regular.labelColor
+				sidebarCellStateSet.selected.backgroundColor = useSystemColors ? resolvedSystemTintColor :  sidebarCellStateSet.regular.labelColor
 				sidebarCellStateSet.selected.labelColor = useSystemColors ? .white : sidebarCellStateSet.regular.backgroundColor
 				sidebarCellStateSet.selected.iconColor = sidebarCellStateSet.selected.labelColor
 
@@ -394,7 +396,7 @@ public class ThemeCollection : NSObject {
 				sidebarCellStateSet.regular.backgroundColor =  .secondarySystemBackground.resolvedColor(with: styleTraitCollection)
 				sidebarCellStateSet.selected.labelColor = .white
 				sidebarCellStateSet.selected.iconColor = .white
-				sidebarCellStateSet.selected.backgroundColor = useSystemColors ? .tintColor.resolvedColor(with: styleTraitCollection) : darkBrandColor
+				sidebarCellStateSet.selected.backgroundColor = useSystemColors ? resolvedSystemTintColor : darkBrandColor
 
 				sidebarLogoIconColor = darkBrandColor
 				sidebarLogoLabel = darkBrandColor
