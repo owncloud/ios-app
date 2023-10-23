@@ -75,7 +75,9 @@ open class ClientLocationPopupButton: ThemeCSSButton {
 		var buttonConfig = configuration ?? .plain()
 		buttonConfig.imagePadding = 5
 		buttonConfig.attributedTitle = attributedTitle
+		#if swift(>=5.9) // workaround build issue on Xcode 14.2 (GitHub actions)
 		buttonConfig.titleLineBreakMode = .byTruncatingMiddle
+		#endif
 		buttonConfig.image = chevronImage
 
 		self.configuration = buttonConfig
