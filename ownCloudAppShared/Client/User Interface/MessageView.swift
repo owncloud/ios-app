@@ -88,6 +88,7 @@ open class MessageView: UIView {
 			messageLabel.translatesAutoresizingMaskIntoConstraints = false
 			messageLabel.numberOfLines = 0
 			messageLabel.textAlignment = .center
+			messageLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
 			containerView.addSubview(imageView)
 			containerView.addSubview(titleLabel)

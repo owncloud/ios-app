@@ -51,8 +51,9 @@ extension OCClassSettingsKey {
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
 
 	// Themes
-	public static let themeGenericColors : OCClassSettingsKey = OCClassSettingsKey("theme-generic-colors")
-	public static let themeDefinitions : OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+	public static let themeGenericColors: OCClassSettingsKey = OCClassSettingsKey("theme-generic-colors")
+	public static let themeDefinitions: OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+	public static let themeTintColor: OCClassSettingsKey = OCClassSettingsKey("theme-tint-color")
 }
 
 extension Branding : BrandingInitialization {
@@ -168,6 +169,14 @@ extension Branding : BrandingInitialization {
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
+			.themeTintColor : [
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Theme Tint Color",
+				.description	: "Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
 			.profileBookmarkName : [
 				.type         : OCClassSettingsMetadataType.string,
 				.label        : "Bookmark Name",
@@ -256,13 +265,21 @@ extension Branding : BrandingInitialization {
 }
 
 extension BrandingImageName {
-	public static let loginLogo : BrandingImageName = BrandingImageName("branding-login-logo")
-	public static let loginBackground : BrandingImageName = BrandingImageName("branding-login-background")
+	public static let brandLogo : BrandingImageName = BrandingImageName("branding-logo")
+	public static let brandBackground : BrandingImageName = BrandingImageName("branding-background")
+
+	public static let legacyBrandLogo : BrandingImageName = BrandingImageName("branding-login-logo") // can be removed as of version 12.2
+	public static let legacyBrandBackground : BrandingImageName = BrandingImageName("branding-login-background") // can be removed as of version 12.2
 
 	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen")
 	public static let splashscreenBackground : BrandingImageName = BrandingImageName("branding-splashscreen-background")
 
 	public static let bookmarkIcon : BrandingImageName = BrandingImageName("branding-bookmark-icon")
+}
+
+extension BrandingAssetSuffix {
+	public static let setup: BrandingAssetSuffix = BrandingAssetSuffix("setup")
+	public static let sidebar: BrandingAssetSuffix = BrandingAssetSuffix("sidebar")
 }
 
 extension Branding {
@@ -417,20 +434,32 @@ extension Branding {
 	}
 
 	public func setupThemeStyles() -> Bool {
-		var extractedThemeStyles : [ThemeStyle] = []
+		var brandingThemeStyles : [ThemeStyle] = []
+
+		allowThemeSelection = !isBranded
 
 		if let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
 			let generic = self.computedValue(forClassSettingsKey: .themeGenericColors) as? [String : Any] ?? [:]
 			for themeStyleDefinition in themeStyleDefinitions {
 				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition, generic: generic) {
-					extractedThemeStyles.append(themeStyle)
+					brandingThemeStyles.append(themeStyle)
 				}
 			}
+		} else if isBranded {
+			var tintColor: UIColor?
+
+			if let tintColorString = self.computedValue(forClassSettingsKey: .themeTintColor) as? String {
+				tintColor = tintColorString.colorFromHex
+			}
+
+			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor))
+			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor))
+			allowThemeSelection = true
 		}
 
 		var isDefault = true
 
-		for themeStyle in extractedThemeStyles {
+		for themeStyle in brandingThemeStyles {
 			let themeStyleExtension = themeStyle.themeStyleExtension(isDefault: isDefault)
 			OCExtensionManager.shared.addExtension(themeStyleExtension)
 			isDefault = false
@@ -446,4 +475,5 @@ public extension ThemeCSSSelector {
 	static let step = ThemeCSSSelector(rawValue: "step")
 	static let help = ThemeCSSSelector(rawValue: "help")
 	static let certificateSummary = ThemeCSSSelector(rawValue: "certificateSummary")
+	static let brand = ThemeCSSSelector(rawValue: "brand")
 }

@@ -79,8 +79,8 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 
 	var titleLabel: UILabel?
 	var messageLabel: UILabel?
-	var continueButton: UIButton = UIButton()
-	var backButton: UIButton = UIButton()
+	var continueButton: UIButton = ThemeButton(withSelectors: [.filled])
+	var backButton: UIButton = ThemeCSSButton(withSelectors: [])
 
 	var contentContainerView: UIView?
 	var contentView: UIView? {

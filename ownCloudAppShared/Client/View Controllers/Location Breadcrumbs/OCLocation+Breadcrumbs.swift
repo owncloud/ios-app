@@ -24,6 +24,12 @@ public extension OCActionPropertyKey {
 }
 
 public extension OCLocation {
+	enum BreadcrumbAction {
+		case open
+		case reveal
+		case auto
+	}
+
 	func displayName(in context: ClientContext?) -> String {
 		switch type {
 			case .drive:
@@ -82,21 +88,67 @@ public extension OCLocation {
 		return nil
 	}
 
-	func breadcrumbs(in clientContext: ClientContext, includeServerName: Bool = true, includeDriveName: Bool = true) -> [OCAction] {
+	func breadcrumbs(in clientContext: ClientContext, includeServerName: Bool = true, includeDriveName: Bool = true, skipFiles: Bool = false, action breadcrumbAction: BreadcrumbAction = .open) -> [OCAction] {
 		var breadcrumbs: [OCAction] = []
 		var currentLocation = self
+		var previousLocation: OCLocation?
 
 		func addCrumb(title: String?, icon: UIImage?, location: OCLocation? = nil) {
 			var actionBlock: OCActionBlock?
 
 			if let location {
-				actionBlock = { [weak clientContext] (action, options, completion) in
+				if location.type == .file, skipFiles {
+					previousLocation = location
+					return
+				}
+
+				actionBlock = { [weak clientContext, previousLocation] (action, options, completion) in
 					if let context = (options?[.clientContext] as? ClientContext) ?? clientContext {
-						_ = (location as DataItemSelectionInteraction).openItem?(from: nil, with: context, animated: true, pushViewController: true, completion: { (success) in
-							completion(success ? nil : NSError(ocError: .internal))
-						})
+						var effectiveBreadcrumbAction: BreadcrumbAction = breadcrumbAction
+
+						switch breadcrumbAction {
+							case .open: break
+
+							case .reveal:
+								if let previousLocation {
+									if previousLocation.type != .folder, previousLocation.type != .file {
+										// Can only reveal files and folders
+										effectiveBreadcrumbAction = .open
+									}
+								} else {
+									if location.type != .file {
+										// Only reveal top file, but not folder
+										effectiveBreadcrumbAction = .open
+									}
+								}
+
+							case .auto:
+								if location.type == .file {
+									effectiveBreadcrumbAction = .reveal
+								} else {
+									effectiveBreadcrumbAction = .open
+								}
+						}
+
+						switch effectiveBreadcrumbAction {
+							case .open:
+								_ = (location as DataItemSelectionInteraction).openItem?(from: nil, with: context, animated: true, pushViewController: true, completion: { (success) in
+									completion(success ? nil : NSError(ocError: .internal))
+								})
+
+							case .reveal:
+								let revealLocation = previousLocation ?? location
+
+								_ = (revealLocation as DataItemSelectionInteraction).revealItem?(from: nil, with: context, animated: true, pushViewController: true, completion: { success in
+									completion(success ? nil : NSError(ocError: .internal))
+								})
+
+							case .auto: break
+						}
 					}
 				}
+
+				previousLocation = location
 			}
 
 			let action = OCAction(title: title ?? "?", icon: icon, action: actionBlock)
@@ -105,10 +157,19 @@ public extension OCLocation {
 			breadcrumbs.insert(action, at: 0)
 		}
 
+//		// Include file
+//		if currentLocation.type == .file {
+//			addCrumb(title: currentLocation.displayName(in: clientContext), icon: currentLocation.displayIcon(in: clientContext), location: currentLocation)
+//
+//			if let parentLocation = currentLocation.parent {
+//				currentLocation = parentLocation
+//			}
+//		}
+
 		// Location in reverse
-		if currentLocation.type == .folder {
+		if currentLocation.type == .folder || currentLocation.type == .file {
 			while !currentLocation.isRoot, currentLocation.path != nil {
-				if currentLocation.type == .folder {
+				if currentLocation.type == .folder || currentLocation.type == .file {
 					addCrumb(title: currentLocation.displayName(in: clientContext), icon: currentLocation.displayIcon(in: clientContext), location: currentLocation)
 				}
 

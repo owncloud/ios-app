@@ -110,7 +110,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			disconnectButton.trailingAnchor.constraint(lessThanOrEqualTo: infoView.trailingAnchor),
 			disconnectButton.centerYAnchor.constraint(equalTo: infoView.centerYAnchor),
 
-			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20)
+			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20).with(priority: .defaultHigh)
 		])
 
 		infoView.setContentHuggingPriority(.required, for: .horizontal)

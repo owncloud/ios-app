@@ -128,6 +128,8 @@
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} Elemente mit Gesamtgröße {{totalSize}} ({{fileCount}} Dateien, {{folderCount}} Ordner)";
 "{{remaining}} available" = "{{remaining}} noch frei";
 
+"Loading…" = "Lade…";
+
 "Show more results" = "Mehr Ergebnisse anzeigen";
 
 "An error occurred" = "Es ist ein Fehler aufgetreten";
