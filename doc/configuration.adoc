@@ -552,6 +552,14 @@ branding.sidebar-links-title
 |Dictionary defining generic colors that can be used in the definitions.
 |advanced `candidate`
 
+|**Theme Tint Color** +
+ +
+branding.theme-tint-color
+|string
+|
+|Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.
+|advanced `candidate`
+
 |**Documentation URL** +
  +
 branding.url-documentation
@@ -1142,6 +1150,12 @@ tag::extensions[]
 
 ! `simple-apm`
 ! Extension with the identifier simple-apm.
+
+! `system.dark`
+! Extension with the identifier system.dark.
+
+! `system.light`
+! Extension with the identifier system.light.
 
 ! `web-finger`
 ! Extension with the identifier web-finger.
