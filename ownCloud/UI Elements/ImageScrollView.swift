@@ -18,9 +18,10 @@
 
 import UIKit
 import VisionKit
+import ownCloudSDK
+import ownCloudAppShared
 
 class ImageScrollView: UIScrollView {
-
 	// MARK: - Constants
 	private let MAXIMUM_ZOOM_SCALE: CGFloat = 6.0
 
@@ -117,7 +118,9 @@ extension ImageScrollView {
 		addSubview(imageView)
 		updateScaleForRotation(size: inSize)
 
-		analyzeImage(image: image)
+		if imageInteractionsAllowed {
+			analyzeImage(image: image)
+		}
 	}
 
 	var hasActiveImageAnalysisSelection: Bool {
@@ -170,4 +173,29 @@ extension ImageScrollView: UIScrollViewDelegate {
 		centerImage()
 	}
 
+}
+
+// MARK: - Class Settings
+public extension OCClassSettingsKey {
+	static let allowImageInteractions = OCClassSettingsKey("allow-image-interactions")
+}
+
+extension ImageScrollView {
+	static func registerImageInteractionsSettings() {
+		Action.registerOCClassSettingsDefaults([
+			.allowImageInteractions : true
+		], metadata: [
+			.allowImageInteractions : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow Image Interactions",
+				.description 	: "Allow (true) or disallow (false) text/selection/OCR interactions with images.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions"
+			]
+		])
+	}
+
+	var imageInteractionsAllowed: Bool {
+		return Action.classSetting(forOCClassSettingsKey: .allowImageInteractions) as? Bool ?? true
+	}
 }
