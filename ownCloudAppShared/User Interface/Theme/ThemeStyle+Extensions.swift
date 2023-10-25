@@ -144,7 +144,7 @@ extension ThemeStyle {
 			}
 
 			if followSystemAppearance == nil {
-				followSystemAppearance = false
+				followSystemAppearance = true
 			}
 
 			return followSystemAppearance!

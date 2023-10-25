@@ -51,9 +51,10 @@ extension OCClassSettingsKey {
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
 
 	// Themes
-	public static let themeGenericColors: OCClassSettingsKey = OCClassSettingsKey("theme-generic-colors")
 	public static let themeDefinitions: OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+
 	public static let themeTintColor: OCClassSettingsKey = OCClassSettingsKey("theme-tint-color")
+	public static let themeCSSRecords: OCClassSettingsKey = OCClassSettingsKey("theme-css-records")
 }
 
 extension Branding : BrandingInitialization {
@@ -155,13 +156,6 @@ extension Branding : BrandingInitialization {
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
-			.themeGenericColors : [
-				.type 		: OCClassSettingsMetadataType.dictionary,
-				.description	: "Dictionary defining generic colors that can be used in the definitions.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
-
 			.themeDefinitions : [
 				.type 		: OCClassSettingsMetadataType.dictionaryArray,
 				.description	: "Array of dictionaries, each specifying a theme.",
@@ -173,6 +167,14 @@ extension Branding : BrandingInitialization {
 				.type		: OCClassSettingsMetadataType.string,
 				.label		: "Theme Tint Color",
 				.description	: "Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.themeCSSRecords: [
+				.type		: OCClassSettingsMetadataType.stringArray,
+				.label		: "Theme CSS Records",
+				.description	: "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
 				.category	: "Branding",
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
@@ -258,7 +260,6 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
-		registerLegacyKeyPath("Generic",		forClassSettingsKey: .themeGenericColors)
 		registerLegacyKeyPath("Themes",			forClassSettingsKey: .themeDefinitions)
 		// swiftlint:enable comma
 	}
@@ -271,8 +272,8 @@ extension BrandingImageName {
 	public static let legacyBrandLogo : BrandingImageName = BrandingImageName("branding-login-logo") // can be removed as of version 12.2
 	public static let legacyBrandBackground : BrandingImageName = BrandingImageName("branding-login-background") // can be removed as of version 12.2
 
-	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen")
-	public static let splashscreenBackground : BrandingImageName = BrandingImageName("branding-splashscreen-background")
+	public static let splashscreenLogo : BrandingImageName = BrandingImageName("splashscreen-logo")
+	public static let splashscreenBackground : BrandingImageName = BrandingImageName("splashscreen-background")
 
 	public static let bookmarkIcon : BrandingImageName = BrandingImageName("branding-bookmark-icon")
 }
@@ -416,7 +417,7 @@ public struct SidebarLink {
 }
 
 extension Branding {
-	func generateThemeStyle(from theme: [String : Any], generic: [String : Any]) -> ThemeStyle? {
+	func generateThemeStyle(from theme: [String : Any]) -> ThemeStyle? {
 		let style = theme["ThemeStyle"] as? String ?? ThemeCollectionStyle.light.rawValue
 		let identifier = theme["Identifier"] as? String ?? "com.owncloud.branding"
 		let name = theme["Name"] as? String ?? "ownCloud-branding-theme"
@@ -425,9 +426,8 @@ extension Branding {
 		if let themeStyle = ThemeCollectionStyle(rawValue: style),
 		   let darkBrandColor = theme["darkBrandColor"] as? String,
 		   let lightBrandColor = theme["lightBrandColor"] as? String {
-			let colors = theme["Colors"] as? NSDictionary
 			let styles = theme["Styles"] as? NSDictionary
-			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
+			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
 		}
 
 		return nil
@@ -439,9 +439,8 @@ extension Branding {
 		allowThemeSelection = !isBranded
 
 		if let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
-			let generic = self.computedValue(forClassSettingsKey: .themeGenericColors) as? [String : Any] ?? [:]
 			for themeStyleDefinition in themeStyleDefinitions {
-				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition, generic: generic) {
+				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition) {
 					brandingThemeStyles.append(themeStyle)
 				}
 			}
@@ -451,9 +450,10 @@ extension Branding {
 			if let tintColorString = self.computedValue(forClassSettingsKey: .themeTintColor) as? String {
 				tintColor = tintColorString.colorFromHex
 			}
+			let cssRecordStrings = self.computedValue(forClassSettingsKey: .themeCSSRecords) as? [String]
 
-			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor))
-			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor))
+			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor, cssRecordStrings: cssRecordStrings))
+			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor, cssRecordStrings: cssRecordStrings))
 			allowThemeSelection = true
 		}
 

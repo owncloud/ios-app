@@ -90,9 +90,13 @@ open class BrandView: UIView {
 		backgroundImageView = nil
 
 		if showBackground {
-			// Add background
+			// Add background color
+			backgroundColorView = ThemeCSSView(withSelectors: [.background])
+			backgroundColorView?.translatesAutoresizingMaskIntoConstraints = false
+			embed(toFillWith: backgroundColorView!)
+
+			// Add background image
 			if let backgroundImage = Branding.shared.brandedImageNamed(.brandBackground, assetSuffix: assetSuffix) ?? Branding.shared.brandedImageNamed(.legacyBrandBackground, assetSuffix: assetSuffix) {
-				// Add background image
 				backgroundImageView = UIImageView(image: backgroundImage)
 				backgroundImageView?.translatesAutoresizingMaskIntoConstraints = false
 				backgroundImageView?.contentMode = .scaleAspectFill
@@ -100,11 +104,6 @@ open class BrandView: UIView {
 				backgroundImageView?.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 700), for: .horizontal) // make background image view have a smaller compression resistance than the parent view (defaults to 750), in order not to establish that the background image width does not determine the superview's width
 
 				embed(toFillWith: backgroundImageView!)
-			} else {
-				// Add background color
-				backgroundColorView = ThemeCSSView(withSelectors: [.background])
-				backgroundColorView?.translatesAutoresizingMaskIntoConstraints = false
-				embed(toFillWith: backgroundColorView!)
 			}
 
 			// Apply rounded corners
