@@ -910,12 +910,12 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Array of dictionaries, each specifying a theme.",
-    "flatIdentifier" : "branding.theme-definitions",
-    "key" : "theme-definitions",
-    "label" : "branding.theme-definitions",
+    "description" : "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "flatIdentifier" : "branding.theme-css-records",
+    "key" : "theme-css-records",
+    "label" : "Theme CSS Records",
     "status" : "advanced",
-    "type" : "dictionaryArray"
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
@@ -923,12 +923,12 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Dictionary defining generic colors that can be used in the definitions.",
-    "flatIdentifier" : "branding.theme-generic-colors",
-    "key" : "theme-generic-colors",
-    "label" : "branding.theme-generic-colors",
+    "description" : "Array of dictionaries, each specifying a theme.",
+    "flatIdentifier" : "branding.theme-definitions",
+    "key" : "theme-definitions",
+    "label" : "branding.theme-definitions",
     "status" : "advanced",
-    "type" : "dictionary"
+    "type" : "dictionaryArray"
   },
   {
     "autoExpansion" : "none",

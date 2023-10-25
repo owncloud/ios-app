@@ -540,16 +540,18 @@ branding.sidebar-links-title
 |Title for the sidebar links section.
 |advanced `candidate`
 
+|**Theme CSS Records** +
+ +
+branding.theme-css-records
+|stringArray
+|
+|CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+|advanced `candidate`
+
 |branding.theme-definitions
 |dictionaryArray
 |
 |Array of dictionaries, each specifying a theme.
-|advanced `candidate`
-
-|branding.theme-generic-colors
-|dictionary
-|
-|Dictionary defining generic colors that can be used in the definitions.
 |advanced `candidate`
 
 |**Theme Tint Color** +
