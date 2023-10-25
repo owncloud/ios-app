@@ -53,8 +53,16 @@ extension OCClassSettingsKey {
 	// Themes
 	public static let themeDefinitions: OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
 
-	public static let themeTintColor: OCClassSettingsKey = OCClassSettingsKey("theme-tint-color")
+	public static let themeColors: OCClassSettingsKey = OCClassSettingsKey("theme-colors")
 	public static let themeCSSRecords: OCClassSettingsKey = OCClassSettingsKey("theme-css-records")
+}
+
+enum BrandingColorAlias: String, CaseIterable {
+	case tintColor = "tint-color"
+	case brandingBackgroundColor = "branding-background-color"
+	case setupStatusBarStyle = "setup-status-bar-style"
+	case folderIconColor = "folder-icon-color"
+	case fileIconColor = "file-icon-color"
 }
 
 extension Branding : BrandingInitialization {
@@ -163,19 +171,41 @@ extension Branding : BrandingInitialization {
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
-			.themeTintColor : [
-				.type		: OCClassSettingsMetadataType.string,
-				.label		: "Theme Tint Color",
-				.description	: "Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
-
 			.themeCSSRecords: [
 				.type		: OCClassSettingsMetadataType.stringArray,
 				.label		: "Theme CSS Records",
 				.description	: "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
 				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.themeColors : [
+				.type		: OCClassSettingsMetadataType.dictionary,
+				.label		: "Theme Colors",
+				.description	: "Colors to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+				.category	: "Branding",
+				.possibleKeys	: [
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.tintColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to use as tint/accent color for controls (in hex notation)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.brandingBackgroundColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to use as background color for brand views (in hex notation)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.setupStatusBarStyle.rawValue,
+						OCClassSettingsMetadataKey.description 	: "The color of the status bar in the setup wizard. Can be either `default`, `black` or `white`."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.fileIconColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to fill file icons with (in hex notation)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.folderIconColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to fill folder icons with (in hex notation)."
+					]
+				],
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
@@ -446,14 +476,48 @@ extension Branding {
 			}
 		} else if isBranded {
 			var tintColor: UIColor?
+			var mappedCSSRecordStrings : [String]?
 
-			if let tintColorString = self.computedValue(forClassSettingsKey: .themeTintColor) as? String {
-				tintColor = tintColorString.colorFromHex
+			if let colors = self.computedValue(forClassSettingsKey: .themeColors) as? [String:String] {
+				func addCSSRecord(_ selectors: [ThemeCSSSelector], property: ThemeCSSProperty, value: String) {
+					if mappedCSSRecordStrings == nil {
+						mappedCSSRecordStrings = []
+					}
+
+					mappedCSSRecordStrings?.append("\(selectors.address(with: property)): \(value)")
+				}
+
+				for (aliasString, value) in colors {
+					if let alias = BrandingColorAlias(rawValue: aliasString) {
+						switch alias {
+							case .tintColor:
+								// Use as tint color
+								tintColor = value.colorFromHex
+
+							case .brandingBackgroundColor:
+								addCSSRecord([.brand, .background], property: .fill, value: value)
+
+							case .setupStatusBarStyle:
+								addCSSRecord([.accountSetup], property: .statusBarStyle, value: value)
+
+							case .folderIconColor:
+								addCSSRecord([.vectorImage, .folderColor], property: .fill, value: value)
+
+							case .fileIconColor:
+								addCSSRecord([.vectorImage, .fileColor], property: .fill, value: value)
+						}
+					}
+				}
 			}
-			let cssRecordStrings = self.computedValue(forClassSettingsKey: .themeCSSRecords) as? [String]
 
-			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor, cssRecordStrings: cssRecordStrings))
-			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor, cssRecordStrings: cssRecordStrings))
+			var effectiveCSSRecordStrings: [String] = mappedCSSRecordStrings ?? []
+
+			if let themeCSSRecordStrings = self.computedValue(forClassSettingsKey: .themeCSSRecords) as? [String] {
+				effectiveCSSRecordStrings.append(contentsOf: themeCSSRecordStrings)
+			}
+
+			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor, cssRecordStrings: effectiveCSSRecordStrings))
+			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor, cssRecordStrings: effectiveCSSRecordStrings))
 			allowThemeSelection = true
 		}
 

@@ -113,7 +113,7 @@ getInteger   			| `Int`
 getCGFloat   			| `CGFloat`
 getBool      			| `Boolean`, `String` (`true` and `false`)
 getUserInterfaceStyle		| `UIUserInterfaceStyle`, `Int`, `String` (`unspecified`, `light`, `dark`)
-getStatusBarStyle		| `UIStatusBarStyle`, `Int`, `String` (`default`, `lightContent`, `darkContent`)
+getStatusBarStyle		| `UIStatusBarStyle`, `Int`, `String` (`default`, `lightContent`, `darkContent`, `white`, `black`)
 getBarStyle			| `UIBarStyle`, `Int`, `String` (`default`, `black`)
 getKeyboardAppearance		| `UIKeyboardAppearance`, `Int`, `String` (`default`, `light`, `dark`)
 getActivityIndicatorStyle 	| `UIActivityIndicatorView.Style`, `Int`, `String` (`medium`, `large`)
@@ -234,7 +234,7 @@ Property | Type   | Description / Values
 `cornerRadius` | float | Corner radius (not widely used)
 `style` | `UIUserInterfaceStyle` | `unspecified`, `light`, `dark`
 `barStyle` | `UIBarStyle` | `default`, `black`
-`statusBarStyle` | `UIStatusBarStyle` | `default`, `lightContent`, `darkContent`
+`statusBarStyle` | `UIStatusBarStyle` | `default`, `lightContent`, `darkContent`, `black`, `white`
 `blurEffectStyle` | `UIBlurEffect.Style` | `regular`, `light`,  `dark`
 `keyboardAppearance` | `UIKeyboardAppearance` | `default`, `light`, `dark`
 `activityIndicatorStyle` |  `UIActivityIndicatorView.Style` | `medium`, `large`
