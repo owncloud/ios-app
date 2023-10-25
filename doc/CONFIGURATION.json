@@ -910,6 +910,41 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "description" : "Colors to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "flatIdentifier" : "branding.theme-colors",
+    "key" : "theme-colors",
+    "label" : "Theme Colors",
+    "possibleKeys" : [
+      {
+        "description" : "Color to use as tint/accent color for controls (in hex notation).",
+        "value" : "tint-color"
+      },
+      {
+        "description" : "Color to use as background color for brand views (in hex notation).",
+        "value" : "branding-background-color"
+      },
+      {
+        "description" : "The color of the status bar in the setup wizard. Can be either `default`, `black` or `white`.",
+        "value" : "setup-status-bar-style"
+      },
+      {
+        "description" : "Color to fill file icons with (in hex notation).",
+        "value" : "file-icon-color"
+      },
+      {
+        "description" : "Color to fill folder icons with (in hex notation).",
+        "value" : "folder-icon-color"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "dictionary"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
     "description" : "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
     "flatIdentifier" : "branding.theme-css-records",
     "key" : "theme-css-records",
@@ -929,19 +964,6 @@
     "label" : "branding.theme-definitions",
     "status" : "advanced",
     "type" : "dictionaryArray"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Branding",
-    "categoryTag" : "branding",
-    "classIdentifier" : "branding",
-    "className" : "Branding",
-    "description" : "Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.",
-    "flatIdentifier" : "branding.theme-tint-color",
-    "key" : "theme-tint-color",
-    "label" : "Theme Tint Color",
-    "status" : "advanced",
-    "type" : "string"
   },
   {
     "autoExpansion" : "none",
