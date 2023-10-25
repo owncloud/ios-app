@@ -182,7 +182,7 @@ extension Branding : BrandingInitialization {
 			.themeColors : [
 				.type		: OCClassSettingsMetadataType.dictionary,
 				.label		: "Theme Colors",
-				.description	: "Colors to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+				.description	: "Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
 				.category	: "Branding",
 				.possibleKeys	: [
 					[
@@ -195,7 +195,7 @@ extension Branding : BrandingInitialization {
 					],
 					[
 						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.setupStatusBarStyle.rawValue,
-						OCClassSettingsMetadataKey.description 	: "The color of the status bar in the setup wizard. Can be either `default`, `black` or `white`."
+						OCClassSettingsMetadataKey.description 	: "The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`."
 					],
 					[
 						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.fileIconColor.rawValue,
