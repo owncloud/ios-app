@@ -545,7 +545,7 @@ branding.sidebar-links-title
 branding.theme-colors
 |dictionary
 |
-|Colors to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+|Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
 [cols="1,1"]
 !===
 ! Key
@@ -557,7 +557,7 @@ branding.theme-colors
 ! Color to use as background color for brand views (in hex notation).
 
 ! `setup-status-bar-style`
-! The color of the status bar in the setup wizard. Can be either `default`, `black` or `white`.
+! The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.
 
 ! `file-icon-color`
 ! Color to fill file icons with (in hex notation).

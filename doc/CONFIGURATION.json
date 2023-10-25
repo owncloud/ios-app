@@ -910,7 +910,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Colors to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "description" : "Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
     "flatIdentifier" : "branding.theme-colors",
     "key" : "theme-colors",
     "label" : "Theme Colors",
@@ -924,7 +924,7 @@
         "value" : "branding-background-color"
       },
       {
-        "description" : "The color of the status bar in the setup wizard. Can be either `default`, `black` or `white`.",
+        "description" : "The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.",
         "value" : "setup-status-bar-style"
       },
       {
