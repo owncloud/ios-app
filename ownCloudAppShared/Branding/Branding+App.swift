@@ -304,8 +304,6 @@ extension BrandingImageName {
 
 	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen-logo")
 	public static let splashscreenBackground : BrandingImageName = BrandingImageName("branding-splashscreen-background")
-
-	public static let bookmarkIcon : BrandingImageName = BrandingImageName("branding-bookmark-icon")
 }
 
 extension BrandingAssetSuffix {

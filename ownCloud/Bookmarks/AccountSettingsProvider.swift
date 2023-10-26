@@ -74,7 +74,7 @@ class AccountSettingsProvider: NSObject {
 			return image
 		}
 
-		return Branding.shared.brandedImageNamed(.bookmarkIcon)!
+		return UIImage(systemName: "globe")!
 	}
 }
 

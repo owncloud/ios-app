@@ -44,10 +44,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		iconView.cssSelectors = [.icon]
 		disconnectButton.cssSelectors = [.disconnect]
 
-		logoFallbackView.contentMode = .scaleAspectFit
-		logoFallbackView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
-
-		iconView.fallbackView = logoFallbackView
+		iconView.fallbackView = BrandView(showBackground: true, showLogo: true, logoMaxSize: CGSize(width: 36, height: 36), roundedCorners: true)
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .title3, with: .bold)
 		titleLabel.adjustsFontForContentSizeCategory = true
