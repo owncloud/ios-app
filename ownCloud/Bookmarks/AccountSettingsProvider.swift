@@ -74,7 +74,7 @@ class AccountSettingsProvider: NSObject {
 			return image
 		}
 
-		return UIImage(named: "branding-bookmark-icon")!
+		return Branding.shared.brandedImageNamed(.bookmarkIcon)!
 	}
 }
 
