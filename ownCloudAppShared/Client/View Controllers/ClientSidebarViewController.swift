@@ -236,6 +236,49 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 		return nil
 	}
+
+	// MARK: - Reordering bookmarks
+	func dataItem(for itemRef: CollectionViewController.ItemRef) -> OCDataItem? {
+		let (dataItemRef, sectionID) = unwrap(itemRef)
+
+		if let sectionID, let section = sectionsByID[sectionID] {
+			if let record = try? section.dataSource?.record(forItemRef: dataItemRef) {
+				return record.item
+			}
+		}
+
+		return nil
+	}
+
+	public override func configureDataSource() {
+		super.configureDataSource()
+
+		collectionViewDataSource.reorderingHandlers.canReorderItem = { (itemRef) in
+			// Log.debug("Can reorder \(itemRef)")
+			return true
+		}
+
+		collectionViewDataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+			Log.debug("Did reorder \(transaction)")
+
+			guard let self else { return }
+
+			var reorderedBookmarks: [OCBookmark] = []
+
+			for collectionItemRef in transaction.finalSnapshot.itemIdentifiers {
+				if let accountController = dataItem(for: collectionItemRef) as? AccountController,
+				   let bookmark = accountController.bookmark,
+				   let managedBookmark = OCBookmarkManager.shared.bookmark(for: bookmark.uuid) {
+					reorderedBookmarks.append(managedBookmark)
+					Log.debug("Bookmark: \(bookmark.shortName)")
+				}
+			}
+
+			if OCBookmarkManager.shared.bookmarks.count == reorderedBookmarks.count {
+				OCBookmarkManager.shared.replaceBookmarks(reorderedBookmarks)
+			}
+		}
+	}
 }
 
 // MARK: - Branding
