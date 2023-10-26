@@ -302,8 +302,8 @@ extension BrandingImageName {
 	public static let legacyBrandLogo : BrandingImageName = BrandingImageName("branding-login-logo") // can be removed as of version 12.2
 	public static let legacyBrandBackground : BrandingImageName = BrandingImageName("branding-login-background") // can be removed as of version 12.2
 
-	public static let splashscreenLogo : BrandingImageName = BrandingImageName("splashscreen-logo")
-	public static let splashscreenBackground : BrandingImageName = BrandingImageName("splashscreen-background")
+	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen-logo")
+	public static let splashscreenBackground : BrandingImageName = BrandingImageName("branding-splashscreen-background")
 
 	public static let bookmarkIcon : BrandingImageName = BrandingImageName("branding-bookmark-icon")
 }
