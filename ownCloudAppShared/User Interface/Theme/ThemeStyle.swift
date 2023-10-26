@@ -30,8 +30,6 @@ public class ThemeStyle : NSObject {
 
 	public var darkStyleIdentifier: String?
 
-	public var customColors : NSDictionary?
-	public var genericColors : NSDictionary?
 	public var styles : NSDictionary?
 
 	public var useSystemColors: Bool
@@ -39,7 +37,7 @@ public class ThemeStyle : NSObject {
 
 	public var cssRecordStrings: [String]?
 
-	public init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, useSystemColors: Bool = false, systemTintColor: UIColor? = nil, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil, interfaceStyles: NSDictionary? = nil, cssRecordStrings: [String]? = nil) {
+	public init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, useSystemColors: Bool = false, systemTintColor: UIColor? = nil, interfaceStyles: NSDictionary? = nil, cssRecordStrings: [String]? = nil) {
 		self.identifier = styleIdentifier
 		self.darkStyleIdentifier = darkIdentifier
 		self.localizedName = name
@@ -48,8 +46,6 @@ public class ThemeStyle : NSObject {
 		self.themeStyle = style
 		self.useSystemColors = useSystemColors
 		self.systemTintColor = systemTintColor
-		self.customColors = customColors
-		self.genericColors = genericColors
 		self.styles = interfaceStyles
 		self.cssRecordStrings = cssRecordStrings
 	}
@@ -112,7 +108,7 @@ public extension ThemeCSSRecord {
 
 public extension ThemeCollection {
 	convenience init(with style: ThemeStyle) {
-		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors, genericColors: style.genericColors, interfaceStyles: style.styles, useSystemColors: style.useSystemColors, systemTintColor: style.systemTintColor)
+		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, interfaceStyles: style.styles, useSystemColors: style.useSystemColors, systemTintColor: style.systemTintColor)
 
 		if let cssRecordStrings = style.cssRecordStrings, let records = ThemeCSSRecord.from(cssRecordStrings) {
 			css.add(records: records)

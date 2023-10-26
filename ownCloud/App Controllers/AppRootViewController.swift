@@ -171,6 +171,14 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		return super.supportedInterfaceOrientations
 	}
 
+	open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+		if let contentViewController {
+			return contentViewController.preferredInterfaceOrientationForPresentation
+		}
+
+		return super.preferredInterfaceOrientationForPresentation
+	}
+
 	// MARK: - Status Bar style
 	open override var childForStatusBarStyle: UIViewController? {
 		return contentViewController

@@ -540,24 +540,47 @@ branding.sidebar-links-title
 |Title for the sidebar links section.
 |advanced `candidate`
 
+|**Theme Colors** +
+ +
+branding.theme-colors
+|dictionary
+|
+|Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+[cols="1,1"]
+!===
+! Key
+! Value
+! `tint-color`
+! Color to use as tint/accent color for controls (in hex notation).
+
+! `branding-background-color`
+! Color to use as background color for brand views (in hex notation).
+
+! `setup-status-bar-style`
+! The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.
+
+! `file-icon-color`
+! Color to fill file icons with (in hex notation).
+
+! `folder-icon-color`
+! Color to fill folder icons with (in hex notation).
+
+!===
+
+|advanced `candidate`
+
+|**Theme CSS Records** +
+ +
+branding.theme-css-records
+|stringArray
+|
+|CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+|advanced `candidate`
+
 |branding.theme-definitions
 |dictionaryArray
 |
 |Array of dictionaries, each specifying a theme.
-|advanced `candidate`
-
-|branding.theme-generic-colors
-|dictionary
-|
-|Dictionary defining generic colors that can be used in the definitions.
-|advanced `candidate`
-
-|**Theme Tint Color** +
- +
-branding.theme-tint-color
-|string
-|
-|Color in hex notation that should be used as tint color instead of the standard system tint color that is used throughout the app for buttons and other controls. This color is only used if no themes are defined otherwise.
 |advanced `candidate`
 
 |**Documentation URL** +

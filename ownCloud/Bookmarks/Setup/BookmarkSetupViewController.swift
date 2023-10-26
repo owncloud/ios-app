@@ -245,8 +245,9 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 				visibleContentContainerView.addSubview(hudMessageView)
 				NSLayoutConstraint.activate([
 					hudMessageView.centerYAnchor.constraint(equalTo: visibleContentContainerView.centerYAnchor),
-					hudMessageView.leadingAnchor.constraint(equalTo: visibleContentContainerView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-					hudMessageView.trailingAnchor.constraint(equalTo: visibleContentContainerView.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+					hudMessageView.centerXAnchor.constraint(equalTo: visibleContentContainerView.safeAreaLayoutGuide.centerXAnchor),
+					hudMessageView.leadingAnchor.constraint(greaterThanOrEqualTo: visibleContentContainerView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+					hudMessageView.trailingAnchor.constraint(lessThanOrEqualTo: visibleContentContainerView.safeAreaLayoutGuide.trailingAnchor, constant: -20)
 				])
 				contentViewController?.view.isHidden = true
 				logoView?.isHidden = true
@@ -312,6 +313,9 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 					.text(hudMessage, style: .system(textStyle: .headline, weight: .bold), alignment: .centered)
 				])
 				messageView.cssSelectors = [ .step ]
+
+				messageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 400).with(priority: .defaultHigh).isActive = true
+
 				self.hudMessageView = messageView
 			} else {
 				self.hudMessageView = nil

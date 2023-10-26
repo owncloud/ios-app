@@ -170,3 +170,17 @@ extension AccountController: DataItemDragInteraction {
 		return nil
 	}
 }
+
+extension AccountController: DataItemDropInteraction {
+	public func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal? {
+		if session.localDragSession == nil {
+			return nil
+		}
+
+		return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+	}
+
+	public func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (Bool) -> Void) {
+		handlingCompletion(false)
+	}
+}

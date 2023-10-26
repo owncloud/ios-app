@@ -36,13 +36,10 @@
 		39057AA3233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39057AA4233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39057AA7233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
-		391130112A20E3F200C22DD2 /* branding-sidebar-link-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 391130102A20E3F100C22DD2 /* branding-sidebar-link-icon.png */; };
 		3912208223436EB80026C290 /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3912208123436EB80026C290 /* SortMethod.swift */; };
 		3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */ = {isa = PBXBuildFile; fileRef = 3912D8AB29958BF400EDCB9A /* OCThemeValues.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3912D8AE29958BF400EDCB9A /* OCThemeValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 3912D8AC29958BF400EDCB9A /* OCThemeValues.m */; };
 		391C79A824E186DC00CB6333 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
-		392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6624D848550000E3F9 /* branding-splashscreen.png */; };
-		3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */; };
 		392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392CFEB62705831700631D2B /* LAContext+Extension.swift */; };
 		392DDAE624C8923B009E5406 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392DDB1324CF024C009E5406 /* ImportFilesController.swift */; };
@@ -65,8 +62,6 @@
 		396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396C82FA2319AFDD00938262 /* CollaborateAction.swift */; };
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754F22327A33500119FCB /* OpenSceneAction.swift */; };
-		398393BE246D63B0001A212B /* branding-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BC246D63B0001A212B /* branding-background.png */; };
-		398393BF246D63B0001A212B /* branding-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 398393BD246D63B0001A212B /* branding-logo.png */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		399697F5260255B100E5AEBA /* PDFGotoPageAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399697F1260255B100E5AEBA /* PDFGotoPageAction.swift */; };
 		399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391220922344C30F0026C290 /* ImportPasteboardAction.swift */; };
@@ -98,7 +93,6 @@
 		39E104CA24C585C30085FDDD /* (null) in Resources */ = {isa = PBXBuildFile; };
 		39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E6DE85233CDF1E008DAE04 /* OCItemTracker.swift */; };
 		39EF06B325D6C3FC001E1E19 /* PresentationModeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39EF06AF25D6C3FC001E1E19 /* PresentationModeAction.swift */; };
-		39F48A6A24D89D7E0000E3F9 /* branding-bookmark-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F48A6524D847D70000E3F9 /* branding-bookmark-icon.png */; };
 		4C05D8A5238708D40073EF50 /* MediaUploadStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */; };
 		4C11EE5B22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C11EE5A22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift */; };
 		4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */; };
@@ -992,7 +986,6 @@
 		39057AA9233BA7A60008E6C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
 		39057AB1233BA7AE0008E6C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Intents.strings; sourceTree = "<group>"; };
 		39104E0A223991C8002FC02F /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
-		391130102A20E3F100C22DD2 /* branding-sidebar-link-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "branding-sidebar-link-icon.png"; sourceTree = "<group>"; };
 		3912208123436EB80026C290 /* SortMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		391220922344C30F0026C290 /* ImportPasteboardAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportPasteboardAction.swift; sourceTree = "<group>"; };
 		391220932344C30F0026C290 /* CutAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutAction.swift; sourceTree = "<group>"; };
@@ -1039,8 +1032,6 @@
 		397754E123279EED00119FCB /* OCItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+Extension.swift"; sourceTree = "<group>"; };
 		397754F22327A33500119FCB /* OpenSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenSceneAction.swift; sourceTree = "<group>"; };
 		397E276B23D05A5400117B07 /* ServerListToolCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListToolCell.swift; sourceTree = "<group>"; };
-		398393BC246D63B0001A212B /* branding-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-background.png"; path = "ownCloud/Resources/Theming/branding-background.png"; sourceTree = SOURCE_ROOT; };
-		398393BD246D63B0001A212B /* branding-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-logo.png"; path = "ownCloud/Resources/Theming/branding-logo.png"; sourceTree = SOURCE_ROOT; };
 		3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePathItemIntentHandler.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		39880BAA233B5236006EA539 /* eu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eu; path = eu.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1121,9 +1112,6 @@
 		39E42D1B2315288B00B82AC3 /* KeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCommands.swift; sourceTree = "<group>"; };
 		39E6DE85233CDF1E008DAE04 /* OCItemTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCItemTracker.swift; sourceTree = "<group>"; };
 		39EF06AF25D6C3FC001E1E19 /* PresentationModeAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationModeAction.swift; sourceTree = "<group>"; };
-		39F48A6524D847D70000E3F9 /* branding-bookmark-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-bookmark-icon.png"; path = "ownCloud/Resources/Theming/branding-bookmark-icon.png"; sourceTree = SOURCE_ROOT; };
-		39F48A6624D848550000E3F9 /* branding-splashscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-splashscreen.png"; path = "ownCloud/Resources/Theming/branding-splashscreen.png"; sourceTree = SOURCE_ROOT; };
-		39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "branding-splashscreen-background.png"; path = "ownCloud/Resources/Theming/branding-splashscreen-background.png"; sourceTree = SOURCE_ROOT; };
 		39F689A922EF5EDC00E63429 /* ownCloud Intents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ownCloud Intents.entitlements"; sourceTree = "<group>"; };
 		39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDirectoryListingIntentHandler.swift; sourceTree = "<group>"; };
 		42866B2892DC9EDC65D844E7 /* Pods_ownCloud_Screenshots_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloud_Screenshots_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1226,7 +1214,6 @@
 		DC081C8A299B9B9000BFF393 /* AppStateActionGoToPersonalFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateActionGoToPersonalFolder.swift; sourceTree = "<group>"; };
 		DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInterfaceContext.swift; sourceTree = "<group>"; };
 		DC0A5C422550C70800E6674B /* class-settings-sdk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "class-settings-sdk"; path = "ios-sdk/doc/class-settings-sdk"; sourceTree = SOURCE_ROOT; };
-		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
 		DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInWebAppAction.swift; sourceTree = "<group>"; };
@@ -1382,6 +1369,7 @@
 		DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = PLCrashReporter.LICENSE; sourceTree = "<group>"; };
 		DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalBrowserBusyHandler.swift; sourceTree = "<group>"; };
 		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
+		DC6F0B962AE90C4A00BFF393 /* com.owncloud.ios-app */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "com.owncloud.ios-app"; sourceTree = "<group>"; };
 		DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSharedWithMeViewController.swift; sourceTree = "<group>"; };
 		DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+ByteCountParser.h"; sourceTree = "<group>"; };
 		DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+ByteCountParser.m"; sourceTree = "<group>"; };
@@ -1601,6 +1589,7 @@
 		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE8AB722AE8121B00BFF393 /* branding-assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "branding-assets"; sourceTree = "<group>"; };
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -1840,7 +1829,6 @@
 				DCC832D1242BB3E900153F8C /* Messages */,
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
 				DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */,
-				DC7DF17C205140F400189B9A /* Server List */,
 				DCF4F1802051A91500189B9A /* Settings */,
 				39E42D152315286300B82AC3 /* Key Commands */,
 				DC422448207CAED60006A2A6 /* Theming */,
@@ -2098,12 +2086,8 @@
 		39C31F8E22F1A4F50023923D /* Theming */ = {
 			isa = PBXGroup;
 			children = (
-				391130102A20E3F100C22DD2 /* branding-sidebar-link-icon.png */,
-				39F48A6524D847D70000E3F9 /* branding-bookmark-icon.png */,
-				398393BC246D63B0001A212B /* branding-background.png */,
-				398393BD246D63B0001A212B /* branding-logo.png */,
-				39F48A6624D848550000E3F9 /* branding-splashscreen.png */,
-				39F48A6724D848550000E3F9 /* branding-splashscreen-background.png */,
+				DCE8AB722AE8121B00BFF393 /* branding-assets */,
+				DC6F0B962AE90C4A00BFF393 /* com.owncloud.ios-app */,
 				3931206A2326451900E8DFBA /* Branding.plist */,
 			);
 			name = Theming;
@@ -2758,14 +2742,6 @@
 			);
 			name = Tools;
 			path = tools;
-			sourceTree = "<group>";
-		};
-		DC7DF17C205140F400189B9A /* Server List */ = {
-			isa = PBXGroup;
-			children = (
-				DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */,
-			);
-			path = "Server List";
 			sourceTree = "<group>";
 		};
 		DC82664028168DAA00F91F7D /* Context */ = {
@@ -3766,6 +3742,7 @@
 				233BDE99204FEFE500C06732 /* Frameworks */,
 				233BDE9A204FEFE500C06732 /* Resources */,
 				DC63207821FCA6A4007EC0A8 /* Copy libzip license */,
+				DC6F0B952AE9014B00BFF393 /* Copy branding assets */,
 				DCC6567020C9B7E400110A97 /* Embed Foundation Extensions */,
 				23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */,
 			);
@@ -4181,19 +4158,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */,
-				3923790524EBD1A5006E86DE /* branding-splashscreen-background.png in Resources */,
-				398393BE246D63B0001A212B /* branding-background.png in Resources */,
 				3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */,
-				398393BF246D63B0001A212B /* branding-logo.png in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
-				392378FF24EBD1A1006E86DE /* branding-splashscreen.png in Resources */,
 				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,
-				391130112A20E3F200C22DD2 /* branding-sidebar-link-icon.png in Resources */,
 				DCE684F6241BD4E800799C30 /* Branding.plist in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
 				DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */,
-				39F48A6A24D89D7E0000E3F9 /* branding-bookmark-icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4347,9 +4318,9 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PROJECT_DIR}/external/libzip/LICENSE",
 			);
 			inputPaths = (
+				"${PROJECT_DIR}/external/libzip/LICENSE",
 			);
 			name = "Copy libzip license";
 			outputFileListPaths = (
@@ -4360,6 +4331,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "echo \"${PROJECT_DIR}/external/libzip/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/libzip.LICENSE\"\ncp \"${PROJECT_DIR}/external/libzip/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/libzip.LICENSE\"\n";
+		};
+		DC6F0B952AE9014B00BFF393 /* Copy branding assets */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets-input.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "Copy branding assets";
+			outputFileListPaths = (
+				"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets-output.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\n\n# Determine branding assets folder to use\nASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app/\"\n\nASSETS_FILE_COUNT=$(ls -A \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"branding-*.png | wc -l)\necho \"File count in branding-assets:\" ${ASSETS_FILE_COUNT}\n\nif [ -e \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\" ]; then\n\tif [ $ASSETS_FILE_COUNT -ne 0 ]; then\n\t\t# Copy branding-*.png files from branding-assets\n\t\tASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"\n\tfi\nfi\n\n# Copy branding-*.png assets\necho \"Copying branding-*.png files from\" ${ASSETS_SOURCE_FOLDER}\necho cp ${ASSETS_SOURCE_FOLDER}branding-*.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\ncp ${ASSETS_SOURCE_FOLDER}branding-*.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\n\n# Remove assets from the assets folder that aren't used by the app from the build product\nif [ -e \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-icon.png\" ]; then\n    rm \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-icon.png\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
