@@ -20,5 +20,5 @@ ${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-login-background.png
 ${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-splashscreen-logo.png
 ${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-splashscreen-background.png
 
-# Bookmark icon
-${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-bookmark-icon.png
+# Sidebar link icon
+${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-sidebar-link-icon.png
