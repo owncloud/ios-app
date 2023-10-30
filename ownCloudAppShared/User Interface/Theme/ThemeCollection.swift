@@ -679,8 +679,8 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.more, .favorite, .disabled],	property: .stroke, value: favoriteDisabledColor),
 
 			// - TVG icon colors
-			ThemeCSSRecord(selectors: [.vectorImage, .folderColor], 	property: .fill, value: iconSymbolColor),
-			ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 		property: .fill, value: iconSymbolColor),
+			// ThemeCSSRecord(selectors: [.vectorImage, .folderColor], 	property: .fill, value: iconSymbolColor), // make TVG files use default colors extracted from original SVG files
+			// ThemeCSSRecord(selectors: [.vectorImage, .fileColor], 	property: .fill, value: iconSymbolColor), // make TVG files use default colors extracted from original SVG files
 			ThemeCSSRecord(selectors: [.vectorImage, .logoColor], 		property: .fill, value: logoFillColor ?? UIColor.white),
 			ThemeCSSRecord(selectors: [.vectorImage, .iconColor], 		property: .fill, value: iconSymbolColor),
 			ThemeCSSRecord(selectors: [.vectorImage, .symbolColor], 	property: .fill, value: iconSymbolColor),
