@@ -13,6 +13,30 @@
 			"replace" : "#969696",
 			"variable" : "fileFillColor"
 		},
+		"fill=\"#49abea\"" : {
+			"description" : "Fill color used in office document",
+
+			"replace" : "#49abea",
+			"variable" : "officeFileFillColor"
+		},
+		"fill=\"#f0965f\"" : {
+			"description" : "Fill color used in presentation document",
+
+			"replace" : "#f0965f",
+			"variable" : "presentationFileFillColor"
+		},
+		"fill=\"#9abd4e\"" : {
+			"description" : "Fill color used in spreadsheet document",
+
+			"replace" : "#9abd4e",
+			"variable" : "spreadsheetFileFillColor"
+		},
+		"fill=\"#dc5047\"" : {
+			"description" : "Fill color used in PDF document",
+
+			"replace" : "#dc5047",
+			"variable" : "pdfFileFillColor"
+		},
 
 		"fill=\"#1D293B\"" : {
 			"description" : "Fill color used in logo",

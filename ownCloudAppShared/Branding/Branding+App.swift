@@ -503,6 +503,10 @@ extension Branding {
 
 							case .fileIconColor:
 								addCSSRecord([.vectorImage, .fileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .officeFileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .presentationFileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .spreadsheetFileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .pdfFileColor], property: .fill, value: value)
 						}
 					}
 				}
