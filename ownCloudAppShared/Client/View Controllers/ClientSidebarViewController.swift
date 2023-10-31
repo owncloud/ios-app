@@ -266,7 +266,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 			var reorderedBookmarks: [OCBookmark] = []
 
 			for collectionItemRef in transaction.finalSnapshot.itemIdentifiers {
-				if let accountController = dataItem(for: collectionItemRef) as? AccountController,
+				if let accountController = self.dataItem(for: collectionItemRef) as? AccountController,
 				   let bookmark = accountController.bookmark,
 				   let managedBookmark = OCBookmarkManager.shared.bookmark(for: bookmark.uuid) {
 					reorderedBookmarks.append(managedBookmark)
