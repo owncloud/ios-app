@@ -1,45 +1,6 @@
 [
   {
     "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "The default name for the creation of new bookmarks.",
-    "flatIdentifier" : "account-settings.default-name",
-    "key" : "default-name",
-    "label" : "account-settings.default-name",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "The default URL for the creation of new bookmarks.",
-    "flatIdentifier" : "account-settings.default-url",
-    "key" : "default-url",
-    "label" : "account-settings.default-url",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-    "flatIdentifier" : "account-settings.url-editable",
-    "key" : "url-editable",
-    "label" : "account-settings.url-editable",
-    "status" : "supported",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
@@ -766,6 +727,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "defaultValue" : true,
     "description" : "Indicates if the user can change the server URL for the account.",
     "flatIdentifier" : "branding.profile-allow-url-configuration",
     "key" : "profile-allow-url-configuration",

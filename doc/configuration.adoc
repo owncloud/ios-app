@@ -344,24 +344,6 @@ tag::bookmarks[]
 |Status
 
 
-|account-settings.default-name
-|string
-|
-|The default name for the creation of new bookmarks.
-|supported `candidate`
-
-|account-settings.default-url
-|string
-|
-|The default URL for the creation of new bookmarks.
-|supported `candidate`
-
-|account-settings.url-editable
-|bool
-|
-|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
-|supported `candidate`
-
 |bookmark.prepopulation
 |string
 |
@@ -456,7 +438,7 @@ branding.can-edit-account
  +
 branding.profile-allow-url-configuration
 |bool
-|
+|`true`
 |Indicates if the user can change the server URL for the account.
 |advanced `candidate`
 
