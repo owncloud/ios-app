@@ -273,7 +273,7 @@ class BookmarkViewController: StaticTableViewController {
 				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
 				// Support for bookmark default name
-				if let defaultNameString = AccountSettingsProvider.shared.defaultBookmarkName {
+				if let defaultNameString = Branding.shared.profileBookmarkName {
 					self.bookmark?.name = defaultNameString
 
 					if bookmark != nil {
@@ -282,7 +282,7 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				// Support for bookmark default URL
-				if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+				if let defaultURL = Branding.shared.profileURL {
 					self.bookmark?.url = defaultURL
 
 					if bookmark != nil {
@@ -290,13 +290,13 @@ class BookmarkViewController: StaticTableViewController {
 					}
 				}
 
-				if let url = AccountSettingsProvider.shared.profileHelpURL, let title = AccountSettingsProvider.shared.profileHelpButtonLabel {
+				if let url = Branding.shared.profileHelpURL, let title = Branding.shared.profileHelpButtonLabel {
 					let imageView = UIImageView(image: UIImage(systemName: "questionmark.circle")!)
 					helpButtonRow = StaticTableViewRow(rowWithAction: { staticRow, sender in
 						UIApplication.shared.open(url)
 					}, title: title, alignment: .center, accessoryView: imageView)
 
-					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: AccountSettingsProvider.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
+					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: Branding.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
 				}
 
 			case .edit:
@@ -319,7 +319,7 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Support for bookmark URL editable
-		if AccountSettingsProvider.shared.URLEditable == false {
+		if Branding.shared.profileAllowUrlConfiguration == false {
 			self.urlRow?.enabled = false
 
 			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
@@ -340,7 +340,7 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
-			.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64), cssSelectors: [.icon]),
+			.image(Branding.shared.brandedImageNamed(.brandLogo) ?? UIImage(systemName: "globe")!, size: CGSize(width: 64, height: 64), cssSelectors: [.icon]),
 			.title(VendorServices.shared.appName, alignment: .centered, cssSelectors: [.title])
 		])
 

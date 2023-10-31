@@ -75,7 +75,8 @@ extension Branding : BrandingInitialization {
 			.sendFeedbackAddress : "ios-app@owncloud.com",
 			.canAddAccount : true,
 			.canEditAccount : true,
-			.enableReviewPrompt : false
+			.enableReviewPrompt : false,
+			.profileAllowUrlConfiguration : true
 		], metadata: [
 			.documentationURL : [
 				.type 		: OCClassSettingsMetadataType.urlString,
@@ -210,67 +211,67 @@ extension Branding : BrandingInitialization {
 			],
 
 			.profileBookmarkName : [
-				.type         : OCClassSettingsMetadataType.string,
-				.label        : "Bookmark Name",
-				.description    : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type        	: OCClassSettingsMetadataType.string,
+				.label       	: "Bookmark Name",
+				.description	: "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileURL : [
-				.type         : OCClassSettingsMetadataType.urlString,
-				.label        : "URL",
-				.description     : "The URL of the server targeted by this profile.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "URL",
+				.description	: "The URL of the server targeted by this profile.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileHelpURL : [
-				.type         : OCClassSettingsMetadataType.urlString,
-				.label         : "Onboarding URL",
-				.description    : "Optional URL to onboarding resources.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "Onboarding URL",
+				.description	: "Optional URL to onboarding resources.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileOpenHelpMessage: [
-				.type         : OCClassSettingsMetadataType.string,
-				.label        : "Open onboarding URL message",
-				.description     : "Message shown in an alert before opening the onboarding URL.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Open onboarding URL message",
+				.description	: "Message shown in an alert before opening the onboarding URL.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileHelpButtonLabel : [
-				.type         : OCClassSettingsMetadataType.string,
-				.label        : "Onboarding button title",
-				.description     : "Text used for the onboarding button title",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Onboarding button title",
+				.description	: "Text used for the onboarding button title",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileAllowUrlConfiguration : [
-				.type         : OCClassSettingsMetadataType.boolean,
-				.label         : "Allow URL configuration",
-				.description    : "Indicates if the user can change the server URL for the account.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow URL configuration",
+				.description	: "Indicates if the user can change the server URL for the account.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.sidebarLinks : [
-				.type         : OCClassSettingsMetadataType.array,
-				.label         : "Sidebar Link Items",
-				.description    : "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.array,
+				.label		: "Sidebar Link Items",
+				.description	: "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.sidebarLinksTitle : [
-				.type         : OCClassSettingsMetadataType.string,
-				.label         : "Sidebar Links Title",
-				.description    : "Title for the sidebar links section.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Sidebar Links Title",
+				.description	: "Title for the sidebar links section.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			]
 		])
 	}
