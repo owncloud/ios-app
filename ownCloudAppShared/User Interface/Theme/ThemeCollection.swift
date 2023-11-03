@@ -787,7 +787,7 @@ public class ThemeCollection : NSObject {
 			_iconColors?["folderFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .folderColor], for: nil)?.hexString()
 
 			_iconColors?["fileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .fileColor], for: nil)?.hexString()
-			_iconColors?["officeFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .officeFileColor], for: nil)?.hexString()
+			_iconColors?["documentFileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .documentFileColor], for: nil)?.hexString()
 			_iconColors?["presentationFileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .presentationFileColor], for: nil)?.hexString()
 			_iconColors?["spreadsheetFileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .spreadsheetFileColor], for: nil)?.hexString()
 			_iconColors?["pdfFileFillColor"] = css.getColor(.fill, selectors: [.vectorImage, .pdfFileColor], for: nil)?.hexString()
@@ -804,7 +804,7 @@ public class ThemeCollection : NSObject {
 extension ThemeCSSSelector {
 	static let folderColor = ThemeCSSSelector(rawValue: "folderColor")
 	static let fileColor = ThemeCSSSelector(rawValue: "fileColor")
-	static let officeFileColor = ThemeCSSSelector(rawValue: "officeFileColor")
+	static let documentFileColor = ThemeCSSSelector(rawValue: "documentFileColor")
 	static let presentationFileColor = ThemeCSSSelector(rawValue: "presentationFileColor")
 	static let spreadsheetFileColor = ThemeCSSSelector(rawValue: "spreadsheetFileColor")
 	static let pdfFileColor = ThemeCSSSelector(rawValue: "pdfFileColor")

@@ -17,7 +17,7 @@
 			"description" : "Fill color used in office document",
 
 			"replace" : "#49abea",
-			"variable" : "officeFileFillColor"
+			"variable" : "documentFileFillColor"
 		},
 		"fill=\"#f0965f\"" : {
 			"description" : "Fill color used in presentation document",
