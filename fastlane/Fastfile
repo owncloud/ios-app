@@ -804,11 +804,15 @@ end
       sh "rsvg-convert badge_tmp.svg > badge.png"
       add_badge(custom: "fastlane/badge.png")
     end
+    
+    #buildScheme = "ownCloud"
+    
+    buildScheme = "ownCloud without Intents"
 
     #Create the build
     build_app(
       project: "ownCloud.xcodeproj",
-      scheme: "ownCloud",
+      scheme: buildScheme,
       configuration: CONFIGURATION,
       codesigning_identity: ENTERPRISE_IDENTITY,
       output_name: ipaName,
