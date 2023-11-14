@@ -1171,7 +1171,7 @@
 
 - (OCCore *)coreWithError:(NSError **)outError
 {
-	OCLogDebug(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
+	OCLogVerbose(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
 
 	OCBookmark *bookmark = self.bookmark;
 	__block OCCore *retCore = nil;
@@ -1255,7 +1255,7 @@
 		*outError = retError;
 	}
 
-	OCLogDebug(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);
+	OCLogVerbose(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);
 
 	return (retCore);
 
