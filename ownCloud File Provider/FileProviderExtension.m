@@ -1071,6 +1071,8 @@
 {
 	FileProviderExtensionThumbnailRequest *thumbnailRequest;
 
+	OCTLogDebug(@[@"FPThumbs"], @"request thumbnails sized %@ for identifiers %@", NSStringFromCGSize(size), OCLogPrivate(itemIdentifiers));
+
 	if ((thumbnailRequest = [FileProviderExtensionThumbnailRequest new]) != nil)
 	{
 		if (size.width > 256)
