@@ -18,8 +18,19 @@
 
 import UIKit
 
+public extension UITextInput {
+	func range(from textRange: UITextRange) -> NSRange {
+		let startOffset = offset(from: beginningOfDocument, to: textRange.start)
+		let endOffset = offset(from: beginningOfDocument, to: textRange.end)
+
+		return NSRange(location: startOffset, length: endOffset-startOffset+1)
+	}
+}
+
 public class ThemeCSSTextField: UITextField, Themeable {
 	private var hasRegistered : Bool = false
+
+	open var requiredFileExtension: String?
 
 	override open func didMoveToWindow() {
 		super.didMoveToWindow()
@@ -40,5 +51,27 @@ public class ThemeCSSTextField: UITextField, Themeable {
 
 	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.applyThemeCollection(collection)
+	}
+
+	public override func shouldChangeText(in range: UITextRange, replacementText: String) -> Bool {
+		if let requiredFileExtension, let previousText = text,
+		   let textRange = Range(self.range(from: range), in: previousText) {
+			let newName = previousText.replacingCharacters(in: textRange, with: replacementText)
+			return (newName as NSString).pathExtension == requiredFileExtension || (newName == ".\(requiredFileExtension)")
+		}
+
+		return super.shouldChangeText(in: range, replacementText: replacementText)
+	}
+
+	public override var selectedTextRange: UITextRange? {
+		didSet {
+			if let requiredFileExtension {
+				if let selectedTextRange,
+				   let maxAllowedPosition = position(from: endOfDocument, offset: -requiredFileExtension.count-1),
+				   compare(selectedTextRange.end, to: maxAllowedPosition) == .orderedDescending {
+					self.selectedTextRange = textRange(from: selectedTextRange.start, to: maxAllowedPosition)
+				}
+			}
+		}
 	}
 }

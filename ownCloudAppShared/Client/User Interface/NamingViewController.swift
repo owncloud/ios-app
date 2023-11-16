@@ -38,7 +38,7 @@ open class NamingViewController: UIViewController {
 	private var thumbnailImageView: ResourceViewHost
 
 	private var nameContainer: UIView
-	private var nameTextField: UITextField
+	private var nameTextField: ThemeCSSTextField
 
 	private var textfieldTopAnchorConstraint: NSLayoutConstraint
 	private var textfieldCenterYAnchorConstraint: NSLayoutConstraint
@@ -153,6 +153,7 @@ open class NamingViewController: UIViewController {
 
 		// Name textfield
 		nameTextField.translatesAutoresizingMaskIntoConstraints = false
+		nameTextField.requiredFileExtension = requiredFileExtension
 		nameContainer.addSubview(nameTextField)
 		NSLayoutConstraint.activate([
 			nameTextField.heightAnchor.constraint(equalToConstant: 40),
@@ -351,28 +352,6 @@ extension NamingViewController: UITextFieldDelegate {
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
 		} else {
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
-		}
-
-	}
-
-	public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString: String) -> Bool {
-		if let requiredFileExtension {
-			if let previousText = textField.text, let textRange = Range(range, in: previousText) {
-				let newName = previousText.replacingCharacters(in: textRange, with: replacementString)
-				return (newName as NSString).pathExtension == requiredFileExtension || (newName == ".\(requiredFileExtension)")
-			}
-		}
-
-		return true
-	}
-
-	public func textFieldDidChangeSelection(_ textField: UITextField) {
-		if let requiredFileExtension {
-			if let selectedTextRange = textField.selectedTextRange,
-			   let maxAllowedPosition = textField.position(from: textField.endOfDocument, offset: -requiredFileExtension.count-1),
-			   textField.compare(selectedTextRange.end, to: maxAllowedPosition) == .orderedDescending {
-			   	textField.selectedTextRange = textField.textRange(from: selectedTextRange.start, to: maxAllowedPosition)
-			}
 		}
 	}
 

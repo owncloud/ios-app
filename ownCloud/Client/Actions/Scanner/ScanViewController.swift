@@ -287,6 +287,11 @@ class ScanViewController: StaticTableViewController {
 		didSet {
 			if let fileName = fileNameRow?.value as? NSString {
 				fileNameRow?.value = fileName.deletingPathExtension + "." + (exportFormat?.suffix ?? "")
+				fileNameRow?.requiredFileExtension = exportFormat?.suffix
+
+				if let textField = fileNameRow?.textField, textField.isFirstResponder {
+					textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.beginningOfDocument)
+				}
 			}
 
 			guard let oneFilePerPageRow = oneFilePerPageRow else { return }
