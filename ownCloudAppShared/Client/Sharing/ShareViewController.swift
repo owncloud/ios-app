@@ -54,6 +54,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	public var share: OCShare?
 	public var item: OCItem?
 	public var location: OCLocation?
+	public var name: String?
 	public var type: ShareType
 	public var mode: Mode
 
@@ -98,6 +99,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	var linksSectionDatasource: OCDataSourceArray?
 	var linksSection: CollectionViewSection?
+
+	var nameTextField : UITextField?
 
 	var customPermissionsSectionOptionGroup: OptionGroup?
 	var customPermissionsDatasource: OCDataSourceArray?
@@ -173,6 +176,31 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		if let linksSection, self.type == .link, self.mode == .edit, let share {
 			linksSectionDatasource?.setVersionedItems([share])
 			sections.append(linksSection)
+		}
+
+		// - Name
+		if self.type == .link {
+			let textField : UITextField = ThemeCSSTextField()
+			textField.translatesAutoresizingMaskIntoConstraints = false
+			textField.setContentHuggingPriority(.required, for: .vertical)
+			textField.setContentCompressionResistancePriority(.required, for: .horizontal)
+			textField.placeholder = "Link".localized
+			textField.text = share?.name
+			textField.accessibilityLabel = "Name".localized
+
+			nameTextField = textField
+
+			let spacerView = UIView()
+			spacerView.translatesAutoresizingMaskIntoConstraints = false
+			spacerView.embed(toFillWith: textField, insets: NSDirectionalEdgeInsets(top: 10, leading: 18, bottom: 10, trailing: 18))
+
+			let nameSectionDatasource = OCDataSourceArray(items: [spacerView])
+			let nameSection = CollectionViewSection(identifier: "name", dataSource: nameSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
+			nameSection.boundarySupplementaryItems = [
+				.mediumTitle("Name".localized)
+			]
+
+			sections.append(nameSection)
 		}
 
 		// - Roles & permissions
@@ -263,6 +291,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 
 		self.addStacked(child: bottomButtonBarViewController, position: .bottom)
+
+		// Wire up name textfield
+		self.name = share?.name
+		nameTextField?.addAction(UIAction(handler: { [weak self, weak nameTextField] _ in
+			if let nameTextField {
+				self?.name = nameTextField.text
+			}
+		}), for: .allEditingEvents)
 
 		// Set up view
 		if let share, let core = clientContext?.core {
@@ -664,7 +700,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 					case .link:
 						if let location, let permissions {
-							newShare = OCShare(publicLinkTo: location, linkName: nil, permissions: permissions, password: nil, expiration: nil)
+							newShare = OCShare(publicLinkTo: location, linkName: name, permissions: permissions, password: nil, expiration: nil)
 						}
 				}
 
@@ -716,6 +752,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 									} else if let password = self?.password {
 										share.password = password
 										share.protectedByPassword = true
+									}
+
+									if self?.type == .link {
+										share.name = self?.name
 									}
 
 									share.expirationDate = self?.expirationDate
