@@ -271,7 +271,6 @@ public class ClientLocationPicker : NSObject {
 					if let bookmarkUUID = location.bookmarkUUID {
 						title = OCBookmarkManager.shared.bookmark(for: bookmarkUUID)?.displayName
 					}
-					viewController.hideNavigationBar = true
 
 				case .drive:
 					if let driveID = location.driveID {

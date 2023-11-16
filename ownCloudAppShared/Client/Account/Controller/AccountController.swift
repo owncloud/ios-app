@@ -47,8 +47,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public static var pickerConfiguration: Configuration {
 			var config = Configuration()
 
-			config.showSavedSearches = false
-			config.showQuickAccess = false
+			config.showSavedSearches = true
+			config.showQuickAccess = true
 			config.showActivity = false
 
 			config.sectionAppearance = .insetGrouped
