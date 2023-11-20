@@ -37,6 +37,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public var showQuickAccess: Bool
 		public var showActivity: Bool
 		public var autoSelectPersonalFolder: Bool
+		public var expandQuickAccess: Bool
 
 		public var sectionAppearance: UICollectionLayoutListConfiguration.Appearance = .sidebar
 
@@ -50,6 +51,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			config.showSavedSearches = true
 			config.showQuickAccess = true
 			config.showActivity = false
+			config.expandQuickAccess = true
 
 			config.sectionAppearance = .insetGrouped
 
@@ -64,6 +66,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			showSavedSearches = true
 			showQuickAccess = true
 			showActivity = true
+			expandQuickAccess = false
 
 			autoSelectPersonalFolder = true
 		}
@@ -471,6 +474,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 				if let quickAccessFolderDataSource = specialItemsDataSources[.quickAccessFolder] {
 					sources.append(quickAccessFolderDataSource)
+				}
+				
+				if configuration.expandQuickAccess, let accountControllerSection = accountControllerSection,
+				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [  specialItemsDataReferences[.quickAccessFolder]! ], forSection: accountControllerSection.identifier) {
+					accountControllerSection.expandedItemRefs = expandedItemRefs
 				}
 			}
 
