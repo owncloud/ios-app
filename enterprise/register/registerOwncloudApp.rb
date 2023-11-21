@@ -1,5 +1,14 @@
 #!/usr/bin/env ruby
 
+ # Copyright (C) 2023, ownCloud GmbH.
+ #
+ # This code is covered by the GNU Public License Version 3.
+ #
+ # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ 
+ # Version 1.1.0
+
 require 'spaceship'
 
 class AppRegistration
@@ -304,3 +313,4 @@ register.prepareAppID("File Provider", "FileProvider.mobileprovision", groups,re
 register.prepareAppID("File Provider UI", "FileProviderUI.mobileprovision", groups, registrationType, "#{bundlePrefix}.ios-app.ownCloud-File-ProviderUI", cert)
 register.prepareAppID("Intent", "Intent.mobileprovision", groups, registrationType, "#{bundlePrefix}.ios-app.ownCloud-Intent", cert)
 register.prepareAppID("ShareExtension", "ShareExtension.mobileprovision", groups, registrationType,"#{bundlePrefix}.ios-app.ownCloud-Share-Extension", cert)
+register.prepareAppID("ActionExtension", "ActionExtension.mobileprovision", groups, registrationType,"#{bundlePrefix}.ios-app.ownCloud-Action-Extension", cert)
