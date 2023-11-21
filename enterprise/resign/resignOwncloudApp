@@ -7,7 +7,7 @@
  # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
 
-VERSION="1.2.2"
+VERSION="1.3.0"
 
 #Define output formats
 BOLD="$(tput bold)"
@@ -64,11 +64,12 @@ FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/FileProvider.mobileprovision"
 FILEPROVIDERUI_MOBILEPROVISION="$PROVISIONING_DIR/FileProviderUI.mobileprovision"
 INTENT_MOBILEPROVISION="$PROVISIONING_DIR/Intent.mobileprovision"
 SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/ShareExtension.mobileprovision"
+ACTIONEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/ActionExtension.mobileprovision"
 ASSOCIATED_DOMAINS="domains.txt"
 
-declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
-declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
-declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud File Provider UI.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex" );
+declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  "$ACTIONEXTENSION_MOBILEPROVISION"  );
+declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" "ownCloud_Action_Extension.entitlements" );
+declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud File Provider UI.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex"  "$APPDIR/PlugIns/ownCloud Action Extension.appex" );
 declare -a BUNDLEIDS=();
 
 # Abort script if script is running in a path which contains "Library", because this could cause resource fork problems
