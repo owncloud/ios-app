@@ -269,7 +269,9 @@ open class NamingViewController: UIViewController {
 	}
 
 	@objc open func textfieldDidChange(_ sender: UITextField) {
-		if sender.text != "" {
+		let filename = sender.text
+
+		if filename != "", requiredFileExtension == nil || ((requiredFileExtension != nil) && filename != ".\(requiredFileExtension!)") {
 			doneButton?.isEnabled = true
 		} else {
 			doneButton?.isEnabled = false
