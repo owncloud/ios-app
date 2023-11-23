@@ -183,8 +183,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			let textField : UITextField = ThemeCSSTextField()
 			textField.translatesAutoresizingMaskIntoConstraints = false
 			textField.setContentHuggingPriority(.required, for: .vertical)
-			textField.setContentCompressionResistancePriority(.required, for: .horizontal)
-			textField.placeholder = "Link".localized
+			textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+			textField.placeholder = share?.token ?? "Link".localized
 			textField.text = share?.name
 			textField.accessibilityLabel = "Name".localized
 

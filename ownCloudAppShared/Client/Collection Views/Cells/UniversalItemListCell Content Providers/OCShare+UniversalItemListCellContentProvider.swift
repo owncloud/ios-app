@@ -88,7 +88,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 						}
 					} else {
 						// Link shares
-						content.title = .text(name ?? "Link".localized)
+						content.title = .text(name ?? token ??  "Link".localized)
 
 						if let urlString = url?.absoluteString, urlString.count > 0 {
 							if let roleName = matchingRole?.localizedName {
