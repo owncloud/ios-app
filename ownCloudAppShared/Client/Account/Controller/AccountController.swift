@@ -477,8 +477,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				}
 				
 				if configuration.expandQuickAccess, let accountControllerSection = accountControllerSection,
-				   let expandedItemRefs = accountControllerSection.collectionViewController?.wrap(references: [  specialItemsDataReferences[.quickAccessFolder]! ], forSection: accountControllerSection.identifier) {
-					accountControllerSection.expandedItemRefs = expandedItemRefs
+				   let quickAccessItemRef = accountControllerSection.collectionViewController?.wrap(references: [  specialItemsDataReferences[.quickAccessFolder]! ], forSection: accountControllerSection.identifier).first {
+					accountControllerSection.addExpanded(item: quickAccessItemRef)
 				}
 			}
 
