@@ -824,5 +824,12 @@ end
         }
       }
     )
+    
+    
+    
+    if appBuildFlags.include? "REMOVE_EXTENSION_INTENTS"
+        sh "../removeExtension.sh \"../" + ipaName.gsub("/", "_") + "\" \"ownCloud Intents\""
+    end
+
   end
 end
