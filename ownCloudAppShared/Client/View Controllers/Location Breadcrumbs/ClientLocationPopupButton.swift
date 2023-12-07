@@ -27,7 +27,7 @@ open class ClientLocationPopupButton: ThemeCSSButton {
 		}
 	}
 
-	public init(clientContext: ClientContext? = nil, location: OCLocation? = nil) {
+	public init(clientContext: ClientContext? = nil, location: OCLocation? = nil, excludeLastPathComponent: Bool = true) {
 		super.init(frame: .zero)
 		cssSelectors = [.title]
 
@@ -44,8 +44,9 @@ open class ClientLocationPopupButton: ThemeCSSButton {
 		menu = UIMenu(title: "", children: [
 			UIDeferredMenuElement.uncached({ [weak self] completion in
 				var menuItems : [UIMenuElement] = []
+				let breadcrumbLocation = excludeLastPathComponent ? self?.location?.parent : self?.location
 
-				if let clientContext = self?.clientContext, let breadcrumbs = self?.location?.breadcrumbs(in: clientContext, includeServerName: false, skipFiles: true, action: .reveal).reversed() {
+				if let clientContext = self?.clientContext, let breadcrumbs = breadcrumbLocation?.breadcrumbs(in: clientContext, includeServerName: false, action: .reveal).reversed() {
 					for crumbAction in breadcrumbs {
 						menuItems.append(crumbAction.uiAction())
 					}

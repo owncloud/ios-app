@@ -92,6 +92,7 @@ public extension OCLocation {
 		var breadcrumbs: [OCAction] = []
 		var currentLocation = self
 		var previousLocation: OCLocation?
+		var effectiveIncludeServername = includeServerName
 
 		func addCrumb(title: String?, icon: UIImage?, location: OCLocation? = nil) {
 			var actionBlock: OCActionBlock?
@@ -182,13 +183,23 @@ public extension OCLocation {
 		}
 
 		// Drive name
-		if let driveID = self.driveID, includeDriveName {
-			let location = OCLocation(driveID: driveID, path: "/")
-			addCrumb(title: location.displayName(in: clientContext), icon: location.displayIcon(in: clientContext), location: location)
+		if includeDriveName {
+			var location: OCLocation?
+
+			if let driveID = self.driveID {
+				location = OCLocation(driveID: driveID, path: "/")
+			} else {
+				// avoid duplicate OC10 root breadcrumb when the server name is also included
+				effectiveIncludeServername = true // alternative would be: location = .legacyRoot - but then there's Files /and/ the server name in the breadcrumbs if includeServername already == true; so for consistency, instead of a "Files" breadcrumb the server name is shown
+			}
+
+			if let location {
+				addCrumb(title: location.displayName(in: clientContext), icon: location.displayIcon(in: clientContext), location: location)
+			}
 		}
 
 		// Server name
-		if let bookmark = clientContext.core?.bookmark, includeServerName {
+		if let bookmark = clientContext.core?.bookmark, effectiveIncludeServername {
 			addCrumb(title: bookmark.displayName ?? bookmark.shortName, icon: OCSymbol.icon(forSymbolName: "server.rack"), location: (self.driveID == nil) ? OCLocation.legacyRoot : nil)
 		}
 

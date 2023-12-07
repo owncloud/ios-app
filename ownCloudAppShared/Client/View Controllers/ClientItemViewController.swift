@@ -688,7 +688,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 	var navigationLocation: OCLocation? {
 		didSet {
-			if let clientContext, let navigationLocation {
+			if let clientContext, let navigationLocation, !navigationLocation.isRoot {
 				navigationItem.titleView = ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
 			} else {
 				if navigationItem.titleView is ClientLocationPopupButton {
