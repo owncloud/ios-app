@@ -93,11 +93,19 @@ public class CollectionViewAction: NSObject {
 					viewController.performDataSourceUpdate { updateDone in
 						if let datasource = viewController.collectionViewDataSource, let sectionID {
 							var sectionSnapshot = datasource.snapshot(for: sectionID)
-							sectionSnapshot.expand([ itemRef ])
-							datasource.apply(sectionSnapshot, to: sectionID, animatingDifferences: animated, completion: {
-								completion?()
-								updateDone()
-							})
+							if !sectionSnapshot.isExpanded(itemRef) {
+								sectionSnapshot.expand([ itemRef ])
+
+								if let section = viewController.sectionsByID[sectionID] {
+									let childSnapshot =  section.provideHierarchicContent(for: collectionView, parentItemRef: itemRef, existingSectionSnapshot: nil)
+									sectionSnapshot.replace(childrenOf: itemRef, using: childSnapshot)
+
+									datasource.apply(sectionSnapshot, to: sectionID, animatingDifferences: animated, completion: {
+										completion?()
+										updateDone()
+									})
+								}
+							}
 						} else {
 							completion?()
 							updateDone()

@@ -475,10 +475,12 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				if let quickAccessFolderDataSource = specialItemsDataSources[.quickAccessFolder] {
 					sources.append(quickAccessFolderDataSource)
 				}
-				
+
 				if configuration.expandQuickAccess, let accountControllerSection = accountControllerSection,
 				   let quickAccessItemRef = accountControllerSection.collectionViewController?.wrap(references: [  specialItemsDataReferences[.quickAccessFolder]! ], forSection: accountControllerSection.identifier).first {
-					accountControllerSection.addExpanded(item: quickAccessItemRef)
+					accountControllerSection.collectionViewController?.addActions([
+						CollectionViewAction(kind: .expand(animated: false), itemReference: quickAccessItemRef)
+					])
 				}
 			}
 

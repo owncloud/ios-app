@@ -432,10 +432,12 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 				if let collectionView = collectionViewController?.collectionView {
 					for expandedItemRef in expandedItemRefs {
 						if sectionSnapshot.contains(expandedItemRef) {
-							sectionSnapshot.expand([expandedItemRef])
+							if !sectionSnapshot.isExpanded(expandedItemRef) {
+								sectionSnapshot.expand([expandedItemRef])
 
-							let childSnapshot = provideHierarchicContent(for: collectionView, parentItemRef: expandedItemRef, existingSectionSnapshot: nil)
-							sectionSnapshot.replace(childrenOf: expandedItemRef, using: childSnapshot)
+								let childSnapshot = provideHierarchicContent(for: collectionView, parentItemRef: expandedItemRef, existingSectionSnapshot: nil)
+								sectionSnapshot.replace(childrenOf: expandedItemRef, using: childSnapshot)
+							}
 						}
 					}
 				}
