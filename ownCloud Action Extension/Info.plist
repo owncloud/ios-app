@@ -8,6 +8,8 @@
 	<true/>
 	<key>OCAppComponentIdentifier</key>
 	<string>shareExtension</string>
+	<key>CFBundleDisplayName</key>
+	<string>Save to $(APP_PRODUCT_NAME)</string>
 	<key>OCAppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
 	<key>OCAppGroupIdentifier</key>
