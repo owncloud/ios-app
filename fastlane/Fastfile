@@ -620,6 +620,9 @@ end
 
     set_info_plist_value(path: "ownCloud Action Extension/Info.plist", key: "CFBundleDisplayName", value: "Save to " + appName)
     set_info_plist_value(path: "ownCloud Action Extension/Info.plist", key: "CFBundleName", value: appName)
+    
+    sh("sed -i '' '/\"CFBundleDisplayName\" =/s/ownCloud/#{appName}/' ownCloud Action Extension/en.lproj/InfoPlist.strings")
+    sh("sed -i '' '/\"CFBundleDisplayName\" =/s/ownCloud/#{appName}/' ownCloud Action Extension/de.lproj/InfoPlist.strings")
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
