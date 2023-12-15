@@ -1935,6 +1935,30 @@
     "categoryTag" : "connection",
     "classIdentifier" : "http",
     "className" : "OCHTTPPipeline",
+    "defaultValue" : "json",
+    "description" : "If request and response logging is enabled, the format to use.",
+    "flatIdentifier" : "http.traffic-log-format",
+    "key" : "traffic-log-format",
+    "label" : "http.traffic-log-format",
+    "possibleValues" : [
+      {
+        "description" : "JSON",
+        "value" : "json"
+      },
+      {
+        "description" : "Plain text",
+        "value" : "plain"
+      }
+    ],
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "http",
+    "className" : "OCHTTPPipeline",
     "defaultValue" : "ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})",
     "description" : "A custom `User-Agent` to send with every HTTP request.\n\nThe following placeholders can be used to make it dynamic:\n- `{{app.build}}`: the build number of the app (f.ex. `123`)\n- `{{app.version}}`: the version of the app (f.ex. `1.2`)\n- `{{app.part}}`: the part of the app (more exactly: the name of the main bundle) from which the request was sent (f.ex. `App`, `ownCloud File Provider`)\n- `{{device.model}}`: the model of the device running the app (f.ex. `iPhone`, `iPad`)\n- `{{device.model-id}}`: the model identifier of the device running the app (f.ex. `iPhone8,1`)\n- `{{os.name}}` : the name of the operating system running on the device (f.ex. `iOS`, `iPadOS`)\n- `{{os.version}}`: the version of operating system running on the device (f.ex. `13.2.2`)\n",
     "flatIdentifier" : "http.user-agent",

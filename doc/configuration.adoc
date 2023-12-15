@@ -713,6 +713,24 @@ tag::connection[]
 |Enable or disable per-process, in-memory cookie storage.
 |supported `candidate`
 
+|http.traffic-log-format
+|string
+|`json`
+|If request and response logging is enabled, the format to use.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `json`
+! JSON
+
+! `plain`
+! Plain text
+
+!===
+
+|supported `candidate`
+
 |http.user-agent
 |string
 |`ownCloudApp/{{app.version}} ({{app.part}}/{{app.build}}; {{os.name}}/{{os.version}}; {{device.model}})`
