@@ -792,13 +792,11 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		OnMainThread {
 			if self.contentDidUpdate {
 				self.contentDidUpdate = false
-				self.handleContentUpdate()
+
+				// Perform operations post content update
+				self.runActions()
 			}
 		}
-	}
-
-	private func handleContentUpdate() {
-		runActions()
 	}
 
 	// MARK: - Selection

@@ -48,14 +48,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public static var pickerConfiguration: Configuration {
 			var config = Configuration()
 
-			config.showSavedSearches = true
-			config.showQuickAccess = true
 			config.showActivity = false
 			config.expandQuickAccess = true
-
-			config.sectionAppearance = .insetGrouped
-
 			config.autoSelectPersonalFolder = false
+			config.sectionAppearance = .insetGrouped
 
 			return config
 		}
@@ -328,7 +324,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	private var legacyAccountRootLocation: OCLocation
 
 	func composeItemsDataSource() {
-		if let core = connection?.core {
+		if let core = connection?.core, itemsDataSource.sources.count == 0 {
 			var sources : [OCDataSource] = []
 
 			// Personal Folder, Shared Files + Drives

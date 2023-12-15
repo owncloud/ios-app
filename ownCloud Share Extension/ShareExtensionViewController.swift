@@ -80,9 +80,12 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 		var location: OCLocation = .accounts
 		if OCBookmarkManager.shared.bookmarks.count == 1, let bookmark = OCBookmarkManager.shared.bookmarks.first {
 			location = .account(bookmark)
-			AccountConnectionPool.shared.connection(for: bookmark)?.connect()
+
+			OnMainThread(after: 0.1) { // Avoid connection state changes during initialization of ClientLocationPicker
+				AccountConnectionPool.shared.connection(for: bookmark)?.connect()
+			}
 		}
-		
+
 		let locationPicker = ClientLocationPicker(location: location, maximumLevel: .account, selectButtonTitle: "Save here".localized, avoidConflictsWith: nil, choiceHandler: { [weak self] folderItem, folderLocation, _, cancelled in
 			if cancelled {
 				self?.cancel()
@@ -91,6 +94,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 			self?.importTo(selectedFolder: folderItem, location: folderLocation)
 		})
+		locationPicker.allowHidingNavigationBar = false
 
 		contentViewController = locationPicker.pickerViewControllerForPresentation()
 	}

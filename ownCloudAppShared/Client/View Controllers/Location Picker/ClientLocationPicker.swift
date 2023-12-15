@@ -101,6 +101,7 @@ public class ClientLocationPicker : NSObject {
 
 	public var selectButtonTitle: String
 	public var selectPrompt: String?
+	public var allowHidingNavigationBar: Bool = true
 	public var accountControllerConfiguration: AccountController.Configuration?
 
 	// MARK: - Init
@@ -211,13 +212,13 @@ public class ClientLocationPicker : NSObject {
 
 	// MARK: - Provide data source and initial view controller
 	func provideDataSource(for location: OCLocation, maximumLevel: LocationLevel, context: ClientContext) -> OCDataSource? {
-		var sectionDataSource: OCDataSource?
+		var sectionDataSource: OCDataSourceMapped?
 
 		let level = location.clientLocationLevel
 
 		switch level {
 			case .accounts, .account:
-				sectionDataSource = OCDataSourceMapped(source: OCBookmarkManager.shared.bookmarksDatasource, creator: { [weak self] (_, bookmarkDataItem) in
+				sectionDataSource = OCDataSourceMapped(source: nil, creator: { [weak self] (_, bookmarkDataItem) in
 					if let bookmark = bookmarkDataItem as? OCBookmark,
 					   let self = self,
 					   let rootContext = self.rootContext,
@@ -239,6 +240,9 @@ public class ClientLocationPicker : NSObject {
 						accountController.destroy() // needs to be called since AccountController keeps a reference to itself otherwise
 					}
 				}, queue: .main)
+
+				sectionDataSource?.trackItemVersions = true
+				sectionDataSource?.source = OCBookmarkManager.shared.bookmarksDatasource
 
 			case .drive, .folder: break
 		}
@@ -271,6 +275,7 @@ public class ClientLocationPicker : NSObject {
 					if let bookmarkUUID = location.bookmarkUUID {
 						title = OCBookmarkManager.shared.bookmark(for: bookmarkUUID)?.displayName
 					}
+					viewController.hideNavigationBar = allowHidingNavigationBar
 
 				case .drive:
 					if let driveID = location.driveID {
