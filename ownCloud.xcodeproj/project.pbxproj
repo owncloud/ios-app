@@ -3864,6 +3864,7 @@
 				391933B02B0B81DB007DF90B /* Sources */,
 				391933B12B0B81DB007DF90B /* Frameworks */,
 				391933B22B0B81DB007DF90B /* Resources */,
+				39CBC5422B44633800E81D24 /* Copy branding asset action extension icon */,
 			);
 			buildRules = (
 			);
@@ -4388,6 +4389,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n\nGITTAGS=$(git describe --tags)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"GitTags\" \"${GITTAGS}\"\n\nGITBRANCH=$(git branch --show-current)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"GitBranch\" \"${GITBRANCH}\"\n\nBUILDDATE=$(date)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"BuildDate\" \"${BUILDDATE}\"\n";
+		};
+		39CBC5422B44633800E81D24 /* Copy branding asset action extension icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/branding-action-extension-icon.png",
+			);
+			name = "Copy branding asset action extension icon";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-action-extension-icon.png",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\n\n# Determine branding assets folder to use\nASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app/\"\n\nASSETS_FILE_COUNT=$(ls -A \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"branding-action-extension-icon.png | wc -l)\necho \"File count in branding-assets:\" ${ASSETS_FILE_COUNT}\n\nif [ -e \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\" ]; then\n    if [ $ASSETS_FILE_COUNT -ne 0 ]; then\n        # Copy branding-*.png files from branding-assets\n        ASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"\n    fi\nfi\n\n# Copy branding-action-extension-icon.png assets\necho \"Copying branding-action-extension-icon.png files from\" ${ASSETS_SOURCE_FOLDER}\necho cp ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\ncp ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-action-extension-icon.png\"\n";
 		};
 		DC049259258CB33600DEDC27 /* Copy PocketSVG license (inactive) */ = {
 			isa = PBXShellScriptBuildPhase;

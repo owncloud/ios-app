@@ -4,6 +4,16 @@
 <dict>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>branding-action-extension-icon</string>
+			</array>
+		</dict>
+	</dict>
 	<key>OCHasFileProvider</key>
 	<true/>
 	<key>OCAppComponentIdentifier</key>
