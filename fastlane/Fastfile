@@ -798,7 +798,7 @@ end
       use_automatic_signing: false,
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
-      profile_name: ENTERPRISE_ACTION_ACTION_PROFILE,
+      profile_name: ENTERPRISE_ACTION_EXTENSION_PROFILE,
       bundle_identifier: ENTERPRISE_ACTION_EXTENSION_ID,
       targets: ["ownCloud Action Extension"]
     )
