@@ -4399,6 +4399,7 @@
 			);
 			inputPaths = (
 				"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/branding-action-extension-icon.png",
+				"${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app/branding-action-extension-icon.png",
 			);
 			name = "Copy branding asset action extension icon";
 			outputFileListPaths = (
@@ -4408,7 +4409,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n\n# Determine branding assets folder to use\nASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app/\"\n\nASSETS_FILE_COUNT=$(ls -A \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"branding-action-extension-icon.png | wc -l)\necho \"File count in branding-assets:\" ${ASSETS_FILE_COUNT}\n\nif [ -e \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\" ]; then\n    if [ $ASSETS_FILE_COUNT -ne 0 ]; then\n        # Copy branding-*.png files from branding-assets\n        ASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"\n    fi\nfi\n\n# Copy branding-action-extension-icon.png assets\necho \"Copying branding-action-extension-icon.png files from\" ${ASSETS_SOURCE_FOLDER}\necho cp ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\ncp ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-action-extension-icon.png\"\n";
+			shellScript = "#!/bin/bash\n\n# Determine branding assets folder to use\nASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app/\"\n\nASSETS_FILE_COUNT=$(ls -A \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"branding-action-extension-icon.png | wc -l)\necho \"File count in branding-assets:\" ${ASSETS_FILE_COUNT}\n\nif [ -e \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\" ]; then\n    if [ $ASSETS_FILE_COUNT -ne 0 ]; then\n        # Copy branding-*.png files from branding-assets\n        ASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"\n    fi\nfi\n\n\nICON_FILE_COUNT=$(ls -A ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png | wc -l)\n\necho \"Icon count in assets source folder:\" ${ICON_FILE_COUNT}\n\nif [ $ICON_FILE_COUNT -ne 0 ]; then\n    # Copy branding-action-extension-icon.png assets\n    echo \"Copying branding-action-extension-icon.png files from\" ${ASSETS_SOURCE_FOLDER}\n    echo cp ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\n    cp ${ASSETS_SOURCE_FOLDER}branding-action-extension-icon.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-action-extension-icon.png\"\nfi\n";
 		};
 		DC049259258CB33600DEDC27 /* Copy PocketSVG license (inactive) */ = {
 			isa = PBXShellScriptBuildPhase;
