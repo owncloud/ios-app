@@ -67,7 +67,9 @@ Details
 
 * Change - New account wizard: [#1274](https://github.com/owncloud/ios-app/pull/1274)
 
-   Reimplementation of the new account wizard.
+   - reimplementation of the new account wizard - support for reordering accounts
+   in the sidebar via drag and drop - adds location breadcrumb dropdown in the
+   viewer
 
    https://github.com/owncloud/ios-app/pull/1274
 
