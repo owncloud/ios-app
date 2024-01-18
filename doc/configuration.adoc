@@ -17,6 +17,9 @@ tag::actions[]
 !===
 ! Value
 ! Description
+! `com.owncloud.action.availableOffline`
+! Make available offline
+
 ! `com.owncloud.action.collaborate`
 ! Sharing
 
@@ -43,12 +46,6 @@ tag::actions[]
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
-
-! `com.owncloud.action.makeAvailableOffline`
-! Make available offline
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Available Offline
 
 ! `com.owncloud.action.markup`
 ! Markup
@@ -121,6 +118,9 @@ action.create-document-mode
 !===
 ! Value
 ! Description
+! `com.owncloud.action.availableOffline`
+! Make available offline
+
 ! `com.owncloud.action.collaborate`
 ! Sharing
 
@@ -147,12 +147,6 @@ action.create-document-mode
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
-
-! `com.owncloud.action.makeAvailableOffline`
-! Make available offline
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Available Offline
 
 ! `com.owncloud.action.markup`
 ! Markup
@@ -350,24 +344,6 @@ tag::bookmarks[]
 |Status
 
 
-|account-settings.default-name
-|string
-|
-|The default name for the creation of new bookmarks.
-|supported `candidate`
-
-|account-settings.default-url
-|string
-|
-|The default URL for the creation of new bookmarks.
-|supported `candidate`
-
-|account-settings.url-editable
-|bool
-|
-|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
-|supported `candidate`
-
 |bookmark.prepopulation
 |string
 |
@@ -462,7 +438,7 @@ branding.can-edit-account
  +
 branding.profile-allow-url-configuration
 |bool
-|
+|`true`
 |Indicates if the user can change the server URL for the account.
 |advanced `candidate`
 
@@ -546,16 +522,47 @@ branding.sidebar-links-title
 |Title for the sidebar links section.
 |advanced `candidate`
 
+|**Theme Colors** +
+ +
+branding.theme-colors
+|dictionary
+|
+|Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+[cols="1,1"]
+!===
+! Key
+! Value
+! `tint-color`
+! Color to use as tint/accent color for controls (in hex notation).
+
+! `branding-background-color`
+! Color to use as background color for brand views (in hex notation).
+
+! `setup-status-bar-style`
+! The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.
+
+! `file-icon-color`
+! Color to fill file icons with (in hex notation).
+
+! `folder-icon-color`
+! Color to fill folder icons with (in hex notation).
+
+!===
+
+|advanced `candidate`
+
+|**Theme CSS Records** +
+ +
+branding.theme-css-records
+|stringArray
+|
+|CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+|advanced `candidate`
+
 |branding.theme-definitions
 |dictionaryArray
 |
 |Array of dictionaries, each specifying a theme.
-|advanced `candidate`
-
-|branding.theme-generic-colors
-|dictionary
-|
-|Dictionary defining generic colors that can be used in the definitions.
 |advanced `candidate`
 
 |**Documentation URL** +
@@ -672,6 +679,12 @@ tag::build[]
 |string
 |
 |Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier only. Fastlane does not need the provisioning profile and certificate with the given app group identifer. Needs resigning with the correct provisioning profile and certificate. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.
+|supported `candidate`
+
+|build.version-number
+|string
+|
+|Sets a custom version number for the app.
 |supported `candidate`
 
 |===
@@ -1008,6 +1021,9 @@ tag::extensions[]
 ! `auth-race-condition`
 ! Extension with the identifier auth-race-condition.
 
+! `com.owncloud.action.availableOffline`
+! Extension with the identifier com.owncloud.action.availableOffline.
+
 ! `com.owncloud.action.background_update`
 ! Extension with the identifier com.owncloud.action.background_update.
 
@@ -1040,12 +1056,6 @@ tag::extensions[]
 
 ! `com.owncloud.action.instant_media_upload`
 ! Extension with the identifier com.owncloud.action.instant_media_upload.
-
-! `com.owncloud.action.makeAvailableOffline`
-! Extension with the identifier com.owncloud.action.makeAvailableOffline.
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Extension with the identifier com.owncloud.action.makeUnavailableOffline.
 
 ! `com.owncloud.action.markup`
 ! Extension with the identifier com.owncloud.action.markup.
@@ -1145,6 +1155,12 @@ tag::extensions[]
 
 ! `simple-apm`
 ! Extension with the identifier simple-apm.
+
+! `system.dark`
+! Extension with the identifier system.dark.
+
+! `system.light`
+! Extension with the identifier system.light.
 
 ! `web-finger`
 ! Extension with the identifier web-finger.
@@ -1500,6 +1516,12 @@ tag::passcode[]
 |bool
 |`false`
 |Controls wether the user MUST establish a passcode upon app installation.
+|advanced `candidate`
+
+|passcode.enforced-by-device
+|bool
+|`false`
+|Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.
 |advanced `candidate`
 
 |passcode.lockDelay

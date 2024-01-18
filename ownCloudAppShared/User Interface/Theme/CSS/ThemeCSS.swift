@@ -317,6 +317,8 @@ open class ThemeCSS: NSObject {
 				case "default":		return .default
 				case "lightContent":	return .lightContent
 				case "darkContent":	return .darkContent
+				case "white":		return .lightContent
+				case "black":		return .darkContent
 				default: break
 			}
 		}

@@ -1,45 +1,6 @@
 [
   {
     "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "The default name for the creation of new bookmarks.",
-    "flatIdentifier" : "account-settings.default-name",
-    "key" : "default-name",
-    "label" : "account-settings.default-name",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "The default URL for the creation of new bookmarks.",
-    "flatIdentifier" : "account-settings.default-url",
-    "key" : "default-url",
-    "label" : "account-settings.default-url",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-    "flatIdentifier" : "account-settings.url-editable",
-    "key" : "url-editable",
-    "label" : "account-settings.url-editable",
-    "status" : "supported",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
@@ -52,6 +13,10 @@
     "key" : "allowed",
     "label" : "action.allowed",
     "possibleValues" : [
+      {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.availableOffline"
+      },
       {
         "description" : "Sharing",
         "value" : "com.owncloud.action.collaborate"
@@ -87,14 +52,6 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
-      },
-      {
-        "description" : "Make available offline",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Available Offline",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
       },
       {
         "description" : "Markup",
@@ -191,6 +148,10 @@
     "label" : "action.disallowed",
     "possibleValues" : [
       {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Sharing",
         "value" : "com.owncloud.action.collaborate"
       },
@@ -225,14 +186,6 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
-      },
-      {
-        "description" : "Make available offline",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Available Offline",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
       },
       {
         "description" : "Markup",
@@ -774,6 +727,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "defaultValue" : true,
     "description" : "Indicates if the user can change the server URL for the account.",
     "flatIdentifier" : "branding.profile-allow-url-configuration",
     "key" : "profile-allow-url-configuration",
@@ -918,12 +872,34 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Array of dictionaries, each specifying a theme.",
-    "flatIdentifier" : "branding.theme-definitions",
-    "key" : "theme-definitions",
-    "label" : "branding.theme-definitions",
+    "description" : "Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "flatIdentifier" : "branding.theme-colors",
+    "key" : "theme-colors",
+    "label" : "Theme Colors",
+    "possibleKeys" : [
+      {
+        "description" : "Color to use as tint/accent color for controls (in hex notation).",
+        "value" : "tint-color"
+      },
+      {
+        "description" : "Color to use as background color for brand views (in hex notation).",
+        "value" : "branding-background-color"
+      },
+      {
+        "description" : "The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.",
+        "value" : "setup-status-bar-style"
+      },
+      {
+        "description" : "Color to fill file icons with (in hex notation).",
+        "value" : "file-icon-color"
+      },
+      {
+        "description" : "Color to fill folder icons with (in hex notation).",
+        "value" : "folder-icon-color"
+      }
+    ],
     "status" : "advanced",
-    "type" : "dictionaryArray"
+    "type" : "dictionary"
   },
   {
     "autoExpansion" : "none",
@@ -931,12 +907,25 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Dictionary defining generic colors that can be used in the definitions.",
-    "flatIdentifier" : "branding.theme-generic-colors",
-    "key" : "theme-generic-colors",
-    "label" : "branding.theme-generic-colors",
+    "description" : "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "flatIdentifier" : "branding.theme-css-records",
+    "key" : "theme-css-records",
+    "label" : "Theme CSS Records",
     "status" : "advanced",
-    "type" : "dictionary"
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "Array of dictionaries, each specifying a theme.",
+    "flatIdentifier" : "branding.theme-definitions",
+    "key" : "theme-definitions",
+    "label" : "branding.theme-definitions",
+    "status" : "advanced",
+    "type" : "dictionaryArray"
   },
   {
     "autoExpansion" : "none",
@@ -1110,6 +1099,19 @@
     "flatIdentifier" : "build.oc-app-group-identifier",
     "key" : "oc-app-group-identifier",
     "label" : "build.oc-app-group-identifier",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Build",
+    "categoryTag" : "build",
+    "classIdentifier" : "build",
+    "className" : "BuildOptions",
+    "description" : "Sets a custom version number for the app.",
+    "flatIdentifier" : "build.version-number",
+    "key" : "version-number",
+    "label" : "build.version-number",
     "status" : "supported",
     "type" : "string"
   },
@@ -1668,6 +1670,10 @@
         "value" : "auth-race-condition"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.availableOffline.",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.background_update.",
         "value" : "com.owncloud.action.background_update"
       },
@@ -1710,14 +1716,6 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.instant_media_upload.",
         "value" : "com.owncloud.action.instant_media_upload"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.makeAvailableOffline.",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.makeUnavailableOffline.",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.markup.",
@@ -1850,6 +1848,14 @@
       {
         "description" : "Extension with the identifier simple-apm.",
         "value" : "simple-apm"
+      },
+      {
+        "description" : "Extension with the identifier system.dark.",
+        "value" : "system.dark"
+      },
+      {
+        "description" : "Extension with the identifier system.light.",
+        "value" : "system.light"
       },
       {
         "description" : "Extension with the identifier web-finger.",
@@ -2316,6 +2322,20 @@
     "flatIdentifier" : "passcode.enforced",
     "key" : "enforced",
     "label" : "passcode.enforced",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "AppLockSettings",
+    "defaultValue" : false,
+    "description" : "Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.",
+    "flatIdentifier" : "passcode.enforced-by-device",
+    "key" : "enforced-by-device",
+    "label" : "passcode.enforced-by-device",
     "status" : "advanced",
     "type" : "bool"
   },

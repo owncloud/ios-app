@@ -75,6 +75,7 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 		_brandingPlistURL = [appBundle URLForResource:@"Branding" withExtension:@"plist"];
 
 		_allowBranding = YES;
+		_allowThemeSelection = YES;
 
 		NSData *brandingPlistData;
 
@@ -210,6 +211,21 @@ INCLUDE_IN_CLASS_SETTINGS_SNAPSHOTS(Branding)
 - (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName
 {
 	return ([UIImage imageNamed:imageName inBundle:self.appBundle compatibleWithTraitCollection:nil]);
+}
+
+- (nullable UIImage *)brandedImageNamed:(BrandingImageName)imageName assetSuffix:(BrandingAssetSuffix)assetSuffix
+{
+	UIImage *image = nil;
+
+	if (assetSuffix != nil) {
+		image = [UIImage imageNamed:[imageName stringByAppendingFormat:@"-%@", assetSuffix] inBundle:self.appBundle compatibleWithTraitCollection:nil];
+	}
+
+	if (image == nil) {
+		image = [UIImage imageNamed:imageName inBundle:self.appBundle compatibleWithTraitCollection:nil];
+	}
+
+	return (image);
 }
 
 - (nullable id)computedValueForClassSettingsKey:(OCClassSettingsKey)classSettingsKey

@@ -1,0 +1,5 @@
+Change: Link naming
+
+Adds a Name field for link shares, allowing to enter and edit the name of link shares.
+
+https://github.com/owncloud/ios-app/issues/1297

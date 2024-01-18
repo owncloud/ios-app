@@ -104,6 +104,7 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
+"last used" = "last used";
 
 "Tree" = "Tree";
 "Search folder" = "Search folder";
@@ -127,6 +128,8 @@
 
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
 "{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "Loading…";
 
 "Show more results" = "Show more results";
 
@@ -622,6 +625,8 @@
 "Add" = "Add";
 "Save changes" = "Save changes";
 
+"Enter password" = "Enter password";
+
 /* Quick Access view */
 "Quick Access" = "Quick Access";
 "Collection" = "Collection";
@@ -858,6 +863,10 @@
 "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
 "File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
 
 /* Disallowed Import Methods */
 /* - Share Extension */

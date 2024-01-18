@@ -94,7 +94,8 @@ open class DataSourceCondition: NSObject {
 		setParentOf(condition: condition, to: self)
 		action = inAction
 
-		if initial, let action {
+		if initial, let action,
+		   fulfilled != nil { // only make initial call if a fulfilled state could already be computed - for condition types where this is not possible right away the subscription's `performInitialUpdate: true` parameter will make sure the initial call is performed as soon as fulfilled could be determined
 			action(self)
 		}
 	}

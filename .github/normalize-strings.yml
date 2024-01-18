@@ -1,0 +1,28 @@
+name: Normalize .strings file encoding
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches:
+    - fix/*
+    - feature/*
+    - milestone/*
+    - translation-sync
+
+jobs:
+  build:
+    runs-on: macos-latest
+    name: Normalize .strings file encoding
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Xcode version
+        run: /usr/bin/xcodebuild -version
+      - name: Normalize .strings files to UTF-8
+        run: ./normalizestrings.sh
+        working-directory: ./tools/normalizestrings/
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Normalized Localizable.strings encoding (UTF-8)
+          file_pattern: '*.strings'

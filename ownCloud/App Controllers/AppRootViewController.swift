@@ -104,7 +104,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 
 		// Build sidebar
 		sidebarViewController = ClientSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
-		sidebarViewController?.addToolbarItems()
+		sidebarViewController?.addToolbarItems(addAccount: Branding.shared.canAddAccount)
 
 		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
 		leftNavigationController?.cssSelectors = [ .sidebar ]
@@ -121,43 +121,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
 			if condition.fulfilled == true {
 				// No account available
-
-				var addAccountTitle = "Add account".localized
-				if !VendorServices.shared.canAddAccount {
-					addAccountTitle = "Login".localized
-				}
-
-				let messageView = ComposedMessageView.infoBox(additionalElements: [
-					.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 128, height: 128), cssSelectors: [.icon]),
-					.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 25, leading: 0, bottom: 25, trailing: 0)),
-					.button(addAccountTitle, action: UIAction(handler: { [weak self] action in
-						if let self = self {
-							BookmarkViewController.showBookmarkUI(on: self, attemptLoginOnSuccess: true)
-						}
-					}), image: UIImage(systemName: "plus.circle"), cssSelectors: [.welcome]),
-					.button("Settings".localized ,action: UIAction(handler: { [weak self] action in
-						if let self = self {
-							self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
-						}
-					}), image: UIImage(systemName: "gearshape"), cssSelectors: [.welcome])
-				])
-				messageView.elementInsets = NSDirectionalEdgeInsets(top: 25, leading: 50, bottom: 50, trailing: 50)
-
-				let rootView = ThemeCSSView(withSelectors: [.modal, .welcome])
-
-				if let image = Branding.shared.brandedImageNamed(.loginBackground) {
-					messageView.isOpaque = false
-					let backgroundImageView = UIImageView(image: image)
-					backgroundImageView.contentMode = .scaleAspectFill
-					rootView.embed(toFillWith: backgroundImageView)
-				}
-
-				rootView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-
-				let messageViewController = UIViewController()
-				messageViewController.view = rootView
-
-				self?.contentViewController = messageViewController
+				let configuration = BookmarkComposerConfiguration.newBookmarkConfiguration
+				configuration.hasIntro = true
+				self?.contentViewController = BookmarkSetupViewController(configuration: configuration)
 			} else {
 				// Account already available
 				self?.contentViewController = self?.contentBrowserController
@@ -196,6 +162,23 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		ClientSessionManager.shared.remove(delegate: self)
 	}
 
+	// MARK: - Interface orientations
+	open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+		if let contentViewController {
+			return contentViewController.supportedInterfaceOrientations
+		}
+
+		return super.supportedInterfaceOrientations
+	}
+
+	open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+		if let contentViewController {
+			return contentViewController.preferredInterfaceOrientationForPresentation
+		}
+
+		return super.preferredInterfaceOrientationForPresentation
+	}
+
 	// MARK: - Status Bar style
 	open override var childForStatusBarStyle: UIViewController? {
 		return contentViewController
@@ -204,6 +187,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 	open override var contentViewController: UIViewController? {
 		didSet {
 			setNeedsStatusBarAppearanceUpdate()
+			if #available(iOS 16, *) {
+				setNeedsUpdateOfSupportedInterfaceOrientations()
+			}
 		}
 	}
 
@@ -420,7 +406,9 @@ extension ClientSidebarViewController {
 
 	// MARK: - Open settings
 	@IBAction func settings() {
-		self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+		let navigationViewController = ThemeNavigationController(rootViewController: SettingsViewController())
+		navigationViewController.modalPresentationStyle = .fullScreen
+		present(navigationViewController, animated: true)
 	}
 
 	// MARK: - Add account

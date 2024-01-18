@@ -160,6 +160,10 @@ public class OpenInWebAppAction: Action {
 			}
 		}
 
+		if context.items.count == 1, let item = context.items.first, let core = context.core {
+			core.updateLastUsed(for: item)
+		}
+
 		switch openMode {
 			case .defaultBrowser:
 				openInExternalBrowser()
@@ -201,7 +205,7 @@ public class OpenInWebAppAction: Action {
 
 		// Open in in-app browser
 		core.connection.open(inApp: item, with: app, viewMode: nil, completionHandler: { (error, url, method, headers, parameters, urlRequest) in
-			if let error = error {
+			if let error {
 				OnMainThread {
 					let appName = self.app?.name ?? "app"
 					let itemName = item.name ?? "item"

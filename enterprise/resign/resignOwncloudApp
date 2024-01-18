@@ -7,7 +7,7 @@
  # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
 
-VERSION="1.2.1"
+VERSION="1.3.0"
 
 #Define output formats
 BOLD="$(tput bold)"
@@ -51,24 +51,32 @@ BUILD_DIR="App"
 DATESTRING=`date +"%Y_%m_%d_%H_%M"`
 NAME_FINAL_IPA="signed_$DATESTRING.ipa"
 UNSIGNED_IPA="$BUILD_DIR/unsigned.ipa"
-ERROR_SHA1=0
+ERROR_SHA=0
 FINAL_IPA="$BUILD_DIR/$NAME_FINAL_IPA"
 APPTEMP="$BUILD_DIR/apptemp"
 APPPAYLOAD="$APPTEMP/Payload"
 APPDIR="$APPPAYLOAD/ownCloud.app"
 PROVISIONING_DIR="Provisioning Files"
+CURRENT_PATH=$(pwd)
 
 DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/App.mobileprovision"
 FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/FileProvider.mobileprovision"
 FILEPROVIDERUI_MOBILEPROVISION="$PROVISIONING_DIR/FileProviderUI.mobileprovision"
 INTENT_MOBILEPROVISION="$PROVISIONING_DIR/Intent.mobileprovision"
 SHAREEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/ShareExtension.mobileprovision"
+ACTIONEXTENSION_MOBILEPROVISION="$PROVISIONING_DIR/ActionExtension.mobileprovision"
 ASSOCIATED_DOMAINS="domains.txt"
 
-declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  );
-declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" );
-declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud File Provider UI.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex" );
+declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$FILEPROVIDERUI_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  "$SHAREEXTENSION_MOBILEPROVISION"  "$ACTIONEXTENSION_MOBILEPROVISION"  );
+declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_File_Provider_UI.entitlements" "ownCloud_Intents.entitlements" "ownCloud_Share_Extension.entitlements" "ownCloud_Action_Extension.entitlements" );
+declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud File Provider UI.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex"  "$APPDIR/PlugIns/ownCloud Share Extension.appex"  "$APPDIR/PlugIns/ownCloud Action Extension.appex" );
 declare -a BUNDLEIDS=();
+
+# Abort script if script is running in a path which contains "Library", because this could cause resource fork problems
+if [[ $CURRENT_PATH == *"/Library/"* ]]; then
+  echo "${WARN}Error: The script cannot be executed in the path /Library/ or one of its subfolders.${NC}"
+  exit 1
+fi
 
 # Delete previous temporal app folder if exist
 if [ -d  "$APPTEMP" ]; then
@@ -81,7 +89,8 @@ if [ ! -f "$UNSIGNED_IPA" ]; then
 fi
 
 # Get certificate SHA-1
-CERT_SHA_1=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-256" | cut -d: -f 2 | xargs`
+CERT_SHA_1=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-1" | cut -d: -f 2 | xargs`
+CERT_SHA_256=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-256" | cut -d: -f 2 | xargs`
 # Create temp directory
 mkdir $APPTEMP
 
@@ -96,25 +105,33 @@ else
 	# Convert provisioning profile to plist
 	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
 	# Get provisioning SHA-1
-	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA256" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+	PROV_SHA_256=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA256" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+
   rm -f "$APPTEMP/tmp.plist"
 
 	if [ "$CERT_SHA_1" = "$PROV_SHA_1" ]; then
-  		echo "${SUCCESS}Provisioning fingerprint matches with certificate:${NC}"
+  		echo "${SUCCESS}Provisioning fingerprint SHA-1 matches with certificate:${NC}"
 	  	echo "${INFO}$a${NC}"
   		echo ""
-		else
+  	elif [ "$CERT_SHA_256" = "$PROV_SHA_256" ]; then
+  		echo "${SUCCESS}Provisioning fingerprint SHA-256 matches with certificate:${NC}"
+	  	echo "${INFO}$a${NC}"
+  		echo ""
+	else
   		echo ""
 	  	echo "${WARN}The provisioning fingerprint does not match with the certificate fingerprint:${NC}"
   		echo "Provisioning Profile:	  	${INFO}$a${NC}"
-	  	echo "Certificate Fingerprint:  	${INFO}$CERT_SHA_1${NC}"
-	  	echo "Provisioning Fingerprint: 	${INFO}$PROV_SHA_1${NC}"
-  		ERROR_SHA1=1
+	  	echo "Certificate Fingerprint (SHA-1):  	${INFO}$CERT_SHA_1${NC}"
+	  	echo "Provisioning Fingerprint (SHA-1): 	${INFO}$PROV_SHA_1${NC}"
+	  	echo "Certificate Fingerprint (SHA-256):  	${INFO}$CERT_SHA_256${NC}"
+	  	echo "Provisioning Fingerprint (SHA-256): 	${INFO}$PROV_SHA_256${NC}"
+  		ERROR_SHA=1
 	fi
 fi
 done
 
-if [ "$ERROR_SHA1" = 1 ]; then
+if [ "$ERROR_SHA" = 1 ]; then
 	echo ""
 	echo "Please check that you are using the correct certificate identity and the provisioning profile was signed with the chosen certificate identity."
 	echo "${WARN}Exit resigning. Please fix the errors above.${NC}"

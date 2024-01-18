@@ -60,4 +60,20 @@ public extension UIView {
 
 		return nil
 	}
+
+	// MARK: - View controller
+	var hostingViewController: UIViewController? {
+		var responder: UIResponder? = self
+		var hostViewController: UIViewController?
+
+		while hostViewController == nil && responder != nil {
+			if let viewController = responder as? UIViewController {
+				hostViewController = viewController
+			}
+
+			responder = responder?.next
+		}
+
+		return hostViewController
+	}
 }

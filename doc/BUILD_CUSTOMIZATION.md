@@ -36,3 +36,7 @@ Removes the following from the app:
 Removes the following from the app:
 - the `NSAppTransportSecurity` dictionary from the app's `Info.plist`
 - including the `NSAllowsArbitraryLoads` key that's needed to allow plain/unsecured HTTP connections
+- 
+### `REMOVE_EXTENSION_INTENTS`
+
+Removes the Intents extension binary from the IPA after building the app with fastlane

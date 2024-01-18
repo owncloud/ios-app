@@ -83,7 +83,7 @@ public extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal, cellState: UICellConfigurationState? = nil) {
 		let css = collection.css
 
-		if let button = self as? UIButton, (self as? ThemeButton) == nil {
+		if let button = self as? UIButton, !(self is ThemeButton) {
 			button.apply(css: css, properties: [.stroke])
 		}
 
@@ -140,25 +140,7 @@ public extension NSObject {
 		}
 
 		if let label = self as? UILabel {
-			var normalColor : UIColor // = collection.tableRowColors.labelColor
-			var highlightColor : UIColor // = collection.tableRowHighlightColors.labelColor
-			let disabledColor : UIColor = css.getColor(.stroke, selectors: [.secondary], for: label) ?? .secondaryLabel // = collection.tableRowColors.secondaryLabelColor
-
-			switch itemStyle {
-				case .message, .bigMessage, .systemSecondary(textStyle: _, weight: _):
-					normalColor = css.getColor(.stroke, selectors: [.secondary], for: label) ?? .secondaryLabel
-					highlightColor = css.getColor(.stroke, selectors: [.secondary], state: [.highlighted], for: label) ?? .tertiaryLabel
-					// normalColor = collection.tableRowColors.secondaryLabelColor
-					// highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
-
-				default:
-				// case .title, .bigTitle, .system(textStyle: _, weight: _):
-					normalColor = css.getColor(.stroke, selectors: [.primary], for: label) ?? .label
-					highlightColor = css.getColor(.stroke, selectors: [.primary], state: [.highlighted], for: label) ?? .label
-					// normalColor = collection.tableRowColors.labelColor
-					// highlightColor = collection.tableRowHighlightColors.labelColor
-			}
-
+			// Change font for any type of label
 			switch itemStyle {
 				case .bigTitle:
 					label.font = UIFont.boldSystemFont(ofSize: 34)
@@ -184,15 +166,33 @@ public extension NSObject {
 				break
 			}
 
-			switch itemState {
-				case .normal:
-					label.textColor = normalColor
+			// Adapt color only for non-ThemeCSSLabel
+			let cssLabel = self as? ThemeCSSLabel
+			if cssLabel == nil {
+				var normalColor : UIColor
+				var highlightColor : UIColor
+				let disabledColor : UIColor = css.getColor(.stroke, selectors: [.secondary], for: label) ?? .secondaryLabel
 
-				case .highlighted:
-					label.textColor = highlightColor
+				switch itemStyle {
+					case .message, .bigMessage, .systemSecondary(textStyle: _, weight: _):
+						normalColor = css.getColor(.stroke, selectors: [.secondary], for: label) ?? .secondaryLabel
+						highlightColor = css.getColor(.stroke, selectors: [.secondary], state: [.highlighted], for: label) ?? .tertiaryLabel
 
-				case .disabled:
-					label.textColor = disabledColor
+					default:
+						normalColor = css.getColor(.stroke, selectors: [.primary], for: label) ?? .label
+						highlightColor = css.getColor(.stroke, selectors: [.primary], state: [.highlighted], for: label) ?? .label
+				}
+
+				switch itemState {
+					case .normal:
+						label.textColor = normalColor
+
+					case .highlighted:
+						label.textColor = highlightColor
+
+					case .disabled:
+						label.textColor = disabledColor
+				}
 			}
 		}
 

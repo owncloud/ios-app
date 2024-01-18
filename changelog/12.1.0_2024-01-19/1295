@@ -1,0 +1,5 @@
+Bugfix: Open ownCloud Links in App
+
+Fixed existing feature intending to open files/folders in app, by clicking a private link from outside.
+
+https://github.com/owncloud/ios-app/issues/1295

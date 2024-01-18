@@ -4,7 +4,7 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
 ## App IDs and Provisioning Files
 
-1. You need to generate the following App IDs with `App Groups` and `Associated Domains` enabled on the Apple Developer Portal `Identifiers` section:
+1. You need to generate the following App IDs with only the Capabilities `App Groups` and `Associated Domains` enabled on the Apple Developer Portal `Identifiers` section:
 
    - `com.yourcompany.ios-app`
 
@@ -15,6 +15,8 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
    - `com.yourcompany.ios-app.ownCloud-Intent`
 
    - `com.yourcompany.ios-app.ownCloud-Share-Extension`
+
+   - `com.yourcompany.ios-app.ownCloud-Action-Extension`
 
 2. Generate one App Group:
 
@@ -51,6 +53,7 @@ Create a text file containing a list of line-break separated domain names (FQN) 
    - `FileProviderUI.mobileprovision`
    - `Intent.mobileprovision`
    - `ShareExtension.mobileprovision`
+   - `ActionExtension.mobileprovision`
 
 5. Execute the script
 

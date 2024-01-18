@@ -22,7 +22,7 @@
 @interface FileProviderExtensionThumbnailRequest ()
 {
 	BOOL _isDone;
-	OCResourceRequestItemThumbnail *_thumbnailRequest;
+	__weak OCResourceRequestItemThumbnail *_thumbnailRequest;
 }
 @end
 
@@ -102,7 +102,7 @@
 
 							dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
 								NSError *returnError = (thumbnail==nil) ?
-												((error != nil) ? error.translatedError : OCError(OCErrorInternal)) :
+												((error != nil) ? error.translatedError : nil) :
 												nil;
 
 								self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, returnError);

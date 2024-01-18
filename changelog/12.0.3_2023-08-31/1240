@@ -1,0 +1,5 @@
+Bugfix: Open Folder in Files.app
+
+In some cases it was not possible to open Folder using iOS Files.app.
+
+https://github.com/owncloud/ios-app/issues/1240

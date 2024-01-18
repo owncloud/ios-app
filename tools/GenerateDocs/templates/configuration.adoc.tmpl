@@ -39,6 +39,18 @@ tag::{{$categoryTag | strings.ToLower }}[]
 {{end}}
 !===
 {{end}}
+{{- if has $option "possibleKeys"}}
+[cols="1,1"]
+!===
+! Key
+! Value
+
+{{- range $possibleKeyIndex, $possibleKey := $option.possibleKeys }}
+! `{{ $possibleKey.value }}`
+! {{ $possibleKey.description }}
+{{end}}
+!===
+{{end}}
 |{{- $option.status}}{{if ne $option.status "debugOnly"}} `candidate`{{end}}
 {{end}}
 {{- end}}

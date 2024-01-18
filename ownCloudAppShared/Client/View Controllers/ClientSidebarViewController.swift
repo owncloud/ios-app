@@ -52,7 +52,7 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		super.viewDidLoad()
 
 		// Set up AccountsControllerSource
-		accountsControllerSectionSource = OCDataSourceMapped(source: OCBookmarkManager.shared.bookmarksDatasource, creator: { [weak self] (_, bookmarkDataItem) in
+		accountsControllerSectionSource = OCDataSourceMapped(source: nil, creator: { [weak self] (_, bookmarkDataItem) in
 			if let bookmark = bookmarkDataItem as? OCBookmark, let self = self, let clientContext = self.clientContext {
 				let controller = AccountController(bookmark: bookmark, context: clientContext, configuration: self.controllerConfiguration)
 
@@ -68,16 +68,29 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		}, queue: .main)
 
 		accountsControllerSectionSource?.trackItemVersions = true
+		accountsControllerSectionSource?.source = OCBookmarkManager.shared.bookmarksDatasource
 
 		// Combined data source
-		if let accountsControllerSectionSource, let sidebarLinksDataSource = sidebarLinksDataSource {
-			combinedSectionsDatasource = OCDataSourceComposition(sources: [ accountsControllerSectionSource, sidebarLinksDataSource ])
+		if let accountsControllerSectionSource {
+			var sources: [OCDataSource] = [ accountsControllerSectionSource ]
+
+			if let brandingElementDataSource {
+				sources.insert(brandingElementDataSource, at: 0)
+			}
+
+			if let sidebarLinksDataSource {
+				sources.append(sidebarLinksDataSource)
+			}
+
+			if sources.count > 1 {
+				combinedSectionsDatasource = OCDataSourceComposition(sources: sources)
+			}
 		}
 
 		// Set up Collection View
 		sectionsDataSource = combinedSectionsDatasource ?? accountsControllerSectionSource
 		navigationItem.largeTitleDisplayMode = .never
-		navigationItem.titleView = self.buildNavigationLogoView()
+		navigationItem.titleView = ClientSidebarViewController.buildNavigationLogoView()
 
 		// Add 10pt space at the top so that the first section's account doesn't "stick" to the top
 		collectionView.contentInset.top += 10
@@ -169,6 +182,24 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 		focusedBookmark = newFocusedBookmark
 	}
 
+	public var brandingElementDataSource: OCDataSourceArray? {
+		if Branding.shared.isBranded {
+			let logoSize = CGSize(width: 128, height: 64)
+			let brandView = BrandView(showBackground: true, showLogo: true, logoMaxSize: logoSize, roundedCorners: true, assetSuffix: .sidebar)
+
+			NSLayoutConstraint.activate([
+				brandView.heightAnchor.constraint(equalToConstant: logoSize.height)
+			])
+
+			let elementDataSource = OCDataSourceArray(items: [ brandView ])
+			let section = CollectionViewSection(identifier: "branding-elements", dataSource: elementDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: .sidebar), clientContext: clientContext)
+
+			return OCDataSourceArray(items: [ section ])
+		}
+
+		return nil
+	}
+
 	public var sidebarLinksDataSource: OCDataSourceArray? {
 		if let sidebarLinks = Branding.shared.sidebarLinks {
 			let actions = sidebarLinks.compactMap { link in
@@ -205,11 +236,54 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 
 		return nil
 	}
+
+	// MARK: - Reordering bookmarks
+	func dataItem(for itemRef: CollectionViewController.ItemRef) -> OCDataItem? {
+		let (dataItemRef, sectionID) = unwrap(itemRef)
+
+		if let sectionID, let section = sectionsByID[sectionID] {
+			if let record = try? section.dataSource?.record(forItemRef: dataItemRef) {
+				return record.item
+			}
+		}
+
+		return nil
+	}
+
+	public override func configureDataSource() {
+		super.configureDataSource()
+
+		collectionViewDataSource.reorderingHandlers.canReorderItem = { (itemRef) in
+			// Log.debug("Can reorder \(itemRef)")
+			return true
+		}
+
+		collectionViewDataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+			Log.debug("Did reorder \(transaction)")
+
+			guard let self else { return }
+
+			var reorderedBookmarks: [OCBookmark] = []
+
+			for collectionItemRef in transaction.finalSnapshot.itemIdentifiers {
+				if let accountController = self.dataItem(for: collectionItemRef) as? AccountController,
+				   let bookmark = accountController.bookmark,
+				   let managedBookmark = OCBookmarkManager.shared.bookmark(for: bookmark.uuid) {
+					reorderedBookmarks.append(managedBookmark)
+					Log.debug("Bookmark: \(bookmark.shortName)")
+				}
+			}
+
+			if OCBookmarkManager.shared.bookmarks.count == reorderedBookmarks.count {
+				OCBookmarkManager.shared.replaceBookmarks(reorderedBookmarks)
+			}
+		}
+	}
 }
 
 // MARK: - Branding
 extension ClientSidebarViewController {
-	func buildNavigationLogoView() -> ThemeCSSView {
+	static public func buildNavigationLogoView() -> ThemeCSSView {
 		let logoImage = UIImage(named: "branding-login-logo")
 		let logoImageView = UIImageView(image: logoImage)
 		logoImageView.cssSelector = .icon
@@ -220,17 +294,16 @@ extension ClientSidebarViewController {
 			// Keep aspect ratio + scale logo to 90% of available height
 			logoImageView.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: (logoImage.size.width / logoImage.size.height) * 0.9).isActive = true
 		}
-		
+
 		let logoLabel = ThemeCSSLabel()
 		logoLabel.translatesAutoresizingMaskIntoConstraints = false
 		logoLabel.text = VendorServices.shared.appName
 		logoLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 		logoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 		logoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-		
+
 		let logoContainer = ThemeCSSView(withSelectors: [.logo])
 		logoContainer.translatesAutoresizingMaskIntoConstraints = false
-		logoContainer.addSubview(logoImageView)
 		logoContainer.setContentHuggingPriority(.required, for: .horizontal)
 		logoContainer.setContentHuggingPriority(.required, for: .vertical)
 
@@ -238,16 +311,18 @@ extension ClientSidebarViewController {
 		logoWrapperView.addSubview(logoContainer)
 
 		if VendorServices.shared.isBranded {
+			logoContainer.addSubview(logoLabel)
 			NSLayoutConstraint.activate([
-				logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
-				logoImageView.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
-				logoImageView.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
-				logoImageView.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
+				logoLabel.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
+				logoLabel.bottomAnchor.constraint(lessThanOrEqualTo: logoContainer.bottomAnchor),
+				logoLabel.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
+				logoLabel.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
 				logoContainer.topAnchor.constraint(equalTo: logoWrapperView.topAnchor),
 				logoContainer.bottomAnchor.constraint(equalTo: logoWrapperView.bottomAnchor),
 				logoContainer.centerXAnchor.constraint(equalTo: logoWrapperView.centerXAnchor)
 			])
 		} else {
+			logoContainer.addSubview(logoImageView)
 			logoContainer.addSubview(logoLabel)
 			NSLayoutConstraint.activate([
 				logoImageView.topAnchor.constraint(greaterThanOrEqualTo: logoContainer.topAnchor),
