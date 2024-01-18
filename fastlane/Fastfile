@@ -425,10 +425,9 @@ end
       appicon(
         appicon_image_file: iconPath + iconName,
         appicon_devices: [:ipad, :iphone, :ios_marketing],
-        appicon_path: "../ownCloud/Resources/Assets.xcassets/",
+        appicon_path: "ownCloud/Resources/Assets.xcassets/",
         appicon_name: outputIconName
       )
-      sh("cp ../" + iconPath + "Assets.xcassets/" + outputIconName + "/* " + outputIconPath + outputIconName)
     end
   end
 
