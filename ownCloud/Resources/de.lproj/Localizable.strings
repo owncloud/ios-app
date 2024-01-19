@@ -167,6 +167,12 @@
 "Welcome to %@" = "Willkommen bei %@";
 "Please enter a server URL" = "Bitte geben Sie eine Server-URL ein";
 "Please pick a profile to begin setup" = "Bitte wählen Sie ein Profil, um mit der Einrichtung zu beginnen";
+"The following steps will guide you through the setup process." = "Die folgenden Schritte führen Sie durch den Einrichtungsprozess.";
+"Start setup" = "Einrichtung beginnen";
+"Open login page" = "Anmeldeseite öffnen";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "Wenn Sie 'Weiter' wählen, werden Sie aufgefordert, der App '{{app.name}}' zu erlauben, die Anmeldeseite zu öffnen, auf der Sie Ihre Anmeldedaten eingeben können.";
+"Account setup complete" = "Kontoeinrichtung abgeschlossen";
+"If you'd like to give the account a custom name, please enter it below:" = "Wenn Sie dem Konto einen eigenen Namen geben möchten, geben Sie ihn bitte unten ein:";
 
 /* Single Account */
 "You are connected as\n%@" = "Sie sind verbunden als\n%@";
