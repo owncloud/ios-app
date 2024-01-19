@@ -187,7 +187,7 @@ platform :ios do
 
           puts("Build EMM iOS App…")
           # Moving all EMM resources to the correct place
-          sh "cp -R ../ownCloud/Resources/Theming/com.owncloud.ios-app.emm/* ../ownCloud/Resources/Theming/branding-assets/"
+          sh "cp -R ../ownCloud/Resources/Theming/com.owncloud.ios-app.emm/*.png ../ownCloud/Resources/Theming/branding-assets/"
 
           # Build App
           owncloud_emm_build()
@@ -223,7 +223,8 @@ platform :ios do
         puts("Build ownCloud Online iOS App…")
 
         # Moving all ownCloud.online resources to the correct place
-        sh "cp -R  ../ownCloud/Resources/Theming/online.owncloud.ios-app/* ../ownCloud/Resources/Theming/branding-assets/"
+        sh "cp -R  ../ownCloud/Resources/Theming/online.owncloud.ios-app/*.png ../ownCloud/Resources/Theming/branding-assets/"
+        sh "cp ../ownCloud/Resources/Theming/online.owncloud.ios-app/Branding.plist ../ownCloud/Resources/Theming/"
         
         # Build App
         owncloud_online_build()
