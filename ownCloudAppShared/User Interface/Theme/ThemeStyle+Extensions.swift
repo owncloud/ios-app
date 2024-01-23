@@ -47,7 +47,7 @@ extension ThemeStyle {
 
 		Log.error("Couldn't get defaultStyle")
 
-		return ThemeStyle.ownCloudDark
+		return ThemeStyle.systemDark()
 	}
 
 	static public var preferredStyle : ThemeStyle {
@@ -185,9 +185,7 @@ extension ThemeStyle {
 
 	static public func registerDefaultStyles() {
 		if !Branding.shared.setupThemeStyles() {
-			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension(isDefault: true))
-			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension())
-			OCExtensionManager.shared.addExtension(ThemeStyle.systemLight().themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.systemLight().themeStyleExtension(isDefault: true))
 			OCExtensionManager.shared.addExtension(ThemeStyle.systemDark().themeStyleExtension())
 		}
 	}
