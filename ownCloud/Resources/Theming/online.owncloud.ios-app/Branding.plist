@@ -13,16 +13,13 @@
 	<key>branding.profile-definitions</key>
 	<array>
 		<dict>
-			<key>allowedAuthenticationMethods</key>
-			<array>
-				<string>com.owncloud.basicauth</string>
-				<string>com.owncloud.oauth2</string>
-			</array>
 			<key>allowedHosts</key>
 			<array>
 				<string>owncloud.online</string>
 				<string>owncloud.com</string>
 				<string>owncloud.team</string>
+				<string>owncloud.works</string>
+				<string>owncloud.org</string>
 			</array>
 			<key>bookmarkName</key>
 			<string>ownCloud Online</string>
@@ -46,9 +43,9 @@
 	</array>
 	<key>branding.send-feedback-address</key>
 	<string></string>
-	<key>branding.theme-definitions$[0].Colors.Icon.folderFillColor</key>
-	<string>#52DDA9</string>
 	<key>branding.theme-definitions$[0].darkBrandColor</key>
+	<string>#52DDA9</string>
+	<key>branding.theme-definitions$[0].lightBrandColor</key>
 	<string>#628a99</string>
 	<key>branding.url-help</key>
 	<string>https://owncloud.online/faq/</string>
