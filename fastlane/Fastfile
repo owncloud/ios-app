@@ -181,7 +181,7 @@ platform :ios do
           prepare_metadata(
           	create_release_notes: options[:create_release_notes],
           	create_screenshots: options[:create_screenshots],
-          	app_name: "ownCloud",
+          	app_name: "ownCloud EMM",
           	metadata_path: 'fastlane/metadata-emm/en-US/release_notes.txt'
           )
 
