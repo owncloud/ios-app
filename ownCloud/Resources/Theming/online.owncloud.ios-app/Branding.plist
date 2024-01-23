@@ -43,10 +43,17 @@
 	</array>
 	<key>branding.send-feedback-address</key>
 	<string></string>
-	<key>branding.theme-definitions$[0].darkBrandColor</key>
-	<string>#52DDA9</string>
-	<key>branding.theme-definitions$[0].lightBrandColor</key>
-	<string>#628a99</string>
+	<key>branding.theme-colors</key>
+	<dict>
+		<key>branding-background-color</key>
+		<string>#628a99</string>
+		<key>setup-status-bar-style</key>
+		<string>black</string>
+		<key>folder-icon-color</key>
+		<string>#52DDA9</string>
+		<key>file-icon-color</key>
+		<string>#52DDA9</string>
+	</dict>
 	<key>branding.url-help</key>
 	<string>https://owncloud.online/faq/</string>
 	<key>branding.url-privacy</key>
