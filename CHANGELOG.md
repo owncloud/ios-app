@@ -1,6 +1,6 @@
 # Table of Contents
 
-* [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-19)
+* [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-29)
 * [Changelog for 12.0.3](#changelog-for-owncloud-ios-client-1203-2023-08-31)
 * [Changelog for 12.0.2](#changelog-for-owncloud-ios-client-1202-2023-06-23)
 * [Changelog for 12.0.1](#changelog-for-owncloud-ios-client-1201-2023-06-15)
@@ -22,7 +22,7 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
-# Changelog for ownCloud iOS Client [12.1.0] (2024-01-19)
+# Changelog for ownCloud iOS Client [12.1.0] (2024-01-29)
 The following sections list the changes in ownCloud iOS Client 12.1.0 relevant to
 ownCloud admins and users.
 
