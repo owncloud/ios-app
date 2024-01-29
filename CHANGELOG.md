@@ -1,3 +1,30 @@
+=======================================
+=======
+# Table of Contents
+
+* [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-19)
+* [Changelog for 12.0.3](#changelog-for-owncloud-ios-client-1203-2023-08-31)
+* [Changelog for 12.0.2](#changelog-for-owncloud-ios-client-1202-2023-06-23)
+* [Changelog for 12.0.1](#changelog-for-owncloud-ios-client-1201-2023-06-15)
+* [Changelog for 12.0.0](#changelog-for-owncloud-ios-client-1200-2023-06-12)
+* [Changelog for 11.11.1](#changelog-for-owncloud-ios-client-11111-2022-10-30)
+* [Changelog for 11.11.0](#changelog-for-owncloud-ios-client-11110-2022-09-26)
+* [Changelog for 11.10.1](#changelog-for-owncloud-ios-client-11101-2022-08-02)
+* [Changelog for 11.10.0](#changelog-for-owncloud-ios-client-11100-2022-05-18)
+* [Changelog for 11.9.1](#changelog-for-owncloud-ios-client-1191-2022-03-29)
+* [Changelog for 11.9.0](#changelog-for-owncloud-ios-client-1190-2022-03-16)
+* [Changelog for 11.8.2](#changelog-for-owncloud-ios-client-1182-2022-01-17)
+* [Changelog for 11.8.1](#changelog-for-owncloud-ios-client-1181-2021-12-22)
+* [Changelog for 11.8.0](#changelog-for-owncloud-ios-client-1180-2021-12-01)
+* [Changelog for 11.7.1](#changelog-for-owncloud-ios-client-1171-2021-09-22)
+* [Changelog for 11.7.0](#changelog-for-owncloud-ios-client-1170-2021-07-29)
+* [Changelog for 11.6.1](#changelog-for-owncloud-ios-client-1161-2021-06-24)
+* [Changelog for 11.6.0](#changelog-for-owncloud-ios-client-1160-2021-05-12)
+* [Changelog for 11.5.2](#changelog-for-owncloud-ios-client-1152-2021-03-03)
+* [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
+* [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
+* [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+
 Changelog for ownCloud iOS Client [12.1.0] (2024-01-19)
 =======================================
 The following sections list the changes in ownCloud iOS Client 12.1.0 relevant to
@@ -107,15 +134,14 @@ Details
 
    https://github.com/owncloud/enterprise/issues/6112
 
-Changelog for ownCloud iOS Client [12.0.3] (2023-08-31)
-=======================================
+# Changelog for ownCloud iOS Client [12.0.3] (2023-08-31)
+
 The following sections list the changes in ownCloud iOS Client 12.0.3 relevant to
 ownCloud admins and users.
 
 [12.0.3]: https://github.com/owncloud/ios-app/compare/milestone/12.0.2...milestone/12.0.3
 
-Summary
--------
+## Summary
 
 * Bugfix - Upload-Metadata: [#1227](https://github.com/owncloud/ios-app/issues/1227)
 * Bugfix - Open Folder in Files.app: [#1240](https://github.com/owncloud/ios-app/issues/1240)
@@ -126,8 +152,7 @@ Summary
 * Bugfix - Open in Web for ownCloud 10: [#5747](https://github.com/owncloud/enterprise/issues/5747)
 * Bugfix - Copy Item not working: [#5889](https://github.com/owncloud/enterprise/issues/5889)
 
-Details
--------
+## Details
 
 * Bugfix - Upload-Metadata: [#1227](https://github.com/owncloud/ios-app/issues/1227)
 
@@ -177,23 +202,20 @@ Details
 
    https://github.com/owncloud/enterprise/issues/5889
 
-Changelog for ownCloud iOS Client [12.0.2] (2023-06-23)
-=======================================
+# Changelog for ownCloud iOS Client [12.0.2] (2023-06-23)
 The following sections list the changes in ownCloud iOS Client 12.0.2 relevant to
 ownCloud admins and users.
 
 [12.0.2]: https://github.com/owncloud/ios-app/compare/milestone/12.0.1...milestone/12.0.2
 
-Summary
--------
+## Summary
 
 * Bugfix - Unable to authenticate using OpenID Connect: [#1219](https://github.com/owncloud/ios-app/issues/1219)
 * Bugfix - Files.app: [#1223](https://github.com/owncloud/ios-app/pull/1223)
 * Bugfix - Recent files view: [#1225](https://github.com/owncloud/ios-app/pull/1225)
 * Bugfix - Attach files from third-party apps: [#1228](https://github.com/owncloud/ios-app/pull/1228)
 
-Details
--------
+## Details
 
 * Bugfix - Unable to authenticate using OpenID Connect: [#1219](https://github.com/owncloud/ios-app/issues/1219)
 
@@ -220,20 +242,17 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1228
 
-Changelog for ownCloud iOS Client [12.0.1] (2023-06-15)
-=======================================
+# Changelog for ownCloud iOS Client [12.0.1] (2023-06-15)
 The following sections list the changes in ownCloud iOS Client 12.0.1 relevant to
 ownCloud admins and users.
 
 [12.0.1]: https://github.com/owncloud/ios-app/compare/milestone/12.0.0...milestone/12.0.1
 
-Summary
--------
+## Summary
 
 * Bugfix - Several Bug Fixes: [#1220](https://github.com/owncloud/ios-app/pull/1220)
 
-Details
--------
+## Details
 
 * Bugfix - Several Bug Fixes: [#1220](https://github.com/owncloud/ios-app/pull/1220)
 
@@ -242,15 +261,13 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1220
 
-Changelog for ownCloud iOS Client [12.0.0] (2023-06-12)
-=======================================
+# Changelog for ownCloud iOS Client [12.0.0] (2023-06-12)
 The following sections list the changes in ownCloud iOS Client 12.0.0 relevant to
 ownCloud admins and users.
 
 [12.0.0]: https://github.com/owncloud/ios-app/compare/milestone/11.11.1...milestone/12.0.0
 
-Summary
--------
+## Summary
 
 * Change - Spaces/Drives / Graph API support: [#92](https://github.com/owncloud/ios-sdk/pull/92)
 * Change - Gridview implementation: [#744](https://github.com/owncloud/ios-app/issues/744)
@@ -267,8 +284,7 @@ Summary
 * Change - Disable access to File Provider via MDM: [#5371](https://github.com/owncloud/enterprise/issues/5371)
 * Change - Dynamic Instance Logo: [#5505](https://github.com/owncloud/enterprise/issues/5505)
 
-Details
--------
+## Details
 
 * Change - Spaces/Drives / Graph API support: [#92](https://github.com/owncloud/ios-sdk/pull/92)
 
@@ -360,20 +376,17 @@ Details
 
    https://github.com/owncloud/enterprise/issues/5505
 
-Changelog for ownCloud iOS Client [11.11.1] (2022-10-30)
-=======================================
+# Changelog for ownCloud iOS Client [11.11.1] (2022-10-30)
 The following sections list the changes in ownCloud iOS Client 11.11.1 relevant to
 ownCloud admins and users.
 
 [11.11.1]: https://github.com/owncloud/ios-app/compare/milestone/11.11.0...milestone/11.11.1
 
-Summary
--------
+## Summary
 
 * Bugfix - Enabling Markup Mode: [#1141](https://github.com/owncloud/ios-app/issues/1141)
 
-Details
--------
+## Details
 
 * Bugfix - Enabling Markup Mode: [#1141](https://github.com/owncloud/ios-app/issues/1141)
 
@@ -381,15 +394,13 @@ Details
 
    https://github.com/owncloud/ios-app/issues/1141
 
-Changelog for ownCloud iOS Client [11.11.0] (2022-09-26)
-=======================================
+# Changelog for ownCloud iOS Client [11.11.0] (2022-09-26)
 The following sections list the changes in ownCloud iOS Client 11.11.0 relevant to
 ownCloud admins and users.
 
 [11.11.0]: https://github.com/owncloud/ios-app/compare/milestone/11.10.1...milestone/11.11.0
 
-Summary
--------
+## Summary
 
 * Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
 * Bugfix - Enabling Markup Mode, Showing Video Controls on iOS 16, Updating Theme: [#1141](https://github.com/owncloud/ios-app/issues/1141)
@@ -397,8 +408,7 @@ Summary
 * Bugfix - Video Metadata Image: [#5296](https://github.com/owncloud/enterprise/issues/5296)
 * Change - New Dark Mode Themes: [#1146](https://github.com/owncloud/ios-app/issues/1146)
 
-Details
--------
+## Details
 
 * Bugfix - Respect privateLinks capability: [#1138](https://github.com/owncloud/ios-app/issues/1138)
 
@@ -436,22 +446,19 @@ Details
 
    https://github.com/owncloud/ios-app/issues/1146
 
-Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
-=======================================
+# Changelog for ownCloud iOS Client [11.10.1] (2022-08-02)
 The following sections list the changes in ownCloud iOS Client 11.10.1 relevant to
 ownCloud admins and users.
 
 [11.10.1]: https://github.com/owncloud/ios-app/compare/milestone/11.10.0...milestone/11.10.1
 
-Summary
--------
+## Summary
 
 * Bugfix - (Branding) Biometrical Unlock in Share Sheet: [#1129](https://github.com/owncloud/ios-app/pull/1129)
 * Bugfix - Show folder contents from cache when offline: [#1130](https://github.com/owncloud/ios-app/issues/1130)
 * Bugfix - (Branding) Color Issues: [#1132](https://github.com/owncloud/ios-app/pull/1132)
 
-Details
--------
+## Details
 
 * Bugfix - (Branding) Biometrical Unlock in Share Sheet: [#1129](https://github.com/owncloud/ios-app/pull/1129)
 
@@ -474,15 +481,13 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1132
 
-Changelog for ownCloud iOS Client [11.10.0] (2022-05-18)
-=======================================
+# Changelog for ownCloud iOS Client [11.10.0] (2022-05-18)
 The following sections list the changes in ownCloud iOS Client 11.10.0 relevant to
 ownCloud admins and users.
 
 [11.10.0]: https://github.com/owncloud/ios-app/compare/milestone/11.9.1...milestone/11.10.0
 
-Summary
--------
+## Summary
 
 * Bugfix - IOS 15 SDK: [#1066](https://github.com/owncloud/ios-app/issues/1066)
 * Bugfix - EMM Shortcuts Licensing: [#1114](https://github.com/owncloud/ios-app/issues/1114)
@@ -490,8 +495,7 @@ Summary
 * Bugfix - Shortcuts Action Delete Path Item: [#1123](https://github.com/owncloud/ios-app/issues/1123)
 * Change - Migration to OpenSSL 1.1.0: [#1116](https://github.com/owncloud/ios-app/pull/1116)
 
-Details
--------
+## Details
 
 * Bugfix - IOS 15 SDK: [#1066](https://github.com/owncloud/ios-app/issues/1066)
 
@@ -525,21 +529,18 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1116
 
-Changelog for ownCloud iOS Client [11.9.1] (2022-03-29)
-=======================================
+# Changelog for ownCloud iOS Client [11.9.1] (2022-03-29)
 The following sections list the changes in ownCloud iOS Client 11.9.1 relevant to
 ownCloud admins and users.
 
 [11.9.1]: https://github.com/owncloud/ios-app/compare/milestone/11.9.0...milestone/11.9.1
 
-Summary
--------
+## Summary
 
 * Bugfix - Setup Passcode with Biometrical Unlock: [#1112](https://github.com/owncloud/ios-app/pull/1112)
 * Change - Set App Group Identifier: [#1099](https://github.com/owncloud/ios-app/pull/1099)
 
-Details
--------
+## Details
 
 * Bugfix - Setup Passcode with Biometrical Unlock: [#1112](https://github.com/owncloud/ios-app/pull/1112)
 
@@ -557,15 +558,13 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1099
 
-Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
-=======================================
+# Changelog for ownCloud iOS Client [11.9.0] (2022-03-16)
 The following sections list the changes in ownCloud iOS Client 11.9.0 relevant to
 ownCloud admins and users.
 
 [11.9.0]: https://github.com/owncloud/ios-app/compare/milestone/11.8.2...milestone/11.9.0
 
-Summary
--------
+## Summary
 
 * Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
 * Bugfix - OAuth token renewal race condition: [#1105](https://github.com/owncloud/ios-app/pull/1105)
@@ -575,8 +574,7 @@ Summary
 * Change - Poll for changes efficiency enhancements: [#1043](https://github.com/owncloud/ios-app/pull/1043)
 * Change - Webfinger / server location: [#1059](https://github.com/owncloud/ios-app/pull/1059)
 
-Details
--------
+## Details
 
 * Bugfix - Fix WebDAV endpoint URL for media playback after restoration: [#1093](https://github.com/owncloud/ios-app/pull/1093)
 
@@ -627,22 +625,19 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1059
 
-Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
-=======================================
+# Changelog for ownCloud iOS Client [11.8.2] (2022-01-17)
 The following sections list the changes in ownCloud iOS Client 11.8.2 relevant to
 ownCloud admins and users.
 
 [11.8.2]: https://github.com/owncloud/ios-app/compare/milestone/11.8.1...milestone/11.8.2
 
-Summary
--------
+## Summary
 
 * Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
 * Bugfix - PDF Editing: [#4934](https://github.com/owncloud/enterprise/issues/4934)
 * Change - (Branding) Corporate Color as Folder Color: [#1069](https://github.com/owncloud/ios-app/issues/1069)
 
-Details
--------
+## Details
 
 * Bugfix - Continuous Audio Playback: [#4924](https://github.com/owncloud/enterprise/issues/4924)
 
@@ -663,21 +658,18 @@ Details
 
    https://github.com/owncloud/ios-app/issues/1069
 
-Changelog for ownCloud iOS Client [11.8.1] (2021-12-22)
-=======================================
+# Changelog for ownCloud iOS Client [11.8.1] (2021-12-22)
 The following sections list the changes in ownCloud iOS Client 11.8.1 relevant to
 ownCloud admins and users.
 
 [11.8.1]: https://github.com/owncloud/ios-app/compare/milestone/11.8.0...milestone/11.8.1
 
-Summary
--------
+## Summary
 
 * Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
 * Change - Fallback on OIDC Dynamic Client Registration: [#1068](https://github.com/owncloud/ios-app/pull/1068)
 
-Details
--------
+## Details
 
 * Change - Localized Sort Order: [#975](https://github.com/owncloud/ios-app/issues/975)
 
@@ -695,15 +687,13 @@ Details
 
    https://github.com/owncloud/ios-app/pull/1068
 
-Changelog for ownCloud iOS Client [11.8.0] (2021-12-01)
-=======================================
+# Changelog for ownCloud iOS Client [11.8.0] (2021-12-01)
 The following sections list the changes in ownCloud iOS Client 11.8.0 relevant to
 ownCloud admins and users.
 
 [11.8.0]: https://github.com/owncloud/ios-app/compare/milestone/11.7.1...milestone/11.8.0
 
-Summary
--------
+## Summary
 
 * Bugfix - Background Location Settings: [#1050](https://github.com/owncloud/ios-app/issues/1050)
 * Bugfix - Clear Passcode Lock: [#1061](https://github.com/owncloud/ios-app/pull/1061)
@@ -721,8 +711,7 @@ Summary
 * Change - (Branding) Biometrical Unlock Setting: [#4818](https://github.com/owncloud/enterprise/issues/4818)
 * Change - (Branding) Custom App/Auth Schemes: [#4857](https://github.com/owncloud/enterprise/issues/4857)
 
-Details
--------
+## Details
 
 * Bugfix - Background Location Settings: [#1050](https://github.com/owncloud/ios-app/issues/1050)
 
@@ -826,15 +815,13 @@ Details
 
    https://github.com/owncloud/enterprise/issues/4857
 
-Changelog for ownCloud iOS Client [11.7.1] (2021-09-22)
-=======================================
+# Changelog for ownCloud iOS Client [11.7.1] (2021-09-22)
 The following sections list the changes in ownCloud iOS Client 11.7.1 relevant to
 ownCloud admins and users.
 
 [11.7.1]: https://github.com/owncloud/ios-app/compare/milestone/11.7.0...milestone/11.7.1
 
-Summary
--------
+## Summary
 
 * Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
 * Bugfix - Enabling Markup Edit Mode on iOS 15: [#1012](https://github.com/owncloud/ios-app/issues/1012)
@@ -851,8 +838,7 @@ Summary
 * Change - MDM-configurable App Lock Interval: [#4741](https://github.com/owncloud/enterprise/issues/4741)
 * Change - Configurable poll interval: [#8777](https://github.com/owncloud/client/pull/8777)
 
-Details
--------
+## Details
 
 * Bugfix - (PDF-Viewer) Keyboard does not disappear: [#894](https://github.com/owncloud/ios-app/issues/894)
 
@@ -948,23 +934,20 @@ Details
 
    https://github.com/owncloud/client/pull/8777
 
-Changelog for ownCloud iOS Client [11.7.0] (2021-07-29)
-=======================================
+# Changelog for ownCloud iOS Client [11.7.0] (2021-07-29)
 The following sections list the changes in ownCloud iOS Client 11.7.0 relevant to
 ownCloud admins and users.
 
 [11.7.0]: https://github.com/owncloud/ios-app/compare/milestone/11.6.1...milestone/11.7.0
 
-Summary
--------
+## Summary
 
 * Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
 * Change - Background Media Upload: [#958](https://github.com/owncloud/ios-app/pull/958)
 * Change - Six Digits Passcode: [#958](https://github.com/owncloud/ios-app/pull/958)
 * Change - Filename Layout: [#968](https://github.com/owncloud/ios-app/issues/968)
 
-Details
--------
+## Details
 
 * Change - Clipboard Support: [#514](https://github.com/owncloud/ios-app/pull/514)
 
@@ -998,23 +981,20 @@ Details
 
    https://github.com/owncloud/ios-app/issues/968
 
-Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
-=======================================
+# Changelog for ownCloud iOS Client [11.6.1] (2021-06-24)
 The following sections list the changes in ownCloud iOS Client 11.6.1 relevant to
 ownCloud admins and users.
 
 [11.6.1]: https://github.com/owncloud/ios-app/compare/milestone/11.6.0...milestone/11.6.1
 
-Summary
--------
+## Summary
 
 * Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
 * Bugfix - In some cases, background media upload worked not as expected: [#4547](https://github.com/owncloud/enterprise/issues/4547)
 * Bugfix - Fixed misleading warnings at let's encrypt cert renewal: [#4558](https://github.com/owncloud/enterprise/issues/4558)
 * Change - Additional URL Scheme: [#979](https://github.com/owncloud/ios-app/issues/979)
 
-Details
--------
+## Details
 
 * Bugfix - FileProvider UI on iOS 12: [#986](https://github.com/owncloud/ios-app/issues/986)
 
@@ -1039,15 +1019,13 @@ Details
 
    https://github.com/owncloud/ios-app/issues/979
 
-Changelog for ownCloud iOS Client [11.6.0] (2021-05-12)
-=======================================
+# Changelog for ownCloud iOS Client [11.6.0] (2021-05-12)
 The following sections list the changes in ownCloud iOS Client 11.6.0 relevant to
 ownCloud admins and users.
 
 [11.6.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.2...milestone/11.6.0
 
-Summary
--------
+## Summary
 
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 * Bugfix - Changed wording in documentation: [#867](https://github.com/owncloud/ios-app/pull/867)
@@ -1086,8 +1064,7 @@ Summary
 * Change - "Go to Page" reallocated in PDF previews: [#4448](https://github.com/owncloud/enterprise/issues/4448)
 * Change - French Localization: [#4450](https://github.com/owncloud/enterprise/issues/4450)
 
-Details
--------
+## Details
 
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 
@@ -1357,22 +1334,19 @@ Details
 
    https://github.com/owncloud/enterprise/issues/4450
 
-Changelog for ownCloud iOS Client [11.5.2] (2021-03-03)
-=======================================
+# Changelog for ownCloud iOS Client [11.5.2] (2021-03-03)
 The following sections list the changes in ownCloud iOS Client 11.5.2 relevant to
 ownCloud admins and users.
 
 [11.5.2]: https://github.com/owncloud/ios-app/compare/milestone/11.5.1...milestone/11.5.2
 
-Summary
--------
+## Summary
 
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 * Bugfix - Misplaced Collapsible Progress Bar in detail view: [#906](https://github.com/owncloud/ios-app/issues/906)
 * Bugfix - Accessing hyperlinks in PDF documents: [#4432](https://github.com/owncloud/enterprise/issues/4432)
 
-Details
--------
+## Details
 
 * Bugfix - PDF thumbnail view position on the iPad: [#905](https://github.com/owncloud/ios-app/pull/905)
 
@@ -1395,20 +1369,17 @@ Details
 
    https://github.com/owncloud/enterprise/issues/4432
 
-Changelog for ownCloud iOS Client [11.5.1] (2021-02-17)
-=======================================
+# Changelog for ownCloud iOS Client [11.5.1] (2021-02-17)
 The following sections list the changes in ownCloud iOS Client 11.5.1 relevant to
 ownCloud admins and users.
 
 [11.5.1]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.1
 
-Summary
--------
+## Summary
 
 * Bugfix - Fix Crash on iOS 12 devices: [#896](https://github.com/owncloud/ios-app/pull/896)
 
-Details
--------
+## Details
 
 * Bugfix - Fix Crash on iOS 12 devices: [#896](https://github.com/owncloud/ios-app/pull/896)
 
@@ -1416,15 +1387,13 @@ Details
 
    https://github.com/owncloud/ios-app/pull/896
 
-Changelog for ownCloud iOS Client [11.5.0] (2021-02-10)
-=======================================
+# Changelog for ownCloud iOS Client [11.5.0] (2021-02-10)
 The following sections list the changes in ownCloud iOS Client 11.5.0 relevant to
 ownCloud admins and users.
 
 [11.5.0]: https://github.com/owncloud/ios-app/compare/milestone/11.5.0...milestone/11.5.0
 
-Summary
--------
+## Summary
 
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 * Bugfix - Changed wording in documentation: [#867](https://github.com/owncloud/ios-app/pull/867)
@@ -1446,8 +1415,7 @@ Summary
 * Change - Automated Calens Changelog Creation: [#879](https://github.com/owncloud/ios-app/pull/879)
 * Change - MDM Enhancements: [#4104](https://github.com/owncloud/enterprise/issues/4104)
 
-Details
--------
+## Details
 
 * Bugfix - Improved AppStore Review Request Time: [#845](https://github.com/owncloud/ios-app/pull/845)
 
@@ -1595,6 +1563,7 @@ Details
 
    https://github.com/owncloud/enterprise/issues/4104
 
+# Changelog for 11.4.5 versions and below
 ## Release version 11.4.5 (January 2021)
 
 - Fix: Crash in Detail View (#855)
