@@ -1865,6 +1865,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Sort by Last Used</string>
+					<key>Subtitle</key>
+					<string>Introducing a new sorting method - “Last Used” - which allows you to sort items based on the most recently accessed ones.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>arrow.up.arrow.down</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Markup Edit Mode on iOS 17</string>
 					<key>Subtitle</key>
 					<string>We have fixed the issue that was disabling the edit mode in the markup document view on iOS 17.</string>

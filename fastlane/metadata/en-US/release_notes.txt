@@ -19,6 +19,9 @@ We have added a new action called "Save to ownCloud" to the share sheet, allowin
 • Link naming:
 You can now enter and edit the name of link shares.
 
+• Sort by Last Used:
+Introducing a new sorting method - “Last Used” - which allows you to sort items based on the most recently accessed ones.
+
 • Markup Edit Mode on iOS 17:
 We have fixed the issue that was disabling the edit mode in the markup document view on iOS 17.
 
