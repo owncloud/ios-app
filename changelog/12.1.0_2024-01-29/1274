@@ -1,7 +1,0 @@
-Change: New account wizard
-
-- reimplementation of the new account wizard
-- support for reordering accounts in the sidebar via drag and drop
-- adds location breadcrumb dropdown in the viewer
-
-https://github.com/owncloud/ios-app/pull/1274

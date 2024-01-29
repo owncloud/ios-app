@@ -215,7 +215,7 @@
          <EnvironmentVariable
             key = "oc:log.enabled-components"
             value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.colored"
@@ -338,6 +338,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:server-locator.use"
+            value = "string:web-finger"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:connection.allowed-authentication-methods"
             value = "[openid-connect,oauth2]"
             isEnabled = "NO">
@@ -440,46 +445,6 @@
          <EnvironmentVariable
             key = "oc:branding.url-theme-json"
             value = "string:auto"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:server-locator.use"
-            value = "string:web-finger"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:branding.profile-url"
-            value = "string:https://lookup.example.com/"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:branding.profile-allow-url-configuration"
-            value = "false"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:branding.profile-bookmark-name"
-            value = "string:MyBrandName"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:branding.profile-help-button-label"
-            value = "string:Help page"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:branding.profile-open-help-message"
-            value = "string:Click the button above to open the help page."
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:branding.profile-help-url"
-            value = "string:https://www.owncloud.com/"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "oc:action.allow-image-interactions"
-            value = "false"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

@@ -106,7 +106,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 		prepareNavigationController()
 
-		showMessage(with: "Connecting…".localized)
+		showCancelLabel(with: "Connecting…".localized)
 
 		var actionTypeLabel = ""
 		var actionExtensionType : ActionExtensionType = .undefined
@@ -139,7 +139,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 					OnMainThread {
 						if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false || item.isShareable == false {
-							self.showMessage(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
+							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
 						} else if core.connectionStatus == .online {
 							self.coreConnectionStatusObservation?.invalidate()
 							self.coreConnectionStatusObservation = nil
@@ -157,18 +157,18 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 							}
 						} else if core.connectionStatus == .connecting {
 							triedConnecting = true
-							self.showMessage(with: "Connecting…".localized)
+							self.showCancelLabel(with: "Connecting…".localized)
 						} else if core.connectionStatus == .offline || core.connectionStatus == .unavailable {
 							// Display error if `.connecting` isn't reached within 2 seconds
 							OnMainThread(after: 2) {
 								if !triedConnecting {
-									self.showMessage(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
+									self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
 								}
 							}
 
 							// Display error if `.connecting` has already been reached
 							if triedConnecting {
-								self.showMessage(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
+								self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
 							}
 						}
 					}
@@ -180,18 +180,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	override func prepare(forError error: Error) {
 		if !OCFileProviderSettings.browseable {
 			prepareNavigationController()
-			showMessage(with: "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.".localized)
-			return
-		}
-
-		if OCBookmarkManager.shared.bookmarks.count == 0 {
-			prepareNavigationController()
-			showMessage(with: "No account has been set up in the {{app.name}} app yet.".localized, buttonLabel: "Open app".localized, action: { [weak self] in
-				if let appURLScheme = OCAppIdentity.shared.appURLSchemes?.first {
-					self?.extensionContext.open(URL(string: "\(appURLScheme)://fp-no-account")!)
-				}
-				self?.complete()
-			})
+			showCancelLabel(with: "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.".localized)
 			return
 		}
 
@@ -208,29 +197,20 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 			AppLockManager.shared.showLockscreenIfNeeded()
 		} else {
 			prepareNavigationController()
-			showMessage(with: "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized)
+			showCancelLabel(with: "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized)
 		}
 	}
 
-	func showMessage(with message: String, buttonLabel: String? = nil, action: CancelLabelViewController.CancelAction? = nil) {
+	func showCancelLabel(with message: String) {
 		OnMainThread {
-			var messageController: CancelLabelViewController?
-
 			if let currentController = self.themeNavigationController?.viewControllers.first as? CancelLabelViewController {
-				messageController = currentController
+				currentController.updateCancelLabels(with: message)
 			} else if let cancelLabelViewController = UIStoryboard.init(name: "MainInterface", bundle: nil).instantiateViewController(withIdentifier: "CancelLabelViewController") as? CancelLabelViewController {
-				messageController = cancelLabelViewController
-			}
-
-			if let messageController {
-				messageController.updateCancelLabels(with: message, buttonLabel: buttonLabel)
-				messageController.cancelAction = action ?? { [weak self] in
+				cancelLabelViewController.updateCancelLabels(with: message)
+				cancelLabelViewController.cancelAction = { [weak self] in
 					self?.complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 				}
-
-				if self.themeNavigationController?.viewControllers.first != messageController {
-					self.themeNavigationController?.viewControllers = [ messageController ]
-				}
+				self.themeNavigationController?.viewControllers = [ cancelLabelViewController ]
 			}
 		}
 	}

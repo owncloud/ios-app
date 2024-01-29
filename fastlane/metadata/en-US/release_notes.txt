@@ -1,32 +1,3 @@
-• New account wizard:
-Introducing a new, intuitive account wizard user interface for a fast onboarding experience.
+• Bug Fixes
+Fixed File Provider, App Provider and layout issues.
 
-• Reordering accounts:
-Now you can easily reorder accounts in the sidebar by simply dragging and dropping them.
-
-• Location breadcrumb:
-We have added a location breadcrumb dropdown in the file viewer, making it easier to navigate through your files.
-
-• Text recognition:
-You can now perform text recognition actions on images.
-
-• File extension / suffix protection:
-To prevent accidental removal or modification of the suffix for new documents and document scanner files, we have implemented file extension protection.
-
-• Share Action "Save to ownCloud":
-We have added a new action called "Save to ownCloud" to the share sheet, allowing you to easily save files to your ownCloud account.
-
-• Link naming:
-You can now enter and edit the name of link shares.
-
-• Sort by Last Used:
-Introducing a new sorting method - “Last Used” - which allows you to sort items based on the most recently accessed ones.
-
-• Markup Edit Mode on iOS 17:
-We have fixed the issue that was disabling the edit mode in the markup document view on iOS 17.
-
-• Open ownCloud Links in App:
-We have resolved the issue with opening private links from third-party apps.
-
-• Bug Fixes:
-We have addressed various issues with the File Provider and the app itself.

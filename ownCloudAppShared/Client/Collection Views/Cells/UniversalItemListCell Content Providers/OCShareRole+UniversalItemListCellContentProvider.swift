@@ -25,7 +25,6 @@ extension OCShareRole: UniversalItemListCellContentProvider {
 
 		if let icon = OCSymbol.icon(forSymbolName: symbolName) {
 			content.icon = .icon(image: icon)
-			content.iconWidth = UniversalItemListCell.defaultIconSize.width / 2
 		}
 
 		content.title = .text(localizedName)

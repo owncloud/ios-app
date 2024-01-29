@@ -673,64 +673,33 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		set {
-			if navigationItem.titleView is ClientLocationPopupButton {
-				navigationItem.titleView = nil
-			}
-
 			navigationItem.titleLabelText = newValue
 			navigationItem.title = newValue
 		}
 	}
 
-	var useNavigationLocationBreadcrumbDropdown: Bool {
-		return UIDevice.current.userInterfaceIdiom == .pad
-	}
-
-	var navigationLocation: OCLocation? {
-		didSet {
-			if let clientContext, let navigationLocation, !navigationLocation.isRoot {
-				navigationItem.titleView = ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
-			} else {
-				if navigationItem.titleView is ClientLocationPopupButton {
-					navigationItem.titleView = nil
-				}
-			}
-		}
-	}
-
 	func updateNavigationTitleFromContext() {
 		var navigationTitle: String?
-		var navigationLocation: OCLocation?
 
 		// Set navigation title from location (if provided)
 		if let location {
 			navigationTitle = location.displayName(in: clientContext)
-			navigationLocation = location
 		}
 
 		// Set navigation title from queryLocation
 		if navigationTitle == nil, let queryLocation = query?.queryLocation {
 			navigationTitle = queryLocation.displayName(in: clientContext)
-			navigationLocation = queryLocation
 		}
 
 		// Set navigation title from rootItem.name
-		if navigationTitle == nil, let queryRootItem = self.clientContext?.rootItem as? OCItem {
-			navigationTitle = queryRootItem.name
-			navigationLocation = queryRootItem.location
+		if navigationTitle == nil {
+			navigationTitle = (self.clientContext?.rootItem as? OCItem)?.name
 		}
 
-		// Compose navigation title
-		if useNavigationLocationBreadcrumbDropdown {
-			self.navigationLocation = navigationLocation
-		}
-
-		if navigationLocation == nil || !useNavigationLocationBreadcrumbDropdown {
-			if let navigationTitle {
-				self.navigationTitle = navigationTitle
-			} else {
-				self.navigationTitle = navigationItem.title
-			}
+		if let navigationTitle {
+			self.navigationTitle = navigationTitle
+		} else {
+			self.navigationTitle = navigationItem.title
 		}
 	}
 

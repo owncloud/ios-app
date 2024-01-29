@@ -1071,8 +1071,6 @@
 {
 	FileProviderExtensionThumbnailRequest *thumbnailRequest;
 
-	OCTLogDebug(@[@"FPThumbs"], @"request thumbnails sized %@ for identifiers %@", NSStringFromCGSize(size), OCLogPrivate(itemIdentifiers));
-
 	if ((thumbnailRequest = [FileProviderExtensionThumbnailRequest new]) != nil)
 	{
 		if (size.width > 256)
@@ -1171,7 +1169,7 @@
 
 - (OCCore *)coreWithError:(NSError **)outError
 {
-	OCLogVerbose(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
+	OCLogDebug(@"FileProviderExtension[%p].core[enter]: _core=%p, bookmark=%@", self, _core, self.bookmark);
 
 	OCBookmark *bookmark = self.bookmark;
 	__block OCCore *retCore = nil;
@@ -1255,7 +1253,7 @@
 		*outError = retError;
 	}
 
-	OCLogVerbose(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);
+	OCLogDebug(@"FileProviderExtension[%p].core[leave]: _core=%p, bookmark=%@", self, retCore, bookmark);
 
 	return (retCore);
 

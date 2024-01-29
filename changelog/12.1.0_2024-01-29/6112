@@ -1,5 +1,0 @@
-Change: Remove Extension Build Flag (Intents)
-
-Adds a build flag to remove app extensions from a IPA build.
-
-https://github.com/owncloud/enterprise/issues/6112

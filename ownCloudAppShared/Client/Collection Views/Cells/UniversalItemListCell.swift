@@ -49,7 +49,6 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 			icon = content.icon
 			iconDisabled = content.iconDisabled
-			iconWidth = content.iconWidth
 
 			details = content.details
 
@@ -103,7 +102,6 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		var title: Title?
 		var icon: Icon?
 		var iconDisabled: Bool = false
-		var iconWidth: CGFloat?
 
 		var details: [SegmentViewItem]?
 
@@ -129,7 +127,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		return view
 	}()
 
-	static public let defaultIconSize : CGSize = CGSize(width: 40, height: 40)
+	private let iconSize : CGSize = CGSize(width: 40, height: 40)
 	public let thumbnailSize : CGSize = CGSize(width: 60, height: 60) // when changing size, also update .iconView.fallbackSize
 	open var iconView: ResourceViewHost = ResourceViewHost(fallbackSize: CGSize(width: 60, height: 60)) // when changing size, also update .thumbnailSize
 
@@ -308,12 +306,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 					hasSecondaryDetailView = false
 				}
 
-				let iconWidthConstraint = updateIconWidth(content?.iconWidth, defaultWidth: (iconViewHeight / 0.75)) // 4:3
-
 				constraints = [
 					iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
 					iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
-					iconWidthConstraint,
+					iconView.widthAnchor.constraint(equalToConstant: floor(iconViewHeight / 0.75)), // 4:3
 					iconView.heightAnchor.constraint(equalToConstant: iconViewHeight),
 					iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 					iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
@@ -332,7 +328,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				let verticalLabelMargin : CGFloat = 10
 				let verticalIconMargin : CGFloat = 10
 				let spacing : CGFloat = 15
-				let iconViewWidth : CGFloat = floor(type(of: self).defaultIconSize.width / 2)
+				let iconViewWidth : CGFloat = floor(iconSize.width / 2)
 				let titleDetailSpacing: CGFloat = 15
 
 				titleLabel.numberOfLines = 1
@@ -345,12 +341,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 					hasSecondaryDetailView = false
 				}
 
-				let iconWidthConstraint = updateIconWidth(content?.iconWidth, defaultWidth: iconViewWidth)
-
 				constraints = [
 					iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
 					iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
-					iconWidthConstraint,
+					iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 					iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 					iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
@@ -368,7 +362,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				let verticalLabelMargin : CGFloat = 10
 				let verticalIconMargin : CGFloat = 10
 				let spacing : CGFloat = 15
-				let iconViewWidth : CGFloat = type(of: self).defaultIconSize.width
+				let iconViewWidth : CGFloat = iconSize.width
 				let verticalLabelMarginFromCenter : CGFloat = 1
 
 				titleLabel.numberOfLines = 1
@@ -383,12 +377,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 				truncationMode = .truncateTail
 
-				let iconWidthConstraint = updateIconWidth(content?.iconWidth, defaultWidth: iconViewWidth)
-
 				constraints = [
 					iconView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: horizontalMargin),
 					iconView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -spacing),
-					iconWidthConstraint,
+					iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 					iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 					iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
@@ -412,28 +404,6 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			cellConstraints = constraints
 			NSLayoutConstraint.activate(constraints)
 		}
-	}
-
-	private var iconWidthConstraint: NSLayoutConstraint?
-	private var lastIconWidth: CGFloat?
-	private var defaultIconWidthForCellLayout: CGFloat? // default width for current cell layout
-	private func updateIconWidth(_ newWidth: CGFloat?, defaultWidth: CGFloat? = nil) -> NSLayoutConstraint {
-		if let iconWidthConstraint {
-			iconWidthConstraint.isActive = false
-		}
-
-		if let defaultWidth {
-			// Store default width for this cell type if one is provided
-			defaultIconWidthForCellLayout = defaultWidth
-		}
-
-		// Fall back to default icon size if necessary
-		let effectiveWidth = newWidth ?? defaultIconWidthForCellLayout ?? type(of: self).defaultIconSize.width
-
-		let widthConstraint = iconView.widthAnchor.constraint(equalToConstant: effectiveWidth)
-		iconWidthConstraint = widthConstraint
-
-		return widthConstraint
 	}
 
 	// MARK: - Content
@@ -530,11 +500,6 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 						case .icon(image: let image):
 							iconViewProvider = image as OCViewProvider
 					}
-				}
-
-				if content?.iconWidth != lastIconWidth {
-					updateIconWidth(content?.iconWidth).isActive = true
-					lastIconWidth = content?.iconWidth
 				}
 
 				iconView.request = iconRequest

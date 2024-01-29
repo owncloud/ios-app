@@ -1,5 +1,0 @@
-Bugfix: Adopt log format
-
-Use common http log format for ownCloud clients.
-
-https://github.com/owncloud/client/issues/11224

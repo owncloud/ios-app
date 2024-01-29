@@ -270,7 +270,6 @@ class CreateDocumentAction: Action {
 							}
 						})
 
-						documentNameViewController.requiredFileExtension = fileType.extension
 						documentNameViewController.navigationItem.title = "Pick a name".localized
 
 						navigationViewController.pushViewController(documentNameViewController, animated: true)

@@ -17,17 +17,14 @@
 */
 
 import UIKit
-import VisionKit
-import ownCloudSDK
-import ownCloudAppShared
 
 class ImageScrollView: UIScrollView {
+
 	// MARK: - Constants
 	private let MAXIMUM_ZOOM_SCALE: CGFloat = 6.0
 
 	// MARK: - Instance Variables
-	private var imageView: UIImageView?
-	private var imageAnalysisInteraction: Any?
+	private var imageView: UIImageView!
 
 	// MARK: - Init
 	override init(frame: CGRect) {
@@ -52,12 +49,12 @@ class ImageScrollView: UIScrollView {
 
 	// MARK: - Manage Scale
 	private func centerImage() {
-		guard let imageView else {
+		guard imageView != nil else {
 			return
 		}
 
 		let boundsSize: CGSize = bounds.size
-		var frameToCenter: CGRect = imageView.frame
+		var frameToCenter: CGRect = imageView?.frame ?? .zero
 
 		// center horizontally
 		if frameToCenter.size.width < boundsSize.width {
@@ -97,6 +94,7 @@ class ImageScrollView: UIScrollView {
 
 // MARK: - Public API
 extension ImageScrollView {
+
 	func updateScaleForRotation(size: CGSize) {
 		contentSize = size
 		setMinZoomScaleForCurrentBounds(size)
@@ -108,58 +106,11 @@ extension ImageScrollView {
 
 	func display(image: UIImage, inSize: CGSize) {
 		imageView?.removeFromSuperview()
-
 		imageView = UIImageView(image: image)
-		guard let imageView else { return }
-
 		imageView.accessibilityIdentifier = "loaded-image-gallery"
 		imageView.contentMode = .scaleAspectFit
-
 		addSubview(imageView)
 		updateScaleForRotation(size: inSize)
-
-		if imageInteractionsAllowed {
-			analyzeImage(image: image)
-		}
-	}
-
-	var hasActiveImageAnalysisSelection: Bool {
-		if #available(iOS 16, *) {
-			if let interaction = imageAnalysisInteraction as? ImageAnalysisInteraction {
-				return interaction.selectableItemsHighlighted
-			}
-		}
-
-		return false
-	}
-
-	func analyzeImage(image: UIImage) {
-		if #available(iOS 16, *) {
-			guard ImageAnalyzer.isSupported else {
-				return
-			}
-
-			let interaction = ImageAnalysisInteraction()
-			imageView?.addInteraction(interaction)
-
-			imageAnalysisInteraction = interaction
-
-			Task.detached(priority: .userInitiated, operation: {
-				do {
-					let configuration = ImageAnalyzer.Configuration([.machineReadableCode, .text, .visualLookUp])
-					let analyzer = ImageAnalyzer()
-					let analysis = try await analyzer.analyze(image, configuration: configuration)
-					await MainActor.run {
-						interaction.analysis = analysis
-						interaction.preferredInteractionTypes = [.automatic]
-					}
-				} catch {
-					await MainActor.run(body: {
-						interaction.preferredInteractionTypes = []
-					})
-				}
-			})
-		}
 	}
 }
 
@@ -173,29 +124,4 @@ extension ImageScrollView: UIScrollViewDelegate {
 		centerImage()
 	}
 
-}
-
-// MARK: - Class Settings
-public extension OCClassSettingsKey {
-	static let allowImageInteractions = OCClassSettingsKey("allow-image-interactions")
-}
-
-extension ImageScrollView {
-	static func registerImageInteractionsSettings() {
-		Action.registerOCClassSettingsDefaults([
-			.allowImageInteractions : true
-		], metadata: [
-			.allowImageInteractions : [
-				.type 		: OCClassSettingsMetadataType.boolean,
-				.label		: "Allow Image Interactions",
-				.description 	: "Allow (true) or disallow (false) text/selection/OCR interactions with images.",
-				.status		: OCClassSettingsKeyStatus.advanced,
-				.category	: "Actions"
-			]
-		])
-	}
-
-	var imageInteractionsAllowed: Bool {
-		return Action.classSetting(forOCClassSettingsKey: .allowImageInteractions) as? Bool ?? true
-	}
 }

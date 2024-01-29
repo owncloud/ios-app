@@ -1,5 +1,0 @@
-Bugfix: Available offline badge
-
-Available offline badge was there after making unavailable offline.
-
-https://github.com/owncloud/ios-app/issues/1128

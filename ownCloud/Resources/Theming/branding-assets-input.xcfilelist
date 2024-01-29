@@ -1,7 +1,0 @@
-# List of all possible source locations
-
-# Default theme
-${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app
-
-# branding-assets
-${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets

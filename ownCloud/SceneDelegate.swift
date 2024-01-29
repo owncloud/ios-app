@@ -51,11 +51,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window = ThemeWindow(windowScene: windowScene)
 
 			window?.rootViewController = appRootViewController
-			if #available(iOS 16, *) {
-				// From the console: "Manually adding the rootViewController's view to the view hierarchy is no longer supported. Please allow UIWindow to add the rootViewController's view to the view hierarchy itself."
-			} else {
-				window?.addSubview(appRootViewController.view)
-			}
+			window?.addSubview(appRootViewController.view)
 			window?.makeKeyAndVisible()
 		}
 

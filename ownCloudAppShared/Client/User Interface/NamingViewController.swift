@@ -19,8 +19,8 @@
 import UIKit
 import ownCloudSDK
 
-public typealias StringValidatorResult = (Bool, String?, String?) // (validationPassed, validationErrorTitle, validationErrorMessage)
-public typealias StringValidatorHandler = (_ stringToCheck: String) -> StringValidatorResult
+public typealias StringValidatorResult = (Bool, String?, String?)
+public typealias StringValidatorHandler = (String) -> StringValidatorResult
 
 open class NamingViewController: UIViewController {
 	weak open var item: OCItem?
@@ -28,7 +28,6 @@ open class NamingViewController: UIViewController {
 	open var completion: (String?, NamingViewController) -> Void
 	open var stringValidator: StringValidatorHandler?
 	open var defaultName: String?
-	open var requiredFileExtension: String?
 
 	private var blurView: UIVisualEffectView
 
@@ -38,7 +37,7 @@ open class NamingViewController: UIViewController {
 	private var thumbnailImageView: ResourceViewHost
 
 	private var nameContainer: UIView
-	private var nameTextField: ThemeCSSTextField
+	private var nameTextField: UITextField
 
 	private var textfieldTopAnchorConstraint: NSLayoutConstraint
 	private var textfieldCenterYAnchorConstraint: NSLayoutConstraint
@@ -153,7 +152,6 @@ open class NamingViewController: UIViewController {
 
 		// Name textfield
 		nameTextField.translatesAutoresizingMaskIntoConstraints = false
-		nameTextField.requiredFileExtension = requiredFileExtension
 		nameContainer.addSubview(nameTextField)
 		NSLayoutConstraint.activate([
 			nameTextField.heightAnchor.constraint(equalToConstant: 40),
@@ -269,9 +267,7 @@ open class NamingViewController: UIViewController {
 	}
 
 	@objc open func textfieldDidChange(_ sender: UITextField) {
-		let filename = sender.text
-
-		if filename != "", requiredFileExtension == nil || ((requiredFileExtension != nil) && filename != ".\(requiredFileExtension!)") {
+		if sender.text != "" {
 			doneButton?.isEnabled = true
 		} else {
 			doneButton?.isEnabled = false
@@ -355,15 +351,7 @@ extension NamingViewController: UITextFieldDelegate {
 		} else {
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
 		}
-	}
 
-	public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-		if let requiredFileExtension {
-			textField.text = "." + requiredFileExtension
-			textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.beginningOfDocument)
-			return false
-		}
-		return true
 	}
 
 	open func textFieldShouldReturn(_ textField: UITextField) -> Bool {

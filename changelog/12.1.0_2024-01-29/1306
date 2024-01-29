@@ -1,5 +1,0 @@
-Bugfix: Show message in File Provider if no account has been set up
-
-This PR makes the File Provider UI show a message if no account has been set up yet, offering to open the app. Previously, the FP UI was briefly shown and then dismissed.
-
-https://github.com/owncloud/ios-app/pull/1306

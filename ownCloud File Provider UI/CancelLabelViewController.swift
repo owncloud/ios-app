@@ -26,11 +26,9 @@ class CancelLabelViewController: UIViewController {
 	@IBOutlet var label : UILabel!
 	@IBOutlet var button : ThemeButton!
 
-	typealias CancelAction = (() -> Void)
+	var cancelAction: (() -> Void)?
 
-	var cancelAction: CancelAction?
-
-	func updateCancelLabels(with message: String, buttonLabel: String? = nil) {
+	func updateCancelLabels(with message: String) {
 		let collection = Theme.shared.activeCollection
 
 		view.cssSelector = .toolbar
@@ -40,7 +38,7 @@ class CancelLabelViewController: UIViewController {
 		label.apply(css: collection.css, properties: [.stroke])
 
 		self.label.text = message
-		self.button.setTitle(buttonLabel ?? "Cancel".localized, for: .normal)
+		self.button.setTitle("Cancel".localized, for: .normal)
 	}
 
 	@IBAction func cancelScreen() {

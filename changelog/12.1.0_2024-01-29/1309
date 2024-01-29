@@ -1,5 +1,0 @@
-Bugfix: Disable Markup Edit Mode iOS 17
-
-Fixed disabling edit mode in markup document view on iOS 17
-
-https://github.com/owncloud/ios-app/issues/1309

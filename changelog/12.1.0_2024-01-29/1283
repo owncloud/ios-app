@@ -1,5 +1,0 @@
-Change: Text recognition actions for images
-
-Adds VisonKit interactions to the image viewer, allowing to select and interact with recognized content (f.ex. text) like in the Photos app.
-
-https://github.com/owncloud/ios-app/pull/1283

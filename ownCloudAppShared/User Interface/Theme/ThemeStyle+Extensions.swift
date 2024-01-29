@@ -47,7 +47,7 @@ extension ThemeStyle {
 
 		Log.error("Couldn't get defaultStyle")
 
-		return ThemeStyle.systemDark()
+		return ThemeStyle.ownCloudDark
 	}
 
 	static public var preferredStyle : ThemeStyle {
@@ -100,11 +100,13 @@ extension ThemeStyle {
 
 		if self.followSystemAppearance {
 			if ThemeStyle.userInterfaceStyle() == .dark {
-				if let style = ThemeStyle.forIdentifier("com.owncloud.dark") {
+				if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
+					ThemeStyle.preferredStyle = style
 					applyStyle = style
 				}
 			} else {
-				if let style = ThemeStyle.forIdentifier("com.owncloud.light") {
+				if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.light])?.first {
+					ThemeStyle.preferredStyle = style
 					applyStyle = style
 				}
 			}
@@ -142,7 +144,7 @@ extension ThemeStyle {
 			}
 
 			if followSystemAppearance == nil {
-				followSystemAppearance = true
+				followSystemAppearance = false
 			}
 
 			return followSystemAppearance!
@@ -183,8 +185,8 @@ extension ThemeStyle {
 
 	static public func registerDefaultStyles() {
 		if !Branding.shared.setupThemeStyles() {
-			OCExtensionManager.shared.addExtension(ThemeStyle.systemLight().themeStyleExtension(isDefault: true))
-			OCExtensionManager.shared.addExtension(ThemeStyle.systemDark().themeStyleExtension())
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension(isDefault: true))
+			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension())
 		}
 	}
 

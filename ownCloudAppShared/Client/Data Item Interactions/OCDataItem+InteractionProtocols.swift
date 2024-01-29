@@ -47,8 +47,8 @@ import ownCloudSDK
 
 // MARK: - Drag & drop
 public struct LocalDataItem {
-	public var bookmarkUUID : UUID
-	public var dataItem: OCDataItem
+	var bookmarkUUID : UUID
+	var dataItem: OCDataItem
 }
 
 @objc public protocol DataItemDragInteraction: OCDataItem {

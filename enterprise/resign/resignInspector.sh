@@ -7,7 +7,7 @@
  # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  
- VERSION="1.1.0"
+ VERSION="1.0.0"
  
  #Define output formats
  BOLD="$(tput bold)"
@@ -72,7 +72,7 @@ fi
 	APPPATH="$APPTEMP/Payload/ownCloud.app"
  fi
  
-  declare -a LOCATIONS=(      "$APPPATH/"   "$APPPATH/PlugIns/ownCloud File Provider.appex"  "$APPPATH/PlugIns/ownCloud File Provider UI.appex"  "$APPPATH/PlugIns/ownCloud Intents.appex"  "$APPPATH/PlugIns/ownCloud Share Extension.appex"  "$APPPATH/PlugIns/ownCloud Action Extension.appex" );
+  declare -a LOCATIONS=(      "$APPPATH/"   "$APPPATH/PlugIns/ownCloud File Provider.appex"  "$APPPATH/PlugIns/ownCloud File Provider UI.appex"  "$APPPATH/PlugIns/ownCloud Intents.appex"  "$APPPATH/PlugIns/ownCloud Share Extension.appex" );
  
   echo "${SUCCESS}Checking entitlements…${NC}"
   echo ""

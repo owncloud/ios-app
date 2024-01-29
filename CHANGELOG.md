@@ -1,6 +1,5 @@
 # Table of Contents
 
-* [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-29)
 * [Changelog for 12.0.3](#changelog-for-owncloud-ios-client-1203-2023-08-31)
 * [Changelog for 12.0.2](#changelog-for-owncloud-ios-client-1202-2023-06-23)
 * [Changelog for 12.0.1](#changelog-for-owncloud-ios-client-1201-2023-06-15)
@@ -22,112 +21,6 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
-# Changelog for ownCloud iOS Client [12.1.0] (2024-01-29)
-The following sections list the changes in ownCloud iOS Client 12.1.0 relevant to
-ownCloud admins and users.
-
-[12.1.0]: https://github.com/owncloud/ios-app/compare/milestone/12.0.3...milestone/12.1.0
-
-## Summary
-
-* Bugfix - Available offline badge: [#1128](https://github.com/owncloud/ios-app/issues/1128)
-* Bugfix - File Provider fixes: [#1294](https://github.com/owncloud/ios-app/pull/1294)
-* Bugfix - Open ownCloud Links in App: [#1295](https://github.com/owncloud/ios-app/issues/1295)
-* Bugfix - Show message in File Provider if no account has been set up: [#1306](https://github.com/owncloud/ios-app/pull/1306)
-* Bugfix - Disable Markup Edit Mode iOS 17: [#1309](https://github.com/owncloud/ios-app/issues/1309)
-* Bugfix - Adopt log format: [#11224](https://github.com/owncloud/client/issues/11224)
-* Change - New account wizard: [#1274](https://github.com/owncloud/ios-app/pull/1274)
-* Change - Text recognition actions for images: [#1283](https://github.com/owncloud/ios-app/pull/1283)
-* Change - File extension / suffix protection: [#1292](https://github.com/owncloud/ios-app/issues/1292)
-* Change - Share Action Extension "Save to ownCloud": [#1293](https://github.com/owncloud/ios-app/issues/1293)
-* Change - Link naming: [#1297](https://github.com/owncloud/ios-app/issues/1297)
-* Change - Remove Extension Build Flag (Intents): [#6112](https://github.com/owncloud/enterprise/issues/6112)
-
-## Details
-
-* Bugfix - Available offline badge: [#1128](https://github.com/owncloud/ios-app/issues/1128)
-
-   Available offline badge was there after making unavailable offline.
-
-   https://github.com/owncloud/ios-app/issues/1128
-
-* Bugfix - File Provider fixes: [#1294](https://github.com/owncloud/ios-app/pull/1294)
-
-   This branch addresses found issues in the File Provider: - fixes unanswered
-   thumbnail requests (leading to infinite thumbnail responses) - fixes incorrect
-   error being returned in response to thumbnail requests
-
-   https://github.com/owncloud/ios-app/pull/1294
-
-* Bugfix - Open ownCloud Links in App: [#1295](https://github.com/owncloud/ios-app/issues/1295)
-
-   Fixed existing feature intending to open files/folders in app, by clicking a
-   private link from outside.
-
-   https://github.com/owncloud/ios-app/issues/1295
-
-* Bugfix - Show message in File Provider if no account has been set up: [#1306](https://github.com/owncloud/ios-app/pull/1306)
-
-   This PR makes the File Provider UI show a message if no account has been set up
-   yet, offering to open the app. Previously, the FP UI was briefly shown and then
-   dismissed.
-
-   https://github.com/owncloud/ios-app/pull/1306
-
-* Bugfix - Disable Markup Edit Mode iOS 17: [#1309](https://github.com/owncloud/ios-app/issues/1309)
-
-   Fixed disabling edit mode in markup document view on iOS 17
-
-   https://github.com/owncloud/ios-app/issues/1309
-
-* Bugfix - Adopt log format: [#11224](https://github.com/owncloud/client/issues/11224)
-
-   Use common http log format for ownCloud clients.
-
-   https://github.com/owncloud/client/issues/11224
-
-* Change - New account wizard: [#1274](https://github.com/owncloud/ios-app/pull/1274)
-
-   - reimplementation of the new account wizard - support for reordering accounts
-   in the sidebar via drag and drop - adds location breadcrumb dropdown in the
-   viewer
-
-   https://github.com/owncloud/ios-app/pull/1274
-
-* Change - Text recognition actions for images: [#1283](https://github.com/owncloud/ios-app/pull/1283)
-
-   Adds VisonKit interactions to the image viewer, allowing to select and interact
-   with recognized content (f.ex. text) like in the Photos app.
-
-   https://github.com/owncloud/ios-app/pull/1283
-
-* Change - File extension / suffix protection: [#1292](https://github.com/owncloud/ios-app/issues/1292)
-
-   Prevents users from removing or changing the suffix for new documents and
-   document scanner.
-
-   https://github.com/owncloud/ios-app/issues/1292
-
-* Change - Share Action Extension "Save to ownCloud": [#1293](https://github.com/owncloud/ios-app/issues/1293)
-
-   Adds a share action extension "Save to ownCloud", which will open the share
-   sheet view.
-
-   https://github.com/owncloud/ios-app/issues/1293
-
-* Change - Link naming: [#1297](https://github.com/owncloud/ios-app/issues/1297)
-
-   Adds a Name field for link shares, allowing to enter and edit the name of link
-   shares.
-
-   https://github.com/owncloud/ios-app/issues/1297
-
-* Change - Remove Extension Build Flag (Intents): [#6112](https://github.com/owncloud/enterprise/issues/6112)
-
-   Adds a build flag to remove app extensions from a IPA build.
-
-   https://github.com/owncloud/enterprise/issues/6112
-
 # Changelog for ownCloud iOS Client [12.0.3] (2023-08-31)
 The following sections list the changes in ownCloud iOS Client 12.0.3 relevant to
 ownCloud admins and users.

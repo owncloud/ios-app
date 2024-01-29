@@ -176,13 +176,13 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Active Viewer
-	private var _navigationItemObservation : NSKeyValueObservation?
+	private var _navigationTitleObservation : NSKeyValueObservation?
 	private var _navigationBarButtonItemsObservation : NSKeyValueObservation?
 
 	weak var activeDisplayViewController : DisplayViewController? {
 		willSet {
-			_navigationItemObservation?.invalidate()
-			_navigationItemObservation = nil
+			_navigationTitleObservation?.invalidate()
+			_navigationTitleObservation = nil
 
 			_navigationBarButtonItemsObservation?.invalidate()
 			_navigationBarButtonItemsObservation = nil
@@ -191,12 +191,8 @@ class DisplayHostViewController: UIPageViewController {
 		didSet {
 			Log.debug("New activeDisplayViewController: \(activeDisplayViewController?.item?.name ?? "-")")
 
-			_navigationItemObservation = activeDisplayViewController?.observe(\DisplayViewController.item, options: .initial, changeHandler: { [weak self] (displayViewController, _) in
-				if let itemLocation = displayViewController.item?.location, let clientContext = displayViewController.clientContext {
-					OnMainThread(inline: true) {
-						self?.navigationItem.titleView = ClientLocationPopupButton(clientContext: clientContext, location: itemLocation)
-					}
-				}
+			_navigationTitleObservation = activeDisplayViewController?.observe(\DisplayViewController.displayTitle, options: .initial, changeHandler: { [weak self] (displayViewController, _) in
+				self?.navigationItem.title = displayViewController.displayTitle
 			})
 
 			_navigationBarButtonItemsObservation = activeDisplayViewController?.observe(\DisplayViewController.displayBarButtonItems, options: .initial, changeHandler: { [weak self] (displayViewController, _) in

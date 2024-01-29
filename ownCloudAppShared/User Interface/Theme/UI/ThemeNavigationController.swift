@@ -42,22 +42,6 @@ open class ThemeNavigationController: UINavigationController, Themeable {
 		return Theme.shared.activeCollection.css.getStatusBarStyle(for: self) ?? .default
 	}
 
-	open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-		if let viewController = viewControllers.last {
-			return viewController.supportedInterfaceOrientations
-		}
-
-		return super.supportedInterfaceOrientations
-	}
-
-	open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-		if let viewController = viewControllers.last {
-			return viewController.preferredInterfaceOrientationForPresentation
-		}
-
-		return super.preferredInterfaceOrientationForPresentation
-	}
-
 	open override var childForStatusBarStyle: UIViewController? {
 		return nil
 	}

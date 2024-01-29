@@ -83,7 +83,7 @@ public extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal, cellState: UICellConfigurationState? = nil) {
 		let css = collection.css
 
-		if let button = self as? UIButton, !(self is ThemeButton) {
+		if let button = self as? UIButton, (self as? ThemeButton) == nil {
 			button.apply(css: css, properties: [.stroke])
 		}
 
