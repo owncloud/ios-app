@@ -100,13 +100,11 @@ extension ThemeStyle {
 
 		if self.followSystemAppearance {
 			if ThemeStyle.userInterfaceStyle() == .dark {
-				if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
-					ThemeStyle.preferredStyle = style
+				if let style = ThemeStyle.forIdentifier("com.owncloud.dark") {
 					applyStyle = style
 				}
 			} else {
-				if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.light])?.first {
-					ThemeStyle.preferredStyle = style
+				if let style = ThemeStyle.forIdentifier("com.owncloud.light") {
 					applyStyle = style
 				}
 			}

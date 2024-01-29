@@ -84,9 +84,9 @@ class UserInterfaceSettingsSection: SettingsSection {
 					ThemeStyle.followSystemAppearance = true
 					themeRow?.cell?.detailTextLabel?.text = "System".localized
 				} else if let styleIdentifier = row.value as? String,
-					let style = ThemeStyle.forIdentifier(styleIdentifier), ThemeStyle.preferredStyle != style {
-						ThemeStyle.followSystemAppearance = false
+					let style = ThemeStyle.forIdentifier(styleIdentifier) {
 						ThemeStyle.preferredStyle = style
+						ThemeStyle.followSystemAppearance = false
 
 					themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
 				}
