@@ -465,7 +465,7 @@ extension Branding {
 	public func setupThemeStyles() -> Bool {
 		var brandingThemeStyles : [ThemeStyle] = []
 
-		allowThemeSelection = !isBranded
+		allowThemeSelection = true
 
 		if let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
 			for themeStyleDefinition in themeStyleDefinitions {
