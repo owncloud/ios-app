@@ -1797,7 +1797,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>New account wizard</string>
 					<key>Subtitle</key>
-					<string>New intuitive account wizard UI for a fast onboarding experience.</string>
+					<string>Introducing a new, intuitive account wizard user interface for a fast onboarding experience.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1807,7 +1807,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Reordering accounts</string>
 					<key>Subtitle</key>
-					<string>Reordering accounts in the sidebar via drag and drop</string>
+					<string>Now you can easily reorder accounts in the sidebar by simply dragging and dropping them.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1817,7 +1817,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Location breadcrumb</string>
 					<key>Subtitle</key>
-					<string>Location breadcrumb dropdown file viewer</string>
+					<string>We have added a location breadcrumb dropdown in the file viewer, making it easier to navigate through your files.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1827,7 +1827,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Text recognition</string>
 					<key>Subtitle</key>
-					<string>Text recognition actions for images</string>
+					<string>You can now perform text recognition actions on images.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1837,7 +1837,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>File extension / suffix protection</string>
 					<key>Subtitle</key>
-					<string>Prevents removing or changing the suffix for new documents and document scanner files.</string>
+					<string>To prevent accidental removal or modification of the suffix for new documents and document scanner files, we have implemented file extension protection.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1847,7 +1847,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Share Action &quot;Save to ownCloud&quot;</string>
 					<key>Subtitle</key>
-					<string>Adds a new action &quot;Save to ownCloud&quot; to the share sheet.</string>
+					<string>We have added a new action called &quot;Save to ownCloud&quot; to the share sheet, allowing you to easily save files to your ownCloud account.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -1857,17 +1857,17 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Link naming</string>
 					<key>Subtitle</key>
-					<string>Enter and edit the name of link shares.</string>
+					<string>You can now enter and edit the name of link shares.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
-					<string>arrowshape.turn.up.left</string>
+					<string>character.textbox</string>
 				</dict>
 				<dict>
 					<key>Title</key>
 					<string>Markup Edit Mode on iOS 17</string>
 					<key>Subtitle</key>
-					<string>Fixed disabling edit mode in markup document view on iOS 17.</string>
+					<string>We have fixed the issue that was disabling the edit mode in the markup document view on iOS 17.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1877,7 +1877,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Open ownCloud Links in App</string>
 					<key>Subtitle</key>
-					<string>Fixed opening a private link from third party apps.</string>
+					<string>We have resolved the issue with opening private links from third-party apps.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
@@ -1887,7 +1887,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Bug Fixes</string>
 					<key>Subtitle</key>
-					<string>Fixed File Provider and app issues.</string>
+					<string>We have addressed various issues with the File Provider and the app itself.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
