@@ -34,6 +34,7 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 	let iconView = UIImageView()
 	let titleLabel = ThemeCSSLabel(withSelectors: [.title])
 	let segmentView = SegmentView(with: [], truncationMode: .truncateTail)
+	let sideButton = UIButton()
 
 	var iconInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)
 	var titleInsets: UIEdgeInsets = UIEdgeInsets(top: 5, left: 3, bottom: 5, right: 3)
@@ -52,8 +53,40 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 	var items: [SegmentViewItem]? {
 		didSet {
 			segmentView.items = items ?? []
+			hasItemsConstraint?.isActive = segmentView.items.count > 0
 		}
 	}
+
+	private var sideButtonUIAction: UIAction?
+	var sideButtonAction: OCAction? {
+		didSet {
+			if let sideButtonUIAction {
+				sideButton.removeAction(sideButtonUIAction, for: .primaryActionTriggered)
+				self.sideButtonUIAction = nil
+			}
+
+			if let sideButtonAction {
+				sideButton.configuration?.image = sideButtonAction.icon
+				sideButton.configuration?.imagePadding = (sideButtonAction.icon != nil) ? 5 : 0
+				sideButton.configuration?.title = sideButtonAction.title
+				sideButton.configuration?.buttonSize = .small
+				sideButton.isEnabled = true
+				sideButton.isHidden = false
+
+				sideButtonUIAction = sideButtonAction.uiAction()
+				if let sideButtonUIAction {
+					sideButton.addAction(sideButtonUIAction, for: .primaryActionTriggered)
+				}
+			} else {
+				sideButton.isHidden = true
+				sideButton.isEnabled = false
+				sideButton.configuration?.image = nil
+				sideButton.configuration?.title = ""
+			}
+		}
+	}
+
+	private var hasItemsConstraint: NSLayoutConstraint?
 
 	func configure() {
 		cssSelector = .savedSearch
@@ -61,10 +94,12 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		segmentView.translatesAutoresizingMaskIntoConstraints = false
+		sideButton.translatesAutoresizingMaskIntoConstraints = false
 
 		contentView.addSubview(titleLabel)
 		contentView.addSubview(iconView)
 		contentView.addSubview(segmentView)
+		contentView.addSubview(sideButton)
 
 		iconView.image = icon
 		iconView.contentMode = .scaleAspectFit
@@ -78,7 +113,11 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 
 		iconView.setContentHuggingPriority(.required, for: .horizontal)
 
-		let backgroundConfig = UIBackgroundConfiguration.clear()
+		sideButton.configuration = .tinted()
+		sideButton.configuration?.title = "Add to sidebar".localized
+
+		var backgroundConfig = UIBackgroundConfiguration.clear()
+		backgroundConfig.cornerRadius = 10
 		backgroundConfiguration = backgroundConfig
 	}
 
@@ -90,6 +129,8 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
 		titleLabel.adjustsFontForContentSizeCategory = true
+
+		hasItemsConstraint = titleLabel.bottomAnchor.constraint(equalTo: segmentView.topAnchor, constant: -titleSegmentSpacing)
 
 		self.configuredConstraints = [
 			iconView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: iconInsets.left),
@@ -103,11 +144,15 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 
 			titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -titleInsets.right),
 			titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: titleInsets.top),
-			titleLabel.bottomAnchor.constraint(equalTo: segmentView.topAnchor, constant: -titleSegmentSpacing),
+			titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -titleInsets.bottom).with(priority: .defaultHigh), // Constraint effective if the cell has no items, overridden by hasItemsConstraint if active
+			hasItemsConstraint!, // Constraint effective if the cell has items
 
 			segmentView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
 			segmentView.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-			segmentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -titleInsets.bottom)
+			segmentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -titleInsets.bottom),
+
+			sideButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -titleInsets.right),
+			sideButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
 		]
 	}
 }
@@ -168,9 +213,31 @@ extension SavedSearchCell {
 		let savedSearchCellRegistration = UICollectionView.CellRegistration<SavedSearchCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let savedSearch = OCDataRenderer.default.renderItem(item, asType: .savedSearch, error: nil, withOptions: nil) as? OCSavedSearch {
+					var icon: UIImage?
+
+					if let customIconName = savedSearch.customIconName {
+						icon = OCSymbol.icon(forSymbolName: customIconName)
+					}
+
+					if icon == nil {
+						icon = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
+					}
+
 					cell.title = savedSearch.displayName
-					cell.icon = savedSearch.isTemplate ? savedTemplateIcon : savedSearchIcon
-					cell.items = savedSearch.segmentViewItemsForDisplay
+					cell.icon = icon
+					cell.items = (savedSearch.isQuickAccess == true) ? nil : savedSearch.segmentViewItemsForDisplay
+
+					let clientContext = cellConfiguration.clientContext
+
+					cell.sideButtonAction = savedSearch.isQuickAccess == true && savedSearch.isTemplate ? OCAction(title: "Add to sidebar".localized, icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak clientContext] _, _, completed in
+						// Make a copy of the saved search object, so it has a different UUID (avoiding ID clashes in collection views) and can be modified
+						if let saveSearch = savedSearch.copy() as? OCSavedSearch {
+							saveSearch.isQuickAccess = true
+							saveSearch.isTemplate = false
+							clientContext?.core?.vault.add(saveSearch)
+						}
+						completed(nil)
+					}) : nil
 				}
 			})
 		}

@@ -142,8 +142,6 @@
 "Image grid" = "Image grid";
 
 /* Saved searches */
-"Saved searches" = "Saved searches";
-"Saved search templates" = "Saved search templates";
 "Save search" = "Save search";
 "Save as search template" = "Save as search template";
 
@@ -627,9 +625,9 @@
 
 "Enter password" = "Enter password";
 
-/* Quick Access view */
+/* Quick Access search suggestions */
 "Quick Access" = "Quick Access";
-"Collection" = "Collection";
+"Add to sidebar" = "Add to sidebar";
 "Recents" = "Recents";
 "Favorites"= "Favorites";
 "Images" = "Images";

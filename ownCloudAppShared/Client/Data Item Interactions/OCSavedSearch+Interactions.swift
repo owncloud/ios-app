@@ -24,6 +24,7 @@ extension OCSavedSearchUserInfoKey {
 	static let customIconName = OCSavedSearchUserInfoKey(rawValue: "customIconName")
 	static let useNameAsTitle = OCSavedSearchUserInfoKey(rawValue: "useNameAsTitle")
 	static let useSortDescriptor = OCSavedSearchUserInfoKey(rawValue: "useSortDescriptor")
+	static let isQuickAccess = OCSavedSearchUserInfoKey(rawValue: "isQuickAccess")
 }
 
 extension OCSavedSearch {
@@ -123,6 +124,20 @@ extension OCSavedSearch {
 		}
 	}
 
+	var isQuickAccess: Bool? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.isQuickAccess : newValue]
+			} else {
+				userInfo?[.isQuickAccess] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.isQuickAccess] as? Bool
+		}
+	}
+
 	func withCustomIcon(name: String) -> OCSavedSearch {
 		customIconName = name
 		return self
@@ -135,6 +150,11 @@ extension OCSavedSearch {
 
 	func useSortDescriptor(_ sortDescriptor: SortDescriptor) -> OCSavedSearch {
 		useSortDescriptor = sortDescriptor
+		return self
+	}
+
+	func isQuickAccess(_ isQuickAccess: Bool) -> OCSavedSearch {
+		self.isQuickAccess = isQuickAccess
 		return self
 	}
 }

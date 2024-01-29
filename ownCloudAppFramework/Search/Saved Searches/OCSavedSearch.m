@@ -87,6 +87,13 @@
 	return (NO);
 }
 
+#pragma mark - Copying
+- (id)copyWithZone:(NSZone *)zone
+{
+	// Issues a new UUID - this is desired
+	return ([[self.class alloc] initWithScope:_scope location:_location name:[_name copy] isTemplate:_isTemplate searchTerm:[_searchTerm copy] userInfo:[_userInfo copy]]);
+}
+
 #pragma mark - Secure coding
 + (BOOL)supportsSecureCoding
 {

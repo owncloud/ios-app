@@ -673,10 +673,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		set {
-			if navigationItem.titleView is ClientLocationPopupButton {
-				navigationItem.titleView = nil
-			}
-
+			navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
 			navigationItem.titleLabelText = newValue
 			navigationItem.title = newValue
 		}
@@ -689,11 +686,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	var navigationLocation: OCLocation? {
 		didSet {
 			if let clientContext, let navigationLocation, !navigationLocation.isRoot {
-				navigationItem.titleView = ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
+				navigationItem.navigationContent.add(items: [NavigationContentItem(identifier: "navigation-location", area: .title, priority: .standard, position: .leading, titleView:
+					ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
+				)])
 			} else {
-				if navigationItem.titleView is ClientLocationPopupButton {
-					navigationItem.titleView = nil
-				}
+				navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
 			}
 		}
 	}
@@ -725,7 +722,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			self.navigationLocation = navigationLocation
 		}
 
-		if navigationLocation == nil || !useNavigationLocationBreadcrumbDropdown {
+		if navigationLocation == nil || !useNavigationLocationBreadcrumbDropdown || navigationLocation?.isRoot == true {
 			if let navigationTitle {
 				self.navigationTitle = navigationTitle
 			} else {
@@ -1019,25 +1016,38 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Search
 	open var searchViewController: SearchViewController?
 
+	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> [SearchScope] {
+		var scopes : [SearchScope] = []
+
+		if clientContext.query?.queryLocation != nil {
+			// - Folder
+			// - Tree (folder + subfolders)
+			scopes.append(contentsOf: [
+				// - In this folder
+				.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
+
+				// - Folder and subfolders (tree / container)
+				.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Tree".localized)
+			])
+
+			// - Drive
+			if clientContext.core?.useDrives == true {
+				let driveName = "Space".localized
+				scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
+			}
+		}
+
+		// - Account
+		scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized))
+
+		return scopes
+	}
+
 	@objc open func startSearch() {
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
-				var scopes : [SearchScope] = [
-					// - In this folder
-					.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
-
-					// - Folder and subfolders (tree / container)
-					.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Tree".localized)
-				]
-
-				// - Drive
-				if clientContext.core?.useDrives == true {
-					let driveName = "Space".localized
-					scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
-				}
-
-				// - Account
-				scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized))
+				// Scopes
+				let scopes = searchScopes(for: clientContext, cellStyle: cellStyle)
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
@@ -1052,42 +1062,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: emptySection!.cellStyle)
 
 				if let vault = clientContext.core?.vault {
-					vault.addSavedSearchesObserver(suggestionsSource, withInitial: true) { suggestionsSource, savedSearches, isInitial in
-						guard let suggestionsSource = suggestionsSource as? OCDataSourceArray else {
-							return
-						}
-
-						var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
-
-						// Offer saved search templates
-						if let savedTemplates = vault.savedSearches?.filter({ savedSearch in
-							return savedSearch.isTemplate
-						}), savedTemplates.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved search templates".localized)
-							savedSearchTemplatesHeaderView.elementInsets = .zero
-
-							suggestionItems.append(savedSearchTemplatesHeaderView)
-							suggestionItems.append(contentsOf: savedTemplates)
-						}
-
-						// Offer saved searches
-						if let savedSearches = vault.savedSearches?.filter({ savedSearch in
-							return !savedSearch.isTemplate
-						}), savedSearches.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved searches".localized)
-							savedSearchTemplatesHeaderView.elementInsets = .zero
-
-							suggestionItems.append(savedSearchTemplatesHeaderView)
-							suggestionItems.append(contentsOf: savedSearches)
-						}
-
-						// Provide "Enter a search term" placeholder if there is no other content available
-						if suggestionItems.count == 0 {
-							suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized) )
-						}
-
-						suggestionsSource.setVersionedItems(suggestionItems)
-					}
+					startProvidingSearchSuggestions(to: suggestionsSource, in: clientContext)
 				}
 
 				// Create and install SearchViewController
@@ -1098,6 +1073,62 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 			}
 		}
+	}
+
+	func startProvidingSearchSuggestions(to suggestionsSource: OCDataSourceArray, in clientContext: ClientContext) {
+		if let vault = clientContext.core?.vault {
+			// Observe saved searches for changes and trigger updates accordingly
+			// This observer will automatically be removed once suggestionsSource is deallocated
+			vault.addSavedSearchesObserver(suggestionsSource, withInitial: true) { [weak clientContext, weak self] suggestionsSource, savedSearches, isInitial in
+				guard let suggestionsSource = suggestionsSource as? OCDataSourceArray, let self, let clientContext else {
+					return
+				}
+
+				var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
+
+				suggestionItems = self.composeSuggestionContents(from: vault.savedSearches, clientContext: clientContext, includingFallbacks: true)
+
+				// Provide "Enter a search term" placeholder if there is no other content available
+				if suggestionItems.count == 0 {
+					suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized) )
+				}
+
+				suggestionsSource.setVersionedItems(suggestionItems)
+			}
+		}
+	}
+
+	open func composeSuggestionContents(from savedSearches: [OCSavedSearch]?, clientContext: ClientContext, includingFallbacks: Bool) -> [OCDataItem & OCDataItemVersioning] {
+		var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
+
+		// Offer saved search templates
+		if let savedTemplates = savedSearches?.filter({ savedSearch in
+			return savedSearch.isTemplate
+		}), savedTemplates.count > 0 {
+			let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Search templates".localized)
+			savedSearchTemplatesHeaderView.elementInsets = .zero
+
+			suggestionItems.append(savedSearchTemplatesHeaderView)
+			suggestionItems.append(contentsOf: savedTemplates)
+		}
+
+		// Offer saved searches
+		if let savedSearches = savedSearches?.filter({ savedSearch in
+			return !savedSearch.isTemplate
+		}), savedSearches.count > 0 {
+			let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved searches".localized)
+			savedSearchTemplatesHeaderView.elementInsets = .zero
+
+			suggestionItems.append(savedSearchTemplatesHeaderView)
+			suggestionItems.append(contentsOf: savedSearches)
+		}
+
+		// Provide "Enter a search term" placeholder if there is no other content available
+		if suggestionItems.count == 0, includingFallbacks {
+			suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized) )
+		}
+
+		return suggestionItems
 	}
 
 	func endSearch() {

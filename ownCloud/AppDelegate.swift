@@ -98,6 +98,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
 
+		// Register class settings for extensions added on a per-connection basis
+		OnMainThread {
+			OpenInWebAppAction.registerSettings()
+			CreateDocumentAction.registerSettings()
+		}
+
 		// Task extensions
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)

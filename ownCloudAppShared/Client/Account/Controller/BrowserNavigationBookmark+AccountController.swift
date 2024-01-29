@@ -53,14 +53,6 @@ public extension BrowserNavigationBookmark {
 				} else if let savedSearchUUID = savedSearch?.uuid {
 					// OCSavedSearch.uuid
 					itemRefs.append(savedSearchUUID as NSString)
-
-					switch specialItem {
-						case .searchPDFDocuments, .searchDocuments, .searchImages, .searchVideos, .searchAudios:
-							itemRefs.append(composedItemRef(for: .quickAccessFolder))
-
-						default: break
-
-					}
 				}
 
 			case .specialItem:

@@ -33,8 +33,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	public struct Configuration {
 		public var showAccountPill: Bool
 		public var showShared: Bool
-		public var showSavedSearches: Bool
-		public var showQuickAccess: Bool
+		public var showSearch: Bool
+		public var showRecents: Bool
+		public var showFavorites: Bool
+		public var showAvailableOffline: Bool
 		public var showActivity: Bool
 		public var autoSelectPersonalFolder: Bool
 
@@ -47,9 +49,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public static var pickerConfiguration: Configuration {
 			var config = Configuration()
 
-			config.showSavedSearches = false
-			config.showQuickAccess = false
+			config.showSearch = false
 			config.showActivity = false
+			config.showAvailableOffline = false
 
 			config.sectionAppearance = .insetGrouped
 
@@ -61,8 +63,10 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public init() {
 			showAccountPill = true
 			showShared = true
-			showSavedSearches = true
-			showQuickAccess = true
+			showSearch = true
+			showFavorites = true
+			showRecents = true
+			showAvailableOffline = true
 			showActivity = true
 
 			autoSelectPersonalFolder = true
@@ -77,19 +81,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		case spacesFolder
 
-		case savedSearchesFolder
+		case searchesFolder
 
-		case quickAccessFolder
-			case favoriteItems
-			case availableOfflineItems
-
-			case searchPDFDocuments
-			case searchDocuments
-			// case searchText
-			case searchImages
-			case searchVideos
-			case searchAudios
-			case recents
+		case recents
+		case favoriteItems
+		case availableOfflineItems
 
 		case activity
 	}
@@ -193,11 +189,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	public func account(connection: AccountConnection, changedStatusTo status: AccountConnection.Status, initial: Bool) {
 		if let vault = connection.core?.vault {
 			// Create savedSearchesDataSource if wanted
-			if configuration.showSavedSearches, savedSearchesDataSource == nil {
+			if configuration.showSearch, savedSearchesDataSource == nil {
 				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { [weak self] obj, keypath, newValue in
 					if let savedSearches = newValue as? [OCSavedSearch] {
 						let searches = savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
-						self?.savedSearchesVisible = searches.count > 0
+						// self?.savedSearchesVisible = searches.count > 0
 						return searches
 					}
 
@@ -283,13 +279,13 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	@objc dynamic var showDisconnectButton: Bool = false
 
 	var savedSearchesDataSource: OCDataSourceKVO?
-	var savedSearchesVisible: Bool = true {
-		didSet {
-			if oldValue != savedSearchesVisible, let savedSearchesFolderDatasource = specialItemsDataSources[.savedSearchesFolder] {
-				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDatasource)
-			}
-		}
-	}
+//	var savedSearchesVisible: Bool = true {
+//		didSet {
+//			if oldValue != savedSearchesVisible, let savedSearchesFolderDatasource = specialItemsDataSources[.searchesFolder] {
+//				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDatasource)
+//			}
+//		}
+//	}
 	var savedSearchesCondition: DataSourceCondition?
 
 	open var specialItems: [SpecialItem : OCDataItem & OCDataItemVersioning] = [:]
@@ -388,90 +384,65 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			}
 
 			// Saved searches
-			if configuration.showSavedSearches, let savedSearchesDataSource = savedSearchesDataSource {
-				savedSearchesCondition = DataSourceCondition(.empty, with: savedSearchesDataSource, initial: true, action: { [weak self] condition in
-					self?.savedSearchesVisible = condition.fulfilled == false
-				})
+			if configuration.showSearch, let savedSearchesDataSource {
+//				savedSearchesCondition = DataSourceCondition(.empty, with: savedSearchesDataSource, initial: true, action: { [weak self] condition in
+//					self?.savedSearchesVisible = condition.fulfilled == false
+//				})
 
-				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Saved searches".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.savedSearchesFolder]!)
+				let savedSearchesFolderDataSource = self.buildTopFolder(with: savedSearchesDataSource, title: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), topItem: .searchesFolder) { [weak self] context, action in
+					return self?.provideViewController(for: .searchesFolder, in: context)
+				}
 
-				specialItems[.savedSearchesFolder] = savedSearchesFolderItem
-				specialItemsDataSources[.savedSearchesFolder] = savedSearchesFolderDataSource
+//				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.searchesFolder]!)
+
+//				specialItems[.searchesFolder] = savedSearchesFolderItem
+//				specialItemsDataSources[.searchesFolder] = savedSearchesFolderDataSource
 
 				sources.append(savedSearchesFolderDataSource)
 			}
 
-			// Quick access
-			if configuration.showQuickAccess {
-				var quickAccessItems: [OCDataItem & OCDataItemVersioning] = []
+			// Other sidebar items
+			var otherItems: [OCDataItem & OCDataItemVersioning] = []
 
+			func addSidebarItem(_ itemID: SpecialItem, _ generate: ()->OCDataItem&OCDataItemVersioning) {
+				var item = specialItems[itemID]
+
+				if item == nil {
+					item = generate()
+					specialItems[itemID] = item
+				}
+
+				if let item {
+					otherItems.append(item)
+				}
+			}
+
+			// Recents
+			if configuration.showRecents {
 				// Recents
-				if specialItems[.recents] == nil {
-					specialItems[.recents] = OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascendant))
+				addSidebarItem(.recents) {
+					return OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascendant))
 				}
-				if let sideBarItem = specialItems[.recents] {
-					quickAccessItems.append(sideBarItem)
-				}
+			}
 
-				// Favorites
-				if bookmark?.hasCapability(.favorites) == true {
-					if specialItems[.favoriteItems] == nil {
-						specialItems[.favoriteItems] = buildSidebarSpecialItem(with: "Favorites".localized, icon: OCSymbol.icon(forSymbolName: "star"), for: .favoriteItems)
-					}
-					if let sideBarItem = specialItems[.favoriteItems] {
-						quickAccessItems.append(sideBarItem)
-					}
+			// Favorites
+			if configuration.showFavorites, bookmark?.hasCapability(.favorites) == true {
+				addSidebarItem(.favoriteItems) {
+					return buildSidebarSpecialItem(with: "Favorites".localized, icon: OCSymbol.icon(forSymbolName: "star"), for: .favoriteItems)
 				}
+			}
 
-				// Available offline
-				if specialItems[.availableOfflineItems] == nil {
-					specialItems[.availableOfflineItems] = buildSidebarSpecialItem(with: "Available Offline".localized, icon: OCItem.cloudAvailableOfflineStatusIcon, for: .availableOfflineItems)
+			// Available offline
+			if configuration.showAvailableOffline {
+				addSidebarItem(.availableOfflineItems) {
+					return buildSidebarSpecialItem(with: "Available Offline".localized, icon: OCItem.cloudAvailableOfflineStatusIcon, for: .availableOfflineItems)
 				}
-				if let sideBarItem = specialItems[.availableOfflineItems] {
-					quickAccessItems.append(sideBarItem)
-				}
+			}
 
-				// Convenience searches
-				if specialItems[.searchPDFDocuments] == nil {
-					specialItems[.searchPDFDocuments] = OCSavedSearch(scope: .account, location: nil, name: "PDF Documents".localized, isTemplate: false, searchTerm: ":pdf").withCustomIcon(name: "doc.richtext").useNameAsTitle(true)
-				}
-				if specialItems[.searchDocuments] == nil {
-					specialItems[.searchDocuments] = OCSavedSearch(scope: .account, location: nil, name: "Documents".localized, isTemplate: false, searchTerm: ":document").withCustomIcon(name: "doc").useNameAsTitle(true)
-				}
-				if specialItems[.searchImages] == nil {
-					specialItems[.searchImages] = OCSavedSearch(scope: .account, location: nil, name: "Images".localized, isTemplate: false, searchTerm: ":image").withCustomIcon(name: "photo").useNameAsTitle(true)
-				}
-				if specialItems[.searchVideos] == nil {
-					specialItems[.searchVideos] = OCSavedSearch(scope: .account, location: nil, name: "Videos".localized, isTemplate: false, searchTerm: ":video").withCustomIcon(name: "film").useNameAsTitle(true)
-				}
-				if specialItems[.searchAudios] == nil {
-					specialItems[.searchAudios] = OCSavedSearch(scope: .account, location: nil, name: "Audios".localized, isTemplate: false, searchTerm: ":audio").withCustomIcon(name: "waveform").useNameAsTitle(true)
-				}
-
-				let addSpecialItemsTypes: [SpecialItem] = [ .searchPDFDocuments, .searchDocuments, .searchImages, .searchVideos, .searchAudios ]
-
-				for specialItemType in addSpecialItemsTypes {
-					if let item = specialItems[specialItemType] as? OCSavedSearch {
-						if let representationUUID = specialItemsDataReferences[specialItemType] as? String {
-							item.uuid = representationUUID
-						}
-						quickAccessItems.append(item)
-					}
-				}
-
-				quickAccessItemsDataSource.setVersionedItems(quickAccessItems)
-
-				// Quick access folder
-				if specialItems[.quickAccessFolder] == nil {
-					let (quickAccessFolderDataSource, quickAccessFolderItem) = self.buildFolder(with: quickAccessItemsDataSource, title: "Quick Access".localized, icon: OCSymbol.icon(forSymbolName: "speedometer"), folderItemRef:specialItemsDataReferences[.quickAccessFolder]!)
-
-					specialItems[.quickAccessFolder] = quickAccessFolderItem
-					specialItemsDataSources[.quickAccessFolder] = quickAccessFolderDataSource
-				}
-
-				if let quickAccessFolderDataSource = specialItemsDataSources[.quickAccessFolder] {
-					sources.append(quickAccessFolderDataSource)
-				}
+			if otherItems.count > 0 {
+				let otherItemsDataSource = OCDataSourceArray()
+				otherItemsDataSource.setVersionedItems(otherItems)
+				sources.append(otherItemsDataSource)
 			}
 
 			// Extra items (Activity & Co via class extension in the app)
@@ -483,9 +454,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			itemsDataSource.sources = sources
 
-			if let savedSearchesFolderDataSource = specialItemsDataSources[.savedSearchesFolder], !savedSearchesVisible {
-				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDataSource)
-			}
+//			if let savedSearchesFolderDataSource = specialItemsDataSources[.searchesFolder], !savedSearchesVisible {
+//				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDataSource)
+//			}
 		}
 	}
 
@@ -546,6 +517,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			case .spacesFolder:
 				viewController = AccountControllerSpacesGridViewController(with: context)
+
+			case .searchesFolder:
+				viewController = AccountControllerSearchViewController(context: context)
 
 			case .availableOfflineItems:
 				if let core = context.core {
