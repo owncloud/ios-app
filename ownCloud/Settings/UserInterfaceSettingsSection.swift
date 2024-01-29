@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class UserInterfaceSettingsSection: SettingsSection {
@@ -35,7 +36,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 			self?.pushThemeStyleSelector()
 			}, title: "Theme".localized, value: ThemeStyle.displayName, accessoryType: .disclosureIndicator, identifier: "theme")
 
-		if !VendorServices.shared.isBranded {
+		if Branding.shared.allowThemeSelection {
 			self.add(row: themeRow!)
 		}
 
@@ -83,9 +84,9 @@ class UserInterfaceSettingsSection: SettingsSection {
 					ThemeStyle.followSystemAppearance = true
 					themeRow?.cell?.detailTextLabel?.text = "System".localized
 				} else if let styleIdentifier = row.value as? String,
-					let style = ThemeStyle.forIdentifier(styleIdentifier), ThemeStyle.preferredStyle != style {
-						ThemeStyle.followSystemAppearance = false
+					let style = ThemeStyle.forIdentifier(styleIdentifier) {
 						ThemeStyle.preferredStyle = style
+						ThemeStyle.followSystemAppearance = false
 
 					themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
 				}

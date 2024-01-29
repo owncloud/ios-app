@@ -88,7 +88,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 						}
 					} else {
 						// Link shares
-						content.title = .text(name ?? "Link".localized)
+						content.title = .text(name ?? token ??  "Link".localized)
 
 						if let urlString = url?.absoluteString, urlString.count > 0 {
 							if let roleName = matchingRole?.localizedName {
@@ -242,7 +242,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 		}
 
-		if category == .withMe, let effectiveState, effectiveState != .accepted {
+		if category == .withMe, let effectiveState {
 			var accessories: [UICellAccessory] = []
 			let omitLongActions = (effectiveState == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
 
@@ -257,7 +257,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 				accessories.append(accessory)
 			}
 
-			if effectiveState == .pending, !omitLongActions {
+			if (effectiveState == .pending || effectiveState == .accepted) && !omitLongActions {
 				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { [weak self, weak context] action in
 					if let self, let context, let core = context.core {
 						core.makeDecision(on: self, accept: false, completionHandler: { error in
@@ -274,11 +274,11 @@ extension OCShare: UniversalItemListCellContentProvider {
 				accessories.append(accessory)
 			}
 
-			content.accessories = accessories
-		}
+			if effectiveState == .accepted {
+				accessories.append(cell.revealButtonAccessory)
+			}
 
-		if category == .withMe, let effectiveState, effectiveState == .accepted {
-			content.accessories = [ cell.revealButtonAccessory ]
+			content.accessories = accessories
 		}
 
 		_ = updateContent(content)

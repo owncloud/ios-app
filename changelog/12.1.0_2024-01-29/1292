@@ -1,0 +1,5 @@
+Change: File extension / suffix protection
+
+Prevents users from removing or changing the suffix for new documents and document scanner.
+
+https://github.com/owncloud/ios-app/issues/1292

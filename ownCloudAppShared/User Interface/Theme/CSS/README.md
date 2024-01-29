@@ -113,7 +113,7 @@ getInteger   			| `Int`
 getCGFloat   			| `CGFloat`
 getBool      			| `Boolean`, `String` (`true` and `false`)
 getUserInterfaceStyle		| `UIUserInterfaceStyle`, `Int`, `String` (`unspecified`, `light`, `dark`)
-getStatusBarStyle		| `UIStatusBarStyle`, `Int`, `String` (`default`, `lightContent`, `darkContent`)
+getStatusBarStyle		| `UIStatusBarStyle`, `Int`, `String` (`default`, `lightContent`, `darkContent`, `white`, `black`)
 getBarStyle			| `UIBarStyle`, `Int`, `String` (`default`, `black`)
 getKeyboardAppearance		| `UIKeyboardAppearance`, `Int`, `String` (`default`, `light`, `dark`)
 getActivityIndicatorStyle 	| `UIActivityIndicatorView.Style`, `Int`, `String` (`medium`, `large`)
@@ -187,33 +187,108 @@ Matching:
 A way to change the value of the `stroke` property, then, would be to add a more specific record, f.ex. for `collection.cell.sortBar` - or possibly for `sortBar` directly (the last selector is weighted much higher).
 
 ## Adding styling via branding
-Additional CSS records can be added through the usual branding options, including `Branding.plist`, by providing an array of css records following this format:
+Depending on how a client is branded, different options are used to add CSS records to f.ex. the `Branding.plist`.
+
+In all cases, the additional CSS records follow this format:
 
 ```
 selector1.selector2….property: value
 ```
 
-Example for a `Branding.plist` that fills the logo in the sidebar's navigation bar with red color:
+See *Debugging selectors and matching* > *Usage in practice* above for how to determine the selectors of a view on screen.
+
+### Branding on top of default themes 
+If `branding.theme-definitions` is **not** used, the app provides themes for light mode and dark mode to branded clients, with support for light customization through branding:
+Option | Description
+--|--
+`branding.theme-colors`| Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+`branding.theme-css-records` | CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+
+Both options can be used together.
+
+#### Using `branding.theme-css-records`
+Example for a `Branding.plist` filling the logo in the sidebar's navigation bar with red and the account pill with green:
+
+```xml
+<key>branding.theme-css-records</key>
+<array>
+	<string>sidebar.navigationBar.logo.stroke: #ff0000</string>
+	<string>sidebar.account.fill: #00ff00</string>
+</array>
+```
+
+Example in flat notation:
+```xml
+<key>branding.theme-css-records$[0]</key>
+<string>sidebar.navigationBar.logo.stroke: #ff0000</string>
+<key>branding.theme-css-records$[1]</key>
+<string>sidebar.account.fill: #00ff00</string>
+```
+
+#### Using `branding.theme-colors`
+For commonly branded elements, the app supports the following aliases to be used in key-value pairs in `branding.theme-colors`:
+
+Alias | Value
+--|--
+`tint-color` | Color to use as tint/accent color for controls (in hex notation). Replaces `branding.theme-tint-color`.
+`branding-background-color` | Color to use as background color for brand views (in hex notation).
+`setup-status-bar-style` | The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.
+`file-icon-color` | Color to fill file icons with (in hex notation).
+`folder-icon-color` | Color to fill folder icons with (in hex notation).
+
+Each alias can be expanded to one or more CSS addresses internally, so that the values set here can be assigned to the right elements - even after major UI changes or refactoring.
+
+Example:
+```xml
+<key>branding.theme-colors</key>
+<dict>
+	<key>tint-color</key>
+	<string>#ff0000</string>
+	<key>branding-background-color</key>
+	<string>#0ff0f0</string>
+	<key>setup-status-bar-style</key>
+	<string>black</string>
+	<key>folder-icon-color</key>
+	<string>#00ff00</string>
+	<key>file-icon-color</key>
+	<string>#0000ff</string>
+</dict>
+````
+
+Example in flat notation:
+```xml
+<key>branding.theme-colors$tint-color</key>
+<string>#ff0000</string>
+<key>branding.theme-colors$branding-background-color</key>
+<string>#0ff0f0</string>
+<key>branding.theme-colors$setup-status-bar-style</key>
+<string>black</string>
+<key>branding.theme-colors$folder-icon-color</key>
+<string>#00ff00</string>
+<key>branding.theme-colors$file-icon-color</key>
+<string>#0000ff</string>
+````
+
+### Branding with fully custom themes
+For clients branded with fully custom themes via `branding.theme-definitions`, an array of additional CSS records can be added for each theme definition.
+
+Example for a `Branding.plist` filling the logo in the sidebar's navigation bar with red and the account pill with green:
 
 ```xml
 <key>branding.theme-definitions$[0].cssRecords</key>
 <array>
 	<string>sidebar.navigationBar.logo.stroke: #ff0000</string>
+	<string>sidebar.account.fill: #00ff00</string>
 </array>
 ```
 
-See *Debugging selectors and matching* > *Usage in practice* above for how to determine the selectors of a view on screen.
-
-#### Icon color CSS selectors
-Icon colors are now also configured via CSS selectors:
-
-TVG/Legacy Color  | CSS selector string
-------------------|------------------------------------
-`folderFillColor` | `vectorImage.folderColor.fill`
-`fileFillColor`   | `vectorImage.fileColor.fill`
-`logoFillColor`   | `vectorImage.logoColor.fill`
-`iconFillColor`   | `vectorImage.iconColor.fill`
-`symbolFillColor` | `vectorImage.symbolColor.fill`
+Example in flat notation:
+```xml
+<key>branding.theme-definitions$[0].cssRecords[0]</key>
+<string>sidebar.navigationBar.logo.stroke: #ff0000</string>
+<key>branding.theme-definitions$[0].cssRecords[1]</key>
+<string>sidebar.account.fill: #00ff00</string>
+```
 
 ### Reference
 #### Selectors
@@ -234,7 +309,18 @@ Property | Type   | Description / Values
 `cornerRadius` | float | Corner radius (not widely used)
 `style` | `UIUserInterfaceStyle` | `unspecified`, `light`, `dark`
 `barStyle` | `UIBarStyle` | `default`, `black`
-`statusBarStyle` | `UIStatusBarStyle` | `default`, `lightContent`, `darkContent`
+`statusBarStyle` | `UIStatusBarStyle` | `default`, `lightContent`, `darkContent`, `black`, `white`
 `blurEffectStyle` | `UIBlurEffect.Style` | `regular`, `light`,  `dark`
 `keyboardAppearance` | `UIKeyboardAppearance` | `default`, `light`, `dark`
 `activityIndicatorStyle` |  `UIActivityIndicatorView.Style` | `medium`, `large`
+
+#### Icon color CSS selectors
+Icon colors are now also configured via CSS selectors:
+
+TVG/Legacy Color  | CSS selector string
+------------------|------------------------------------
+`folderFillColor` | `vectorImage.folderColor.fill`
+`fileFillColor`   | `vectorImage.fileColor.fill`
+`logoFillColor`   | `vectorImage.logoColor.fill`
+`iconFillColor`   | `vectorImage.iconColor.fill`
+`symbolFillColor` | `vectorImage.symbolColor.fill`

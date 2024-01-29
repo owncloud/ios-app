@@ -44,10 +44,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		iconView.cssSelectors = [.icon]
 		disconnectButton.cssSelectors = [.disconnect]
 
-		logoFallbackView.contentMode = .scaleAspectFit
-		logoFallbackView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
-
-		iconView.fallbackView = logoFallbackView
+		iconView.fallbackView = BrandView(showBackground: true, showLogo: true, logoMaxSize: CGSize(width: 36, height: 36), roundedCorners: true)
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .title3, with: .bold)
 		titleLabel.adjustsFontForContentSizeCategory = true
@@ -110,13 +107,15 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			disconnectButton.trailingAnchor.constraint(lessThanOrEqualTo: infoView.trailingAnchor),
 			disconnectButton.centerYAnchor.constraint(equalTo: infoView.centerYAnchor),
 
-			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20)
+			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20).with(priority: .defaultHigh)
 		])
 
 		infoView.setContentHuggingPriority(.required, for: .horizontal)
 		logoFallbackView.setContentHuggingPriority(.required, for: .vertical)
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+
+		disconnectButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 	}
 
 	override init(frame: CGRect) {

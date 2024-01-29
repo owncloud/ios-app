@@ -104,7 +104,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 
 		// Build sidebar
 		sidebarViewController = ClientSidebarViewController(context: rootContext!, controllerConfiguration: controllerConfiguration)
-		sidebarViewController?.addToolbarItems()
+		sidebarViewController?.addToolbarItems(addAccount: Branding.shared.canAddAccount)
 
 		leftNavigationController = ThemeNavigationController(rootViewController: sidebarViewController!)
 		leftNavigationController?.cssSelectors = [ .sidebar ]
@@ -121,7 +121,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		noBookmarkCondition = DataSourceCondition(.empty, with: OCBookmarkManager.shared.bookmarksDatasource, initial: true, action: { [weak self] condition in
 			if condition.fulfilled == true {
 				// No account available
-				self?.contentViewController = InitialSetupViewController()
+				let configuration = BookmarkComposerConfiguration.newBookmarkConfiguration
+				configuration.hasIntro = true
+				self?.contentViewController = BookmarkSetupViewController(configuration: configuration)
 			} else {
 				// Account already available
 				self?.contentViewController = self?.contentBrowserController
@@ -160,6 +162,23 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		ClientSessionManager.shared.remove(delegate: self)
 	}
 
+	// MARK: - Interface orientations
+	open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+		if let contentViewController {
+			return contentViewController.supportedInterfaceOrientations
+		}
+
+		return super.supportedInterfaceOrientations
+	}
+
+	open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+		if let contentViewController {
+			return contentViewController.preferredInterfaceOrientationForPresentation
+		}
+
+		return super.preferredInterfaceOrientationForPresentation
+	}
+
 	// MARK: - Status Bar style
 	open override var childForStatusBarStyle: UIViewController? {
 		return contentViewController
@@ -168,6 +187,9 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 	open override var contentViewController: UIViewController? {
 		didSet {
 			setNeedsStatusBarAppearanceUpdate()
+			if #available(iOS 16, *) {
+				setNeedsUpdateOfSupportedInterfaceOrientations()
+			}
 		}
 	}
 
@@ -384,7 +406,9 @@ extension ClientSidebarViewController {
 
 	// MARK: - Open settings
 	@IBAction func settings() {
-		self.present(ThemeNavigationController(rootViewController: SettingsViewController()), animated: true)
+		let navigationViewController = ThemeNavigationController(rootViewController: SettingsViewController())
+		navigationViewController.modalPresentationStyle = .fullScreen
+		present(navigationViewController, animated: true)
 	}
 
 	// MARK: - Add account

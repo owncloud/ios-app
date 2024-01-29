@@ -154,10 +154,24 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		}
 	}
+	
+	func disableEditingMode() {
+		if #available(iOS 17.0, *) {
+			if let rightBarButtonItems = self.navigationItem.rightBarButtonItems, rightBarButtonItems.count > 0 {
+				for markupButton in rightBarButtonItems {
+					if (markupButton.debugDescription as NSString).contains("pencil.tip.crop.circle") {
+						_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+					}
+				}
+			}
+		} else {
+			self.setEditing(false, animated: false)
+		}
+	}
 
 	@objc func dismissAnimated() {
-		self.setEditing(false, animated: false)
-
+		disableEditingMode()
+		
 		if savingMode == nil {
 			requestsavingMode { (savingMode) in
 				self.dismiss(animated: true) {

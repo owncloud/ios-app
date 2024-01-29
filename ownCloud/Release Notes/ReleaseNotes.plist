@@ -1788,6 +1788,123 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>New account wizard</string>
+					<key>Subtitle</key>
+					<string>Introducing a new, intuitive account wizard user interface for a fast onboarding experience.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>sparkles.rectangle.stack</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Reordering accounts</string>
+					<key>Subtitle</key>
+					<string>Now you can easily reorder accounts in the sidebar by simply dragging and dropping them.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>line.3.horizontal.circle</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Location breadcrumb</string>
+					<key>Subtitle</key>
+					<string>We have added a location breadcrumb dropdown in the file viewer, making it easier to navigate through your files.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>chevron.down</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Text recognition</string>
+					<key>Subtitle</key>
+					<string>You can now perform text recognition actions on images.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>text.viewfinder</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>File extension / suffix protection</string>
+					<key>Subtitle</key>
+					<string>To prevent accidental removal or modification of the suffix for new documents and document scanner files, we have implemented file extension protection.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock.shield</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Share Action &quot;Save to ownCloud&quot;</string>
+					<key>Subtitle</key>
+					<string>We have added a new action called &quot;Save to ownCloud&quot; to the share sheet, allowing you to easily save files to your ownCloud account.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>square.and.arrow.up</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Link naming</string>
+					<key>Subtitle</key>
+					<string>You can now enter and edit the name of link shares.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>character.textbox</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Sort by Last Used</string>
+					<key>Subtitle</key>
+					<string>Introducing a new sorting method - “Last Used” - which allows you to sort items based on the most recently accessed ones.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>arrow.up.arrow.down</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Markup Edit Mode on iOS 17</string>
+					<key>Subtitle</key>
+					<string>We have fixed the issue that was disabling the edit mode in the markup document view on iOS 17.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Open ownCloud Links in App</string>
+					<key>Subtitle</key>
+					<string>We have resolved the issue with opening private links from third-party apps.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Bug Fixes</string>
+					<key>Subtitle</key>
+					<string>We have addressed various issues with the File Provider and the app itself.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

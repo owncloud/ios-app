@@ -273,7 +273,7 @@ class BookmarkViewController: StaticTableViewController {
 				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
 				// Support for bookmark default name
-				if let defaultNameString = AccountSettingsProvider.shared.defaultBookmarkName {
+				if let defaultNameString = Branding.shared.profileBookmarkName {
 					self.bookmark?.name = defaultNameString
 
 					if bookmark != nil {
@@ -282,7 +282,7 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				// Support for bookmark default URL
-				if let defaultURL = AccountSettingsProvider.shared.defaultURL {
+				if let defaultURL = Branding.shared.profileURL {
 					self.bookmark?.url = defaultURL
 
 					if bookmark != nil {
@@ -290,13 +290,13 @@ class BookmarkViewController: StaticTableViewController {
 					}
 				}
 
-				if let url = AccountSettingsProvider.shared.profileHelpURL, let title = AccountSettingsProvider.shared.profileHelpButtonLabel {
+				if let url = Branding.shared.profileHelpURL, let title = Branding.shared.profileHelpButtonLabel {
 					let imageView = UIImageView(image: UIImage(systemName: "questionmark.circle")!)
 					helpButtonRow = StaticTableViewRow(rowWithAction: { staticRow, sender in
 						UIApplication.shared.open(url)
 					}, title: title, alignment: .center, accessoryView: imageView)
 
-					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: AccountSettingsProvider.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
+					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: Branding.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
 				}
 
 			case .edit:
@@ -319,7 +319,7 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Support for bookmark URL editable
-		if AccountSettingsProvider.shared.URLEditable == false {
+		if Branding.shared.profileAllowUrlConfiguration == false {
 			self.urlRow?.enabled = false
 
 			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
@@ -340,7 +340,7 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		let logoAndAppNameView = ComposedMessageView.infoBox(additionalElements: [
-			.image(AccountSettingsProvider.shared.logo, size: CGSize(width: 64, height: 64), cssSelectors: [.icon]),
+			.image(Branding.shared.brandedImageNamed(.brandLogo) ?? UIImage(systemName: "globe")!, size: CGSize(width: 64, height: 64), cssSelectors: [.icon]),
 			.title(VendorServices.shared.appName, alignment: .centered, cssSelectors: [.title])
 		])
 
@@ -348,7 +348,7 @@ class BookmarkViewController: StaticTableViewController {
 		logoAndAppNameView.backgroundInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
 		logoAndAppNameView.elementInsets = NSDirectionalEdgeInsets(top: 30, leading: 20, bottom: 10, trailing: 20)
 
-		(logoAndAppNameView.backgroundView as? RoundCornerBackgroundView)?.fillImage = Branding.shared.brandedImageNamed(.loginBackground)
+		(logoAndAppNameView.backgroundView as? RoundCornerBackgroundView)?.fillImage = Branding.shared.brandedImageNamed(.brandBackground) ?? Branding.shared.brandedImageNamed(.legacyBrandBackground)
 
 		self.tableView.tableHeaderView = logoAndAppNameView
 		self.tableView.layoutTableHeaderView()
@@ -1108,39 +1108,55 @@ class BookmarkViewController: StaticTableViewController {
 // MARK: - Convenience for presentation
 extension BookmarkViewController {
 	static func showBookmarkUI(on hostViewController: UIViewController, edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
-		var editBookmark = bookmark
+		if bookmark != nil {
+			var editBookmark = bookmark
 
-		if let bookmark {
-			// Retrieve latest version of bookmark from OCBookmarkManager
-			if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuid.uuidString) {
-				editBookmark = latestStoredBookmarkVersion
-			}
-		}
-
-		let bookmarkViewController : BookmarkViewController = BookmarkViewController(editBookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
-		bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
-			if success, let bookmark = bookmark {
-				if let error = autosolveErrorOnSuccess as Error? {
-					OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+			if let bookmark {
+				// Retrieve latest version of bookmark from OCBookmarkManager
+				if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuid.uuidString) {
+					editBookmark = latestStoredBookmarkVersion
 				}
+			}
 
-				if attemptLoginOnSuccess {
+			let bookmarkViewController : BookmarkViewController = BookmarkViewController(editBookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
+			bookmarkViewController.userActionCompletionHandler = { (bookmark, success) in
+				if success, let bookmark = bookmark {
+					if let error = autosolveErrorOnSuccess as Error? {
+						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+					}
+
+					if attemptLoginOnSuccess {
+						AccountConnectionPool.shared.connection(for: bookmark)?.connect()
+					}
+				}
+			}
+
+			let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
+			navigationController.isModalInPresentation = true
+
+			hostViewController.present(navigationController, animated: true, completion: {
+				OnMainThread {
+					if performContinue {
+						bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+						bookmarkViewController.handleContinue()
+					}
+				}
+			})
+		} else {
+			let setupViewController = BookmarkSetupViewController(configuration: .newBookmarkConfiguration, cancelHandler: {
+				hostViewController.dismiss(animated: true)
+			}, doneHandler: { bookmark in
+				hostViewController.dismiss(animated: true)
+				if attemptLoginOnSuccess, let bookmark {
 					AccountConnectionPool.shared.connection(for: bookmark)?.connect()
 				}
-			}
+			})
+			setupViewController.navigationItem.titleLabelText = "Add account".localized
+
+			let navigationViewController = ThemeNavigationController(rootViewController: setupViewController)
+			navigationViewController.modalPresentationStyle = .fullScreen
+			hostViewController.present(navigationViewController, animated: true, completion: nil)
 		}
-
-		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
-		navigationController.isModalInPresentation = true
-
-		hostViewController.present(navigationController, animated: true, completion: {
-			OnMainThread {
-				if performContinue {
-					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
-					bookmarkViewController.handleContinue()
-				}
-			}
-		})
 	}
 }
 

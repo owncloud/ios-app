@@ -23,19 +23,19 @@ public extension UIView {
 	typealias ConstraintsModifier = (_ constraintSet: ConstraintSet) -> ConstraintSet
 
 	struct ConstraintSet {
-		var firstLeadingOrTopConstraint: NSLayoutConstraint?
-		var lastTrailingOrBottomConstraint: NSLayoutConstraint?
+		public var firstLeadingOrTopConstraint: NSLayoutConstraint?
+		public var lastTrailingOrBottomConstraint: NSLayoutConstraint?
 	}
 
 	struct AnchorSet {
-		var leadingAnchor: NSLayoutXAxisAnchor
-		var trailingAnchor: NSLayoutXAxisAnchor
+		public var leadingAnchor: NSLayoutXAxisAnchor
+		public var trailingAnchor: NSLayoutXAxisAnchor
 
-		var topAnchor: NSLayoutYAxisAnchor
-		var bottomAnchor: NSLayoutYAxisAnchor
+		public var topAnchor: NSLayoutYAxisAnchor
+		public var bottomAnchor: NSLayoutYAxisAnchor
 
-		var centerXAnchor: NSLayoutXAxisAnchor
-		var centerYAnchor: NSLayoutYAxisAnchor
+		public var centerXAnchor: NSLayoutXAxisAnchor
+		public var centerYAnchor: NSLayoutYAxisAnchor
 	}
 
 	var defaultAnchorSet : AnchorSet {
@@ -116,7 +116,7 @@ public extension UIView {
 		return constraintSet
 	}
 
-	@discardableResult func embedVertically(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, spacingProvider: SpacingProvider? = nil, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
+	@discardableResult func embedVertically(views: [UIView], insets: NSDirectionalEdgeInsets, enclosingAnchors: AnchorSet? = nil, spacingProvider: SpacingProvider? = nil, centered: Bool = true, constraintsModifier: ConstraintsModifier? = nil) -> ConstraintSet {
 		var viewIdx : Int = 0
 		var previousView: UIView?
 		var embedConstraints: [NSLayoutConstraint] = []
@@ -143,11 +143,18 @@ public extension UIView {
 			}
 
 			// - horizontal position + insets
-			embedConstraints.append(contentsOf: [
-				view.centerXAnchor.constraint(equalTo: anchorSet.centerXAnchor),
-				view.leadingAnchor.constraint(greaterThanOrEqualTo: anchorSet.leadingAnchor, constant: insets.leading),
-				view.trailingAnchor.constraint(lessThanOrEqualTo: anchorSet.trailingAnchor, constant: -insets.trailing)
-			])
+			if centered {
+				embedConstraints.append(contentsOf: [
+					view.centerXAnchor.constraint(equalTo: anchorSet.centerXAnchor),
+					view.leadingAnchor.constraint(greaterThanOrEqualTo: anchorSet.leadingAnchor, constant: insets.leading),
+					view.trailingAnchor.constraint(lessThanOrEqualTo: anchorSet.trailingAnchor, constant: -insets.trailing)
+				])
+			} else {
+				embedConstraints.append(contentsOf: [
+					view.leadingAnchor.constraint(equalTo: anchorSet.leadingAnchor, constant: insets.leading),
+					view.trailingAnchor.constraint(equalTo: anchorSet.trailingAnchor, constant: -insets.trailing)
+				])
+			}
 
 			// - bottom
 			if viewIdx == (views.count-1) {
@@ -194,10 +201,12 @@ public extension UIView {
 		return constraints
 	}
 
-	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil, maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil) -> [NSLayoutConstraint] {
-		view.translatesAutoresizingMaskIntoConstraints = false
+	@discardableResult func embed(centered view: UIView, minimumInsets insets: NSDirectionalEdgeInsets = .zero, fixedSize: CGSize? = nil, minimumSize: CGSize? = nil, maximumSize: CGSize? = nil, enclosingAnchors: AnchorSet? = nil, constraintsOnly: Bool = false) -> [NSLayoutConstraint] {
+		if !constraintsOnly {
+			view.translatesAutoresizingMaskIntoConstraints = false
 
-		addSubview(view)
+			addSubview(view)
+		}
 
 		var constraints: [NSLayoutConstraint]
 		let anchorSet = enclosingAnchors ?? defaultAnchorSet
@@ -232,7 +241,9 @@ public extension UIView {
 			]
 		}
 
-		NSLayoutConstraint.activate(constraints)
+		if !constraintsOnly {
+			NSLayoutConstraint.activate(constraints)
+		}
 
 		return constraints
 	}
