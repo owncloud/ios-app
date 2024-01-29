@@ -296,7 +296,7 @@ platform :ios do
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
-      APP_NAME: "ownCloud",
+      APP_NAME: "ownCloud EMM",
       URL_SCHEME: "owncloud-emm",
       IPA_NAME: "ownCloud-emm"
     )
