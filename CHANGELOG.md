@@ -1,5 +1,3 @@
-=======================================
-=======
 # Table of Contents
 
 * [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-19)
@@ -24,16 +22,13 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
-
-Changelog for ownCloud iOS Client [12.1.0] (2024-01-19)
-=======================================
+# Changelog for ownCloud iOS Client [12.1.0] (2024-01-19)
 The following sections list the changes in ownCloud iOS Client 12.1.0 relevant to
 ownCloud admins and users.
 
 [12.1.0]: https://github.com/owncloud/ios-app/compare/milestone/12.0.3...milestone/12.1.0
 
-Summary
--------
+## Summary
 
 * Bugfix - Available offline badge: [#1128](https://github.com/owncloud/ios-app/issues/1128)
 * Bugfix - File Provider fixes: [#1294](https://github.com/owncloud/ios-app/pull/1294)
@@ -48,8 +43,7 @@ Summary
 * Change - Link naming: [#1297](https://github.com/owncloud/ios-app/issues/1297)
 * Change - Remove Extension Build Flag (Intents): [#6112](https://github.com/owncloud/enterprise/issues/6112)
 
-Details
--------
+## Details
 
 * Bugfix - Available offline badge: [#1128](https://github.com/owncloud/ios-app/issues/1128)
 
@@ -135,7 +129,6 @@ Details
    https://github.com/owncloud/enterprise/issues/6112
 
 # Changelog for ownCloud iOS Client [12.0.3] (2023-08-31)
-
 The following sections list the changes in ownCloud iOS Client 12.0.3 relevant to
 ownCloud admins and users.
 
