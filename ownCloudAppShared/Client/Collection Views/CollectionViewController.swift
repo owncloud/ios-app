@@ -527,6 +527,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>()
 		var snapshotsBySection = [CollectionViewSection.SectionIdentifier : NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>]()
 		var updatedItems : [CollectionViewController.ItemRef] = []
+		var selectedItemRefs: [ItemRef]?
+
+		let updateWithAnimation = animatingDifferences && !useWrappedIdentifiers
+
+		if !updateWithAnimation {
+			// Selection is lost when updating without animation (via https://forums.developer.apple.com/forums/thread/656529?answerId=627227022#627227022)
+			let selectedIndexPaths = collectionView.indexPathsForSelectedItems
+			selectedItemRefs = selectedIndexPaths?.compactMap({ indexPath in
+				return collectionViewDataSource.itemIdentifier(for: indexPath)
+			})
+		}
 
 		// Log.debug("<=========================>")
 
@@ -541,7 +552,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 
-		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences && !useWrappedIdentifiers)
+		collectionViewDataSource.apply(snapshot, animatingDifferences: updateWithAnimation)
 
 		if useWrappedIdentifiers {
 			for section in sections {
@@ -560,6 +571,23 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				var snapshot = collectionViewDataSource.snapshot()
 				snapshot.reconfigureItems(updatedItems)
 				collectionViewDataSource.apply(snapshot, animatingDifferences: false)
+			}
+		}
+
+		// Restore selected item refs
+		if let selectedItemRefs {
+			var selectIndexPaths: [IndexPath]?
+
+			selectIndexPaths = selectedItemRefs.compactMap({ itemRef in
+				collectionViewDataSource.indexPath(for: itemRef)
+			})
+
+			if let selectIndexPaths, selectIndexPaths.count > 0 {
+				OnMainThread {
+					for selectedIndexPath in selectIndexPaths {
+						self.collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredVertically)
+					}
+				}
 			}
 		}
 
@@ -998,7 +1026,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 					return nil
 				}
 
-				if let menuItems = contextMenuInteraction.composeContextMenuItems(in: self, location: .contextMenuItem, with: self.clientContext) {
+				if let menuItems = contextMenuInteraction.composeContextMenuItems(in: self, location: .contextMenuItem, with: clientContext) {
 					return UIMenu(title: "", children: menuItems)
 				}
 

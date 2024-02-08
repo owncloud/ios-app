@@ -207,7 +207,7 @@ extension OCSavedSearch {
 
 extension SavedSearchCell {
 	static let savedTemplateIcon = OCSymbol.icon(forSymbolName: "square.dashed.inset.filled")
-	static let savedSearchIcon = OCSymbol.icon(forSymbolName: "gearshape.fill")
+	static let savedSearchIcon = OCSymbol.icon(forSymbolName: "folder.badge.gearshape")
 
 	static func registerCellProvider() {
 		let savedSearchCellRegistration = UICollectionView.CellRegistration<SavedSearchCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in

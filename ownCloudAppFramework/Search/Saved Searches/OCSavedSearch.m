@@ -59,7 +59,7 @@
 
 - (OCDataItemVersion)dataItemVersion
 {
-	return (@(self.hash));
+	return ([NSString stringWithFormat:@"%lu%@%@", self.hash, self.name, self.uuid]);
 }
 
 #pragma mark - Comparison

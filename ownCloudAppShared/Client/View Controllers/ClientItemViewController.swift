@@ -1059,9 +1059,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				// Suggestion view
 				let suggestionsSource = OCDataSourceArray()
+				suggestionsSource.trackItemVersions = true
+
 				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: emptySection!.cellStyle)
 
-				if let vault = clientContext.core?.vault {
+				if clientContext.core?.vault != nil {
 					startProvidingSearchSuggestions(to: suggestionsSource, in: clientContext)
 				}
 

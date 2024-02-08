@@ -52,11 +52,32 @@ class AccountControllerSearchViewController: ClientItemViewController {
 	override func composeSuggestionContents(from savedSearches: [OCSavedSearch]?, clientContext: ClientContext, includingFallbacks: Bool) -> [OCDataItem & OCDataItemVersioning] {
 		var suggestions = super.composeSuggestionContents(from: savedSearches, clientContext: clientContext, includingFallbacks: false)
 
-		let headerView = ComposedMessageView.sectionHeader(titled: "Quick Access".localized)
-		headerView.elementInsets = .zero
-		suggestions.insert(headerView, at: 0)
+		let savedSearches = clientContext.core?.vault.savedSearches ?? []
+		var thinnedQuickAccessSuggestions : [OCSavedSearch] = []
 
-		suggestions.insert(contentsOf: quickAccessSuggestions, at: 1)
+		for quickAccessSuggestion in quickAccessSuggestions {
+			let storedSearch = savedSearches.first(where: { storedSavedSearch in
+				return 	storedSavedSearch.searchTerm == quickAccessSuggestion.searchTerm &&
+					storedSavedSearch.customIconName == quickAccessSuggestion.customIconName &&
+					storedSavedSearch.name == quickAccessSuggestion.name &&
+					storedSavedSearch.isTemplate != quickAccessSuggestion.isTemplate &&
+					storedSavedSearch.isQuickAccess == quickAccessSuggestion.isQuickAccess &&
+					storedSavedSearch.useNameAsTitle == quickAccessSuggestion.useNameAsTitle &&
+					storedSavedSearch.scope == quickAccessSuggestion.scope
+			})
+
+			if storedSearch == nil {
+				thinnedQuickAccessSuggestions.append(quickAccessSuggestion)
+			}
+		}
+
+		if thinnedQuickAccessSuggestions.count > 0 {
+			let headerView = ComposedMessageView.sectionHeader(titled: "Quick Access".localized)
+			headerView.elementInsets = .zero
+			suggestions.insert(headerView, at: 0)
+
+			suggestions.insert(contentsOf: thinnedQuickAccessSuggestions, at: 1)
+		}
 
 		return suggestions
 	}

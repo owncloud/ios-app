@@ -81,7 +81,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		case spacesFolder
 
-		case searchesFolder
+		case globalSearch
 
 		case recents
 		case favoriteItems
@@ -190,11 +190,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		if let vault = connection.core?.vault {
 			// Create savedSearchesDataSource if wanted
 			if configuration.showSearch, savedSearchesDataSource == nil {
-				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { [weak self] obj, keypath, newValue in
+				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { obj, keypath, newValue in
 					if let savedSearches = newValue as? [OCSavedSearch] {
-						let searches = savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
-						// self?.savedSearchesVisible = searches.count > 0
-						return searches
+						return savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
 					}
 
 					return nil
@@ -279,13 +277,6 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	@objc dynamic var showDisconnectButton: Bool = false
 
 	var savedSearchesDataSource: OCDataSourceKVO?
-//	var savedSearchesVisible: Bool = true {
-//		didSet {
-//			if oldValue != savedSearchesVisible, let savedSearchesFolderDatasource = specialItemsDataSources[.searchesFolder] {
-//				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDatasource)
-//			}
-//		}
-//	}
 	var savedSearchesCondition: DataSourceCondition?
 
 	open var specialItems: [SpecialItem : OCDataItem & OCDataItemVersioning] = [:]
@@ -319,6 +310,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	}
 
 	private var legacyAccountRootLocation: OCLocation
+
+	private let useFolderForSearches: Bool = false
 
 	func composeItemsDataSource() {
 		if let core = connection?.core {
@@ -384,21 +377,27 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			}
 
 			// Saved searches
+			var savedSearchesSidebarDataSource: OCDataSource?
+
 			if configuration.showSearch, let savedSearchesDataSource {
-//				savedSearchesCondition = DataSourceCondition(.empty, with: savedSearchesDataSource, initial: true, action: { [weak self] condition in
-//					self?.savedSearchesVisible = condition.fulfilled == false
-//				})
+				if useFolderForSearches {
+					// Use "Search" item in sidebar, showing saved searches when unfolded
+					let savedSearchesFolderDataSource = self.buildTopFolder(with: savedSearchesDataSource, title: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), topItem: .globalSearch) { [weak self] context, action in
+						return self?.provideViewController(for: .globalSearch, in: context)
+					}
 
-				let savedSearchesFolderDataSource = self.buildTopFolder(with: savedSearchesDataSource, title: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), topItem: .searchesFolder) { [weak self] context, action in
-					return self?.provideViewController(for: .searchesFolder, in: context)
+					sources.append(savedSearchesFolderDataSource)
+				} else {
+					// Add "Search" item to sidebar, making saved searches standalone items
+					let globalSearchItem = CollectionSidebarAction(with: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), identifier: specialItemsDataReferences[.globalSearch], viewControllerProvider: { [weak self] context, action in
+						return self?.provideViewController(for: .globalSearch, in: context)
+					}, cacheViewControllers: false)
+
+					specialItems[.globalSearch] = globalSearchItem
+
+					sources.append(OCDataSourceArray(items: [ globalSearchItem ]))
+					savedSearchesSidebarDataSource = savedSearchesDataSource // Add saved searches only after Available Offline
 				}
-
-//				let (savedSearchesFolderDataSource, savedSearchesFolderItem) = self.buildFolder(with: savedSearchesDataSource, title: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), folderItemRef:specialItemsDataReferences[.searchesFolder]!)
-
-//				specialItems[.searchesFolder] = savedSearchesFolderItem
-//				specialItemsDataSources[.searchesFolder] = savedSearchesFolderDataSource
-
-				sources.append(savedSearchesFolderDataSource)
 			}
 
 			// Other sidebar items
@@ -445,6 +444,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				sources.append(otherItemsDataSource)
 			}
 
+			// Saved searches (if not in folder)
+			if let savedSearchesSidebarDataSource {
+				sources.append(savedSearchesSidebarDataSource)
+			}
+
 			// Extra items (Activity & Co via class extension in the app)
 			if let extraItemsSupport = self as? AccountControllerExtraItems {
 				extraItemsSupport.updateExtraItems(dataSource: extraItemsDataSource)
@@ -453,10 +457,6 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			}
 
 			itemsDataSource.sources = sources
-
-//			if let savedSearchesFolderDataSource = specialItemsDataSources[.searchesFolder], !savedSearchesVisible {
-//				itemsDataSource.setInclude(savedSearchesVisible, for: savedSearchesFolderDataSource)
-//			}
 		}
 	}
 
@@ -518,7 +518,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			case .spacesFolder:
 				viewController = AccountControllerSpacesGridViewController(with: context)
 
-			case .searchesFolder:
+			case .globalSearch:
 				viewController = AccountControllerSearchViewController(context: context)
 
 			case .availableOfflineItems:
@@ -628,7 +628,6 @@ extension AccountController: DataItemSelectionInteraction {
 			   let /* spacesFolderItemRef */ _ = section?.collectionViewController?.wrap(references: [specialItemsDataReferences[.spacesFolder]!], forSection: sectionID).first {
 				section?.collectionViewController?.addActions([
 					CollectionViewAction(kind: .select(animated: false, scrollPosition: .centeredVertically), itemReference: personalFolderItemRef)
-					// CollectionViewAction(kind: .expand(animated: true), itemReference: spacesFolderItemRef)
 				])
 			}
 		}
