@@ -96,6 +96,14 @@ public class AppLockManager: NSObject {
 			self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
 		}
 	}
+	private var lockSetTime: TimeInterval? {
+		get {
+			return userDefaults.object(forKey: "applock-lock-set-time") as? TimeInterval
+		}
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-lock-set-time")
+		}
+	}
 	private var biometricalAuthenticationSucceeded: Bool {
 		get {
 			return userDefaults.bool(forKey: "applock-biometrical-authentication-succeeded")
@@ -373,6 +381,7 @@ public class AppLockManager: NSObject {
 				let delayUntilNextAttempt = pow(powBaseDelay, Double(failedPasscodeAttempts))
 
 				lockedUntilDate = Date().addingTimeInterval(delayUntilNextAttempt)
+				lockSetTime = ProcessInfo.processInfo.systemUptime
 				startLockCountdown()
 			}
 
@@ -381,6 +390,21 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - Status
+	
+	private var isLockBypassed: Bool {
+	 if let lockedUntilDate = lockedUntilDate, let lockSetTime = lockSetTime {
+		 let currentTime = ProcessInfo.processInfo.systemUptime
+		 let lockDuration = currentTime - lockSetTime
+		 let timeRemaining = lockedUntilDate.timeIntervalSinceNow
+
+		 if lockDuration < timeRemaining {
+			 // User has attempted to bypass the lock
+			 return true
+		 }
+	 }
+	 return false
+ }
+	
 	private var shouldDisplayLockscreen: Bool {
 		if !AppLockSettings.shared.lockEnabled {
 			return false
@@ -417,7 +441,7 @@ public class AppLockManager: NSObject {
 	}
 
 	private var shouldDisplayCountdown : Bool {
-		if let startLockBeforeDate = self.lockedUntilDate {
+		if let startLockBeforeDate = self.lockedUntilDate, isLockBypassed {
 			return startLockBeforeDate > Date()
 		}
 
