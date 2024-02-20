@@ -573,17 +573,27 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					}))
 				]
 			} else {
-				var buttonConfig = UIButton.Configuration.plain()
-				buttonConfig.title = "Add".localized
-				buttonConfig.contentInsets = .zero
+				var generateButtonConfig = UIButton.Configuration.plain()
+				generateButtonConfig.title = "Generate".localized
+				generateButtonConfig.contentInsets = .zero
 
-				let button = ThemeCSSButton()
-				button.configuration = buttonConfig
-				button.addAction(UIAction(handler: { [weak self] action in
+				let generateButton = ThemeCSSButton()
+				generateButton.configuration = generateButtonConfig
+				generateButton.addAction(UIAction(handler: { [weak self] action in
+					self?.generatePassword()
+				}), for: .primaryActionTriggered)
+
+				var addButtonConfig = UIButton.Configuration.plain()
+				addButtonConfig.title = "Set".localized
+				addButtonConfig.contentInsets = .zero
+
+				let addButton = ThemeCSSButton()
+				addButton.configuration = addButtonConfig
+				addButton.addAction(UIAction(handler: { [weak self] action in
 					self?.requestPassword()
 				}), for: .primaryActionTriggered)
 
-				details.append(SegmentViewItem(view: button))
+				details.append(contentsOf: [SegmentViewItem(view: generateButton), SegmentViewItem(title: "|", style: .label), SegmentViewItem(view: addButton)])
 			}
 
 			let content = UniversalItemListCell.Content(with: .text("Password".localized), iconSymbolName: "key.fill", accessories: accessories)
@@ -684,6 +694,19 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}))
 
 		self.clientContext?.present(passwordPrompt, animated: true)
+	}
+	func generatePassword() {
+		let passwordPolicy = clientContext?.core?.connection.capabilities?.passwordPolicy ?? OCPasswordPolicy.default
+		var generatedPassword: String?
+		do {
+			try generatedPassword = passwordPolicy.generatePassword(withMinLength: nil, maxLength: nil)
+		} catch let error as NSError {
+			Log.error("Error generating password: \(error)")
+		}
+		if let generatedPassword {
+			self.password = generatedPassword
+			self.updateOptions()
+		}
 	}
 
 	// MARK: - Save (edit + create)
