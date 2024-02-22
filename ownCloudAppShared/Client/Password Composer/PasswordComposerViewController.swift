@@ -260,6 +260,7 @@ class PasswordComposerViewController: UIViewController {
 	}
 
 	func copyToClipboard() {
+		UIPasteboard.general.string = password
 	}
 
 	func viewControllerForPresentation() -> ThemeNavigationController {
