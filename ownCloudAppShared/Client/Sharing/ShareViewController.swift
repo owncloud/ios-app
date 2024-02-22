@@ -270,11 +270,15 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		navigationItem.titleLabelText = navigationTitle
 
 		// Add bottom button bar
-		let title = (mode == .create) ? ((type == .link) ? "Create link".localized : "Invite".localized) : "Save changes".localized
+		let isLinkCreation = (mode == .create) && (type == .link)
+ 		let title = (mode == .create) ? ((type == .link) ? "Share".localized : "Invite".localized) : "Save changes".localized
+		let altTitle = isLinkCreation ? "Create".localized : nil
 
-		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, cancelButtonTitle: "Cancel".localized, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
+		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, alternativeButtonTitle: altTitle, cancelButtonTitle: "Cancel".localized, hasAlternativeButton: isLinkCreation, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
+			self?.save(andShare: isLinkCreation)
+		}), alternativeAction: isLinkCreation ? UIAction(handler: { [weak self] _ in
 			self?.save()
-		}), cancelAction: UIAction(handler: { [weak self] _ in
+		}) : nil, cancelAction: UIAction(handler: { [weak self] _ in
 			self?.complete()
 		}))
 		bottomButtonBar?.showActivityIndicatorWhileModalActionRunning = mode != .edit
@@ -533,13 +537,18 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	// MARK: - State
 	func updateState() {
+		var createIsEnabled: Bool
+
 		switch type {
 			case .link:
-				bottomButtonBar?.selectButton.isEnabled = (location != nil) && (role != nil) && (permissions != nil)
+				createIsEnabled = (location != nil) && (role != nil) && (permissions != nil)
 
 			case .share:
-				bottomButtonBar?.selectButton.isEnabled = (location != nil) && (recipient != nil) && (role != nil) && (permissions != nil)
+				createIsEnabled = (location != nil) && (recipient != nil) && (role != nil) && (permissions != nil)
 		}
+
+		bottomButtonBar?.selectButton.isEnabled = createIsEnabled
+		bottomButtonBar?.alternativeButton.isEnabled = createIsEnabled
 	}
 
 	// MARK: - Options
@@ -550,6 +559,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	var expiryOption: OptionItem?
 	var expirationDatePicker: UIDatePicker?
 	var expirationDate: Date?
+
+	var passwordPolicy: OCPasswordPolicy {
+		return clientContext?.core?.connection.capabilities?.passwordPolicy ?? OCPasswordPolicy.default
+	}
 
 	func updateOptions() {
 		let hasPasswordOption = type == .link
@@ -601,9 +614,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 			if passwordOption == nil {
 				passwordOption = OptionItem(kind: .single, content: content, state: false, selectionAction: { [weak self] optionItem in
-					if self?.hasPassword == true {
-						self?.requestPassword()
-					}
+					self?.requestPassword()
 				})
 			} else {
 				passwordOption?.content = content
@@ -680,23 +691,21 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		return ((share?.protectedByPassword == true) && !removePassword) || (password != nil)
 	}
 	func requestPassword() {
-		let passwordPrompt = UIAlertController(title: "Enter password".localized, message: nil, preferredStyle: .alert)
-
-		passwordPrompt.addTextField(configurationHandler: { textField in
-			textField.placeholder = "Password".localized
-			textField.isSecureTextEntry = true
+		let passwordViewController = PasswordComposerViewController(password: password ?? "", policy: passwordPolicy, saveButtonTitle: "Set".localized, resultHandler: { [weak self] password, cancelled in
+			if !cancelled, let password {
+				self?.password = password
+				self?.updateOptions()
+			}
 		})
+		let navigationViewController = passwordViewController.viewControllerForPresentation()
 
-		passwordPrompt.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel))
-		passwordPrompt.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [weak self, weak passwordPrompt] action in
-			self?.password = passwordPrompt?.textFields?.first?.text
-			self?.updateOptions()
-		}))
+		if mode == .edit, hasPassword {
+			passwordViewController.navigationItem.title = "Change password".localized
+		}
 
-		self.clientContext?.present(passwordPrompt, animated: true)
+		self.clientContext?.present(navigationViewController, animated: true)
 	}
 	func generatePassword() {
-		let passwordPolicy = clientContext?.core?.connection.capabilities?.passwordPolicy ?? OCPasswordPolicy.default
 		var generatedPassword: String?
 		do {
 			try generatedPassword = passwordPolicy.generatePassword(withMinLength: nil, maxLength: nil)
@@ -710,7 +719,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	}
 
 	// MARK: - Save (edit + create)
-	func save() {
+	func save(andShare: Bool = false) {
+		let presentingViewController = UIDevice.current.isIpad ? self : self.presentingViewController
+
 		switch mode {
 			case .create:
 				var newShare: OCShare?
@@ -755,6 +766,67 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					if let error {
 						self.showError(error)
 					} else {
+						if let url = share?.url, andShare {
+							let existingCompletionHandler = UIDevice.current.isIpad ? { (share) in
+								// On iPad, first show Share Sheet, then close ShareViewController
+								self.complete(with: share)
+							} : self.completionHandler // On iPhone, first close ShareViewController, then show Share Sheet
+
+							let handleResultAndShowShareSheet: CompletionHandler = { (share) in
+								let absoluteURLString = url.absoluteString
+								var shareMessage: String?
+
+								if let password = self.password {
+									// Message consists of Link + Password
+									if let displayName = self.location?.displayName(in: nil) {
+										shareMessage = "{{itemName}} ({{link}}) | password: {{password}}".localized([
+											"itemName" : displayName,
+											"link" : absoluteURLString,
+											"password" : password
+										])
+									} else {
+										shareMessage = "{{link}} | password: {{password}}".localized([
+											"link" : absoluteURLString,
+											"password" : password
+										])
+									}
+								} else {
+									// Message consists of Link only
+									shareMessage = absoluteURLString
+								}
+
+								if let shareMessage, let presentingViewController {
+									// Show Share Sheet
+									OnMainThread {
+										let shareViewController = UIActivityViewController(activityItems: [shareMessage], applicationActivities:nil)
+
+										if UIDevice.current.isIpad {
+											shareViewController.popoverPresentationController?.sourceView = self.bottomButtonBar?.selectButton ?? self.view
+										}
+
+										shareViewController.completionWithItemsHandler = { (_, _, _, _) in
+											// Completed
+											existingCompletionHandler?(share)
+										}
+
+										presentingViewController.present(shareViewController, animated: true, completion: nil)
+									}
+								} else {
+									// Completed
+									existingCompletionHandler?(share)
+								}
+							}
+
+							if UIDevice.current.isIpad {
+								// On iPad, first show Share Sheet, then close ShareViewController
+								handleResultAndShowShareSheet(share)
+								return // Avoid calling self.complete(with:), called via existingCompletionHandler
+							} else {
+								// On iPhone, first close ShareViewController, then show Share Sheet
+								self.completionHandler = handleResultAndShowShareSheet
+							}
+						}
+
 						self.complete(with: share)
 					}
 				})

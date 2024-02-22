@@ -85,6 +85,7 @@ open class BottomButtonBar: ThemeCSSView {
 			}
 
 			cancelButton.isEnabled = !modalActionRunning
+			alternativeButton.isEnabled = !modalActionRunning
 			selectButton.isEnabled = !modalActionRunning
 		}
 	}
