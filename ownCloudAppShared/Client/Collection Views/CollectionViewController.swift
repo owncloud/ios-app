@@ -663,6 +663,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		}
 	}
 
+	// MARK: - Client Contexts
+	open func clientContext(for indexPath: IndexPath?) -> ClientContext? {
+		var sectionClientContext: ClientContext?
+
+		if let indexPath, let section = section(at: indexPath.section) {
+			sectionClientContext = section.clientContext
+		}
+
+		return sectionClientContext ?? clientContext
+	}
+
 	// MARK: - Item references
 	public typealias ItemRef = NSObject
 	public class WrappedItem : NSObject {
@@ -1176,7 +1187,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		if let item = targetedDataItem(for: destinationIndexPath, interaction: .acceptDrop),
 		   let dropInteraction = item as? DataItemDropInteraction {
-			if let dropProposal = dropInteraction.allowDropOperation?(for: session, with: clientContext) {
+			if let dropProposal = dropInteraction.allowDropOperation?(for: session, with: clientContext(for: destinationIndexPath)) {
 				// Save last requested indexPath because UICollectionViewDropCoordinator.destinationIndexPath will only return the last hit-tested one,
 				// so that dropping into a cell-less region of the collection view will have UICollectionViewDropCoordinator.destinationIndexPath return
 				// the last hit-tested cell's indexPath - rather than (the accurate) nil
@@ -1196,7 +1207,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		   let dropInteraction = item as? DataItemDropInteraction {
 			let dragItems = coordinator.items.compactMap { collectionViewDropItem in collectionViewDropItem.dragItem }
 
-			dropInteraction.performDropOperation(of: dragItems, with: clientContext, handlingCompletion: { didSucceed in
+			dropInteraction.performDropOperation(of: dragItems, with: clientContext(for: coordinator.destinationIndexPath), handlingCompletion: { didSucceed in
 			})
 		}
 	}

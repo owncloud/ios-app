@@ -34,6 +34,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public var showAccountPill: Bool
 		public var showShared: Bool
 		public var showSearch: Bool
+		public var showSavedSearches: Bool
+		public var showUserSidebarItems: Bool
 		public var showRecents: Bool
 		public var showFavorites: Bool
 		public var showAvailableOffline: Bool
@@ -64,6 +66,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			showAccountPill = true
 			showShared = true
 			showSearch = true
+			showSavedSearches = true
+			showUserSidebarItems = true
 			showFavorites = true
 			showRecents = true
 			showAvailableOffline = true
@@ -189,7 +193,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 	public func account(connection: AccountConnection, changedStatusTo status: AccountConnection.Status, initial: Bool) {
 		if let vault = connection.core?.vault {
 			// Create savedSearchesDataSource if wanted
-			if configuration.showSearch, savedSearchesDataSource == nil {
+			if configuration.showSavedSearches, savedSearchesDataSource == nil {
 				savedSearchesDataSource = OCDataSourceKVO(object: vault, keyPath: "savedSearches", versionedItemUpdateHandler: { obj, keypath, newValue in
 					if let savedSearches = newValue as? [OCSavedSearch] {
 						return savedSearches.filter { savedSearch in return !savedSearch.isTemplate }
@@ -198,8 +202,14 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 					return nil
 				})
 			}
+
+			// Create
+			if configuration.showUserSidebarItems, userSidebarItemsDataSource == nil {
+				userSidebarItemsDataSource = OCDataSourceKVO(object: vault, keyPath: "sidebarItems")
+			}
 		} else {
 			savedSearchesDataSource = nil
+			userSidebarItemsDataSource = nil
 		}
 
 		switch status {
@@ -278,6 +288,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 	var savedSearchesDataSource: OCDataSourceKVO?
 	var savedSearchesCondition: DataSourceCondition?
+
+	var userSidebarItemsDataSource: OCDataSourceKVO?
 
 	open var specialItems: [SpecialItem : OCDataItem & OCDataItemVersioning] = [:]
 	open var specialItemsDataReferences: [SpecialItem : OCDataItemReference] = [:]
@@ -378,6 +390,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			// Saved searches
 			var savedSearchesSidebarDataSource: OCDataSource?
+			var userSidebarItemsSidebarDataSource: OCDataSource?
 
 			if configuration.showSearch, let savedSearchesDataSource {
 				if useFolderForSearches {
@@ -398,6 +411,12 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 					sources.append(OCDataSourceArray(items: [ globalSearchItem ]))
 					savedSearchesSidebarDataSource = savedSearchesDataSource // Add saved searches only after Available Offline
 				}
+			}
+
+			// User sidebar items
+			if configuration.showUserSidebarItems, let userSidebarItemsDataSource {
+				// Add user sidebar items
+				userSidebarItemsSidebarDataSource = userSidebarItemsDataSource
 			}
 
 			// Other sidebar items
@@ -447,6 +466,11 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Saved searches (if not in folder)
 			if let savedSearchesSidebarDataSource {
 				sources.append(savedSearchesSidebarDataSource)
+			}
+
+			// User sidebar items
+			if let userSidebarItemsSidebarDataSource {
+				sources.append(userSidebarItemsSidebarDataSource)
 			}
 
 			// Extra items (Activity & Co via class extension in the app)

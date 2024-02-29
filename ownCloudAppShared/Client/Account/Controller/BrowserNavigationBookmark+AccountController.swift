@@ -34,14 +34,24 @@ public extension BrowserNavigationBookmark {
 
 		switch type {
 			case .dataItem:
+				if let savedSearchUUID = savedSearch?.uuid {
+					// OCSavedSearch.uuid
+					itemRefs.append(savedSearchUUID as NSString)
+				}
+
+				if let sidebarItemUUID = sidebarItem?.uuid {
+					// OCSidebarItem.uuid
+					itemRefs.append(sidebarItemUUID as NSString)
+				}
+
 				if let driveID = location?.driveID as? NSString {
 					// Respective driveID (OCDrive.dataItemReference)
 					if let bookmarkUUID,
 					   let spacesFolderID = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: bookmarkUUID, specialItem: .spacesFolder).representationSideBarItemRef {
 					   	// Provide spaces folder as fallback 
-						return [driveID, spacesFolderID]
+						itemRefs.append(contentsOf: [driveID, spacesFolderID])
 					} else {
-						return [driveID]
+						itemRefs.append(contentsOf: [driveID])
 					}
 				} else if let locationItemRef = location?.dataItemReference {
 					// OCLocation.dataItemReference
@@ -49,10 +59,7 @@ public extension BrowserNavigationBookmark {
 					let rootLocation = OCLocation.legacyRoot
 					rootLocation.bookmarkUUID = bookmarkUUID
 
-					return [locationItemRef, rootLocation.dataItemReference]
-				} else if let savedSearchUUID = savedSearch?.uuid {
-					// OCSavedSearch.uuid
-					itemRefs.append(savedSearchUUID as NSString)
+					itemRefs.append(contentsOf: [locationItemRef, rootLocation.dataItemReference])
 				}
 
 			case .specialItem:

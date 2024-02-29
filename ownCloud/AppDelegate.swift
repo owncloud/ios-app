@@ -88,6 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CreateDocumentAction.actionExtension)
+		OCExtensionManager.shared.addExtension(AddToSidebarAction.actionExtension)
 
 		if UIDevice.current.isIpad {
 			// iPad only
