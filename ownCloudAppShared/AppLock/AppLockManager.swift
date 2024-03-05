@@ -369,6 +369,7 @@ public class AppLockManager: NSObject {
 		if testPasscode == self.passcode {
 			unlocked = true
 			failedPasscodeAttempts = 0
+			lockSetTime = nil
 			dismissLockscreen(animated: true)
 		} else {
 			unlocked = false
@@ -392,18 +393,18 @@ public class AppLockManager: NSObject {
 	// MARK: - Status
 	
 	private var isLockBypassed: Bool {
-	 if let lockedUntilDate = lockedUntilDate, let lockSetTime = lockSetTime {
-		 let currentTime = ProcessInfo.processInfo.systemUptime
-		 let lockDuration = currentTime - lockSetTime
-		 let timeRemaining = lockedUntilDate.timeIntervalSinceNow
-
-		 if lockDuration < timeRemaining {
-			 // User has attempted to bypass the lock
-			 return true
-		 }
-	 }
-	 return false
- }
+		if let lockedUntilDate = lockedUntilDate, let lockSetTime = lockSetTime {
+			let currentTime = ProcessInfo.processInfo.systemUptime
+			let lockDuration = currentTime - lockSetTime
+			
+			let wiggleRoom: Double = 0.05
+			
+			if abs(lockDuration - lockSetTime) > wiggleRoom {
+				return true
+			}
+		}
+		return false
+	}
 	
 	private var shouldDisplayLockscreen: Bool {
 		if !AppLockSettings.shared.lockEnabled {
@@ -441,8 +442,10 @@ public class AppLockManager: NSObject {
 	}
 
 	private var shouldDisplayCountdown : Bool {
-		if let startLockBeforeDate = self.lockedUntilDate, isLockBypassed {
+		if let startLockBeforeDate = self.lockedUntilDate {
 			return startLockBeforeDate > Date()
+		} else if isLockBypassed {
+			return true
 		}
 
 		return false
