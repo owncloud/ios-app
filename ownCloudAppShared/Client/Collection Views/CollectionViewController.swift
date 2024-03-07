@@ -1180,21 +1180,36 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	var lastDropProposalDestinationIndexPath : IndexPath?
 	var lastDropProposalDestinationIndexPathValid : Bool = false
 
+	func dropInteraction(for destinationIndexPath: IndexPath?) -> DataItemDropInteraction? {
+		var dropInteraction: DataItemDropInteraction?
+
+		if let item = targetedDataItem(for: destinationIndexPath, interaction: .acceptDrop),
+		   let itemDropInteraction = item as? DataItemDropInteraction {
+		   	dropInteraction = itemDropInteraction
+		}
+
+		if let sectionIndex = destinationIndexPath?.section,
+		   let section = section(at: sectionIndex),
+		   let sectionDropInteraction = section.sectionDropInteraction {
+			dropInteraction = sectionDropInteraction
+		}
+
+		return dropInteraction
+	}
+
 	public func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
 		updateDropTargetsFor(collectionView, dropSession: session)
 
 		Log.debug("Destination index path: \(String(describing: destinationIndexPath))")
 
-		if let item = targetedDataItem(for: destinationIndexPath, interaction: .acceptDrop),
-		   let dropInteraction = item as? DataItemDropInteraction {
-			if let dropProposal = dropInteraction.allowDropOperation?(for: session, with: clientContext(for: destinationIndexPath)) {
-				// Save last requested indexPath because UICollectionViewDropCoordinator.destinationIndexPath will only return the last hit-tested one,
-				// so that dropping into a cell-less region of the collection view will have UICollectionViewDropCoordinator.destinationIndexPath return
-				// the last hit-tested cell's indexPath - rather than (the accurate) nil
-				lastDropProposalDestinationIndexPath = destinationIndexPath
-				lastDropProposalDestinationIndexPathValid = true
-				return dropProposal
-			}
+		if let dropInteraction = dropInteraction(for: destinationIndexPath),
+		   let dropProposal = dropInteraction.allowDropOperation?(for: session, with: clientContext(for: destinationIndexPath)) {
+			// Save last requested indexPath because UICollectionViewDropCoordinator.destinationIndexPath will only return the last hit-tested one,
+			// so that dropping into a cell-less region of the collection view will have UICollectionViewDropCoordinator.destinationIndexPath return
+			// the last hit-tested cell's indexPath - rather than (the accurate) nil
+			lastDropProposalDestinationIndexPath = destinationIndexPath
+			lastDropProposalDestinationIndexPathValid = true
+			return dropProposal
 		}
 
 		lastDropProposalDestinationIndexPathValid = false
@@ -1203,8 +1218,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-		if let item = targetedDataItem(for: (lastDropProposalDestinationIndexPathValid ? lastDropProposalDestinationIndexPath : coordinator.destinationIndexPath), interaction: .acceptDrop),
-		   let dropInteraction = item as? DataItemDropInteraction {
+		if let dropInteraction = dropInteraction(for: (lastDropProposalDestinationIndexPathValid ? lastDropProposalDestinationIndexPath : coordinator.destinationIndexPath)) {
 			let dragItems = coordinator.items.compactMap { collectionViewDropItem in collectionViewDropItem.dragItem }
 
 			dropInteraction.performDropOperation(of: dragItems, with: clientContext(for: coordinator.destinationIndexPath), handlingCompletion: { didSucceed in
