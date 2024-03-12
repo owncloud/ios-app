@@ -261,6 +261,8 @@ class PasswordComposerViewController: UIViewController {
 
 	func copyToClipboard() {
 		UIPasteboard.general.string = password
+
+		_ = NotificationHUDViewController(on: self, title: "Password".localized, subtitle: "The password was copied to the clipboard".localized, completion: nil)
 	}
 
 	func viewControllerForPresentation() -> ThemeNavigationController {
