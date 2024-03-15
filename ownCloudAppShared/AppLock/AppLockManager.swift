@@ -88,14 +88,16 @@ public class AppLockManager: NSObject {
 			self.userDefaults.set(newValue, forKey: "applock-failed-passcode-attempts")
 		}
 	}
-	private var lockedUntilDate: Date? {
+	
+	private var lockDelay: Double? {
 		get {
-			return userDefaults.object(forKey: "applock-locked-until-date") as? Date
+			return userDefaults.object(forKey: "applock-delay") as? Double
 		}
 		set(newValue) {
-			self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
+			self.userDefaults.set(newValue, forKey: "applock-delay")
 		}
 	}
+	
 	private var biometricalAuthenticationSucceeded: Bool {
 		get {
 			return userDefaults.bool(forKey: "applock-biometrical-authentication-succeeded")
@@ -361,6 +363,8 @@ public class AppLockManager: NSObject {
 		if testPasscode == self.passcode {
 			unlocked = true
 			failedPasscodeAttempts = 0
+			lockDelay = nil
+			
 			dismissLockscreen(animated: true)
 		} else {
 			unlocked = false
@@ -371,8 +375,7 @@ public class AppLockManager: NSObject {
 
 			if self.failedPasscodeAttempts >= self.maximumPasscodeAttempts {
 				let delayUntilNextAttempt = pow(powBaseDelay, Double(failedPasscodeAttempts))
-
-				lockedUntilDate = Date().addingTimeInterval(delayUntilNextAttempt)
+				lockDelay = delayUntilNextAttempt
 				startLockCountdown()
 			}
 
@@ -381,6 +384,7 @@ public class AppLockManager: NSObject {
 	}
 
 	// MARK: - Status
+	
 	private var shouldDisplayLockscreen: Bool {
 		if !AppLockSettings.shared.lockEnabled {
 			return false
@@ -417,8 +421,8 @@ public class AppLockManager: NSObject {
 	}
 
 	private var shouldDisplayCountdown : Bool {
-		if let startLockBeforeDate = self.lockedUntilDate {
-			return startLockBeforeDate > Date()
+		if let lockDelay = self.lockDelay, lockDelay > 0 {
+			return true
 		}
 
 		return false
@@ -432,32 +436,37 @@ public class AppLockManager: NSObject {
 				passcodeViewController.view.setNeedsLayout()
 			}
 			updateLockCountdown()
-
-			lockTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateLockCountdown), userInfo: nil, repeats: true)
+			
+			if lockTimer == nil {
+				lockTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateLockCountdown), userInfo: nil, repeats: true)
+			}
 		}
 	}
 
 	@objc private func updateLockCountdown() {
-		if let date = self.lockedUntilDate {
-			let interval = Int(date.timeIntervalSinceNow)
-			let seconds = interval % 60
-			let minutes = (interval / 60) % 60
-			let hours = (interval / 3600)
-
+		if let lockDelay = self.lockDelay {
+			let hours = Int(lockDelay) / 3600
+			let minutes = Int(lockDelay) / 60 % 60
+			let seconds = Int(lockDelay) % 60
+			
+			if lockDelay > 0 {
+				self.lockDelay = (lockDelay - 1)
+			}
+			
 			let dateFormatted:String?
 			if hours > 0 {
 				dateFormatted = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 			} else {
 				dateFormatted = String(format: "%02d:%02d", minutes, seconds)
 			}
-
+			
 			let timeoutMessage:String = NSString(format: "Please try again in %@".localized as NSString, dateFormatted!) as String
-
+			
 			performPasscodeViewControllerUpdates { (passcodeViewController) in
 				passcodeViewController.timeoutMessage = timeoutMessage
 			}
-
-			if date <= Date() {
+			
+			if lockDelay <= 0 {
 				// Time elapsed, allow entering passcode again
 				self.lockTimer?.invalidate()
 				performPasscodeViewControllerUpdates { (passcodeViewController) in
