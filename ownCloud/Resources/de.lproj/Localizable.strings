@@ -142,17 +142,15 @@
 "Image grid" = "Bild-Kacheln";
 
 /* Saved searches */
-"Saved searches" = "Gespeicherte Suchanfragen";
-"Saved search templates" = "Vorlagen für gespeicherte Suchanfragen";
-"Save search" = "Suchanfrage speichern";
-"Save as search template" = "Suchanfrage als Vorlagen speichern";
+"Save search" = "Suche speichern";
+"Save as search template" = "Suche als Vorlage speichern";
 
-"Name of saved search" = "Name der gespeicherten Suchanfrage";
-"Saved search" = "Gespeicherte Suchanfrage";
-"Saved searches" = "Gespeicherte Suchanfragen";
+"Name of saved search" = "Name der gespeicherten Suche";
+"Saved search" = "Gespeicherte Suche";
+"Saved searches" = "Gespeicherte Suchen";
 "Name of template" = "Name der Vorlage";
-"Search template" = "Vorlage für Suchanfragen";
-"Search templates" = "Vorlagen für Suchanfragen";
+"Search template" = "Suchvorlage";
+"Search templates" = "Suchvorlagen";
 
 /* Search scope */
 "Search scope" = "Suchbereich";

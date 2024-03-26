@@ -42,6 +42,10 @@
         "value" : "com.owncloud.action.delete"
       },
       {
+        "description" : "Close Window",
+        "value" : "com.owncloud.action.discardscene"
+      },
+      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -64,6 +68,10 @@
       {
         "description" : "Open in",
         "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Open in a new Window",
+        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Go to page",
@@ -176,6 +184,10 @@
         "value" : "com.owncloud.action.delete"
       },
       {
+        "description" : "Close Window",
+        "value" : "com.owncloud.action.discardscene"
+      },
+      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -198,6 +210,10 @@
       {
         "description" : "Open in",
         "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Open in a new Window",
+        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Go to page",
@@ -297,6 +313,38 @@
     ],
     "status" : "advanced",
     "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
+    "defaultValue" : "auto",
+    "description" : "Determines how to open a document in a web app.",
+    "flatIdentifier" : "action.open-in-web-app-mode",
+    "key" : "open-in-web-app-mode",
+    "label" : "Open In WebApp mode",
+    "possibleValues" : [
+      {
+        "description" : "Open using `in-app-with-default-browser-option`, unless the respective endpoint is not available - in which case `default-browser` is used instead. If no endpoint to open the document is available, an error message is shown.",
+        "value" : "auto"
+      },
+      {
+        "description" : "Open in default browser app. May require user to sign in.",
+        "value" : "default-browser"
+      },
+      {
+        "description" : "Open inline in an in-app browser.",
+        "value" : "in-app"
+      },
+      {
+        "description" : "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in).",
+        "value" : "in-app-with-default-browser-option"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
   },
   {
     "autoExpansion" : "none",
@@ -1702,6 +1750,10 @@
         "value" : "com.owncloud.action.delete"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.discardscene.",
+        "value" : "com.owncloud.action.discardscene"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.duplicate.",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -1728,6 +1780,10 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.openin.",
         "value" : "com.owncloud.action.openin"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.openscene.",
+        "value" : "com.owncloud.action.openscene"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.pdfpage.",
@@ -1928,6 +1984,30 @@
     ],
     "status" : "debugOnly",
     "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "http",
+    "className" : "OCHTTPPipeline",
+    "defaultValue" : "json",
+    "description" : "If request and response logging is enabled, the format to use.",
+    "flatIdentifier" : "http.traffic-log-format",
+    "key" : "traffic-log-format",
+    "label" : "http.traffic-log-format",
+    "possibleValues" : [
+      {
+        "description" : "JSON",
+        "value" : "json"
+      },
+      {
+        "description" : "Plain text",
+        "value" : "plain"
+      }
+    ],
+    "status" : "supported",
+    "type" : "string"
   },
   {
     "autoExpansion" : "none",

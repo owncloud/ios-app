@@ -344,6 +344,13 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 				// Show location picker
 				showLocationPicker()
 			}
+
+			// Log in to first account if there's only one
+			let bookmarks = OCBookmarkManager.shared.bookmarks
+
+			if bookmarks.count == 1, let onlyBookmark = bookmarks.first {
+				AccountConnectionPool.shared.connection(for: onlyBookmark)?.connect()
+			}
 		}
 	}
 

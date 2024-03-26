@@ -57,8 +57,8 @@ public extension OCExtensionType {
 
 public extension OCExtensionLocationIdentifier {
 	static let tableRow: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("tableRow") //!< Present as table row action
-	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreDetailItem") //!< Present in "more" card view for a single item in detail view
-	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
+	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
+	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreDetailItem") //!< Present in "more" card view for a single item in detail view
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let emptyFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("emptyFolder") //!< Present in "more" options for a whole folder
 	static let multiSelection: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("multiSelection") //!< Present as action when selecting multiple items

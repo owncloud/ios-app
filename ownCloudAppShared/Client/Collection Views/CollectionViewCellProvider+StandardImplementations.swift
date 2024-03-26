@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 public extension CollectionViewCellProvider {
 	static func registerStandardImplementations() {
@@ -36,6 +37,9 @@ public extension CollectionViewCellProvider {
 		OCItemPolicy.registerUniversalCellProvider()	// Cell providers for .itemPolicy
 		OCIdentity.registerUniversalCellProvider()	// Cell providers for .identity
 		OptionItem.registerUniversalCellProvider()	// Cell providers for .optionItem
+
+		// Other cell providers
+		OCSidebarItem.registerCellProvider()		// Cell provider for .sidebarItem
 
 		// Register cell providers for .presentable
 		registerPresentableCellProvider()

@@ -527,6 +527,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection.SectionIdentifier, CollectionViewController.ItemRef>()
 		var snapshotsBySection = [CollectionViewSection.SectionIdentifier : NSDiffableDataSourceSectionSnapshot<CollectionViewController.ItemRef>]()
 		var updatedItems : [CollectionViewController.ItemRef] = []
+		var selectedItemRefs: [ItemRef]?
+
+		let updateWithAnimation = animatingDifferences && !useWrappedIdentifiers
+
+		if !updateWithAnimation {
+			// Selection is lost when updating without animation (via https://forums.developer.apple.com/forums/thread/656529?answerId=627227022#627227022)
+			let selectedIndexPaths = collectionView.indexPathsForSelectedItems
+			selectedItemRefs = selectedIndexPaths?.compactMap({ indexPath in
+				return collectionViewDataSource.itemIdentifier(for: indexPath)
+			})
+		}
 
 		// Log.debug("<=========================>")
 
@@ -541,7 +552,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			}
 		}
 
-		collectionViewDataSource.apply(snapshot, animatingDifferences: animatingDifferences && !useWrappedIdentifiers)
+		collectionViewDataSource.apply(snapshot, animatingDifferences: updateWithAnimation)
 
 		if useWrappedIdentifiers {
 			for section in sections {
@@ -560,6 +571,23 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				var snapshot = collectionViewDataSource.snapshot()
 				snapshot.reconfigureItems(updatedItems)
 				collectionViewDataSource.apply(snapshot, animatingDifferences: false)
+			}
+		}
+
+		// Restore selected item refs
+		if let selectedItemRefs {
+			var selectIndexPaths: [IndexPath]?
+
+			selectIndexPaths = selectedItemRefs.compactMap({ itemRef in
+				collectionViewDataSource.indexPath(for: itemRef)
+			})
+
+			if let selectIndexPaths, selectIndexPaths.count > 0 {
+				OnMainThread {
+					for selectedIndexPath in selectIndexPaths {
+						self.collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredVertically)
+					}
+				}
 			}
 		}
 
@@ -633,6 +661,17 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 				updateDone()
 			}
 		}
+	}
+
+	// MARK: - Client Contexts
+	open func clientContext(for indexPath: IndexPath?) -> ClientContext? {
+		var sectionClientContext: ClientContext?
+
+		if let indexPath, let section = section(at: indexPath.section) {
+			sectionClientContext = section.clientContext
+		}
+
+		return sectionClientContext ?? clientContext
 	}
 
 	// MARK: - Item references
@@ -998,7 +1037,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 					return nil
 				}
 
-				if let menuItems = contextMenuInteraction.composeContextMenuItems(in: self, location: .contextMenuItem, with: self.clientContext) {
+				if let menuItems = contextMenuInteraction.composeContextMenuItems(in: self, location: .contextMenuItem, with: clientContext) {
 					return UIMenu(title: "", children: menuItems)
 				}
 
@@ -1141,21 +1180,36 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	var lastDropProposalDestinationIndexPath : IndexPath?
 	var lastDropProposalDestinationIndexPathValid : Bool = false
 
+	func dropInteraction(for destinationIndexPath: IndexPath?) -> DataItemDropInteraction? {
+		var dropInteraction: DataItemDropInteraction?
+
+		if let item = targetedDataItem(for: destinationIndexPath, interaction: .acceptDrop),
+		   let itemDropInteraction = item as? DataItemDropInteraction {
+		   	dropInteraction = itemDropInteraction
+		}
+
+		if let sectionIndex = destinationIndexPath?.section,
+		   let section = section(at: sectionIndex),
+		   let sectionDropInteraction = section.sectionDropInteraction {
+			dropInteraction = sectionDropInteraction
+		}
+
+		return dropInteraction
+	}
+
 	public func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
 		updateDropTargetsFor(collectionView, dropSession: session)
 
 		Log.debug("Destination index path: \(String(describing: destinationIndexPath))")
 
-		if let item = targetedDataItem(for: destinationIndexPath, interaction: .acceptDrop),
-		   let dropInteraction = item as? DataItemDropInteraction {
-			if let dropProposal = dropInteraction.allowDropOperation?(for: session, with: clientContext) {
-				// Save last requested indexPath because UICollectionViewDropCoordinator.destinationIndexPath will only return the last hit-tested one,
-				// so that dropping into a cell-less region of the collection view will have UICollectionViewDropCoordinator.destinationIndexPath return
-				// the last hit-tested cell's indexPath - rather than (the accurate) nil
-				lastDropProposalDestinationIndexPath = destinationIndexPath
-				lastDropProposalDestinationIndexPathValid = true
-				return dropProposal
-			}
+		if let dropInteraction = dropInteraction(for: destinationIndexPath),
+		   let dropProposal = dropInteraction.allowDropOperation?(for: session, with: clientContext(for: destinationIndexPath)) {
+			// Save last requested indexPath because UICollectionViewDropCoordinator.destinationIndexPath will only return the last hit-tested one,
+			// so that dropping into a cell-less region of the collection view will have UICollectionViewDropCoordinator.destinationIndexPath return
+			// the last hit-tested cell's indexPath - rather than (the accurate) nil
+			lastDropProposalDestinationIndexPath = destinationIndexPath
+			lastDropProposalDestinationIndexPathValid = true
+			return dropProposal
 		}
 
 		lastDropProposalDestinationIndexPathValid = false
@@ -1164,11 +1218,10 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	}
 
 	public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-		if let item = targetedDataItem(for: (lastDropProposalDestinationIndexPathValid ? lastDropProposalDestinationIndexPath : coordinator.destinationIndexPath), interaction: .acceptDrop),
-		   let dropInteraction = item as? DataItemDropInteraction {
+		if let dropInteraction = dropInteraction(for: (lastDropProposalDestinationIndexPathValid ? lastDropProposalDestinationIndexPath : coordinator.destinationIndexPath)) {
 			let dragItems = coordinator.items.compactMap { collectionViewDropItem in collectionViewDropItem.dragItem }
 
-			dropInteraction.performDropOperation(of: dragItems, with: clientContext, handlingCompletion: { didSucceed in
+			dropInteraction.performDropOperation(of: dragItems, with: clientContext(for: coordinator.destinationIndexPath), handlingCompletion: { didSucceed in
 			})
 		}
 	}

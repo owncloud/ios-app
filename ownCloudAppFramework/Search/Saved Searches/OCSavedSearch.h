@@ -25,7 +25,7 @@ typedef NSString* OCSavedSearchUserInfoKey NS_TYPED_ENUM;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OCSavedSearch : NSObject <NSSecureCoding, OCDataItem, OCDataItemVersioning>
+@interface OCSavedSearch : NSObject <NSSecureCoding, NSCopying, OCDataItem, OCDataItemVersioning>
 
 @property(strong) OCSavedSearchUUID uuid; //!< Unique ID of the saved search
 

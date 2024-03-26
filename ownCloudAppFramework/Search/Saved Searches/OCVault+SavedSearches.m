@@ -52,6 +52,33 @@
 	[self didChangeValueForKey:@"savedSearches"];
 }
 
+- (void)updateSavedSearch:(OCSavedSearch *)savedSearch
+{
+	[self willChangeValueForKey:@"savedSearches"];
+
+	[self.keyValueStore updateObjectForKey:OCKeyValueStoreKeySavedSearches usingModifier:^id _Nullable(id  _Nullable existingObject, BOOL * _Nonnull outDidModify) {
+		NSMutableArray<OCSavedSearch *> *savedSearches = OCTypedCast(existingObject, NSMutableArray);
+		NSUInteger countBefore;
+
+		if (savedSearches != nil)
+		{
+			NSUInteger existingOffset = [savedSearches indexOfObjectPassingTest:^BOOL(OCSavedSearch * _Nonnull existingSearch, NSUInteger idx, BOOL * _Nonnull stop) {
+				return ([existingSearch.uuid isEqual:savedSearch.uuid]);
+			}];
+
+			if (existingOffset != NSNotFound)
+			{
+				[savedSearches replaceObjectAtIndex:existingOffset withObject:savedSearch];
+				*outDidModify = YES;
+			}
+		}
+
+		return (savedSearches);
+	}];
+
+	[self didChangeValueForKey:@"savedSearches"];
+}
+
 - (void)deleteSavedSearch:(OCSavedSearch *)savedSearch
 {
 	[self willChangeValueForKey:@"savedSearches"];

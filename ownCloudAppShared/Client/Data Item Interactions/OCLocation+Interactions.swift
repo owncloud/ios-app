@@ -22,7 +22,7 @@ import ownCloudApp
 
 // MARK: - Selection > Open
 extension OCLocation : DataItemSelectionInteraction {
-	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+	public func customizedOpenItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, customizeViewController: ((ClientItemViewController) -> Void)?, completion: ((Bool) -> Void)?) -> UIViewController? {
 		let driveContext = ClientContext(with: context, modifier: { context in
 			if let driveID = self.driveID, let core = context.core {
 				context.drive = core.drive(withIdentifier: driveID)
@@ -42,12 +42,18 @@ extension OCLocation : DataItemSelectionInteraction {
 			viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: location, clientContext: context, restoreAction: .open)
 			viewController.revoke(in: context, when: [ .connectionClosed, .driveRemoved ])
 
+			customizeViewController?(viewController)
+
 			return viewController
 		}, push: pushViewController, animated: animated)
 
 		completion?(true)
 
 		return locationViewController
+	}
+
+	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+		return customizedOpenItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, customizeViewController: nil, completion: completion)
 	}
 
 	public func revealItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {

@@ -30,35 +30,28 @@ public enum CreateDocumentActionMode: String {
 }
 
 class CreateDocumentAction: Action {
-	private static var _classSettingsRegistered: Bool = false
-	override public class var actionExtension: ActionExtension {
-		if !_classSettingsRegistered {
-			_classSettingsRegistered = true
-
-			self.registerOCClassSettingsDefaults([
-				.createDocumentMode : CreateDocumentActionMode.createAndOpen.rawValue
-			], metadata: [
-				.createDocumentMode : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Create Document Mode",
-					.description 	: "Determines behaviour when creating a document.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Actions",
-					.possibleValues : [
-						[
-							OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.create.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Creates the document."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.createAndOpen.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Creates the document and opens it in a web app for the document format."
-						]
+	public static func registerSettings() {
+		self.registerOCClassSettingsDefaults([
+			.createDocumentMode : CreateDocumentActionMode.createAndOpen.rawValue
+		], metadata: [
+			.createDocumentMode : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Create Document Mode",
+				.description 	: "Determines behaviour when creating a document.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions",
+				.possibleValues : [
+					[
+						OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.create.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Creates the document."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.createAndOpen.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Creates the document and opens it in a web app for the document format."
 					]
 				]
-			])
-		}
-
-		return super.actionExtension
+			]
+		])
 	}
 
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createDocument") }

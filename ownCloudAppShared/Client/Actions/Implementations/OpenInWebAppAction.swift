@@ -31,43 +31,36 @@ public enum OpenInWebAppActionMode: String {
 }
 
 public class OpenInWebAppAction: Action {
-	private static var _classSettingsRegistered: Bool = false
-	override public class var actionExtension: ActionExtension {
-		if !_classSettingsRegistered {
-			_classSettingsRegistered = true
-
-			self.registerOCClassSettingsDefaults([
-				.openInWebAppMode : OpenInWebAppActionMode.auto.rawValue
-			], metadata: [
-				.openInWebAppMode : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Open In WebApp mode",
-					.description 	: "Determines how to open a document in a web app.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Actions",
-					.possibleValues : [
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.auto.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open using `\(OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue)`, unless the respective endpoint is not available - in which case `\(OpenInWebAppActionMode.defaultBrowser.rawValue)` is used instead. If no endpoint to open the document is available, an error message is shown."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.defaultBrowser.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open in default browser app. May require user to sign in."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inApp.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in)."
-						]
+	public static func registerSettings() {
+		self.registerOCClassSettingsDefaults([
+			.openInWebAppMode : OpenInWebAppActionMode.auto.rawValue
+		], metadata: [
+			.openInWebAppMode : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Open In WebApp mode",
+				.description 	: "Determines how to open a document in a web app.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions",
+				.possibleValues : [
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.auto.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open using `\(OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue)`, unless the respective endpoint is not available - in which case `\(OpenInWebAppActionMode.defaultBrowser.rawValue)` is used instead. If no endpoint to open the document is available, an error message is shown."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.defaultBrowser.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open in default browser app. May require user to sign in."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inApp.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in)."
 					]
 				]
-			])
-		}
-
-		return super.actionExtension
+			]
+		])
 	}
 
 	override public class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openinwebapp") }

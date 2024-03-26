@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(readonly,strong,nullable) NSArray<OCSavedSearch *> *savedSearches;
 
 - (void)addSavedSearch:(OCSavedSearch *)savedSearch;
+- (void)updateSavedSearch:(OCSavedSearch *)savedSearch;
 - (void)deleteSavedSearch:(OCSavedSearch *)savedSearch;
 
 - (void)addSavedSearchesObserver:(id)owner withInitial:(BOOL)initial updateHandler:(void(^)(id owner, NSArray<OCSavedSearch *> * _Nullable savedSearches, BOOL initial))updateHandler;
