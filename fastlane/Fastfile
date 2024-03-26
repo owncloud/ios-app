@@ -181,13 +181,13 @@ platform :ios do
           prepare_metadata(
           	create_release_notes: options[:create_release_notes],
           	create_screenshots: options[:create_screenshots],
-          	app_name: "ownCloud",
+          	app_name: "ownCloud EMM",
           	metadata_path: 'fastlane/metadata-emm/en-US/release_notes.txt'
           )
 
           puts("Build EMM iOS App…")
           # Moving all EMM resources to the correct place
-          sh "cp -R ../ownCloud/Resources/Theming/com.owncloud.ios-app.emm/* ../ownCloud/Resources/Theming/branding-assets/"
+          sh "cp -R ../ownCloud/Resources/Theming/com.owncloud.ios-app.emm/*.png ../ownCloud/Resources/Theming/branding-assets/"
 
           # Build App
           owncloud_emm_build()
@@ -223,7 +223,8 @@ platform :ios do
         puts("Build ownCloud Online iOS App…")
 
         # Moving all ownCloud.online resources to the correct place
-        sh "cp -R  ../ownCloud/Resources/Theming/online.owncloud.ios-app/* ../ownCloud/Resources/Theming/branding-assets/"
+        sh "cp -R  ../ownCloud/Resources/Theming/online.owncloud.ios-app/*.png ../ownCloud/Resources/Theming/branding-assets/"
+        sh "cp ../ownCloud/Resources/Theming/online.owncloud.ios-app/Branding.plist ../ownCloud/Resources/Theming/"
         
         # Build App
         owncloud_online_build()
@@ -295,7 +296,7 @@ platform :ios do
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false,
-      APP_NAME: "ownCloud",
+      APP_NAME: "ownCloud EMM",
       URL_SCHEME: "owncloud-emm",
       IPA_NAME: "ownCloud-emm"
     )
@@ -425,10 +426,9 @@ end
       appicon(
         appicon_image_file: iconPath + iconName,
         appicon_devices: [:ipad, :iphone, :ios_marketing],
-        appicon_path: "../ownCloud/Resources/Assets.xcassets/",
+        appicon_path: "ownCloud/Resources/Assets.xcassets/",
         appicon_name: outputIconName
       )
-      sh("cp ../" + iconPath + "Assets.xcassets/" + outputIconName + "/* " + outputIconPath + outputIconName)
     end
   end
 

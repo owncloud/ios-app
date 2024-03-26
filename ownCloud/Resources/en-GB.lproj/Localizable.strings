@@ -104,6 +104,7 @@
 "kind" = "kind";
 "size" = "size";
 "date" = "date";
+"last used" = "last used";
 
 "Tree" = "Tree";
 "Search folder" = "Search folder";
@@ -127,6 +128,8 @@
 
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
 "{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "Loading…";
 
 "Show more results" = "Show more results";
 
@@ -165,6 +168,12 @@
 "Welcome to %@" = "Welcome to %@";
 "Please enter a server URL" = "Please enter a server URL";
 "Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -622,6 +631,8 @@
 "Add" = "Add";
 "Save changes" = "Save changes";
 
+"Enter password" = "Enter password";
+
 /* Quick Access view */
 "Quick Access" = "Quick Access";
 "Collection" = "Collection";
@@ -858,6 +869,10 @@
 "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
 "File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
 
 /* Disallowed Import Methods */
 /* - Share Extension */

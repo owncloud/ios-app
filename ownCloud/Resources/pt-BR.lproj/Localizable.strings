@@ -104,6 +104,7 @@
 "kind" = "tipo";
 "size" = "tamanho";
 "date" = "data";
+"last used" = "last used";
 
 "Tree" = "Árvore";
 "Search folder" = "Pesquisar pasta";
@@ -127,6 +128,8 @@
 
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} itens com {{totalSize}} total ({{fileCount}} arquivos, {{folderCount}} pastas)";
 "{{remaining}} available" = "{{restante}} disponível";
+
+"Loading…" = "Carregando...";
 
 "Show more results" = "Mostrar mais resultados ";
 
@@ -165,6 +168,12 @@
 "Welcome to %@" = "Bem-vindo ao %@";
 "Please enter a server URL" = "Insira um URL de servidor";
 "Please pick a profile to begin setup" = "Escolha um perfil para iniciar a configuração";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
 
 /* Single Account */
 "You are connected as\n%@" = "Você está conectado como\n%@";
@@ -622,6 +631,8 @@
 "Add" = "Adicionar";
 "Save changes" = "Salvar alterações";
 
+"Enter password" = "Enter password";
+
 /* Quick Access view */
 "Quick Access" = "Acesso Rápido";
 "Collection" = "Coleção";
@@ -858,6 +869,10 @@
 "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "O acesso do provedor de arquivos foi desativado pelo administrador.\n\nPor favor, use o aplicativo para acessar seus arquivos.";
 "File Provider access has been disabled by the administrator. Please use the app to create new folders." = "O acesso do provedor de arquivos foi desativado pelo administrador. Por favor, use o aplicativo para criar novas pastas.";
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "O acesso do provedor de arquivos foi desativado pelo administrador. Use a extensão de compartilhamento para importar arquivos.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
 
 /* Disallowed Import Methods */
 /* - Share Extension */

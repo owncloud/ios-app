@@ -104,6 +104,7 @@
 "kind" = "lloj";
 "size" = "madhësi";
 "date" = "datë";
+"last used" = "përdorur së fundi më";
 
 "Tree" = "Pemë";
 "Search folder" = "Kërko në dosje";
@@ -127,6 +128,8 @@
 
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} objekte, me {{totalSize}} gjithsej, ({{fileCount}} kartela, {{folderCount}} dosje)";
 "{{remaining}} available" = "{{remaining}} të lira";
+
+"Loading…" = "Po ngarkohet…";
 
 "Show more results" = "Shfaq më tepër përfundime";
 
@@ -165,6 +168,12 @@
 "Welcome to %@" = "Mirë se vini te %@";
 "Please enter a server URL" = "Ju lutemi, jepni një URL shërbyesi";
 "Please pick a profile to begin setup" = "Ju lutemi, zgjidhni një profil për të filluar ujdisja";
+"The following steps will guide you through the setup process." = "Hapat vijues do t’ju udhëheqin nëpër procesin e ujdisjes.";
+"Start setup" = "Nisni ujdisjen";
+"Open login page" = "Hapni faqen e hyrjeve";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "Nëse “Vazhdoni”, do t’ju kërkohet të lejoni aplikacionin '{{app.name}}' të hapë faqen e hyrjeve, ku mund të jepni kredencialet tuaja.";
+"Account setup complete" = "Ujdisje llogarie e plotësuar";
+"If you'd like to give the account a custom name, please enter it below:" = "Nëse doni t’i jepni llogarisë një emër vetjak, ju lutemi, jepeni më poshtë:";
 
 /* Single Account */
 "You are connected as\n%@" = "Jeni i lidhur si\n%@";
@@ -296,7 +305,7 @@
 "User Interface" = "Ndërfaqe Përdoruesi";
 "Dark" = "E errët";
 "Dark Blue" = "Blu e Errët";
-"Dark Web" = "Dark Web";
+"Dark Web" = "Web-i i Errët";
 "Light" = "E çelët";
 "Classic" = "Klasike";
 "System" = "Sistem";
@@ -622,6 +631,8 @@
 "Add" = "Shtoni";
 "Save changes" = "Ruaji ndryshimet";
 
+"Enter password" = "Jepni fjalëkalim";
+
 /* Quick Access view */
 "Quick Access" = "Hyrje e Shpejtë";
 "Collection" = "Koleksion";
@@ -855,13 +866,17 @@
 
 /* FileProvider */
 /* - Disabled */
-"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
-"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
-"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi.\n\nJu lutemi, për të hyrë te kartelat tuaja përdorni aplikacionin.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi. Ju lutemi, për të krijuar kartela të reja, përdorni aplikacionin.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi. Ju lutemi, për të importuar kartela, përdorni zgjerimin për ndarje më të tjerë.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "Te {{app.name}} s’është ujdisur ende llogari.";
+"Open app" = "Hap aplikacionin";
 
 /* Disallowed Import Methods */
 /* - Share Extension */
-"Share Extension disabled" = "Share Extension disabled";
+"Share Extension disabled" = "Zgjerimi për Ndarje Me të Tjerë është çaktivizuar";
 "Importing files through the Share Extension is not allowed on this device." = "Në këtë pajisje nuk lejohet importim kartelash përmes Share Extension.";
 
 /* - Open with */

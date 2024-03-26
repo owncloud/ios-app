@@ -34,7 +34,7 @@
 "Cancel" = "取消";
 "Approve" = "批准";
 "Error" = "錯誤";
-"Issues" = "Issues";
+"Issues" = "問題";
 "Review Connection" = "查看連接";
 "Authenticated via" = "經由通過驗證";
 "Authenticated as %@ via %@" = "認證為%@經由%@";
@@ -104,6 +104,7 @@
 "kind" = "類";
 "size" = "容量";
 "date" = "日期";
+"last used" = "last used";
 
 "Tree" = "Tree";
 "Search folder" = "Search folder";
@@ -128,31 +129,33 @@
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
 "{{remaining}} available" = "{{remaining}} available";
 
+"Loading…" = "載入中…";
+
 "Show more results" = "Show more results";
 
 "An error occurred" = "發生錯誤";
 
 /* Item Layouts */
 "List" = "清單";
-"Grid" = "Grid";
-"Item grid" = "Item grid";
-"Image grid" = "Image grid";
+"Grid" = "網格";
+"Item grid" = "項目網格";
+"Image grid" = "圖片網格";
 
 /* Saved searches */
-"Saved searches" = "Saved searches";
-"Saved search templates" = "Saved search templates";
-"Save search" = "Save search";
-"Save as search template" = "Save as search template";
+"Saved searches" = "已儲存的搜尋";
+"Saved search templates" = "已儲存的搜尋範本";
+"Save search" = "儲存搜尋";
+"Save as search template" = "儲存搜尋範本";
 
-"Name of saved search" = "Name of saved search";
-"Saved search" = "Saved search";
-"Saved searches" = "Saved searches";
-"Name of template" = "Name of template";
-"Search template" = "Search template";
-"Search templates" = "Search templates";
+"Name of saved search" = "已儲存的名稱搜尋";
+"Saved search" = "已儲存的搜尋";
+"Saved searches" = "已儲存的搜尋";
+"Name of template" = "名稱範本";
+"Search template" = "搜尋範本";
+"Search templates" = "搜尋範本";
 
 /* Search scope */
-"Search scope" = "Search scope";
+"Search scope" = "搜尋範圍";
 "Toggle Search Scope" = "Toggle Search Scope";
 
 /* Static Login Setup */
@@ -162,9 +165,15 @@
 "Retry detection" = "重試檢測";
 "Enter your username and password" = "Enter your username and password";
 "Please log in to authorize the app." = "Please log in to authorize the app.";
-"Welcome to %@" = "Welcome to %@";
+"Welcome to %@" = "歡迎來到%@";
 "Please enter a server URL" = "Please enter a server URL";
 "Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
 
 /* Single Account */
 "You are connected as\n%@" = "您連接為\n%@";
@@ -175,7 +184,7 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "簡介 '%@'沒有超連結已配置\n請提供一個超連結經由配置或 MDM";
 
 /* Client Messages */
-"No contents" = "No contents";
+"No contents" = "沒有內容";
 "This folder contains no files or folders." = "此目錄不包含文件或目錄。";
 "This folder is empty." = "This folder is empty.";
 "This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
@@ -622,6 +631,8 @@
 "Add" = "加入";
 "Save changes" = "儲存更改";
 
+"Enter password" = "Enter password";
+
 /* Quick Access view */
 "Quick Access" = "快速訪問";
 "Collection" = "採集";
@@ -858,6 +869,10 @@
 "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
 "File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
 
 /* Disallowed Import Methods */
 /* - Share Extension */

@@ -104,6 +104,7 @@
 "kind" = "Typ";
 "size" = "Größe";
 "date" = "Datum";
+"last used" = "zuletzt benutzt";
 
 "Tree" = "Baum";
 "Search folder" = "Ordner durchsuchen";
@@ -165,6 +166,12 @@
 "Welcome to %@" = "Willkommen bei %@";
 "Please enter a server URL" = "Bitte geben Sie eine Server-URL ein";
 "Please pick a profile to begin setup" = "Bitte wählen Sie ein Profil, um mit der Einrichtung zu beginnen";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
 
 /* Single Account */
 "You are connected as\n%@" = "Sie sind verbunden als\n%@";
@@ -622,6 +629,8 @@
 "Add" = "Hinzufügen";
 "Save changes" = "Änderung speichern";
 
+"Enter password" = "Passwort eingeben";
+
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
 "Collection" = "Sammlung";
@@ -858,6 +867,10 @@
 "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "Der Zugriff auf den Dateizugang wurde vom Administrator deaktiviert.\n\nBitte verwenden Sie die App, um auf Ihre Dateien zuzugreifen.";
 "File Provider access has been disabled by the administrator. Please use the app to create new folders." = "Der Zugriff auf den Dateizugang wurde vom Administrator deaktiviert. Bitte verwenden Sie die App, um neue Ordner zu erstellen.";
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "Der Zugriff auf den Dateizugang wurde vom Administrator deaktiviert. Bitte verwenden Sie die Teilen-Erweiterung, um Dateien zu importieren.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "Es wurde noch kein Konto in der {{app.name}} App eingerichtet.";
+"Open app" = "App öffnen";
 
 /* Disallowed Import Methods */
 /* - Share Extension */

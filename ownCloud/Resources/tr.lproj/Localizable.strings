@@ -104,6 +104,7 @@
 "kind" = "çeşit";
 "size" = "boyut";
 "date" = "tarih";
+"last used" = "last used";
 
 "Tree" = "Ağaç";
 "Search folder" = "Klasör ara";
@@ -127,6 +128,8 @@
 
 "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "Toplam {{totalSize}} olan {{itemCount}} öge ({{fileCount}} dosya, {{folderCount}} klasör)";
 "{{remaining}} available" = "{{remaining}} kullanılabilir";
+
+"Loading…" = "Yükleniyor...";
 
 "Show more results" = "Daha fazla sonuç göster";
 
@@ -165,6 +168,12 @@
 "Welcome to %@" = "%@'ye Hoş Geldiniz";
 "Please enter a server URL" = "Lütfen bir sunucu URL girin";
 "Please pick a profile to begin setup" = "Kuruluma başlamak için lütfen bir profil seçin";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
 
 /* Single Account */
 "You are connected as\n%@" = "Bağlantı kurdunuz\n%@";
@@ -622,6 +631,8 @@
 "Add" = "Ekle";
 "Save changes" = "Değişiklikleri Kaydet";
 
+"Enter password" = "Enter password";
+
 /* Quick Access view */
 "Quick Access" = "Hızlı Erişim";
 "Collection" = "Koleksiyon";
@@ -858,6 +869,10 @@
 "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "Dosya Sağlayıcı erişimi yönetici tarafından devre dışı bırakıldı.\n\nLütfen dosyalarınıza erişmek için uygulamayı kullanın.";
 "File Provider access has been disabled by the administrator. Please use the app to create new folders." = "Dosya Sağlayıcı erişimi yönetici tarafından devre dışı bırakıldı. Lütfen yeni klasörler oluşturmak için uygulamayı kullanın.";
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "Dosya Sağlayıcı erişimi yönetici tarafından devre dışı bırakıldı. Dosyaları içe aktarmak için lütfen paylaşım uzantısını kullanın.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
 
 /* Disallowed Import Methods */
 /* - Share Extension */
