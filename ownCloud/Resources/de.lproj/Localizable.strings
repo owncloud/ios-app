@@ -629,9 +629,17 @@
 
 "Share with" = "Teilen mit";
 "Add" = "Hinzufügen";
+"Set" = "Setzen";
+"Generate" = "Generieren";
 "Save changes" = "Änderung speichern";
 
 "Enter password" = "Passwort eingeben";
+"Change password" = "Passwort ändern";
+"Show" = "Zeigen";
+"Hide" = "Verbergen";
+
+"{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | Passwort: {{password}}";
+"{{link}} | password: {{password}}" = "{{link}} | Passwort: {{password}}";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";

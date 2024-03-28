@@ -327,6 +327,8 @@ public class ThemeCollection : NSObject {
 				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
 				collectionBackgroundColor = darkBrandColor.darker(0.1)
 
+				cellSet.backgroundColor
+
 				groupedCellSet = ThemeColorSet.from(backgroundColor: darkBrandColor, tintColor: lightBrandColor, for: interfaceStyle)
 				groupedCellStateSet = ThemeColorStateSet.from(colorSet: groupedCellSet, for: interfaceStyle)
 				groupedCollectionBackgroundColor = useSystemColors ? .systemGroupedBackground.resolvedColor(with: styleTraitCollection) : navigationBarSet.backgroundColor.darker(0.3)
@@ -505,12 +507,14 @@ public class ThemeCollection : NSObject {
 
 			ThemeCSSRecord(selectors: [.collection, .selected, .selectionCheckmark], 		property: .stroke,   value: UIColor.white),
 
-			ThemeCSSRecord(selectors: [.grouped, .collection],  	   		property: .fill,   value: groupedCollectionBackgroundColor),
-			ThemeCSSRecord(selectors: [.insetGrouped, .collection],    		property: .fill,   value: groupedCollectionBackgroundColor),
-			ThemeCSSRecord(selectors: [.grouped, .collection, .sectionHeader],  	property: .fill,   value: groupedCollectionBackgroundColor),
-			ThemeCSSRecord(selectors: [.grouped, .collection, .cell, .action],  	property: .fill,   value: cellStateSet.regular.backgroundColor),
-			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .sectionHeader], property: .fill,   value: groupedCollectionBackgroundColor),
-			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .cell, .action], property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection],  	   			property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection],    			property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .sectionHeader],  		property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .sectionHeader, .cell],	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .cell],  			property: .fill,   value: groupedCellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.grouped, .collection, .cell, .action],  		property: .fill,   value: cellStateSet.regular.backgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .sectionHeader], 	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .cell, .action], 	property: .fill,   value: cellStateSet.regular.backgroundColor),
 
 			// - Table View
 			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
