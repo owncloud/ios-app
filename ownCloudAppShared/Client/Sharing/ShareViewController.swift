@@ -243,6 +243,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		linksSectionContext.originatingViewController = self
 
 		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
+
+		// Add defaults for creation
+		if self.type == .link, self.mode == .create, share == nil, expirationDate == nil {
+			if clientContext.core?.connection.capabilities?.publicSharingExpireDateAddDefaultDate == true,
+			   let numberOfDays = clientContext.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+				expirationDate = Date(timeIntervalSinceNow: numberOfDays.doubleValue * (24 * 60 * 60))
+			}
+		}
 	}
 
 	required public init?(coder: NSCoder) {
@@ -547,27 +555,58 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				createIsEnabled = (location != nil) && (recipient != nil) && (role != nil) && (permissions != nil)
 		}
 
+		// Enforce password requirements
+		if hasPasswordOption && passwordRequired && !hasPassword {
+			createIsEnabled = false
+		}
+
+		// Enforce expiration date requirements
+		if hasExpirationOption && expirationDateRequired && (expirationDate == nil) {
+			createIsEnabled = false
+		}
+
 		bottomButtonBar?.selectButton.isEnabled = createIsEnabled
 		bottomButtonBar?.alternativeButton.isEnabled = createIsEnabled
 	}
 
 	// MARK: - Options
 	var passwordOption: OptionItem?
-	var password: String?
-	var removePassword: Bool = false
-
-	var expiryOption: OptionItem?
-	var expirationDatePicker: UIDatePicker?
-	var expirationDate: Date?
-
+	var password: String? {
+		didSet {
+			updateState()
+		}
+	}
+	var removePassword: Bool = false {
+		didSet {
+			updateState()
+		}
+	}
 	var passwordPolicy: OCPasswordPolicy {
 		return clientContext?.core?.connection.capabilities?.passwordPolicy ?? OCPasswordPolicy.default
 	}
 
-	func updateOptions() {
-		let hasPasswordOption = type == .link
-		let hasExpirationOption = true
+	var expiryOption: OptionItem?
+	var expirationDatePicker: UIDatePicker?
+	var expirationDate: Date? {
+		didSet {
+			updateState()
+		}
+	}
 
+	var hasPasswordOption: Bool {
+		return type == .link
+	}
+	var passwordRequired: Bool {
+		return (type == .link) && (clientContext?.core?.connection.capabilities?.publicSharingPasswordEnforced == true)
+	}
+	var hasExpirationOption: Bool {
+		return (type == .link)
+	}
+	var expirationDateRequired: Bool {
+		return type == .link ? (clientContext?.core?.connection.capabilities?.publicSharingExpireDateEnforceDateAndDaysDeterminesLastAllowedDate == true) : false
+	}
+
+	func updateOptions() {
 		var options: [OCDataItem & OCDataItemVersioning] = []
 
 		// Password
@@ -575,7 +614,33 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			var accessories: [UICellAccessory] = []
 			var details: [SegmentViewItem] = []
 
+			let makeButton: (_ title: String, _ action: @escaping UIActionHandler) -> UIButton = { (title, action) in
+				var buttonConfig = UIButton.Configuration.plain()
+				buttonConfig.title = title
+				buttonConfig.contentInsets = .zero
+
+				let button = ThemeCSSButton()
+				button.configuration = buttonConfig
+				button.addAction(UIAction(handler: action), for: .primaryActionTriggered)
+
+				return button
+			}
+
 			if ((share?.protectedByPassword == true) && !removePassword) || (password != nil) {
+				if password != nil {
+					let copyButton = makeButton("Copy".localized, { [weak self] action in
+						if let self, let password = self.password {
+							UIPasteboard.general.string = password
+							_ = NotificationHUDViewController(on: self, title: "Password".localized, subtitle: "The password was copied to the clipboard".localized, completion: nil)
+						}
+					})
+
+					details.append(contentsOf: [
+						SegmentViewItem(view: copyButton),
+						SegmentViewItem(title: "|", style: .label)
+					])
+				}
+
 				details.append(.detailText("******"))
 
 				accessories = [
@@ -586,25 +651,17 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					}))
 				]
 			} else {
-				var generateButtonConfig = UIButton.Configuration.plain()
-				generateButtonConfig.title = "Generate".localized
-				generateButtonConfig.contentInsets = .zero
+				if passwordRequired {
+					details.append(.detailText("⚠️"))
+				}
 
-				let generateButton = ThemeCSSButton()
-				generateButton.configuration = generateButtonConfig
-				generateButton.addAction(UIAction(handler: { [weak self] action in
+				let generateButton = makeButton("Generate".localized, { [weak self] action in
 					self?.generatePassword()
-				}), for: .primaryActionTriggered)
+				})
 
-				var addButtonConfig = UIButton.Configuration.plain()
-				addButtonConfig.title = "Set".localized
-				addButtonConfig.contentInsets = .zero
-
-				let addButton = ThemeCSSButton()
-				addButton.configuration = addButtonConfig
-				addButton.addAction(UIAction(handler: { [weak self] action in
+				let addButton = makeButton("Set".localized, { [weak self] action in
 					self?.requestPassword()
-				}), for: .primaryActionTriggered)
+				})
 
 				details.append(contentsOf: [SegmentViewItem(view: generateButton), SegmentViewItem(title: "|", style: .label), SegmentViewItem(view: addButton)])
 			}
@@ -636,6 +693,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					datePicker.preferredDatePickerStyle = .compact
 					datePicker.datePickerMode = .date
 					datePicker.minimumDate = .now
+					if clientContext?.core?.connection.capabilities?.publicSharingExpireDateEnforceDateAndDaysDeterminesLastAllowedDate == true,
+					   let numberOfDays = clientContext?.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+						datePicker.maximumDate = Date(timeIntervalSinceNow: numberOfDays.doubleValue * (24 * 60 * 60))
+					}
 					datePicker.date = expirationDate
 					datePicker.addAction(UIAction(handler: { [weak self, weak datePicker] action in
 						self?.expirationDate = datePicker?.date
@@ -666,6 +727,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					self?.expirationDate = .now.addingTimeInterval(24 * 3600 * 7)
 					self?.updateOptions()
 				}), for: .primaryActionTriggered)
+
+				if expirationDateRequired {
+					details.append(.detailText("⚠️"))
+				}
 
 				details.append(SegmentViewItem(view: button))
 			}
