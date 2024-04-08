@@ -126,7 +126,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			// Set .drive based on location.driveID
 			if let driveID = location?.driveID, let core = context.core {
-				context.drive = core.drive(withIdentifier: driveID)
+				context.drive = core.drive(withIdentifier: driveID, attachedOnly: false)
 			}
 
 			// Use inDataSource as queryDatasource if no query was provided

@@ -25,7 +25,7 @@ extension OCLocation : DataItemSelectionInteraction {
 	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
 		let driveContext = ClientContext(with: context, modifier: { context in
 			if let driveID = self.driveID, let core = context.core {
-				context.drive = core.drive(withIdentifier: driveID)
+				context.drive = core.drive(withIdentifier: driveID, attachedOnly: false)
 			}
 		})
 		let query = OCQuery(for: self)

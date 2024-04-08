@@ -92,7 +92,7 @@ public class ActionExtension: OCExtension {
 
 public extension OCItem {
 	func isSharedWithUser(in context: ClientContext?) -> Bool {
-		if let context, let core = context.core, core.useDrives, let driveID, let drive = core.drive(withIdentifier: driveID) {
+		if let context, let core = context.core, core.useDrives, let driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: true) {
 			// On drive-based instances, all items shared with the user are located in the Shares Jail
 			if drive.specialType == .shares {
 				return true

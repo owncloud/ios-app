@@ -28,7 +28,7 @@ extension OCItemPolicy: UniversalItemListCellContentProvider {
 		content.icon = isFile ? .file : ((location?.isDriveRoot == true) ? .drive : .folder)
 
 		// Title
-		if location?.isDriveRoot == true, let driveID = location?.driveID, let drive = context?.core?.drive(withIdentifier: driveID), let driveName = drive.name {
+		if location?.isDriveRoot == true, let driveID = location?.driveID, let drive = context?.core?.drive(withIdentifier: driveID, attachedOnly: false), let driveName = drive.name {
 			content.title = .drive(name: driveName)
 		} else if let name = location?.lastPathComponent {
 			content.title = isFile ? .file(name: name) : .folder(name: name)
