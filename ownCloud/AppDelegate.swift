@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		AppStatistics.shared.update()
 
 		// Display Extensions
+		OCExtensionManager.shared.addExtension(URLDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
