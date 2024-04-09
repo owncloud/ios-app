@@ -473,6 +473,7 @@
 		DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */; };
 		DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */; };
 		DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20E292F843800D27573 /* CollectionViewAction.swift */; };
+		DCB796582BC535AD00D6D759 /* RemoveFromSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */; };
 		DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */; };
 		DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */; };
 		DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */; };
@@ -1548,6 +1549,7 @@
 		DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountController+ExtraItems.swift"; sourceTree = "<group>"; };
 		DCB6B20E292F843800D27573 /* CollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewAction.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* AccountAuthenticationUpdaterPasswordPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdaterPasswordPromptViewController.swift; sourceTree = "<group>"; };
+		DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveFromSidebarAction.swift; sourceTree = "<group>"; };
 		DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryCellProvider.swift; sourceTree = "<group>"; };
 		DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryItem.swift; sourceTree = "<group>"; };
@@ -2265,6 +2267,7 @@
 				39EF06AF25D6C3FC001E1E19 /* PresentationModeAction.swift */,
 				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 				DC1621372B8FE9BF00EB17F8 /* AddToSidebarAction.swift */,
+				DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -4570,6 +4573,7 @@
 				4C9BFA2323158C3F0059CA3E /* PreviewViewController.swift in Sources */,
 				399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */,
 				DC59087F2AA8D25400BFF393 /* CertificateSummaryView.swift in Sources */,
+				DCB796582BC535AD00D6D759 /* RemoveFromSidebarAction.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
 				DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */,
 				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,

@@ -1,8 +1,8 @@
 //
-//  AddToSidebarAction.swift
+//  RemoveFromSidebarAction.swift
 //  ownCloud
 //
-//  Created by Felix Schwarz on 28.02.24.
+//  Created by Felix Schwarz on 09.04.24.
 //  Copyright © 2024 ownCloud GmbH. All rights reserved.
 //
 
@@ -21,10 +21,10 @@ import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
 
-class AddToSidebarAction: Action {
-	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.addToSidebar") }
+class RemoveFromSidebarAction: Action {
+	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.removeFromSidebar") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Add to sidebar".localized }
+	override class var name : String? { return "Remove from sidebar".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.contextMenuItem, .moreItem] }
 
 	// MARK: - Extension matching
@@ -43,22 +43,26 @@ class AddToSidebarAction: Action {
 			if sidebarItemLocationStrings == nil {
 				sidebarItemLocationStrings = context.core?.vault.sidebarItems?.compactMap({ item in
 					return item.location?.string
-				}) ?? []
+				})
+
+				if sidebarItemLocationStrings == nil {
+					return .none
+				}
 			}
 
-			if let sidebarItemLocationStrings, sidebarItemLocationStrings.count > 0, let itemLocationString = item.location?.string {
+			if let sidebarItemLocationStrings, let itemLocationString = item.location?.string {
 				if sidebarItemLocationStrings.contains(itemLocationString) {
-					return .none
+					return .middle
 				}
 			}
 		}
 
-		return .middle
+		return .none
 	}
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let core = core else {
+		guard context.items.count > 0, let core = core, let sidebarItems = context.core?.vault.sidebarItems else {
 			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
@@ -66,13 +70,18 @@ class AddToSidebarAction: Action {
 		for item in context.items {
 			if let location = item.location {
 				location.bookmarkUUID = context.core?.bookmark.uuid
-				core.vault.add(OCSidebarItem(location: location))
+				for sidebarItem in sidebarItems {
+					if sidebarItem.location == location {
+						core.vault.delete(sidebarItem)
+						break
+					}
+				}
 			}
 		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(named: "sidebar.leading.badge.plus")?.withRenderingMode(.alwaysTemplate)
+		return UIImage(named: "sidebar.leading.badge.minus")?.withRenderingMode(.alwaysTemplate)
 	}
 
 }
