@@ -638,6 +638,15 @@
 "{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | password: {{password}}";
 "{{link}} | password: {{password}}" = "{{link}} | password: {{password}}";
 
+/* .url viewer / creation */
+"Shortcut" = "Shortcut";
+"Open link" = "Open link";
+"Opening link failed" = "Opening link failed";
+
+"Create shortcut" = "Create shortcut";
+"Name of the shortcut" = "Name of the shortcut";
+"Target URL of shortcut" = "Target URL of shortcut";
+
 /* Quick Access search suggestions */
 "Quick Access" = "Quick Access";
 "Add to sidebar" = "Add to sidebar";
