@@ -483,6 +483,8 @@
 		DCB796472BC4847200D6D759 /* URLDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796462BC4847200D6D759 /* URLDisplayViewController.swift */; };
 		DCB796492BC4854800D6D759 /* INIFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796482BC4854800D6D759 /* INIFile.swift */; };
 		DCB7964C2BC4901400D6D759 /* INIFile+URLFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */; };
+		DCB796642BC73AF100D6D759 /* CreateURLShortcutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796632BC73AF100D6D759 /* CreateURLShortcutAction.swift */; };
+		DCB7967F2BC83E6E00D6D759 /* text-uri-list.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */; };
 		DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */; };
 		DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */; };
 		DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */; };
@@ -1564,6 +1566,8 @@
 		DCB796462BC4847200D6D759 /* URLDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLDisplayViewController.swift; sourceTree = "<group>"; };
 		DCB796482BC4854800D6D759 /* INIFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INIFile.swift; sourceTree = "<group>"; };
 		DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+URLFile.swift"; sourceTree = "<group>"; };
+		DCB796632BC73AF100D6D759 /* CreateURLShortcutAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateURLShortcutAction.swift; sourceTree = "<group>"; };
+		DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-uri-list.tvg"; path = "img/filetypes-tvg/text-uri-list.tvg"; sourceTree = SOURCE_ROOT; };
 		DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryCellProvider.swift; sourceTree = "<group>"; };
 		DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryItem.swift; sourceTree = "<group>"; };
@@ -2286,6 +2290,7 @@
 				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 				DC1621372B8FE9BF00EB17F8 /* AddToSidebarAction.swift */,
 				DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */,
+				DCB796632BC73AF100D6D759 /* CreateURLShortcutAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -3345,6 +3350,7 @@
 				DCB504D7221EF07E007638BE /* status-flash.tvg */,
 				DCE5E89D2080D780005F60CE /* text-calendar.tvg */,
 				DCE5E8992080D780005F60CE /* text-code.tvg */,
+				DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */,
 				DCE5E89E2080D780005F60CE /* text-vcard.tvg */,
 				DCE5E8962080D77F005F60CE /* text.tvg */,
 				DCE5E88C2080D77E005F60CE /* video.tvg */,
@@ -4387,6 +4393,7 @@
 				DC2FE2DA24C30586002AFDB3 /* Localizable.strings in Resources */,
 				DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */,
 				DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */,
+				DCB7967F2BC83E6E00D6D759 /* text-uri-list.tvg in Resources */,
 				DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */,
 				DC0492B1258CC4EE00DEDC27 /* PocketSVG.LICENSE in Resources */,
 				DCD863FB28115C8700CA6631 /* Down.LICENSE in Resources */,
@@ -4571,6 +4578,7 @@
 				4CB8ADE322DF6BA700F1FEBC /* PHAsset+Upload.swift in Sources */,
 				4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */,
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
+				DCB796642BC73AF100D6D759 /* CreateURLShortcutAction.swift in Sources */,
 				4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */,
 				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
