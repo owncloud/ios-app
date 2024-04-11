@@ -597,7 +597,29 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		return type == .link
 	}
 	var passwordRequired: Bool {
-		return (type == .link) && (clientContext?.core?.connection.capabilities?.publicSharingPasswordEnforced == true)
+		if type == .link, let capabilities = clientContext?.core?.connection.capabilities {
+			if capabilities.publicSharingPasswordEnforced == true {
+				return true
+			}
+			if permissions?.contains(.read) == true &&
+			   permissions?.contains(.delete) == true && (
+				permissions?.contains(.create) == true ||
+				permissions?.contains(.update) == true) {
+				return capabilities.publicSharingPasswordEnforcedForReadWriteDelete == true
+			}
+			if permissions?.contains(.read) == true && (
+				permissions?.contains(.create) == true ||
+				permissions?.contains(.update) == true) {
+				return capabilities.publicSharingPasswordEnforcedForReadWrite == true
+			}
+			if permissions?.contains(.create) == true {
+				return capabilities.publicSharingPasswordEnforcedForUploadOnly == true
+			}
+			if permissions?.contains(.read) == true {
+				return capabilities.publicSharingPasswordEnforcedForReadOnly == true
+			}
+		}
+		return false
 	}
 	var hasExpirationOption: Bool {
 		return (type == .link)
