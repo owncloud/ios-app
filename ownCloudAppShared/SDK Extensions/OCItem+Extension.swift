@@ -73,6 +73,7 @@ extension OCItem {
 		"text",
 		"text-calendar",
 		"text-code",
+		"text-uri-list",
 		"text-vcard",
 		"video",
 		"x-office-document",

@@ -639,6 +639,15 @@
 "{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | Passwort: {{password}}";
 "{{link}} | password: {{password}}" = "{{link}} | Passwort: {{password}}";
 
+/* .url viewer / creation */
+"Shortcut" = "Verknüpfung";
+"Open link" = "Link öffnen";
+"Opening link failed" = "Öffnen des Links fehlgeschlagen";
+
+"Create shortcut" = "Verknüpfung erstellen";
+"Name of the shortcut" = "Name der Verknüpfung";
+"Target URL of shortcut" = "Ziel-URL der Verknüpfung";
+
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
 "Collection" = "Sammlung";
