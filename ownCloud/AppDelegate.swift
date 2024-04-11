@@ -91,6 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CreateDocumentAction.actionExtension)
 		OCExtensionManager.shared.addExtension(AddToSidebarAction.actionExtension)
 		OCExtensionManager.shared.addExtension(RemoveFromSidebarAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CreateURLShortcutAction.actionExtension)
 
 		if UIDevice.current.isIpad {
 			// iPad only
