@@ -24,6 +24,7 @@ extension OCSavedSearchUserInfoKey {
 	static let customIconName = OCSavedSearchUserInfoKey(rawValue: "customIconName")
 	static let useNameAsTitle = OCSavedSearchUserInfoKey(rawValue: "useNameAsTitle")
 	static let useSortDescriptor = OCSavedSearchUserInfoKey(rawValue: "useSortDescriptor")
+	static let isQuickAccess = OCSavedSearchUserInfoKey(rawValue: "isQuickAccess")
 }
 
 extension OCSavedSearch {
@@ -37,12 +38,41 @@ extension OCSavedSearch {
 		})
 	}
 
+	func canRename(in context: ClientContext?) -> Bool {
+		return canDelete(in: context) && (isQuickAccess != true)
+	}
+
 	func delete(in context: ClientContext?) {
 		guard let context = context, let core = context.core else {
 			return
 		}
 
 		core.vault.delete(self)
+	}
+
+	func rename(in context: ClientContext?) {
+		guard let context = context, context.core != nil else {
+			return
+		}
+
+		let namePrompt = UIAlertController(title: "Name of saved search".localized, message: nil, preferredStyle: .alert)
+
+		namePrompt.addTextField(configurationHandler: { textField in
+			textField.placeholder = "Saved search".localized
+			textField.text = self.isNameUserDefined ? self.name : ""
+		})
+
+		namePrompt.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel))
+		namePrompt.addAction(UIAlertAction(title: "Save".localized, style: .default, handler: { [weak self, weak namePrompt] action in
+			guard let self else {
+				return
+			}
+			self.name = namePrompt?.textFields?.first?.text ?? ""
+
+			context.core?.vault.update(self)
+		}))
+
+		context.present(namePrompt, animated: true)
 	}
 
 	func condition() -> OCQueryCondition? {
@@ -123,6 +153,20 @@ extension OCSavedSearch {
 		}
 	}
 
+	var isQuickAccess: Bool? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.isQuickAccess : newValue]
+			} else {
+				userInfo?[.isQuickAccess] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.isQuickAccess] as? Bool
+		}
+	}
+
 	func withCustomIcon(name: String) -> OCSavedSearch {
 		customIconName = name
 		return self
@@ -135,6 +179,11 @@ extension OCSavedSearch {
 
 	func useSortDescriptor(_ sortDescriptor: SortDescriptor) -> OCSavedSearch {
 		useSortDescriptor = sortDescriptor
+		return self
+	}
+
+	func isQuickAccess(_ isQuickAccess: Bool) -> OCSavedSearch {
+		self.isQuickAccess = isQuickAccess
 		return self
 	}
 }
@@ -210,18 +259,35 @@ extension OCSavedSearch: DataItemSwipeInteraction {
 
 extension OCSavedSearch: DataItemContextMenuInteraction {
 	public func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]? {
-		guard canDelete(in: context) else {
+		let canDelete = canDelete(in: context), canRename = canRename(in: context)
+		var actions: [UIMenuElement] = []
+
+		guard canDelete || canRename else {
 			return nil
 		}
 
-		let deleteAction = UIAction(handler: { [weak self] action in
-			self?.delete(in: context)
-		})
-		deleteAction.title = "Delete".localized
-		deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
-		deleteAction.attributes = .destructive
+		if canRename {
+			let renameAction = UIAction(handler: { [weak self] action in
+				self?.rename(in: context)
+			})
+			renameAction.title = "Rename".localized
+			renameAction.image = OCSymbol.icon(forSymbolName: "pencil")
 
-		return [ deleteAction ]
+			actions.append(renameAction)
+		}
+
+		if canDelete {
+			let deleteAction = UIAction(handler: { [weak self] action in
+				self?.delete(in: context)
+			})
+			deleteAction.title = "Delete".localized
+			deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
+			deleteAction.attributes = .destructive
+
+			actions.append(deleteAction)
+		}
+
+		return actions
 	}
 }
 

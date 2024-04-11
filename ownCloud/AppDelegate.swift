@@ -88,6 +88,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CreateDocumentAction.actionExtension)
+		OCExtensionManager.shared.addExtension(AddToSidebarAction.actionExtension)
+		OCExtensionManager.shared.addExtension(RemoveFromSidebarAction.actionExtension)
 
 		if UIDevice.current.isIpad {
 			// iPad only
@@ -97,6 +99,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+
+		// Register class settings for extensions added on a per-connection basis
+		OnMainThread {
+			OpenInWebAppAction.registerSettings()
+			CreateDocumentAction.registerSettings()
+		}
 
 		// Task extensions
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
