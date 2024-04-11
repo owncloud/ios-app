@@ -225,6 +225,9 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	}
 
 	// MARK: - Navigation item modification
+	open var showCancelButton: Bool = true
+	open var hideNavigationButtons: Bool = true
+
 	var targetNavigationItem: UINavigationItem?
 
 	var niInjected: Bool = false
@@ -232,18 +235,29 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 	func injectIntoNavigationItem() {
 		if !niInjected, let targetNavigationItem {
+			var navigationContentItems: [NavigationContentItem] = []
+
 			// Store content
 			niHidesBackButton = targetNavigationItem.hidesBackButton
 
-			// Alternative implementation as a standard "Cancel" button, more convention compliant, but needs more space: let cancelToolbarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(endSearch))
-			let cancelToolbarButton = UIBarButtonItem(image: OCSymbol.icon(forSymbolName: "xmark"), style: .done, target: self, action: #selector(endSearch))
+			// Compose navigation views
+			// - "Overwrite" <> navigation buttons with no content
+			if hideNavigationButtons {
+				navigationContentItems.append(NavigationContentItem(identifier: "search-left", area: .left, priority: .highest, position: .trailing, items: [ ]))
+			}
+
+			// - add search field
+			navigationContentItems.append(NavigationContentItem(identifier: "search-field", area: .title, priority: .highest, position: .leading, titleView: searchField))
+
+			// - add X (cancel) button
+			if showCancelButton {
+				// Alternative implementation as a standard "Cancel" button, more convention compliant, but needs more space: let cancelToolbarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(endSearch))
+				let cancelToolbarButton = UIBarButtonItem(image: OCSymbol.icon(forSymbolName: "xmark"), style: .done, target: self, action: #selector(endSearch))
+				navigationContentItems.append(NavigationContentItem(identifier: "search-right", area: .right, priority: .highest, position: .trailing, items: [ cancelToolbarButton ]))
+			}
 
 			// Overwrite content
-			targetNavigationItem.navigationContent.add(items: [
-				NavigationContentItem(identifier: "search-left", area: .left, priority: .highest, position: .trailing, items: [ ]),
-				NavigationContentItem(identifier: "search-field", area: .title, priority: .highest, position: .leading, titleView: searchField),
-				NavigationContentItem(identifier: "search-right", area: .right, priority: .highest, position: .trailing, items: [ cancelToolbarButton ])
-			])
+			targetNavigationItem.navigationContent.add(items: navigationContentItems)
 			targetNavigationItem.hidesBackButton = true
 
 			niInjected = true
@@ -251,7 +265,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 	}
 
 	func restoreNavigationItem() {
-		if niInjected, let targetNavigationItem = targetNavigationItem {
+		if niInjected, let targetNavigationItem {
 			// Restore content
 			targetNavigationItem.navigationContent.remove(itemsWithIdentifiers: [
 				"search-left",
