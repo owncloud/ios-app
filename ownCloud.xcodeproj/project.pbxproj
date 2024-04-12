@@ -496,6 +496,7 @@
 		DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC5E444232654DE002E5B84 /* NSObject+AnnotatedProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
 		DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DCC73F2E2B86BC960009A210 /* PasswordComposerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC73F2D2B86BC960009A210 /* PasswordComposerViewController.swift */; };
 		DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */; };
 		DCC832F1242CC27B00153F8C /* NotificationMessagePresenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCC832F2242CC28400153F8C /* NotificationMessagePresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC832E7242CB18700153F8C /* NotificationMessagePresenter.m */; };
@@ -1576,6 +1577,7 @@
 		DCC6564920C9B7E400110A97 /* FileProviderExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtension.m; sourceTree = "<group>"; };
 		DCC6565120C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud_File_Provider.entitlements; sourceTree = "<group>"; };
+		DCC73F2D2B86BC960009A210 /* PasswordComposerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordComposerViewController.swift; sourceTree = "<group>"; };
 		DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySleepPreventer.swift; sourceTree = "<group>"; };
 		DCC832E1242C0EAC00153F8C /* MessageSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSelector.swift; sourceTree = "<group>"; };
 		DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationMessagePresenter.h; sourceTree = "<group>"; };
@@ -2002,6 +2004,7 @@
 				DCE4E43424C199860051722F /* Actions */,
 				DC16213C2B8FF02500EB17F8 /* Sidebar Items */,
 				399EA6ED25E6544000B6FF11 /* Sharing */,
+				DCC73F2C2B86BC170009A210 /* Password Composer */,
 				DCE4E42F24C1963F0051722F /* User Interface */,
 			);
 			path = Client;
@@ -3250,6 +3253,14 @@
 				DC576EC222647A070087316D /* Localizable.strings */,
 			);
 			path = "ownCloud File Provider";
+			sourceTree = "<group>";
+		};
+		DCC73F2C2B86BC170009A210 /* Password Composer */ = {
+			isa = PBXGroup;
+			children = (
+				DCC73F2D2B86BC960009A210 /* PasswordComposerViewController.swift */,
+			);
+			path = "Password Composer";
 			sourceTree = "<group>";
 		};
 		DCC832D1242BB3E900153F8C /* Messages */ = {
@@ -4872,6 +4883,7 @@
 				DCA2EDE4279B1789001F04E6 /* ResourceItemIcon.swift in Sources */,
 				DC8E99E8297F3BA700594697 /* ActionTapGestureRecognizer.swift in Sources */,
 				DCB5D56B2861BEBE004AF425 /* SearchViewController.swift in Sources */,
+				DCC73F2E2B86BC960009A210 /* PasswordComposerViewController.swift in Sources */,
 				DCB1B8A729C75EBD00BFF393 /* ThemeCSS+AutoSelectors.swift in Sources */,
 				0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */,
 				DCB1B8A429C73DB800BFF393 /* ThemeCSSRecord.swift in Sources */,
