@@ -51,14 +51,31 @@ extension OCItem : DataItemSelectionInteraction {
 					}
 
 				case .file:
-					if let viewController = context.pushViewControllerToNavigation(context: context, provider: { context in
-						let viewController = context.viewItemHandler?.provideViewer(for: self, context: context)
-						viewController?.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .open)
-						viewController?.revoke(in: context, when: [.connectionClosed, .driveRemoved])
-						return viewController
-					}, push: pushViewController, animated: animated) {
-						completion?(true)
-						return viewController
+					var directOpenActions: [Action]?
+
+					if let viewController, let core = context.core {
+						let directOpenActionLocation = OCExtensionLocation(ofType: .action, identifier: .directOpen)
+						let directOpenActionContext = ActionContext(viewController: viewController, clientContext: context, core: core, items: [item], location: directOpenActionLocation, sender: nil)
+						directOpenActions = Action.sortedApplicableActions(for: directOpenActionContext)
+						if let directOpenActions {
+							for action in directOpenActions {
+								action.progressHandler = context.actionProgressHandlerProvider?.makeActionProgressHandler()
+							}
+						}
+					}
+
+					if let directOpenActions, directOpenActions.count > 0 {
+						directOpenActions.first?.run()
+					} else {
+						if let viewController = context.pushViewControllerToNavigation(context: context, provider: { context in
+							let viewController = context.viewItemHandler?.provideViewer(for: self, context: context)
+							viewController?.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .open)
+							viewController?.revoke(in: context, when: [.connectionClosed, .driveRemoved])
+							return viewController
+						}, push: pushViewController, animated: animated) {
+							completion?(true)
+							return viewController
+						}
 					}
 			}
 		}
