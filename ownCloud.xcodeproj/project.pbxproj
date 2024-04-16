@@ -484,7 +484,14 @@
 		DCB796492BC4854800D6D759 /* INIFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796482BC4854800D6D759 /* INIFile.swift */; };
 		DCB7964C2BC4901400D6D759 /* INIFile+URLFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */; };
 		DCB796642BC73AF100D6D759 /* CreateURLShortcutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796632BC73AF100D6D759 /* CreateURLShortcutAction.swift */; };
+		DCB796472BC4847200D6D759 /* ShortcutFileDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */; };
+		DCB796492BC4854800D6D759 /* INIFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796482BC4854800D6D759 /* INIFile.swift */; };
+		DCB7964C2BC4901400D6D759 /* INIFile+URLFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */; };
+		DCB796582BC535AD00D6D759 /* RemoveFromSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */; };
+		DCB796642BC73AF100D6D759 /* CreateShortcutFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */; };
 		DCB7967F2BC83E6E00D6D759 /* text-uri-list.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */; };
+		DCB7969D2BCE71C300D6D759 /* OpenShortcutFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */; };
+		DCB7969F2BCE745500D6D759 /* INIFile+ShortcutResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */; };
 		DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */; };
 		DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */; };
 		DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */; };
@@ -1567,7 +1574,14 @@
 		DCB796482BC4854800D6D759 /* INIFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INIFile.swift; sourceTree = "<group>"; };
 		DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+URLFile.swift"; sourceTree = "<group>"; };
 		DCB796632BC73AF100D6D759 /* CreateURLShortcutAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateURLShortcutAction.swift; sourceTree = "<group>"; };
+		DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutFileDisplayViewController.swift; sourceTree = "<group>"; };
+		DCB796482BC4854800D6D759 /* INIFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INIFile.swift; sourceTree = "<group>"; };
+		DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+URLFile.swift"; sourceTree = "<group>"; };
+		DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveFromSidebarAction.swift; sourceTree = "<group>"; };
+		DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShortcutFileAction.swift; sourceTree = "<group>"; };
 		DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-uri-list.tvg"; path = "img/filetypes-tvg/text-uri-list.tvg"; sourceTree = SOURCE_ROOT; };
+		DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenShortcutFileAction.swift; sourceTree = "<group>"; };
+		DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+ShortcutResolution.swift"; sourceTree = "<group>"; };
 		DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryCellProvider.swift; sourceTree = "<group>"; };
 		DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryItem.swift; sourceTree = "<group>"; };
@@ -1919,6 +1933,7 @@
 				4C51727422DE04BD001BC97F /* Tasks */,
 				DCC832D1242BB3E900153F8C /* Messages */,
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
+				DCB7969B2BCE715C00D6D759 /* Shortcut Files */,
 				DCA35D6724CF7B6E00DBE2B0 /* Diagnostic */,
 				DCF4F1802051A91500189B9A /* Settings */,
 				39E42D152315286300B82AC3 /* Key Commands */,
@@ -1997,7 +2012,7 @@
 				23D5241421491C670002C566 /* DisplayViewController.swift */,
 				6E5FC171221590B000F60846 /* DisplayHostViewController.swift */,
 				DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */,
-				DCB796452BC483EB00D6D759 /* URL */,
+				DCB796452BC483EB00D6D759 /* Shortcut File */,
 				DCBF0A5E2280393A00465530 /* PDF */,
 				DCBF0A5F2280394B00465530 /* Image */,
 				4C82D06E22C9384700835F0B /* Media */,
@@ -2290,7 +2305,8 @@
 				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 				DC1621372B8FE9BF00EB17F8 /* AddToSidebarAction.swift */,
 				DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */,
-				DCB796632BC73AF100D6D759 /* CreateURLShortcutAction.swift */,
+				DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */,
+				DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -3144,14 +3160,22 @@
 			path = "Navigation Revocation";
 			sourceTree = "<group>";
 		};
-		DCB796452BC483EB00D6D759 /* URL */ = {
+		DCB796452BC483EB00D6D759 /* Shortcut File */ = {
 			isa = PBXGroup;
 			children = (
-				DCB796462BC4847200D6D759 /* URLDisplayViewController.swift */,
+				DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */,
+			);
+			path = "Shortcut File";
+			sourceTree = "<group>";
+		};
+		DCB7969B2BCE715C00D6D759 /* Shortcut Files */ = {
+			isa = PBXGroup;
+			children = (
 				DCB796482BC4854800D6D759 /* INIFile.swift */,
 				DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */,
+				DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */,
 			);
-			path = URL;
+			path = "Shortcut Files";
 			sourceTree = "<group>";
 		};
 		DCBAEADC29A552D100BFF393 /* Supplementary Cells */ = {
@@ -4578,7 +4602,7 @@
 				4CB8ADE322DF6BA700F1FEBC /* PHAsset+Upload.swift in Sources */,
 				4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */,
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
-				DCB796642BC73AF100D6D759 /* CreateURLShortcutAction.swift in Sources */,
+				DCB796642BC73AF100D6D759 /* CreateShortcutFileAction.swift in Sources */,
 				4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */,
 				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
@@ -4624,6 +4648,7 @@
 				399698ED260A3CEE00E5AEBA /* ImportPasteboardAction.swift in Sources */,
 				DC59087F2AA8D25400BFF393 /* CertificateSummaryView.swift in Sources */,
 				DCB796582BC535AD00D6D759 /* RemoveFromSidebarAction.swift in Sources */,
+				DCB7969F2BCE745500D6D759 /* INIFile+ShortcutResolution.swift in Sources */,
 				4C3E17DB234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift in Sources */,
 				DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */,
 				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,
@@ -4642,6 +4667,7 @@
 				025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
+				DCB7969D2BCE71C300D6D759 /* OpenShortcutFileAction.swift in Sources */,
 				DCB6B1EB292B7C2400D27573 /* AppRootViewController+ItemActions.swift in Sources */,
 				DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
@@ -4672,7 +4698,7 @@
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
 				DCC3701624D4D365008B0DEB /* OCScanJobActivity+DiagnosticGenerator.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
-				DCB796472BC4847200D6D759 /* URLDisplayViewController.swift in Sources */,
+				DCB796472BC4847200D6D759 /* ShortcutFileDisplayViewController.swift in Sources */,
 				DC0CE19D28C89CD9009ABDFB /* CreateDocumentAction.swift in Sources */,
 				4C51727D22DE04BD001BC97F /* ScheduledTaskExtension.swift in Sources */,
 				025F063324AA163C009D8FC5 /* DisplayExifMetadataAction.swift in Sources */,

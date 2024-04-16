@@ -1,5 +1,5 @@
 //
-//  CreateURLShortcutAction.swift
+//  CreateShortcutFileAction.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 10.04.24.
@@ -7,7 +7,7 @@
 //
 
 /*
- * Copyright (C) 2022, ownCloud GmbH.
+ * Copyright (C) 2024, ownCloud GmbH.
  *
  * This code is covered by the GNU Public License Version 3.
  *
@@ -20,8 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-class CreateURLShortcutAction: Action {
-	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createURLShortcut") }
+class CreateShortcutFileAction: Action {
+	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createShortcutFile") }
 	override open class var category : ActionCategory? { return .normal }
 	override open class var name : String? { return "Create shortcut".localized }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .emptyFolder] }
