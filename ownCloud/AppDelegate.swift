@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		AppStatistics.shared.update()
 
 		// Display Extensions
-		OCExtensionManager.shared.addExtension(URLDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(ShortcutFileDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
@@ -91,7 +91,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CreateDocumentAction.actionExtension)
 		OCExtensionManager.shared.addExtension(AddToSidebarAction.actionExtension)
 		OCExtensionManager.shared.addExtension(RemoveFromSidebarAction.actionExtension)
-		OCExtensionManager.shared.addExtension(CreateURLShortcutAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CreateShortcutFileAction.actionExtension)
+		OCExtensionManager.shared.addExtension(OpenShortcutFileAction.actionExtension)
 
 		if UIDevice.current.isIpad {
 			// iPad only

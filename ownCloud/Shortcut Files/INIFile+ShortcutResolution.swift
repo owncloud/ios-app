@@ -1,0 +1,45 @@
+//
+//  INIFile+ShortcutResolution.swift
+//  ownCloud
+//
+//  Created by Felix Schwarz on 16.04.24.
+//  Copyright © 2024 ownCloud GmbH. All rights reserved.
+//
+
+/*
+ * Copyright (C) 2024, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+import Foundation
+import ownCloudSDK
+import ownCloudAppShared
+
+public extension INIFile {
+	static func resolveShortcutFile(at fileURL: URL, core: OCCore, result handler: @escaping (_ error: Error?, _ url: URL?, _ item: OCItem?) -> Void) {
+		if let data = try? Data(contentsOf: fileURL) {
+			if let url = INIFile(with: data).url {
+				if url.privateLinkItemID != nil {
+					core.retrieveItem(forPrivateLink: url, completionHandler: { error, item in
+						OnMainThread {
+							handler(error, (item != nil) ? nil : url, item)
+						}
+					})
+				} else {
+					OnMainThread {
+						handler(nil, url, nil)
+					}
+				}
+			} else {
+				handler(NSError(ocError: .privateLinkInvalidFormat), nil, nil)
+			}
+		} else {
+			handler(NSError(ocError: .fileNotFound), nil, nil)
+		}
+	}
+}
