@@ -88,16 +88,22 @@ public class AppLockManager: NSObject {
 			self.userDefaults.set(newValue, forKey: "applock-failed-passcode-attempts")
 		}
 	}
-	
-	private var lockDelay: Double? {
+	private var lockedUntilDate: Date? {
 		get {
-			return userDefaults.object(forKey: "applock-delay") as? Double
+			return userDefaults.object(forKey: "applock-locked-until-date") as? Date
 		}
 		set(newValue) {
-			self.userDefaults.set(newValue, forKey: "applock-delay")
+			self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
 		}
 	}
-	
+	private var lockDelay: Double? {
+		get {
+			return userDefaults.object(forKey: "applock-lock-delay") as? Double
+		}
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-lock-delay")
+		}
+	}
 	private var biometricalAuthenticationSucceeded: Bool {
 		get {
 			return userDefaults.bool(forKey: "applock-biometrical-authentication-succeeded")
@@ -153,11 +159,13 @@ public class AppLockManager: NSObject {
 		userDefaults = OCAppIdentity.shared.userDefaults!
 
 		super.init()
+		significantTimeChangeOccurred()
 
 		if AppLockManager.supportedOnDevice {
 			NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
 			NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 			NotificationCenter.default.addObserver(self, selector: #selector(self.updateLockscreens), name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(significantTimeChangeOccurred), name: UIApplication.significantTimeChangeNotification, object: nil)
 		}
 	}
 
@@ -166,6 +174,7 @@ public class AppLockManager: NSObject {
 			NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
 			NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
 			NotificationCenter.default.removeObserver(self, name: ThemeWindow.themeWindowListChangedNotification, object: nil)
+			NotificationCenter.default.removeObserver(self, name: UIApplication.significantTimeChangeNotification, object: nil)
 		}
 	}
 
@@ -175,19 +184,19 @@ public class AppLockManager: NSObject {
 			lockscreenOpenForced = forceShow
 			lockscreenOpen = true
 
-            // The following code needs to be executed after a short delay, because in the share sheet the biometrical unlock UI can block adding the PasscodeViewController UI
-            var delay = 0.0
-            if self.passwordViewHostViewController != nil {
-                delay = 0.5
-            }
-            OnMainThread(after: delay) {
-                // Show biometrical
-                if !forceShow, !self.shouldDisplayCountdown, self.biometricalAuthenticationSucceeded {
-                    self.showBiometricalAuthenticationInterface(context: context)
-                } else if setupMode {
-                    self.showBiometricalAuthenticationInterface(context: context)
-                }
-            }
+			// The following code needs to be executed after a short delay, because in the share sheet the biometrical unlock UI can block adding the PasscodeViewController UI
+			var delay = 0.0
+			if self.passwordViewHostViewController != nil {
+				delay = 0.5
+			}
+			OnMainThread(after: delay) {
+				// Show biometrical
+				if !forceShow, !self.shouldDisplayCountdown, self.biometricalAuthenticationSucceeded {
+					self.showBiometricalAuthenticationInterface(context: context)
+				} else if setupMode {
+					self.showBiometricalAuthenticationInterface(context: context)
+				}
+			}
 		} else {
 			dismissLockscreen(animated: true)
 		}
@@ -357,14 +366,20 @@ public class AppLockManager: NSObject {
 			dismissLockscreen(animated: false)
 		}
 	}
+	
+	@objc public func significantTimeChangeOccurred() {
+		if let lockDelay = lockDelay {
+			lockedUntilDate = Date().addingTimeInterval(lockDelay)
+		}
+	}
 
 	// MARK: - Unlock
 	func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil, passcodeViewController: PasscodeViewController? = nil) {
 		if testPasscode == self.passcode {
 			unlocked = true
 			failedPasscodeAttempts = 0
+			lockedUntilDate = nil
 			lockDelay = nil
-			
 			dismissLockscreen(animated: true)
 		} else {
 			unlocked = false
@@ -375,6 +390,8 @@ public class AppLockManager: NSObject {
 
 			if self.failedPasscodeAttempts >= self.maximumPasscodeAttempts {
 				let delayUntilNextAttempt = pow(powBaseDelay, Double(failedPasscodeAttempts))
+
+				lockedUntilDate = Date().addingTimeInterval(delayUntilNextAttempt)
 				lockDelay = delayUntilNextAttempt
 				startLockCountdown()
 			}
@@ -421,8 +438,8 @@ public class AppLockManager: NSObject {
 	}
 
 	private var shouldDisplayCountdown : Bool {
-		if let lockDelay = self.lockDelay, lockDelay > 0 {
-			return true
+		if let startLockBeforeDate = self.lockedUntilDate {
+			return startLockBeforeDate > Date()
 		}
 
 		return false
@@ -444,29 +461,26 @@ public class AppLockManager: NSObject {
 	}
 
 	@objc private func updateLockCountdown() {
-		if let lockDelay = self.lockDelay {
-			let hours = Int(lockDelay) / 3600
-			let minutes = Int(lockDelay) / 60 % 60
-			let seconds = Int(lockDelay) % 60
-			
-			if lockDelay > 0 {
-				self.lockDelay = (lockDelay - 1)
-			}
-			
+		if let date = self.lockedUntilDate {
+			let interval = Int(date.timeIntervalSinceNow)
+			let seconds = interval % 60
+			let minutes = (interval / 60) % 60
+			let hours = (interval / 3600)
+
 			let dateFormatted:String?
 			if hours > 0 {
 				dateFormatted = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
 			} else {
 				dateFormatted = String(format: "%02d:%02d", minutes, seconds)
 			}
-			
+
 			let timeoutMessage:String = NSString(format: "Please try again in %@".localized as NSString, dateFormatted!) as String
-			
+
 			performPasscodeViewControllerUpdates { (passcodeViewController) in
 				passcodeViewController.timeoutMessage = timeoutMessage
 			}
-			
-			if lockDelay <= 0 {
+
+			if date <= Date() {
 				// Time elapsed, allow entering passcode again
 				self.lockTimer?.invalidate()
 				performPasscodeViewControllerUpdates { (passcodeViewController) in

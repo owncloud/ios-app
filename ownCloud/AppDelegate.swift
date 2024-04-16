@@ -135,6 +135,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		return true
 	}
+	
+	func applicationSignificantTimeChange(_ application: UIApplication) {
+		AppLockManager.shared.significantTimeChangeOccurred()
+	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 		if !OCAuthenticationBrowserSessionCustomScheme.handleOpen(url), // No custom scheme URL handling for this URL
