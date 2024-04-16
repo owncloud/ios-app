@@ -69,6 +69,7 @@ public extension OCExtensionLocationIdentifier {
 	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
 	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
 	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
+	static let directOpen: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("directOpen") //!< Used in OCItem+Interactions to implement direct actions for opening files
 }
 
 public class ActionExtension: OCExtension {

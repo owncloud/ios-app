@@ -642,6 +642,9 @@
 "Shortcut" = "Shortcut";
 "Open link" = "Open link";
 "Opening link failed" = "Opening link failed";
+"Open shortcut" = "Open shortcut";
+"Shortcut to '{{hostname}}'" = "Shortcut to '{{hostname}}'";
+"This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?" = "This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?";
 
 "Create shortcut" = "Create shortcut";
 "Name of the shortcut" = "Name of the shortcut";

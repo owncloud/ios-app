@@ -643,6 +643,9 @@
 "Shortcut" = "Verknüpfung";
 "Open link" = "Link öffnen";
 "Opening link failed" = "Öffnen des Links fehlgeschlagen";
+"Open shortcut" = "Verknüpfung öffnen";
+"Shortcut to '{{hostname}}'" = "Verknüpfung zu '{{hostname}}'";
+"This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?" = "Diese Verknüpfung zeigt auf:\n\n{{url}}\n\nIm Standardbrowser öffnen?";
 
 "Create shortcut" = "Verknüpfung erstellen";
 "Name of the shortcut" = "Name der Verknüpfung";

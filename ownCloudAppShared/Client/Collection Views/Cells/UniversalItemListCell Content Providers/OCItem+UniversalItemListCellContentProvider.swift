@@ -228,7 +228,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 		// Progress
 		var progress : Progress?
 
-		if (syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0), !hasMessageForItem {
+		if syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0, !hasMessageForItem {
 			progress = context?.core?.progress(for: self, matching: .none)?.first
 
 			if progress == nil {
