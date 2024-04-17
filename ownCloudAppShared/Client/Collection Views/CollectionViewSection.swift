@@ -691,6 +691,9 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 		return layoutSection
 	}
 
+	// MARK: - Drag and drop additions
+	var sectionDropInteraction: DataItemDropInteraction?
+
 	// MARK: - Data Item & Versioning conformance
 	public let dataItemType: OCDataItemType = .collectionViewSection
 

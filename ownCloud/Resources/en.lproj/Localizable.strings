@@ -142,8 +142,6 @@
 "Image grid" = "Image grid";
 
 /* Saved searches */
-"Saved searches" = "Saved searches";
-"Saved search templates" = "Saved search templates";
 "Save search" = "Save search";
 "Save as search template" = "Save as search template";
 
@@ -536,7 +534,7 @@
 "Shared with {{recipients}}" = "Shared with {{recipients}}";
 "Expires {{expirationDate}}" = "Expires {{expirationDate}}";
 "Share {{itemName}}" = "Share {{itemName}}";
-"Create link" = "Create link";
+"Create" = "Create";
 "Invite" = "Invite";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
@@ -558,7 +556,6 @@
 "Shared with" = "Shared with";
 "Remove Recipient failed" = "Remove Recipient failed";
 "Remove Recipient" = "Remove Recipient";
-"Create" = "Create";
 "Change" = "Change";
 "Recipients can view or download contents." = "Recipients can view or download contents.";
 "Recipients can view, download, edit, delete and upload contents." = "Recipients can view, download, edit, delete and upload contents.";
@@ -629,13 +626,21 @@
 
 "Share with" = "Share with";
 "Add" = "Add";
+"Set" = "Set";
+"Generate" = "Generate";
 "Save changes" = "Save changes";
 
 "Enter password" = "Enter password";
+"Change password" = "Change password";
+"Show" = "Show";
+"Hide" = "Hide";
 
-/* Quick Access view */
+"{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | password: {{password}}";
+"{{link}} | password: {{password}}" = "{{link}} | password: {{password}}";
+
+/* Quick Access search suggestions */
 "Quick Access" = "Quick Access";
-"Collection" = "Collection";
+"Add to sidebar" = "Add to sidebar";
 "Recents" = "Recents";
 "Favorites"= "Favorites";
 "Images" = "Images";

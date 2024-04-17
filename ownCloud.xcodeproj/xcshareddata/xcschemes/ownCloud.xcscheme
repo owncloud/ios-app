@@ -487,6 +487,11 @@
             value = "string:plain"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.omit-authorization-parameters"
+            value = "[user,login_hint]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption

@@ -65,7 +65,7 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 		if let icon = item.icon {
 			iconView = UIImageView()
 			iconView?.cssSelector = .icon
-			iconView?.image = icon.withRenderingMode(.alwaysTemplate)
+			iconView?.image = icon.withRenderingMode(item.iconRenderingMode ?? .alwaysTemplate)
 			iconView?.contentMode = .scaleAspectFit
 			iconView?.translatesAutoresizingMaskIntoConstraints = false
 			iconView?.setContentHuggingPriority(.required, for: .horizontal)
