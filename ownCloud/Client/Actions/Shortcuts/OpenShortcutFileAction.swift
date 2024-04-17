@@ -79,7 +79,7 @@ class OpenShortcutFileAction: Action {
 			_ = item.openItem(from: context.viewController, with: context.clientContext, animated: true, pushViewController: true, completion: nil)
 		} else if let url {
 			let alert = ThemedAlertController(title: "Shortcut to '{{hostname}}'".localized(["hostname" : url.host ?? "URL"]), message: "This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?".localized(["url" :  url.absoluteString]), preferredStyle: .alert)
-			alert.addAction(UIAlertAction(title: "Open".localized, style: .default, handler: { _ in
+			alert.addAction(UIAlertAction(title: "Open link".localized, style: .default, handler: { _ in
 				UIApplication.shared.open(url) { success in
 					if !success {
 						OnMainThread {
