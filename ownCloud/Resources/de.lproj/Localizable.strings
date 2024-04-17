@@ -648,8 +648,9 @@
 "This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?" = "Diese Verknüpfung zeigt auf:\n\n{{url}}\n\nIm Standardbrowser öffnen?";
 
 "Create shortcut" = "Verknüpfung erstellen";
-"Name of the shortcut" = "Name der Verknüpfung";
-"Target URL of shortcut" = "Ziel-URL der Verknüpfung";
+"URL of webpage or item" = "URL der Webseite oder Datei";
+
+"Pick file or folder" = "Datei oder Ordner wählen";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";

@@ -79,9 +79,9 @@ public class INIFile {
 		var composedString: String = ""
 
 		for section in sections {
-			composedString = composedString.appendingFormat("[\(section.title)]\n")
+			composedString = composedString.appending("[\(section.title)]").appendingFormat("\n")
 			for keyValuePair in section.keyValuePairs {
-				composedString = composedString.appendingFormat("\(keyValuePair.0)=\(keyValuePair.1)\n")
+				composedString = composedString.appending("\(keyValuePair.0)=\(keyValuePair.1)").appendingFormat("\n")
 			}
 		}
 

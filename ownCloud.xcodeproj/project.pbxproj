@@ -492,6 +492,7 @@
 		DCB7967F2BC83E6E00D6D759 /* text-uri-list.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */; };
 		DCB7969D2BCE71C300D6D759 /* OpenShortcutFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */; };
 		DCB7969F2BCE745500D6D759 /* INIFile+ShortcutResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */; };
+		DCB796A72BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796A62BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift */; };
 		DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */; };
 		DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */; };
 		DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */; };
@@ -1582,6 +1583,7 @@
 		DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-uri-list.tvg"; path = "img/filetypes-tvg/text-uri-list.tvg"; sourceTree = SOURCE_ROOT; };
 		DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenShortcutFileAction.swift; sourceTree = "<group>"; };
 		DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+ShortcutResolution.swift"; sourceTree = "<group>"; };
+		DCB796A62BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShortcutFileViewController.swift; sourceTree = "<group>"; };
 		DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryCellProvider.swift; sourceTree = "<group>"; };
 		DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryItem.swift; sourceTree = "<group>"; };
@@ -1974,6 +1976,7 @@
 			children = (
 				DCE4E43D24C19C3E0051722F /* Action+UserInterface.swift */,
 				DC255E432319AD13007279B1 /* Scanner */,
+				DCB796A52BCFB5DA00D6D759 /* Shortcuts */,
 				6E586CF52199A70100F680C4 /* Actions+Extensions */,
 				39CD755323D8392D00193950 /* EditDocumentViewController.swift */,
 				025F063924AA18C7009D8FC5 /* ImageMetadataViewController.swift */,
@@ -2305,8 +2308,6 @@
 				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 				DC1621372B8FE9BF00EB17F8 /* AddToSidebarAction.swift */,
 				DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */,
-				DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */,
-				DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -3176,6 +3177,16 @@
 				DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */,
 			);
 			path = "Shortcut Files";
+			sourceTree = "<group>";
+		};
+		DCB796A52BCFB5DA00D6D759 /* Shortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */,
+				DCB796A62BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift */,
+				DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */,
+			);
+			path = Shortcuts;
 			sourceTree = "<group>";
 		};
 		DCBAEADC29A552D100BFF393 /* Supplementary Cells */ = {
@@ -4691,6 +4702,7 @@
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				DCB6B1F5292CC46B00D27573 /* AccountController+ItemActions.swift in Sources */,
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,
+				DCB796A72BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift in Sources */,
 				4C51727F22DE04BD001BC97F /* ScheduledTaskManager.swift in Sources */,
 				DCB796492BC4854800D6D759 /* INIFile.swift in Sources */,
 				39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */,
