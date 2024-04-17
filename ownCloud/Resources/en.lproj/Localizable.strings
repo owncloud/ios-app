@@ -647,8 +647,9 @@
 "This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?" = "This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?";
 
 "Create shortcut" = "Create shortcut";
-"Name of the shortcut" = "Name of the shortcut";
-"Target URL of shortcut" = "Target URL of shortcut";
+"URL of webpage or item" = "URL of webpage or item";
+
+"Pick file or folder" = "Pick file or folder";
 
 /* Quick Access search suggestions */
 "Quick Access" = "Quick Access";
