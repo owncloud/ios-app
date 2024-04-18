@@ -645,7 +645,8 @@
 "Opening link failed" = "Öffnen des Links fehlgeschlagen";
 "Open shortcut" = "Verknüpfung öffnen";
 "Shortcut to '{{hostname}}'" = "Verknüpfung zu '{{hostname}}'";
-"This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?" = "Diese Verknüpfung zeigt auf:\n\n{{url}}\n\nIm Standardbrowser öffnen?";
+"This shortcut points to:\n{{url}}" = "Diese Verknüpfung verweist auf:\n{{url}}";
+"The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it." = "Das Ziel, auf das diese Verknüpfung verweist, konnte nicht gefunden werden. Möglicherweise wurde es gelöscht oder Sie haben keinen Zugriff darauf.";
 
 "Create shortcut" = "Verknüpfung erstellen";
 "URL of webpage or item" = "URL der Webseite oder Datei";
