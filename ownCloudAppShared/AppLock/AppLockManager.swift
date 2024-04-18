@@ -376,7 +376,7 @@ public class AppLockManager: NSObject {
 	}
 
 	@objc func significantTimeChangeOccurred() {
-		if shouldDisplayCountdown {
+		if !unlocked, lockedUntilDate != nil {
 			resetAndStartLockCountdown()
 		}
 	}
