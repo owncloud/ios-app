@@ -32,13 +32,31 @@ public extension INIFile {
 							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it.".localized])
 						}
 
+						if effectiveError == nil, item != nil {
+							switch OpenShortcutFileAction.openShortcutMode {
+								case .linksOnly, .none:
+									effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The shortcut points to another item, but the configuration of this app prohibits opening it.".localized])
+
+								default: break
+							}
+						}
+
 						OnMainThread {
 							handler(effectiveError, (item != nil) ? nil : url, item)
 						}
 					})
 				} else {
+					var effectiveError: Error? = nil
+
+					switch OpenShortcutFileAction.openShortcutMode {
+						case .itemsOnly, .none:
+							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The shortcut points to a URL, but the configuration of this app prohibits opening it.".localized])
+
+						default: break
+					}
+
 					OnMainThread {
-						handler(nil, url, nil)
+						handler(effectiveError, url, nil)
 					}
 				}
 			} else {
