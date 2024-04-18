@@ -644,7 +644,8 @@
 "Opening link failed" = "Opening link failed";
 "Open shortcut" = "Open shortcut";
 "Shortcut to '{{hostname}}'" = "Shortcut to '{{hostname}}'";
-"This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?" = "This shortcut points to:\n\n{{url}}\n\nShould it be opened in the default browser?";
+"This shortcut points to:\n{{url}}" = "This shortcut points to:\n{{url}}";
+"The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it." = "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it.";
 
 "Create shortcut" = "Create shortcut";
 "URL of webpage or item" = "URL of webpage or item";

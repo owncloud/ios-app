@@ -26,8 +26,14 @@ public extension INIFile {
 			if let url = INIFile(with: data).url {
 				if url.privateLinkItemID != nil {
 					core.retrieveItem(forPrivateLink: url, completionHandler: { error, item in
+						var effectiveError = error
+
+						if let nsError = error as? NSError, nsError.isOCError(withCode: .itemDestinationNotFound) {
+							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it.".localized])
+						}
+
 						OnMainThread {
-							handler(error, (item != nil) ? nil : url, item)
+							handler(effectiveError, (item != nil) ? nil : url, item)
 						}
 					})
 				} else {
