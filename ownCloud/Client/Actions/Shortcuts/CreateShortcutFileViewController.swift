@@ -228,7 +228,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 		core.retrievePrivateLink(for: item, completionHandler: { [weak self] error, privateLinkURL in
 			if let error {
 				OnMainThread {
-					let alertController = ThemedAlertController(with: "An error occurred".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+					let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
 					self?.clientContext?.present(alertController, animated: true)
 				}
 				return
@@ -293,7 +293,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 	func completed(with error: Error? = nil) {
 		OnMainThread(inline: true) {
 			if let error {
-				let alertController = ThemedAlertController(with: "An error occurred".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+				let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
 				self.clientContext?.present(alertController, animated: true)
 			} else if self.presentingViewController != nil {
 				self.dismiss(animated: true, completion: nil)

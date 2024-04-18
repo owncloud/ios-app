@@ -26,7 +26,7 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 			INIFile.resolveShortcutFile(at: itemDirectURL, core: core, result: { [weak self] error, url, item in
 				OnMainThread {
 					if let error {
-						let alertController = ThemedAlertController(with: "An error occurred".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+						let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
 						self?.present(alertController, animated: true)
 					} else if item != nil {
 						self?.presentShortcutWith(item: item)
