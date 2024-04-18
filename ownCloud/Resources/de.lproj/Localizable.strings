@@ -648,6 +648,9 @@
 "This shortcut points to:\n{{url}}" = "Diese Verknüpfung verweist auf:\n{{url}}";
 "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it." = "Das Ziel, auf das diese Verknüpfung verweist, konnte nicht gefunden werden. Möglicherweise wurde es gelöscht oder Sie haben keinen Zugriff darauf.";
 
+"The shortcut points to a URL, but the configuration of this app prohibits opening it." = "Die Verknüpfung verweist auf eine URL, aber die Konfiguration dieser App untersagt das Öffnen.";
+"The shortcut points to another item, but the configuration of this app prohibits opening it." = "Die Verknüpfung verweist auf ein anderes Element, aber die Konfiguration dieser App untersagt das Öffnen.";
+
 "Create shortcut" = "Verknüpfung erstellen";
 "URL of webpage or item" = "URL der Webseite oder Datei";
 
