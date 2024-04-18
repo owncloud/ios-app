@@ -20,7 +20,60 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
+public extension OCClassSettingsKey {
+	static let openShortcutMode = OCClassSettingsKey("open-shortcut-mode")
+}
+
+public enum OpenShortcutActionMode: String {
+	case all = "all"
+	case itemsOnly = "items-only"
+	case linksOnly = "links-only"
+	case none = "none"
+}
+
 class OpenShortcutFileAction: Action {
+	public static func registerSettings() {
+		self.registerOCClassSettingsDefaults([
+			.openShortcutMode : OpenShortcutActionMode.all.rawValue
+		], metadata: [
+			.openShortcutMode : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Open Shortcut mode",
+				.description 	: "Determines how the app opens shortcut files (ending in `.url`) app.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions",
+				.possibleValues : [
+					[
+						OCClassSettingsMetadataKey.value 	: OpenShortcutActionMode.all.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open all shortcut files, targeting both links (web and other) and items."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenShortcutActionMode.itemsOnly.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open only shortcut files that target items."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenShortcutActionMode.linksOnly.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open only shortcut files that target links (web and other)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenShortcutActionMode.none.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Do not open shortcut files."
+					]
+				]
+			]
+		])
+	}
+
+	public static var openShortcutMode: OpenShortcutActionMode {
+		let classSettingValue = self.classSetting(forOCClassSettingsKey: .openShortcutMode) as? String
+
+		if let classSettingValue {
+			return OpenShortcutActionMode(rawValue: classSettingValue) ?? .none
+		}
+
+		return .all
+	}
+
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openShortcutFile") }
 	override open class var category : ActionCategory? { return .normal }
 	override open class var name : String? { return "Open shortcut".localized }
@@ -28,6 +81,10 @@ class OpenShortcutFileAction: Action {
 
 	// MARK: - Extension matching
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if OpenShortcutFileAction.openShortcutMode == .none {
+			return .none
+		}
+
 		if forContext.items.count > 1 {
 			return .none
 		}

@@ -647,6 +647,9 @@
 "This shortcut points to:\n{{url}}" = "This shortcut points to:\n{{url}}";
 "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it." = "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it.";
 
+"The shortcut points to a URL, but the configuration of this app prohibits opening it." = "The shortcut points to a URL, but the configuration of this app prohibits opening it.";
+"The shortcut points to another item, but the configuration of this app prohibits opening it." = "The shortcut points to a URL, but the configuration of this app prohibits opening it.";
+
 "Create shortcut" = "Create shortcut";
 "URL of webpage or item" = "URL of webpage or item";
 

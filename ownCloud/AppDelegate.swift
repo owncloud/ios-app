@@ -106,6 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Register class settings for extensions added on a per-connection basis
 		OnMainThread {
 			OpenInWebAppAction.registerSettings()
+			OpenShortcutFileAction.registerSettings()
 			CreateDocumentAction.registerSettings()
 		}
 

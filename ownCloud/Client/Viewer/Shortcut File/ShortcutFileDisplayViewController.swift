@@ -134,8 +134,15 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 }
 
 extension ShortcutFileDisplayViewController: DisplayExtension {
-	static var customMatcher: OCExtensionCustomContextMatcher?
 	static var displayExtensionIdentifier: String = "org.owncloud.url-shortcut"
 	static var supportedMimeTypes: [String]? = ["text/uri-list"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+
+	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+		if OpenShortcutFileAction.openShortcutMode == .none {
+			return .noMatch
+		}
+
+		return defaultPriority
+	}
 }
