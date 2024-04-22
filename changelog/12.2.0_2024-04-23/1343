@@ -1,4 +1,4 @@
-Bugfix: Fix cleanup of Available Offline policies targeting unavailable spaces [#1343](https://github.com/owncloud/ios-app/pull/1343)
+Bugfix: Fix cleanup of Available Offline policies targeting unavailable spaces
 
 Fixes an issue arising from Available Offline policies targeting unavailable
 or detached spaces and removes the respective policies, preventing continued

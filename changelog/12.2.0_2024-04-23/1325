@@ -1,4 +1,4 @@
-Enhancement: Password Policy support: [#1325](https://github.com/owncloud/ios-app/pull/1325)
+Enhancement: Password Policy support
 
 This PR implements password policy support throughout the iOS client app, including:
 - an extensible password policy system based on rules, policies and validation reports with verbose error reporting for
