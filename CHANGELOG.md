@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.2.0](#changelog-for-owncloud-ios-client-1220-2024-04-23)
 * [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-29)
 * [Changelog for 12.0.3](#changelog-for-owncloud-ios-client-1203-2023-08-31)
 * [Changelog for 12.0.2](#changelog-for-owncloud-ios-client-1202-2023-06-23)
@@ -22,11 +23,72 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+
+# Changelog for ownCloud iOS Client [12.2.0] (2024-04-23)
+The following sections list the changes in ownCloud iOS Client 12.2.0 relevant to
+ownCloud admins and users.
+
+[12.2.0]: https://github.com/owncloud/ios-app/compare/milestone/12.1...milestone/12.2
+
+## Summary
+
+* Change - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
+* Change - Password Policy support: [#1325](https://github.com/owncloud/ios-app/pull/1325)
+* Bugfix - Fix cleanup of Available Offline policies targeting unavailable spaces [#1343](https://github.com/owncloud/ios-app/pull/1343)
+
+## Details
+
+* Change - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
+
+   This PR:
+   - removes `Quick Access` from the sidebar, redistributing its prior contents as follows:
+     - `Recents`: promoted to a top-level sidebar item
+     - `Favorites`: promoted to a top-level sidebar item
+     - `Available Offline`: promoted to a top-level sidebar item
+     - other Quick Access items: moved as suggestions to new top-level sidebar `Search` item, with a dedicated `Add to sidebar` button that allows re-adding the previous Quick Access items as saved search
+     - Saved searches now appear as top-level items in the sidebar
+   - adds custom user sidebar items
+     - can be added via `Add to sidebar`
+     - support drag and drop (also cross-account)
+     - managed via context menu, swipe and `Remove from sidebar` actions
+   - in the share extension automatically connects to the first account if only one account is in the account (superseding [#1296](https://github.com/owncloud/ios-app/pull/1296))
+   - incorporates the latest SDK with important fixes
+   
+   https://github.com/owncloud/ios-app/pull/1320
+
+* Change - Password Policy support: [#1325](https://github.com/owncloud/ios-app/pull/1325)
+
+   This PR implements password policy support throughout the iOS client app, including:
+   - an extensible password policy system based on rules, policies and validation reports with verbose error reporting for
+      - characters and [character sets](https://developer.apple.com/documentation/foundation/nscharacterset)
+      - lengths
+      - byte counts
+   - the generation of password policies based on server capabilities
+   - a default password policy for servers that do not provide a password policy
+   - a password generator based on password policy rules using "[cryptographically secure random    bytes](https://developer.apple.com/documentation/security/1399291-secrandomcopybytes)"
+   - a password composer for entering, editing and generating passwords with instant rule verification and feedback
+   - one-tap password generation based on a server's password policy within Public Link creation
+   - sharing of combined public link URL and password to the clipboard, Messages, Mail and more via the system share sheet directly after link generation, like f.ex.:
+   ```
+   Photos (https://demo.owncloud.org/s/D3WkWZOW8BUjeKr) | Password: 46CPou|#Pw5.
+   ```
+
+   https://github.com/owncloud/ios-app/pull/1325
+   https://github.com/owncloud/ios-app/issues/973
+
+* Bugfix - Fix cleanup of Available Offline policies targeting unavailable spaces [#1343](https://github.com/owncloud/ios-app/pull/1343)
+
+   Fixes an issue arising from Available Offline policies targeting unavailable
+   or detached spaces and removes the respective policies, preventing continued
+   retries for files from inaccessible or removed spaces.
+
+   https://github.com/owncloud/ios-app/pull/1343
+
 # Changelog for ownCloud iOS Client [12.1.0] (2024-01-29)
 The following sections list the changes in ownCloud iOS Client 12.1.0 relevant to
 ownCloud admins and users.
 
-[12.1.0]: https://github.com/owncloud/ios-app/compare/milestone/12.0.3...milestone/12.1.0
+[12.1.0]: https://github.com/owncloud/ios-app/compare/milestone/12.0.3...milestone/12.1
 
 ## Summary
 
