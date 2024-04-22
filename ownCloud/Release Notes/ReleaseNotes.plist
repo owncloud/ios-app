@@ -1905,6 +1905,63 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.2</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Search in sidebar</string>
+					<key>Subtitle</key>
+					<string>Search and Quick Access have been merged into a new, more powerful sidebar item.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>magnifyingglass.circle</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>More powerful sidebar</string>
+					<key>Subtitle</key>
+					<string>Add folders and saved searches directly to the sidebar.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>sidebar.leading</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Share link + password together</string>
+					<key>Subtitle</key>
+					<string>Directly share created links - along with their passwords.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>square.and.arrow.up</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Password policies + generator</string>
+					<key>Subtitle</key>
+					<string>Now supports validating and generating passwords based on server-provided password policies.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>lock</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Bug Fixes</string>
+					<key>Subtitle</key>
+					<string>We have fixed a bug where the app repeatedly tried to download Available Offline items located on no longer accessible spaces.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
