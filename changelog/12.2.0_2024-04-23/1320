@@ -1,4 +1,4 @@
-Change - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
+Enhancement: Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
 
 This PR:
 - removes `Quick Access` from the sidebar, redistributing its prior contents as follows:
