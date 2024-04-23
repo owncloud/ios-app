@@ -78,7 +78,7 @@ public class SegmentViewItem: NSObject {
 		return _view
 	}
 
-	public init(with icon: UIImage? = nil, iconRenderingMode: UIImage.RenderingMode? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, linebreakMode: NSLineBreakMode? = nil, lines: [Line]? = nil, view: UIView? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
+	public init(with icon: UIImage? = nil, iconRenderingMode: UIImage.RenderingMode? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, linebreakMode: NSLineBreakMode? = nil, lines: [Line]? = nil, accessibilityLabel: String? = nil, view: UIView? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
 		self.style = style
 
 		super.init()
@@ -90,6 +90,7 @@ public class SegmentViewItem: NSObject {
 		self.titleTextWeight = titleTextWeight
 		self.titleLinebreakMode = linebreakMode
 		self.lines = lines
+		self.accessibilityLabel = accessibilityLabel
 		self.embedView = view
 		self.representedObject = representedObject
 		self.weakRepresentedObject = weakRepresentedObject

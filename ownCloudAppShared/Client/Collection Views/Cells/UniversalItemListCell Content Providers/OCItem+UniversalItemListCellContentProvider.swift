@@ -109,9 +109,10 @@ class OCItemUniversalItemListCellHelper {
 }
 
 extension OCItem: UniversalItemListCellContentProvider {
-	func cloudStatus(in core: OCCore?) -> (icon: UIImage?, iconAlpha: CGFloat) {
+	func cloudStatus(in core: OCCore?) -> (icon: UIImage?, iconAlpha: CGFloat, accessibilityLabel: String?) {
 		var cloudStatusIcon : UIImage?
 		var cloudStatusIconAlpha : CGFloat = 1.0
+		var accessibilityLabel: String?
 		let availableOfflineCoverage : OCCoreAvailableOfflineCoverage = core?.availableOfflinePolicyCoverage(of: self) ?? .none
 
 		switch availableOfflineCoverage {
@@ -124,23 +125,28 @@ extension OCItem: UniversalItemListCellContentProvider {
 				case .cloudOnly:
 					cloudStatusIcon = OCItem.cloudOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
+					accessibilityLabel = "In the cloud".localized
 
 				case .localCopy:
 					cloudStatusIcon = (downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? OCItem.cloudAvailableOfflineStatusIcon : nil
+					accessibilityLabel = "Local copy".localized
 
 				case .locallyModified, .localOnly:
 					cloudStatusIcon = OCItem.cloudLocalOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
+					accessibilityLabel = "Local version".localized
 			}
 		} else {
 			if availableOfflineCoverage == .none {
 				cloudStatusIcon = nil
+				accessibilityLabel = nil
 			} else {
 				cloudStatusIcon = OCItem.cloudAvailableOfflineStatusIcon
+				accessibilityLabel = "Available offline".localized
 			}
 		}
 
-		return (cloudStatusIcon, cloudStatusIconAlpha)
+		return (cloudStatusIcon, cloudStatusIconAlpha, accessibilityLabel)
 	}
 
 	func content(for cell: UniversalItemListCell?, thumbnailSize: CGSize, context: ClientContext?, configuration: CollectionViewCellConfiguration?) -> (content: UniversalItemListCell.Content, hasMessageForItem: Bool) {
@@ -172,10 +178,10 @@ extension OCItem: UniversalItemListCellContentProvider {
 		var detailItems: [SegmentViewItem] = []
 
 		// - Cloud status
-		let (cloudStatusIcon, cloudStatusIconAlpha) = cloudStatus(in: context?.core)
+		let (cloudStatusIcon, cloudStatusIconAlpha, accessibilityLabel) = cloudStatus(in: context?.core)
 
 		if let cloudStatusIcon {
-			let segmentItem = SegmentViewItem(with: cloudStatusIcon.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: cloudStatusIcon.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: accessibilityLabel)
 			segmentItem.insets = .zero
 			segmentItem.alpha = cloudStatusIconAlpha
 			detailItems.append(segmentItem)
@@ -183,13 +189,13 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Sharing
 		if isSharedWithUser || sharedByUserOrGroup {
-			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: "Shared".localized)
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
 
 		if sharedByPublicLink {
-			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: "Shared by link".localized)
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}

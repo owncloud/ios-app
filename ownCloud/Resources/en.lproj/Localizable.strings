@@ -117,6 +117,8 @@
 "Search for users or groups" = "Search for users or groups";
 "Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
 
+"Reveal" = "Reveal";
+
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 "Reveal in folder" = "Reveal in folder";
@@ -265,6 +267,7 @@
 "Upload videos via WiFi only" = "Upload videos via WiFi only";
 "Upload pictures via WiFi only" = "Upload pictures via WiFi only";
 "More" = "More";
+"More for {{title}}" = "More for {{title}}";
 "Documentation" = "Documentation";
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
@@ -668,6 +671,9 @@
 "Documents" = "Documents";
 "Audio" = "Audio";
 
+/* Sidebar */
+"Show/Hide sidebar" = "Show/Hide sidebar";
+
 /* Favorites view */
 "No favorites found" = "No favorites found";
 "If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
@@ -760,6 +766,13 @@
 
 "Locations" = "Locations";
 "Downloaded Files" = "Downloaded Files";
+
+/* Item and cloud status */
+"In the cloud" = "In the cloud";
+"Local copy" = "Local copy";
+"Local version" = "Local version";
+"Available offline" = "Available offline";
+"Shared" = "Shared";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";

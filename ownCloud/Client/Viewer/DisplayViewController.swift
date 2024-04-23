@@ -494,7 +494,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		let itemName = item?.name ?? ""
 		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(actionsBarButtonPressed))
 		actionsBarButtonItem.tag = moreButtonTag
-		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+		actionsBarButtonItem.accessibilityLabel = "Actions".localized
 
 		return actionsBarButtonItem
 	}
@@ -699,6 +699,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 								// Use existing local copy
 								itemDirectURL = file.url
+								state = .downloadFinished
 								didUpdate = true
 
 								// Modify item's last used timestamp

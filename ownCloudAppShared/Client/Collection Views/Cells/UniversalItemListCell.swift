@@ -440,6 +440,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	var title: NSAttributedString? {
 		didSet {
 			titleLabel.attributedText = title
+			if let titleString = title?.string {
+				moreButtonAccessibilityLabel = "More for {{title}}".localized(["title" : titleString])
+				moreButton?.accessibilityLabel = moreButtonAccessibilityLabel
+			}
 		}
 	}
 	var primaryDetailSegments: [SegmentViewItem]? {
@@ -652,13 +656,14 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	// MARK: - Accessories
 	// - More ...
 	open var moreButton: UIButton?
+	private var moreButtonAccessibilityLabel: String?
 	open lazy var moreButtonAccessory: UICellAccessory = {
 		let button = UIButton()
 
 		button.setImage(UIImage(named: "more-dots"), for: .normal)
 		button.contentMode = .center
 		button.isPointerInteractionEnabled = true
-		button.accessibilityLabel = "More".localized
+		button.accessibilityLabel = moreButtonAccessibilityLabel ?? "More".localized
 		button.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
 
 		button.frame = CGRect(x: 0, y: 0, width: 32, height: 42) // Avoid _UITemporaryLayoutWidths auto-layout warnings

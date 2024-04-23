@@ -117,6 +117,8 @@
 "Search for users or groups" = "Suche nach Benutzern oder Gruppen";
 "Enter the user or group you want to invite." = "Geben Sie den Benutzer oder die Gruppe ein, die Sie einladen möchten.";
 
+"Reveal" = "Zeigen";
+
 "Pending" = "Ausstehend";
 "Show parent paths" = "Übergeordnete Pfade anzeigen";
 "Reveal in folder" = "Im Ordner anzeigen";
@@ -265,6 +267,7 @@
 "Upload videos via WiFi only" = "Videos nur über WLAN hochladen";
 "Upload pictures via WiFi only" = "Fotos nur über WLAN hochladen";
 "More" = "Mehr";
+"More for {{title}}" = "Mehr zu {{title}}";
 "Documentation" = "Dokumentation";
 "Send feedback" = "Feedback senden";
 "Recommend to a friend" = "Weiterempfehlen";
@@ -448,7 +451,7 @@
 
 "Select one or more items." = "Wähle ein oder mehrere Elemente";
 
-"Add item" = "Eintrag hinzufügen";
+"Add item" = "Element hinzufügen";
 
 /* App Provider */
 "New document" = "Neues Dokument";
@@ -669,6 +672,9 @@
 "Documents" = "Dokumente";
 "Audio" = "Audio";
 
+/* Sidebar */
+"Show/Hide sidebar" = "Seiteleiste zeigen/verstecken";
+
 /* Favorites view */
 "No favorites found" = "Keine Favoriten gefunden";
 "If you make an item a favorite, it will turn up here." = "Wenn Sie ein Element favorisieren, wird es hier erscheinen.";
@@ -761,6 +767,13 @@
 
 "Locations" = "Umgebungen";
 "Downloaded Files" = "Heruntergeladene Dateien";
+
+/* Item and cloud status */
+"In the cloud" = "In der Cloud";
+"Local copy" = "Lokale Kopie";
+"Local version" = "Lokale Version";
+"Available offline" = "Offline verfügbar";
+"Shared" = "Geteilt";
 
 /* Single Account */
 "You are connected as\n%@" = "Sie sind verbunden als\n%@";
