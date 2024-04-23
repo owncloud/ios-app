@@ -474,6 +474,12 @@
 		DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */; };
 		DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20E292F843800D27573 /* CollectionViewAction.swift */; };
 		DCB796582BC535AD00D6D759 /* RemoveFromSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */; };
+		DCB86E8F2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */; };
+		DCB86E902BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */; };
+		DCB86E912BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */; };
+		DCB86E922BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */; };
+		DCB86E932BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */; };
+		DCB86E942BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */; };
 		DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */; };
 		DCBAEADE29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */; };
 		DCBAEAE029A554CC00BFF393 /* CollectionViewSupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */; };
@@ -1551,6 +1557,7 @@
 		DCB6B20E292F843800D27573 /* CollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewAction.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* AccountAuthenticationUpdaterPasswordPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdaterPasswordPromptViewController.swift; sourceTree = "<group>"; };
 		DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveFromSidebarAction.swift; sourceTree = "<group>"; };
+		DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		DCBAEAD429A361C100BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItemPolicy+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DCBAEADD29A5536F00BFF393 /* CollectionViewSupplementaryCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryCellProvider.swift; sourceTree = "<group>"; };
 		DCBAEADF29A554CC00BFF393 /* CollectionViewSupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSupplementaryItem.swift; sourceTree = "<group>"; };
@@ -1851,6 +1858,7 @@
 			children = (
 				DC3BAC63282472A80057FCD4 /* KNOWN_ISSUES.md */,
 				DC9BFBB220A19AF3007064B5 /* doc */,
+				DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */,
 				233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */,
 				233BDE9E204FEFE500C06732 /* ownCloud */,
 				DC7DBA10207F59C500E7337D /* External */,
@@ -4305,6 +4313,7 @@
 				39DF77D524EA854C0066E8F0 /* LaunchScreen.storyboard in Resources */,
 				3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
+				DCB86E8F2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */,
 				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,
 				DCE684F6241BD4E800799C30 /* Branding.plist in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
@@ -4325,6 +4334,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB86E942BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */,
 				391933DA2B0B9863007DF90B /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4373,6 +4383,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB86E922BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4380,6 +4391,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB86E912BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */,
 				39DC7CD325C2E1570001E08C /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4397,6 +4409,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB86E902BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */,
 				DC576EC022647A070087316D /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4408,6 +4421,7 @@
 				392DDAE624C8923B009E5406 /* Assets.xcassets in Resources */,
 				39534BC724EA903200AD7907 /* InfoPlist.strings in Resources */,
 				3949F6A224E6781600EC99A3 /* Localizable.strings in Resources */,
+				DCB86E932BD7B9EE00492C09 /* PrivacyInfo.xcprivacy in Resources */,
 				39E104CA24C585C30085FDDD /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6313,7 +6327,7 @@
 			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 3.1.5001;
 			};
 		};
 		DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */ = {
