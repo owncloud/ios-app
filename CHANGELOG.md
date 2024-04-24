@@ -32,6 +32,7 @@ ownCloud admins and users.
 ## Summary
 
 * Bugfix - Fix cleanup of Available Offline policies targeting unavailable spaces: [#1343](https://github.com/owncloud/ios-app/pull/1343)
+* Change - Add required privacy manifests: [#1348](https://github.com/owncloud/ios-app/pull/1348)
 * Enhancement - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
 * Enhancement - Password Policy support: [#1325](https://github.com/owncloud/ios-app/pull/1325)
 
@@ -44,6 +45,19 @@ ownCloud admins and users.
    retries for files from inaccessible or removed spaces.
 
    https://github.com/owncloud/ios-app/pull/1343
+
+* Change - Add required privacy manifests: [#1348](https://github.com/owncloud/ios-app/pull/1348)
+
+   Adds the [privacy
+   manifest](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api?language=objc)
+   [required by Apple starting May 1,
+   2024](https://developer.apple.com/news/?id=3d8a9yyh) to the app and upgrades
+   `krzyzanowskim/OpenSSL` to
+   [3.1.5001](https://github.com/krzyzanowskim/OpenSSL/releases/tag/3.1.5001) to
+   include a privacy manifest as [also required by
+   Apple](https://developer.apple.com/support/third-party-SDK-requirements/).
+
+   https://github.com/owncloud/ios-app/pull/1348
 
 * Enhancement - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
 
