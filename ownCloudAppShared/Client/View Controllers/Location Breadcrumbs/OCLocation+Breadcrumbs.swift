@@ -33,7 +33,7 @@ public extension OCLocation {
 	func displayName(in context: ClientContext?) -> String {
 		switch type {
 			case .drive:
-				if let core = context?.core, let driveID, let drive = core.drive(withIdentifier: driveID), let driveName = drive.name {
+				if let core = context?.core, let driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: false), let driveName = drive.name {
 					return driveName
 				}
 				return "Space".localized
@@ -62,7 +62,7 @@ public extension OCLocation {
 	func displayIcon(in context: ClientContext?, forSidebar: Bool = false) -> UIImage? {
 		switch type {
 			case .drive:
-				if let core = context?.core, let driveID, let drive = core.drive(withIdentifier: driveID), let specialType = drive.specialType {
+				if let core = context?.core, let driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: false), let specialType = drive.specialType {
 					switch specialType {
 						case .personal:
 							return OCSymbol.icon(forSymbolName: forSidebar ? "person" : "person.fill")
