@@ -515,6 +515,7 @@ public class AppLockManager: NSObject {
 
 			updateLockCountdown()
 
+			lockTimer?.invalidate()
 			lockTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateLockCountdown), userInfo: nil, repeats: true)
 		}
 	}
