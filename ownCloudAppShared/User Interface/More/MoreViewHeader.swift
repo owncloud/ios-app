@@ -181,7 +181,7 @@ open class MoreViewHeader: UIView {
 
 			if item.isRoot {
 				if let core, core.useDrives, let driveID = item.driveID {
-					if let drive = core.drive(withIdentifier: driveID) {
+					if let drive = core.drive(withIdentifier: driveID, attachedOnly: false) {
 						itemName = drive.name
 					}
 				} else {
