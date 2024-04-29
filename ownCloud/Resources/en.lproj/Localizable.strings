@@ -137,6 +137,13 @@
 
 "An error occurred" = "An error occurred";
 
+/* Status dot description */
+"Offline" = "Offline";
+"Connecting" = "Connecting";
+"Online" = "Online";
+"Busy" = "Busy";
+"Authentication error" = "Authentication error";
+
 /* Item Layouts */
 "List" = "List";
 "Grid" = "Grid";

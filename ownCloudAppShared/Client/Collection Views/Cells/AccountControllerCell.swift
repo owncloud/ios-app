@@ -221,6 +221,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 	func updateStatus(iconFor status: AccountConnection.Status?) {
 		var color: UIColor?
+		var statusDescription: String?
 
 		if let status = status {
 			switch status {
@@ -228,18 +229,23 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 				case .offline:
 					color = .systemGray
+					statusDescription = "Offline".localized
 
 				case .connecting, .coreAvailable:
 					color = .systemYellow
+					statusDescription = "Connecting".localized
 
 				case .online:
 					color = .systemGreen
+					statusDescription = "Online".localized
 
 				case .busy:
 					color = .systemBlue
+					statusDescription = "Busy".localized
 
 				case .authenticationError:
 					color = .systemRed
+					statusDescription = "Authentication error".localized
 			}
 		}
 
@@ -253,6 +259,9 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			statusIconView.image = nil
 		}
+
+		statusIconView.isAccessibilityElement = statusDescription != nil
+		statusIconView.accessibilityLabel = statusDescription
 	}
 
 	func updateStatus(from richStatus: AccountConnectionRichStatus?) {

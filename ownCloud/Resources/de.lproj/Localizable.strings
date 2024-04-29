@@ -137,6 +137,13 @@
 
 "An error occurred" = "Es ist ein Fehler aufgetreten";
 
+/* Status dot description */
+"Offline" = "Offline";
+"Connecting" = "Verbinde";
+"Online" = "Online";
+"Busy" = "Beschäftigt";
+"Authentication error" = "Authentifizierungsfehler";
+
 /* Item Layouts */
 "List" = "Liste";
 "Grid" = "Kacheln";
