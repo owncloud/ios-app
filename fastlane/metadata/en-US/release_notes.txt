@@ -1,15 +1,3 @@
-• Search in sidebar
-Search and Quick Access have been merged into a new, more powerful sidebar item.
-
-• More powerful sidebar
-Add folders and saved searches directly to the sidebar.
-
-• Share link + password together
-Directly share created links - along with their passwords.
-
-• Password policies + generator
-Now supports validating and generating passwords based on server-provided password policies.
-
-• Bug Fixes
-We have fixed a bug where the app repeatedly tried to download Available Offline items located on no longer accessible spaces.
+• Security Fix
+Detect attempts to bypass a lock timeout by changing the clock
 
