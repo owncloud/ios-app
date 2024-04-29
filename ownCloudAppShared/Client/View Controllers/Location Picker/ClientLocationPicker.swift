@@ -275,7 +275,7 @@ public class ClientLocationPicker : NSObject {
 
 				case .drive:
 					if let driveID = location.driveID {
-						title = context.core?.drive(withIdentifier: driveID)?.name
+						title = context.core?.drive(withIdentifier: driveID, attachedOnly: false)?.name
 					}
 
 				case .folder: break

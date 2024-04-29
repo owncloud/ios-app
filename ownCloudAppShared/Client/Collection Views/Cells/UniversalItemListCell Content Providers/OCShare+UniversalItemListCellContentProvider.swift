@@ -30,7 +30,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		// Title
 		if !showManagementView {
-			if itemLocation.isDriveRoot, let driveID = itemLocation.driveID, let drive = context?.core?.drive(withIdentifier: driveID), let driveName = drive.name {
+			if itemLocation.isDriveRoot, let driveID = itemLocation.driveID, let drive = context?.core?.drive(withIdentifier: driveID, attachedOnly: false), let driveName = drive.name {
 				content.title = .drive(name: driveName)
 			} else if let name = itemLocation.lastPathComponent {
 				content.title = isFile ? .file(name: name) : .folder(name: name)

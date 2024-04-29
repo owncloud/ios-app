@@ -14,6 +14,10 @@
     "label" : "action.allowed",
     "possibleValues" : [
       {
+        "description" : "Add to sidebar",
+        "value" : "com.owncloud.action.addToSidebar"
+      },
+      {
         "description" : "Make available offline",
         "value" : "com.owncloud.action.availableOffline"
       },
@@ -42,10 +46,6 @@
         "value" : "com.owncloud.action.delete"
       },
       {
-        "description" : "Close Window",
-        "value" : "com.owncloud.action.discardscene"
-      },
-      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -70,16 +70,16 @@
         "value" : "com.owncloud.action.openin"
       },
       {
-        "description" : "Open in a new Window",
-        "value" : "com.owncloud.action.openscene"
-      },
-      {
         "description" : "Go to page",
         "value" : "com.owncloud.action.pdfpage"
       },
       {
         "description" : "Presentation Mode",
         "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Remove from sidebar",
+        "value" : "com.owncloud.action.removeFromSidebar"
       },
       {
         "description" : "Rename",
@@ -156,6 +156,10 @@
     "label" : "action.disallowed",
     "possibleValues" : [
       {
+        "description" : "Add to sidebar",
+        "value" : "com.owncloud.action.addToSidebar"
+      },
+      {
         "description" : "Make available offline",
         "value" : "com.owncloud.action.availableOffline"
       },
@@ -184,10 +188,6 @@
         "value" : "com.owncloud.action.delete"
       },
       {
-        "description" : "Close Window",
-        "value" : "com.owncloud.action.discardscene"
-      },
-      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -212,16 +212,16 @@
         "value" : "com.owncloud.action.openin"
       },
       {
-        "description" : "Open in a new Window",
-        "value" : "com.owncloud.action.openscene"
-      },
-      {
         "description" : "Go to page",
         "value" : "com.owncloud.action.pdfpage"
       },
       {
         "description" : "Presentation Mode",
         "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Remove from sidebar",
+        "value" : "com.owncloud.action.removeFromSidebar"
       },
       {
         "description" : "Rename",
@@ -596,6 +596,19 @@
     "label" : "authentication-oauth2.oidc-scope",
     "status" : "supported",
     "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "categoryTag" : "oauth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "description" : "Omit Authorization Request Parameters - parameter names provided here are omitted from OAuth2 authorization requests.",
+    "flatIdentifier" : "authentication-oauth2.omit-authorization-parameters",
+    "key" : "omit-authorization-parameters",
+    "label" : "authentication-oauth2.omit-authorization-parameters",
+    "status" : "advanced",
+    "type" : "stringArray"
   },
   {
     "autoExpansion" : "none",
@@ -1718,6 +1731,10 @@
         "value" : "auth-race-condition"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.addToSidebar.",
+        "value" : "com.owncloud.action.addToSidebar"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.availableOffline.",
         "value" : "com.owncloud.action.availableOffline"
       },
@@ -1750,10 +1767,6 @@
         "value" : "com.owncloud.action.delete"
       },
       {
-        "description" : "Extension with the identifier com.owncloud.action.discardscene.",
-        "value" : "com.owncloud.action.discardscene"
-      },
-      {
         "description" : "Extension with the identifier com.owncloud.action.duplicate.",
         "value" : "com.owncloud.action.duplicate"
       },
@@ -1782,10 +1795,6 @@
         "value" : "com.owncloud.action.openin"
       },
       {
-        "description" : "Extension with the identifier com.owncloud.action.openscene.",
-        "value" : "com.owncloud.action.openscene"
-      },
-      {
         "description" : "Extension with the identifier com.owncloud.action.pdfpage.",
         "value" : "com.owncloud.action.pdfpage"
       },
@@ -1796,6 +1805,10 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.presentationmode.",
         "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.removeFromSidebar.",
+        "value" : "com.owncloud.action.removeFromSidebar"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.rename.",
@@ -1904,14 +1917,6 @@
       {
         "description" : "Extension with the identifier simple-apm.",
         "value" : "simple-apm"
-      },
-      {
-        "description" : "Extension with the identifier system.dark.",
-        "value" : "system.dark"
-      },
-      {
-        "description" : "Extension with the identifier system.light.",
-        "value" : "system.light"
       },
       {
         "description" : "Extension with the identifier web-finger.",
