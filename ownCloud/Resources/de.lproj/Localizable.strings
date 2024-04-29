@@ -649,6 +649,10 @@
 "{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | Passwort: {{password}}";
 "{{link}} | password: {{password}}" = "{{link}} | Passwort: {{password}}";
 
+"Accept share" = "Geteiltes akzeptieren";
+"Decline share" = "Geteiltes ablehnen";
+"Accept or decline" = "Akzeptieren oder ablehnen";
+
 /* .url viewer / creation */
 "Shortcut" = "Verknüpfung";
 "Open link" = "Link öffnen";

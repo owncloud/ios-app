@@ -634,6 +634,10 @@
 "Shared by me" = "Shared by me";
 "Shared by link" = "Shared by link";
 
+"Accept share" = "Accept share";
+"Decline share" = "Decline share";
+"Accept or decline" = "Accept or decline";
+
 "Share with" = "Share with";
 "Add" = "Add";
 "Set" = "Set";
