@@ -1,0 +1,7 @@
+Fix: Detect attempts to bypass a lock timeout by changing the clock
+
+- detect attempts to bypass a lock timeout by changing the clock
+- code cleanups/modernizations of `AppLockManager`
+- supersedes #1324
+
+https://github.com/owncloud/ios-app/pull/1347
