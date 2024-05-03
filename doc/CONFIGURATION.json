@@ -38,6 +38,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Create shortcut",
+        "value" : "com.owncloud.action.createShortcutFile"
+      },
+      {
         "description" : "Cut",
         "value" : "com.owncloud.action.cutpasteboard"
       },
@@ -64,6 +68,10 @@
       {
         "description" : "Move",
         "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Open shortcut",
+        "value" : "com.owncloud.action.openShortcutFile"
       },
       {
         "description" : "Open in",
@@ -180,6 +188,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Create shortcut",
+        "value" : "com.owncloud.action.createShortcutFile"
+      },
+      {
         "description" : "Cut",
         "value" : "com.owncloud.action.cutpasteboard"
       },
@@ -206,6 +218,10 @@
       {
         "description" : "Move",
         "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Open shortcut",
+        "value" : "com.owncloud.action.openShortcutFile"
       },
       {
         "description" : "Open in",
@@ -341,6 +357,38 @@
       {
         "description" : "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in).",
         "value" : "in-app-with-default-browser-option"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
+    "defaultValue" : "all",
+    "description" : "Determines how the app opens shortcut files (ending in `.url`) app.",
+    "flatIdentifier" : "action.open-shortcut-mode",
+    "key" : "open-shortcut-mode",
+    "label" : "Open Shortcut mode",
+    "possibleValues" : [
+      {
+        "description" : "Open all shortcut files, targeting both links (web and other) and items.",
+        "value" : "all"
+      },
+      {
+        "description" : "Open only shortcut files that target items.",
+        "value" : "items-only"
+      },
+      {
+        "description" : "Open only shortcut files that target links (web and other).",
+        "value" : "links-only"
+      },
+      {
+        "description" : "Do not open shortcut files.",
+        "value" : "none"
       }
     ],
     "status" : "advanced",
@@ -1759,6 +1807,10 @@
         "value" : "com.owncloud.action.createFolder"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.createShortcutFile.",
+        "value" : "com.owncloud.action.createShortcutFile"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.cutpasteboard.",
         "value" : "com.owncloud.action.cutpasteboard"
       },
@@ -1789,6 +1841,10 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.move.",
         "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.openShortcutFile.",
+        "value" : "com.owncloud.action.openShortcutFile"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.openin.",
@@ -1901,6 +1957,10 @@
       {
         "description" : "Extension with the identifier org.owncloud.ql_preview.",
         "value" : "org.owncloud.ql_preview"
+      },
+      {
+        "description" : "Extension with the identifier org.owncloud.url-shortcut.",
+        "value" : "org.owncloud.url-shortcut"
       },
       {
         "description" : "Extension with the identifier org.owncloud.webview.",
