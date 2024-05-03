@@ -35,6 +35,9 @@ tag::actions[]
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
+! `com.owncloud.action.createShortcutFile`
+! Create shortcut
+
 ! `com.owncloud.action.cutpasteboard`
 ! Cut
 
@@ -55,6 +58,9 @@ tag::actions[]
 
 ! `com.owncloud.action.move`
 ! Move
+
+! `com.owncloud.action.openShortcutFile`
+! Open shortcut
 
 ! `com.owncloud.action.openin`
 ! Open in
@@ -142,6 +148,9 @@ action.create-document-mode
 ! `com.owncloud.action.createFolder`
 ! Create folder
 
+! `com.owncloud.action.createShortcutFile`
+! Create shortcut
+
 ! `com.owncloud.action.cutpasteboard`
 ! Cut
 
@@ -162,6 +171,9 @@ action.create-document-mode
 
 ! `com.owncloud.action.move`
 ! Move
+
+! `com.owncloud.action.openShortcutFile`
+! Open shortcut
 
 ! `com.owncloud.action.openin`
 ! Open in
@@ -266,6 +278,32 @@ action.open-in-web-app-mode
 
 ! `in-app-with-default-browser-option`
 ! Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in).
+
+!===
+
+|advanced `candidate`
+
+|**Open Shortcut mode** +
+ +
+action.open-shortcut-mode
+|string
+|`all`
+|Determines how the app opens shortcut files (ending in `.url`) app.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `all`
+! Open all shortcut files, targeting both links (web and other) and items.
+
+! `items-only`
+! Open only shortcut files that target items.
+
+! `links-only`
+! Open only shortcut files that target links (web and other).
+
+! `none`
+! Do not open shortcut files.
 
 !===
 
@@ -1098,6 +1136,9 @@ tag::extensions[]
 ! `com.owncloud.action.createFolder`
 ! Extension with the identifier com.owncloud.action.createFolder.
 
+! `com.owncloud.action.createShortcutFile`
+! Extension with the identifier com.owncloud.action.createShortcutFile.
+
 ! `com.owncloud.action.cutpasteboard`
 ! Extension with the identifier com.owncloud.action.cutpasteboard.
 
@@ -1121,6 +1162,9 @@ tag::extensions[]
 
 ! `com.owncloud.action.move`
 ! Extension with the identifier com.owncloud.action.move.
+
+! `com.owncloud.action.openShortcutFile`
+! Extension with the identifier com.owncloud.action.openShortcutFile.
 
 ! `com.owncloud.action.openin`
 ! Extension with the identifier com.owncloud.action.openin.
@@ -1205,6 +1249,9 @@ tag::extensions[]
 
 ! `org.owncloud.ql_preview`
 ! Extension with the identifier org.owncloud.ql_preview.
+
+! `org.owncloud.url-shortcut`
+! Extension with the identifier org.owncloud.url-shortcut.
 
 ! `org.owncloud.webview`
 ! Extension with the identifier org.owncloud.webview.
