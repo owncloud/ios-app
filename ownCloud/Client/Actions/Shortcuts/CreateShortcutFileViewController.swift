@@ -70,9 +70,23 @@ class CreateShortcutFileViewController: CollectionViewController {
 
 					targetSectionDatasource.setVersionedItems([containerView])
 
-					if name == "" || name == nil, let baseName = targetItem.baseName {
-						nameTextField?.text = baseName
-						name = baseName
+					if name == "" || name == nil {
+						var baseName = targetItem.baseName
+
+						if targetItem.isRoot {
+							if core.useDrives, let driveID = targetItem.driveID {
+								if let drive = core.drive(withIdentifier: driveID, attachedOnly: false) {
+									baseName = drive.name
+								}
+							} else {
+								baseName = "Files".localized
+							}
+						}
+
+						if let baseName {
+							nameTextField?.text = baseName
+							name = baseName
+						}
 					}
 				}
 			}
