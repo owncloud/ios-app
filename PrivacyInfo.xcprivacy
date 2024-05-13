@@ -13,7 +13,7 @@
 			</array>
 		</dict>
 		<dict>
- 			<key>NSPrivacyAccessedAPIType</key>
+			<key>NSPrivacyAccessedAPIType</key>
 			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
