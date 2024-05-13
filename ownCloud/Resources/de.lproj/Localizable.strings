@@ -658,6 +658,8 @@
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
+"Add to sidebar" = "Zur Seitenleiste hinzufügen";
+"Remove from sidebar" = "Aus Seitenleiste entfernen";
 "Collection" = "Sammlung";
 "Recents" = "Kürzlich";
 "Favorites"= "Favoriten";

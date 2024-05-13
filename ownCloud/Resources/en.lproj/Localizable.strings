@@ -658,6 +658,8 @@
 /* Quick Access search suggestions */
 "Quick Access" = "Quick Access";
 "Add to sidebar" = "Add to sidebar";
+"Remove from sidebar" = "Remove from sidebar";
+"Collection" = "Collection";
 "Recents" = "Recents";
 "Favorites"= "Favorites";
 "Images" = "Images";
