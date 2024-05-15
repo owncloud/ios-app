@@ -58,7 +58,6 @@
 
 	[self.keyValueStore updateObjectForKey:OCKeyValueStoreKeySavedSearches usingModifier:^id _Nullable(id  _Nullable existingObject, BOOL * _Nonnull outDidModify) {
 		NSMutableArray<OCSavedSearch *> *savedSearches = OCTypedCast(existingObject, NSMutableArray);
-		NSUInteger countBefore;
 
 		if (savedSearches != nil)
 		{

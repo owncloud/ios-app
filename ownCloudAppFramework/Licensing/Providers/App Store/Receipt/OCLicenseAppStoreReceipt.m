@@ -115,8 +115,6 @@
 	}
 
 	// OpenSSL setup
-	ERR_load_X509_strings();
-	ERR_load_PKCS7_strings();
 	OpenSSL_add_all_digests();
 
 	// Parse receipt

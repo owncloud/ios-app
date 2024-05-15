@@ -39,6 +39,7 @@ disabled_rules:
     - control_statement
     - nesting
     - comma
+    - large_tuple
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

@@ -92,7 +92,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		locationServicesRowSubtitle += " "
 		locationServicesRowSubtitle += "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.".localized
 
-		let currentAuthStatus = CLLocationManager.authorizationStatus() == .authorizedAlways
+		let currentAuthStatus = CLLocationManager().authorizationStatus == .authorizedAlways
 		backgroundLocationRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				if enableSwitch.isOn {
