@@ -28,9 +28,7 @@ public protocol ThemeCSSChangeObserver {
 }
 
 extension NSObject {
-	private struct AssociatedKeys {
-		static var cssSelectors = "_cssSelectors"
-	}
+	private static let associatedKeyCssSelectors = malloc(1)!
 
 	public var activeThemeCSS: ThemeCSS {
 		return Theme.shared.activeCollection.css
@@ -42,7 +40,7 @@ extension NSObject {
 
 	public var cssSelectors: [ThemeCSSSelector]? {
 		set {
-			objc_setAssociatedObject(self, &AssociatedKeys.cssSelectors, newValue, .OBJC_ASSOCIATION_RETAIN)
+			objc_setAssociatedObject(self, NSObject.associatedKeyCssSelectors, newValue, .OBJC_ASSOCIATION_RETAIN)
 
 			if let changeObserver = self as? ThemeCSSChangeObserver {
 				changeObserver.cssSelectorsChanged()
@@ -50,7 +48,7 @@ extension NSObject {
 		}
 
 		get {
-			var effectiveSelectors: [ThemeCSSSelector] = objc_getAssociatedObject(self, &AssociatedKeys.cssSelectors) as? [ThemeCSSSelector] ?? []
+			var effectiveSelectors: [ThemeCSSSelector] = objc_getAssociatedObject(self, NSObject.associatedKeyCssSelectors) as? [ThemeCSSSelector] ?? []
 
 			if let autoSelector = self as? ThemeCSSAutoSelector {
 				effectiveSelectors.insert(contentsOf: autoSelector.cssAutoSelectors, at: (effectiveSelectors.count > 0) ? (effectiveSelectors.count-1) : 0)

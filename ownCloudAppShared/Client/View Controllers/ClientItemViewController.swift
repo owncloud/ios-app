@@ -1315,11 +1315,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 		}
 	}
-
-	// MARK: - Themeing
-	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-	}
 }
 
 extension ThemeCSSSelector {

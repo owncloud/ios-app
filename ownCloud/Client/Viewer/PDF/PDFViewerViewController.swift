@@ -234,10 +234,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 		self.fullScreen.toggle()
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-	}
-
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit

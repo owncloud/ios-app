@@ -93,10 +93,6 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		fetchAlbums()
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-	}
-
 	// MARK: - Theme support
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

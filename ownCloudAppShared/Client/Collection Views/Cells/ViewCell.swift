@@ -100,17 +100,15 @@ class SeparatorLayoutGuideCustomizer : NSObject {
 }
 
 extension UIView {
-	private struct AssociatedKeys {
-		static var separatorLayoutGuideCustomizerKey = "separatorLayoutGuideCustomizerKey"
-	}
+	private static let associatedKeySeparatorLayoutGuideCustomizer = malloc(1)!
 
 	var separatorLayoutGuideCustomizer: SeparatorLayoutGuideCustomizer? {
 		get {
-			return objc_getAssociatedObject(self, &AssociatedKeys.separatorLayoutGuideCustomizerKey) as? SeparatorLayoutGuideCustomizer
+			return objc_getAssociatedObject(self, UIView.associatedKeySeparatorLayoutGuideCustomizer) as? SeparatorLayoutGuideCustomizer
 		}
 
 		set {
-			objc_setAssociatedObject(self, &AssociatedKeys.separatorLayoutGuideCustomizerKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+			objc_setAssociatedObject(self, UIView.associatedKeySeparatorLayoutGuideCustomizer, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
 		}
 	}
 }

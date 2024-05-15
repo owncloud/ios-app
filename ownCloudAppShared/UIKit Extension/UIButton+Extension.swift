@@ -21,18 +21,16 @@ import UIKit
 import ownCloudSDK
 
 public extension UIButton {
-	private struct AssociatedKeys {
-		static var actionKey = "actionKey"
-	}
+	private static let associatedActionKey = malloc(1)!
 
 	var actionIdentifier: OCExtensionIdentifier? {
 		get {
-			return objc_getAssociatedObject(self, &AssociatedKeys.actionKey) as? OCExtensionIdentifier
+			return objc_getAssociatedObject(self, UIButton.associatedActionKey) as? OCExtensionIdentifier
 		}
 
 		set {
 			if newValue != nil {
-				objc_setAssociatedObject(self, &AssociatedKeys.actionKey, newValue!, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+				objc_setAssociatedObject(self, UIButton.associatedActionKey, newValue!, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
 			}
 		}
 	}
