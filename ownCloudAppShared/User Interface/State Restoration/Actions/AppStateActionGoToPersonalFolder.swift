@@ -32,10 +32,6 @@ public class AppStateActionGoToPersonalFolder: AppStateAction {
 		super.init(coder: coder)
 	}
 
-	override public func encode(with coder: NSCoder) {
-		super.encode(with: coder)
-	}
-
 	var drivesSubscription: OCDataSourceSubscription?
 
 	override public func perform(in clientContext: ClientContext, completion: @escaping AppStateAction.Completion) {

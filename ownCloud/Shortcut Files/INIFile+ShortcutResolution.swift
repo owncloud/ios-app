@@ -46,7 +46,7 @@ public extension INIFile {
 						}
 					})
 				} else {
-					var effectiveError: Error? = nil
+					var effectiveError: Error?
 
 					switch OpenShortcutFileAction.openShortcutMode {
 						case .itemsOnly, .none:

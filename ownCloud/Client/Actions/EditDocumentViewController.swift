@@ -154,7 +154,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		}
 	}
-	
+
 	func disableEditingMode() {
 		if #available(iOS 17.0, *) {
 			if let rightBarButtonItems = self.navigationItem.rightBarButtonItems, rightBarButtonItems.count > 0 {
@@ -171,7 +171,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 	@objc func dismissAnimated() {
 		disableEditingMode()
-		
+
 		if savingMode == nil {
 			requestsavingMode { (savingMode) in
 				self.dismiss(animated: true) {

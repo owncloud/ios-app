@@ -422,7 +422,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Other sidebar items
 			var otherItems: [OCDataItem & OCDataItemVersioning] = []
 
-			func addSidebarItem(_ itemID: SpecialItem, _ generate: ()->OCDataItem&OCDataItemVersioning) {
+			func addSidebarItem(_ itemID: SpecialItem, _ generate: () -> OCDataItem & OCDataItemVersioning) {
 				var item = specialItems[itemID]
 
 				if item == nil {
@@ -649,7 +649,7 @@ extension AccountController: DataItemSelectionInteraction {
 			if let personalSpaceDataItemRef = self.personalSpaceDataItemRef,
 			   let sectionID = section?.identifier,
 			   let personalFolderItemRef = section?.collectionViewController?.wrap(references: [personalSpaceDataItemRef], forSection: sectionID).first,
-			   let /* spacesFolderItemRef */ _ = section?.collectionViewController?.wrap(references: [specialItemsDataReferences[.spacesFolder]!], forSection: sectionID).first {
+			   section?.collectionViewController?.wrap(references: [specialItemsDataReferences[.spacesFolder]!], forSection: sectionID).first != nil {
 				section?.collectionViewController?.addActions([
 					CollectionViewAction(kind: .select(animated: false, scrollPosition: .centeredVertically), itemReference: personalFolderItemRef)
 				])
