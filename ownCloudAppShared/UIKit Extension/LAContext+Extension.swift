@@ -25,6 +25,7 @@ extension LAContext {
 			switch self.biometryType {
 				case .faceID : return "Face ID".localized
 				case .touchID: return "Touch ID".localized
+				case .opticID: return "Optic ID".localized
 				case .none: return nil
 				@unknown default: return nil
 			}
@@ -40,6 +41,9 @@ extension LAContext {
 
 				case .touchID:
 					return UIImage(systemName: "touchid")
+
+				case .opticID:
+					return UIImage(systemName: "opticid")
 
 				case .none: return nil
 				@unknown default: return nil

@@ -414,7 +414,7 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 	@discardableResult func startLocationMonitoringIfAuthorized() -> Bool {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return false }
 
-		if CLLocationManager.authorizationStatus() == .authorizedAlways && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled {
+		if locationManager.authorizationStatus == .authorizedAlways && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled {
 			Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Significant location monitoring has started")
 			startLocationTracking()
 			return true
@@ -424,13 +424,13 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 	}
 
 	func stopLocationMonitoring() {
-		if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+		if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
 			stopLocationTracking()
 		}
 	}
 
 	func requestLocationAuthorization() -> Bool {
-		let currentStatus = CLLocationManager.authorizationStatus()
+		let currentStatus = locationManager.authorizationStatus
 		switch currentStatus {
 		case .notDetermined, .authorizedWhenInUse:
 			self.locationManager.requestAlwaysAuthorization()

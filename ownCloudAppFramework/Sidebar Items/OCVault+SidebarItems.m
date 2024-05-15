@@ -58,7 +58,6 @@
 
 	[self.keyValueStore updateObjectForKey:OCKeyValueStoreKeySidebarItems usingModifier:^id _Nullable(id  _Nullable existingObject, BOOL * _Nonnull outDidModify) {
 		NSMutableArray<OCSidebarItem *> *sidebarItems = OCTypedCast(existingObject, NSMutableArray);
-		NSUInteger countBefore;
 
 		if (sidebarItems != nil)
 		{
