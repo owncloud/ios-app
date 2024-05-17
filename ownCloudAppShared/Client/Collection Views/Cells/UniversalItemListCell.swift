@@ -109,6 +109,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		var progress: Progress?
 		var accessories: [UICellAccessory]?
+		var accessibilityCustomActions: [UIAccessibilityCustomAction]?
 
 		var disabled: Bool = false
 
@@ -653,6 +654,50 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 	}
 
+	// MARK: - Key commands
+	open override var keyCommands: [UIKeyCommand]? {
+		var keyCommands: [UIKeyCommand] = super.keyCommands ?? []
+
+		if messageButton != nil {
+			// Provide access to the message button via a press of the Return key
+			keyCommands.append(UIKeyCommand(input: "\r", modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(messageButtonTapped)))
+		} else if moreButton != nil {
+			// Provide access to the more button via a press of the Return key (https://github.com/owncloud/ios-app/issues/1336)
+			keyCommands.append(UIKeyCommand(input: "\r", modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(moreButtonTapped)))
+		}
+
+		if revealButton != nil {
+			// Provide access to the reveal button via a press of the right arrow (->) key (https://github.com/owncloud/ios-app/issues/1336)
+			keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(revealButtonTapped)))
+		}
+
+		return keyCommands
+	}
+
+	// MARK: - Accessibility custom actions
+	open func updateAccessibilityCustomActions() {
+		var customActions: [UIAccessibilityCustomAction] = []
+
+		// Provide keyboard access to all buttons' actions via Tab + Z
+		if moreButton != nil {
+			customActions.append(UIAccessibilityCustomAction(name: "Actions".localized, image: UIImage(named: "more-dots"), target: self, selector: #selector(moreButtonTapped)))
+		}
+
+		if revealButton != nil {
+			customActions.append(UIAccessibilityCustomAction(name: "Reveal".localized, image: OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), target: self, selector: #selector(revealButtonTapped)))
+		}
+
+		if messageButton != nil {
+			customActions.append(UIAccessibilityCustomAction(name: "Show message".localized, image: OCSymbol.icon(forSymbolName: "exclamationmark.triangle.fill"), target: self, selector: #selector(messageButtonTapped)))
+		}
+
+		if let contentCustomActions = content?.accessibilityCustomActions {
+			customActions.append(contentsOf: contentCustomActions)
+		}
+
+		accessibilityCustomActions = customActions.count > 0 ? customActions : nil
+	}
+
 	// MARK: - Accessories
 	// - More ...
 	open var moreButton: UIButton?
@@ -673,6 +718,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.cssSelectors = [.accessory, .more]
 
 		moreButton = button
+
+		updateAccessibilityCustomActions()
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
 	}()
@@ -705,6 +752,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		revealButton = button
 
+		updateAccessibilityCustomActions()
+
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
 	}()
 
@@ -733,6 +782,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.cssSelectors = [.accessory]
 
 		messageButton = button
+
+		updateAccessibilityCustomActions()
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
 	}()

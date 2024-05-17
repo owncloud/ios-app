@@ -244,28 +244,41 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .withMe, let effectiveState {
 			var accessories: [UICellAccessory] = []
+			var customActions: [UIAccessibilityCustomAction] = []
 			let omitLongActions = (effectiveState == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
 
-			if (effectiveState == .pending || effectiveState == .declined) && !omitLongActions {
-				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { [weak self, weak context] action in
-					if let self, let context, let core = context.core {
-						core.makeDecision(on: self, accept: true, completionHandler: { error in
-						})
-					}
-				}))
-
-				accessories.append(accessory)
+			let makeDecisionAction: (_ accept: Bool) -> Void = { [weak self, weak context] accept in
+				if let self, let context, let core = context.core {
+					core.makeDecision(on: self, accept: accept, completionHandler: { error in
+					})
+				}
 			}
 
-			if (effectiveState == .pending || effectiveState == .accepted) && !omitLongActions {
-				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { [weak self, weak context] action in
-					if let self, let context, let core = context.core {
-						core.makeDecision(on: self, accept: false, completionHandler: { error in
-						})
-					}
-				}))
+			if (effectiveState == .pending || effectiveState == .declined) {
+				if !omitLongActions {
+					let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { _ in makeDecisionAction(true) }
+					))
 
-				accessories.append(accessory)
+					accessories.append(accessory)
+				}
+
+				customActions.append(UIAccessibilityCustomAction(name: "Accept".localized, image: OCSymbol.icon(forSymbolName: "checkmark.circle"), actionHandler: { _ in
+					makeDecisionAction(true)
+					return true
+				}))
+			}
+
+			if (effectiveState == .pending || effectiveState == .accepted) {
+				if !omitLongActions {
+					let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { _ in makeDecisionAction(false) }))
+
+					accessories.append(accessory)
+				}
+
+				customActions.append(UIAccessibilityCustomAction(name: "Decline".localized, image: OCSymbol.icon(forSymbolName: "minus.circle"), actionHandler: { _ in
+					makeDecisionAction(false)
+					return true
+				}))
 			}
 
 			if omitLongActions, let menuItems = composeContextMenuItems(in: nil, location: .contextMenuItem, with: context) {
@@ -279,6 +292,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 
 			content.accessories = accessories
+			content.accessibilityCustomActions = customActions
 		}
 
 		_ = updateContent(content)

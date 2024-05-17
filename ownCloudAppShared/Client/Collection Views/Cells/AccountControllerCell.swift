@@ -183,6 +183,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 					OnMainThread { [weak self] in
 						if accountController == self?.accountController {
 							self?.disconnectButton.isHidden = !showDisconnectButton
+							self?.accessibilityCustomActions = showDisconnectButton ? [
+								UIAccessibilityCustomAction(name: "Disconnect".localized, image: OCSymbol.icon(forSymbolName: "eject.circle.fill"), actionHandler: { [weak self] _ in
+									self?.accountController?.disconnect(completion: nil)
+									return true
+								})
+							] : nil
 						}
 					}
 				})

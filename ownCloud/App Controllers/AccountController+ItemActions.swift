@@ -136,6 +136,17 @@ extension AccountController: DataItemContextMenuInteraction {
 
 			menuItems.append(manageAction)
 
+			// Disconnect
+			if showDisconnectButton {
+				let disconnectAction = UIAction(handler: { [weak self] _ in
+					self?.disconnect(completion: nil)
+				})
+				disconnectAction.title = "Disconnect".localized
+				disconnectAction.image = OCSymbol.icon(forSymbolName: "eject.circle.fill")
+
+				menuItems.append(disconnectAction)
+			}
+
 			// Delete
 			let deleteAction = UIAction(handler: { [weak self, weak hostViewController] action in
 				guard let hostViewController = hostViewController else { return }

@@ -284,7 +284,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 	}
 
-	@objc dynamic var showDisconnectButton: Bool = false
+	@objc dynamic open var showDisconnectButton: Bool = false
 
 	var savedSearchesDataSource: OCDataSourceKVO?
 	var savedSearchesCondition: DataSourceCondition?
