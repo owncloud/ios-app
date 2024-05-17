@@ -166,7 +166,7 @@ public class SortBar: ThemeCSSView {
 			// Select Button
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.cssSelector = .multiselect
-			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
+			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .primaryActionTriggered)
 			selectButton.accessibilityLabel = "Enter multiple selection".localized
 			selectButton.isPointerInteractionEnabled = true
 
@@ -177,7 +177,7 @@ public class SortBar: ThemeCSSView {
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
 
-			// Disply Mode Button
+			// Display Mode Button
 			changeItemLayoutButton.cssSelector = .itemLayout
 			changeItemLayoutButton.accessibilityLabel = "Toggle layout".localized
 			changeItemLayoutButton.isPointerInteractionEnabled = true
@@ -206,6 +206,13 @@ public class SortBar: ThemeCSSView {
 				changeItemLayoutButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				changeItemLayoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
+
+
+			self.accessibilityRespondsToUserInteraction = false
+
+			sortButton.focusGroupIdentifier = "sort-button"
+			selectButton.focusGroupIdentifier = "select-button"
+			changeItemLayoutButton.focusGroupIdentifier = "changeItemLayoutButton-button"
 		}
 
 		// Finalize view setup

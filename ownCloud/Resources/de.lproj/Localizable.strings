@@ -100,6 +100,8 @@
 "Sort by %@" = "Sortiert nach %@";
 "Sort by" = "Sortieren nach";
 
+"Toggle layout" = "Layout ändern";
+
 "name" = "Name";
 "kind" = "Typ";
 "size" = "Größe";

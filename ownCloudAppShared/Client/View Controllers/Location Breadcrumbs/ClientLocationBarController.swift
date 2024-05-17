@@ -43,6 +43,7 @@ open class ClientLocationBarController: UIViewController, Themeable {
 
 	open override func loadView() {
 		view = ThemeCSSView(withSelectors: [.toolbar, .locationBar])
+		view.focusGroupIdentifier = "location-bar"
 	}
 
 	open override func viewDidLoad() {
@@ -96,6 +97,8 @@ open class ClientLocationBarController: UIViewController, Themeable {
 						}
 					})
 				]
+				segment.isAccessibilityElement = true
+				segment.accessibilityTraits = .button
 			}
 		})
 	}

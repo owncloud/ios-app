@@ -294,6 +294,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			footerItem?.separatorLayoutGuideCustomizer = SeparatorLayoutGuideCustomizer(with: { viewCell, view in
 				return [ viewCell.separatorLayoutGuide.leadingAnchor.constraint(equalTo: viewCell.contentView.trailingAnchor) ]
 			})
+			footerItem?.accessibilityRespondsToUserInteraction = false
 			footerItem?.layoutIfNeeded()
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in

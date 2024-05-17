@@ -145,6 +145,16 @@
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-UIFocusLoggingEnabled YES"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-UIFocusLoopDebuggerEnabled YES"
+            isEnabled = "NO">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "MTC_MAX_HIT_COUNT"

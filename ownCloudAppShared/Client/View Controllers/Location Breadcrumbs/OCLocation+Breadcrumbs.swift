@@ -230,6 +230,7 @@ extension OCLocation {
 
 		segments.last?.titleTextWeight = .semibold
 		segments.last?.gestureRecognizers = nil
+		segments.last?.isAccessibilityElement = false
 
 		segments.first?.insets.leading = 0
 		segments.last?.insets.trailing = 0
