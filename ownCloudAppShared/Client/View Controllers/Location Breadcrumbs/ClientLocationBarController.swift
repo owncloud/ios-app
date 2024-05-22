@@ -43,7 +43,7 @@ open class ClientLocationBarController: UIViewController, Themeable {
 
 	open override func loadView() {
 		view = ThemeCSSView(withSelectors: [.toolbar, .locationBar])
-		view.focusGroupIdentifier = "location-bar"
+		view.focusGroupIdentifier = "com.owncloud.location-bar"
 	}
 
 	open override func viewDidLoad() {

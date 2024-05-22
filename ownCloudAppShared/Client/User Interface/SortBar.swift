@@ -110,6 +110,8 @@ public class SortBar: ThemeCSSView {
 		super.init(frame: frame)
 		self.cssSelector = .sortBar
 
+		let focusGuide = UIFocusGuide()
+
 		if let sortButton, let selectButton, let changeItemLayoutButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
@@ -207,12 +209,21 @@ public class SortBar: ThemeCSSView {
 				changeItemLayoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
 
-
 			self.accessibilityRespondsToUserInteraction = false
 
-			sortButton.focusGroupIdentifier = "sort-button"
-			selectButton.focusGroupIdentifier = "select-button"
-			changeItemLayoutButton.focusGroupIdentifier = "changeItemLayoutButton-button"
+			sortButton.focusGroupIdentifier = "com.owncloud.sort-button"
+			selectButton.focusGroupIdentifier = "com.owncloud.select-button"
+			changeItemLayoutButton.focusGroupIdentifier = "com.owncloud.change-item-layout-button"
+
+			focusGuide.preferredFocusEnvironments = [ sortButton, selectButton, changeItemLayoutButton ]
+			addLayoutGuide(focusGuide)
+
+			NSLayoutConstraint.activate([
+				leadingAnchor.constraint(equalTo: focusGuide.leadingAnchor),
+				trailingAnchor.constraint(equalTo: focusGuide.trailingAnchor),
+				topAnchor.constraint(equalTo: focusGuide.topAnchor),
+				bottomAnchor.constraint(equalTo: focusGuide.bottomAnchor)
+			])
 		}
 
 		// Finalize view setup

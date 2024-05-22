@@ -148,6 +148,9 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handleMediaPlaybackFinished(notification:)), name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+
+		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: .shift, action: #selector(keyCommandPreviousItem), discoverabilityTitle: "Previous item".localized))
+		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: .shift, action: #selector(keyCommandNextItem), discoverabilityTitle: "Next item".localized))
 	}
 
 	private var registered = false
@@ -360,6 +363,34 @@ class DisplayHostViewController: UIPageViewController {
 			return filteredItems
 		}
 	}
+
+	// MARK: - Manual navigation
+	func showPreviousItem(onlyMediaItems: Bool = false, animated: Bool = false) {
+		guard let activeDisplayViewController, let previousViewController = adjacentViewController(relativeTo: activeDisplayViewController, .before, includeOnlyMediaItems: onlyMediaItems) as? DisplayViewController else { return }
+
+		setViewControllers([previousViewController], direction: .reverse, animated: animated, completion: nil)
+		self.activeDisplayViewController = previousViewController
+	}
+
+	func showNextItem(onlyMediaItems: Bool = false, animated: Bool = false) {
+		guard let activeDisplayViewController, let nextViewController = adjacentViewController(relativeTo: activeDisplayViewController, .after, includeOnlyMediaItems: onlyMediaItems) as? DisplayViewController else { return }
+
+		setViewControllers([nextViewController], direction: .forward, animated: animated, completion: nil)
+		self.activeDisplayViewController = nextViewController
+	}
+
+	// MARK: - Keyboard support
+	@objc func keyCommandPreviousItem() {
+		showPreviousItem(animated: false)
+	}
+
+	@objc func keyCommandNextItem() {
+		showNextItem(animated: false)
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
 }
 
 extension DisplayHostViewController: UIPageViewControllerDataSource {
@@ -387,31 +418,21 @@ extension DisplayHostViewController: Themeable {
 }
 
 extension DisplayHostViewController {
-
 	@objc private func handleMediaPlaybackFinished(notification:Notification) {
-		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) as? MediaDisplayViewController {
-				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
-				activeDisplayViewController = displayViewController
-			}
+		if activeDisplayViewController is MediaDisplayViewController {
+			showNextItem(onlyMediaItems: true, animated: false)
 		}
 	}
 
 	@objc private func handlePlayNextMedia(notification:Notification) {
-		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .after, includeOnlyMediaItems: true) as? MediaDisplayViewController {
-				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
-				activeDisplayViewController = displayViewController
-			}
+		if activeDisplayViewController is MediaDisplayViewController {
+			showNextItem(onlyMediaItems: true, animated: false)
 		}
 	}
 
 	@objc private func handlePlayPreviousMedia(notification:Notification) {
-		if let mediaController = activeDisplayViewController as? MediaDisplayViewController {
-			if let displayViewController = adjacentViewController(relativeTo: mediaController, .before, includeOnlyMediaItems: true) as? MediaDisplayViewController {
-				self.setViewControllers([displayViewController], direction: .forward, animated: false, completion: nil)
-				activeDisplayViewController = displayViewController
-			}
+		if activeDisplayViewController is MediaDisplayViewController {
+			showPreviousItem(onlyMediaItems: true, animated: false)
 		}
 	}
 }

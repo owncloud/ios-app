@@ -69,6 +69,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 		contentContainerView.cssSelector = .content
 		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
+		contentContainerView.focusGroupIdentifier = "com.owncloud.content"
 		view.addSubview(contentContainerView)
 
 		navigationView.translatesAutoresizingMaskIntoConstraints = false
@@ -359,6 +360,8 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		}
 		didSet {
 			if let sidebarViewController, let sidebarViewControllerView = sidebarViewController.view {
+				sidebarViewController.focusGroupIdentifier = "com.owncloud.sidebar"
+
 				updateSideBarNavigationItem()
 
 				addChild(sidebarViewController)

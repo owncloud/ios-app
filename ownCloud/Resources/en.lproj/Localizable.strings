@@ -491,6 +491,9 @@
 "Refresh without asking" = "Refresh without asking";
 "Ignore updates" = "Ignore updates";
 
+"Previous item" = "Previous item";
+"Next item" = "Next item";
+
 /* PDF Viewer */
 "Resume" = "Resume";
 "Go to page" = "Go to page";

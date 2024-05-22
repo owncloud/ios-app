@@ -491,6 +491,9 @@
 "Refresh without asking" = "Aktualisieren ohne Nachfrage";
 "Ignore updates" = "Aktualisierungen ignorieren";
 
+"Previous item" = "Vorherige Datei";
+"Next item" = "Nächste Datei";
+
 /* PDF Viewer */
 "Resume" = "Fortsetzen";
 "Go to page" = "Gehe zu Seite";
