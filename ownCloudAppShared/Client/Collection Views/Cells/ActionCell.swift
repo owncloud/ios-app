@@ -203,6 +203,7 @@ extension ActionCell {
 				var accessories: [UICellAccessory] = []
 				var content = cell.defaultContentConfiguration()
 				var backgroundConfiguration: UIBackgroundConfiguration?
+				var hasButton = false
 
 				if let action = item as? OCAction {
 					content.text = action.title
@@ -236,6 +237,9 @@ extension ActionCell {
 							action?.run(options: options)
 						}), for: .primaryActionTriggered)
 
+						button.focusGroupIdentifier = "com.owncloud.accessory-action-button.\(arc4random())"
+						hasButton = true
+
 						accessories.append(.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing())))
 					}
 				}
@@ -249,6 +253,8 @@ extension ActionCell {
 						accessories.append(.outlineDisclosure(options: headerDisclosureOption))
 					}
 				}
+
+				cell.accessibilityRespondsToUserInteraction = !hasButton
 
 				cell.accessories = accessories
 				cell.contentConfiguration = content

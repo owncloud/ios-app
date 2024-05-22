@@ -19,10 +19,17 @@
 import UIKit
 import ownCloudSDK
 
-extension OCAction {
+public extension OCAction {
 	func uiAction(with options: [OCActionRunOptionKey : Any]? = nil) -> UIAction {
 		return UIAction(title: title, image: icon, attributes: [], handler: { action in
 			self.run(options: options)
 		})
+	}
+
+	func accessibilityCustomAction(with options: [OCActionRunOptionKey : Any]? = nil) -> UIAccessibilityCustomAction {
+		return UIAccessibilityCustomAction(name: title, image: icon) { _ in
+			self.run(options: options)
+			return true
+		}
 	}
 }

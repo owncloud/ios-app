@@ -497,6 +497,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.collection, .cell,.segments], 	property: .fill,   value: UIColor.clear),
 			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.icon], property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.title],property: .stroke, value: cellStateSet.regular.secondaryLabelColor),
+
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.focused],property: .stroke, value: cellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.focused,.icon],property: .stroke, value: cellStateSet.regular.labelColor),
+			ThemeCSSRecord(selectors: [.collection, .cell,.segments,.focused,.title],property: .stroke, value: cellStateSet.regular.labelColor),
+
 			ThemeCSSRecord(selectors: [.collection, .sectionFooter], 	property: .stroke, value: sectionFooterColor),
 			ThemeCSSRecord(selectors: [.collection, .cell], 	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 
@@ -645,7 +650,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.action, .highlighted],		property: .fill, value: inlineActionBackgroundColorHighlighted),
 
 			// - Drive Header
-			ThemeCSSRecord(selectors: [.header, .drive, .cover],		property: .fill, value: lightBrandColor),
+			ThemeCSSRecord(selectors: [.header, .drive, .cover],		property: .fill,   value: UIColor.systemGray),
+			ThemeCSSRecord(selectors: [.header, .drive, .focused, .cover],	property: .fill,   value: tintColor),
+
+			ThemeCSSRecord(selectors: [.header, .drive, .semicover],	property: .fill,   value: UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)),
+			ThemeCSSRecord(selectors: [.header, .drive, .focused, .semicover],property: .fill, value: tintColor),
 
 			// - Expandable Resource Cell
 			ThemeCSSRecord(selectors: [.expandable],			property: .fill,   value: collectionBackgroundColor),

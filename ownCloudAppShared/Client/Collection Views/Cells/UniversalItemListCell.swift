@@ -844,6 +844,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			backgroundConfig?.backgroundColor = collection.css.getColor(.fill, for: self)
 		}
 
+		detailSegmentPrimaryView.cssSelectors = state.isFocused ? [.focused] : []
+		detailSegmentSecondaryView?.cssSelectors = state.isFocused ? [.focused] : []
+
 		backgroundConfiguration = backgroundConfig
 
 		// Multiselection in grid cell layout

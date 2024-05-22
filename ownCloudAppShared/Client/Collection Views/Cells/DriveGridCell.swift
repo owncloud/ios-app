@@ -58,6 +58,12 @@ class DriveGridCell: DriveHeaderCell {
 		contentView.addSubview(moreButton)
 	}
 
+	override func updateConfiguration(using state: UICellConfigurationState) {
+		super.updateConfiguration(using: state)
+		self.cssSelectors = state.isFocused ? [.header, .drive, .focused] : [.header, .drive]
+		applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
+	}
+
 	override func configureLayout() {
 		super.configureLayout()
 
@@ -79,6 +85,7 @@ class DriveGridCell: DriveHeaderCell {
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
 
+		darkBackgroundView.applyThemeCollection(theme: theme, collection: collection, event: .update)
 		moreButton.apply(css: collection.css, properties: [.stroke, .fill])
 	}
 }

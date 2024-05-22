@@ -22,7 +22,8 @@ extension ThemeCSSSelector {
 	static let segments = ThemeCSSSelector(rawValue: "segments")
 }
 
-public class SegmentView: ThemeView, ThemeCSSAutoSelector {
+public class SegmentView: ThemeView, ThemeCSSAutoSelector, ThemeCSSChangeObserver {
+
 	public let cssAutoSelectors: [ThemeCSSSelector] = [.segments]
 
 	public enum TruncationMode {
@@ -295,5 +296,12 @@ public class SegmentView: ThemeView, ThemeCSSAutoSelector {
 				self.scrollToTruncationTarget()
 			}
 		}
+	}
+
+	public func cssSelectorsChanged() {
+		for item in items {
+			item._view = nil
+		}
+		recreateAndLayoutItemViews()
 	}
 }

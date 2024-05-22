@@ -238,6 +238,14 @@ extension SavedSearchCell {
 						}
 						completed(nil)
 					}) : nil
+
+					if let sideButtonAction = cell.sideButtonAction {
+						cell.accessibilityCustomActions = [
+							sideButtonAction.accessibilityCustomAction()
+						]
+					} else {
+						cell.accessibilityCustomActions = nil
+					}
 				}
 			})
 		}
