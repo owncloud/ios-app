@@ -99,6 +99,10 @@
 "Please wait…" = "Bitte warten…";
 "Sort by %@" = "Sortiert nach %@";
 "Sort by" = "Sortieren nach";
+"Sort by {{attribute}} in {{direction}} order" = "{{direction}} sortiert nach {{attribute}}";
+"{{attribute}} {{direction}}" = "{{attribute}} {{direction}}";
+"ascending" = "aufsteigend";
+"descending" = "absteigend";
 
 "Toggle layout" = "Layout ändern";
 

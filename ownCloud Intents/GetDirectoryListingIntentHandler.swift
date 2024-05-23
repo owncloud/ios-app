@@ -119,7 +119,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 				if targetDirectoryQuery.sortComparator == nil {
 					let sort = SortMethod(rawValue: (intent.sortType.rawValue - 1)) ?? SortMethod.alphabetically
 
-					targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: (intent.sortDirection.rawValue - 1)) ?? SortDirection.ascendant)
+					targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: (intent.sortDirection.rawValue - 1)) ?? SortDirection.ascending)
 				}
 				core?.start(targetDirectoryQuery)
 			} else {

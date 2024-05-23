@@ -77,13 +77,13 @@ public class SortBar: ThemeCSSView {
 
 		if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
 			if sortDescriptor.method == newSortMethod {
-				if sortDirection == .ascendant {
-					sortDirection = .descendant
+				if sortDirection == .ascending {
+					sortDirection = .descending
 				} else {
-					sortDirection = .ascendant
+					sortDirection = .ascending
 				}
 			} else {
-				sortDirection = .ascendant // Reset sort direction when switching sort methods
+				sortDirection = .ascending // Reset sort direction when switching sort methods
 			}
 		}
 
@@ -138,18 +138,26 @@ public class SortBar: ThemeCSSView {
 					for method in SortMethod.all {
 						let title = method.localizedName
 						var sortDirectionTitle = ""
+						var sortDirectionLabel = ""
 
-						if self?.sortDescriptor.method == method {
-							if self?.sortDescriptor.direction == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
-								sortDirectionTitle = " ↓"
+						if let sortDescriptor = self?.sortDescriptor {
+							if sortDescriptor.method == method {
+								// Show arrows and labels opposite to the current sort direction to show what choosing them will lead to
+								sortDirectionTitle = sortDescriptor.direction == .ascending ? " ↓" : " ↑"
+								sortDirectionLabel = sortDescriptor.direction == .ascending ? "descending".localized : "ascending".localized
 							} else {
-								sortDirectionTitle = " ↑"
+								sortDirectionLabel = sortDescriptor.direction == .ascending ? "ascending".localized : "descending".localized
 							}
 						}
 
 						let menuItem = UIAction(title: "\(title)\(sortDirectionTitle)", image: nil, attributes: []) { [weak self] _ in
 							self?.userSelectedSortMethod(method)
 						}
+
+						menuItem.accessibilityLabel = "{{attribute}} {{direction}}".localized([
+							"attribute" : method.localizedName,
+							"direction" : sortDirectionLabel
+						])
 
 						menuItems.append(menuItem)
 					}
@@ -250,12 +258,15 @@ public class SortBar: ThemeCSSView {
 		let method = sortDescriptor.method
 		let sortButtonTitle = sortDirectionTitle(method.localizedName)
 		sortButton?.setTitle(sortButtonTitle, for: .normal)
-		sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, method.localizedName) as String
+		sortButton?.accessibilityLabel = "Sort by {{attribute}} in {{direction}} order".localized([
+			"attribute" : method.localizedName,
+			"direction" : (sortDescriptor.direction == .ascending) ? "ascending".localized : "descending".localized
+		])
 		sortButton?.sizeToFit()
 	}
 
 	func sortDirectionTitle(_ title: String) -> String {
-		if sortDescriptor.direction == .descendant {
+		if sortDescriptor.direction == .descending {
 			return String(format: "%@ ↓", title)
 		} else {
 			return String(format: "%@ ↑", title)
