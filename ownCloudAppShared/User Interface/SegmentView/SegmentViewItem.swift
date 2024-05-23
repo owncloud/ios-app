@@ -119,6 +119,20 @@ extension [SegmentViewItem] {
 			return includeUntagged
 		})
 	}
+
+	var accessibilityLabelSummary: String? {
+		var accessibilityLabelSummary: String = ""
+
+		for item in self {
+			if let accessibilityLabel = item.accessibilityLabel {
+				accessibilityLabelSummary += " \(accessibilityLabel)"
+			} else if let title = item.title {
+				accessibilityLabelSummary += " \(title)"
+			}
+		}
+
+		return accessibilityLabelSummary.count > 0 ? accessibilityLabelSummary : nil
+	}
 }
 
 extension SegmentViewItem {

@@ -214,13 +214,16 @@ extension OCItem: UniversalItemListCellContentProvider {
 		primaryLineSizeSegment.insets = .zero
 		detailItems.append(primaryLineSizeSegment)
 
-		let secondaryLineDateSegment = SegmentViewItem(with: nil, title: lastModifiedLocalizedCompact, style: .plain, titleTextStyle: .footnote, lines: [.secondary])
+		let secondaryLineDateSegment = SegmentViewItem(with: nil, title: lastModifiedLocalizedCompact, style: .plain, titleTextStyle: .footnote, lines: [.secondary], accessibilityLabel: lastModifiedLocalizedAccessible)
 		secondaryLineDateSegment.insets = .zero
 		detailItems.append(secondaryLineDateSegment)
 
-		detailString += " - " + lastModifiedLocalized
+		var detailStringAccessible = detailString
 
-		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine])
+		detailString += " - " + lastModifiedLocalized
+		detailStringAccessible += " " + lastModifiedLocalizedAccessible
+
+		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine], accessibilityLabel: detailStringAccessible)
 		detailSegment.insets = .zero
 
 		detailItems.append(detailSegment)

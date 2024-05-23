@@ -144,6 +144,11 @@
 
 "An error occurred" = "Es ist ein Fehler aufgetreten";
 
+/* Accessibility descriptions of items */
+"{{fileName}} (file)" = "{{fileName}} (Datei)";
+"{{folderName}} (folder)" = "{{folderName}} (Ordner)";
+"{{spaceName}} (space)" = "{{spaceName}} (Space)";
+
 /* Status dot description */
 "Offline" = "Offline";
 "Connecting" = "Verbinde";

@@ -407,6 +407,12 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			}
 		}
 
+		titleLabel.isAccessibilityElement = false
+		detailSegmentPrimaryView.isAccessibilityElement = false
+		detailSegmentSecondaryView?.isAccessibilityElement = false
+		contentView.isAccessibilityElement = false
+		self.isAccessibilityElement = true
+
 		detailSegmentPrimaryView.truncationMode = truncationMode
 
 		if constraints.count > 0 {
@@ -447,6 +453,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			}
 		}
 	}
+	var accessibilityTitle: String?
 	var primaryDetailSegments: [SegmentViewItem]? {
 		didSet {
 			detailSegmentPrimaryView.items = primaryDetailSegments ?? []
@@ -559,15 +566,19 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 					switch title {
 						case .text(let text):
 							set(title: text)
+							accessibilityTitle = text
 
 						case .file(name: let name):
 							set(title: name, isFileName: true)
+							accessibilityTitle = "{{fileName}} (file)".localized(["fileName" : name])
 
 						case .folder(name: let name):
 							set(title: name)
+							accessibilityTitle = "{{folderName}} (folder)".localized(["folderName" : name])
 
 						case .drive(name: let name):
 							set(title: name)
+							accessibilityTitle = "{{spaceName}} (space)".localized(["spaceName" : name])
 					}
 				} else {
 					set(title: nil)
@@ -627,7 +638,27 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			if onlyFields == nil || onlyFields?.contains(.progress) == true {
 				progressView?.progress = content?.progress
 			}
+
+			self.accessibilityLabel = accessibilityLabelContent
 		}
+	}
+
+	var accessibilityLabelContent: String {
+		var content: String = ""
+
+		if let titleString = accessibilityTitle {
+			content += titleString
+		}
+
+		if let primaryDetailSegments, let accessibilityLabelSummary = primaryDetailSegments.accessibilityLabelSummary {
+			content += accessibilityLabelSummary
+		}
+
+		if let secondaryDetailSegments, let accessibilityLabelSummary = secondaryDetailSegments.accessibilityLabelSummary {
+			content += accessibilityLabelSummary
+		}
+
+		return content
 	}
 
 	// MARK: - Content provider
@@ -718,6 +749,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.cssSelectors = [.accessory, .more]
 
 		moreButton = button
+		moreButton?.isAccessibilityElement = false // do NOT make the more button available as accessibility element so that item lists can be browsed fluently in VoiceOver. Where users want to access the more button, they can do so via the custom accessibility actions, which include the more button. When the cell is selected, swiping up and down allows picking an action, including "More".
 
 		updateAccessibilityCustomActions()
 
