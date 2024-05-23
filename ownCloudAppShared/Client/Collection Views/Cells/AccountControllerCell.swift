@@ -76,6 +76,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		contentView.addSubview(infoView)
 
 		infoView.addSubview(disconnectButton)
+
+		titleLabel.isAccessibilityElement = false
+		detailLabel.isAccessibilityElement = false
+		statusIconView.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
 	}
 
 	func configureLayout() {
@@ -137,11 +143,13 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 	var title: String? {
 		didSet {
 			titleLabel.text = title
+			updateAccessibilityLabel()
 		}
 	}
 	var detail: String? {
 		didSet {
 			detailLabel.text = detail
+			updateAccessibilityLabel()
 		}
 	}
 
@@ -222,6 +230,8 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			}
 
 			self.updateStatus(iconFor: accountController?.connection?.status)
+
+			updateAccessibilityLabel()
 		}
 	}
 
@@ -266,8 +276,9 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			statusIconView.image = nil
 		}
 
-		statusIconView.isAccessibilityElement = statusDescription != nil
 		statusIconView.accessibilityLabel = statusDescription
+
+		updateAccessibilityLabel()
 	}
 
 	func updateStatus(from richStatus: AccountConnectionRichStatus?) {
@@ -284,6 +295,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			detailLabel.text = detail
 		}
+	}
+
+	func updateAccessibilityLabel() {
+		accessibilityLabel = "\("Account".localized) \(title ?? "") \(detail ?? "") \(statusIconView.accessibilityLabel != nil ? "Status".localized + " " + statusIconView.accessibilityLabel! : "")"
 	}
 
 	// MARK: - Message Badge
