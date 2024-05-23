@@ -953,6 +953,7 @@
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Mehrfachauswahl beginnen";
+"Exit multiple selection" = "Mehrfachauswahl beenden";
 
 /* Universal Links */
 "Resolving link…" = "Link auflösen…";

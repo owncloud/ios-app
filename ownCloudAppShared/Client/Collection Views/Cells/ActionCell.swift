@@ -44,6 +44,7 @@ class ActionCell: ThemeableCollectionViewCell {
 	var title : String? {
 		didSet {
 			titleLabel.text = title
+			accessibilityLabel = title
 		}
 	}
 	var icon : UIImage? {
@@ -85,7 +86,6 @@ class ActionCell: ThemeableCollectionViewCell {
 		iconView.contentMode = .scaleAspectFit
 
 		titleLabel.setContentHuggingPriority(.required, for: .vertical)
-//		titleLabel.setContentHuggingPriority(.required, for: .horizontal)
 
 		titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -96,6 +96,10 @@ class ActionCell: ThemeableCollectionViewCell {
 
 		let backgroundConfig = UIBackgroundConfiguration.clear()
 		backgroundConfiguration = backgroundConfig
+
+		titleLabel.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
 	}
 
 	func configureLayout() {

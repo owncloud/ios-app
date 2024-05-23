@@ -253,6 +253,8 @@ extension DriveListCell {
 			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
+
+			cell.accessibilityTraits = .button
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

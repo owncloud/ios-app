@@ -786,6 +786,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		didSet {
 			if oldValue != isMultiSelecting {
 				collectionView.isEditing = isMultiSelecting
+				sortBar?.multiselectActive = isMultiSelecting
 
 				if isMultiSelecting {
 					// Setup new action context

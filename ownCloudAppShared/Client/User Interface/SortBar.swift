@@ -50,6 +50,11 @@ public class SortBar: ThemeCSSView {
 			updateSelectButtonVisibility()
 		}
 	}
+	public var multiselectActive: Bool = false {
+		didSet {
+			selectButton?.accessibilityLabel = multiselectActive ? "Exit multiple selection".localized : "Enter multiple selection".localized
+		}
+	}
 	public var showSelectButton: Bool = false {
 		didSet {
 			updateSelectButtonVisibility()
@@ -177,7 +182,7 @@ public class SortBar: ThemeCSSView {
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.cssSelector = .multiselect
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .primaryActionTriggered)
-			selectButton.accessibilityLabel = "Enter multiple selection".localized
+			selectButton.accessibilityLabel = multiselectActive ? "Exit multiple selection".localized : "Enter multiple selection".localized
 			selectButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([

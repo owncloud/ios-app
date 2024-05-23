@@ -952,6 +952,7 @@
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
+"Exit multiple selection" = "Exit multiple selection";
 
 /* Universal Links */
 "Resolving link…" = "Resolving link…";
