@@ -24,6 +24,11 @@ class DriveGridCell: DriveHeaderCell {
 	var moreAction: OCAction? {
 		didSet {
 			moreButton.isHidden = (moreAction == nil)
+			if let moreAction {
+				accessibilityCustomActions = [ moreAction.accessibilityCustomAction() ]
+			} else {
+				accessibilityCustomActions = nil
+			}
 		}
 	}
 
@@ -55,6 +60,11 @@ class DriveGridCell: DriveHeaderCell {
 		moreButton.isHidden = true
 		moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+		titleLabel.isAccessibilityElement = false
+		subtitleLabel.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
+
 		contentView.addSubview(moreButton)
 	}
 
@@ -76,9 +86,16 @@ class DriveGridCell: DriveHeaderCell {
 		])
 	}
 
+	override var title: String? {
+		didSet {
+			accessibilityLabel = title
+		}
+	}
+
 	override var subtitle: String? {
 		didSet {
 			subtitleLabel.text = subtitle ?? " " // Ensure the grid cells' titles align by always showing a subtitle - if necessary, an empty one
+			accessibilityHint = subtitle
 		}
 	}
 

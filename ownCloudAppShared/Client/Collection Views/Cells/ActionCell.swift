@@ -237,10 +237,12 @@ extension ActionCell {
 							action?.run(options: options)
 						}), for: .primaryActionTriggered)
 
-						button.focusGroupIdentifier = "com.owncloud.accessory-action-button.\(arc4random())"
+						button.focusGroupIdentifier = "com.owncloud.accessory-action-button.\(UUID().uuidString)"
 						hasButton = true
 
 						accessories.append(.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing())))
+					} else {
+						cell.accessibilityTraits = .button
 					}
 				}
 
@@ -251,6 +253,8 @@ extension ActionCell {
 					if sidebarAction.childrenDataSource != nil {
 						let headerDisclosureOption = UICellAccessory.OutlineDisclosureOptions(style: .cell)
 						accessories.append(.outlineDisclosure(options: headerDisclosureOption))
+					} else {
+						cell.accessibilityTraits = .button
 					}
 				}
 

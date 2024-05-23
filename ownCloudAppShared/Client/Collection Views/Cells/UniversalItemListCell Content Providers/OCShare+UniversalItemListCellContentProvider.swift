@@ -128,11 +128,12 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 				if let expirationDate {
 					let prettyExpirationDate = OCItem.compactDateFormatter.string(from: expirationDate)
+					let accessibleExpirationDate = OCItem.accessibilityDateFormatter.string(from: expirationDate)
 
 					let expirationDateIconSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "calendar"))
 					expirationDateIconSegment.insets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
 
-					let expirationDateSegment = SegmentViewItem(with: nil, title: "Expires {{expirationDate}}".localized(["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote)
+					let expirationDateSegment = SegmentViewItem(with: nil, title: "Expires {{expirationDate}}".localized(["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote, accessibilityLabel: "Expires {{expirationDate}}".localized(["expirationDate" : accessibleExpirationDate]))
 					expirationDateSegment.insets = .zero
 
 					detailExtraItems = [

@@ -43,6 +43,7 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 	var title: String? {
 		didSet {
 			titleLabel.text = title
+			updateAccessibilityLabel()
 		}
 	}
 	var icon: UIImage? {
@@ -54,7 +55,12 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 		didSet {
 			segmentView.items = items ?? []
 			hasItemsConstraint?.isActive = segmentView.items.count > 0
+			updateAccessibilityLabel()
 		}
+	}
+
+	private func updateAccessibilityLabel() {
+		contentView.accessibilityLabel = "\(title ?? "") \(items?.accessibilityLabelSummary ?? "")"
 	}
 
 	private var sideButtonUIAction: UIAction?
@@ -111,6 +117,8 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 		titleLabel.lineBreakMode = .byWordWrapping
 		titleLabel.numberOfLines = 1
 
+		titleLabel.isAccessibilityElement = false
+
 		iconView.setContentHuggingPriority(.required, for: .horizontal)
 
 		sideButton.configuration = .tinted()
@@ -119,6 +127,9 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 		var backgroundConfig = UIBackgroundConfiguration.clear()
 		backgroundConfig.cornerRadius = 10
 		backgroundConfiguration = backgroundConfig
+
+		contentView.isAccessibilityElement = true
+		contentView.accessibilityTraits = .button
 	}
 
 	func configureLayout() {
@@ -266,6 +277,7 @@ extension SavedSearchCell {
 
 			cell.backgroundConfiguration = .listSidebarCell()
 			cell.contentConfiguration = content
+			cell.accessibilityTraits = .button
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
 		}
 
