@@ -1,4 +1,4 @@
-Fix: Detect attempts to bypass a lock timeout by changing the clock
+Bugfix: Detect attempts to bypass a lock timeout by changing the clock
 
 - detect attempts to bypass a lock timeout by changing the clock
 - code cleanups/modernizations of `AppLockManager`
