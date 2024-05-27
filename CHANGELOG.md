@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.2.1](#changelog-for-owncloud-ios-client-1221-2024-04-30)
 * [Changelog for 12.2.0](#changelog-for-owncloud-ios-client-1220-2024-04-23)
 * [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-29)
 * [Changelog for 12.0.3](#changelog-for-owncloud-ios-client-1203-2023-08-31)
@@ -23,6 +24,25 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.2.1] (2024-04-30)
+The following sections list the changes in ownCloud iOS Client 12.2.1 relevant to
+ownCloud admins and users.
+
+[12.2.1]: https://github.com/owncloud/ios-app/compare/milestone/12.2.0...milestone/12.2.1
+
+## Summary
+
+* Bugfix - Detect attempts to bypass a lock timeout by changing the clock: [#1347](https://github.com/owncloud/ios-app/pull/1347)
+
+## Details
+
+* Bugfix - Detect attempts to bypass a lock timeout by changing the clock: [#1347](https://github.com/owncloud/ios-app/pull/1347)
+
+   - detect attempts to bypass a lock timeout by changing the clock - code
+   cleanups/modernizations of `AppLockManager` - supersedes #1324
+
+   https://github.com/owncloud/ios-app/pull/1347
+
 # Changelog for ownCloud iOS Client [12.2.0] (2024-04-23)
 The following sections list the changes in ownCloud iOS Client 12.2.0 relevant to
 ownCloud admins and users.
