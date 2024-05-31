@@ -49,6 +49,11 @@ class ClientSharedByMeViewController: CollectionViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
+
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, contentDataSource: OCDataSource) -> CollectionViewSection {
 			let section = CollectionViewSection(identifier: identifier, dataSource: contentDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)), clientContext: clientContext)
 			section.hideIfEmptyDataSource = contentDataSource

@@ -660,9 +660,14 @@
 "Save changes" = "Save changes";
 
 "Enter password" = "Enter password";
+"Remove password" = "Remove password";
 "Change password" = "Change password";
 "Show" = "Show";
 "Hide" = "Hide";
+
+"Remove expiration date" = "Remove expiration date";
+"Extend by one week" = "Extend by one week";
+"Shorten by one week" = "Shorten by one week";
 
 "{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | password: {{password}}";
 "{{link}} | password: {{password}}" = "{{link}} | password: {{password}}";

@@ -24,7 +24,7 @@ class AvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.availableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make available offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
@@ -120,6 +120,18 @@ class AvailableOfflineAction: Action {
 			return staticRow
 		}
 		return nil
+	}
+
+	override func provideAccessibilityCustomAction() -> UIAccessibilityCustomAction {
+		let customAction = super.provideAccessibilityCustomAction()
+
+		if self.isAvailableOffline {
+			customAction.name = "Make unavailable offline".localized
+		} else {
+			customAction.name = "Make available offline".localized
+		}
+
+		return customAction
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {

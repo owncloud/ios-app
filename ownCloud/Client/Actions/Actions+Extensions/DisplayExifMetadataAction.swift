@@ -23,7 +23,7 @@ class DisplayExifMetadataAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.show-exif") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Image metadata".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .contextMenuItem, .accessibilityCustomAction] }
 	class var supportedMimeTypes : [String] { return ["image"] }
 	class var excludedMimeTypes : [String] { return ["image/gif", "image/svg"] }
 

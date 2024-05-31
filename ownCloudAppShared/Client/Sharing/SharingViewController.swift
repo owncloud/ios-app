@@ -220,6 +220,13 @@ open class SharingViewController: CollectionViewController {
 		if let core = clientContext.core, let itemSharesQuery {
 			core.start(itemSharesQuery)
 		}
+
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		defer { // needed so dragInteractionEnabled.didSet is called despite being set in the initializer
+			dragInteractionEnabled = false
+		}
 	}
 
 	deinit {

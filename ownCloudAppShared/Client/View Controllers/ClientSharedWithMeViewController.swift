@@ -45,6 +45,11 @@ class ClientSharedWithMeViewController: CollectionViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
+
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource, queryDataSource: OCDataSource? = nil) -> CollectionViewSection {
 			var sectionContext = clientContext
 

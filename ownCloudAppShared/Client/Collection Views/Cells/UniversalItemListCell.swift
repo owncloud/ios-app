@@ -61,6 +61,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			dataItem = content.dataItem
 
 			onlyFields = content.onlyFields
+
+			accessibilityLabel = content.accessibilityLabel
+			accessibilityCustomActions = content.accessibilityCustomActions
+			accessibilityCustomActionsBlock = content.accessibilityCustomActionsBlock
 		}
 
 		init(with title: Title, detailText: String? = nil, icon: Icon? = nil, accessories: [UICellAccessory]? = nil) {
@@ -109,7 +113,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		var progress: Progress?
 		var accessories: [UICellAccessory]?
+
+		var accessibilityLabel: String?
 		var accessibilityCustomActions: [UIAccessibilityCustomAction]?
+		var accessibilityCustomActionsBlock: (() -> [UIAccessibilityCustomAction]?)?
 
 		var disabled: Bool = false
 
@@ -639,12 +646,21 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 				progressView?.progress = content?.progress
 			}
 
+			// Accessibility actions
+			if content?.accessibilityCustomActionsBlock != nil || content?.accessibilityCustomActions != nil {
+				updateAccessibilityCustomActions()
+			}
+
 			self.accessibilityLabel = accessibilityLabelContent
 		}
 	}
 
 	var accessibilityLabelContent: String {
 		var content: String = ""
+
+		if let accessibilityLabel = self.content?.accessibilityLabel, accessibilityLabel.count > 0 {
+			return accessibilityLabel
+		}
 
 		if let titleString = accessibilityTitle {
 			content += titleString
@@ -727,6 +743,21 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		accessibilityCustomActions = customActions.count > 0 ? customActions : nil
+
+		if #available(iOS 17, *) {
+			if let contentCustomActionsBlock = content?.accessibilityCustomActionsBlock {
+				accessibilityCustomActions = nil
+				accessibilityCustomActionsBlock = {
+					var actions: [UIAccessibilityCustomAction] = customActions
+
+					if let contentProvidedActions = contentCustomActionsBlock() {
+						actions.append(contentsOf: contentProvidedActions)
+					}
+
+					return actions
+				}
+			}
+		}
 	}
 
 	// MARK: - Accessories

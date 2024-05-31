@@ -247,6 +247,29 @@ extension OCItem: UniversalItemListCellContentProvider {
 			content.progress = progress
 		}
 
+		// Accessibility custom actions
+		if #available(iOS 17, *) {
+			if let context, let clientViewController = context.originatingViewController as? ClientItemViewController {
+				content.accessibilityCustomActionsBlock = { [weak self] in
+					var accessibilityActions : [UIAccessibilityCustomAction] = []
+
+					if let core = context.core, let self {
+						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .accessibilityCustomAction)
+						let actionContext = ActionContext(viewController: clientViewController, clientContext: context, core: core, items: [self], location: actionsLocation, sender: nil)
+						let actions = Action.sortedApplicableActions(for: actionContext)
+						for action in actions {
+							action.progressHandler = context.actionProgressHandlerProvider?.makeActionProgressHandler()
+
+							let customAction = action.provideAccessibilityCustomAction()
+							accessibilityActions.append(customAction)
+						}
+					}
+
+					return accessibilityActions
+				}
+			}
+		}
+
 		// Accessories
 		var accessories: [UICellAccessory] = [
 			.multiselect()
@@ -271,7 +294,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 			}
 		}
 
-		content.accessories = accessories // [ cell.moreButtonAccessory, cell.progressAccessory, cell.messageButtonAccessory, cell.revealButtonAccessory ]
+		content.accessories = accessories
 
 		return (content, hasMessageForItem)
 	}

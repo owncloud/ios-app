@@ -260,6 +260,11 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
+
 		// Add extra content inset on top
 		var extraContentInset = collectionView.contentInset
 		extraContentInset.top += 10
@@ -635,15 +640,23 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		if hasPasswordOption {
 			var accessories: [UICellAccessory] = []
 			var details: [SegmentViewItem] = []
+			var customActions: [UIAccessibilityCustomAction] = []
 
 			let makeButton: (_ title: String, _ action: @escaping UIActionHandler) -> UIButton = { (title, action) in
 				var buttonConfig = UIButton.Configuration.plain()
 				buttonConfig.title = title
 				buttonConfig.contentInsets = .zero
 
+				let uiAction = UIAction(handler: action)
+
 				let button = ThemeCSSButton()
 				button.configuration = buttonConfig
-				button.addAction(UIAction(handler: action), for: .primaryActionTriggered)
+				button.addAction(uiAction, for: .primaryActionTriggered)
+
+				customActions.append(UIAccessibilityCustomAction(name: title, actionHandler: { _ in
+					action(uiAction)
+					return true
+				}))
 
 				return button
 			}
@@ -665,13 +678,22 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				details.append(.detailText("******"))
 
+				let removePassword = { [weak self] in
+					self?.password = nil
+					self?.removePassword = true
+					self?.updateOptions()
+				}
+
 				accessories = [
-					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove password".localized, action: UIAction(handler: { [weak self] action in
-						self?.password = nil
-						self?.removePassword = true
-						self?.updateOptions()
+					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove password".localized, action: UIAction(handler: { _ in
+						removePassword()
 					}))
 				]
+
+				customActions.append(UIAccessibilityCustomAction(name: "Remove password".localized, actionHandler: { _ in
+					removePassword()
+					return true
+				}))
 			} else {
 				if passwordRequired {
 					details.append(.detailText("⚠️"))
@@ -690,6 +712,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 			let content = UniversalItemListCell.Content(with: .text("Password".localized), iconSymbolName: "key.fill", accessories: accessories)
 			content.details = details
+			content.accessibilityCustomActions = customActions
 
 			if passwordOption == nil {
 				passwordOption = OptionItem(kind: .single, content: content, state: false, selectionAction: { [weak self] optionItem in
@@ -708,6 +731,12 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		if hasExpirationOption {
 			var accessories: [UICellAccessory] = []
 			var details: [SegmentViewItem] = []
+			var customActions: [UIAccessibilityCustomAction] = []
+
+			let addExpirationDate = { [weak self] in
+				self?.expirationDate = .now.addingTimeInterval(24 * 3600 * 7)
+				self?.updateOptions()
+			}
 
 			if let expirationDate {
 				if expirationDatePicker == nil {
@@ -726,18 +755,47 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					}), for: .valueChanged)
 
 					expirationDatePicker = datePicker
+				} else {
+					expirationDatePicker?.date = expirationDate
 				}
 
 				if let expirationDatePicker {
 					details.append(SegmentViewItem(view: expirationDatePicker))
 				}
 
+				let removeExpirationDate = { [weak self] in
+					self?.expirationDate = nil
+					self?.updateOptions()
+				}
+
 				accessories = [
-					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove expiration date".localized, action: UIAction(handler: { [weak self] action in
-						self?.expirationDate = nil
-						self?.updateOptions()
+					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove expiration date".localized, action: UIAction(handler: { _ in
+						removeExpirationDate()
 					}))
 				]
+
+				customActions.append(UIAccessibilityCustomAction(name: "Extend by one week".localized, actionHandler: { [weak self] _ in
+					if let expirationDate = self?.expirationDate {
+						self?.expirationDate = expirationDate.addingTimeInterval(7 * 24 * 60 * 60)
+						self?.updateOptions()
+					}
+					return true
+				}))
+
+				if expirationDate.timeIntervalSinceNow > (7 * 24 * 60 * 60) {
+					customActions.append(UIAccessibilityCustomAction(name: "Shorten by one week".localized, actionHandler: { [weak self] _ in
+						if let expirationDate = self?.expirationDate {
+							self?.expirationDate = expirationDate.addingTimeInterval(-7 * 24 * 60 * 60)
+							self?.updateOptions()
+						}
+						return true
+					}))
+				}
+
+				customActions.append(UIAccessibilityCustomAction(name: "Remove expiration date".localized, actionHandler: { _ in
+					removeExpirationDate()
+					return true
+				}))
 			} else {
 				var buttonConfig = UIButton.Configuration.plain()
 				buttonConfig.title = "Add".localized
@@ -745,9 +803,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				let button = ThemeCSSButton()
 				button.configuration = buttonConfig
-				button.addAction(UIAction(handler: { [weak self] action in
-					self?.expirationDate = .now.addingTimeInterval(24 * 3600 * 7)
-					self?.updateOptions()
+				button.addAction(UIAction(handler: { _ in
+					addExpirationDate()
 				}), for: .primaryActionTriggered)
 
 				if expirationDateRequired {
@@ -755,15 +812,30 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				}
 
 				details.append(SegmentViewItem(view: button))
+
+				customActions.append(UIAccessibilityCustomAction(name: "Add".localized, actionHandler: { _ in
+					addExpirationDate()
+					return true
+				}))
 			}
 
 			let content = UniversalItemListCell.Content(with: .text("Expiration date".localized), iconSymbolName: "calendar", accessories: accessories)
 			content.details = details
+			content.accessibilityCustomActions = customActions
+			content.accessibilityLabel = "Expiration date".localized + " " + ((expirationDate != nil) ? OCItem.accessibilityDateFormatter.string(for: expirationDate!) ?? "" : "")
 
 			if expiryOption == nil {
 				expiryOption = OptionItem(kind: .single, content: content, state: false)
 			} else {
 				expiryOption?.content = content
+			}
+
+			expiryOption?.selectAction = {  [weak self] optionItem in
+				if self?.expirationDate == nil {
+					addExpirationDate()
+				} else if let picker = self?.expirationDatePicker {
+					picker.sendActions(for: .primaryActionTriggered)
+				}
 			}
 
 			if let expiryOption {

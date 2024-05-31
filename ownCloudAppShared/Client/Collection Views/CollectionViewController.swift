@@ -211,6 +211,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			collectionView.delegate = self
 			collectionView.dragDelegate = self
 			collectionView.dropDelegate = self
+			collectionView.dragInteractionEnabled = dragInteractionEnabled
 		}
 	}
 
@@ -1123,6 +1124,14 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public var dropTargetsDataSource : OCDataSource?
 
 	// MARK: - Drag delegate
+	var dragInteractionEnabled: Bool = true {
+		didSet {
+			// Allows disabling dragging of items, so keyboard control does
+			// not include "Drag Item" in the accessibility actions invoked with Tab + Z
+			collectionView?.dragInteractionEnabled = dragInteractionEnabled
+		}
+	}
+
 	public func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		if let item = targetedDataItem(for: indexPath, interaction: .drag),
 		   let dragInteraction = item as? DataItemDragInteraction {

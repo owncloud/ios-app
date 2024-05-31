@@ -657,9 +657,14 @@
 "Save changes" = "Änderung speichern";
 
 "Enter password" = "Passwort eingeben";
+"Remove password" = "Passwort entfernen";
 "Change password" = "Passwort ändern";
 "Show" = "Zeigen";
 "Hide" = "Verbergen";
+
+"Remove expiration date" = "Ablaufsdatum entfernen";
+"Extend by one week" = "Verlängern um eine Woche";
+"Shorten by one week" = "Vorziehen um eine Woche";
 
 "{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | Passwort: {{password}}";
 "{{link}} | password: {{password}}" = "{{link}} | Passwort: {{password}}";
