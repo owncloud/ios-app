@@ -49,6 +49,13 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 				self?.setCoverView(coverView, layout: .top)
 			})
 		}
+
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		defer { // needed so dragInteractionEnabled.didSet is called despite being set in the initializer
+			dragInteractionEnabled = false
+		}
 	}
 
 	static func cellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {

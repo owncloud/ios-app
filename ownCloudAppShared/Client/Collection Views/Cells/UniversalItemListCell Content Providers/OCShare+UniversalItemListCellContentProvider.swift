@@ -209,12 +209,13 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .byMe {
 			if type == .link {
-				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "list.clipboard"), title: "Copy".localized, accessibilityLabel: "Copy to clipboard".localized, cssSelectors: [.accessory, .copyToClipboard], action: UIAction(handler: { [weak self, weak context] action in
+				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(accessibilityLabel: "Copy to clipboard".localized, cssSelectors: [.accessory, .copyToClipboard], provideAccessibilityCustomAction: true, action: OCAction(title: "Copy".localized, icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self, weak context] _, _, done in
 					if let self {
 						if self.copyToClipboard(), let presentationViewController = context?.presentationViewController {
 							_ = NotificationHUDViewController(on: presentationViewController, title: self.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 						}
 					}
+					done(nil)
 				}))
 
 				var accessories = [ copyToClipboardAccessory ]
@@ -245,7 +246,6 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .withMe, let effectiveState {
 			var accessories: [UICellAccessory] = []
-			var customActions: [UIAccessibilityCustomAction] = []
 			let omitLongActions = (effectiveState == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
 
 			let makeDecisionAction: (_ accept: Bool) -> Void = { [weak self, weak context] accept in
@@ -255,31 +255,22 @@ extension OCShare: UniversalItemListCellContentProvider {
 				}
 			}
 
-			if (effectiveState == .pending || effectiveState == .declined) {
-				if !omitLongActions {
-					let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { _ in makeDecisionAction(true) }
-					))
-
-					accessories.append(accessory)
-				}
-
-				customActions.append(UIAccessibilityCustomAction(name: "Accept".localized, image: OCSymbol.icon(forSymbolName: "checkmark.circle"), actionHandler: { _ in
+			if !omitLongActions, offerAcceptAction {
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], provideAccessibilityCustomAction: false, action: OCAction(title: "Accept".localized, icon: OCSymbol.icon(forSymbolName: "checkmark.circle"), action: { _, _, done in
 					makeDecisionAction(true)
-					return true
+					done(nil)
 				}))
+
+				accessories.append(accessory)
 			}
 
-			if (effectiveState == .pending || effectiveState == .accepted) {
-				if !omitLongActions {
-					let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { _ in makeDecisionAction(false) }))
-
-					accessories.append(accessory)
-				}
-
-				customActions.append(UIAccessibilityCustomAction(name: "Decline".localized, image: OCSymbol.icon(forSymbolName: "minus.circle"), actionHandler: { _ in
+			if !omitLongActions, offerDeclineAction {
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], provideAccessibilityCustomAction: false, action: OCAction(title: "Decline".localized, icon: OCSymbol.icon(forSymbolName: "minus.circle"), action: { _, _, done in
 					makeDecisionAction(false)
-					return true
+					done(nil)
 				}))
+
+				accessories.append(accessory)
 			}
 
 			if omitLongActions, let menuItems = composeContextMenuItems(in: nil, location: .contextMenuItem, with: context) {
@@ -293,7 +284,6 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 
 			content.accessories = accessories
-			content.accessibilityCustomActions = customActions
 		}
 
 		_ = updateContent(content)

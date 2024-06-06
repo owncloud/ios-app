@@ -639,6 +639,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 						self.accessories = []
 					}
 				}
+
+				updateAccessibilityCustomActions()
 			}
 
 			// Progress
@@ -738,6 +740,12 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			customActions.append(UIAccessibilityCustomAction(name: "Show message".localized, image: OCSymbol.icon(forSymbolName: "exclamationmark.triangle.fill"), target: self, selector: #selector(messageButtonTapped)))
 		}
 
+		// Add accessibility custom actions attached to accessories
+		for accessory in accessories {
+			customActions.append(contentsOf: accessory.attachedAccessibilityCustomActions)
+		}
+
+		// Add accessibility custom actions from content
 		if let contentCustomActions = content?.accessibilityCustomActions {
 			customActions.append(contentsOf: contentCustomActions)
 		}
@@ -875,8 +883,24 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	}()
 
 	// - Make custom accessory buttons
-	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], action: UIAction? = nil) -> (UIButton, UICellAccessory) {
-		return UICellAccessory.borderedButton(image: image, title: title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action)
+	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], action: OCAction, provideAccessibilityCustomAction: Bool = false) -> (UIButton, UICellAccessory) {
+		var (button, accessory) = UICellAccessory.borderedButton(image: image, title: title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action.uiAction())
+
+		if provideAccessibilityCustomAction {
+			accessory.attachedAccessibilityCustomActions = [ action.accessibilityCustomAction() ]
+		}
+
+		return (button, accessory)
+	}
+
+	open func makeAccessoryButton(accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], provideAccessibilityCustomAction: Bool = false, action: OCAction) -> (UIButton, UICellAccessory) {
+		var (button, accessory) = UICellAccessory.borderedButton(image: action.icon, title: action.title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action.uiAction())
+
+		if provideAccessibilityCustomAction {
+			accessory.attachedAccessibilityCustomActions = [ action.accessibilityCustomAction() ]
+		}
+
+		return (button, accessory)
 	}
 
 	// MARK: - Prepare for reuse
@@ -960,6 +984,38 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		setNeedsUpdateConfiguration()
+	}
+}
+
+// MARK: - Accessibility custom actions support
+public extension UICellAccessory {
+	private static let associatedKeyAttachedAccessibilityCustomActions = malloc(1)!
+
+	private var containedCustomView: UIView? {
+		switch self.accessoryType {
+			case let .customView(customView):
+				return customView
+
+			default: break
+		}
+
+		return nil
+	}
+
+	var attachedAccessibilityCustomActions: [UIAccessibilityCustomAction] {
+		set {
+			if let containedCustomView {
+				objc_setAssociatedObject(containedCustomView, UICellAccessory.associatedKeyAttachedAccessibilityCustomActions, newValue as NSArray, .OBJC_ASSOCIATION_RETAIN)
+			}
+		}
+
+		get {
+			if let containedCustomView {
+				return objc_getAssociatedObject(containedCustomView, UICellAccessory.associatedKeyAttachedAccessibilityCustomActions) as? [UIAccessibilityCustomAction] ?? []
+			}
+
+			return []
+		}
 	}
 }
 

@@ -504,7 +504,6 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	}
 
 	var actionBarButtonItem : UIBarButtonItem {
-		let itemName = item?.name ?? ""
 		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(actionsBarButtonPressed))
 		actionsBarButtonItem.tag = moreButtonTag
 		actionsBarButtonItem.accessibilityLabel = "Actions".localized
