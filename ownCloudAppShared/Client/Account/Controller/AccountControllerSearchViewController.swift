@@ -81,4 +81,12 @@ class AccountControllerSearchViewController: ClientItemViewController {
 
 		return suggestions
 	}
+
+	override func search(for viewController: SearchViewController, content: SearchViewController.Content?) {
+		// Disable dragging of items, so keyboard control does not include "Drag Item"
+		// in the accessibility actions invoked with Tab + Z for (Quick Access) suggestions
+		dragInteractionEnabled = (content?.type == .suggestion) ? false : true
+
+		super.search(for: viewController, content: content)
+	}
 }
