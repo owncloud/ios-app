@@ -283,7 +283,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			footerFolderStatisticsLabel = ThemeCSSLabel(withSelectors: [.sectionFooter, .statistics])
 			footerFolderStatisticsLabel?.translatesAutoresizingMaskIntoConstraints = false
-			footerFolderStatisticsLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+			footerFolderStatisticsLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
 			footerFolderStatisticsLabel?.textAlignment = .center
 			footerFolderStatisticsLabel?.setContentHuggingPriority(.required, for: .vertical)
 			footerFolderStatisticsLabel?.setContentCompressionResistancePriority(.required, for: .vertical)

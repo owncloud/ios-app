@@ -110,7 +110,7 @@ class ActionCell: ThemeableCollectionViewCell {
 
 				titleLabel.textAlignment = .center
 
-				titleLabel.font = UIFont.systemFont(ofSize: 10)
+				titleLabel.font = UIFont.preferredFont(forTextStyle: .caption2)
 
 				self.configuredConstraints = [
 					iconView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: iconInsets.left),
