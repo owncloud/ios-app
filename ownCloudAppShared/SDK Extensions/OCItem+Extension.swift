@@ -156,6 +156,12 @@ extension OCItem {
 		return OCItem.compactDateFormatter.string(from: lastModified)
 	}
 
+	public var lastModifiedLocalizedAccessible: String {
+		guard let lastModified = self.lastModified else { return "" }
+
+		return OCItem.accessibilityDateFormatter.string(from: lastModified)
+	}
+
 	static private let byteCounterFormatter: ByteCountFormatter = {
 		let byteCounterFormatter = ByteCountFormatter()
 		byteCounterFormatter.allowsNonnumericFormatting = false
@@ -175,6 +181,15 @@ extension OCItem {
 		let dateFormatter: DateFormatter =  DateFormatter()
 		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .short
+		dateFormatter.locale = Locale.current
+		dateFormatter.doesRelativeDateFormatting = true
+		return dateFormatter
+	}()
+
+	static public let accessibilityDateFormatter: DateFormatter = {
+		let dateFormatter: DateFormatter =  DateFormatter()
+		dateFormatter.timeStyle = .short
+		dateFormatter.dateStyle = .long
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter

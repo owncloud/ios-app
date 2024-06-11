@@ -25,7 +25,7 @@ class RemoveFromSidebarAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.removeFromSidebar") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Remove from sidebar".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.contextMenuItem, .moreItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.contextMenuItem, .moreItem, .accessibilityCustomAction] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {

@@ -27,7 +27,7 @@ class DocumentEditingAction : Action {
 	override class var name : String? { return "Markup".localized }
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
 	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic", "image/gif"] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }

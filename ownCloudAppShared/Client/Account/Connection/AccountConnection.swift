@@ -221,7 +221,7 @@ open class AccountConnection: NSObject {
 					// Add shareJailQueryCustomizer
 					core?.shareJailQueryCustomizer = { (query) in
 						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
-						query.sortComparator = SortMethod.alphabetically.comparator(direction: .ascendant)
+						query.sortComparator = SortMethod.alphabetically.comparator(direction: .ascending)
 					}
 
 					// Remove skip available offline when user opens the bookmark

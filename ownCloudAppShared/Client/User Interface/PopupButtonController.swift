@@ -190,6 +190,7 @@ open class PopupButtonController : NSObject, Themeable {
 
 			button.setAttributedTitle(attributedTitle, for: .normal)
 			button.sizeToFit()
+			button.accessibilityLabel = title
 		}
 	}
 

@@ -23,8 +23,8 @@ import ownCloudApp
 public typealias OCSort = Comparator
 
 public enum SortDirection: Int {
-	case ascendant = 0
-	case descendant = 1
+	case ascending = 0
+	case descending = 1
 }
 
 public enum SortMethod: Int {
@@ -87,7 +87,7 @@ public enum SortMethod: Int {
 			guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
 				return .orderedSame
 			}
-			if direction == .descendant {
+			if direction == .descending {
 				return localizedSortComparator(rightName, leftName)
 			}
 
@@ -119,7 +119,7 @@ public enum SortMethod: Int {
 
 					let leftSize = leftItem!.size as NSNumber
 					let rightSize = rightItem!.size as NSNumber
-					if direction == .descendant {
+					if direction == .descending {
 						return leftSize.compare(rightSize)
 					}
 
@@ -145,7 +145,7 @@ public enum SortMethod: Int {
 						result = typeResult
 					}
 
-					if direction == .descendant {
+					if direction == .descending {
 						if result == .orderedDescending {
 							result = .orderedAscending
 						} else if result == .orderedAscending {
@@ -168,7 +168,7 @@ public enum SortMethod: Int {
 						return .orderedSame
 					}
 
-					if direction == .descendant {
+					if direction == .descending {
 						 if rightShared {
 							return .orderedAscending
 						}
@@ -189,7 +189,7 @@ public enum SortMethod: Int {
 					guard let leftLastModified  = (left as? OCItem)?.lastModified, let rightLastModified = (right as? OCItem)?.lastModified else {
 						return .orderedSame
 					}
-					if direction == .descendant {
+					if direction == .descending {
 						return leftLastModified.compare(rightLastModified)
 					}
 
@@ -202,7 +202,7 @@ public enum SortMethod: Int {
 					guard let leftLastUsed  = (left as? OCItem)?.lastUsed ?? (left as? OCItem)?.lastModified, let rightLastUsed = (right as? OCItem)?.lastUsed ?? (right as? OCItem)?.lastModified else {
 						return .orderedSame
 					}
-					if direction == .descendant {
+					if direction == .descending {
 						return leftLastUsed.compare(rightLastUsed)
 					}
 
@@ -252,7 +252,7 @@ public class SortDescriptor: NSObject {
 	public static var defaultSortDescriptor: SortDescriptor {
 		get {
 			let defaultSortMethod: SortMethod = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? .alphabetically
-			let defaultSortDirection: SortDirection = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? .ascendant
+			let defaultSortDirection: SortDirection = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? .ascending
 
 			return SortDescriptor(method: defaultSortMethod, direction: defaultSortDirection)
 		}

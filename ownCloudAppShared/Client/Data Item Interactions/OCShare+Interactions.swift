@@ -48,12 +48,12 @@ extension OCShare {
 		makeDecision(accept: false, context: context)
 	}
 
-	private var offerAcceptAction: Bool {
+	var offerAcceptAction: Bool {
 		return ((self.effectiveState == .pending || self.effectiveState == .declined) && (self.category == .withMe))
 	}
 
-	private var offerDeclineAction: Bool {
-		return (self.effectiveState == .pending || self.effectiveState == .accepted  || self.category == .byMe)
+	var offerDeclineAction: Bool {
+		return (((self.effectiveState == .pending || self.effectiveState == .accepted) && (self.category == .withMe)) || self.category == .byMe)
 	}
 }
 

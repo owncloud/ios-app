@@ -70,6 +70,7 @@ public extension OCExtensionLocationIdentifier {
 	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
 	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
 	static let directOpen: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("directOpen") //!< Used in OCItem+Interactions to implement direct actions for opening files
+	static let accessibilityCustomAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("accessibilityCustomAction") //!< Accessibility custom action available in VoiceOver and in Keyboard Control when pressing Tab + Z
 }
 
 public class ActionExtension: OCExtension {
@@ -523,6 +524,10 @@ open class Action : NSObject {
 		return UIBarButtonItem(title: actionExtension.name, image: icon, primaryAction: UIAction(handler: { (_) in
 			self.perform()
 		}))
+	}
+
+	open func provideAccessibilityCustomAction() -> UIAccessibilityCustomAction {
+		return provideOCAction().accessibilityCustomAction()
 	}
 
 	// MARK: - Action metadata

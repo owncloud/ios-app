@@ -303,6 +303,10 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			connectionActivityView.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			connectionActivityView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: verticalSpacing)
 		])
+
+		view.isAccessibilityElement = true
+		view.focusGroupIdentifier = "com.owncloud.viewer"
+		view.focusEffect = UIFocusHaloEffect(rect: CGRect(x: 0, y: 0, width: 0, height: 0)) // Avoid "bluish" overlay over viewed content when using the accessibility option keyboard navigation
 	}
 
 	private var _themeRegistered = false
@@ -319,6 +323,15 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		updateDisplayTitleAndButtons()
 		updateUI()
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		becomeFirstResponder()
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
 	}
 
 	// MARK: - Actions which can be triggered by the user
@@ -491,10 +504,9 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	}
 
 	var actionBarButtonItem : UIBarButtonItem {
-		let itemName = item?.name ?? ""
 		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(actionsBarButtonPressed))
 		actionsBarButtonItem.tag = moreButtonTag
-		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+		actionsBarButtonItem.accessibilityLabel = "Actions".localized
 
 		return actionsBarButtonItem
 	}
@@ -699,6 +711,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 								// Use existing local copy
 								itemDirectURL = file.url
+								state = .downloadFinished
 								didUpdate = true
 
 								// Modify item's last used timestamp

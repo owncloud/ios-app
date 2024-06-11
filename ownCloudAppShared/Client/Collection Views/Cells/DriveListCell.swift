@@ -191,7 +191,7 @@ extension DriveListCell {
 
 					// More item button action
 					if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
-						cell.moreAction = OCAction(title: "", icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
+						cell.moreAction = OCAction(title: "Actions".localized, icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
 							clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
 								if let item {
 									OnMainThread {
@@ -253,6 +253,8 @@ extension DriveListCell {
 			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
+
+			cell.accessibilityTraits = .button
 		}
 
 		CollectionViewCellProvider.register(CollectionViewCellProvider(for: .drive, with: { collectionView, cellConfiguration, itemRecord, itemRef, indexPath in

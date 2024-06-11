@@ -447,6 +447,7 @@ public class ComposedMessageView: UIView, Themeable {
 		super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 		self.translatesAutoresizingMaskIntoConstraints = false
 		self.cssSelectors = [.message]
+		self.accessibilityRespondsToUserInteraction = false
 
 		self.elements = elements
 	}

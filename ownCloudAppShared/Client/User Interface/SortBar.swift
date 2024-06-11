@@ -50,6 +50,11 @@ public class SortBar: ThemeCSSView {
 			updateSelectButtonVisibility()
 		}
 	}
+	public var multiselectActive: Bool = false {
+		didSet {
+			selectButton?.accessibilityLabel = multiselectActive ? "Exit multiple selection".localized : "Enter multiple selection".localized
+		}
+	}
 	public var showSelectButton: Bool = false {
 		didSet {
 			updateSelectButtonVisibility()
@@ -77,13 +82,13 @@ public class SortBar: ThemeCSSView {
 
 		if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
 			if sortDescriptor.method == newSortMethod {
-				if sortDirection == .ascendant {
-					sortDirection = .descendant
+				if sortDirection == .ascending {
+					sortDirection = .descending
 				} else {
-					sortDirection = .ascendant
+					sortDirection = .ascending
 				}
 			} else {
-				sortDirection = .ascendant // Reset sort direction when switching sort methods
+				sortDirection = .ascending // Reset sort direction when switching sort methods
 			}
 		}
 
@@ -109,6 +114,8 @@ public class SortBar: ThemeCSSView {
 
 		super.init(frame: frame)
 		self.cssSelector = .sortBar
+
+		let focusGuide = UIFocusGuide()
 
 		if let sortButton, let selectButton, let changeItemLayoutButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
@@ -136,18 +143,26 @@ public class SortBar: ThemeCSSView {
 					for method in SortMethod.all {
 						let title = method.localizedName
 						var sortDirectionTitle = ""
+						var sortDirectionLabel = ""
 
-						if self?.sortDescriptor.method == method {
-							if self?.sortDescriptor.direction == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
-								sortDirectionTitle = " ↓"
+						if let sortDescriptor = self?.sortDescriptor {
+							if sortDescriptor.method == method {
+								// Show arrows and labels opposite to the current sort direction to show what choosing them will lead to
+								sortDirectionTitle = sortDescriptor.direction == .ascending ? " ↓" : " ↑"
+								sortDirectionLabel = sortDescriptor.direction == .ascending ? "descending".localized : "ascending".localized
 							} else {
-								sortDirectionTitle = " ↑"
+								sortDirectionLabel = sortDescriptor.direction == .ascending ? "ascending".localized : "descending".localized
 							}
 						}
 
 						let menuItem = UIAction(title: "\(title)\(sortDirectionTitle)", image: nil, attributes: []) { [weak self] _ in
 							self?.userSelectedSortMethod(method)
 						}
+
+						menuItem.accessibilityLabel = "{{attribute}} {{direction}}".localized([
+							"attribute" : method.localizedName,
+							"direction" : sortDirectionLabel
+						])
 
 						menuItems.append(menuItem)
 					}
@@ -166,8 +181,8 @@ public class SortBar: ThemeCSSView {
 			// Select Button
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.cssSelector = .multiselect
-			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
-			selectButton.accessibilityLabel = "Enter multiple selection".localized
+			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .primaryActionTriggered)
+			selectButton.accessibilityLabel = multiselectActive ? "Exit multiple selection".localized : "Enter multiple selection".localized
 			selectButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
@@ -177,7 +192,7 @@ public class SortBar: ThemeCSSView {
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
 
-			// Disply Mode Button
+			// Display Mode Button
 			changeItemLayoutButton.cssSelector = .itemLayout
 			changeItemLayoutButton.accessibilityLabel = "Toggle layout".localized
 			changeItemLayoutButton.isPointerInteractionEnabled = true
@@ -206,6 +221,22 @@ public class SortBar: ThemeCSSView {
 				changeItemLayoutButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				changeItemLayoutButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 			])
+
+			self.accessibilityRespondsToUserInteraction = false
+
+			sortButton.focusGroupIdentifier = "com.owncloud.sort-button"
+			selectButton.focusGroupIdentifier = "com.owncloud.select-button"
+			changeItemLayoutButton.focusGroupIdentifier = "com.owncloud.change-item-layout-button"
+
+			focusGuide.preferredFocusEnvironments = [ sortButton, selectButton, changeItemLayoutButton ]
+			addLayoutGuide(focusGuide)
+
+			NSLayoutConstraint.activate([
+				leadingAnchor.constraint(equalTo: focusGuide.leadingAnchor),
+				trailingAnchor.constraint(equalTo: focusGuide.trailingAnchor),
+				topAnchor.constraint(equalTo: focusGuide.topAnchor),
+				bottomAnchor.constraint(equalTo: focusGuide.bottomAnchor)
+			])
 		}
 
 		// Finalize view setup
@@ -232,12 +263,15 @@ public class SortBar: ThemeCSSView {
 		let method = sortDescriptor.method
 		let sortButtonTitle = sortDirectionTitle(method.localizedName)
 		sortButton?.setTitle(sortButtonTitle, for: .normal)
-		sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, method.localizedName) as String
+		sortButton?.accessibilityLabel = "Sort by {{attribute}} in {{direction}} order".localized([
+			"attribute" : method.localizedName,
+			"direction" : (sortDescriptor.direction == .ascending) ? "ascending".localized : "descending".localized
+		])
 		sortButton?.sizeToFit()
 	}
 
 	func sortDirectionTitle(_ title: String) -> String {
-		if sortDescriptor.direction == .descendant {
+		if sortDescriptor.direction == .descending {
 			return String(format: "%@ ↓", title)
 		} else {
 			return String(format: "%@ ↑", title)

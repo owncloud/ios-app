@@ -128,11 +128,12 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 				if let expirationDate {
 					let prettyExpirationDate = OCItem.compactDateFormatter.string(from: expirationDate)
+					let accessibleExpirationDate = OCItem.accessibilityDateFormatter.string(from: expirationDate)
 
 					let expirationDateIconSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "calendar"))
 					expirationDateIconSegment.insets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
 
-					let expirationDateSegment = SegmentViewItem(with: nil, title: "Expires {{expirationDate}}".localized(["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote)
+					let expirationDateSegment = SegmentViewItem(with: nil, title: "Expires {{expirationDate}}".localized(["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote, accessibilityLabel: "Expires {{expirationDate}}".localized(["expirationDate" : accessibleExpirationDate]))
 					expirationDateSegment.insets = .zero
 
 					detailExtraItems = [
@@ -208,12 +209,13 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .byMe {
 			if type == .link {
-				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "list.clipboard"), title: "Copy".localized, accessibilityLabel: "Copy to clipboard".localized, cssSelectors: [.accessory, .copyToClipboard], action: UIAction(handler: { [weak self, weak context] action in
+				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(accessibilityLabel: "Copy to clipboard".localized, cssSelectors: [.accessory, .copyToClipboard], provideAccessibilityCustomAction: true, action: OCAction(title: "Copy".localized, icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self, weak context] _, _, done in
 					if let self {
 						if self.copyToClipboard(), let presentationViewController = context?.presentationViewController {
 							_ = NotificationHUDViewController(on: presentationViewController, title: self.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 						}
 					}
+					done(nil)
 				}))
 
 				var accessories = [ copyToClipboardAccessory ]
@@ -246,23 +248,26 @@ extension OCShare: UniversalItemListCellContentProvider {
 			var accessories: [UICellAccessory] = []
 			let omitLongActions = (effectiveState == .pending) && (UITraitCollection.current.horizontalSizeClass == .compact)
 
-			if (effectiveState == .pending || effectiveState == .declined) && !omitLongActions {
-				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "checkmark.circle"), title: "Accept".localized, accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], action: UIAction(handler: { [weak self, weak context] action in
-					if let self, let context, let core = context.core {
-						core.makeDecision(on: self, accept: true, completionHandler: { error in
-						})
-					}
+			let makeDecisionAction: (_ accept: Bool) -> Void = { [weak self, weak context] accept in
+				if let self, let context, let core = context.core {
+					core.makeDecision(on: self, accept: accept, completionHandler: { error in
+					})
+				}
+			}
+
+			if !omitLongActions, offerAcceptAction {
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], provideAccessibilityCustomAction: false, action: OCAction(title: "Accept".localized, icon: OCSymbol.icon(forSymbolName: "checkmark.circle"), action: { _, _, done in
+					makeDecisionAction(true)
+					done(nil)
 				}))
 
 				accessories.append(accessory)
 			}
 
-			if (effectiveState == .pending || effectiveState == .accepted) && !omitLongActions {
-				let (_, accessory) = cell.makeAccessoryButton(image: OCSymbol.icon(forSymbolName: "minus.circle"), title: "Decline".localized, accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], action: UIAction(handler: { [weak self, weak context] action in
-					if let self, let context, let core = context.core {
-						core.makeDecision(on: self, accept: false, completionHandler: { error in
-						})
-					}
+			if !omitLongActions, offerDeclineAction {
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], provideAccessibilityCustomAction: false, action: OCAction(title: "Decline".localized, icon: OCSymbol.icon(forSymbolName: "minus.circle"), action: { _, _, done in
+					makeDecisionAction(false)
+					done(nil)
 				}))
 
 				accessories.append(accessory)

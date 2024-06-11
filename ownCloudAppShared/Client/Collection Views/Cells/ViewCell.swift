@@ -66,6 +66,8 @@ class ViewCell: ThemeableCollectionViewListCell {
 				}
 
 				NSLayoutConstraint.activate(constraints)
+
+				accessibilityRespondsToUserInteraction = self.hostedView?.accessibilityRespondsToUserInteraction ?? true
 			}
 		}
 	}

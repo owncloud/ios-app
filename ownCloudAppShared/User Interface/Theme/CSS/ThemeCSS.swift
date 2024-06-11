@@ -104,6 +104,7 @@ public struct ThemeCSSSelector: RawRepresentable, Equatable {
 	public static let selected = ThemeCSSSelector(rawValue: "selected")
 	public static let disabled = ThemeCSSSelector(rawValue: "disabled")
 	public static let filled = ThemeCSSSelector(rawValue: "filled")
+	public static let focused = ThemeCSSSelector(rawValue: "focused")
 
 	// Configurations
 	public static let grouped = ThemeCSSSelector(rawValue: "grouped")

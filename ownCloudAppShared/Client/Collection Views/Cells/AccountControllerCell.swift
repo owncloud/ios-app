@@ -76,6 +76,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		contentView.addSubview(infoView)
 
 		infoView.addSubview(disconnectButton)
+
+		titleLabel.isAccessibilityElement = false
+		detailLabel.isAccessibilityElement = false
+		statusIconView.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
 	}
 
 	func configureLayout() {
@@ -137,11 +143,13 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 	var title: String? {
 		didSet {
 			titleLabel.text = title
+			updateAccessibilityLabel()
 		}
 	}
 	var detail: String? {
 		didSet {
 			detailLabel.text = detail
+			updateAccessibilityLabel()
 		}
 	}
 
@@ -183,6 +191,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 					OnMainThread { [weak self] in
 						if accountController == self?.accountController {
 							self?.disconnectButton.isHidden = !showDisconnectButton
+							self?.accessibilityCustomActions = showDisconnectButton ? [
+								UIAccessibilityCustomAction(name: "Disconnect".localized, image: OCSymbol.icon(forSymbolName: "eject.circle.fill"), actionHandler: { [weak self] _ in
+									self?.accountController?.disconnect(completion: nil)
+									return true
+								})
+							] : nil
 						}
 					}
 				})
@@ -216,11 +230,14 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			}
 
 			self.updateStatus(iconFor: accountController?.connection?.status)
+
+			updateAccessibilityLabel()
 		}
 	}
 
 	func updateStatus(iconFor status: AccountConnection.Status?) {
 		var color: UIColor?
+		var statusDescription: String?
 
 		if let status = status {
 			switch status {
@@ -228,18 +245,23 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 				case .offline:
 					color = .systemGray
+					statusDescription = "Offline".localized
 
 				case .connecting, .coreAvailable:
 					color = .systemYellow
+					statusDescription = "Connecting".localized
 
 				case .online:
 					color = .systemGreen
+					statusDescription = "Online".localized
 
 				case .busy:
 					color = .systemBlue
+					statusDescription = "Busy".localized
 
 				case .authenticationError:
 					color = .systemRed
+					statusDescription = "Authentication error".localized
 			}
 		}
 
@@ -253,6 +275,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			statusIconView.image = nil
 		}
+
+		statusIconView.accessibilityLabel = statusDescription
+
+		updateAccessibilityLabel()
 	}
 
 	func updateStatus(from richStatus: AccountConnectionRichStatus?) {
@@ -269,6 +295,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			detailLabel.text = detail
 		}
+	}
+
+	func updateAccessibilityLabel() {
+		accessibilityLabel = "\("Account".localized) \(title ?? "") \(detail ?? "") \(statusIconView.accessibilityLabel != nil ? "Status".localized + " " + statusIconView.accessibilityLabel! : "")"
 	}
 
 	// MARK: - Message Badge

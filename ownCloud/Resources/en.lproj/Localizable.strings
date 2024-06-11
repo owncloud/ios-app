@@ -99,6 +99,12 @@
 "Please wait…" = "Please wait…";
 "Sort by %@" = "Sort by %@";
 "Sort by" = "Sort by";
+"Sort by {{attribute}} in {{direction}} order" = "Sort by {{attribute}} in {{direction}} order";
+"{{attribute}} {{direction}}" = "{{attribute}} {{direction}}";
+"ascending" = "ascending";
+"descending" = "descending";
+
+"Toggle layout" = "Toggle layout";
 
 "name" = "name";
 "kind" = "kind";
@@ -117,6 +123,9 @@
 "Search for users or groups" = "Search for users or groups";
 "Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
 
+"Reveal" = "Reveal";
+"Show message" = "Show message";
+
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 "Reveal in folder" = "Reveal in folder";
@@ -134,6 +143,18 @@
 "Show more results" = "Show more results";
 
 "An error occurred" = "An error occurred";
+
+/* Accessibility descriptions of items */
+"{{fileName}} (file)" = "{{fileName}} (file)";
+"{{folderName}} (folder)" = "{{folderName}} (folder)";
+"{{spaceName}} (space)" = "{{spaceName}} (space)";
+
+/* Status dot description */
+"Offline" = "Offline";
+"Connecting" = "Connecting";
+"Online" = "Online";
+"Busy" = "Busy";
+"Authentication error" = "Authentication error";
 
 /* Item Layouts */
 "List" = "List";
@@ -265,6 +286,7 @@
 "Upload videos via WiFi only" = "Upload videos via WiFi only";
 "Upload pictures via WiFi only" = "Upload pictures via WiFi only";
 "More" = "More";
+"More for {{title}}" = "More for {{title}}";
 "Documentation" = "Documentation";
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
@@ -478,6 +500,9 @@
 "Refresh without asking" = "Refresh without asking";
 "Ignore updates" = "Ignore updates";
 
+"Previous item" = "Previous item";
+"Next item" = "Next item";
+
 /* PDF Viewer */
 "Resume" = "Resume";
 "Go to page" = "Go to page";
@@ -624,6 +649,10 @@
 "Shared by me" = "Shared by me";
 "Shared by link" = "Shared by link";
 
+"Accept share" = "Accept share";
+"Decline share" = "Decline share";
+"Accept or decline" = "Accept or decline";
+
 "Share with" = "Share with";
 "Add" = "Add";
 "Set" = "Set";
@@ -631,9 +660,14 @@
 "Save changes" = "Save changes";
 
 "Enter password" = "Enter password";
+"Remove password" = "Remove password";
 "Change password" = "Change password";
 "Show" = "Show";
 "Hide" = "Hide";
+
+"Remove expiration date" = "Remove expiration date";
+"Extend by one week" = "Extend by one week";
+"Shorten by one week" = "Shorten by one week";
 
 "{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | password: {{password}}";
 "{{link}} | password: {{password}}" = "{{link}} | password: {{password}}";
@@ -667,6 +701,9 @@
 "Text" = "Text";
 "Documents" = "Documents";
 "Audio" = "Audio";
+
+/* Sidebar */
+"Show/Hide sidebar" = "Show/Hide sidebar";
 
 /* Favorites view */
 "No favorites found" = "No favorites found";
@@ -760,6 +797,13 @@
 
 "Locations" = "Locations";
 "Downloaded Files" = "Downloaded Files";
+
+/* Item and cloud status */
+"In the cloud" = "In the cloud";
+"Local copy" = "Local copy";
+"Local version" = "Local version";
+"Available offline" = "Available offline";
+"Shared" = "Shared";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -913,6 +957,7 @@
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
+"Exit multiple selection" = "Exit multiple selection";
 
 /* Universal Links */
 "Resolving link…" = "Resolving link…";

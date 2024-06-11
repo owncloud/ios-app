@@ -61,6 +61,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			dataItem = content.dataItem
 
 			onlyFields = content.onlyFields
+
+			accessibilityLabel = content.accessibilityLabel
+			accessibilityCustomActions = content.accessibilityCustomActions
+			accessibilityCustomActionsBlock = content.accessibilityCustomActionsBlock
 		}
 
 		init(with title: Title, detailText: String? = nil, icon: Icon? = nil, accessories: [UICellAccessory]? = nil) {
@@ -109,6 +113,10 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		var progress: Progress?
 		var accessories: [UICellAccessory]?
+
+		var accessibilityLabel: String?
+		var accessibilityCustomActions: [UIAccessibilityCustomAction]?
+		var accessibilityCustomActionsBlock: (() -> [UIAccessibilityCustomAction]?)?
 
 		var disabled: Bool = false
 
@@ -406,6 +414,12 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			}
 		}
 
+		titleLabel.isAccessibilityElement = false
+		detailSegmentPrimaryView.isAccessibilityElement = false
+		detailSegmentSecondaryView?.isAccessibilityElement = false
+		contentView.isAccessibilityElement = false
+		self.isAccessibilityElement = true
+
 		detailSegmentPrimaryView.truncationMode = truncationMode
 
 		if constraints.count > 0 {
@@ -440,8 +454,13 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	var title: NSAttributedString? {
 		didSet {
 			titleLabel.attributedText = title
+			if let titleString = title?.string {
+				moreButtonAccessibilityLabel = "More for {{title}}".localized(["title" : titleString])
+				moreButton?.accessibilityLabel = moreButtonAccessibilityLabel
+			}
 		}
 	}
+	var accessibilityTitle: String?
 	var primaryDetailSegments: [SegmentViewItem]? {
 		didSet {
 			detailSegmentPrimaryView.items = primaryDetailSegments ?? []
@@ -554,15 +573,19 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 					switch title {
 						case .text(let text):
 							set(title: text)
+							accessibilityTitle = text
 
 						case .file(name: let name):
 							set(title: name, isFileName: true)
+							accessibilityTitle = "{{fileName}} (file)".localized(["fileName" : name])
 
 						case .folder(name: let name):
 							set(title: name)
+							accessibilityTitle = "{{folderName}} (folder)".localized(["folderName" : name])
 
 						case .drive(name: let name):
 							set(title: name)
+							accessibilityTitle = "{{spaceName}} (space)".localized(["spaceName" : name])
 					}
 				} else {
 					set(title: nil)
@@ -616,13 +639,44 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 						self.accessories = []
 					}
 				}
+
+				updateAccessibilityCustomActions()
 			}
 
 			// Progress
 			if onlyFields == nil || onlyFields?.contains(.progress) == true {
 				progressView?.progress = content?.progress
 			}
+
+			// Accessibility actions
+			if content?.accessibilityCustomActionsBlock != nil || content?.accessibilityCustomActions != nil {
+				updateAccessibilityCustomActions()
+			}
+
+			self.accessibilityLabel = accessibilityLabelContent
 		}
+	}
+
+	var accessibilityLabelContent: String {
+		var content: String = ""
+
+		if let accessibilityLabel = self.content?.accessibilityLabel, accessibilityLabel.count > 0 {
+			return accessibilityLabel
+		}
+
+		if let titleString = accessibilityTitle {
+			content += titleString
+		}
+
+		if let primaryDetailSegments, let accessibilityLabelSummary = primaryDetailSegments.accessibilityLabelSummary {
+			content += accessibilityLabelSummary
+		}
+
+		if let secondaryDetailSegments, let accessibilityLabelSummary = secondaryDetailSegments.accessibilityLabelSummary {
+			content += accessibilityLabelSummary
+		}
+
+		return content
 	}
 
 	// MARK: - Content provider
@@ -649,16 +703,82 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 	}
 
+	// MARK: - Key commands
+	open override var keyCommands: [UIKeyCommand]? {
+		var keyCommands: [UIKeyCommand] = super.keyCommands ?? []
+
+		if messageButton != nil {
+			// Provide access to the message button via a press of the Return key
+			keyCommands.append(UIKeyCommand(input: "\r", modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(messageButtonTapped)))
+		} else if moreButton != nil {
+			// Provide access to the more button via a press of the Return key (https://github.com/owncloud/ios-app/issues/1336)
+			keyCommands.append(UIKeyCommand(input: "\r", modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(moreButtonTapped)))
+		}
+
+		if revealButton != nil {
+			// Provide access to the reveal button via a press of the right arrow (->) key (https://github.com/owncloud/ios-app/issues/1336)
+			keyCommands.append(UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: UIKeyModifierFlags(rawValue: 0), action: #selector(revealButtonTapped)))
+		}
+
+		return keyCommands
+	}
+
+	// MARK: - Accessibility custom actions
+	open func updateAccessibilityCustomActions() {
+		var customActions: [UIAccessibilityCustomAction] = []
+
+		// Provide keyboard access to all buttons' actions via Tab + Z
+		if moreButton != nil {
+			customActions.append(UIAccessibilityCustomAction(name: "Actions".localized, image: UIImage(named: "more-dots"), target: self, selector: #selector(moreButtonTapped)))
+		}
+
+		if revealButton != nil {
+			customActions.append(UIAccessibilityCustomAction(name: "Reveal".localized, image: OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), target: self, selector: #selector(revealButtonTapped)))
+		}
+
+		if messageButton != nil {
+			customActions.append(UIAccessibilityCustomAction(name: "Show message".localized, image: OCSymbol.icon(forSymbolName: "exclamationmark.triangle.fill"), target: self, selector: #selector(messageButtonTapped)))
+		}
+
+		// Add accessibility custom actions attached to accessories
+		for accessory in accessories {
+			customActions.append(contentsOf: accessory.attachedAccessibilityCustomActions)
+		}
+
+		// Add accessibility custom actions from content
+		if let contentCustomActions = content?.accessibilityCustomActions {
+			customActions.append(contentsOf: contentCustomActions)
+		}
+
+		accessibilityCustomActions = customActions.count > 0 ? customActions : nil
+
+		if #available(iOS 17, *) {
+			if let contentCustomActionsBlock = content?.accessibilityCustomActionsBlock {
+				accessibilityCustomActions = nil
+				accessibilityCustomActionsBlock = {
+					var actions: [UIAccessibilityCustomAction] = customActions
+
+					if let contentProvidedActions = contentCustomActionsBlock() {
+						actions.append(contentsOf: contentProvidedActions)
+					}
+
+					return actions
+				}
+			}
+		}
+	}
+
 	// MARK: - Accessories
 	// - More ...
 	open var moreButton: UIButton?
+	private var moreButtonAccessibilityLabel: String?
 	open lazy var moreButtonAccessory: UICellAccessory = {
 		let button = UIButton()
 
 		button.setImage(UIImage(named: "more-dots"), for: .normal)
 		button.contentMode = .center
 		button.isPointerInteractionEnabled = true
-		button.accessibilityLabel = "More".localized
+		button.accessibilityLabel = moreButtonAccessibilityLabel ?? "More".localized
 		button.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
 
 		button.frame = CGRect(x: 0, y: 0, width: 32, height: 42) // Avoid _UITemporaryLayoutWidths auto-layout warnings
@@ -668,6 +788,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.cssSelectors = [.accessory, .more]
 
 		moreButton = button
+		moreButton?.isAccessibilityElement = false // do NOT make the more button available as accessibility element so that item lists can be browsed fluently in VoiceOver. Where users want to access the more button, they can do so via the custom accessibility actions, which include the more button. When the cell is selected, swiping up and down allows picking an action, including "More".
+
+		updateAccessibilityCustomActions()
 
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
 	}()
@@ -700,6 +823,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		revealButton = button
 
+		updateAccessibilityCustomActions()
+
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
 	}()
 
@@ -729,6 +854,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		messageButton = button
 
+		updateAccessibilityCustomActions()
+
 		return .customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing(displayed: .whenNotEditing)))
 	}()
 
@@ -756,8 +883,24 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 	}()
 
 	// - Make custom accessory buttons
-	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], action: UIAction? = nil) -> (UIButton, UICellAccessory) {
-		return UICellAccessory.borderedButton(image: image, title: title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action)
+	open func makeAccessoryButton(image: UIImage? = nil, title: String? = nil, accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], action: OCAction, provideAccessibilityCustomAction: Bool = false) -> (UIButton, UICellAccessory) {
+		var (button, accessory) = UICellAccessory.borderedButton(image: image, title: title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action.uiAction())
+
+		if provideAccessibilityCustomAction {
+			accessory.attachedAccessibilityCustomActions = [ action.accessibilityCustomAction() ]
+		}
+
+		return (button, accessory)
+	}
+
+	open func makeAccessoryButton(accessibilityLabel: String? = nil, cssSelectors: [ThemeCSSSelector]? = [.accessory], provideAccessibilityCustomAction: Bool = false, action: OCAction) -> (UIButton, UICellAccessory) {
+		var (button, accessory) = UICellAccessory.borderedButton(image: action.icon, title: action.title, accessibilityLabel: accessibilityLabel, cssSelectors: cssSelectors, action: action.uiAction())
+
+		if provideAccessibilityCustomAction {
+			accessory.attachedAccessibilityCustomActions = [ action.accessibilityCustomAction() ]
+		}
+
+		return (button, accessory)
 	}
 
 	// MARK: - Prepare for reuse
@@ -787,6 +930,9 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		} else {
 			backgroundConfig?.backgroundColor = collection.css.getColor(.fill, for: self)
 		}
+
+		detailSegmentPrimaryView.cssSelectors = state.isFocused ? [.focused] : []
+		detailSegmentSecondaryView?.cssSelectors = state.isFocused ? [.focused] : []
 
 		backgroundConfiguration = backgroundConfig
 
@@ -838,6 +984,38 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		setNeedsUpdateConfiguration()
+	}
+}
+
+// MARK: - Accessibility custom actions support
+public extension UICellAccessory {
+	private static let associatedKeyAttachedAccessibilityCustomActions = malloc(1)!
+
+	private var containedCustomView: UIView? {
+		switch self.accessoryType {
+			case let .customView(customView):
+				return customView
+
+			default: break
+		}
+
+		return nil
+	}
+
+	var attachedAccessibilityCustomActions: [UIAccessibilityCustomAction] {
+		set {
+			if let containedCustomView {
+				objc_setAssociatedObject(containedCustomView, UICellAccessory.associatedKeyAttachedAccessibilityCustomActions, newValue as NSArray, .OBJC_ASSOCIATION_RETAIN)
+			}
+		}
+
+		get {
+			if let containedCustomView {
+				return objc_getAssociatedObject(containedCustomView, UICellAccessory.associatedKeyAttachedAccessibilityCustomActions) as? [UIAccessibilityCustomAction] ?? []
+			}
+
+			return []
+		}
 	}
 }
 

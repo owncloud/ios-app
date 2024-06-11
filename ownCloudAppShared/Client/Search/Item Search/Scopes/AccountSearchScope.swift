@@ -121,7 +121,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
  		if let condition = condition {
 			if let sortDescriptor = clientContext.sortDescriptor {
 				condition.sortBy = sortDescriptor.method.sortPropertyName
-				condition.sortAscending = sortDescriptor.direction == .ascendant
+				condition.sortAscending = sortDescriptor.direction == .ascending
 			}
 
 			condition.maxResultCount = NSNumber(value: maxResultCount)

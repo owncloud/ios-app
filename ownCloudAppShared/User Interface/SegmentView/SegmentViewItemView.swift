@@ -72,6 +72,10 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 			iconView?.setContentHuggingPriority(.required, for: .vertical)
 			iconView?.setContentCompressionResistancePriority(.required, for: .horizontal)
 			iconView?.setContentCompressionResistancePriority(.required, for: .vertical)
+			if let accessibilityLabel = item.accessibilityLabel {
+				iconView?.isAccessibilityElement = true
+				iconView?.accessibilityLabel = accessibilityLabel
+			}
 			views.append(iconView!)
 		}
 

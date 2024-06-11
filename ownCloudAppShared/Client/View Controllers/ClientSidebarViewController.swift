@@ -51,6 +51,11 @@ public class ClientSidebarViewController: CollectionSidebarViewController, Navig
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
+
 		// Set up AccountsControllerSource
 		accountsControllerSectionSource = OCDataSourceMapped(source: nil, creator: { [weak self] (_, bookmarkDataItem) in
 			if let bookmark = bookmarkDataItem as? OCBookmark, let self = self, let clientContext = self.clientContext {

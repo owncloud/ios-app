@@ -284,7 +284,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		}
 	}
 
-	@objc dynamic var showDisconnectButton: Bool = false
+	@objc dynamic open var showDisconnectButton: Bool = false
 
 	var savedSearchesDataSource: OCDataSourceKVO?
 	var savedSearchesCondition: DataSourceCondition?
@@ -439,7 +439,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			if configuration.showRecents {
 				// Recents
 				addSidebarItem(.recents) {
-					return OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascendant))
+					return OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascending))
 				}
 			}
 
