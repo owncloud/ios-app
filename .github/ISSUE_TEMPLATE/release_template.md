@@ -15,6 +15,7 @@ Xcode version to work with:
 
 ### Git & Code
 
+* [ ] [DEV] Update [SBOM](https://cloud.owncloud.com/f/6072865)
 - [ ] [GIT] Create branch `release/[major].[minor].[patch]` (freeze the code)
 - [ ] [DEV] Update `APP_SHORT_VERSION` `[major].[minor].[patch]` in [ownCloud.xcodeproj/project.pbxproj](https://github.com/owncloud/ios-app/blob/master/ownCloud.xcodeproj/project.pbxproj)
 - [ ] [TRFX] Update translations from transifex branch.
