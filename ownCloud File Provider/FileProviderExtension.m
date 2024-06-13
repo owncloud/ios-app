@@ -487,7 +487,7 @@
 		 	// Cancel download if the item is currently downloading
 		 	if (item.isDownloading)
 		 	{
-		 		if ((downloadProgress = [self.core progressForItem:(OCItem *)item matchingEventType:OCEventTypeDownload]) != nil)
+		 		if ((downloadProgress = [self.core progressForItemWithLocalID:((OCItem *)item).localID matchingEventType:OCEventTypeDownload]) != nil)
 		 		{
 		 			[downloadProgress makeObjectsPerformSelector:@selector(cancel)];
 				}
