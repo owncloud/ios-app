@@ -21,12 +21,12 @@ import MessageUI
 import ownCloudApp
 import ownCloudAppShared
 import ownCloudSDK
+import SafariServices
 
 extension VendorServices {
 	public func recommendToFriend(from viewController: UIViewController) {
-
 		guard let appStoreLink = self.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else {
-				return
+			return
 		}
 		let appName = VendorServices.shared.appName
 
@@ -35,6 +35,15 @@ extension VendorServices {
 		<a href="\(appStoreLink)">Download here</a>
 		"""
 		self.sendMail(to: nil, subject: "Try \(appName) on your smartphone!", message: message, from: viewController)
+	}
+
+	public func showHelpAndSupportOptions(from viewController: UIViewController) {
+		let feedbackViewController = HelpAndSupportViewController()
+
+		let navigationViewController = ThemeNavigationController(rootViewController: feedbackViewController)
+		navigationViewController.navigationBar.prefersLargeTitles = true
+
+		viewController.present(navigationViewController, animated: true)
 	}
 
 	public func sendFeedback(from viewController: UIViewController) {
@@ -84,6 +93,24 @@ extension VendorServices {
 			let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
 			alert.addAction(okAction)
 			viewController.present(alert, animated: true)
+		}
+	}
+
+	public func openSFWebView(on viewController: UIViewController, for url: URL, withConfirmation: Bool = true) {
+		if withConfirmation {
+			let alert = ThemedAlertController(title: "Do you want to open the following URL?".localized,
+						      message: url.absoluteString,
+						      preferredStyle: .alert)
+
+			let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+				viewController.present(SFSafariViewController(url: url), animated: true)
+			}
+			let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+			alert.addAction(okAction)
+			alert.addAction(cancelAction)
+			viewController.present(alert, animated: true)
+		} else {
+			viewController.present(SFSafariViewController(url: url), animated: true)
 		}
 	}
 }
