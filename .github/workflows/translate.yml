@@ -2,9 +2,7 @@ name: "Update translations"
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 3 * * *"
-
+  
 permissions: {}
 
 defaults:
@@ -34,7 +32,7 @@ jobs:
       - name: l10n-push
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         # we need to use a different docker image for those two, this appears to be a bit tricky with github actions out of the box
-        run:  bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "cd ownCloud/Resources/ && tx push -s --skip"
+        run:  bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "cd ownCloud/Resources/en.lproj && tx push -s --skip"
 
       - name: l10n-pull
         run: bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "cd ownCloud/Resources/ && tx pull --force --skip --all"
