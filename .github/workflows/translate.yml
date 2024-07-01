@@ -3,8 +3,8 @@ name: "Update translations"
 on:
   workflow_dispatch:
   push:
-  branches:
-    - transifex-github-action
+    branches:
+      - transifex-github-action
     
 permissions: {}
 
