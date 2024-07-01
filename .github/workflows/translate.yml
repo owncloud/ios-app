@@ -42,11 +42,13 @@ jobs:
           git add ownCloud/Resources/*.strings
           git status
           git stash
-          git pull origin
 
       - name: commit and push
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        #if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
+          install -d -m 0700 ~/.ssh
+          Set-Content -Value "${{ secrets.DEPLOYMENT_SSH_KEY }}" -Path ~/.ssh/id_ed25519
+          chmod 0600 ~/.ssh/id_ed25519
           if(git stash list) {
               git stash pop
               install -d -m 0700 ~/.ssh
