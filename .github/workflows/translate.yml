@@ -30,6 +30,7 @@ jobs:
 
       - name: l10n-remove-old
         run: |
+          git submodule update --init --recursive
           git checkout ownCloud/Resources/
 
       - name: Print working directory
