@@ -27,11 +27,15 @@ jobs:
         with:
           submodules: recursive
           ref: ${{ github.ref }}
+          
+      - name: Print current branch
+        run: echo "Current branch is $GITHUB_REF"
 
-      - name: l10n-remove-old
+      - name: Update Submodules
         run: |
+          git submodule sync --recursive
           git submodule update --init --recursive
-          git checkout ownCloud/Resources/
+          git submodule foreach --recursive 'git checkout $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master) && git pull'
 
       #- name: l10n-push
         # if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
