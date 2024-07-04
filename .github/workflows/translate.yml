@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 3 * * *"
+  branches:
+    - master
     
 permissions: {}
 
