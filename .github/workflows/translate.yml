@@ -15,11 +15,29 @@ defaults:
     shell: pwsh
 
 jobs:
+  normalize-strings:
+    runs-on: macos-13
+    name: Normalize .strings file encoding
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Xcode version
+        run: /usr/bin/xcodebuild -version
+      - name: Normalize .strings files to UTF-8
+        run: ./normalizestrings.sh
+        working-directory: ./tools/normalizestrings/
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Normalized Localizable.strings encoding (UTF-8)
+          file_pattern: '*.strings'
+
   update-translations:
     permissions:
-      # for git push
-      contents: write
+      contents: write # for git push
     runs-on: ubuntu-latest
+    needs: normalize-strings # Ensure this job runs after 'normalize-strings'
 
     env:
       TX_TOKEN: ${{ secrets.TX_TOKEN }}
@@ -62,4 +80,4 @@ jobs:
               git add translations/
               git commit -m "[tx] updated client translations from transifex [skip ci]"
               git push git@github.com:owncloud/ios-app.git
-            }
+          }
