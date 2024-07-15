@@ -1,12 +1,9 @@
 name: "Update translations"
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 3 * * *"
   push:
     branches:
-      - master
+      - transifex-github-action
     
 permissions: {}
 
@@ -28,6 +25,24 @@ jobs:
         with:
           submodules: recursive
           ref: ${{ github.ref }}
+      
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang libpython2.7 libpython2.7-dev
+      
+      - name: Download Swift
+        run: wget https://swift.org/builds/swift-5.3-release/ubuntu2004/swift-5.3-RELEASE/swift-5.3-RELEASE-ubuntu20.04.tar.gz
+      
+      - name: Extract Swift
+        run: tar xzf swift-5.3-RELEASE-ubuntu20.04.tar.gz
+      
+      - name: Move Swift to /usr/share
+        run: sudo mv swift-5.3-RELEASE-ubuntu20.04 /usr/share/swift
+      
+      - name: Add Swift to PATH
+        run: echo "export PATH=/usr/share/swift/usr/bin:\$PATH" >> $GITHUB_ENV
+      
+      - name: Verify Swift installation
+        run: swift -v
 
       - name: l10n-push
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
