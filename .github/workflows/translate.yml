@@ -45,7 +45,7 @@ jobs:
         run: swift -v
       
       - name: Compile Swift file
-        run: swiftc ios-sdk/tools/ocstringstool/ocstringstool/main.swift -o ocstringstool
+        run: swiftc tools/normalizestrings/main.swift -o ocstringstool
       
       - name: Run compiled Swift program
         run: ./ocstringstool
