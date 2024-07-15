@@ -48,7 +48,7 @@ jobs:
         run: swiftc tools/normalizestrings/main.swift -o ocstringstool
       
       - name: Run compiled Swift program
-        run: ./ocstringstool
+        run: ./ocstringstool normalize ownCloud/Resources/
 
       - name: l10n-push
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
