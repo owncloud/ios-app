@@ -25,7 +25,8 @@ public class ProgressView: UIView, Themeable, CAAnimationDelegate, ThemeCSSAutoS
 	var foregroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var stopButtonLayer : CAShapeLayer = CAShapeLayer()
 
-	private let dimensions : CGSize = CGSize(width: 30, height: 30)
+	private let dimensions = CGSize(width: 30, height: 30)
+	private let minimumViewSize = CGSize(width: 50, height: 50)
 	private let circleLineWidth : CGFloat = 3
 
 	private var _observerRegistered : Bool = false
@@ -132,6 +133,16 @@ public class ProgressView: UIView, Themeable, CAAnimationDelegate, ThemeCSSAutoS
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.cancel)))
+
+		self.addConstraints([
+			// Enforce minimum size of .dimensions
+			widthAnchor.constraint(greaterThanOrEqualToConstant: dimensions.width),
+			heightAnchor.constraint(greaterThanOrEqualToConstant: dimensions.height),
+
+			// Nudge Auto Layout towards using .minimumViewSize (.dimensions + extra space to make a better touch target) while allowing individual "overrides"
+			widthAnchor.constraint(equalToConstant: minimumViewSize.width).with(priority: .defaultHigh),
+			heightAnchor.constraint(equalToConstant: minimumViewSize.height).with(priority: .defaultHigh)
+		])
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
