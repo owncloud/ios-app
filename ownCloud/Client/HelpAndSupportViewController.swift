@@ -93,8 +93,10 @@ class HelpAndSupportViewController: CollectionViewController {
 				.text("If you don't need a response and just want to send us feedback, you can also send us a mail.".localized, style: .informal, cssSelectors: [.message]),
 				.spacing(5),
 
-				.button("Send feedback".localized, action: UIAction(handler: { _ in
-					VendorServices.shared.sendFeedback(from: self)
+				.button("Send feedback".localized, action: UIAction(handler: { [weak self] _ in
+					if let self {
+						VendorServices.shared.sendFeedback(from: self)
+					}
 				}), image: nil, cssSelectors: [ .info ], insets: .zero)
 			])
 		}
