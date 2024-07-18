@@ -1,12 +1,9 @@
 name: "Update translations"
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 3 * * *"
   push:
     branches:
-      - master
+    - fix/github-translation-action
     
 permissions: {}
 
