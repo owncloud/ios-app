@@ -60,7 +60,8 @@ jobs:
 
       - name: update-repo-before-commit
         run: |
-          git submodule sync
+          rm -rf ios-sdk
+          git submodule deinit ios-sdk
           git submodule update --init --recursive
           git status
           git add ownCloud/Resources/*.strings
