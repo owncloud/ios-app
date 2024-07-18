@@ -60,14 +60,9 @@ jobs:
 
       - name: update-repo-before-commit
         run: |
-          rm -rf ios-sdk
-          git submodule deinit ios-sdk
-          git submodule update --init --recursive
-          git status
           git add ownCloud/Resources/*.strings
           git status
           git stash
-          git pull --ff-only origin
 
       - name: commit and push
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
