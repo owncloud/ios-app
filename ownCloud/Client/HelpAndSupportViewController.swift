@@ -39,7 +39,7 @@ class HelpAndSupportViewController: CollectionViewController {
 
 		cssSelectors = [.modal]
 
-		navigationItem.title = "Help & Support".localized
+		navigationItem.title = "Help & Contact".localized
 		navigationItem.largeTitleDisplayMode = .always
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction(handler: { [weak self] _ in
@@ -86,14 +86,14 @@ class HelpAndSupportViewController: CollectionViewController {
 			.spacing(20)
 		])
 
-		if (VendorServices.shared.feedbackMail != nil) || (Branding.shared.feedbackURL != nil) {
+		if Branding.shared.feedbackURL != nil {
 			elements.append(contentsOf: [
-				.title("Send feedback".localized),
+				.title("Feedback".localized),
 
-				.text("If you don't need a response and just want to send us feedback, you can also send us a mail.".localized, style: .informal, cssSelectors: [.message]),
+				.text("If you have a moment to give us your feedback, please take our survey.".localized, style: .informal, cssSelectors: [.message]),
 				.spacing(5),
 
-				.button("Send feedback".localized, action: UIAction(handler: { [weak self] _ in
+				.button("Take survey".localized, action: UIAction(handler: { [weak self] _ in
 					if let self {
 						VendorServices.shared.sendFeedback(from: self)
 					}

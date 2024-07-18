@@ -72,7 +72,7 @@ extension Branding : BrandingInitialization {
 			.helpURL 	  : "https://owncloud.com/docs-guides/",
 			.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 			.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
-			.sendFeedbackAddress : "ios-app@owncloud.com",
+			.sendFeedbackURL  : "https://owncloud.com/ios-app-feedback",
 			.canAddAccount : true,
 			.canEditAccount : true,
 			.enableReviewPrompt : false,

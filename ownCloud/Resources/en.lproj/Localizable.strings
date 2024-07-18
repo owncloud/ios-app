@@ -289,6 +289,7 @@
 "More for {{title}}" = "More for {{title}}";
 "Documentation" = "Documentation";
 "Send feedback" = "Send feedback";
+"Take survey" = "Take survey";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
 "Terms Of Use" = "Terms Of Use";
@@ -320,7 +321,7 @@
 "Version information were copied to the clipboard" = "Version information were copied to the clipboard";
 
 /* Help and support */
-"Help & Support" = "Help & Support";
+"Help & Contact" = "Help & Contact";
 
 "Find information, answers and solutions in the detailed documentation." = "Find information, answers and solutions in the detailed documentation.";
 "View documentation" = "View documentation";
@@ -329,7 +330,7 @@
 "File an issue" = "File an issue";
 "Visit the forums" = "Visit the forums";
 
-"If you don't need a response and just want to send us feedback, you can also send us a mail." = "If you don't need a response and just want to send us feedback, you can also send us a mail.";
+"If you have a moment to give us your feedback, please take our survey." = "If you have a moment to give us your feedback, please take our survey.";
 
 /* User Interface Settings */
 "Theme" = "Theme";
