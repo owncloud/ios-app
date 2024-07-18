@@ -75,7 +75,7 @@ class MoreSettingsSection: SettingsSection {
 			if let viewController = self?.viewController {
 				VendorServices.shared.showHelpAndSupportOptions(from: viewController)
 			}
-		}, title: "Help & Support".localized, accessoryType: .disclosureIndicator, identifier: "help-and-support")
+		}, title: "Help & Contact".localized, accessoryType: .disclosureIndicator, identifier: "help-and-contact")
 
 		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
