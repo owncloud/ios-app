@@ -35,7 +35,7 @@ jobs:
         run:  bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "cd ownCloud/Resources/en.lproj && tx push -s --skip"
 
       - name: l10n-pull
-        run: bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "tx pull -a --skip --minimum-perc=75 -f"
+        run: bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "tx pull --all --skip --minimum-perc=75 --force"
       
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y clang libpython2.7 libpython2.7-dev
