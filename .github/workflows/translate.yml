@@ -35,7 +35,7 @@ jobs:
         run:  bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "cd ownCloud/Resources/en.lproj && tx push -s --skip"
 
       - name: l10n-pull
-        run: bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "cd ownCloud/Resources/ && tx pull --force --skip --all"
+        run: bash .github/workflows/run-in-docker.sh owncloudci/transifex:latest "tx pull --all --skip --minimum-perc=75 --force"
       
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y clang libpython2.7 libpython2.7-dev
@@ -63,11 +63,9 @@ jobs:
 
       - name: update-repo-before-commit
         run: |
-          git status
           git add ownCloud/Resources/*.strings
           git status
           git stash
-          git pull --ff-only origin
 
       - name: commit and push
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
