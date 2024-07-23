@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 3 * * *"
-  push:
-    branches:
-      - master
     
 permissions: {}
 
@@ -80,7 +77,6 @@ jobs:
               chmod 0600 ~/.ssh/id_ed25519
               git config user.name "ownClouders"
               git config user.email "devops@owncloud.com"
-              git add translations/
               git commit -m "[tx] updated client translations from transifex [skip ci]"
               git push git@github.com:owncloud/ios-app.git
           }
