@@ -47,9 +47,7 @@ extension VendorServices {
 	}
 
 	public func sendFeedback(from viewController: UIViewController) {
-		if let sendFeedbackURL = Branding.shared.feedbackURL {
-			UIApplication.shared.open(sendFeedbackURL, options: [:], completionHandler: nil)
-		} else if let feedbackMail {
+		if let feedbackMail {
 			var buildType = "release".localized
 
 			if self.isBetaBuild {
@@ -62,6 +60,8 @@ extension VendorServices {
 			}
 
 			self.sendMail(to: feedbackMail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(self.appName)\(appSuffix)", message: nil, from: viewController)
+		} else if let sendFeedbackURL = Branding.shared.feedbackURL {
+			UIApplication.shared.open(sendFeedbackURL, options: [:], completionHandler: nil)
 		}
 	}
 
