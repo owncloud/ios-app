@@ -570,7 +570,7 @@ branding.profile-url
  +
 branding.send-feedback-address
 |string
-|`ios-app@owncloud.com`
+|
 |Email address to send feedback to. Set to `null` to disable this feature.
 |advanced `candidate`
 
@@ -578,7 +578,7 @@ branding.send-feedback-address
  +
 branding.send-feedback-url
 |string
-|
+|`https://owncloud.com/ios-app-feedback`
 |URL to open when selecting the "Send feedback" option. Allows the use of all placeholders provided in `http.user-agent`.
 |advanced `candidate`
 
