@@ -71,11 +71,13 @@ jobs:
           Set-Content -Value "${{ secrets.DEPLOYMENT_SSH_KEY }}" -Path ~/.ssh/id_ed25519
           chmod 0600 ~/.ssh/id_ed25519
           if(git stash list) {
+              git stash pop
               install -d -m 0700 ~/.ssh
               Set-Content -Value "${{ secrets.DEPLOYMENT_SSH_KEY }}" -Path ~/.ssh/id_ed25519
               chmod 0600 ~/.ssh/id_ed25519
               git config user.name "ownClouders"
               git config user.email "devops@owncloud.com"
+              git add ownCloud/Resources/*.strings
               git commit -m "[tx] updated client translations from transifex [skip ci]"
               git push git@github.com:owncloud/ios-app.git
           }
