@@ -38,7 +38,7 @@ class AvailableOfflineAction: Action {
 			if let itemLocation = item.location, let policies = core.retrieveAvailableOfflinePoliciesCovering(item, completionHandler: nil) {
 				for policy in policies {
 					// Only show if item is not already available offline via parent item
-					if let policyLocation = policy.location, itemLocation.isLocated(in: policyLocation) && itemLocation != policyLocation {
+					if let policyLocation = policy.location, itemLocation.isLocated(in: policyLocation) && !itemLocation.isEqual(policyLocation) {
 						return .none
 					}
 				}
