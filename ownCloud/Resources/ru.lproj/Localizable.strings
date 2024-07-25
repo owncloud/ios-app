@@ -48,7 +48,7 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Есть проблемы с сертификатом. Для получения подробностей откройте ‘Детали сертификата'.";
 "No issues found. Certificate passed validation." = "Не выявлено проблем. Сертификат прошёл проверку.";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "С сертификатом возможно есть проблемы, но он был принят пользователем\nДля получения подробностей откройте 'Детали сертификата'.";
-"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "При нажатии кнопки «Продолжить» вам будет предложено разрешить приложению  \"{{app.name}}\" открыть страницу входа {{authmethodName}}, на которой вы сможете ввести свои учетные данные.";
 
 "Error opening %@" = "Ошибка при открытии %@";
 
@@ -58,7 +58,7 @@
 "Fetching user information…" = "Получение информации о пользователе…";
 "Updating connection…" = "Соединение обновляется…";
 
-"Preparing account" = "Preparing account";
+"Preparing account" = "Создать учётную запись";
 "Please wait…" = "Пожалуйста, ждите…";
 "Skip" = "Пропустить";
 
@@ -104,18 +104,18 @@
 "kind" = "добрый";
 "size" = "размеру";
 "date" = "дате";
-"last used" = "last used";
+"last used" = "последний используемый";
 
-"Tree" = "Tree";
+"Tree" = "дерево";
 "Search folder" = "Поиск в папке";
-"Search tree" = "Search tree";
-"Search from {{folder.name}}" = "Search from {{folder.name}}";
-"Search space" = "Search space";
-"Search {{space.name}}" = "Search {{space.name}}";
+"Search tree" = "Дерево поиска";
+"Search from {{folder.name}}" = "Поиск по {{folder.name}}";
+"Search space" = "Поиск в пространстве";
+"Search {{space.name}}" = "Поиск {{space.name}}";
 "Search account" = "Поиск в учётной записи";
-"Enter a search term" = "Enter a search term";
-"Search for users or groups" = "Search for users or groups";
-"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+"Enter a search term" = "Введите слово для поиска";
+"Search for users or groups" = "Поиск пользователей или групп";
+"Enter the user or group you want to invite." = "Введите пользователя или группу, которую вы хотите пригласить.";
 
 "Pending" = "Ожидается";
 "Show parent paths" = "Показать вышестоящие пути";
@@ -126,8 +126,8 @@
 "%@ item | " = "%@ элемент | ";
 "%@ items | " = "%@ элементов | ";
 
-"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
-"{{remaining}} available" = "{{remaining}} available";
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} элементов с {{totalSize}} общим размером ({{fileCount}} файлов, {{folderCount}} папок)";
+"{{remaining}} available" = "{{remaining}} доступно";
 
 "Loading…" = "Загрузка...";
 
@@ -137,22 +137,22 @@
 
 /* Item Layouts */
 "List" = "Список";
-"Grid" = "Grid";
-"Item grid" = "Item grid";
-"Image grid" = "Image grid";
+"Grid" = "Сетка";
+"Item grid" = "Сетка предметов";
+"Image grid" = "Сетка изображений";
 
 /* Saved searches */
-"Saved searches" = "Saved searches";
-"Saved search templates" = "Saved search templates";
-"Save search" = "Save search";
-"Save as search template" = "Save as search template";
+"Saved searches" = "Сохраненные поиски";
+"Saved search templates" = "Сохраненные шаблоны поиска";
+"Save search" = "Сохранить поиск";
+"Save as search template" = "Сохранить как шаблон поиска";
 
-"Name of saved search" = "Name of saved search";
-"Saved search" = "Saved search";
-"Saved searches" = "Saved searches";
-"Name of template" = "Name of template";
-"Search template" = "Search template";
-"Search templates" = "Search templates";
+"Name of saved search" = "Название сохраненного поиска";
+"Saved search" = "Сохраненный поиск";
+"Saved searches" = "Сохраненные поиски";
+"Name of template" = "Имя шаблона";
+"Search template" = "Шаблон поиска";
+"Search templates" = "Шаблоны поиска";
 
 /* Search scope */
 "Search scope" = "Область поиска";
@@ -168,12 +168,12 @@
 "Welcome to %@" = "Добро пожаловать в %@";
 "Please enter a server URL" = "Пожалуйста введите адресную строку сервера";
 "Please pick a profile to begin setup" = "Пожалуйста, выберите профиль, чтобы начать установку";
-"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
-"Start setup" = "Start setup";
-"Open login page" = "Open login page";
-"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
-"Account setup complete" = "Account setup complete";
-"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+"The following steps will guide you through the setup process." = "Следующие шаги помогут вам в процессе настройки.";
+"Start setup" = "Начать настройку";
+"Open login page" = "Откройте страницу входа в систему";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "Если вы \"Продолжите\", вам будет предложено разрешить приложению \"{{app.name }}\" открыть страницу входа в систему, где вы сможете ввести свои учетные данные.";
+"Account setup complete" = "Настройка учетной записи завершена";
+"If you'd like to give the account a custom name, please enter it below:" = "Если вы хотите присвоить учетной записи собственное имя, пожалуйста, введите его ниже:";
 
 /* Single Account */
 "You are connected as\n%@" = "Вы подключены, как\n%@";
@@ -184,10 +184,10 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "Для профиля '%@' не настроена ссылка.\nПожалуйста, задайте URL через конфигурацию или MDM.";
 
 /* Client Messages */
-"No contents" = "No contents";
+"No contents" = "нет содержимого";
 "This folder contains no files or folders." = "В этой папке нет ни файлов, ни подпапок.";
-"This folder is empty." = "This folder is empty.";
-"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
+"This folder is empty." = "Папка пуста.";
+"This folder is empty. Fill it with content:" = "Эта папка пуста. Заполните ее содержимым:";
 
 "Folder removed" = "Папка удалена";
 "This folder no longer exists on the server." = "Эта папка больше не существует на сервере.";
@@ -204,7 +204,7 @@
 "Upload files" = "Закачать файлы";
 
 "No matches" = "Нет соответствий";
-"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
+"The search term you entered did not match any item in the selected scope." = "Введенный вами термин поиска не соответствует ни одному элементу в выбранной области видимости.";
 "There are no results for this search term" = "По данному запросу ничего не найдено";
 "No items found matching the search criteria." = "No items found matching the search criteria.";
 
@@ -455,7 +455,7 @@
 /* App Provider */
 "New document" = "Новый документ";
 "Pick a name" = "Pick a name";
-"Pick a document type to create:" = "Pick a document type to create:";
+"Pick a document type to create:" = "Выберите тип документа для создания:";
 "Error creating {{itemName}}" = "Error creating {{itemName}}";
 
 "Opening…" = "Opening…";
@@ -702,14 +702,14 @@
 "Offline files use" = "Использование автономных файлов";
 "Compacting of '%@' failed" = "Сжатие '%@' не удалось";
 "Include available offline files" = "Включить доступные автономные файлы";
-"Delete all Offline Files" = "Delete all Offline Files";
+"Delete all Offline Files" = "Удалить все оффлайн-файлы";
 "Manage" = "Управление";
 "Storage" = "Хранилище";
 "Compacting" = "Сжатие";
 
 "Really include available offline files?" = "Действительно включить доступные автономные файлы?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Файлы и папки, помеченные как доступные без сети, станут недоступными. При следующем входе в учётную запись они будут скачаны повторно (нужна связь).";
-"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Удаляет скачанные файлы и локальные копии элементов, помеченных как Доступные офлайн. Последние будут снова скачаны при следующем входе в вашу учетную запись (требуется подключение).";
 
 /* Diagnostic */
 "Diagnostic Overview" = "Диагностический обзор";
@@ -731,11 +731,11 @@
 
 "Available Offline" = "Доступно без сети";
 
-"No files available offline" = "No files available offline";
-"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+"No files available offline" = "Нет файлов доступных офлайн";
+"Files selected and downloaded for offline availability will show up here." = "Файлы, выбранные и скачанные для офлайн-доступа, будут отображаться здесь.";
 
-"Locations" = "Locations";
-"Downloaded Files" = "Downloaded Files";
+"Locations" = "Места";
+"Downloaded Files" = "Скачанные файлы";
 
 /* Single Account */
 "You are connected as\n%@" = "Вы подключены, как\n%@";
@@ -759,14 +759,14 @@
 "Select Last Item on Page" = "Выбрать последний элемент на странице";
 "Scroll to Top" = "Прокрутить в начало";
 "Scroll to Bottom" = "Прокрутить в конец";
-"Copy to Clipboard" = "Copy to Clipboard";
-"Import from Clipboard" = "Import from Clipboard";
-"Choose destination directory…" = "Choose destination directory…";
+"Copy to Clipboard" = "Скопировать в буфер обмена";
+"Import from Clipboard" = "Импортировать из буфера обмена";
+"Choose destination directory…" = "Выберите целевую директорию...";
 "Next" = "Следующий";
 "Previous" = "Предыдущий";
 "Favorite" = "В избранное";
 "Cut" = "Вырезать";
-"Paste" = "Paste";
+"Paste" = "Вставить";
 "Play/Pause" = "Проигрывание/Пауза";
 "Skip Back" = "Пропустить назад";
 "Skip Ahead" = "Пропустить вперёд";
@@ -820,7 +820,7 @@
 
 /* Licensing: Settings */
 "In-App Purchases" = "Покупки в приложении";
-"Purchases & Subscriptions" = "Purchases & Subscriptions";
+"Purchases & Subscriptions" = "Покупки и подписки";
 "Error fetching transactions" = "Ошибка считывания транзакций";
 "Document Scanner" = "Сканер документов";
 "Scan documents and photos with your camera." = "Сканировать документы и фотографии с помощью вашей камеры.";
@@ -860,8 +860,8 @@
 "Error importing %@" = "Ошибка при импорте %@";
 "Error loading item" = "Ошибка при загрузке элемента";
 "Preparing…" = "Подготовка";
-"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
-"Import {{itemCount}} files" = "Import {{itemCount}} files";
+"Import \"{{itemName}}\"" = "Импортировать \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Импортировать {{itemCount}} файлов";
 "Save here" = "Сохранить здесь";
 
 /* FileProvider */
@@ -871,21 +871,21 @@
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
 
 /* - No account */
-"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
-"Open app" = "Open app";
+"No account has been set up in the {{app.name}} app yet." = "В приложении {{app.name}} еще не создана учетная запись.";
+"Open app" = "Открыть приложение";
 
 /* Disallowed Import Methods */
 /* - Share Extension */
-"Share Extension disabled" = "Share Extension disabled";
-"Importing files through the Share Extension is not allowed on this device." = "Importing files through the Share Extension is not allowed on this device.";
+"Share Extension disabled" = "Отключение расширения общего доступа";
+"Importing files through the Share Extension is not allowed on this device." = "Импортирование файлов через Share Extension не разрешено на этом устройстве.";
 
 /* - Open with */
-"Opening not allowed" = "Opening not allowed";
-"Importing files through opening is not allowed on this device." = "Importing files through opening is not allowed on this device.";
+"Opening not allowed" = "Открытие не разрешено";
+"Importing files through opening is not allowed on this device." = "Импортирование файлов через открытие на этом устройстве не разрешено.";
 
 /* - Files.app */
-"Import not allowed" = "Import not allowed";
-"Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
+"Import not allowed" = "импорт не разрешен";
+"Importing files through the File Provider is not allowed on this device." = "Импортирование файлов через File Provider не разрешено на этом устройстве.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Введите множественный выбор";

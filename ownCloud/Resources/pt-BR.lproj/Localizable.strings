@@ -104,7 +104,7 @@
 "kind" = "tipo";
 "size" = "tamanho";
 "date" = "data";
-"last used" = "last used";
+"last used" = "usado por último";
 
 "Tree" = "Árvore";
 "Search folder" = "Pesquisar pasta";
@@ -168,12 +168,12 @@
 "Welcome to %@" = "Bem-vindo ao %@";
 "Please enter a server URL" = "Insira um URL de servidor";
 "Please pick a profile to begin setup" = "Escolha um perfil para iniciar a configuração";
-"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
-"Start setup" = "Start setup";
-"Open login page" = "Open login page";
-"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
-"Account setup complete" = "Account setup complete";
-"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+"The following steps will guide you through the setup process." = "As etapas a seguir guiarão você pelo processo de configuração.";
+"Start setup" = "Iniciar configuração";
+"Open login page" = "Abrir página de login";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "Se você 'Continuar', será solicitado que você permita que o aplicativo '{{app.name}}' abra a página de login onde você pode inserir suas credenciais.";
+"Account setup complete" = "Configuração da conta concluída";
+"If you'd like to give the account a custom name, please enter it below:" = "Se desejar dar um nome personalizado à conta, insira-o abaixo:";
 
 /* Single Account */
 "You are connected as\n%@" = "Você está conectado como\n%@";
@@ -631,7 +631,7 @@
 "Add" = "Adicionar";
 "Save changes" = "Salvar alterações";
 
-"Enter password" = "Enter password";
+"Enter password" = "Digite a senha";
 
 /* Quick Access view */
 "Quick Access" = "Acesso Rápido";
@@ -871,8 +871,8 @@
 "File Provider access has been disabled by the administrator. Please use the share extension to import files." = "O acesso do provedor de arquivos foi desativado pelo administrador. Use a extensão de compartilhamento para importar arquivos.";
 
 /* - No account */
-"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
-"Open app" = "Open app";
+"No account has been set up in the {{app.name}} app yet." = "Nenhuma conta foi configurada no aplicativo {{app.name}} ainda.";
+"Open app" = "Abrir aplicativo";
 
 /* Disallowed Import Methods */
 /* - Share Extension */

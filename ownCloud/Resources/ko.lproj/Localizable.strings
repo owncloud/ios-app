@@ -455,7 +455,7 @@
 /* App Provider */
 "New document" = "새 문서";
 "Pick a name" = "Pick a name";
-"Pick a document type to create:" = "Pick a document type to create:";
+"Pick a document type to create:" = "생성할 문서 타입을 고르세요.";
 "Error creating {{itemName}}" = "Error creating {{itemName}}";
 
 "Opening…" = "Opening…";

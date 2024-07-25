@@ -99,12 +99,6 @@
 "Please wait…" = "Bitte warten…";
 "Sort by %@" = "Sortiert nach %@";
 "Sort by" = "Sortieren nach";
-"Sort by {{attribute}} in {{direction}} order" = "{{direction}} sortiert nach {{attribute}}";
-"{{attribute}} {{direction}}" = "{{attribute}} {{direction}}";
-"ascending" = "aufsteigend";
-"descending" = "absteigend";
-
-"Toggle layout" = "Layout ändern";
 
 "name" = "Name";
 "kind" = "Typ";
@@ -122,9 +116,6 @@
 "Enter a search term" = "Suchbegriff eingeben";
 "Search for users or groups" = "Suche nach Benutzern oder Gruppen";
 "Enter the user or group you want to invite." = "Geben Sie den Benutzer oder die Gruppe ein, die Sie einladen möchten.";
-
-"Reveal" = "Zeigen";
-"Show message" = "Nachricht zeigen";
 
 "Pending" = "Ausstehend";
 "Show parent paths" = "Übergeordnete Pfade anzeigen";
@@ -144,18 +135,6 @@
 
 "An error occurred" = "Es ist ein Fehler aufgetreten";
 
-/* Accessibility descriptions of items */
-"{{fileName}} (file)" = "{{fileName}} (Datei)";
-"{{folderName}} (folder)" = "{{folderName}} (Ordner)";
-"{{spaceName}} (space)" = "{{spaceName}} (Space)";
-
-/* Status dot description */
-"Offline" = "Offline";
-"Connecting" = "Verbinde";
-"Online" = "Online";
-"Busy" = "Beschäftigt";
-"Authentication error" = "Authentifizierungsfehler";
-
 /* Item Layouts */
 "List" = "Liste";
 "Grid" = "Kacheln";
@@ -163,15 +142,17 @@
 "Image grid" = "Bild-Kacheln";
 
 /* Saved searches */
-"Save search" = "Suche speichern";
-"Save as search template" = "Suche als Vorlage speichern";
+"Saved searches" = "Gespeicherte Suchanfragen";
+"Saved search templates" = "Vorlagen für gespeicherte Suchanfragen";
+"Save search" = "Suchanfrage speichern";
+"Save as search template" = "Suchanfrage als Vorlagen speichern";
 
-"Name of saved search" = "Name der gespeicherten Suche";
-"Saved search" = "Gespeicherte Suche";
-"Saved searches" = "Gespeicherte Suchen";
+"Name of saved search" = "Name der gespeicherten Suchanfrage";
+"Saved search" = "Gespeicherte Suchanfrage";
+"Saved searches" = "Gespeicherte Suchanfragen";
 "Name of template" = "Name der Vorlage";
-"Search template" = "Suchvorlage";
-"Search templates" = "Suchvorlagen";
+"Search template" = "Vorlage für Suchanfragen";
+"Search templates" = "Vorlagen für Suchanfragen";
 
 /* Search scope */
 "Search scope" = "Suchbereich";
@@ -187,12 +168,12 @@
 "Welcome to %@" = "Willkommen bei %@";
 "Please enter a server URL" = "Bitte geben Sie eine Server-URL ein";
 "Please pick a profile to begin setup" = "Bitte wählen Sie ein Profil, um mit der Einrichtung zu beginnen";
-"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
-"Start setup" = "Start setup";
-"Open login page" = "Open login page";
-"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
-"Account setup complete" = "Account setup complete";
-"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+"The following steps will guide you through the setup process." = "Die folgenden Schritte führen durch den Einrichtungsprozess.";
+"Start setup" = "Einrichtung starten";
+"Open login page" = "Öffne Anmeldeseite";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "Wenn Sie 'Fortsetzen' wählen, werden Sie aufgefordert, der App '{{app.name}}' das Öffnen der Login-Seite zu erlauben, wo Sie Ihre Zugangsdaten eingeben können.";
+"Account setup complete" = "Kontoeinrichtung abgeschlossen";
+"If you'd like to give the account a custom name, please enter it below:" = "Um dem Konto einen individuellen Namen zu geben, tippe ihn bitte unten ein.";
 
 /* Single Account */
 "You are connected as\n%@" = "Sie sind verbunden als\n%@";
@@ -286,7 +267,6 @@
 "Upload videos via WiFi only" = "Videos nur über WLAN hochladen";
 "Upload pictures via WiFi only" = "Fotos nur über WLAN hochladen";
 "More" = "Mehr";
-"More for {{title}}" = "Mehr zu {{title}}";
 "Documentation" = "Dokumentation";
 "Send feedback" = "Feedback senden";
 "Recommend to a friend" = "Weiterempfehlen";
@@ -470,7 +450,7 @@
 
 "Select one or more items." = "Wähle ein oder mehrere Elemente";
 
-"Add item" = "Element hinzufügen";
+"Add item" = "Eintrag hinzufügen";
 
 /* App Provider */
 "New document" = "Neues Dokument";
@@ -499,9 +479,6 @@
 "Show new version" = "Neue Version anzeigen";
 "Refresh without asking" = "Aktualisieren ohne Nachfrage";
 "Ignore updates" = "Aktualisierungen ignorieren";
-
-"Previous item" = "Vorherige Datei";
-"Next item" = "Nächste Datei";
 
 /* PDF Viewer */
 "Resume" = "Fortsetzen";
@@ -652,48 +629,12 @@
 
 "Share with" = "Teilen mit";
 "Add" = "Hinzufügen";
-"Set" = "Setzen";
-"Generate" = "Generieren";
 "Save changes" = "Änderung speichern";
 
 "Enter password" = "Passwort eingeben";
-"Remove password" = "Passwort entfernen";
-"Change password" = "Passwort ändern";
-"Show" = "Zeigen";
-"Hide" = "Verbergen";
-
-"Remove expiration date" = "Ablaufsdatum entfernen";
-"Extend by one week" = "Verlängern um eine Woche";
-"Shorten by one week" = "Vorziehen um eine Woche";
-
-"{{itemName}} ({{link}}) | password: {{password}}" = "{{itemName}} ({{link}}) | Passwort: {{password}}";
-"{{link}} | password: {{password}}" = "{{link}} | Passwort: {{password}}";
-
-"Accept share" = "Geteiltes akzeptieren";
-"Decline share" = "Geteiltes ablehnen";
-"Accept or decline" = "Akzeptieren oder ablehnen";
-
-/* .url viewer / creation */
-"Shortcut" = "Verknüpfung";
-"Open link" = "Link öffnen";
-"Opening link failed" = "Öffnen des Links fehlgeschlagen";
-"Open shortcut" = "Verknüpfung öffnen";
-"Shortcut to '{{hostname}}'" = "Verknüpfung zu '{{hostname}}'";
-"This shortcut points to:\n{{url}}" = "Diese Verknüpfung verweist auf:\n{{url}}";
-"The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it." = "Das Ziel, auf das diese Verknüpfung verweist, konnte nicht gefunden werden. Möglicherweise wurde es gelöscht oder Sie haben keinen Zugriff darauf.";
-
-"The shortcut points to a URL, but the configuration of this app prohibits opening it." = "Die Verknüpfung verweist auf eine URL, aber die Konfiguration dieser App untersagt das Öffnen.";
-"The shortcut points to another item, but the configuration of this app prohibits opening it." = "Die Verknüpfung verweist auf ein anderes Element, aber die Konfiguration dieser App untersagt das Öffnen.";
-
-"Create shortcut" = "Verknüpfung erstellen";
-"URL of webpage or item" = "URL der Webseite oder Datei";
-
-"Pick file or folder" = "Datei oder Ordner wählen";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
-"Add to sidebar" = "Zur Seitenleiste hinzufügen";
-"Remove from sidebar" = "Aus Seitenleiste entfernen";
 "Collection" = "Sammlung";
 "Recents" = "Kürzlich";
 "Favorites"= "Favoriten";
@@ -702,9 +643,6 @@
 "Text" = "Text";
 "Documents" = "Dokumente";
 "Audio" = "Audio";
-
-/* Sidebar */
-"Show/Hide sidebar" = "Seiteleiste zeigen/verstecken";
 
 /* Favorites view */
 "No favorites found" = "Keine Favoriten gefunden";
@@ -798,13 +736,6 @@
 
 "Locations" = "Umgebungen";
 "Downloaded Files" = "Heruntergeladene Dateien";
-
-/* Item and cloud status */
-"In the cloud" = "In der Cloud";
-"Local copy" = "Lokale Kopie";
-"Local version" = "Lokale Version";
-"Available offline" = "Offline verfügbar";
-"Shared" = "Geteilt";
 
 /* Single Account */
 "You are connected as\n%@" = "Sie sind verbunden als\n%@";
@@ -958,7 +889,6 @@
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Mehrfachauswahl beginnen";
-"Exit multiple selection" = "Mehrfachauswahl beenden";
 
 /* Universal Links */
 "Resolving link…" = "Link auflösen…";
