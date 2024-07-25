@@ -21,12 +21,12 @@ import MessageUI
 import ownCloudApp
 import ownCloudAppShared
 import ownCloudSDK
+import SafariServices
 
 extension VendorServices {
 	public func recommendToFriend(from viewController: UIViewController) {
-
 		guard let appStoreLink = self.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else {
-				return
+			return
 		}
 		let appName = VendorServices.shared.appName
 
@@ -37,10 +37,17 @@ extension VendorServices {
 		self.sendMail(to: nil, subject: "Try \(appName) on your smartphone!", message: message, from: viewController)
 	}
 
+	public func showHelpAndSupportOptions(from viewController: UIViewController) {
+		let feedbackViewController = HelpAndSupportViewController()
+
+		let navigationViewController = ThemeNavigationController(rootViewController: feedbackViewController)
+		navigationViewController.navigationBar.prefersLargeTitles = true
+
+		viewController.present(navigationViewController, animated: true)
+	}
+
 	public func sendFeedback(from viewController: UIViewController) {
-		if let sendFeedbackURL = Branding.shared.feedbackURL {
-			UIApplication.shared.open(sendFeedbackURL, options: [:], completionHandler: nil)
-		} else {
+		if let feedbackMail {
 			var buildType = "release".localized
 
 			if self.isBetaBuild {
@@ -52,10 +59,9 @@ extension VendorServices {
 				appSuffix = "-EMM"
 			}
 
-			guard let feedbackEmail = self.feedbackMail else {
-				return
-			}
-			self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(self.appName)\(appSuffix)", message: nil, from: viewController)
+			self.sendMail(to: feedbackMail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(self.appName)\(appSuffix)", message: nil, from: viewController)
+		} else if let sendFeedbackURL = Branding.shared.feedbackURL {
+			UIApplication.shared.open(sendFeedbackURL, options: [:], completionHandler: nil)
 		}
 	}
 
@@ -84,6 +90,24 @@ extension VendorServices {
 			let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
 			alert.addAction(okAction)
 			viewController.present(alert, animated: true)
+		}
+	}
+
+	public func openSFWebView(on viewController: UIViewController, for url: URL, withConfirmation: Bool = true) {
+		if withConfirmation {
+			let alert = ThemedAlertController(title: "Do you want to open the following URL?".localized,
+						      message: url.absoluteString,
+						      preferredStyle: .alert)
+
+			let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+				viewController.present(SFSafariViewController(url: url), animated: true)
+			}
+			let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+			alert.addAction(okAction)
+			alert.addAction(cancelAction)
+			viewController.present(alert, animated: true)
+		} else {
+			viewController.present(SFSafariViewController(url: url), animated: true)
 		}
 	}
 }

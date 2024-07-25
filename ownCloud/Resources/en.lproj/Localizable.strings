@@ -289,6 +289,7 @@
 "More for {{title}}" = "More for {{title}}";
 "Documentation" = "Documentation";
 "Send feedback" = "Send feedback";
+"Take survey" = "Take survey";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
 "Terms Of Use" = "Terms Of Use";
@@ -319,6 +320,17 @@
 "App Version" = "App Version";
 "Version information were copied to the clipboard" = "Version information were copied to the clipboard";
 
+/* Help and support */
+"Help & Contact" = "Help & Contact";
+
+"Find information, answers and solutions in the detailed documentation." = "Find information, answers and solutions in the detailed documentation.";
+"View documentation" = "View documentation";
+
+"Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature." = "Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature.";
+"File an issue" = "File an issue";
+"Visit the forums" = "Visit the forums";
+
+"If you have a moment to give us your feedback, please take our survey." = "If you have a moment to give us your feedback, please take our survey.";
 
 /* User Interface Settings */
 "Theme" = "Theme";

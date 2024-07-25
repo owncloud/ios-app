@@ -35,10 +35,14 @@ class MetadataDocumentationTests: XCTestCase {
 		}
 
 		if let jsonString = String(data: jsonData, encoding: .utf8) {
+			Log.debug("Generated JSON:")
 			Log.debug("\(jsonString)")
 
 			if let jsonPath = ProcessInfo.processInfo.environment["OC_SETTINGS_DOC_JSON"] {
+				Log.debug("Writing to \(jsonPath)")
 				try? jsonData.write(to: URL(fileURLWithPath: jsonPath), options: .atomicWrite)
+			} else {
+				Log.debug("No JSON destination found")
 			}
 		}
 	}

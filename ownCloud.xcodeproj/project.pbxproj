@@ -224,6 +224,7 @@
 		DC16213E2B8FF06800EB17F8 /* OCSidebarItem+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC16213D2B8FF06800EB17F8 /* OCSidebarItem+Interactions.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
+		DC1BEEF62C2DFE940016C94F /* HelpAndSupportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1BEEF52C2DFE940016C94F /* HelpAndSupportViewController.swift */; };
 		DC20DE6A21C01B210096000B /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC20DE6B21C01B210096000B /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC2218C62822C5B900808BCE /* OCVFSNode+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2218C52822C5B900808BCE /* OCVFSNode+FileProviderItem.m */; };
@@ -1290,6 +1291,7 @@
 		DC16213D2B8FF06800EB17F8 /* OCSidebarItem+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCSidebarItem+Interactions.swift"; sourceTree = "<group>"; };
 		DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
+		DC1BEEF52C2DFE940016C94F /* HelpAndSupportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpAndSupportViewController.swift; sourceTree = "<group>"; };
 		DC2218C42822C5B900808BCE /* OCVFSNode+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVFSNode+FileProviderItem.h"; sourceTree = "<group>"; };
 		DC2218C52822C5B900808BCE /* OCVFSNode+FileProviderItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVFSNode+FileProviderItem.m"; sourceTree = "<group>"; };
 		DC2218CA2823329100808BCE /* FileProviderContentEnumerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderContentEnumerator.h; sourceTree = "<group>"; };
@@ -2626,6 +2628,7 @@
 				4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */,
 				4C1561EE22232357009C4EF3 /* PhotoSelectionViewCell.swift */,
 				DC6CC3142642C3560040ECAC /* ExternalBrowserBusyHandler.swift */,
+				DC1BEEF52C2DFE940016C94F /* HelpAndSupportViewController.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -4666,6 +4669,7 @@
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadMediaAction.swift in Sources */,
 				025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */,
+				DC1BEEF62C2DFE940016C94F /* HelpAndSupportViewController.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DCB7969D2BCE71C300D6D759 /* OpenShortcutFileAction.swift in Sources */,

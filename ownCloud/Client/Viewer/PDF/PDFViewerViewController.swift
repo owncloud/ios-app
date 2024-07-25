@@ -20,7 +20,6 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 import PDFKit
-import SafariServices
 
 class PulsatingButton: UIButton {
 
@@ -510,7 +509,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 
 extension PDFViewerViewController : PDFViewDelegate {
     func pdfViewWillClick(onLink sender: PDFView, with url: URL) {
-        let vc = SFSafariViewController(url: url)
-        present(vc, animated: true)
+    	VendorServices.shared.openSFWebView(on: self, for: url)
     }
 }
