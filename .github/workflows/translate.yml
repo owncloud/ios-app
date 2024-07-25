@@ -60,7 +60,7 @@ jobs:
 
       - name: update-repo-before-commit
         run: |
-          git add ownCloud/Resources/*.strings
+          git add ownCloud/Resources/**/*.strings
           git status
           git stash
 
@@ -77,7 +77,7 @@ jobs:
               chmod 0600 ~/.ssh/id_ed25519
               git config user.name "ownClouders"
               git config user.email "devops@owncloud.com"
-              git add ownCloud/Resources/*.strings
+              git add ownCloud/Resources/**/*.strings
               git commit -m "[tx] updated client translations from transifex [skip ci]"
               git push git@github.com:owncloud/ios-app.git
           }
