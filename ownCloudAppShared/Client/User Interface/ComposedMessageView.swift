@@ -530,6 +530,9 @@ public class ComposedMessageView: UIView, Themeable {
 							view.topAnchor.constraint(equalTo: self.topAnchor, constant: (element.insets.top + elementInsets.top))
 						])
 					}
+					constraints.append(contentsOf: [
+						view.widthAnchor.constraint(equalToConstant: 300)
+					])
 
 					previousElement = element
 				}

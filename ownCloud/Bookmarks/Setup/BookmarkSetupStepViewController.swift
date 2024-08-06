@@ -82,7 +82,7 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 	var continueButton: UIButton = ThemeButton(withSelectors: [.filled])
 	var backButton: UIButton = ThemeCSSButton(withSelectors: [])
 
-	var contentContainerView: UIView?
+	var contentContainerView: UIScrollView?
 	var contentView: UIView? {
 		willSet {
 			if newValue != contentView {
@@ -110,6 +110,7 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 
 	override func loadView() {
 		var views: [UIView] = topViews ?? []
+		var viewsSub: [UIView] = topViews ?? []
 
 		let contentView = UIView()
 		contentView.cssSelectors = [.step, step.cssSelector]
@@ -122,7 +123,7 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 			titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline, with: .bold)
 			titleLabel?.makeLabelWrapText()
 
-			views.append(titleLabel!)
+			viewsSub.append(titleLabel!)
 		}
 
 		if let stepMessage = textOverride(for: "message") ?? stepMessage {
@@ -132,16 +133,26 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 			messageLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline, with: .regular)
 			messageLabel?.makeLabelWrapText()
 
-			views.append(messageLabel!)
+			viewsSub.append(messageLabel!)
 		}
 
 		// Content container view
-		contentContainerView = UIView()
+		contentContainerView = UIScrollView()
+		contentContainerView?.backgroundColor = .yellow
 		contentContainerView?.translatesAutoresizingMaskIntoConstraints = false
 
 		if let contentContainerView {
 			views.append(contentContainerView)
 		}
+		
+		let contentViewSub = UIView()
+		contentViewSub.cssSelectors = [.step, step.cssSelector]
+		
+		contentViewSub.embedVertically(views: viewsSub, insets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), spacingProvider: { leadingView, trailingView in
+			return 5
+		}, centered: false)
+		
+		contentContainerView?.addSubview(contentViewSub)
 
 		// Continue Button
 		var buttonConfiguration = UIButton.Configuration.borderedProminent()

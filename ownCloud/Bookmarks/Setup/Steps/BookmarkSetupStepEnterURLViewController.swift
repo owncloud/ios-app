@@ -35,7 +35,7 @@ class BookmarkSetupStepEnterURLViewController: BookmarkSetupStepViewController {
 
 		focusTextFields = [ urlTextField! ]
 
-		contentView = urlTextField
+		//contentView = urlTextField
 
 		updateState()
 	}
