@@ -460,7 +460,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 	}
 }
 
-extension UserInterfaceContext : UserInterfaceContextProvider {
+extension UserInterfaceContext : ownCloudAppShared.UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
 		return ShareExtensionViewController.shared?.view
 	}

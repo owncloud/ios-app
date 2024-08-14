@@ -107,7 +107,7 @@ public extension OCClassSettingsKey {
 	static var disableEnterpriseLicensing : OCClassSettingsKey { return OCClassSettingsKey(rawValue: "disable-enterprise-licensing") }
 }
 
-extension OCLicenseManager : OCClassSettingsSupport {
+extension OCLicenseManager : ownCloudSDK.OCClassSettingsSupport {
 	public static var classSettingsIdentifier: OCClassSettingsIdentifier {
 		return .licensing
 	}
