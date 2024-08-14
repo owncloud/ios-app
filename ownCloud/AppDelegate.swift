@@ -308,7 +308,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
-extension UserInterfaceContext : UserInterfaceContextProvider {
+extension UserInterfaceContext : ownCloudAppShared.UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
 		return provideCurrentWindow()
 	}

@@ -99,7 +99,7 @@ public class Log {
 	}
 }
 
-extension OCLogger : OCLogIntroFormat {
+extension OCLogger : ownCloudSDK.OCLogIntroFormat {
 	public func logIntroFormat() -> String {
 		return "{{stdIntro}}; Log options: \(Log.logOptionStatus)"
 	}

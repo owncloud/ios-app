@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudAppShared
 
-extension AccountController: AccountControllerExtraItems {
+extension AccountController: ownCloudAppShared.AccountControllerExtraItems {
 	var activitySideBarItem: CollectionSidebarAction? {
 		var sideBarItem: CollectionSidebarAction? = specialItems[.activity] as? CollectionSidebarAction
 

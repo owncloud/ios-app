@@ -59,7 +59,7 @@ extension AccountController {
 	}
 }
 
-extension AccountController: DataItemSwipeInteraction {
+extension AccountController: ownCloudAppShared.DataItemSwipeInteraction {
 	public func provideTrailingSwipeActions(with context: ClientContext?) -> UISwipeActionsConfiguration? {
 		if let hostViewController = context?.originatingViewController ?? context?.rootViewController {
 			let deleteRowAction = UIContextualAction(style: .destructive, title: localizedDeleteTitle, handler: { [weak self, weak hostViewController] (_, _, completionHandler) in
@@ -96,7 +96,7 @@ extension AccountController {
 	}
 }
 
-extension AccountController: DataItemContextMenuInteraction {
+extension AccountController: ownCloudAppShared.DataItemContextMenuInteraction {
 	public func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]? {
 		if let hostViewController = context?.originatingViewController ?? context?.rootViewController {
 			var menuItems: [UIMenuElement] = []
@@ -166,7 +166,7 @@ extension AccountController: DataItemContextMenuInteraction {
 	}
 }
 
-extension AccountController: DataItemDragInteraction {
+extension AccountController: ownCloudAppShared.DataItemDragInteraction {
 	public func provideDragItems(with context: ClientContext?) -> [UIDragItem]? {
 		if let bookmark, let userActivity = openInNewWindowUserActivity(with: clientContext) {
 			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
@@ -182,7 +182,7 @@ extension AccountController: DataItemDragInteraction {
 	}
 }
 
-extension AccountController: DataItemDropInteraction {
+extension AccountController: ownCloudAppShared.DataItemDropInteraction {
 	public func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal? {
 		if session.localDragSession == nil {
 			return nil

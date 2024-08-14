@@ -45,7 +45,7 @@ class ThemeableTextView : UITextView, Themeable {
 	}
 }
 
-extension OCResourceText : OCViewProvider {
+extension OCResourceText : ownCloudSDK.OCViewProvider {
 	public func provideView(for size: CGSize, in context: OCViewProviderContext?, completion completionHandler: @escaping (UIView?) -> Void) {
 		var attributedText : NSAttributedString?
 
