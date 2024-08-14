@@ -65,7 +65,7 @@ enum BrandingColorAlias: String, CaseIterable {
 	case fileIconColor = "file-icon-color"
 }
 
-extension Branding : BrandingInitialization {
+extension Branding : ownCloudApp.BrandingInitialization {
 	public static func initializeBranding() {
 		self.registerOCClassSettingsDefaults([
 			.documentationURL : "https://doc.owncloud.com/ios-app/latest/",
