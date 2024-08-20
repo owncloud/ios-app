@@ -17,7 +17,21 @@
  */
 
 #import <ownCloudSDK/ownCloudSDK.h>
-#import <ownCloudApp/ownCloudApp.h>
+
+// BEGIN: Shared with ownCloudApp.framework
+#import "Branding.h"
+#import "BrandingClassSettingsSource.h"
+#import "NotificationManager.h"
+#import "NotificationMessagePresenter.h"
+#import "NotificationAuthErrorForwarder.h"
+#import "OCBookmark+AppExtensions.h"
+#import "OCBookmark+FPServices.h"
+#import "OCCore+BundleImport.h"
+#import "OCFileProviderSettings.h"
+#import "VFSManager.h"
+#import "AppLockSettings.h"
+#import "ZIPArchive.h"
+// END: shared with ownCloudApp.framework
 
 #import "FileProviderExtension.h"
 #import "OCItem+FileProviderItem.h"
@@ -1382,7 +1396,6 @@
 @end
 
 OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";
-OCClassSettingsIdentifier OCClassSettingsIdentifierFileProvider = @"file-provider";
 OCClassSettingsKey OCClassSettingsKeyFileProviderSkipLocalErrorChecks = @"skip-local-error-checks";
 
 /*

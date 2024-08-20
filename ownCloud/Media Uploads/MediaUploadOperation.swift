@@ -37,9 +37,11 @@ class MediaUploadOperation : Operation {
 		self.core = core
 		self.mediaUploadJob = mediaUploadJob
 		self.assetId = assetId
-		if let vault = self.core?.vault {
-			self.fpSession = OCFileProviderServiceSession(vault: vault)
-		}
+
+		// Disable FileProvider usage due to XPC / stability issues
+		// if let vault = self.core?.vault {
+		// 	self.fpSession = OCFileProviderServiceSession(vault: vault)
+		// }
 	}
 
 	override func main() {
