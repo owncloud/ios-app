@@ -17,7 +17,12 @@
  */
 
 #import "FileProviderServiceSource.h"
-#import <ownCloudApp/ownCloudApp.h>
+
+// BEGIN: Shared with ownCloudApp.framework
+#import "OCFileProviderService.h"
+#import "OCCore+BundleImport.h"
+// END: Shared with ownCloudApp.framework
+
 #import <ownCloudSDK/ownCloudSDK.h>
 
 @interface OCCore (setNeedsToProcessSyncRecords)

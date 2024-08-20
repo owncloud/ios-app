@@ -33,7 +33,6 @@
 
 extern OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider;
 
-extern OCClassSettingsIdentifier OCClassSettingsIdentifierFileProvider;
 extern OCClassSettingsKey OCClassSettingsKeyFileProviderSkipLocalErrorChecks;
 
 #define FPLogCmdBegin(command, format,...) \
