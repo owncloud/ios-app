@@ -20,4 +20,7 @@
 "NSAppleMusicUsageDescription" = "Izin ini diperlukan untuk mengunggah file media ke server Anda.";
 "NSPhotoLibraryAddUsageDescription" = "Izin ini diperlukan untuk mengunggah foto dan video dari perpustakaan foto Anda.";
 "NSPhotoLibraryUsageDescription" = "Izin ini diperlukan untuk mengunggah foto dan video dari perpustakaan foto Anda.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in the background.";
+"NSLocationAlwaysUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
+"NSLocationWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
 "NSMicrophoneUsageDescription" = "This permission is needed to record videos";

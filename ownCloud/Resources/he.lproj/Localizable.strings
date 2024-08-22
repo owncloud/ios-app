@@ -48,7 +48,7 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "לתעודת האימות יש בעיות.\nיש לפתוח 'פרטי תעודת אימות' למידע נוסף.";
 "No issues found. Certificate passed validation." = "לא נמצאו בעיות. התעודה עברה אימות.";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "יתכן וקיימות בעיות בתעודת האימות, אבל התעודה התקבלה על ידי משתמש.\nיש לפתוח 'פרטי תעודת אימות' למידע נוסף.";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "אם נבחר  'המשך', תועבר בקשה לאפשר לאפליקציה '%@' לפתוח את ממשק ההתחברות OAuth2 בו ניתן יהיה להכניס את פרטי ההתחברות.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
 
 "Error opening %@" = "Error opening %@";
 
@@ -104,8 +104,19 @@
 "kind" = "סוג";
 "size" = "גודל";
 "date" = "תאריך";
+"last used" = "last used";
+
+"Tree" = "Tree";
 "Search folder" = "Search folder";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
 "Search account" = "Search account";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
 "Pending" = "ממתין";
 "Show parent paths" = "הצגת נתיבי בסיס";
 "Reveal in folder" = "Reveal in folder";
@@ -115,7 +126,33 @@
 "%@ item | " = "%@ פריט | ";
 "%@ items | " = "%@ פריטים | ";
 
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "בטעינה …";
+
 "Show more results" = "Show more results";
+
+"An error occurred" = "אירעה שגיאה";
+
+/* Item Layouts */
+"List" = "רשימה";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
 
 /* Search scope */
 "Search scope" = "Search scope";
@@ -131,6 +168,12 @@
 "Welcome to %@" = "Welcome to %@";
 "Please enter a server URL" = "Please enter a server URL";
 "Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -141,8 +184,10 @@
 "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "תיקייה ריקה";
+"No contents" = "No contents";
 "This folder contains no files or folders." = "תיקייה זו אינה כוללת קבצים או תיקיות משנה.";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "התיקייה הוסרה";
 "This folder no longer exists on the server." = "תיקייה זו אינה קיימת עוד על השרת.";
@@ -159,7 +204,10 @@
 "Upload files" = "העלאת קבצים";
 
 "No matches" = "לא נמצאו התאמות";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "לא נמצאו תוצאות למונח החיפוש";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "מצב";
 
 "Authorization failed" = "אישור נכשל";
@@ -242,6 +290,8 @@
 "Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
 "%ld digit code" = "%ld digit code";
 "Enter a new code with %ld digits" = "Enter a new code with %ld digits";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
 
 "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ גרסה %@ בנייה %@\n(יישום: %@, sdk: %@)";
 "beta" = "בטא";
@@ -360,9 +410,16 @@
 "Create folder" ="יצירת תיקייה";
 "Duplicate" = "כפול";
 "Move" = "העברה";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "העברה לכאן";
+"Select target." = "Select target.";
 "Open in" = "פתיחה באמצעות";
 "Copy" = "העתקה";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
 "Copy here" = "העתקה לכאן";
+
 "Cannot connect to " = "לא ניתן להתחבר ל-";
 " couldn't download file(s)" = "לא ניתן היה להוריד את הקבצים";
 "Actions" = "פעולות";
@@ -374,6 +431,8 @@
 "%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
 "%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
 "Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
+
+"Processing on server" = "Processing on server";
 
 "Preparing…" = "מכין...";
 
@@ -389,8 +448,21 @@
 "Enable" = "הפעלה";
 "Exit Full Screen" = "Exit Full Screen";
 
-/* Directory Picker Messages */
-"Move here" = "העברה לכאן";
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "הוספת פריט";
+
+/* App Provider */
+"New document" = "מסמך חדש";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
 
 /* Preview */
 "Open file" = "פתיחת קובץ";
@@ -448,25 +520,24 @@
 "Scan additional" = "סריקת נוסף";
 "Create one file per page" = "יצירת קובץ לעמוד";
 
-/* Scan */
-"Scan" = "סריקה";
-"Scans" = "סריקות";
-"Scan document" = "סריקת מסמך";
-"Saving" = "שמירה";
-"File format" = "פורמט קובץ";
-"Name" = "שם";
-"Save as" = "שמירה בשם";
-"Options" = "אפשרויות";
-"Scan additional" = "סריקת נוסף";
-"Create one file per page" = "יצירת קובץ לעמוד";
-
 /* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
 "Searching Shares…" = "מחפש שיתופים...";
 "Recipient" = "נמען";
 "Recipients" = "נמענים";
 "Public Link" = "קישור ציבורי";
 "Public Links" = "קישורים ציבוריים";
-"Shared by %@" = "משותף על ידי %@";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Invite";
 "Invite Recipient" = "נמען לא חוקי";
 "Recipients" = "נמענים";
 "Add email or name" = "יש להוסיף דואר אלקטרוני או שם";
@@ -552,6 +623,16 @@
 "Share with user/group" = "Share with user/group";
 "Share link" = "קישור לשיתוף";
 
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "משותף עם קישור";
+
+"Share with" = "שיתוף עם";
+"Add" = "הוספה";
+"Save changes" = "שמירת שינויים";
+
+"Enter password" = "Enter password";
+
 /* Quick Access view */
 "Quick Access" = "גישה מהירה";
 "Collection" = "אוסף";
@@ -562,6 +643,10 @@
 "Text" = "טקסט";
 "Documents" = "מסמכים";
 "Audio" = "קובץ שמע";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
 
 /* Media files settings */
 "Media Files" = "קובצי מדיה";
@@ -645,10 +730,12 @@
 "Make unavailable offline" = "הופך ללא זמין באופן מקוון";
 
 "Available Offline" = "זמין באופן לא מקוון";
-"No items have been selected for offline availability." = "לא נבחרו פריטים לזמינות במצב לא מקוון.";
 
-"Overview" = "סקירה כללית";
-"All Files" = "כל הקבצים";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -733,7 +820,7 @@
 
 /* Licensing: Settings */
 "In-App Purchases" = "רכישות בתוך היישום";
-"Purchases" = "רכישות";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
 "Error fetching transactions" = "שגיאה במשיכת עסקאות";
 "Document Scanner" = "סורק מסמכים";
 "Scan documents and photos with your camera." = "סריקת מסמכים ותמונות באמצעות המצלמה שלך.";
@@ -759,7 +846,7 @@
 "subscription" = "מנוי";
 "Photo Pro Features" = "Photo Pro Features";
 "Image metadata, extended upload options" = "Image metadata, extended upload options";
-"Purchase" = "Purchase";
+"Purchase" = "רכישה";
 "Subscribe" = "רישום";
 
 "No accounts found" = "No accounts found";
@@ -773,7 +860,19 @@
 "Error importing %@" = "שגיאה ביבוא %@";
 "Error loading item" = "שגיאה בטעינת פריט";
 "Preparing…" = "מכין...";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
 "Save here" = "שמירה כאן";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
 
 /* Disallowed Import Methods */
 /* - Share Extension */
@@ -787,16 +886,6 @@
 /* - Files.app */
 "Import not allowed" = "Import not allowed";
 "Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
-
-/* Data migration from legacy app */
-"Account Migration" = "נדידת חשבון";
-"App Passcode" = "קוד יישום";
-"Instant Upload Settings" = "הגדרות העלאה מיידית";
-"Migrating" = "בנדידה";
-"Migrated" = "סיים נדידה";
-"Failed to migrate" = "נדידה נכשלה";
-"Failed to access legacy user data" = "הגישה לנתוני משתמש מדור קודם נכשלה";
-"The app was upgraded to a new version. Below there is an overview of all migrated accounts." = "The app was upgraded to a new version. Below there is an overview of all migrated accounts.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "הזנת בחירה מרובה";
@@ -822,7 +911,7 @@
 "Capture settings" = "Capture settings";
 "Time" = "זמן";
 "EXIF aux info" = "EXIF aux info";
-"Authoring" =  "Authoring";
+"Authoring" =  "כתיבה";
 "TIFF" = "TIFF";
 
 "Lens make" = "Lens make";
@@ -836,7 +925,7 @@
 "ISO" = "ISO";
 
 /* EXIF: exposure program */
-"Program" = "Program";
+"Program" = "תוכנית";
 "Not defined" = "Not defined";
 "Manual" = "Manual";
 "Normal" = "רגיל";
@@ -893,7 +982,7 @@
 "Copyright" = "זכויות יוצרים";
 
 /* IPTC meta data */
-"Contact info" = "Contact info";
+"Contact info" = "צור קשר";
 "Usage terms" = "Usage terms";
 "Scene" = "Scene";
 "Description" = "תיאור";
@@ -908,7 +997,7 @@
 "GPS Location" = "GPS Location";
 "Coordinates" = "Coordinates";
 "Altitude" = "Altitude";
-"Place" = "Place";
+"Place" = "מקום";
 "E" = "E";
 "W" = "W";
 "N" = "N";
@@ -932,3 +1021,8 @@
 "New settings received from MDM" = "New settings received from MDM";
 "Tap to quit the app." = "Tap to quit the app.";
 "Tap to launch the app." = "Tap to launch the app.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";
