@@ -295,10 +295,12 @@ open class AccountConnection: NSObject {
 			connection.fpServiceStandby?.stop()
 
 			// Return core
-			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: {
+			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: { [weak self] in
 				connection.richStatus = nil
 				connection.core = nil
 				connection.status = .noCore
+
+				self?.progressSummarizer.resetPrioritySummaries()
 
 				OnMainThread {
 					completion?(nil)

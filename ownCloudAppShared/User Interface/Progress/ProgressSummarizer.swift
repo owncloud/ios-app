@@ -330,6 +330,15 @@ public class ProgressSummarizer: NSObject {
 		}
 	}
 
+	public func resetPrioritySummaries() {
+		OCSynchronized(self) {
+			Log.debug("Reset priority summaries")
+
+			prioritySummaries.removeAll()
+			self.prioritySummary = nil
+		}
+	}
+
 	// MARK: - Change notifications
 	private var observers : [ProgressSummaryNotificationObserver] = []
 	public func addObserver(_ observer: AnyObject, notificationBlock: @escaping ProgressSummarizerNotificationBlock) {
