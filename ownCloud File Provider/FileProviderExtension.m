@@ -800,6 +800,7 @@
 				OCCoreOptionImportByCopying : @(importByCopying)
 			} placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 				FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
+				item.bookmarkUUID = self.core.bookmark.uuid.UUIDString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 				completionHandler(item, [error translatedError]);
 			} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 				if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
