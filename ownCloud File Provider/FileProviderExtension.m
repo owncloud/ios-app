@@ -376,6 +376,12 @@
 		 {
 			FPLogCmdBegin(@"StartProviding", @"Downloading %@", item);
 
+			if (((OCItem *)item).type == OCItemTypeCollection) {
+				// Can't download folders
+				completionHandler([NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+				return;
+			}
+
 			[self.core downloadItem:(OCItem *)item options:@{
 
 				OCCoreOptionAddFileClaim : [OCClaim claimForLifetimeOfCore:core explicitIdentifier:OCClaimExplicitIdentifierFileProvider withLockType:OCClaimLockTypeRead]
