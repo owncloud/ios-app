@@ -17,258 +17,359 @@
  */
 
 /* Add / Edit Bookmark */
-"Edit account" = "编辑帐户";
-"Add account" = "添加账号";
-"Server URL" = "服务器 URL";
+"Edit account" = "Edit account";
+"Add account" = "Add account";
+"Server URL" = "Server URL";
 "https://example.com" = "https://example.com";
-"Continue" = "继续";
-"Name" = "名称";
-"Example Server" = "范例服务器";
-"Show Certificate Details" = "显示证书信息";
-"Connect" = "连接";
-"Delete Authentication Data" = "删除认证数据";
-"Authentication" = "认证";
-"Username" = "用户名";
-"Password" = "密码";
-"Certificate Details" = "证书详情";
-"Cancel" = "取消";
-"Approve" = "认可";
-"Error" = "错误";
-"Review Connection" = "审查连接";
-"Authenticated via" = "已认证，通过";
-"Authenticated as %@ via %@" = "已认证为 %@，通过 %@";
-"Edit" = "编辑";
-"Credentials" = "凭证";
-"Rejected" = "被拒绝";
-"Passed" = "通过";
-"Accepted" = "接受";
-"Validation Error" = "验证错误";
-"Certificate was rejected by user." = "证书被用户拒绝。";
-"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "证书存在问题。\n要获得更多信息，打开“证书细节”。";
-"No issues found. Certificate passed validation." = "没有发现问题。证书通过验证。";
-"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "证书可能存在问题，但已被用户接受。\n打开“证书细节”获得更多信息。";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "如果你选择“继续”，你将被建议允许应用“%@”打开OAuth2登录，在那里你可以输入你的凭据。";
+"Continue" = "Continue";
+"Name" = "Name";
+"Example Server" = "Example Server";
+"Show Certificate Details" = "Show Certificate Details";
+"Connect" = "Connect";
+"Delete Authentication Data" = "Delete Authentication Data";
+"Authentication" = "Authentication";
+"Username" = "Username";
+"Password" = "Password";
+"Certificate Details" = "Certificate Details";
+"Cancel" = "Cancel";
+"Approve" = "Approve";
+"Error" = "Error";
+"Issues" = "Issues";
+"Review Connection" = "Review Connection";
+"Authenticated via" = "Authenticated via";
+"Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+"Edit" = "Edit";
+"Credentials" = "Credentials";
+"Rejected" = "Rejected";
+"Passed" = "Passed";
+"Accepted" = "Accepted";
+"Validation Error" = "Validation Error";
+"Certificate was rejected by user." = "Certificate was rejected by user.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Certificate has issues.\nOpen 'Certificate Details' for more informations.";
+"No issues found. Certificate passed validation." = "No issues found. Certificate passed validation.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
 
-"Contacting server…" = "正在与服务器通信 ……";
-"Authenticating…" = "正在认证...";
+"Error opening %@" = "Error opening %@";
 
-"Fetching user information…" = "正在获取用户信息...";
-"Updating connection…" = "更新连接...";
+"Contacting server…" = "Contacting server…";
+"Authenticating…" = "Authenticating…";
 
-"Missing hostname" = "缺少主机名";
-"The entered URL does not include a hostname." = "输入的 URL 不包含主机名。";
-"Add account" = "添加账号";
-"Server name" = "服务器名称";
-"Server Password" = "服务器密码";
-"Server Username" = "服务器用户名";
+"Fetching user information…" = "Fetching user information…";
+"Updating connection…" = "Updating connection…";
+
+"Preparing account" = "Preparing account";
+"Please wait…" = "Please wait…";
+"Skip" = "Skip";
+
+"Missing hostname" = "Missing hostname";
+"The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
+"Add account" = "Add account";
+"Server name" = "Server name";
+"Server Password" = "Server Password";
+"Server Username" = "Server Username";
 "Show accounts" = "Show accounts";
 "Setup complete" = "Setup complete";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Access Files" = "Access Files";
+"Log out" = "Log out";
+"Retry" = "Retry";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
 
 /* Client */
-"Browse" = "浏览";
-"Disconnect" = "断开连接";
-"Connecting…" = "正在连接...";
-"Connected." = "已连接。";
-"Select" = "选择";
-"Done" = "完成";
+"Browse" = "Browse";
+"Files" = "Files";
+"Disconnect" = "Disconnect";
+"Connecting…" = "Connecting…";
+"Connected." = "Connected.";
+"Select" = "Select";
+"Done" = "Done";
 
-"Folder" = "文件夹";
+"Folder" = "Folder";
 
-"Stopped" = "已停止";
-"Started…" = "已启动 ……";
-"Contents from cache." = "缓存的内容。";
-"Waiting for server response…" = "等待服务器响应 ……";
-"This folder no longer exists." = "此文件夹已不存在。";
-"Everything up-to-date." = "一切均为最新版本。";
-"Please wait…" = "请稍等 ……";
-"Sort by %@" = "按%@排序";
-"Sort by" = "排序方式";
+"Stopped" = "Stopped";
+"Started…" = "Started…";
+"Contents from cache." = "Contents from cache.";
+"Waiting for server response…" = "Waiting for server response…";
+"This folder no longer exists." = "This folder no longer exists.";
+"Everything up-to-date." = "Everything up-to-date.";
+"Please wait…" = "Please wait…";
+"Sort by %@" = "Sort by %@";
+"Sort by" = "Sort by";
 
-"name" = "名称";
+"name" = "name";
 "kind" = "kind";
-"size" = "大小";
-"date" = "日期";
-"Search this folder" = "在此文件夹搜索";
-"Pending" = "等待";
-"Show parent paths" = "显示父路径";
+"size" = "size";
+"date" = "date";
+"last used" = "last used";
 
-"%@ of %@ used" = "使用量%@/%@";
-"Total: %@" = "总计：%@";
+"Tree" = "Tree";
+"Search folder" = "Search folder";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
+"Search account" = "Search account";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
+"Pending" = "Pending";
+"Show parent paths" = "Show parent paths";
+"Reveal in folder" = "Reveal in folder";
+
+"%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "加载中...";
+
+"Show more results" = "Show more results";
+
+"An error occurred" = "An error occurred";
+
+/* Item Layouts */
+"List" = "List";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
+
 /* Static Login Setup */
-"Server error" = "服务器错误";
+"Server error" = "Server error";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
+"Enter your username and password" = "Enter your username and password";
+"Please log in to authorize the app." = "Please log in to authorize the app.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+"Login" = "Login";
+"Wrong URL" = "Wrong URL";
+"Please enter a valid URL" = "Please enter a valid URL";
+"Missing Profile URL" = "Missing Profile URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "空文件夹";
-"This folder contains no files or folders." = "此文件夹中没有文件或文件夹。";
+"No contents" = "No contents";
+"This folder contains no files or folders." = "This folder contains no files or folders.";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
-"Folder removed" = "文件夹已移除";
-"This folder no longer exists on the server." = "此文件夹已不存在于服务器上。";
-"Are you sure you want to delete this item from the server?" = "你确认要从服务器中删除此项目吗？";
-"Are you sure you want to delete these items from the server?" = "你确认要从服务器中删除这些项目吗？";
-"Multiple items" = "多个项目";
-"Deleting '%@'" = "正在删除 ‘%@’";
-"Renaming to %@" = "正在重命名为 %@…";
-"Upload from your photo library" = "从你的图片库中上传";
-"Missing permissions" = "缺少权限";
-"This permission is needed to upload photos and videos from your photo library." = "需要此权限才能从你的图片库中上传照片和视频。";
-"Not now" = "暂时不";
-"Upload file" = "上传文件";
-"Upload files" = "上传文件";
+"Folder removed" = "Folder removed";
+"This folder no longer exists on the server." = "This folder no longer exists on the server.";
+"Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
+"Are you sure you want to delete these items from the server?" = "Are you sure you want to delete these items from the server?";
+"Multiple items" = "Multiple items";
+"Deleting '%@'" = "Deleting '%@'";
+"Renaming to %@" = "Renaming to %@";
+"Upload from your photo library" = "Upload from your photo library";
+"Missing permissions" = "Missing permissions";
+"This permission is needed to upload photos and videos from your photo library." = "This permission is needed to upload photos and videos from your photo library.";
+"Not now" = "Not now";
+"Upload file" = "Upload file";
+"Upload files" = "Upload files";
 
-"No matches" = "没有匹配的";
-"There are no results for this search term" = "没有搜索结果";
-"Status" = "状态";
+"No matches" = "No matches";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
+"There are no results for this search term" = "There are no results for this search term";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
 
-"Authorization failed" = "认证失败";
-"The account has been disabled." = "此账户已被禁用。";
-"The server declined access with the credentials stored for this connection." = "服务器拒绝了使用该为此连接储存的凭据的访问。";
-"Access denied" = "访问被拒绝";
-"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "该连接的访问令牌已过期或失效。重新登录来重新获得访问权。";
-"No authentication data has been found for this connection." = "没有发现针对此连接的认证信息";
-"Sign in" = "登录";
-"Continue offline" = "继续离线";
-"Media upload in the previous session was incomplete since the application was terminated" = "在上个会话中上传的媒体由于应用程序被终止而不完整";
+"Status" = "Status";
+
+"Authorization failed" = "Authorization failed";
+"The account has been disabled." = "The account has been disabled.";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"Access denied" = "Access denied";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
+"No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Authentication with %@ is no longer allowed. Re-authentication needed.";
+"Sign in" = "Sign in";
+"Continue offline" = "Continue offline";
+"Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+"Waiting for response from login session in external browser…" = "Waiting for response from login session in external browser…";
 
 "All done" = "All done";
 "No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
 
-"Show all" = "显示所有";
+"Show all" = "Show all";
 "+ %ld more" = "+ %ld more";
 "Apply choice to all similar issues" = "Apply choice to all similar issues";
 "Apply to all" = "Apply to all";
 
 /* Server List*/
-"Cancel" = "取消";
-"OK" = "确定";
+"Cancel" = "Cancel";
+"OK" = "OK";
 
-"'%@' is currently locked" = "‘%@’ 正被锁定";
-"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "一个正在进行的操作阻止了到 ‘%@’ 的连接。请稍后再试。";
+"'%@' is currently locked" = "'%@' is currently locked";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
-"Really delete '%@'?" = "真的要删除 ‘%@’ 吗？";
-"This will also delete all locally stored file copies." = "这也会删除本地保存的所有副本。";
-"Delete" = "删除";
-"Remove" = "移除";
+"Really delete '%@'?" = "Really delete '%@'?";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
+"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
+"Delete" = "Delete";
+"Remove" = "Remove";
 "Removing of '%@' failed" = "Removing of '%@' failed";
-"Accounts" = "账号";
+"Accounts" = "Accounts";
 
-"Help" = "帮助";
-"Feedback" = "反馈";
-"Welcome" = "欢迎来到你的";
-"Thanks for choosing %@! \n Start by adding your account." = "感谢您选择 %@！\n要开始使用，请增加你的帐户。";
+"Help" = "Help";
+"Feedback" = "Feedback";
+"Welcome" = "Welcome";
+"Thanks for choosing %@! \n Start by adding your account." = "Thanks for choosing %@! \n Start by adding your account.";
 
 /* Settings Messages */
 
-"Security" = "安全";
-"Passcode Lock" = "密码锁";
+"Security" = "Security";
+"Passcode Lock" = "Passcode Lock";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
-"Videos" = "视频";
-"Photos" = "照片";
-"Background uploads" = "后台上传";
-"Wifi only" = "只使用 Wifi";
-"Settings" = "设置";
-"Lock application" = "锁定应用程序";
-"Upload videos via WiFi only" = "仅通过 WIFI 上传视频";
-"Upload pictures via WiFi only" = "仅通过 WIFI 上传图片。";
-"More" = "更多";
-"Send feedback" = "发送反馈";
-"Recommend to a friend" = "推荐给朋友";
-"Privacy Policy" = "隐私政策";
+"Unlock using %@?" = "Unlock using %@?";
+"Videos" = "Videos";
+"Photos" = "Photos";
+"Wifi only" = "Wifi only";
+"Settings" = "Settings";
+"Lock application" = "Lock application";
+"Upload videos via WiFi only" = "Upload videos via WiFi only";
+"Upload pictures via WiFi only" = "Upload pictures via WiFi only";
+"More" = "More";
+"Documentation" = "Documentation";
+"Send feedback" = "Send feedback";
+"Recommend to a friend" = "Recommend to a friend";
+"Privacy Policy" = "Privacy Policy";
 "Terms Of Use" = "Terms Of Use";
-"Acknowledgements" = "致谢";
-"Video upload path" = "视频上传路径";
-"Photo upload path" = "照片上传路径";
-"Immediately" = "立即";
-"After 1 minute" = "1 分钟后";
-"After 5 minutes" = "5 分钟后";
-"After 30 minutes" = "30 分钟后";
-
-"Please configure an email account" = "请配置一个电子邮件帐户";
-"You need to configure an email account first to be able to send emails." = "要发送电子邮件，你需要配置一个电子邮件帐户。";
-"Do you want to open the following URL?" = "你确定要打开下面的 URL？";
+"Acknowledgements" = "Acknowledgements";
+"license" = "license";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.";
+"Video upload path" = "Video upload path";
+"Photo upload path" = "Photo upload path";
+"Immediately" = "Immediately";
+"After 1 minute" = "After 1 minute";
+"After 5 minutes" = "After 5 minutes";
+"After 30 minutes" = "After 30 minutes";
+"After %ld seconds" = "After %ld seconds";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
+"Please configure an email account" = "Please configure an email account";
+"You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
+"Do you want to open the following URL?" = "Do you want to open the following URL?";
+"Passcode option" = "Passcode option";
+"Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
+"%ld digit code" = "%ld digit code";
+"Enter a new code with %ld digits" = "Enter a new code with %ld digits";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
 
 "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
-"beta" = "公测的";
-"release" = "发布";
+"beta" = "beta";
+"release" = "release";
 "App Version" = "App Version";
 "Version information were copied to the clipboard" = "Version information were copied to the clipboard";
 
 
 /* User Interface Settings */
-"Theme" = "主题";
-"User Interface" = "用户界面";
-"Dark" = "暗色";
-"Light" = "亮色";
-"Classic" = "经典";
-"System" = "系统";
-"System Appeareance" = "系统外观";
+"Theme" = "Theme";
+"User Interface" = "User Interface";
+"Dark" = "Dark";
+"Dark Blue" = "Dark Blue";
+"Dark Web" = "Dark Web";
+"Light" = "Light";
+"Classic" = "Classic";
+"System" = "System";
+"System Appeareance" = "System Appeareance";
 
 /* Log settings */
-"Log Files" = "日志文件";
-"Browse log files" = "浏览日志文件";
-"Share" = "共享";
-"Delete all log files?" = "要删除所有日志吗？";
-"Delete all" = "删除所有";
+"Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
+"Share" = "Share";
+"Delete all log files?" = "Delete all log files?";
+"Delete all" = "Delete all";
 
-"Log Level" = "日志级别";
-"Log Destinations" = "日志位置";
-"Privacy" = "隐私";
+"Log Level" = "Log Level";
+"Log Destinations" = "Log Destinations";
+"Privacy" = "Privacy";
 
-"Logging" = "日志";
-"Enable logging" = "开启日志";
-"Options" = "选项";
+"Logging" = "Logging";
+"Enable logging" = "Enable logging";
+"Options" = "Options";
 
-"Off" = "关闭";
-"Info" = "信息";
-"Default" = "默认";
-"Warning" = "警告";
-"Error" = "错误";
+"Off" = "Off";
+"Info" = "Info";
+"Default" = "Default";
+"Warning" = "Warning";
+"Error" = "Error";
 
-"Share log file" = "分享日志文件";
-"Reset log file" = "重置日志文件";
+"Share log file" = "Share log file";
+"Reset log file" = "Reset log file";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "激活时，日志可能会影响性能并且包含敏感信息。然而日志不会被设置成自动提交到%@服务器。和他者分享日志完全在用户的控制之下。";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.";
 
-"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "最后10条激活的日志会保留在设备上-每条日志覆盖24小时的使用时间。当分享时请注意日志可能会包含敏感信息例如服务器的域名和用户特定的信息。";
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
 
-"Mask private data" = "覆盖隐私数据";
-"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "开启此选项后，将尝试在日志中隐去隐私数据。但由于日志是一个用于开发和调试的功能，即使启用此选项，我们也无法保证日志文件中不会包含任何隐私数据。因此，请在与其他人分享日志之前仔细检查所有日志文件，以确保其中没有你不想与他人分享的内容。";
+"Mask private data" = "Mask private data";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
 
-"No log file found" = "未找到日志文件";
-"The log file can't be shared because no log file could be found or the log file is empty." = "无法分享日志文件，因为找不到日志文件或者日志文件为空。";
-"Enable log file" = "启用日志文件";
+"No log file found" = "No log file found";
+"The log file can't be shared because no log file could be found or the log file is empty." = "The log file can't be shared because no log file could be found or the log file is empty.";
+"Enable log file" = "Enable log file";
 
-"Really reset log file?" = "确定要重置日志文件吗？";
-"This action can't be undone." = "此操作不能被撤销。";
+"Really reset log file?" = "Really reset log file?";
+"This action can't be undone." = "This action can't be undone.";
 
 /* Data usage settings */
 "Data usage" = "Data usage";
-"Delete unused local copies" = "删除没有使用过的本地副本";
-"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "测量到的通过此设备上传、编辑、下载或查看各自的文件的时间。不要通过“离线可用”特性应用于已下载的文件。本地副本可能在给定的时间经过前被删除，例如出于在服务器上有该文件的更新版本-或是手动删除了离线文件的原因。同时，本地副本也可能在给定时间后仍未被删除，例如出于对它施加了操作，文件还在使用中-或是持有该文件的账户在应用中还未被使用过的原因。";
-"never" = "从不";
-"after %@" = "%@后";
-"Decrease Slider Value" = "减少滑块值";
-"Increase Slider Value" = "增加滑块值";
+"Delete unused local copies" = "Delete unused local copies";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
+"never" = "never";
+"after %@" = "after %@";
+"Decrease Slider Value" = "Decrease Slider Value";
+"Increase Slider Value" = "Increase Slider Value";
 
 "Cellular Data Usage" = "Cellular Data Usage";
 "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
 "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.";
-"General" = "常规";
+"General" = "General";
 "By feature" = "By feature";
 
 "off" = "off";
-"enabled" = "已启用";
+"enabled" = "enabled";
 
 /* Display settings */
-"Advanced settings" = "高级选项";
-"Show hidden files and folders" = "显示隐藏的文件和文件夹";
+"Advanced settings" = "Advanced settings";
+"Show hidden files and folders" = "Show hidden files and folders";
 "Show folders on top" = "Show folders on top";
 "Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
@@ -278,248 +379,308 @@
 
 /* Passcode Messages */
 
-"Enter code" = "输入代码";
-"Repeat code" = "重复代码";
-"Delete code" = "删除代码";
-"The entered codes are different" = "输入的代码不相同。";
-"Incorrect code" = "错误的代码";
-"Please try again in %@" = "请在 %@ 后重试";
-"Unlock %@" = "解锁 %@";
-"Biometric authentication failed" = "生物认证失败";
+"Enter code" = "Enter code";
+"Repeat code" = "Repeat code";
+"Delete code" = "Delete code";
+"The entered codes are different" = "The entered codes are different";
+"Incorrect code" = "Incorrect code";
+"Please try again in %@" = "Please try again in %@";
+"Unlock %@" = "Unlock %@";
+"Biometric authentication failed" = "Biometric authentication failed";
+"You are required to set the passcode" = "You are required to set the passcode";
 
 /* Certificate management */
 
-"Certificates" = "证书";
-"User-approved certificates" = "用户允许的证书";
+"Certificates" = "Certificates";
+"User-approved certificates" = "User-approved certificates";
 
-"Approved" = "已认可";
-"Auto-approved" = "已自动同意";
-"Revoke approval" =  "撤销允许";
+"Approved" = "Approved";
+"Auto-approved" = "Auto-approved";
+"Revoke approval" =  "Revoke approval";
 
 /* Actions */
 
-"Forbidden Characters" = "禁止的字符";
-"File name cannot contain / or \\" = "文件名不能包含 / 或 \\";
+"Forbidden Characters" = "Forbidden Characters";
+"File name cannot contain / or \\" = "File name cannot contain / or \\";
 "Item with same name already exists" = "Item with same name already exists";
 "An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
-"New Folder" = "新建文件夹";
-"Folder name" = "文件夹名称";
-"Rename" ="重命名";
-"Create folder" ="创建目录";
-"Duplicate" = "重复";
-"Move" = "移动";
-"Open in" = "打开方式";
-"Copy" = "复制";
-"Copy here" = "复制到此处";
-"Cannot connect to " = "无法连接到";
-" couldn't download file(s)" = "不能下载文件";
-"Actions" = "动作";
-"copy" = "复制";
-"Close Window" = "关闭窗口";
-"Open in a new Window" = "在新窗口中打开";
-"Open in Window" = "在窗口中打开";
-"Take photo or video" = "Take photo or video";
+"New Folder" = "New Folder";
+"Folder name" = "Folder name";
+"Rename" ="Rename";
+"Create folder" ="Create folder";
+"Duplicate" = "Duplicate";
+"Move" = "Move";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Move here";
+"Select target." = "Select target.";
+"Open in" = "Open in";
+"Copy" = "Copy";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
+"Copy here" = "Copy here";
 
-"Preparing…" = "准备中...";
+"Cannot connect to " = "Cannot connect to ";
+" couldn't download file(s)" = " couldn't download file(s)";
+"Actions" = "Actions";
+"copy" = "copy";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
+"Take photo or video" = "Take photo or video";
+"%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
+"%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
+
+"Processing on server" = "Processing on server";
+
+"Preparing…" = "Preparing…";
 
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
 
 "Close actions menu" = "Close actions menu";
-"Favorited" = "已收藏";
+"Favorited" = "Favorited";
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Presentation Mode";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
+"Enable" = "Enable";
+"Exit Full Screen" = "Exit Full Screen";
 
-/* Directory Picker Messages */
-"Move here" = "移动到此处";
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Add item";
+
+/* App Provider */
+"New document" = "New document";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
 
 /* Preview */
-"Open file" = "打开文件";
-"Network unavailable" = "网络不可用";
-"Error" = "错误";
-"Could not get the picture" = "无法获取图像";
-"Downloading" = "正在下载";
-"File couldn't be opened" = "无法打开文件";
+"Open file" = "Open file";
+"Network unavailable" = "Network unavailable";
+"Error" = "Error";
+"Could not get the picture" = "Could not get the picture";
+"Downloading" = "Downloading";
+"File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
 
+"File" = "File";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
+
 /* PDF Viewer */
-"Resume" = "继续";
-"Go to page" = "跳转到页面";
-"Page" = "页面";
-"This document has %@ pages" = "此文档有 %@ 页";
-"%@ of %@" = "%@ / %@";
-"Invalid Page" = "无效的页面";
-"The entered page number doesn't exist" = "输入的页码不存在";
-"Search PDF" = "查找PDF";
-"Outline" = "概述";
+"Resume" = "Resume";
+"Go to page" = "Go to page";
+"Page" = "Page";
+"This document has %@ pages" = "This document has %@ pages";
+"%@ of %@" = "%@ of %@";
+"Invalid Page" = "Invalid Page";
+"The entered page number doesn't exist" = "The entered page number doesn't exist";
+"Search PDF" = "Search PDF";
+"Outline" = "Outline";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
-"Upload" = "上传";
-"Select All" = "全选";
-"Deselect All" = "全不选";
-"All Photos" = "所有照片";
-"Albums" = "专辑页";
-"Importing from photo library" = "从图库中导入";
-"Media import" = "导入媒体";
-"%@ of %@" = "%@ / %@";
+"Upload" = "Upload";
+"Select All" = "Select All";
+"Deselect All" = "Deselect All";
+"All Photos" = "All Photos";
+"Albums" = "专辑";
+"Importing from photo library" = "Importing from photo library";
+"Media import" = "Media import";
+"%@ of %@" = "%@ of %@";
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
 "%d Item" = "%d Item";
 "%d Items" = "%d Items";
+"Select Items" = "Select Items";
 
 /* Scan */
-"Scan" = "扫描";
-"Scans" = "扫描";
-"Scan document" = "扫描文档";
-"Saving" = "保存中";
-"File format" = "文件格式";
-"Name" = "名称";
-"Save as" = "保存为...";
-"Options" = "选项";
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Save as";
+"Options" = "Options";
 "Scan additional" = "Scan additional";
-"Create one file per page" = "为每页创建一个文件";
-
-/* Scan */
-"Scan" = "扫描";
-"Scans" = "扫描";
-"Scan document" = "扫描文档";
-"Saving" = "保存中";
-"File format" = "文件格式";
-"Name" = "名称";
-"Save as" = "保存为...";
-"Options" = "选项";
-"Scan additional" = "Scan additional";
-"Create one file per page" = "为每页创建一个文件";
+"Create one file per page" = "Create one file per page";
 
 /* Sharing */
-"Searching Shares…" = "查找共享...";
-"Recipient" = "收件人";
-"Recipients" = "接收者";
-"Public Link" = "公共链接";
-"Public Links" = "公共链接";
-"Shared by {{owner}}" = "由{{owner}}共享";
-"Invite Recipient" = "邀请接收者";
-"Recipients" = "接收者";
-"Add email or name" = "添加电子邮件地址或姓名";
-"Users" = "用户";
-"Groups" = "群组";
-"Start typing to search users, groups and remote users." = "输入来查找用户、群组和远程用户。";
-"(Group)" = "（组）";
-"Adding User to Share failed" = "添加用户到分享失败";
-"Permissions" = "权限";
-"Invited: %@" = "邀请：%@";
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
+"Searching Shares…" = "Searching Shares…";
+"Recipient" = "Recipient";
+"Recipients" = "Recipients";
+"Public Link" = "Public Link";
+"Public Links" = "Public Links";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Invite";
+"Invite Recipient" = "Invite Recipient";
+"Recipients" = "Recipients";
+"Add email or name" = "Add email or name";
+"Users" = "Users";
+"Groups" = "Groups";
+"Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
+"(Group)" = "(Group)";
+"Adding User to Share failed" = "Adding User to Share failed";
+"Permissions" = "Permissions";
+"Invited: %@" = "Invited: %@";
 "Created: %@" = "Created: %@";
-"Allows the users you share with to re-share" = "允许你分享给的用户再次分享";
-"Allows the users you share with to edit your shared files, and to collaborate" = "允许你分享给的用户编辑你分享的文件，并且一起合作";
-"Allows the users you share with to create new files and add them to the share" = "允许你分享给的用户创建新文件并添加它们到该分享";
-"Allows uploading a new version of a shared file and replacing it" = "允许上传被分享文件的新版本并替换原有的文件";
-"Allows the users you share with to delete shared files" = "允许你分享给的用户删除被分享的文件";
-"Setting permission failed" = "设置权限失败";
-"Shared with" = "已共享给";
-"Remove Recipient failed" = "远程接收失败";
-"Remove Recipient" = "移除接收者";
-"Create" = "创建";
-"Change" = "更改";
-"Recipients can view or download contents." = "接收者可查看或下载内容。";
-"Recipients can view, download, edit, delete and upload contents." = "接收者可查看、下载、编辑、删除以及上传内容。";
-"Receive files from multiple recipients without revealing the contents of the folder." = "从多个接收者处接收文件而不暴露文件夹中的内容。";
-"Download / View" = "下载 / 查看";
-"Download / View / Upload" = "下载 / 查看 / 上传";
-"Upload only (File Drop)" = "仅上传 (File Drop)";
-"Creating public link failed" = "公共链接创建失败";
-"Create Public Link" = "创建公共链接";
-"Links" = "链接";
-"Link" = "链接";
-"Setting expiration date failed" = "设置失效时期失败";
-"Expiration date" = "过期日期";
-"Copy Public Link" = "复制公共链接";
-"Delete Public Link" = "删除公共链接";
-"Deleting Public Link failed" = "公共链接删除失败";
-"Deleting password failed" = "密码删除失败";
-"Setting password failed" = "密码设置失败";
-"Type to update password" = "键入来更新密码";
-"Cannot change permission" = "不能更改权限";
-"Before you can set the permission\n%@,\n you must enter a password." = "在你设置该权限\n%@之前，\n你必须输入一个密码。";
-"Password Protected" = "密码保护";
-"Pending Federated Invites" = "挂起的联合邀请";
-"Pending Invites" = "挂起的邀请";
-"Shared with you" = "分享给您的文件";
-"Shared with others" = "您分享的文件";
-"Shares" = "共享";
-"Copy Private Link" = "复制私有链接";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "只有接收者可以使用该链接。把它作为指向该源的永久链接";
-"Accept Share failed" = "接受分享失败";
-"Decline Share failed" = "拒绝分享失败";
-"Accept" = "接受";
-"Decline" = "拒绝";
-"Declined" = "拒绝";
-"Decline Share" = "拒绝分享";
-"Unshare" = "取消共享";
-"Unshare failed" = "取消分享失败";
-"Are you sure you want to unshare these items?" = "你确认要取消分享这些对象吗？";
-"Are you sure you want to unshare this item?" = "你确认要取消这个对象的分享吗？";
-"Share" = "共享";
-"Read" = "阅读";
-"Can Share" = "可分享";
-"Can Edit" = "可编辑";
-"Can Edit and Change" = "可编辑和更改";
-"Can Create" = "可创建";
-"Can Change" = "可更改";
-"Can Delete" = "可删除";
-"Accept Invite %@" = "接受邀请%@";
-"Decline Invite %@" = "拒绝邀请%@";
-"Decline cannot be undone." = "拒绝不可撤销。";
-"Sharing" = "共享";
-"You" = "你";
-"Share this file" = "分享此文件";
-"Share this folder" = "分享此文件夹";
-"shared" = "已共享";
-"Owner" = "所有者";
-"Private Link" = "私有链接";
+"Allows the users you share with to re-share" = "Allows the users you share with to re-share";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Allows the users you share with to edit your shared files, and to collaborate";
+"Allows the users you share with to create new files and add them to the share" = "Allows the users you share with to create new files and add them to the share";
+"Allows uploading a new version of a shared file and replacing it" = "Allows uploading a new version of a shared file and replacing it";
+"Allows the users you share with to delete shared files" = "Allows the users you share with to delete shared files";
+"Setting permission failed" = "Setting permission failed";
+"Shared with" = "Shared with";
+"Remove Recipient failed" = "Remove Recipient failed";
+"Remove Recipient" = "Remove Recipient";
+"Create" = "Create";
+"Change" = "Change";
+"Recipients can view or download contents." = "Recipients can view or download contents.";
+"Recipients can view, download, edit, delete and upload contents." = "Recipients can view, download, edit, delete and upload contents.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Receive files from multiple recipients without revealing the contents of the folder.";
+"Download / View" = "Download / View";
+"Download / View / Upload" = "Download / View / Upload";
+"Upload only (File Drop)" = "Upload only (File Drop)";
+"Creating public link failed" = "Creating public link failed";
+"Create Public Link" = "Create Public Link";
+"Links" = "Links";
+"Link" = "Link";
+"Setting expiration date failed" = "Setting expiration date failed";
+"Expiration date" = "Expiration date";
+"Copy Public Link" = "Copy Public Link";
+"Delete Public Link" = "Delete Public Link";
+"Deleting Public Link failed" = "Deleting Public Link failed";
+"Deleting password failed" = "Deleting password failed";
+"Setting password failed" = "Setting password failed";
+"Type to update password" = "Type to update password";
+"Cannot change permission" = "Cannot change permission";
+"Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
+"Password Protected" = "Password Protected";
+"Pending Federated Invites" = "Pending Federated Invites";
+"Pending Invites" = "Pending Invites";
+"Shared with you" = "Shared with you";
+"Shared with others" = "Shared with others";
+"Shares" = "Shares";
+"Copy Private Link" = "Copy Private Link";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.";
+"Accept Share failed" = "Accept Share failed";
+"Decline Share failed" = "Decline Share failed";
+"Accept" = "Accept";
+"Decline" = "Decline";
+"Declined" = "Declined";
+"Decline Share" = "Decline Share";
+"Unshare" = "Unshare";
+"Unshare failed" = "Unshare failed";
+"Are you sure you want to unshare these items?" = "Are you sure you want to unshare these items?";
+"Are you sure you want to unshare this item?" = "Are you sure you want to unshare this item?";
+"Share" = "Share";
+"Read" = "Read";
+"Can Share" = "Can Share";
+"Can Edit" = "Can Edit";
+"Can Edit and Change" = "Can Edit and Change";
+"Can Create" = "Can Create";
+"Can Change" = "Can Change";
+"Can Delete" = "Can Delete";
+"Accept Invite %@" = "Accept Invite %@";
+"Decline Invite %@" = "Decline Invite %@";
+"Decline cannot be undone." = "Decline cannot be undone.";
+"Sharing" = "Sharing";
+"You" = "You";
+"Share this file" = "Share this file";
+"Share this folder" = "Share this folder";
+"shared" = "shared";
+"Owner" = "Owner";
+"Private Link" = "Private Link";
 "Created Public Link" = "Created Public Link";
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
+"%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Share with user/group";
+"Share link" = "Share link";
+
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Shared by link";
+
+"Share with" = "Share with";
+"Add" = "Add";
+"Save changes" = "Save changes";
+
+"Enter password" = "Enter password";
 
 /* Quick Access view */
-"Quick Access" = "快速访问";
-"Collection" = "收藏";
-"Recents" = "最近";
-"Favorites"= "收藏";
-"Images" = "图片";
-"PDF Documents" = "PDF 文档";
-"Text" = "文本";
-"Documents" = "文档";
-"Audio" = "声音提醒";
+"Quick Access" = "Quick Access";
+"Collection" = "Collection";
+"Recents" = "Recents";
+"Favorites"= "Favorites";
+"Images" = "Images";
+"PDF Documents" = "PDF Documents";
+"Text" = "Text";
+"Documents" = "Documents";
+"Audio" = "Audio";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
 
 /* Media files settings */
-"Media Files" = "媒体文件";
+"Media Files" = "Media Files";
 "Download instead of streaming" = "Download instead of streaming";
 
 /* Photo upload settings */
-"Media Upload" = "上传媒体";
+"Media Upload" = "Media Upload";
 "Media Export" = "Media Export";
 "Auto Upload" = "Auto Upload";
-"Convert HEIC to JPEG" = "将 HEIC 转换为 JPEG";
-"Convert videos to MP4" = "将视频转换为 MP4";
+"Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
 "Preserve original media file names" = "Preserve original media file names";
-"Auto Upload Photos" = "自动上传照片";
-"Auto Upload Videos" = "自动上传视频";
-"Account" = "账户";
-"Accounts" = "账号";
-"Select account" = "选择账户";
-"Photo upload path" = "照片上传路径";
-"Video upload path" = "视频上传路径";
-"Select Upload Path" = "选择上传路径";
-"Auto upload of media was disabled since configured account / folder was not found" = "由于配置的账户/文件夹未被找到，自动上传媒体被禁用";
-"Importing %@ media files for upload" = "导入%@媒体文件用于上传";
+"Auto Upload Photos" = "Auto Upload Photos";
+"Auto Upload Videos" = "Auto Upload Videos";
+"Account" = "Account";
+"Accounts" = "Accounts";
+"Select account" = "Select account";
+"Photo upload path" = "Photo upload path";
+"Video upload path" = "Video upload path";
+"Select Upload Path" = "Select Upload Path";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
+"Importing %@ media files for upload" = "Importing %@ media files for upload";
 "Photo upload" = "Photo upload";
 "Video upload" = "Video upload";
 
 /* Background media uploads */
-"Background uploads" = "后台上传";
+"Background uploads (Lab Version)" = "Background uploads (Lab Version)";
+"Background uploads" = "Background uploads";
 "Use background refresh" = "Use background refresh";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Allow this app to refresh the content when on Wi-Fi or mobile network in background.";
 "Enable background uploads" = "Enable background uploads";
 "Use background location updates" = "Use background location updates";
 "Background upload notifications" = "Background upload notifications";
-"if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "If you would like background media uploads to be more reliable, you should enable background location updates.";
 "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
 "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
 "Location permission denied" = "Location permission denied";
@@ -527,31 +688,32 @@
 "Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";
 
 /* Progress summarizer */
-"Creating %ld folders…" = "创建 %ld 文件夹中...";
-"Moving %ld items…" = "移动 %ld 文件夹中...";
-"Copying %ld items…" = "复制 %ld 对象中...";
-"Deleting %ld items…" = "删除 %ld 对象中...";
-"Uploading %ld files…" = "上传 %ld 文件中...";
-"Downloading %ld files…" = "下载 %ld 文件中...";
-"Updating %ld items…" = "更新 %ld 对象中...";
+"Creating %ld folders…" = "Creating %ld folders…";
+"Moving %ld items…" = "Moving %ld items…";
+"Copying %ld items…" = "Copying %ld items…";
+"Deleting %ld items…" = "Deleting %ld items…";
+"Uploading %ld files…" = "Uploading %ld files…";
+"Downloading %ld files…" = "Downloading %ld files…";
+"Updating %ld items…" = "Updating %ld items…";
 
 /* Offline storage management */
 "Free on %@" = "Free on %@";
-"unknown" = "未知";
-"Offline files use" = "离线文件使用";
-"Compacting of '%@' failed" = "对“%@”的压缩失败";
-"Include available offline files" = "包含可用的离线文件";
-"Delete all Offline Files" = "删除本地副本";
-"Manage" = "管理";
-"Storage" = "存储";
-"Compacting" = "压缩中";
+"unknown" = "unknown";
+"Offline files use" = "Offline files use";
+"Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Include available offline files" = "Include available offline files";
+"Delete all Offline Files" = "Delete all Offline Files";
+"Manage" = "Manage";
+"Storage" = "Storage";
+"Compacting" = "Compacting";
 
-"Really include available offline files?" = "真的包含可用的离线文件吗？";
-"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "被标记为离线可用的文件和文件夹将不可用。它们将会在你下次登录到你的账号时被重新下载（需要网络连接）";
+"Really include available offline files?" = "Really include available offline files?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
 
 /* Diagnostic */
 "Diagnostic Overview" = "Diagnostic Overview";
-"Diagnostics" = "自检";
+"Diagnostics" = "Diagnostics";
 "Share Diagnostics" = "Share Diagnostics";
 "Action executed" = "Action executed";
 
@@ -560,47 +722,58 @@
 "Total update scans" = "Total update scans";
 
 /* Available offline */
-"Root folder" = "根目录";
-"at" = "在";
-"(no match)" = "（没有匹配）";
+"Root folder" = "Root folder";
+"at" = "at";
+"(no match)" = "(no match)";
 
-"Make available offline" = "使离线可用";
-"Make unavailable offline" = "使离线不可用";
+"Make available offline" = "Make available offline";
+"Make unavailable offline" = "Make unavailable offline";
 
-"Available Offline" = "离线可用";
-"No items have been selected for offline availability." = "还没有对象被设置为离线可用";
+"Available Offline" = "Available Offline";
 
-"Overview" = "概览";
-"All Files" = "所有文件";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+"You are connected as\n%@" = "You are connected as\n%@";
 
 /* Release Notes */
-"Proceed" = "继续";
+"Proceed" = "Proceed";
 "New in %@" = "New in %@";
 "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
 "Thank you for using %@.\n" = "Thank you for using %@.\n";
 
 /* Key Commands */
-"Select Next" = "选择下一个";
-"Select Previous" = "选择上一个";
-"Open Selected" = "打开所选";
-"Change Sort Order" = "改变排序";
-"Search" = "搜索";
-"Back" = "返回";
-"Save" = "保存";
-"Sort by %@" = "按%@排序";
-"Tab %@" = "标签%@";
-"Select Last Item on Page" = "选择页面上的最后一个对象";
-"Scroll to Top" = "滚动到顶部";
-"Scroll to Bottom" = "滚动到底部";
-"Copy to Clipboard" = "复制到剪贴板";
-"Import from Clipboard" = "从剪贴板导入";
-"Next" = "下一曲";
-"Previous" = "上一个";
-"Favorite" = "收藏";
-"Cut" = "剪切";
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Search";
+"Back" = "Back";
+"Save" = "Save";
+"Sort by %@" = "Sort by %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Clipboard" = "Copy to Clipboard";
+"Import from Clipboard" = "Import from Clipboard";
+"Choose destination directory…" = "Choose destination directory…";
+"Next" = "下一首";
+"Previous" = "上一首";
+"Favorite" = "Favorite";
+"Cut" = "Cut";
+"Paste" = "Paste";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";
@@ -640,13 +813,14 @@
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
 "Purchase failed" = "Purchase failed";
+"More information" = "More information";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"Purchases" = "Purchases";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Document Scanner";
 "Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
@@ -656,15 +830,62 @@
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
 
+"Purchased App Version" = "Purchased App Version";
+"Receipt Date" = "Receipt Date";
+"Manage subscription" = "Manage subscription";
+"Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+"Type" = "Type";
+"Quantity" = "Quantity";
+"Product" = "Product";
+"Date" = "Date";
+"Cancelled" = "Cancelled";
+"Ends" = "Ends";
+"none" = "none";
+"trial" = "trial";
+"purchase" = "purchase";
+"subscription" = "subscription";
+"Photo Pro Features" = "Photo Pro Features";
+"Image metadata, extended upload options" = "Image metadata, extended upload options";
+"Purchase" = "Purchase";
+"Subscribe" = "Subscribe";
+
+"No accounts found" = "No accounts found";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "In order to accurately determine your current licensing status, please add one or more accounts first.";
+
 /* Share Sheet */
-"Save File" = "保存文件";
+"Save File" = "Save File";
 "Choose an account and folder to import into." = "Choose an account and folder to import into.";
 "No account configured.\nSetup an new account in the app to save to." = "No account configured.\nSetup an new account in the app to save to.";
 "Importing item %ld of %ld" = "Importing item %ld of %ld";
 "Error importing %@" = "Error importing %@";
 "Error loading item" = "Error loading item";
-"Preparing…" = "准备中...";
+"Preparing…" = "Preparing…";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
 "Save here" = "Save here";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Share Extension disabled";
+"Importing files through the Share Extension is not allowed on this device." = "Importing files through the Share Extension is not allowed on this device.";
+
+/* - Open with */
+"Opening not allowed" = "Opening not allowed";
+"Importing files through opening is not allowed on this device." = "Importing files through opening is not allowed on this device.";
+
+/* - Files.app */
+"Import not allowed" = "Import not allowed";
+"Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
@@ -675,3 +896,133 @@
 "Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
 "Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
 "Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
+
+/* Photo meta-data */
+"Image metadata" = "Image metadata";
+"Image details" = "Image details";
+"Profile" = "Profile";
+"Size" = "Size";
+"Density" = "Density";
+"Color model" = "Color model";
+"%@ (%d bits/channel)" = "%@ (%d bits/channel)";
+"Histogram" = "Histogram";
+
+"Camera details" = "Camera details";
+"Capture settings" = "Capture settings";
+"Time" = "Time";
+"EXIF aux info" = "EXIF aux info";
+"Authoring" =  "Authoring";
+"TIFF" = "TIFF";
+
+"Lens make" = "Lens make";
+"Lens model" = "Lens model";
+"Lens info" = "Lens info";
+"Focal length" = "Focal length";
+"Focal length @ 35 mm" = "Focal length @ 35 mm";
+
+"Shutter speed" = "Shutter speed";
+"Aperture" = "Aperture";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Program";
+"Not defined" = "Not defined";
+"Manual" = "Manual";
+"Normal" = "Normal";
+"Aperture priority" = "Aperture priority";
+"Shutter priority" = "Shutter priority";
+"Creative" = "Creative";
+"Action" = "Action";
+"Portrait" = "Portrait";
+"Landscape" = "Landscape";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Metering";
+"unknown" = "unknown";
+"Average" = "Average";
+"CenterWeightedAverage" = "CenterWeightedAverage";
+"Spot" = "Spot";
+"MultiSpot" = "MultiSpot";
+"Pattern" = "Pattern";
+"Partial" = "Partial";
+
+/* EXIF: flash mode */
+"Flash" = "Flash";
+"Fired" = "Fired";
+"Didn't fire" = "Didn't fire";
+"No strobe return detection" = "No strobe return detection";
+"Strobe return light not detected" = "Strobe return light not detected";
+"Strobe return light detected" = "Strobe return light detected";
+"Compulsory flash firing" = "Compulsory flash firing";
+"Compulsory flash supression" = "Compulsory flash supression";
+"Auto mode" = "Auto mode";
+"Red eye detection supported" = "Red eye detection supported";
+"not present" = "not present";
+
+/* EXIF: white balance */
+"White balance" = "White balance";
+"Auto" = "Auto";
+"Manual" = "Manual";
+
+"Exposure bias" = "Exposure bias";
+"Uncalibrated" = "Uncalibrated";
+"Original date" = "Original date";
+"Digitized date" = "Digitized date";
+
+"Color space" = "Color space";
+
+/* EXIF: aux info */
+"Lens ID" = "Lens ID";
+"Lens serial" = "Lens serial";
+"Serial number" = "Serial number";
+"Flash compensation" = "Flash compensation";
+"Owner" = "Owner";
+"Firmware" = "Firmware";
+"Keywords" = "Keywords";
+"Copyright" = "Copyright";
+
+/* IPTC meta data */
+"Contact info" = "Contact info";
+"Usage terms" = "Usage terms";
+"Scene" = "Scene";
+"Description" = "Description";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Photometric interpretation";
+"none" = "none";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS Location";
+"Coordinates" = "Coordinates";
+"Altitude" = "Altitude";
+"Place" = "Place";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Extended upload settings";
+"Prefer unedited photos" = "Prefer unedited photos";
+"Prefer RAW photos" = "Prefer RAW photos";
+"Prefer original videos" = "Prefer original videos";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Limited Photo Access";
+"Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
+"No Access to the media selected for upload" = "No Access to the media selected for upload";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
+
+/* MDM settings push */
+"New settings received from MDM" = "New settings received from MDM";
+"Tap to quit the app." = "Tap to quit the app.";
+"Tap to launch the app." = "Tap to launch the app.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

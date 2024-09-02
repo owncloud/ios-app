@@ -34,6 +34,7 @@
 "Cancel" = "Ακύρωση";
 "Approve" = "Έγκριση";
 "Error" = "Σφάλμα";
+"Issues" = "Issues";
 "Review Connection" = "Επισκόπηση σύνδεσης";
 "Authenticated via" = "Πιστοποιήθηκε μέσω";
 "Authenticated as %@ via %@" = "Πιστοποιήθηκε ως %@ μέσω %@";
@@ -47,7 +48,9 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Το πιστοποιητικό έχει προβλήματα.\nΑνοίξτε τις 'Λεπτομέρειες πιστοποιητικού' για περισσότερες πληροφορίες.";
 "No issues found. Certificate passed validation." = "Δεν βρέθηκαν προβλήματα. Το πιστοποιητικό πέρασε την επικύρωση.";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Το πιστοποιητικό ενδέχεται να έχει προβλήματα, αλλά έγινε αποδεκτό από τον χρήστη.\nΑνοίξτε τις 'Λεπτομέρειες πιστοποιητικού' για περισσότερες πληροφορίες";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Αν 'Συνεχίσετε', θα σας ζητηθεί να επιτρέψετε στην εφαρμογή '%@' να ανοίξει την σύνδεση OAuth2 από όπου μπορείτε να εισαγάγετε τα διαπιστευτήριά σας.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
+
+"Error opening %@" = "Σφάλμα ανοίγματος %@";
 
 "Contacting server…" = "Γίνεται επικοινωνία με το διακομιστή…";
 "Authenticating…" = "Γίνεται πιστοποίηση…";
@@ -55,17 +58,30 @@
 "Fetching user information…" = "Γίνεται ανάκτηση πληροφοριών χρήστη…";
 "Updating connection…" = "Γίνεται ενημέρωση σύνδεσης…";
 
+"Preparing account" = "Preparing account";
+"Please wait…" = "Παρακαλούμε περιμένετε…";
+"Skip" = "Παράβλεψη";
+
 "Missing hostname" = "Λείπει το όνομα κεντρικού υπολογιστή";
 "The entered URL does not include a hostname." = "Η εισαχθείσα διεύθυνση URL δεν περιλαμβάνει όνομα κεντρικού υπολογιστή.";
 "Add account" = "Προσθήκη λογαριασμού";
 "Server name" = "Όνομα διακομιστή";
 "Server Password" = "Συνθηματικό διακομιστή";
 "Server Username" = "Όνομα χρήστη διακομιστή";
-"Show accounts" = "Show accounts";
-"Setup complete" = "Setup complete";
+"Show accounts" = "Εμφάνιση λογαριασμών";
+"Setup complete" = "Η εγκατάσταση ολοκληρώθηκε";
+"Edit Login" = "Επεξεργασία σύνδεσης";
+"Manage Storage" = "Διαχείριση αποθηκευτικού χώρου";
+"Access Files" = "Πρόσβαση αρχείων";
+"Log out" = "Αποσύνδεση";
+"Retry" = "Επανάληψη";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Μεταδεδομένα σελιδοδεικτών";
 
 /* Client */
 "Browse" = "Περιήγηση";
+"Files" = "Αρχεία";
 "Disconnect" = "Αποσύνδεση";
 "Connecting…" = "Γίνεται σύνδεση…";
 "Connected." = "Συνδεδεμένο.";
@@ -88,24 +104,90 @@
 "kind" = "kind";
 "size" = "μέγεθος";
 "date" = "ημερομηνία";
-"Search this folder" = "Αναζήτηση σε αυτό το φάκελο";
+"last used" = "last used";
+
+"Tree" = "Tree";
+"Search folder" = "Αναζήτηση φακέλου";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
+"Search account" = "Αναζήτηση λογαριασμού";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
 "Pending" = "Εκκρεμεί";
 "Show parent paths" = "Εμφάνιση γονικών διαδρομών";
+"Reveal in folder" = "Αποκάλυψη στο φάκελο";
 
 "%@ of %@ used" = "%@ από %@ σε χρήση";
 "Total: %@" = "Σύνολο: %@";
-"%@ item | " = "%@ item | ";
-"%@ items | " = "%@ items | ";
+"%@ item | " = "%@αντικείμενο Ι";
+"%@ items | " = "%@αντικείμενα Ι";
+
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "Γίνεται φόρτωση...";
+
+"Show more results" = "Εμφάνιση περισσότερων αποτελεσμάτων";
+
+"An error occurred" = "Παρουσιάστηκε σφάλμα";
+
+/* Item Layouts */
+"List" = "Λίστα";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
+
+/* Search scope */
+"Search scope" = "Εύρος αναζήτησης";
+"Toggle Search Scope" = "Εναλλαγή εύρους αναζήτησης";
 
 /* Static Login Setup */
 "Server error" = " ";
-"The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
-"The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
-"Retry detection" = "Retry detection";
+"The server doesn't support any allowed authentication method." = "Ο διακομιστής δεν υποστηρίζει καμία επιτρεπόμενη μέθοδο πιστοποίησης.";
+"The server doesn't support any known and allowed authentication method found." = "Ο διακομιστής δεν υποστηρίζει καμία γνωστή και επιτρεπόμενη μέθοδο πιστοποίησης που να βρέθηκε.";
+"Retry detection" = "Επανάληψη ανίχνευσης";
+"Enter your username and password" = "Εισάγετε όνομα χρήστη και συνθηματικό";
+"Please log in to authorize the app." = "Παρακαλούμε συνδεθείτε για να εξουσιοδοτήσετε την εφαρμογή.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Παρακαλούμε εισαγάγετε μια διεύθυνση διακομιστή";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+"Login" = "Σύνδεση";
+"Wrong URL" = "Εσφαλμένη URL";
+"Please enter a valid URL" = "Παρακαλούμε εισάγετε ένα έγκυρο URL";
+"Missing Profile URL" = "Missing Profile URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Άδειος φάκελος";
+"No contents" = "No contents";
 "This folder contains no files or folders." = "Αυτός ο φάκελος δεν περιέχει αρχεία ή φακέλους.";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Ο φάκελος αφαιρέθηκε";
 "This folder no longer exists on the server." = "Αυτός ο φάκελος δεν υπάρχει πλέον στον διακομιστή.";
@@ -122,7 +204,10 @@
 "Upload files" = "Μεταφόρτωση αρχείων";
 
 "No matches" = "Δεν υπάρχουν αντιστοιχίες";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "Δεν υπάρχουν αποτελέσματα για αυτόν τον όρο αναζήτησης";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "Κατάσταση";
 
 "Authorization failed" = "Απποτυχημένη εξουσιοδότηση";
@@ -131,17 +216,20 @@
 "Access denied" = "Δεν επιτρέπεται η πρόσβαση";
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
 "No authentication data has been found for this connection." = "Δεν βρέθηκαν δεδομένα ελέγχου ταυτότητας για αυτήν τη σύνδεση.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Authentication with %@ is no longer allowed. Re-authentication needed.";
 "Sign in" = "Συνδεθείτε";
-"Continue offline" = "Continue offline";
+"Continue offline" = "Συνέχεια εκτός σύνδεσης";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
 
-"All done" = "All done";
+"Waiting for response from login session in external browser…" = "Αναμονή για απάντηση από την συνεδρία σύνδεσης στο εξωτερικό πρόγραμμα περιήγησης…";
+
+"All done" = "Ολοκληρώθηκαν";
 "No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
 
 "Show all" = "Εμφάνιση όλων";
 "+ %ld more" = "+ %ld more";
 "Apply choice to all similar issues" = "Apply choice to all similar issues";
-"Apply to all" = "Apply to all";
+"Apply to all" = "Εφαρμογή σε όλα";
 
 /* Server List*/
 "Cancel" = "Ακύρωση";
@@ -152,6 +240,7 @@
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Είστε βέβαιοι για την διαγραφή του '%@';";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
 "This will also delete all locally stored file copies." = "Αυτό θα διαγράψει επίσης όλα τα τοπικά αποθηκευμένα αντίγραφα αρχείων.";
 "Delete" = "Διαγραφή";
 "Remove" = "Αφαίρεση";
@@ -169,35 +258,45 @@
 "Passcode Lock" = "Κλείδωμα με συνθηματικό";
 "Face ID" = "ID Προσώπου";
 "Touch ID" = "ID Αφής";
+"Unlock using %@?" = "Unlock using %@?";
 "Videos" = "Βίντεο";
 "Photos" = "Φωτογραφίες";
-"Background uploads" = "Μεταφόρτωση στο παρασκήνιο";
 "Wifi only" = "Μόνο μέσω Wifi";
 "Settings" = "Ρυθμίσεις";
 "Lock application" = "Κλείδωμα εφαρμογής";
 "Upload videos via WiFi only" = "Μεταφόρτωση βίντεο μόνο μέσω WiFi";
 "Upload pictures via WiFi only" = "Μεταφόρτωση φωτογραφιών μόνο μέσω WiFi";
 "More" = "Περισσότερα";
+"Documentation" = "Τεκμηρίωση";
 "Send feedback" = "Αποστολή ανάδρασης";
 "Recommend to a friend" = "Προτείνετε σε φίλο";
 "Privacy Policy" = "Πολιτική Απορρήτου";
 "Terms Of Use" = "Όροι χρήσης";
 "Acknowledgements" = "Ευχαριστίες";
+"license" = "license";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.";
 "Video upload path" = "Διαδρομή μεταφορτώσεων βίντεο";
 "Photo upload path" = "Διαδρομή μεταφορτώσεων φωτογραφιών";
 "Immediately" = "Αμέσως";
 "After 1 minute" = "Μετά από 1 λεπτό";
 "After 5 minutes" = "Μετά από 5 λεπτά";
 "After 30 minutes" = "Μετά από 30 λεπτά";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Εάν επιλέξετε \"Άμεσα\", η εφαρμογή θα κλειδωθεί, όταν δεν είναι πλέον στο προσκήνιο.\n\nΗ πρόσβαση στο Files.app δεν είναι δυνατή αν επιλέξετε το διάστημα κλειδώματος \"Αμέσως\".\nΠαρακαλούμε επιλέξτε άλλη καθυστέρηση, εάν θέλετε να έχετε πρόσβαση στα αρχεία σας στο Files.app ή μέσω ενός εργαλείου επιλογής εγγράφων.";
+"After %ld seconds" = "After %ld seconds";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Παρακαλούμε ρυθμίστε ένα λογαριασμό ηλεκτρονικού ταχυδρομείου";
 "You need to configure an email account first to be able to send emails." = "Πρέπει πρώτα να ρυθμίσετε έναν λογαριασμό ηλεκτρονικού ταχυδρομείου για να μπορείτε να στέλνετε μηνύματα ηλεκτρονικού ταχυδρομείου.";
 "Do you want to open the following URL?" = "Θέλετε να ανοίξετε την ακόλουθη διεύθυνση URL;";
+"Passcode option" = "Passcode option";
+"Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
+"%ld digit code" = "%ld digit code";
+"Enter a new code with %ld digits" = "Enter a new code with %ld digits";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
 
 "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "έκδοση";
-"App Version" = "App Version";
+"App Version" = "Έκδοση εφαρμογής";
 "Version information were copied to the clipboard" = "Version information were copied to the clipboard";
 
 
@@ -205,6 +304,8 @@
 "Theme" = "Θέμα";
 "User Interface" = "Διεπαφή χρήστη";
 "Dark" = "Σκούρο";
+"Dark Blue" = "Dark Blue";
+"Dark Web" = "Dark Web";
 "Light" = "Φωτεινό";
 "Classic" = "Κλασικό";
 "System" = "Σύστημα";
@@ -249,7 +350,7 @@
 "This action can't be undone." = "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.";
 
 /* Data usage settings */
-"Data usage" = "Data usage";
+"Data usage" = "Χρήση δεδομένων";
 "Delete unused local copies" = "Διαγραφή μη χρησιμοποιούμενων τοπικών αντιγράφων";
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
 "never" = "ποτέ";
@@ -257,20 +358,20 @@
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
 
-"Cellular transfers" = "Cellular transfers";
+"Cellular Data Usage" = "Cellular Data Usage";
 "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
-"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.";
 "General" = "Γενικά";
 "By feature" = "By feature";
 
-"off" = "off";
+"off" = "ανενεργό";
 "enabled" = "ενεργοποιημένο";
 
 /* Display settings */
 "Advanced settings" = "Ρυθμίσεις για προχωρημένους";
 "Show hidden files and folders" = "Εμφάνιση κρυφών αρχείων και φακέλων";
-"Show folders at the top" = "Show folders at the top";
-"Prevent gestures" = "Prevent gestures";
+"Show folders on top" = "Να εμφανίζονται πρώτα οι φάκελοι";
+"Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
 /* Advanced settings */
@@ -286,6 +387,7 @@
 "Please try again in %@" = "Παρακαλούμε δοκιμάστε ξανά σε %@";
 "Unlock %@" = "Ξεκλείδωμα %@";
 "Biometric authentication failed" = "Ο βιομετρικός έλεγχος ταυτότητας απέτυχε";
+"You are required to set the passcode" = "Απαιτείται να ορίσετε τον κωδικό πρόσβασης";
 
 /* Certificate management */
 
@@ -308,9 +410,16 @@
 "Create folder" ="Δημιουργία φακέλου";
 "Duplicate" = "Αντίγραφο";
 "Move" = "Μετακίνηση";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Μετακίνηση εδώ";
+"Select target." = "Select target.";
 "Open in" = "Άνοιγμα σε";
 "Copy" = "Αντιγραφή";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
 "Copy here" = "Αντιγραφή εδώ";
+
 "Cannot connect to " = "Αδυναμία σύνδεσης σε ";
 " couldn't download file(s)" = " δεν ήταν δυνατή η λήψη αρχείου(-ων)";
 "Actions" = "Ενέργειες";
@@ -319,6 +428,11 @@
 "Open in a new Window" = "Άνοιγμα σε νέο παράθυρο";
 "Open in Window" = "Άνοιγμα σε παράθυρο";
 "Take photo or video" = "Λήψη φωτογραφίας ή βίντεο";
+"%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
+"%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
+
+"Processing on server" = "Processing on server";
 
 "Preparing…" = "Γίνεται προετοιμασία…";
 
@@ -327,11 +441,28 @@
 
 "Close actions menu" = "Close actions menu";
 "Favorited" = "Αγαπημένα";
-"Favorite item" = "Favorite item";
+"Favorite item" = "Αγαπημένο αντικείμενο";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Λειτουργία παρουσίασης";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
+"Enable" = "Ενεργοποίηση";
+"Exit Full Screen" = "Έξοδος από την πλήρη οθόνη";
 
-/* Directory Picker Messages */
-"Move here" = "Μετακίνηση εδώ";
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Προσθήκη αντικειμένου";
+
+/* App Provider */
+"New document" = "Νέο έγγραφο";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
 
 /* Preview */
 "Open file" = "Άνοιγμα αρχείου";
@@ -341,6 +472,13 @@
 "Downloading" = "Λήψη";
 "File couldn't be opened" = "Αδυναμία ανοίγματος αρχείου";
 "Connecting..." = "Γίνεται σύνδεση...";
+
+"File" = "Αρχείο";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Εμφάνισης νέας έκδοσης";
+"Refresh without asking" = "Ανανέωση χωρίς ερώτηση";
+"Ignore updates" = "Ignore updates";
 
 /* PDF Viewer */
 "Resume" = "Συνέχεια";
@@ -352,6 +490,9 @@
 "The entered page number doesn't exist" = "Ο αριθμός της σελίδας που δώσατε, δεν υπάρχει";
 "Search PDF" = "Αναζήτηση PDF";
 "Outline" = "Περίγραμμα";
+"Find Next" = "Εύρεση επομένου";
+"Find Previous" = "Εύρεση προηγο´μενου";
+"Close Search" = "Κλείσιμο αναζήτησης";
 
 /* Photo Upload */
 "Upload" = "Μεταφόρτωση";
@@ -363,20 +504,9 @@
 "Media import" = "Εισαγωγή μέσων";
 "%@ of %@" = "%@ από %@";
 "Selected folder lacks file creation permission" = "Ο επιλεγμένος φάκελος δεν έχει άδεια δημιουργίας αρχείων";
-"%d Item" = "%d Item";
-"%d Items" = "%d Items";
-
-/* Scan */
-"Scan" = "Σάρωση";
-"Scans" = "Σαρώσεις";
-"Scan document" = "Σάρωση εγγράφου";
-"Saving" = "Αποθήκευση";
-"File format" = "Μορφή αρχείου";
-"Name" = "Όνομα";
-"Save as" = "Αποθήκευση ως";
-"Options" = "Επιλογές";
-"Scan additional" = "Scan additional";
-"Create one file per page" = "Δημιουργία ενός αρχείου ανά σελίδα";
+"%d Item" = "%d αντικείμενο";
+"%d Items" = "%d αντικείμενα";
+"Select Items" = "Επιλογή αντικειμένων";
 
 /* Scan */
 "Scan" = "Σάρωση";
@@ -391,12 +521,23 @@
 "Create one file per page" = "Δημιουργία ενός αρχείου ανά σελίδα";
 
 /* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
 "Searching Shares…" = "Αναζήτηση κοινόχρηστων…";
 "Recipient" = "Παραλήπτης";
 "Recipients" = "Παραλήπτες";
 "Public Link" = "Δημόσιος σύνδεσμος";
 "Public Links" = "Δημόσιοι σύνδεσμοι";
-"Shared by %@" = "Διαμοιράστηκε από τον %@";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Πρόσκληση";
 "Invite Recipient" = "Μη έγκυρος παραλήπτης";
 "Recipients" = "Παραλήπτες";
 "Add email or name" = "Προσθήκη email ή ονόματος";
@@ -446,7 +587,7 @@
 "Shared with others" = "Διαμοιρασμένα με άλλους";
 "Shares" = "Κοινόχρηστα";
 "Copy Private Link" = "Αντιγραφή ιδιωτικού συνδέσμου";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Μόνο οι παραλήπτες μπορούν να χρησιμοποιήσουν αυτόν τον σύνδεσμο. Χρησιμοποιήστε το ως μόνιμο σύνδεσμο για να επισημάνετε αυτόν τον πόρο";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.";
 "Accept Share failed" = "Αποτυχία αποδοχής κοινόχρηστου";
 "Decline Share failed" = "Αποτυχία απόρριψης κοινόχρηστου";
 "Accept" = "Αποδοχή";
@@ -475,8 +616,22 @@
 "shared" = "διαμοιρασμένα";
 "Owner" = "Ιδιοκτήτης";
 "Private Link" = "Ιδιωτικός σύνδεσμος";
-"Created Public Link" = "Created Public Link";
+"Created Public Link" = "Δημιουργία δημόσιου συνδέσμου";
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
+"%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Διαμοιρασμός με χρήστη/ομάδα";
+"Share link" = "Διαμοιρασμός συνδέσμου";
+
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Διαμοιρασμένα μέσω συνδέσμου";
+
+"Share with" = "Διαμοιρασμός με";
+"Add" = "Προσθήκη";
+"Save changes" = "Αποθήκευση αλλαγών";
+
+"Enter password" = "Enter password";
 
 /* Quick Access view */
 "Quick Access" = "Γρήγορη πρόσβαση";
@@ -489,14 +644,18 @@
 "Documents" = "Έγγραφα";
 "Audio" = "Ήχος";
 
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
+
 /* Media files settings */
 "Media Files" = "Αρχεία πολυμέσων";
 "Download instead of streaming" = "Download instead of streaming";
 
 /* Photo upload settings */
 "Media Upload" = "Μεταφόρτωση μέσων";
-"Media Export" = "Media Export";
-"Auto Upload" = "Auto Upload";
+"Media Export" = "Έξοδος μέσων";
+"Auto Upload" = "Αυτόματη μεταφόρτωση";
 "Convert HEIC to JPEG" = "Μετατροπή HEIC σε JPEG";
 "Convert videos to MP4" = "Μετατροπή videos σε MP4";
 "Preserve original media file names" = "Preserve original media file names";
@@ -510,16 +669,18 @@
 "Select Upload Path" = "Επιλογή διαδρομής μεταφόρτωσης";
 "Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 "Importing %@ media files for upload" = "Importing %@ media files for upload";
-"Photo upload" = "Photo upload";
-"Video upload" = "Video upload";
+"Photo upload" = "Μεταφόρτωση φωτογραφίας";
+"Video upload" = "Μεταφόρτωση βίντεο";
 
 /* Background media uploads */
+"Background uploads (Lab Version)" = "Background uploads (Lab Version)";
 "Background uploads" = "Μεταφόρτωση στο παρασκήνιο";
 "Use background refresh" = "Use background refresh";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Allow this app to refresh the content when on Wi-Fi or mobile network in background.";
 "Enable background uploads" = "Enable background uploads";
 "Use background location updates" = "Use background location updates";
-"Background upload notifications" = "Background upload notifications";
-"if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
+"Background upload notifications" = "Ειδοποιήσεις μεταφόρτωσης στο παρασκήνιο";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "If you would like background media uploads to be more reliable, you should enable background location updates.";
 "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
 "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
 "Location permission denied" = "Location permission denied";
@@ -541,45 +702,49 @@
 "Offline files use" = "Χρήση αρχείων εκτός σύνδεσης";
 "Compacting of '%@' failed" = "Αποτυχία συμπίεσης του '%@'";
 "Include available offline files" = "Include available offline files";
-"Delete Local Copies" = "Διαγραφή τοπικών αντιγράφων";
+"Delete all Offline Files" = "Delete all Offline Files";
 "Manage" = "Διαχείριση";
 "Storage" = "Αποθηκευτικός χώρος";
 "Compacting" = "Συμπίεση";
 
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
 
 /* Diagnostic */
 "Diagnostic Overview" = "Diagnostic Overview";
 "Diagnostics" = "Διαγνωστικά";
 "Share Diagnostics" = "Share Diagnostics";
-"Action executed" = "Action executed";
+"Action executed" = "Η ενέργεια εκτελέστηκε";
 
-"Update Status" = "Update Status";
+"Update Status" = "Κατάσταση ενημέρωσης";
 "Completed update scans" = "Completed update scans";
 "Total update scans" = "Total update scans";
 
 /* Available offline */
-"Root folder" = "Root folder";
+"Root folder" = "Φάκελος root";
 "at" = "στο";
 "(no match)" = "(no match)";
 
-"Make available offline" = "Make available offline";
+"Make available offline" = "Να είναι διαθέσιμο εκτός σύνδεσης";
 "Make unavailable offline" = "Make unavailable offline";
 
 "Available Offline" = "Διαθέσιμο χωρίς σύνδεση";
-"No items have been selected for offline availability." = "No items have been selected for offline availability.";
 
-"Overview" = "Overview";
-"All Files" = "Όλα τα αρχεία";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
-"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
+"You are connected as\n%@" = "You are connected as\n%@";
 
 /* Release Notes */
 "Proceed" = "Συνέχιση";
-"New in ownCloud" = "New in ownCloud";
+"New in %@" = "New in %@";
 "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
+"Thank you for using %@.\n" = "Thank you for using %@.\n";
 
 /* Key Commands */
 "Select Next" = "Επιλογή επομένου";
@@ -594,25 +759,34 @@
 "Select Last Item on Page" = "Επιλογή τελευταίου αντικειμένου στη σελίδα";
 "Scroll to Top" = "Κύλιση προς τα επάνω";
 "Scroll to Bottom" = "Κύλιση προς τα κάτω";
-"Copy to Pasteboard" = "Αντιγραφή στο Pasteboard";
-"Import from Pasteboard" = "Εισαγωγή από το Pasteboard";
+"Copy to Clipboard" = "Copy to Clipboard";
+"Import from Clipboard" = "Import from Clipboard";
+"Choose destination directory…" = "Choose destination directory…";
 "Next" = "Επόμενο";
 "Previous" = "Προηγούμενο";
 "Favorite" = "Αγαπημένο";
 "Cut" = "Αποκοπή";
+"Paste" = "Paste";
+"Play/Pause" = "Αναπαραγωγή/Παύση";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Μετάβαση στην αρχή";
+"Mute/Unmute" = "Σίγαση/Αναίρεση σίγασης";
+"Full Screen" = "Πλήρης οθόνη";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "Πώς πρέπει να αποθηκευτεί αυτό το αρχείο;";
 "Overwrite original" = "Overwrite original";
 "Save as copy" = "Αποθήκευση ως αντίγραφο";
-"Discard changes" = "Discard changes";
+"Discard changes" = "Απόρριψη αλλαγών";
 "Markup" = "Markup";
 "Crop or Rotate" = "Περικοπή ή περιστροφή";
 "Saving edited file failed" = "Αποτυχία αποθήκευσης του επεξεργασμένου αρχείου";
-"File no longer exists" = "File no longer exists";
+"File no longer exists" = "Το αρχείο δεν υπάρχει πλέον";
 
 /* Licensing */
-"Unlocked" = "Unlocked";
+"Unlocked" = "Ξεκλειδωμένο";
 "Unlock" = "Ξεκλείδωμα";
 
 "Subscribe Now" = "Subscribe Now";
@@ -639,27 +813,29 @@
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
 "Purchase failed" = "Αποτυχία αγοράς";
+"More information" = "Περισσότερες πληροφορίες";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"Purchases" = "Αγορές";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Σαρωτής εγγράφων";
 "Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
 "Shortcuts Actions" = "Shortcuts Actions";
 "Use ownCloud actions in Shortcuts." = "Use ownCloud actions in Shortcuts.";
-"Markup Documents" = "Markup Documents";
+"Markup Documents" = "Έγγραφα Markup";
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
+
 "Purchased App Version" = "Purchased App Version";
 "Receipt Date" = "Ημερομηνία απόδειξης";
 "Manage subscription" = "Manage subscription";
 "Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
 "Type" = "Τύπος";
-"Quantity" = "Quantity";
+"Quantity" = "Ποσότητα";
 "Product" = "Προϊόν";
 "Date" = "Ημερομηνία";
 "Cancelled" = "Ακυρώθηκε";
@@ -668,6 +844,13 @@
 "trial" = "δοκιμαστικό";
 "purchase" = "αγορά";
 "subscription" = "subscription";
+"Photo Pro Features" = "Photo Pro Features";
+"Image metadata, extended upload options" = "Image metadata, extended upload options";
+"Purchase" = "Αγορά";
+"Subscribe" = "Συνδρομή";
+
+"No accounts found" = "Δεν βρέθηκαν λογαριασμοί";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "In order to accurately determine your current licensing status, please add one or more accounts first.";
 
 /* Share Sheet */
 "Save File" = "Αποθήκευση αρχείου";
@@ -675,19 +858,34 @@
 "No account configured.\nSetup an new account in the app to save to." = "No account configured.\nSetup an new account in the app to save to.";
 "Importing item %ld of %ld" = "Importing item %ld of %ld";
 "Error importing %@" = "Error importing %@";
-"Error loading item" = "Error loading item";
+"Error loading item" = "Σφάλμα φόρτωσης αντικειμένου";
 "Preparing…" = "Γίνεται προετοιμασία…";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
 "Save here" = "Save here";
 
-/* Data migration from legacy app */
-"Account Migration" = "Account Migration";
-"App Passcode" = "App Passcode";
-"Instant Upload Settings" = "Instant Upload Settings";
-"Migrating" = "Migrating";
-"Migrated" = "Migrated";
-"Failed to migrate" = "Failed to migrate";
-"Failed to access legacy user data" = "Failed to access legacy user data";
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
 
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Share Extension disabled";
+"Importing files through the Share Extension is not allowed on this device." = "Importing files through the Share Extension is not allowed on this device.";
+
+/* - Open with */
+"Opening not allowed" = "Opening not allowed";
+"Importing files through opening is not allowed on this device." = "Importing files through opening is not allowed on this device.";
+
+/* - Files.app */
+"Import not allowed" = "Import not allowed";
+"Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
@@ -698,3 +896,133 @@
 "Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
 "Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
 "Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
+
+/* Photo meta-data */
+"Image metadata" = "Μεταδεδομένα εικόνας";
+"Image details" = "Λεπτομέρειες εικόνας";
+"Profile" = "Profile";
+"Size" = "Μέγεθος";
+"Density" = "Density";
+"Color model" = "Color model";
+"%@ (%d bits/channel)" = "%@ (%d bits/channel)";
+"Histogram" = "Ιστόγραμμα";
+
+"Camera details" = "Λεπτομέρειες κάμερας";
+"Capture settings" = "Capture settings";
+"Time" = "Ώρα";
+"EXIF aux info" = "EXIF aux info";
+"Authoring" =  "Authoring";
+"TIFF" = "TIFF";
+
+"Lens make" = "Lens make";
+"Lens model" = "Μοντέλο φακών";
+"Lens info" = "Πληροφορίες φακών";
+"Focal length" = "Focal length";
+"Focal length @ 35 mm" = "Focal length @ 35 mm";
+
+"Shutter speed" = "Shutter speed";
+"Aperture" = "Aperture";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Πρόγραμμα";
+"Not defined" = "Not defined";
+"Manual" = "Χειροκίνητα";
+"Normal" = "Κανονικό";
+"Aperture priority" = "Aperture priority";
+"Shutter priority" = "Shutter priority";
+"Creative" = "Creative";
+"Action" = "Ενέργεια";
+"Portrait" = "Portrait";
+"Landscape" = "Landscape";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Metering";
+"unknown" = "αγνωστο";
+"Average" = "Μέσος όρος";
+"CenterWeightedAverage" = "CenterWeightedAverage";
+"Spot" = "Spot";
+"MultiSpot" = "MultiSpot";
+"Pattern" = "Πρότυπα";
+"Partial" = "Partial";
+
+/* EXIF: flash mode */
+"Flash" = "Flash";
+"Fired" = "Fired";
+"Didn't fire" = "Didn't fire";
+"No strobe return detection" = "No strobe return detection";
+"Strobe return light not detected" = "Strobe return light not detected";
+"Strobe return light detected" = "Strobe return light detected";
+"Compulsory flash firing" = "Compulsory flash firing";
+"Compulsory flash supression" = "Compulsory flash supression";
+"Auto mode" = "Αυτόματη λειτουργία";
+"Red eye detection supported" = "Red eye detection supported";
+"not present" = "not present";
+
+/* EXIF: white balance */
+"White balance" = "White balance";
+"Auto" = "Αυτόματο";
+"Manual" = "Χειροκίνητα";
+
+"Exposure bias" = "Exposure bias";
+"Uncalibrated" = "Uncalibrated";
+"Original date" = "Original date";
+"Digitized date" = "Digitized date";
+
+"Color space" = "Color space";
+
+/* EXIF: aux info */
+"Lens ID" = "Lens ID";
+"Lens serial" = "Lens serial";
+"Serial number" = "Σειριακός αριθμός";
+"Flash compensation" = "Flash compensation";
+"Owner" = "Ιδιοκτήτης";
+"Firmware" = "Υλικολογισμικό";
+"Keywords" = "Λέξεις κλειδιά";
+"Copyright" = "Πνευματικά δικαιώματα";
+
+/* IPTC meta data */
+"Contact info" = "Πληροφορίες επαφής";
+"Usage terms" = "Usage terms";
+"Scene" = "Scene";
+"Description" = "Περιγραφή";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Photometric interpretation";
+"none" = "καμία";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "Τοποθεσία GPS";
+"Coordinates" = "Συντεταγμένες";
+"Altitude" = "Altitude";
+"Place" = "Τοποθεσία";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Extended upload settings";
+"Prefer unedited photos" = "Prefer unedited photos";
+"Prefer RAW photos" = "Prefer RAW photos";
+"Prefer original videos" = "Prefer original videos";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Limited Photo Access";
+"Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
+"No Access to the media selected for upload" = "No Access to the media selected for upload";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
+
+/* MDM settings push */
+"New settings received from MDM" = "New settings received from MDM";
+"Tap to quit the app." = "Tap to quit the app.";
+"Tap to launch the app." = "Tap to launch the app.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

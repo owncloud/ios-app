@@ -34,6 +34,7 @@
 "Cancel" = "Ezeztatu";
 "Approve" = "Onartu";
 "Error" = "Errorea";
+"Issues" = "Issues";
 "Review Connection" = "Konexioa Berrikusi";
 "Authenticated via" = "Autentifikatua horrela";
 "Authenticated as %@ via %@" = "%@ bezala autentifikatua %@ erabiliz";
@@ -47,7 +48,9 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Ziurtagiriak arazoak ditu.\nIreki 'Ziurtagiri Xehetasunak' informazio gehiago jasotzeko.";
 "No issues found. Certificate passed validation." = "Ez da arazorik aurkitu. Ziurtagiriak balidazioa gainditu du.";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Ziurtagiriak arazoak izan ditzake, baina erabiltzaileak onartu zuen.\nIreki 'Ziurtagiri Xehetasunak' informazio gehiago jasotzeko.";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "'Jarraitzen' baduzu, '%@' App-ak OAuth2 logina ireki ahal izateko baimena eskatuko zaizu. Bertan zure kredentzialak sartu ahal izango dituzu.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
+
+"Error opening %@" = "Error opening %@";
 
 "Contacting server…" = "Zerbitzaria kontaktatzen...";
 "Authenticating…" = "Autentifikazioa egiten...";
@@ -55,15 +58,30 @@
 "Fetching user information…" = "Erabiltzailearen informazioa eskuratzen...";
 "Updating connection…" = "Konexioa eguneratzen...";
 
+"Preparing account" = "Preparing account";
+"Please wait…" = "Itxaron mesedez...";
+"Skip" = "Skip";
+
 "Missing hostname" = "Ostalaria falta da";
 "The entered URL does not include a hostname." = "Sartutako URLak ez du ostalaririk.";
 "Add account" = "Gehitu kontua";
 "Server name" = "Zerbitzari izena";
 "Server Password" = "Zerbitzari Pasahitza";
 "Server Username" = "Zerbitzari Erabiltzaile Izena";
+"Show accounts" = "Show accounts";
+"Setup complete" = "Setup complete";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Access Files" = "Access Files";
+"Log out" = "Saioa bukatu";
+"Retry" = "Saiatu berriro.";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
 
 /* Client */
 "Browse" = "Arakatu";
+"Files" = "Fitxategiak";
 "Disconnect" = "Deskonektatu";
 "Connecting…" = "Konektatzen...";
 "Connected." = "Konektatua.";
@@ -86,16 +104,90 @@
 "kind" = "kind";
 "size" = "tamaina";
 "date" = "data";
-"Search this folder" = "Karpeta honetan bilatu";
+"last used" = "last used";
+
+"Tree" = "Tree";
+"Search folder" = "Search folder";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
+"Search account" = "Search account";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
 "Pending" = "Zain";
 "Show parent paths" = "Erakutsi gurasoen pathak";
+"Reveal in folder" = "Reveal in folder";
 
 "%@ of %@ used" = "%@ erabilia %@-etik";
 "Total: %@" = "Guztia: %@";
+"%@ item | " = "%@ item | ";
+"%@ items | " = "%@ items | ";
+
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "Kargatzen...";
+
+"Show more results" = "Show more results";
+
+"An error occurred" = "Errore bat gertatu da";
+
+/* Item Layouts */
+"List" = "Zerrenda";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
+
+/* Static Login Setup */
+"Server error" = "Server error";
+"The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
+"The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
+"Retry detection" = "Retry detection";
+"Enter your username and password" = "Enter your username and password";
+"Please log in to authorize the app." = "Please log in to authorize the app.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+"Login" = "Saio hasiera";
+"Wrong URL" = "Wrong URL";
+"Please enter a valid URL" = "Please enter a valid URL";
+"Missing Profile URL" = "Missing Profile URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Karpeta hutsa";
+"No contents" = "No contents";
 "This folder contains no files or folders." = "Karpeta honek ez du fitxategi edo karpetarik.";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Karpeta ezabatua";
 "This folder no longer exists on the server." = "Dagoeneko ez da karpeta hau existitzen zerbitzarian.";
@@ -112,7 +204,10 @@
 "Upload files" = "Fitxategiak igo";
 
 "No matches" = "Bat etortzerik ez";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "Ez dago emaitzarik bilaketa termino honentzat";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "Egoera";
 
 "Authorization failed" = "Baimentzeak huts egin du";
@@ -121,9 +216,20 @@
 "Access denied" = "Sarrera ukatua";
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Konexioaren atzipen-tokena iraungi da edo baliogabea bilakatu da. Saioa hasi berriz atzipena berreskuratzeko.";
 "No authentication data has been found for this connection." = "Ez da autentifikazio daturik aurkitu konexio honentzat.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Authentication with %@ is no longer allowed. Re-authentication needed.";
 "Sign in" = "Izena eman";
 "Continue offline" = "Jarraitu offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+"Waiting for response from login session in external browser…" = "Waiting for response from login session in external browser…";
+
+"All done" = "All done";
+"No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
+
+"Show all" = "Bistartu denak";
+"+ %ld more" = "+ %ld more";
+"Apply choice to all similar issues" = "Apply choice to all similar issues";
+"Apply to all" = "Apply to all";
 
 /* Server List*/
 "Cancel" = "Ezeztatu";
@@ -131,10 +237,14 @@
 
 "'%@' is currently locked" = "'%@' kateatua dago une honetan";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "'%@'-era konektatu ahal izatea eragozten duen operazioa burutzen ari da. Saiatu beranduago mesedez.";
+"Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
+"This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Benetan '%@' ezabatu?";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
 "This will also delete all locally stored file copies." = "Honek lokalean gordetako fitxategi kopia guztiak ezabatuko ditu.";
 "Delete" = "Ezabatu";
-"Deletion of '%@' failed" = "'%@'-en ezabaketak huts egin du";
+"Remove" = "Ezabatu";
+"Removing of '%@' failed" = "Removing of '%@' failed";
 "Accounts" = "Kontuak";
 
 "Help" = "Laguntza";
@@ -148,39 +258,54 @@
 "Passcode Lock" = "Pasakode Babesa";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
+"Unlock using %@?" = "Unlock using %@?";
 "Videos" = "Bidekoak";
 "Photos" = "Argazkiak";
-"Background uploads" = "Atzeko planoko igoerak";
 "Wifi only" = "Wifi bakarrik";
 "Settings" = "Ezarpenak";
 "Lock application" = "Aplikazioa itxi";
 "Upload videos via WiFi only" = "Igo bideoak WIFI bidez bakarrik";
 "Upload pictures via WiFi only" = "Igo irudiak WIFI bidez bakarrik";
 "More" = "Gehiago";
+"Documentation" = "Dokumentazioa";
 "Send feedback" = "Iritzia bidali";
 "Recommend to a friend" = "Lagun bati gomendatu";
 "Privacy Policy" = "Pribatasun Politika";
 "Terms Of Use" = "Terms Of Use";
 "Acknowledgements" = "Onarpenak";
+"license" = "license";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.";
 "Video upload path" = "Bideo igoera path-a";
 "Photo upload path" = "Argazki igoera path-a";
 "Immediately" = "Berehala";
 "After 1 minute" = "Minutu 1 ondoren";
 "After 5 minutes" = "5 minutu ondoren";
 "After 30 minutes" = "30 minutu ondoren";
+"After %ld seconds" = "After %ld seconds";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Konfiguratu mesedez email kontu bat";
 "You need to configure an email account first to be able to send emails." = "Email kontu bat konfiguratu behar duzu lehenik email mezuak bidali ahal izateko.";
 "Do you want to open the following URL?" = "Ondorengo URLa ireki nahi duzu?";
+"Passcode option" = "Passcode option";
+"Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
+"%ld digit code" = "%ld digit code";
+"Enter a new code with %ld digits" = "Enter a new code with %ld digits";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
 
-"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ bertsioa %@ eraiketa %@ (app: %@, sdk: %@)";
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "release";
+"App Version" = "App Version";
+"Version information were copied to the clipboard" = "Version information were copied to the clipboard";
 
 
 /* User Interface Settings */
 "Theme" = "Gaia";
 "User Interface" = "Erabiltzaile interfazea";
 "Dark" = "Iluna";
+"Dark Blue" = "Dark Blue";
+"Dark Web" = "Dark Web";
 "Light" = "Argia";
 "Classic" = "Klasikoa";
 "System" = "Sistema";
@@ -224,7 +349,8 @@
 "Really reset log file?" = "Benetan erregistro fitxategia berrezarri?";
 "This action can't be undone." = "Ekintza hau ezin da desegin.";
 
-/* Storage settings */
+/* Data usage settings */
+"Data usage" = "Data usage";
 "Delete unused local copies" = "Ezabatu erabiltzen ez diren kopia lokalak";
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Gailu honetan emandako denbora fitxategia kargatu, editatu, deskargatu edo ikusi denetik. Ez da kontuan hartzen Konexiorik Gabeko Eskuragarri dauden fitxategien deskarga. Kopia lokalak emandako denbora baino lehen ezabatu daitezke, adib. zerbitzarian fitxategiaren bertsio berriagoa dagoelako - edo konexiorik gabeko kopien eskuzko ezabaketarengatik. Emandako denbora pasatuta ere, kopia lokalak ez dira ezabatuko agian, adib. fitxategian inongo ekintzarik egin bada, fitxategia erabiltzen ari delako - edo fitxategia darabilen kontua ez delako aplikazioan erabili.";
 "never" = "inoiz";
@@ -232,12 +358,24 @@
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
 
+"Cellular Data Usage" = "Cellular Data Usage";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.";
+"General" = "Orokorra";
+"By feature" = "By feature";
+
+"off" = "off";
+"enabled" = "gaituta";
+
 /* Display settings */
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Erakutsi fitxategi eta karpeta ezkutuak";
 "Show folders on top" = "Show folders on top";
 "Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
+
+/* Advanced settings */
+"Enable diagnostics" = "Enable diagnostics";
 
 /* Passcode Messages */
 
@@ -249,6 +387,7 @@
 "Please try again in %@" = "Saiatu berriz mesedez %@ ondoren";
 "Unlock %@" = "Desblokeatu %@";
 "Biometric authentication failed" = "Autentifikazio biometrikoak huts egin du";
+"You are required to set the passcode" = "You are required to set the passcode";
 
 /* Certificate management */
 
@@ -263,15 +402,24 @@
 
 "Forbidden Characters" = "Debekatutako Karaktereak";
 "File name cannot contain / or \\" = "Fitxategi izenak ezin du / edo \\ izan";
+"Item with same name already exists" = "Item with same name already exists";
+"An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
 "New Folder" = "Karpeta berria";
 "Folder name" = "Karpeta izena";
 "Rename" ="Berrizendatu";
 "Create folder" ="Sortu karpeta";
 "Duplicate" = "Bikoiztu";
 "Move" = "Mugitu";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Mugitu hona";
+"Select target." = "Select target.";
 "Open in" = "Zabaldu";
 "Copy" = "Kopiatu";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
 "Copy here" = "Kopiatu hemen";
+
 "Cannot connect to " = "Ezin izan da hona konektatu";
 " couldn't download file(s)" = "ezin izan d(ir)a fitxategia(k) jaitsi";
 "Actions" = "Ekintzak";
@@ -280,6 +428,11 @@
 "Open in a new Window" = "Open in a new Window";
 "Open in Window" = "Open in Window";
 "Take photo or video" = "Take photo or video";
+"%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
+"%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
+
+"Processing on server" = "Processing on server";
 
 "Preparing…" = "Prestatzen...";
 
@@ -290,9 +443,26 @@
 "Favorited" = "Gogokoa";
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Presentation Mode";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
+"Enable" = "Gaitu";
+"Exit Full Screen" = "Exit Full Screen";
 
-/* Directory Picker Messages */
-"Move here" = "Mugitu hona";
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Gehitu elementua";
+
+/* App Provider */
+"New document" = "Dokumentu berria";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
 
 /* Preview */
 "Open file" = "Fitxategia ireki";
@@ -302,6 +472,13 @@
 "Downloading" = "Deskargatzen";
 "File couldn't be opened" = "Ezin izan da fitxategia ireki";
 "Connecting..." = "Connecting...";
+
+"File" = "Fitxategia";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
 
 /* PDF Viewer */
 "Resume" = "Berrekin";
@@ -313,6 +490,9 @@
 "The entered page number doesn't exist" = "Ez dago sartutako orri zenbakirik";
 "Search PDF" = "Bilatu PDF";
 "Outline" = "Zirriborroa";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
 "Upload" = "Igo";
@@ -324,18 +504,9 @@
 "Media import" = "Media import";
 "%@ of %@" = "%@ %@-tik";
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
-
-/* Scan */
-"Scan" = "Scan";
-"Scans" = "Scans";
-"Scan document" = "Scan document";
-"Saving" = "Gordetzen";
-"File format" = "File format";
-"Name" = "Izena";
-"Save as" = "Save as";
-"Options" = "Aukerak";
-"Scan additional" = "Scan additional";
-"Create one file per page" = "Create one file per page";
+"%d Item" = "%d Item";
+"%d Items" = "%d Items";
+"Select Items" = "Select Items";
 
 /* Scan */
 "Scan" = "Scan";
@@ -350,12 +521,23 @@
 "Create one file per page" = "Create one file per page";
 
 /* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
 "Searching Shares…" = "Partekatzeak Bilatzen...";
 "Recipient" = "Ontzia";
 "Recipients" = "Hartzaileak";
 "Public Link" = "Esteka Publikoa";
 "Public Links" = "Esteka Publikoak";
-"Shared by {{owner}}" = "{{owner}}-ek partekatua";
+"Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Gonbidatu";
 "Invite Recipient" = "Hartzaileak Gonbidatu";
 "Recipients" = "Hartzaileak";
 "Add email or name" = "Gehitu email edo izena";
@@ -405,7 +587,7 @@
 "Shared with others" = "Beste batzuekin partekatua";
 "Shares" = "Partekatuak";
 "Copy Private Link" = "Esteka Pribatua kopiatu";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Hartzaileek bakarrik erabili dezakete esteka hau. Erabili baliabide honen esteka iraunkor gisa";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.";
 "Accept Share failed" = "Partekatzea onartzeak huts egin du";
 "Decline Share failed" = "Partekatzeari uko egiteak huts egin du";
 "Accept" = "Onartu";
@@ -436,6 +618,20 @@
 "Private Link" = "Esteka Pribatua";
 "Created Public Link" = "Created Public Link";
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
+"%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Share with user/group";
+"Share link" = "Partekatu esteka";
+
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Lotura bidez elkarbanatuta";
+
+"Share with" = "Elkarbanatu honekin";
+"Add" = "Gehitu";
+"Save changes" = "Aldaketak gorde";
+
+"Enter password" = "Enter password";
 
 /* Quick Access view */
 "Quick Access" = "Atzipen Azkarra";
@@ -448,11 +644,18 @@
 "Documents" = "Dokumentuak";
 "Audio" = "Audio";
 
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
+
 /* Media files settings */
 "Media Files" = "Media Fitxategiak";
+"Download instead of streaming" = "Download instead of streaming";
 
 /* Photo upload settings */
 "Media Upload" = "Media Kargatu";
+"Media Export" = "Media Export";
+"Auto Upload" = "Auto Upload";
 "Convert HEIC to JPEG" = "HEIC JPEGera bihurtu";
 "Convert videos to MP4" = "Bideoak MP4ra bihurtu";
 "Preserve original media file names" = "Preserve original media file names";
@@ -461,10 +664,28 @@
 "Account" = "Kontua";
 "Accounts" = "Kontuak";
 "Select account" = "Select account";
-"Upload Path" = "Igotzetarako Bidea";
+"Photo upload path" = "Argazki igoera path-a";
+"Video upload path" = "Bideo igoera path-a";
 "Select Upload Path" = "Select Upload Path";
 "Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 "Importing %@ media files for upload" = "Importing %@ media files for upload";
+"Photo upload" = "Photo upload";
+"Video upload" = "Video upload";
+
+/* Background media uploads */
+"Background uploads (Lab Version)" = "Background uploads (Lab Version)";
+"Background uploads" = "Atzeko planoko igoerak";
+"Use background refresh" = "Use background refresh";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Allow this app to refresh the content when on Wi-Fi or mobile network in background.";
+"Enable background uploads" = "Enable background uploads";
+"Use background location updates" = "Use background location updates";
+"Background upload notifications" = "Background upload notifications";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "If you would like background media uploads to be more reliable, you should enable background location updates.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
+"Location permission denied" = "Location permission denied";
+"Please re-enable location acquisition in system settings" = "Please re-enable location acquisition in system settings";
+"Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "%ld karpetak sortzen...";
@@ -481,13 +702,24 @@
 "Offline files use" = "Konexiorik gabeko fitxategien erabilpena";
 "Compacting of '%@' failed" = "'%@'-ren trinkotzeak huts egin du";
 "Include available offline files" = "Gehitu konexiorik gabe eskuragarri dauden fitxategiak";
-"Delete all Offline Files" = "Ezabatu Kopia Lokalak";
+"Delete all Offline Files" = "Delete all Offline Files";
 "Manage" = "Kudeatu";
 "Storage" = "Biltegia";
 "Compacting" = "Compacting";
 
 "Really include available offline files?" = "Benetan konexiorik gabe eskuragarri dauden fitxategiak gehitu nahi dituzula?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Konexiorik gabe eskuragarri gisa markatuta dauden fitxategi eta karpetak eskuraezin egongo dira. Saioa hasten duzunean bBerriz ere deskargatuko dira (konexioa beharrezkoa).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
+
+/* Diagnostic */
+"Diagnostic Overview" = "Diagnostic Overview";
+"Diagnostics" = "Diagnostikoak";
+"Share Diagnostics" = "Share Diagnostics";
+"Action executed" = "Action executed";
+
+"Update Status" = "Update Status";
+"Completed update scans" = "Completed update scans";
+"Total update scans" = "Total update scans";
 
 /* Available offline */
 "Root folder" = "Erro karpeta";
@@ -498,14 +730,15 @@
 "Make unavailable offline" = "Konexiorik gabe eskuraezin jarri";
 
 "Available Offline" = "Konexiorik gabe eskuragarri";
-"No items have been selected for offline availability." = "Ez da alerik hautatu konexiorik gabe eskuragarri jartzeko.";
 
-"Overview" = "Ikuspegi orokorra";
-"All Files" = "Fitxategi denak";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
 
-/* Import File */
-"Save File" = "Fitxategia Gorde";
-"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Fitxategia inportatzeko kontu eta karpeta hautatu.\n\nAldi bakoitzean fitxategi bakarra inportatu daiteke.";
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
+
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
 
 /* Release Notes */
 "Proceed" = "Jarraitu";
@@ -528,10 +761,19 @@
 "Scroll to Bottom" = "Scroll to Bottom";
 "Copy to Clipboard" = "Copy to Clipboard";
 "Import from Clipboard" = "Import from Clipboard";
+"Choose destination directory…" = "Choose destination directory…";
 "Next" = "Hurrengoa";
 "Previous" = "Aurrekoa";
 "Favorite" = "Gogokoa";
 "Cut" = "Cut";
+"Paste" = "Paste";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";
@@ -571,14 +813,14 @@
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
 "Purchase failed" = "Purchase failed";
+"More information" = "More information";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"App Store" = "App Store";
-"Purchases" = "Purchases";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Document Scanner";
 "Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
@@ -587,6 +829,7 @@
 "Markup Documents" = "Markup Documents";
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
+
 "Purchased App Version" = "Purchased App Version";
 "Receipt Date" = "Receipt Date";
 "Manage subscription" = "Manage subscription";
@@ -601,6 +844,48 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+"Photo Pro Features" = "Photo Pro Features";
+"Image metadata, extended upload options" = "Image metadata, extended upload options";
+"Purchase" = "Purchase";
+"Subscribe" = "Harpidetu";
+
+"No accounts found" = "No accounts found";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "In order to accurately determine your current licensing status, please add one or more accounts first.";
+
+/* Share Sheet */
+"Save File" = "Fitxategia Gorde";
+"Choose an account and folder to import into." = "Choose an account and folder to import into.";
+"No account configured.\nSetup an new account in the app to save to." = "No account configured.\nSetup an new account in the app to save to.";
+"Importing item %ld of %ld" = "Importing item %ld of %ld";
+"Error importing %@" = "Error importing %@";
+"Error loading item" = "Error loading item";
+"Preparing…" = "Prestatzen...";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
+"Save here" = "Save here";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Share Extension disabled";
+"Importing files through the Share Extension is not allowed on this device." = "Importing files through the Share Extension is not allowed on this device.";
+
+/* - Open with */
+"Opening not allowed" = "Opening not allowed";
+"Importing files through opening is not allowed on this device." = "Importing files through opening is not allowed on this device.";
+
+/* - Files.app */
+"Import not allowed" = "Import not allowed";
+"Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
@@ -611,3 +896,133 @@
 "Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
 "Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
 "Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
+
+/* Photo meta-data */
+"Image metadata" = "Image metadata";
+"Image details" = "Image details";
+"Profile" = "Profile";
+"Size" = "Tamaina";
+"Density" = "Density";
+"Color model" = "Color model";
+"%@ (%d bits/channel)" = "%@ (%d bits/channel)";
+"Histogram" = "Histogram";
+
+"Camera details" = "Camera details";
+"Capture settings" = "Capture settings";
+"Time" = "Noiz";
+"EXIF aux info" = "EXIF aux info";
+"Authoring" =  "Authoring";
+"TIFF" = "TIFF";
+
+"Lens make" = "Lens make";
+"Lens model" = "Lens model";
+"Lens info" = "Lens info";
+"Focal length" = "Focal length";
+"Focal length @ 35 mm" = "Focal length @ 35 mm";
+
+"Shutter speed" = "Shutter speed";
+"Aperture" = "Aperture";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Program";
+"Not defined" = "Not defined";
+"Manual" = "Manual";
+"Normal" = "Normal";
+"Aperture priority" = "Aperture priority";
+"Shutter priority" = "Shutter priority";
+"Creative" = "Creative";
+"Action" = "Ekintza";
+"Portrait" = "Portrait";
+"Landscape" = "Landscape";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Metering";
+"unknown" = "ezezaguna";
+"Average" = "Average";
+"CenterWeightedAverage" = "CenterWeightedAverage";
+"Spot" = "Spot";
+"MultiSpot" = "MultiSpot";
+"Pattern" = "Pattern";
+"Partial" = "Partial";
+
+/* EXIF: flash mode */
+"Flash" = "Flash";
+"Fired" = "Fired";
+"Didn't fire" = "Didn't fire";
+"No strobe return detection" = "No strobe return detection";
+"Strobe return light not detected" = "Strobe return light not detected";
+"Strobe return light detected" = "Strobe return light detected";
+"Compulsory flash firing" = "Compulsory flash firing";
+"Compulsory flash supression" = "Compulsory flash supression";
+"Auto mode" = "Auto mode";
+"Red eye detection supported" = "Red eye detection supported";
+"not present" = "not present";
+
+/* EXIF: white balance */
+"White balance" = "White balance";
+"Auto" = "Auto";
+"Manual" = "Manual";
+
+"Exposure bias" = "Exposure bias";
+"Uncalibrated" = "Uncalibrated";
+"Original date" = "Original date";
+"Digitized date" = "Digitized date";
+
+"Color space" = "Color space";
+
+/* EXIF: aux info */
+"Lens ID" = "Lens ID";
+"Lens serial" = "Lens serial";
+"Serial number" = "Serial number";
+"Flash compensation" = "Flash compensation";
+"Owner" = "Jabea";
+"Firmware" = "Firmware";
+"Keywords" = "Keywords";
+"Copyright" = "Copyright";
+
+/* IPTC meta data */
+"Contact info" = "Contact info";
+"Usage terms" = "Usage terms";
+"Scene" = "Scene";
+"Description" = "Deskribapena";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Photometric interpretation";
+"none" = "bat ere ez";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS Location";
+"Coordinates" = "Coordinates";
+"Altitude" = "Altitude";
+"Place" = "Place";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Extended upload settings";
+"Prefer unedited photos" = "Prefer unedited photos";
+"Prefer RAW photos" = "Prefer RAW photos";
+"Prefer original videos" = "Prefer original videos";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Limited Photo Access";
+"Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
+"No Access to the media selected for upload" = "No Access to the media selected for upload";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
+
+/* MDM settings push */
+"New settings received from MDM" = "New settings received from MDM";
+"Tap to quit the app." = "Tap to quit the app.";
+"Tap to launch the app." = "Tap to launch the app.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

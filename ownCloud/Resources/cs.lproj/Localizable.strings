@@ -34,6 +34,7 @@
 "Cancel" = "Zrušit";
 "Approve" = "Schválit";
 "Error" = "Chyba";
+"Issues" = "Problémy";
 "Review Connection" = "Review Connection";
 "Authenticated via" = "Přihlášen";
 "Authenticated as %@ via %@" = "Přihlášený jako %@ prostřednictvím %@";
@@ -47,13 +48,19 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Certificate has issues.\nOpen 'Certificate Details' for more informations.";
 "No issues found. Certificate passed validation." = "No issues found. Certificate passed validation.";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.";
+
+"Error opening %@" = "Error opening %@";
 
 "Contacting server…" = "Kontaktování serveru";
 "Authenticating…" = "Probíhá autentizace...";
 
 "Fetching user information…" = "Fetching user information…";
 "Updating connection…" = "Updating connection…";
+
+"Preparing account" = "Preparing account";
+"Please wait…" = "Čekejte prosím...";
+"Skip" = "Přeskočit";
 
 "Missing hostname" = "Chybějící hostitel";
 "The entered URL does not include a hostname." = "Zadaná URL adresa neobsahuje hostitele.";
@@ -63,9 +70,18 @@
 "Server Username" = "Server Username";
 "Show accounts" = "Show accounts";
 "Setup complete" = "Setup complete";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Access Files" = "Access Files";
+"Log out" = "Odhlásit se";
+"Retry" = "Zkusit znovu";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Bookmark Metadata";
 
 /* Client */
 "Browse" = "Procházet";
+"Files" = "Soubory";
 "Disconnect" = "Odpojit";
 "Connecting…" = "Připojování...";
 "Connected." = "Připojeno.";
@@ -88,24 +104,90 @@
 "kind" = "kind";
 "size" = "velikost";
 "date" = "datum";
-"Search this folder" = "Hledat v tomto adresáři";
+"last used" = "last used";
+
+"Tree" = "Tree";
+"Search folder" = "Search folder";
+"Search tree" = "Search tree";
+"Search from {{folder.name}}" = "Search from {{folder.name}}";
+"Search space" = "Search space";
+"Search {{space.name}}" = "Search {{space.name}}";
+"Search account" = "Search account";
+"Enter a search term" = "Enter a search term";
+"Search for users or groups" = "Search for users or groups";
+"Enter the user or group you want to invite." = "Enter the user or group you want to invite.";
+
 "Pending" = "Nevyřízené";
 "Show parent paths" = "Show parent paths";
+"Reveal in folder" = "Reveal in folder";
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
 "%@ item | " = "%@ item | ";
 "%@ items | " = "%@ items | ";
 
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)";
+"{{remaining}} available" = "{{remaining}} available";
+
+"Loading…" = "Načítání…";
+
+"Show more results" = "Show more results";
+
+"An error occurred" = "Nastala chyba";
+
+/* Item Layouts */
+"List" = "Seznam";
+"Grid" = "Grid";
+"Item grid" = "Item grid";
+"Image grid" = "Image grid";
+
+/* Saved searches */
+"Saved searches" = "Saved searches";
+"Saved search templates" = "Saved search templates";
+"Save search" = "Save search";
+"Save as search template" = "Save as search template";
+
+"Name of saved search" = "Name of saved search";
+"Saved search" = "Saved search";
+"Saved searches" = "Saved searches";
+"Name of template" = "Name of template";
+"Search template" = "Search template";
+"Search templates" = "Search templates";
+
+/* Search scope */
+"Search scope" = "Search scope";
+"Toggle Search Scope" = "Toggle Search Scope";
+
 /* Static Login Setup */
 "Server error" = "Chyba serveru";
 "The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
 "The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
 "Retry detection" = "Retry detection";
+"Enter your username and password" = "Enter your username and password";
+"Please log in to authorize the app." = "Please log in to authorize the app.";
+"Welcome to %@" = "Welcome to %@";
+"Please enter a server URL" = "Please enter a server URL";
+"Please pick a profile to begin setup" = "Please pick a profile to begin setup";
+"The following steps will guide you through the setup process." = "The following steps will guide you through the setup process.";
+"Start setup" = "Start setup";
+"Open login page" = "Open login page";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.";
+"Account setup complete" = "Account setup complete";
+"If you'd like to give the account a custom name, please enter it below:" = "If you'd like to give the account a custom name, please enter it below:";
+
+/* Single Account */
+"You are connected as\n%@" = "You are connected as\n%@";
+"Login" = "Přihlásit";
+"Wrong URL" = "Wrong URL";
+"Please enter a valid URL" = "Please enter a valid URL";
+"Missing Profile URL" = "Missing Profile URL";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.";
 
 /* Client Messages */
-"Empty folder" = "Prázdný adresář";
+"No contents" = "No contents";
 "This folder contains no files or folders." = "Tento adresář neobsahuje žádné soubory ani podadresáře";
+"This folder is empty." = "This folder is empty.";
+"This folder is empty. Fill it with content:" = "This folder is empty. Fill it with content:";
 
 "Folder removed" = "Adresář odstraněn";
 "This folder no longer exists on the server." = "Tento adresář již neexistuje na serveru.";
@@ -122,7 +204,10 @@
 "Upload files" = "Nahrávané soubory";
 
 "No matches" = "No matches";
+"The search term you entered did not match any item in the selected scope." = "The search term you entered did not match any item in the selected scope.";
 "There are no results for this search term" = "There are no results for this search term";
+"No items found matching the search criteria." = "No items found matching the search criteria.";
+
 "Status" = "Stav";
 
 "Authorization failed" = "Authorization failed";
@@ -131,9 +216,12 @@
 "Access denied" = "Přístup zamítnut";
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
 "No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Authentication with %@ is no longer allowed. Re-authentication needed.";
 "Sign in" = "Přihlásit";
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+"Waiting for response from login session in external browser…" = "Waiting for response from login session in external browser…";
 
 "All done" = "All done";
 "No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
@@ -152,6 +240,7 @@
 "Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
 "This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Really delete '%@'?" = "Opravdu smazat '%@'?";
+"Do you want to log out from '%@'?" = "Do you want to log out from '%@'?";
 "This will also delete all locally stored file copies." = "Tímto zároveň smažete všechny lokálně uložené kopie.";
 "Delete" = "Smazat";
 "Remove" = "Odstranit";
@@ -169,30 +258,40 @@
 "Passcode Lock" = "Přístupový kód";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
+"Unlock using %@?" = "Unlock using %@?";
 "Videos" = "Videa";
 "Photos" = "Fotky";
-"Background uploads" = "Nahrávání na pozadí";
 "Wifi only" = "Pouze Wi-Fi";
 "Settings" = "Nastavení";
 "Lock application" = "Uzamknout aplikaci";
 "Upload videos via WiFi only" = "Nahrávat videa pouze přes WiFi";
 "Upload pictures via WiFi only" = "Odesílat obrázky pouze přes WiFi";
 "More" = "Více";
+"Documentation" = "Dokumentace";
 "Send feedback" = "Odeslat názor";
 "Recommend to a friend" = "Doporučit přátelům";
 "Privacy Policy" = "Ochrana soukromí";
 "Terms Of Use" = "Terms Of Use";
 "Acknowledgements" = "Acknowledgements";
+"license" = "license";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.";
 "Video upload path" = "Cesta k nahrání videa";
 "Photo upload path" = "Photo upload path";
-"Immediately" = "Immediately";
+"Immediately" = "Okamžitě";
 "After 1 minute" = "Za 1 minutu";
 "After 5 minutes" = "Za 5 minut";
 "After 30 minutes" = "Za 30 minut";
+"After %ld seconds" = "After %ld seconds";
 "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.";
 "Please configure an email account" = "Prosím, nastavte svůj e-mailový účet";
 "You need to configure an email account first to be able to send emails." = "Abyste mohli odesílat e-maily, nejprve musíte nastavit e-mailový účet.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
+"Passcode option" = "Passcode option";
+"Please choose how many digits you want to use for the passcode lock?" = "Please choose how many digits you want to use for the passcode lock?";
+"%ld digit code" = "%ld digit code";
+"Enter a new code with %ld digits" = "Enter a new code with %ld digits";
+"To use the app, you need to create a passcode." = "To use the app, you need to create a passcode.";
+"Passcode setup" = "Passcode setup";
 
 "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "beta";
@@ -205,6 +304,8 @@
 "Theme" = "Vzhled";
 "User Interface" = "User Interface";
 "Dark" = "Tmavé";
+"Dark Blue" = "Dark Blue";
+"Dark Web" = "Dark Web";
 "Light" = "Světlé";
 "Classic" = "Classic";
 "System" = "Systém";
@@ -221,7 +322,7 @@
 "Log Destinations" = "Log Destinations";
 "Privacy" = "Privacy";
 
-"Logging" = "Logging";
+"Logging" = "Logování";
 "Enable logging" = "Povolit logování";
 "Options" = "Možnosti";
 
@@ -269,7 +370,7 @@
 /* Display settings */
 "Advanced settings" = "Pokročilá nastavení";
 "Show hidden files and folders" = "Show hidden files and folders";
-"Show folders at the top" = "Show folders at the top";
+"Show folders on top" = "Show folders on top";
 "Disable gestures" = "Disable gestures";
 "Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
@@ -286,6 +387,7 @@
 "Please try again in %@" = "Prosím, zkuste znovu za %@";
 "Unlock %@" = "Odemknout %@";
 "Biometric authentication failed" = "Biometrická autentizace selhala";
+"You are required to set the passcode" = "You are required to set the passcode";
 
 /* Certificate management */
 
@@ -308,9 +410,16 @@
 "Create folder" ="Vytvořit složku";
 "Duplicate" = "Duplicate";
 "Move" = "Přesunout";
+"Move {{itemCount}} items" = "Move {{itemCount}} items";
+"Move \"{{itemName}}\"" = "Move \"{{itemName}}\"";
+"Move here" = "Přesunout sem";
+"Select target." = "Select target.";
 "Open in" = "Open in";
 "Copy" = "Kopie";
-"Copy here" = "Copy here";
+"Copy {{itemCount}} items" = "Copy {{itemCount}} items";
+"Copy \"{{itemName}}\"" = "Copy \"{{itemName}}\"";
+"Copy here" = "Zkopírovat sem";
+
 "Cannot connect to " = "Cannot connect to ";
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Činnosti";
@@ -319,6 +428,11 @@
 "Open in a new Window" = "Open in a new Window";
 "Open in Window" = "Open in Window";
 "Take photo or video" = "Take photo or video";
+"%ld Item was copied to the clipboard" = "%ld Item was copied to the clipboard";
+"%ld Items were copied to the clipboard" = "%ld Items were copied to the clipboard";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Please note: Folders can only be pasted into the %@ app and the same account.";
+
+"Processing on server" = "Processing on server";
 
 "Preparing…" = "Preparing…";
 
@@ -329,9 +443,26 @@
 "Favorited" = "Přidáno k oblíbeným";
 "Favorite item" = "Favorite item";
 "Unfavorite item" = "Unfavorite item";
+"Presentation Mode" = "Presentation Mode";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Enabling presentation mode will prevent the display from sleep mode until the view is closed.";
+"Enable" = "Povolit";
+"Exit Full Screen" = "Exit Full Screen";
 
-/* Directory Picker Messages */
-"Move here" = "Move here";
+"Select one or more items." = "Select one or more items.";
+
+"Add item" = "Přidat položku";
+
+/* App Provider */
+"New document" = "Nový dokument";
+"Pick a name" = "Pick a name";
+"Pick a document type to create:" = "Pick a document type to create:";
+"Error creating {{itemName}}" = "Error creating {{itemName}}";
+
+"Opening…" = "Opening…";
+
+"Open in {{appName}} (web)" = "Open in {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Error opening {{itemName}} in {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Opening documents is not supported by the app provider on this instance.";
 
 /* Preview */
 "Open file" = "Otevřít soubor";
@@ -341,6 +472,13 @@
 "Downloading" = "Stahování";
 "File couldn't be opened" = "File couldn't be opened";
 "Connecting..." = "Connecting...";
+
+"File" = "Soubor";
+"%@ was updated" = "%@ was updated";
+"Would you like to view the updated version?" = "Would you like to view the updated version?";
+"Show new version" = "Show new version";
+"Refresh without asking" = "Refresh without asking";
+"Ignore updates" = "Ignore updates";
 
 /* PDF Viewer */
 "Resume" = "Obnovit";
@@ -352,6 +490,9 @@
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
 "Search PDF" = "Search PDF";
 "Outline" = "Outline";
+"Find Next" = "Find Next";
+"Find Previous" = "Find Previous";
+"Close Search" = "Close Search";
 
 /* Photo Upload */
 "Upload" = "Nahrát";
@@ -365,18 +506,7 @@
 "Selected folder lacks file creation permission" = "Selected folder lacks file creation permission";
 "%d Item" = "%d Item";
 "%d Items" = "%d Items";
-
-/* Scan */
-"Scan" = "Scan";
-"Scans" = "Scans";
-"Scan document" = "Scan document";
-"Saving" = "Ukládá se";
-"File format" = "File format";
-"Name" = "Název";
-"Save as" = "Ulož jako";
-"Options" = "Možnosti";
-"Scan additional" = "Scan additional";
-"Create one file per page" = "Create one file per page";
+"Select Items" = "Select Items";
 
 /* Scan */
 "Scan" = "Scan";
@@ -391,12 +521,23 @@
 "Create one file per page" = "Create one file per page";
 
 /* Sharing */
+"Sharing requires an active connection." = "Sharing requires an active connection.";
+"No items shared with you" = "No items shared with you";
+"No items shared by you" = "No items shared by you";
+"No items shared by link" = "No items shared by link";
+
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Příjemce";
 "Recipients" = "Recipients";
 "Public Link" = "Public Link";
 "Public Links" = "Veřejné odkazy";
 "Shared by {{owner}}" = "Shared by {{owner}}";
+"Shared with {{recipient}}" = "Shared with {{recipient}}";
+"Shared with {{recipients}}" = "Shared with {{recipients}}";
+"Expires {{expirationDate}}" = "Expires {{expirationDate}}";
+"Share {{itemName}}" = "Share {{itemName}}";
+"Create link" = "Create link";
+"Invite" = "Pozvat";
 "Invite Recipient" = "Invite Recipient";
 "Recipients" = "Recipients";
 "Add email or name" = "Add email or name";
@@ -420,11 +561,11 @@
 "Create" = "Vytvořit";
 "Change" = "Změnit";
 "Recipients can view or download contents." = "Příjemce může zobrazit a stáhnout obsah.";
-"Recipients can view, download, edit, delete and upload contents." = "Recipients can view, download, edit, delete and upload contents.";
-"Receive files from multiple recipients without revealing the contents of the folder." = "Receive files from multiple recipients without revealing the contents of the folder.";
+"Recipients can view, download, edit, delete and upload contents." = "Příjemce může zobrazit, stáhnout, upravovat, mazat a nahrávat obsah.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Přijmout soubory od několika příjemců, kteří neuvidí obsah složky.";
 "Download / View" = "Stáhnout / zobrazit";
 "Download / View / Upload" = "Stáhnout / zobrazit / nahrát";
-"Upload only (File Drop)" = "Upload only (File Drop)";
+"Upload only (File Drop)" = "Pouze nahrávání";
 "Creating public link failed" = "Creating public link failed";
 "Create Public Link" = "Create Public Link";
 "Links" = "Odkazy";
@@ -446,7 +587,7 @@
 "Shared with others" = "Sdíleno s ostatními";
 "Shares" = "Sdílení";
 "Copy Private Link" = "Copy Private Link";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Only recipients can use this link. Use it as a permanent link to point to this resource";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares.";
 "Accept Share failed" = "Accept Share failed";
 "Decline Share failed" = "Decline Share failed";
 "Accept" = "Přijmout";
@@ -473,13 +614,27 @@
 "Share this file" = "Share this file";
 "Share this folder" = "Share this folder";
 "shared" = "sdílené";
-"Owner" = "Owner";
+"Owner" = "Vlastník";
 "Private Link" = "Private Link";
 "Created Public Link" = "Created Public Link";
 "URL was copied to the clipboard" = "URL was copied to the clipboard";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.";
+"%@ is not available for this item." = "%@ is not available for this item.";
+"Share with user/group" = "Share with user/group";
+"Share link" = "Sdílet odkaz";
+
+"Shared with me" = "Shared with me";
+"Shared by me" = "Shared by me";
+"Shared by link" = "Sdíleno pomocí odkazu";
+
+"Share with" = "Sdílet s";
+"Add" = "Přidat";
+"Save changes" = "Uložit změny";
+
+"Enter password" = "Enter password";
 
 /* Quick Access view */
-"Quick Access" = "Quick Access";
+"Quick Access" = "Rychlý přístup";
 "Collection" = "Collection";
 "Recents" = "Recents";
 "Favorites"= "Oblíbené";
@@ -488,6 +643,10 @@
 "Text" = "Text";
 "Documents" = "Dokumenty";
 "Audio" = "Audio";
+
+/* Favorites view */
+"No favorites found" = "No favorites found";
+"If you make an item a favorite, it will turn up here." = "If you make an item a favorite, it will turn up here.";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -514,8 +673,10 @@
 "Video upload" = "Video upload";
 
 /* Background media uploads */
+"Background uploads (Lab Version)" = "Background uploads (Lab Version)";
 "Background uploads" = "Nahrávání na pozadí";
 "Use background refresh" = "Use background refresh";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Allow this app to refresh the content when on Wi-Fi or mobile network in background.";
 "Enable background uploads" = "Enable background uploads";
 "Use background location updates" = "Use background location updates";
 "Background upload notifications" = "Background upload notifications";
@@ -548,6 +709,7 @@
 
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).";
 
 /* Diagnostic */
 "Diagnostic Overview" = "Diagnostic Overview";
@@ -568,10 +730,12 @@
 "Make unavailable offline" = "Make unavailable offline";
 
 "Available Offline" = "Available Offline";
-"No items have been selected for offline availability." = "No items have been selected for offline availability.";
 
-"Overview" = "Overview";
-"All Files" = "All Files";
+"No files available offline" = "No files available offline";
+"Files selected and downloaded for offline availability will show up here." = "Files selected and downloaded for offline availability will show up here.";
+
+"Locations" = "Locations";
+"Downloaded Files" = "Downloaded Files";
 
 /* Single Account */
 "You are connected as\n%@" = "You are connected as\n%@";
@@ -597,10 +761,19 @@
 "Scroll to Bottom" = "Scroll to Bottom";
 "Copy to Clipboard" = "Copy to Clipboard";
 "Import from Clipboard" = "Import from Clipboard";
+"Choose destination directory…" = "Choose destination directory…";
 "Next" = "Následující";
 "Previous" = "Předchozí";
 "Favorite" = "Oblíbené";
 "Cut" = "Cut";
+"Paste" = "Paste";
+"Play/Pause" = "Play/Pause";
+"Skip Back" = "Skip Back";
+"Skip Ahead" = "Skip Ahead";
+"Go to Beginning" = "Go to Beginning";
+"Mute/Unmute" = "Mute/Unmute";
+"Full Screen" = "Full Screen";
+"Switch Theme Style" = "Switch Theme Style";
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";
@@ -614,7 +787,7 @@
 
 /* Licensing */
 "Unlocked" = "Unlocked";
-"Unlock" = "Unlock";
+"Unlock" = "Odemknout";
 
 "Subscribe Now" = "Subscribe Now";
 "Free" = "Free";
@@ -640,13 +813,14 @@
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
 "Purchase failed" = "Purchase failed";
+"More information" = "More information";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-"Purchases" = "Purchases";
+"Purchases & Subscriptions" = "Purchases & Subscriptions";
 "Error fetching transactions" = "Error fetching transactions";
 "Document Scanner" = "Document Scanner";
 "Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
@@ -656,6 +830,28 @@
 "Markup photos and PDF files." = "Markup photos and PDF files.";
 "Unlock all Pro Features." = "Unlock all Pro Features.";
 
+"Purchased App Version" = "Purchased App Version";
+"Receipt Date" = "Receipt Date";
+"Manage subscription" = "Manage subscription";
+"Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+"Type" = "Typ";
+"Quantity" = "Quantity";
+"Product" = "Product";
+"Date" = "Datum";
+"Cancelled" = "Zrušeno";
+"Ends" = "Končí";
+"none" = "žádné";
+"trial" = "trial";
+"purchase" = "purchase";
+"subscription" = "subscription";
+"Photo Pro Features" = "Photo Pro Features";
+"Image metadata, extended upload options" = "Image metadata, extended upload options";
+"Purchase" = "Purchase";
+"Subscribe" = "Odebírat";
+
+"No accounts found" = "No accounts found";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "In order to accurately determine your current licensing status, please add one or more accounts first.";
+
 /* Share Sheet */
 "Save File" = "Save File";
 "Choose an account and folder to import into." = "Choose an account and folder to import into.";
@@ -664,7 +860,32 @@
 "Error importing %@" = "Error importing %@";
 "Error loading item" = "Error loading item";
 "Preparing…" = "Preparing…";
+"Import \"{{itemName}}\"" = "Import \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Import {{itemCount}} files";
 "Save here" = "Save here";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "File Provider access has been disabled by the administrator. Please use the app to create new folders.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "File Provider access has been disabled by the administrator. Please use the share extension to import files.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "No account has been set up in the {{app.name}} app yet.";
+"Open app" = "Open app";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Share Extension disabled";
+"Importing files through the Share Extension is not allowed on this device." = "Importing files through the Share Extension is not allowed on this device.";
+
+/* - Open with */
+"Opening not allowed" = "Opening not allowed";
+"Importing files through opening is not allowed on this device." = "Importing files through opening is not allowed on this device.";
+
+/* - Files.app */
+"Import not allowed" = "Import not allowed";
+"Importing files through the File Provider is not allowed on this device." = "Importing files through the File Provider is not allowed on this device.";
 
 /* Misc. accessibility */
 "Enter multiple selection" = "Enter multiple selection";
@@ -675,3 +896,133 @@
 "Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
 "Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
 "Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
+
+/* Photo meta-data */
+"Image metadata" = "Image metadata";
+"Image details" = "Image details";
+"Profile" = "Profile";
+"Size" = "Velikost";
+"Density" = "Density";
+"Color model" = "Color model";
+"%@ (%d bits/channel)" = "%@ (%d bits/channel)";
+"Histogram" = "Histogram";
+
+"Camera details" = "Camera details";
+"Capture settings" = "Capture settings";
+"Time" = "Čas";
+"EXIF aux info" = "EXIF aux info";
+"Authoring" =  "Authoring";
+"TIFF" = "TIFF";
+
+"Lens make" = "Lens make";
+"Lens model" = "Lens model";
+"Lens info" = "Lens info";
+"Focal length" = "Focal length";
+"Focal length @ 35 mm" = "Focal length @ 35 mm";
+
+"Shutter speed" = "Shutter speed";
+"Aperture" = "Aperture";
+"ISO" = "ISO";
+
+/* EXIF: exposure program */
+"Program" = "Program";
+"Not defined" = "Not defined";
+"Manual" = "Manual";
+"Normal" = "Normální";
+"Aperture priority" = "Aperture priority";
+"Shutter priority" = "Shutter priority";
+"Creative" = "Creative";
+"Action" = "Akce";
+"Portrait" = "Portrait";
+"Landscape" = "Landscape";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Metering";
+"unknown" = "neznámý";
+"Average" = "Average";
+"CenterWeightedAverage" = "CenterWeightedAverage";
+"Spot" = "Spot";
+"MultiSpot" = "MultiSpot";
+"Pattern" = "Maska";
+"Partial" = "Partial";
+
+/* EXIF: flash mode */
+"Flash" = "Flash";
+"Fired" = "Fired";
+"Didn't fire" = "Didn't fire";
+"No strobe return detection" = "No strobe return detection";
+"Strobe return light not detected" = "Strobe return light not detected";
+"Strobe return light detected" = "Strobe return light detected";
+"Compulsory flash firing" = "Compulsory flash firing";
+"Compulsory flash supression" = "Compulsory flash supression";
+"Auto mode" = "Auto mode";
+"Red eye detection supported" = "Red eye detection supported";
+"not present" = "not present";
+
+/* EXIF: white balance */
+"White balance" = "White balance";
+"Auto" = "Auto";
+"Manual" = "Manual";
+
+"Exposure bias" = "Exposure bias";
+"Uncalibrated" = "Uncalibrated";
+"Original date" = "Original date";
+"Digitized date" = "Digitized date";
+
+"Color space" = "Color space";
+
+/* EXIF: aux info */
+"Lens ID" = "Lens ID";
+"Lens serial" = "Lens serial";
+"Serial number" = "Serial number";
+"Flash compensation" = "Flash compensation";
+"Owner" = "Vlastník";
+"Firmware" = "Firmware";
+"Keywords" = "Keywords";
+"Copyright" = "Autorská práva";
+
+/* IPTC meta data */
+"Contact info" = "Contact info";
+"Usage terms" = "Usage terms";
+"Scene" = "Scene";
+"Description" = "Popis";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Photometric interpretation";
+"none" = "žádné";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "GPS Location";
+"Coordinates" = "Coordinates";
+"Altitude" = "Altitude";
+"Place" = "Place";
+"E" = "E";
+"W" = "W";
+"N" = "N";
+"S" = "S";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Extended upload settings";
+"Prefer unedited photos" = "Prefer unedited photos";
+"Prefer RAW photos" = "Prefer RAW photos";
+"Prefer original videos" = "Prefer original videos";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Limited Photo Access";
+"Access for the media selected for upload is limited" = "Access for the media selected for upload is limited";
+"No Access to the media selected for upload" = "No Access to the media selected for upload";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.";
+
+/* MDM settings push */
+"New settings received from MDM" = "New settings received from MDM";
+"Tap to quit the app." = "Tap to quit the app.";
+"Tap to launch the app." = "Tap to launch the app.";
+
+/* Beta warning */
+"Beta Warning" = "Beta Warning";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.";
+"Agree" = "Agree";

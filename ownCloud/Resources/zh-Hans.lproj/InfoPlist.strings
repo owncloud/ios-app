@@ -16,11 +16,11 @@
  *
  */
 
-"NSFaceIDUsageDescription" = "需要密码解锁。";
-"NSAppleMusicUsageDescription" = "将媒体文件上传到您的服务器需要此权限。";
-"NSPhotoLibraryAddUsageDescription" = "需要此权限才能从你的图片库中上传照片和视频。";
-"NSPhotoLibraryUsageDescription" = "需要此权限才能从你的图片库中上传照片和视频。";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "需要此权限才能在后台启用照片和视频的自动上传。";
-"NSLocationAlwaysUsageDescription" = "需要此权限才能在后台启用照片和视频的自动上传";
-"NSLocationWhenInUseUsageDescription" = "需要此权限才能在后台启用照片和视频的自动上传";
-"NSMicrophoneUsageDescription" = "录制视频需要此权限";
+"NSFaceIDUsageDescription" = "Unlock the app without entering the passcode.";
+"NSAppleMusicUsageDescription" = "This permission is needed for uploading media files to your server.";
+"NSPhotoLibraryAddUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
+"NSPhotoLibraryUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in the background.";
+"NSLocationAlwaysUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
+"NSLocationWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
+"NSMicrophoneUsageDescription" = "This permission is needed to record videos";
