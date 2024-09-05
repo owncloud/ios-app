@@ -57,6 +57,8 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 							self?.activityIndicator.stopAnimating()
 							self?.activityIndicator.isHidden = true
 							self?.progressView.isHidden = false
+
+							self?.progressView.progress = Float(progress.fractionCompleted)
 						}
 					}
 				})
@@ -78,6 +80,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 		super.init(nibName: nil, bundle: nil)
 
 		self.progress = progress
+		self.cssSelectors = [ .modal ]
 
 		if let initialTitleLabel = initialTitleLabel {
 			titleLabel = UILabel()
