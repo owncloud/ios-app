@@ -26,6 +26,9 @@ extension NSErrorDomain {
 	static let ShareErrorDomain = "ShareErrorDomain"
 }
 
+private let unitCountForImport: Int64 = 50
+private let unitCountForUpload: Int64 = 100
+
 @objc(ShareExtensionViewController)
 class ShareExtensionViewController: EmbeddingViewController, Themeable {
 	// MARK: - Initialization
@@ -93,62 +96,104 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 	var fpServiceSession : OCFileProviderServiceSession?
 	var asyncQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
+	var progressViewController: ProgressIndicatorViewController?
+	var uploadCoreProgress: Progress?
+
 	func importTo(selectedFolder: OCItem?, location: OCLocation?) {
-		if let targetFolder = selectedFolder, let bookmarkUUID = targetFolder.bookmarkUUID {
+		if let targetFolder = selectedFolder, let bookmarkUUID = targetFolder.bookmarkUUID ?? location?.bookmarkUUID?.uuidString {
 			if let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID) {
-				let vault = OCVault(bookmark: bookmark)
-				self.fpServiceSession = OCFileProviderServiceSession(vault: vault)
-
 				OnMainThread {
-					let progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, progress: nil, cancelHandler: {})
+					self.progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, progress: nil, cancelHandler: { [weak self] in
+						self?.uploadCoreProgress?.cancel() // Cancel transfers (!) via Progress instances provided by upload methods
+						self?.cancel()
+					})
+					self.contentViewController = self.progressViewController
 
-					self.contentViewController = progressViewController
+					let importCompletionHandler : ((_ error: Error?) -> Void) = { [weak self] (error) in
+						self?.finish(with: error)
+					}
 
-					AccountConnectionPool.shared.disconnectAll {
-						OnMainThread {
-							if let fpServiceSession = self.fpServiceSession {
-								self.importFiles(to: targetFolder, serviceSession: fpServiceSession, progressViewController: progressViewController, completion: { [weak self] (error) in
-									OnMainThread {
-										if let error = error {
-											self?.extensionContext?.cancelRequest(withError: error)
-										} else {
-											self?.extensionContext?.completeRequest(returningItems: [])
-										}
-									}
-								})
+					if let accountConnection = AccountConnectionPool.shared.connection(for: bookmark) {
+						// Account found - connect (just in case it's not)
+						accountConnection.connect { error in
+							if let error {
+								// Error connecting
+								Log.error("Share Extension could not connect: \(String(describing: error))")
+								self.finish(with: error)
+							} else if let core = accountConnection.core {
+								// Import files
+								OnMainThread {
+									self.importFiles(to: targetFolder, core: core, completion: importCompletionHandler)
+								}
+							} else {
+								// Error retrieving core for connection after connect (should never happen)
+								Log.error("Share Extension could not retrieve core for connection")
+								self.finish(with: NSError(ocError: .internal))
 							}
 						}
+					} else {
+						// Account not found - this should not be possible
+						self.finish(with: NSError(ocError: .internal))
 					}
 				}
 			}
 		}
 	}
 
-	func importFiles(to targetDirectory : OCItem, serviceSession: OCFileProviderServiceSession, progressViewController: ProgressIndicatorViewController?, completion: @escaping (_ error: Error?) -> Void) {
+	func importFiles(to targetDirectory : OCItem, core: OCCore, completion: @escaping (_ error: Error?) -> Void) {
 		if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
-			var totalItems : Int = 0
-			var importedItems : Int = 0
-			var importError : Error?
+			var totalItems : Int64 = 0
+			var importedItems : Int64 = 0
+			var uploadedItems : Int64 = 0
+			var importProgress: Progress
+			var uploadProgress: Progress
+			var totalProgress: Progress
+			var uploadError: Error?
+			let uploadWaitGroup: DispatchGroup = DispatchGroup()
 
 			for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
-					totalItems += attachments.count
+					totalItems += Int64(attachments.count)
 				}
 			}
 
-			let incrementImportedFile : () -> Void = { [weak progressViewController] in
+			importProgress = Progress(totalUnitCount: totalItems)
+			uploadProgress = Progress(totalUnitCount: totalItems)
+			totalProgress = Progress(totalUnitCount: (unitCountForImport + unitCountForUpload) * totalItems)
+			totalProgress.addChild(importProgress, withPendingUnitCount: unitCountForImport * totalItems)
+			totalProgress.addChild(uploadProgress, withPendingUnitCount: unitCountForUpload * totalItems)
+			self.progressViewController?.progress = totalProgress
+
+			uploadCoreProgress = Progress(totalUnitCount: totalItems)
+
+			let incrementImportCounter = {
+				// Increment progress
 				importedItems += 1
 
 				OnMainThread {
-					progressViewController?.update(progress: Float(importedItems)/Float(totalItems), text: NSString(format: "Importing item %ld of %ld".localized as NSString, importedItems, totalItems) as String)
+					importProgress.completedUnitCount = importedItems
+					totalProgress.localizedDescription = NSString(format: "Importing item %ld of %ld".localized as NSString, importedItems, totalItems) as String
+					// self.progressViewController?.update(text: NSString(format: "Importing item %ld of %ld".localized as NSString, importedItems, totalItems) as String)
 				}
 			}
 
-			// Keep session open
-			serviceSession.acquireFileProviderServicesHost(completionHandler: { (_, _, doneHandler) in
-				serviceSession.incrementSessionUsage()
-				doneHandler?()
-			}, errorHandler: { (_) in })
+			let updateUploadMessage = {
+				OnMainThread {
+					if importedItems == totalItems {
+						totalProgress.localizedDescription = "Uploading {{remainingFileCount}} files…".localized(["remainingFileCount" : "\(totalItems - uploadedItems)"])
+					}
+				}
+			}
+
+			let handleUploadResult: (_ error: Error?) -> Void = { (error) in
+				if let error {
+					uploadError = error
+				}
+				uploadProgress.completedUnitCount += 1
+				uploadedItems += 1
+				updateUploadMessage()
+				uploadWaitGroup.leave()
+			}
 
 			for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
@@ -160,14 +205,19 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(UTType.item.identifier) {
 							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
 								asyncQueue.async({ (jobDone) in
-									if progressViewController?.cancelled == true {
+									if self.progressViewController?.cancelled == true {
 										jobDone()
 										return
 									}
+
+									incrementImportCounter()
+
 									// Workaround for saving attachements from Mail.app. Attachments from Mail.app contains two types e.g. "com.adobe.pdf" AND "public.file-url". For loading the file the type "public.file-url" is needed. Otherwise the resource could not be accessed (NSItemProviderSandboxedResource)
 									if attachment.registeredTypeIdentifiers.contains("public.file-url") {
 										type = "public.file-url"
 									}
+
+									let suggestedTextFileName = attachment.suggestedName ?? "Text".localized
 
 									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in
 										if error == nil {
@@ -177,12 +227,12 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 											if let text = item as? String { // Save plain text content
 												let ext = UTType(type)?.preferredFilenameExtension
-												tempFilePath = NSTemporaryDirectory() + (attachment.suggestedName ?? "Text".localized) + "." + (ext ?? type)
+												tempFilePath = NSTemporaryDirectory() + suggestedTextFileName + "." + (ext ?? type)
 												data = Data(text.utf8)
 											} else if let url = item as? URL { // Download URL content
 												if url.isFileURL {
 													tempFileURL = URL(fileURLWithPath: NSTemporaryDirectory() + url.lastPathComponent)
-													if let tempFileURL = tempFileURL {
+													if let tempFileURL {
 														try? FileManager.default.copyItem(at: url, to: tempFileURL)
 													}
 												} else {
@@ -195,84 +245,58 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 												}
 											}
 
-											if tempFileURL == nil, let data = data, let tempFilePath = tempFilePath {
+											if tempFileURL == nil, let data = data, let tempFilePath {
 												FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
 												tempFileURL = URL(fileURLWithPath: tempFilePath)
 											}
 
-											if let tempFileURL = tempFileURL {
-												serviceSession.importThroughFileProvider(url: tempFileURL, to: targetDirectory, completion: { (error, _) in
-													try? FileManager.default.removeItem(at: tempFileURL)
+											if let tempFileURL {
+												uploadWaitGroup.enter()
 
-													if let error = error {
-														Log.error("Error importing item at \(tempFileURL) through file provider: \(String(describing: error))")
-
-														self.showAlert(title: NSString(format: "Error importing %@".localized as NSString, tempFileURL.lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
-															if !doContinue {
-																importError = error
-																progressViewController?.cancel()
-															}
-
-															jobDone()
-														})
-													} else {
-														incrementImportedFile()
-
-														jobDone()
-													}
-												})
+												if let coreProgress = self.uploadFile(from: tempFileURL, removeAfterImport: true, to: targetDirectory, via: core, schedulingDoneBlock: jobDone, completionHandler: handleUploadResult) {
+													self.uploadCoreProgress?.addChild(coreProgress, withPendingUnitCount: 1)
+												}
 											} else {
 												jobDone()
 											}
-										} else {
+										} else if let error {
 											Log.error("Error loading item: \(String(describing: error))")
 
-											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { (doContinue) in
+											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { [weak self] (doContinue) in
 												if !doContinue {
-													importError = error
-													progressViewController?.cancel()
+													self?.cancel()
 												}
 
 												jobDone()
 											})
+										} else {
+											jobDone()
 										}
 									})
 								})
 							} else {
 								// Handle local files
 								asyncQueue.async({ (jobDone) in
-									if progressViewController?.cancelled == true {
+									if self.progressViewController?.cancelled == true {
 										jobDone()
 										return
 									}
 
+									incrementImportCounter()
+
 									attachment.loadFileRepresentation(forTypeIdentifier: type) { (url, error) in
-										if error == nil, let url = url {
-											serviceSession.importThroughFileProvider(url: url, to: targetDirectory, completion: { (error, _) in
-												if let error = error {
-													Log.error("Error importing item at \(url.absoluteString) through file provider: \(String(describing: error))")
+										if error == nil, let url {
+											uploadWaitGroup.enter()
 
-													self.showAlert(title: NSString(format: "Error importing %@", url.lastPathComponent) as String, error: error, decisionHandler: { (doContinue) in
-														if !doContinue {
-															importError = error
-															progressViewController?.cancel()
-														}
-
-														jobDone()
-													})
-												} else {
-													incrementImportedFile()
-
-													jobDone()
-												}
-											})
-										} else if let error = error {
+											if let coreProgress = self.uploadFile(from: url, removeAfterImport: false, to: targetDirectory, via: core, schedulingDoneBlock: jobDone, completionHandler: handleUploadResult) {
+												self.uploadCoreProgress?.addChild(coreProgress, withPendingUnitCount: 1)
+											}
+										} else if let error {
 											Log.error("Error loading item: \(String(describing: error))")
 
-											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { (doContinue) in
+											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { [weak self] (doContinue) in
 												if !doContinue {
-													importError = error
-													progressViewController?.cancel()
+													self?.cancel()
 												}
 
 												jobDone()
@@ -289,15 +313,47 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 			}
 
 			asyncQueue.async({ (jobDone) in
-				// Balance previous retainSession() call and allow session to close
-				serviceSession.decrementSessionUsage()
-
 				OnMainThread {
-					completion(importError ?? ((progressViewController?.cancelled ?? false) ? NSError(ocError: .cancelled) : nil))
-					jobDone()
+					updateUploadMessage()
 				}
+
+				uploadWaitGroup.notify(queue: .main, execute: {
+ 					self.finish(with: ((self.progressViewController?.cancelled ?? false) ? NSError(ocError: .cancelled) : uploadError))
+ 					jobDone()
+				})
 			})
 		}
+	}
+
+	func uploadFile(from sourceURL: URL, removeAfterImport: Bool, to targetItem: OCItem, via core: OCCore, schedulingDoneBlock: @escaping os_block_t, completionHandler: @escaping (Error?) -> Void) -> Progress? {
+		let progress = core.importItemNamed(sourceURL.lastPathComponent, at: targetItem, from: sourceURL, isSecurityScoped: false, options: [
+			.importByCopying : true,
+			.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
+		], placeholderCompletionHandler: { [weak self] error, placeholderItem in
+			if removeAfterImport {
+				try? FileManager.default.removeItem(at: sourceURL)
+			}
+
+			if let error {
+				Log.error("Error importing item at \(sourceURL) through share extension: \(String(describing: error))")
+
+				self?.showAlert(title: NSString(format: "Error importing %@".localized as NSString, sourceURL.lastPathComponent) as String, error: error, decisionHandler: { [weak self] (doContinue) in
+					if !doContinue {
+						completionHandler(error)
+						self?.progressViewController?.cancel()
+					}
+
+					schedulingDoneBlock()
+				})
+			} else {
+				schedulingDoneBlock()
+			}
+		}, resultHandler: { error, core, item, parameter in
+			completionHandler(error)
+			schedulingDoneBlock()
+		})
+
+		return progress
 	}
 
 	// MARK: - Events
@@ -413,19 +469,35 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 	}
 
 	// MARK: - Actions
-	func completed() {
-		AppLockManager.shared.appDidEnterBackground()
-
-		AccountConnectionPool.shared.disconnectAll {
-			self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-		}
+	func cancel() {
+		finish(with: NSError(domain: NSErrorDomain.ShareErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
 	}
 
-	func cancel() {
-		AppLockManager.shared.appDidEnterBackground()
+	private var _isFinished: Bool = false
+	func finish(with error: Error?) {
+		var alreadyFinished: Bool = false
 
-		AccountConnectionPool.shared.disconnectAll {
-			self.extensionContext?.cancelRequest(withError: NSError(domain: NSErrorDomain.ShareErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"]))
+		OCSynchronized(self) {
+			alreadyFinished = _isFinished
+			_isFinished = true
+		}
+
+		if alreadyFinished {
+			// Already finished
+			Log.error("Share Extension already finished. Attempt to finish again with \(String(describing: error))")
+			return
+		}
+
+		OnMainThread {
+			AppLockManager.shared.appDidEnterBackground()
+
+			AccountConnectionPool.shared.disconnectAll { [weak self] in
+				if let error = error {
+					self?.extensionContext?.cancelRequest(withError: error)
+				} else {
+					self?.extensionContext?.completeRequest(returningItems: [])
+				}
+			}
 		}
 	}
 
