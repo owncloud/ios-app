@@ -2,8 +2,6 @@
   "sourceLanguage" : "en",
   "strings" : {
     "CFBundleDisplayName" : {
-      "comment" : "* Copyright (C) 2020, ownCloud GmbH.\n *\n * This code is covered by the GNU Public License Version 3.\n *\n * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/\n * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.\n *",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
