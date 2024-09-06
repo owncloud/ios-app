@@ -36,7 +36,6 @@
       }
     },
     "Log into your account in the app for more details." : {
-      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -53,7 +52,6 @@
       }
     },
     "The destination folder couldn't be found on this server. Moving items across servers is currently not supported." : {
-      "comment" : "Localizable.strings\n  ownCloud\n\n  Created by Felix Schwarz on 15.04.19.\n  Copyright © 2019 ownCloud GmbH. All rights reserved.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
