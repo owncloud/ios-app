@@ -122,7 +122,7 @@ class SavedSearchCell: ThemeableCollectionViewCell {
 		iconView.setContentHuggingPriority(.required, for: .horizontal)
 
 		sideButton.configuration = .tinted()
-		sideButton.configuration?.title = "Add to sidebar".localized
+		sideButton.configuration?.title = OCLocalizedString("Add to sidebar", nil)
 
 		var backgroundConfig = UIBackgroundConfiguration.clear()
 		backgroundConfig.cornerRadius = 10
@@ -208,7 +208,7 @@ extension OCSavedSearch {
 
 extension OCSavedSearch {
 	var displayName: String {
-		return (isNameUserDefined && name.count > 0) ? name : (isTemplate ? "Search template".localized : "Saved search".localized)
+		return (isNameUserDefined && name.count > 0) ? name : (isTemplate ? OCLocalizedString("Search template", nil) : OCLocalizedString("Saved search", nil))
 	}
 
 	var sideBarDisplayName: String {
@@ -240,7 +240,7 @@ extension SavedSearchCell {
 
 					let clientContext = cellConfiguration.clientContext
 
-					cell.sideButtonAction = savedSearch.isQuickAccess == true && savedSearch.isTemplate ? OCAction(title: "Add to sidebar".localized, icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak clientContext] _, _, completed in
+					cell.sideButtonAction = savedSearch.isQuickAccess == true && savedSearch.isTemplate ? OCAction(title: OCLocalizedString("Add to sidebar", nil), icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak clientContext] _, _, completed in
 						// Make a copy of the saved search object, so it has a different UUID (avoiding ID clashes in collection views) and can be modified
 						if let saveSearch = savedSearch.copy() as? OCSavedSearch {
 							saveSearch.isQuickAccess = true

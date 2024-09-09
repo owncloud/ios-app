@@ -40,27 +40,27 @@ class BookmarkInfoViewController: StaticTableViewController {
 		self.bookmark = bookmark
 
 		// Storage
-		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: "Offline files use".localized, value: "unknown".localized)
-		let deviceFreeTitle = String(format: "Free on %@".localized, UIDevice.current.name)
-		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "unknown".localized)
+		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: OCLocalizedString("Offline files use", nil), value: OCLocalizedString("unknown", nil))
+		let deviceFreeTitle = String(format: OCLocalizedString("Free on %@", nil), UIDevice.current.name)
+		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: OCLocalizedString("unknown", nil))
 
-		addSection(StaticTableViewSection(headerTitle: "Storage".localized, footerTitle: nil, identifier: "section-storage", rows: [ offlineStorageInfoRow!, deviceAvailableStorageInfoRow! ]))
+		addSection(StaticTableViewSection(headerTitle: OCLocalizedString("Storage", nil), footerTitle: nil, identifier: "section-storage", rows: [ offlineStorageInfoRow!, deviceAvailableStorageInfoRow! ]))
 
 		// Compacting
 		let includeAvailableOfflineCopiesRow = StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
 			if (row.value as? Bool) == true {
-				let alertController = ThemedAlertController(title: "Really include available offline files?".localized,
-									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).".localized,
+				let alertController = ThemedAlertController(title: OCLocalizedString("Really include available offline files?", nil),
+									message: OCLocalizedString("Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).", nil),
 									preferredStyle: .alert)
 
-				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { [weak row] (_) in
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: { [weak row] (_) in
 					row?.value = false
 				}))
-				alertController.addAction(UIAlertAction(title: "Proceed".localized, style: .default, handler: nil))
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("Proceed", nil), style: .default, handler: nil))
 
 				self?.present(alertController, animated: true, completion: nil)
 			}
-			}, title: "Include available offline files".localized, value: false, identifier: "row-include-available-offline")
+			}, title: OCLocalizedString("Include available offline files", nil), value: false, identifier: "row-include-available-offline")
 
 		let deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {
@@ -92,11 +92,11 @@ class BookmarkInfoViewController: StaticTableViewController {
 							row.cell?.accessoryView = nil
 							if error != nil {
 								// Inform user if vault couldn't be comp acted
-								let alertController = ThemedAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+								let alertController = ThemedAlertController(title: NSString(format: OCLocalizedString("Compacting of '%@' failed", nil) as NSString, bookmark.shortName as NSString) as String,
 																		message: error?.localizedDescription,
 																		preferredStyle: .alert)
 
-								alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+								alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 								self?.present(alertController, animated: true, completion: nil)
 							}
@@ -108,12 +108,12 @@ class BookmarkInfoViewController: StaticTableViewController {
 					})
 				}, for: bookmark)
 			}
-		}, title: "Delete all Offline Files".localized, style: .destructive, alignment: .center, identifier: "row-offline-copies-delete")
+		}, title: OCLocalizedString("Delete all Offline Files", nil), style: .destructive, alignment: .center, identifier: "row-offline-copies-delete")
 
 		if VendorServices.shared.isBranded {
-			addSection(StaticTableViewSection(headerTitle: "", footerTitle: "Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).".localized, identifier: "section-compact", rows: [ deleteLocalFilesRow ]))
+			addSection(StaticTableViewSection(headerTitle: "", footerTitle: OCLocalizedString("Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required).", nil), identifier: "section-compact", rows: [ deleteLocalFilesRow ]))
 		} else {
-			addSection(StaticTableViewSection(headerTitle: "Compacting".localized, footerTitle: nil, identifier: "section-compact", rows: [ includeAvailableOfflineCopiesRow, deleteLocalFilesRow ]))
+			addSection(StaticTableViewSection(headerTitle: OCLocalizedString("Compacting", nil), footerTitle: nil, identifier: "section-compact", rows: [ includeAvailableOfflineCopiesRow, deleteLocalFilesRow ]))
 		}
 
 		if DiagnosticManager.shared.enabled {
@@ -132,10 +132,10 @@ class BookmarkInfoViewController: StaticTableViewController {
 								var diagnosticNodes : [OCDiagnosticNode] = []
 
 								diagnosticNodes.append(contentsOf: database.diagnosticNodes(with: nil))
-								diagnosticNodes.append(OCDiagnosticNode.withLabel("Bookmark Metadata".localized, children: bookmark.diagnosticNodes(with: nil)))
+								diagnosticNodes.append(OCDiagnosticNode.withLabel(OCLocalizedString("Bookmark Metadata", nil), children: bookmark.diagnosticNodes(with: nil)))
 
 								OnMainThread {
-									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel("Diagnostic Overview".localized, children: diagnosticNodes), context: nil), animated: true)
+									self?.navigationController?.pushViewController(DiagnosticViewController(for: OCDiagnosticNode.withLabel(OCLocalizedString("Diagnostic Overview", nil), children: diagnosticNodes), context: nil), animated: true)
 								}
 
 								done()
@@ -145,9 +145,9 @@ class BookmarkInfoViewController: StaticTableViewController {
 						}
 					})
 				}
-			}, title: "Diagnostic Overview".localized, accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
+			}, title: OCLocalizedString("Diagnostic Overview", nil), accessoryType: .disclosureIndicator, identifier: "row-show-diagnostics")
 
-			addSection(StaticTableViewSection(headerTitle: "Diagnostics".localized, footerTitle: nil, identifier: "section-diagnostics", rows: [ showDiagnostics ]))
+			addSection(StaticTableViewSection(headerTitle: OCLocalizedString("Diagnostics", nil), footerTitle: nil, identifier: "section-diagnostics", rows: [ showDiagnostics ]))
 		}
 	}
 
@@ -159,7 +159,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.navigationItem.title = "Manage".localized
+		self.navigationItem.title = OCLocalizedString("Manage", nil)
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(BookmarkInfoViewController.userActionDone))
 	}
 

@@ -23,7 +23,7 @@ import ownCloudAppShared
 class CreateShortcutFileAction: Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createShortcutFile") }
 	override open class var category : ActionCategory? { return .normal }
-	override open class var name : String? { return "Create shortcut".localized }
+	override open class var name : String? { return OCLocalizedString("Create shortcut", nil) }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .emptyFolder] }
 
 	// MARK: - Extension matching

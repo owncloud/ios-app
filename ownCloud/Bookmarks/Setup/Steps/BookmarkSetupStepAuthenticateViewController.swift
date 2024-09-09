@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewController {
 	var usernameField: UITextField?
@@ -37,11 +38,11 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 		}
 
 		if withCredentials {
-			continueButtonLabelText = "Login".localized
+			continueButtonLabelText = OCLocalizedString("Login", nil)
 		} else {
-			stepTitle = "Login".localized
-			stepMessage = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.".localized
-			continueButtonLabelText = "Open login page".localized
+			stepTitle = OCLocalizedString("Login", nil)
+			stepMessage = OCLocalizedString("If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials.", nil)
+			continueButtonLabelText = OCLocalizedString("Open login page", nil)
 		}
 
 		let certificateSummaryView = CertificateSummaryView(with: bookmark?.primaryCertificate, httpHostname: bookmark?.url?.host)
@@ -57,12 +58,12 @@ class BookmarkSetupStepAuthenticateViewController: BookmarkSetupStepViewControll
 		if withCredentials {
 			usernameField = buildTextField(withAction: UIAction(handler: { [weak self] _ in
 				self?.updateState()
-			}), placeholder: "Username", value: prefillUsername ?? "", autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Server Username".localized, borderStyle: .roundedRect)
+			}), placeholder: "Username", value: prefillUsername ?? "", autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: OCLocalizedString("Server Username", nil), borderStyle: .roundedRect)
 			usernameField?.textContentType = .username
 
 			passwordField = buildTextField(withAction: UIAction(handler: { [weak self] _ in
 				self?.updateState()
-			}), placeholder: "Password", value: prefillPassword ?? "", secureTextEntry: true, autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Server Password".localized, borderStyle: .roundedRect)
+			}), placeholder: "Password", value: prefillPassword ?? "", secureTextEntry: true, autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: OCLocalizedString("Server Password", nil), borderStyle: .roundedRect)
 			passwordField?.textContentType = .password
 
 			focusTextFields = [ usernameField!, passwordField! ]

@@ -18,18 +18,19 @@
 
 import UIKit
 import ownCloudAppShared
+import ownCloudSDK
 
 class BookmarkSetupStepEnterURLViewController: BookmarkSetupStepViewController {
 	var urlTextField: UITextField?
 
 	override func loadView() {
-		stepTitle = "Server URL".localized
+		stepTitle = OCLocalizedString("Server URL", nil)
 
 		super.loadView()
 
 		urlTextField = buildTextField(withAction: UIAction(handler: { [weak self] _ in
 			self?.updateState()
-		}), placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Server URL".localized, borderStyle: .roundedRect)
+		}), placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: OCLocalizedString("Server URL", nil), borderStyle: .roundedRect)
 
 		urlTextField?.text = setupViewController?.composer?.configuration.url?.absoluteString
 

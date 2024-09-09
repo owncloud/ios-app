@@ -109,7 +109,7 @@ public class OpenInWebAppAction: Action {
 			return standardPriority
 		}
 
-		return ActionExtension(name: "Open in {{appName}} (web)".localized(["appName" : appName]), category: category!, identifier: extensionIdentifier, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: nil, keyModifierFlags: nil)
+		return ActionExtension(name: OCLocalizedFormat("Open in {{appName}} (web)", ["appName" : appName]), category: category!, identifier: extensionIdentifier, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: nil, keyModifierFlags: nil)
 	}
 
 	class open func applicablePosition(forContext: ActionContext, app: OCAppProviderApp) -> ActionPosition {
@@ -174,9 +174,9 @@ public class OpenInWebAppAction: Action {
 					let itemName = item.name ?? "item"
 
 					let alertController = ThemedAlertController(
-						with: "Error opening {{itemName}} in {{appName}}".localized(["itemName" : itemName, "appName" : appName]),
-						message: "Opening documents is not supported by the app provider on this instance.".localized,
-						okLabel: "OK".localized,
+						with: OCLocalizedFormat("Error opening {{itemName}} in {{appName}}", ["itemName" : itemName, "appName" : appName]),
+						message: OCLocalizedString("Opening documents is not supported by the app provider on this instance.", nil),
+						okLabel: OCLocalizedString("OK", nil),
 						action: nil)
 
 					viewController.present(alertController, animated: true)
@@ -204,9 +204,9 @@ public class OpenInWebAppAction: Action {
 					let itemName = item.name ?? "item"
 
 					let alertController = ThemedAlertController(
-						with: "Error opening {{itemName}} in {{appName}}".localized(["itemName" : itemName, "appName" : appName]),
+						with: OCLocalizedFormat("Error opening {{itemName}} in {{appName}}", ["itemName" : itemName, "appName" : appName]),
 						message: error.localizedDescription,
-						okLabel: "OK".localized,
+						okLabel: OCLocalizedString("OK", nil),
 						action: nil)
 
 					viewController.present(alertController, animated: true)

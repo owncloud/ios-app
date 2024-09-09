@@ -56,7 +56,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 	}
 
 	var categories: [Category] = [
-		Category(name: "Type".localized, selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+		Category(name: OCLocalizedString("Type", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
 			OCQueryCondition.fromSearchTerm(":file")!,
 			OCQueryCondition.fromSearchTerm(":folder")!,
 			OCQueryCondition.fromSearchTerm(":document")!,
@@ -67,14 +67,14 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			OCQueryCondition.fromSearchTerm(":video")!,
 			OCQueryCondition.fromSearchTerm(":audio")!
 		]),
-		Category(name: "Date".localized, selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+		Category(name: OCLocalizedString("Date", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
 			OCQueryCondition.fromSearchTerm(":recent")!,
 			OCQueryCondition.fromSearchTerm(":today")!,
 			OCQueryCondition.fromSearchTerm(":week")!,
 			OCQueryCondition.fromSearchTerm(":month")!,
 			OCQueryCondition.fromSearchTerm(":year")!
 		]),
-		Category(name: "Size".localized, selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+		Category(name: OCLocalizedString("Size", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
 			OCQueryCondition.fromSearchTerm("smaller:10mb")!,
 			OCQueryCondition.fromSearchTerm("greater:10mb")!,
 			OCQueryCondition.fromSearchTerm("smaller:100mb")!,
@@ -103,7 +103,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func requestName(title: String, message: String? = nil, placeholder: String? = nil, cancelButtonText: String? = "Cancel".localized, saveButtonText: String? = "Save".localized, completionHandler: @escaping (_ save: Bool, _ name: String?) -> Void) {
+	func requestName(title: String, message: String? = nil, placeholder: String? = nil, cancelButtonText: String? = OCLocalizedString("Cancel", nil), saveButtonText: String? = OCLocalizedString("Save", nil), completionHandler: @escaping (_ save: Bool, _ name: String?) -> Void) {
 		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: saveButtonText, style: .default, handler: { [weak alert] _ in
 			var text = alert?.textFields?.first?.text
@@ -135,7 +135,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-search":
 						if let savedSearch = scope.savedSearch as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of saved search".localized, placeholder: "Saved search".localized, completionHandler: { save, name in
+								self?.requestName(title: OCLocalizedString("Name of saved search", nil), placeholder: OCLocalizedString("Saved search", nil), completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name
@@ -148,7 +148,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 					case "save-template":
 						if let savedSearch = scope.savedTemplate as? OCSavedSearch, let vault = scope.clientContext.core?.vault {
 							OnMainThread {
-								self?.requestName(title: "Name of template".localized, placeholder: "Search template".localized, completionHandler: { save, name in
+								self?.requestName(title: OCLocalizedString("Name of template", nil), placeholder: OCLocalizedString("Search template", nil), completionHandler: { save, name in
 									if save {
 										if let name = name {
 											savedSearch.name = name
@@ -169,12 +169,12 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			var choices: [PopupButtonChoice] = []
 
 			if (self?.scope as? ItemSearchScope)?.canSaveSearch == true {
-				let saveSearchChoice = PopupButtonChoice(with: "Save search".localized, image: OCSymbol.icon(forSymbolName: "folder.badge.gearshape"), representedObject: NSString("save-search"))
+				let saveSearchChoice = PopupButtonChoice(with: OCLocalizedString("Save search", nil), image: OCSymbol.icon(forSymbolName: "folder.badge.gearshape"), representedObject: NSString("save-search"))
 				choices.append(saveSearchChoice)
 			}
 
 			if (self?.scope as? ItemSearchScope)?.canSaveTemplate == true {
-				let saveTemplateChoice = PopupButtonChoice(with: "Save as search template".localized, image: OCSymbol.icon(forSymbolName: "plus.square.dashed"), representedObject: NSString("save-template"))
+				let saveTemplateChoice = PopupButtonChoice(with: OCLocalizedString("Save as search template", nil), image: OCSymbol.icon(forSymbolName: "plus.square.dashed"), representedObject: NSString("save-template"))
 				choices.append(saveTemplateChoice)
 			}
 

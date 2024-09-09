@@ -45,10 +45,10 @@ public extension OCLicenseManager {
 		OCLicenseManagerHasBeenSetup = true
 
 		// Set up features and products
-		let documentScannerFeature = OCLicenseFeature(identifier: .documentScanner, name: "Document Scanner".localized, description: "Scan documents and photos with your camera.".localized)
-		let shortcutsFeature = OCLicenseFeature(identifier: .shortcuts, name: "Shortcuts Actions".localized, description: "Use ownCloud actions in Shortcuts.".localized)
-		let documentMarkupFeature = OCLicenseFeature(identifier: .documentMarkup, name: "Markup Documents".localized, description: "Markup photos and PDF files.".localized)
-		let photoProFeature = OCLicenseFeature(identifier: .photoProFeatures, name: "Photo Pro Features".localized, description: "Image metadata, extended upload options".localized)
+		let documentScannerFeature = OCLicenseFeature(identifier: .documentScanner, name: OCLocalizedString("Document Scanner", nil), description: OCLocalizedString("Scan documents and photos with your camera.", nil))
+		let shortcutsFeature = OCLicenseFeature(identifier: .shortcuts, name: OCLocalizedString("Shortcuts Actions", nil), description: OCLocalizedString("Use ownCloud actions in Shortcuts.", nil))
+		let documentMarkupFeature = OCLicenseFeature(identifier: .documentMarkup, name: OCLocalizedString("Markup Documents", nil), description: OCLocalizedString("Markup photos and PDF files.", nil))
+		let photoProFeature = OCLicenseFeature(identifier: .photoProFeatures, name: OCLocalizedString("Photo Pro Features", nil), description: OCLocalizedString("Image metadata, extended upload options", nil))
 
 		// - Features
 		register(documentScannerFeature)
@@ -63,7 +63,7 @@ public extension OCLicenseManager {
 		register(OCLicenseProduct(identifier: .singlePhotoProFeatures, name: photoProFeature.localizedName!, description: photoProFeature.localizedDescription, contents: [.photoProFeatures]))
 
 		// - Subscription
-		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup, .photoProFeatures]))
+		register(OCLicenseProduct(identifier: .bundlePro, name: OCLocalizedString("Pro Features", nil), description: OCLocalizedString("Unlock all Pro Features.", nil), contents: [.documentScanner, .shortcuts, .documentMarkup, .photoProFeatures]))
 
 		// Set up App Store License Provider
 		#if !DISABLE_APPSTORE_LICENSING

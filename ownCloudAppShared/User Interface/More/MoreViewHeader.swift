@@ -185,7 +185,7 @@ open class MoreViewHeader: UIView {
 						itemName = drive.name
 					}
 				} else {
-					itemName = "Files".localized
+					itemName = OCLocalizedString("Files", nil)
 				}
 			}
 
@@ -196,7 +196,7 @@ open class MoreViewHeader: UIView {
 			var size = byteCountFormatter.string(fromByteCount: Int64(item.size))
 
 			if item.size < 0 {
-				size = "Pending".localized
+				size = OCLocalizedString("Pending", nil)
 			}
 
 			let dateString = item.lastModifiedLocalized
@@ -242,11 +242,11 @@ open class MoreViewHeader: UIView {
 		if item.isFavorite == true {
 			favoriteButton.cssSelectors = [.favorite]
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
-			favoriteButton.accessibilityLabel = "Unfavorite item".localized
+			favoriteButton.accessibilityLabel = OCLocalizedString("Unfavorite item", nil)
 		} else {
 			favoriteButton.cssSelectors = [.disabled, .favorite]
 			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
-			favoriteButton.accessibilityLabel = "Favorite item".localized
+			favoriteButton.accessibilityLabel = OCLocalizedString("Favorite item", nil)
 		}
 
 		favoriteButton.tintColor = Theme.shared.activeCollection.css.getColor(.stroke, for: favoriteButton)

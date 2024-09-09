@@ -96,7 +96,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 			} else {
 				let cancelButton = ThemeCSSButton(withSelectors: [.cancel])
 				cancelButton.translatesAutoresizingMaskIntoConstraints = false
-				cancelButton.setTitle("Cancel".localized, for: .normal)
+				cancelButton.setTitle(OCLocalizedString("Cancel", nil), for: .normal)
 				cancelButton.addAction(UIAction(handler: { [weak self] _ in
 					self?.cancel()
 				}), for: .primaryActionTriggered)
@@ -116,7 +116,7 @@ class BookmarkSetupViewController: EmbeddingViewController, BookmarkComposerDele
 
 			if let helpButtonURL = configuration.helpButtonURL {
 				helpElements += [
-					.button(configuration.helpButtonLabel ?? "Open help page".localized, action: UIAction(handler: { action in
+					.button(configuration.helpButtonLabel ?? OCLocalizedString("Open help page", nil), action: UIAction(handler: { action in
 						UIApplication.shared.open(helpButtonURL)
 					}), image: UIImage(systemName: "questionmark.circle"))
 				]

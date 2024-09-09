@@ -108,7 +108,7 @@ open class SharingViewController: CollectionViewController {
 
 			recipientsSection = CollectionViewSection(identifier: "recipients", dataSource: recipientsSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
 			recipientsSection?.boundarySupplementaryItems = [
-				.mediumTitle("Shared with".localized)
+				.mediumTitle(OCLocalizedString("Shared with", nil))
 			]
 			sections.append(recipientsSection!)
 		}
@@ -150,7 +150,7 @@ open class SharingViewController: CollectionViewController {
 
 				linksSection = CollectionViewSection(identifier: "links", dataSource: linksSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
 				linksSection?.boundarySupplementaryItems = [
-					.mediumTitle("Links".localized)
+					.mediumTitle(OCLocalizedString("Links", nil))
 				]
 				sections.append(linksSection!)
 			}
@@ -158,7 +158,7 @@ open class SharingViewController: CollectionViewController {
 
 		// Init
 		super.init(context: managementClientContext, sections: sections, useStackViewRoot: true)
-		navigationItem.titleLabelText = "Sharing".localized
+		navigationItem.titleLabelText = OCLocalizedString("Sharing", nil)
 		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction(handler: { [weak self] action in
 			self?.dismiss(animated: true)
 		}))
@@ -179,14 +179,14 @@ open class SharingViewController: CollectionViewController {
 		}
 
 		addRecipientDataSource?.setVersionedItems([
-			OCAction(title: "Invite".localized, icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] action, options, completion in
+			OCAction(title: OCLocalizedString("Invite", nil), icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] action, options, completion in
 				self?.createShare(type: .share)
 				completion(nil)
 			})
 		])
 
 		var linkActions = [
-			OCAction(title: "Create link".localized, icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] (action, options, completion) in
+			OCAction(title: OCLocalizedString("Create link", nil), icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] (action, options, completion) in
 				self?.createShare(type: .link)
 				completion(nil)
 			})
@@ -194,7 +194,7 @@ open class SharingViewController: CollectionViewController {
 
 		if managementClientContext.core?.connection.capabilities?.supportsPrivateLinks == true {
 			linkActions.append(
-				OCAction(title: "Copy Private Link".localized, icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self] _, _, completion in
+				OCAction(title: OCLocalizedString("Copy Private Link", nil), icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self] _, _, completion in
 					if let item = self?.item, let core = self?.clientContext?.core {
 						core.retrievePrivateLink(for: item, completionHandler: { (error, url) in
 							guard let url = url else { return }
@@ -202,7 +202,7 @@ open class SharingViewController: CollectionViewController {
 								OnMainThread {
 									UIPasteboard.general.url = url
 
-									_ = NotificationHUDViewController(on: presentationViewController, title: "Private Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: nil)
+									_ = NotificationHUDViewController(on: presentationViewController, title: OCLocalizedString("Private Link", nil), subtitle: OCLocalizedString("URL was copied to the clipboard", nil), completion: nil)
 								}
 							}
 						})

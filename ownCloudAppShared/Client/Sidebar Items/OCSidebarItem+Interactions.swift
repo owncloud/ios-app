@@ -47,7 +47,7 @@ extension OCSidebarItem : DataItemSelectionInteraction {
 // MARK: - Swipe Interaction
 extension OCSidebarItem: DataItemSwipeInteraction {
 	public func provideTrailingSwipeActions(with context: ClientContext?) -> UISwipeActionsConfiguration? {
-		let deleteAction = UIContextualAction(style: .destructive, title: "Remove".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+		let deleteAction = UIContextualAction(style: .destructive, title: OCLocalizedString("Remove", nil), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
@@ -63,7 +63,7 @@ extension OCSidebarItem: DataItemContextMenuInteraction {
 		let deleteAction = UIAction(handler: { [weak self] action in
 			self?.delete(in: context)
 		})
-		deleteAction.title = "Remove".localized
+		deleteAction.title = OCLocalizedString("Remove", nil)
 		deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
 		deleteAction.attributes = .destructive
 

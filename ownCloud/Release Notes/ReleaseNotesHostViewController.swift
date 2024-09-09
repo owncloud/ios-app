@@ -57,7 +57,7 @@ class ReleaseNotesHostViewController: UIViewController {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
 
-		titleLabel.text = String(format:"New in %@".localized, appName)
+		titleLabel.text = String(format:OCLocalizedString("New in %@", nil), appName)
 		titleLabel.textAlignment = .center
 		titleLabel.numberOfLines = 0
 		titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
@@ -89,7 +89,7 @@ class ReleaseNotesHostViewController: UIViewController {
 				bottomView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
 			])
 
-			proceedButton.setTitle("Proceed".localized, for: .normal)
+			proceedButton.setTitle(OCLocalizedString("Proceed", nil), for: .normal)
 			proceedButton.translatesAutoresizingMaskIntoConstraints = false
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
@@ -97,9 +97,9 @@ class ReleaseNotesHostViewController: UIViewController {
 			let appName = VendorServices.shared.appName
 			var footerText = ""
 			if VendorServices.shared.isBranded {
-				footerText = String(format:"Thank you for using %@.\n".localized, appName)
+				footerText = String(format:OCLocalizedString("Thank you for using %@.\n", nil), appName)
 			} else {
-				footerText = String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName)
+				footerText = String(format:OCLocalizedString("Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️", nil), appName)
 			}
 			footerButton.setTitle(footerText, for: .normal)
 

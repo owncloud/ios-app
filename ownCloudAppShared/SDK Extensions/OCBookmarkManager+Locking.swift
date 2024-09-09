@@ -70,11 +70,11 @@ public extension OCBookmarkManager {
 	static func isLocked(bookmark: OCBookmark, presentAlertOn viewController: UIViewController? = nil, completion: ((_ isLocked: Bool) -> Void)? = nil) -> Bool {
 		if self.lockedBookmarks.contains(bookmark) {
 			if viewController != nil {
-				let alertController = ThemedAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
-									    message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
+				let alertController = ThemedAlertController(title: NSString(format: OCLocalizedString("'%@' is currently locked", nil) as NSString, bookmark.shortName as NSString) as String,
+									    message: NSString(format: OCLocalizedString("An operation is currently performed that prevents connecting to '%@'. Please try again later.", nil) as NSString, bookmark.shortName as NSString) as String,
 									    preferredStyle: .alert)
 
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: { (_) in
 					completion?(true)
 				}))
 

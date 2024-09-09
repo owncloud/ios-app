@@ -58,7 +58,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 						self?.targetURLTextField?.text = ""
 						self?.targetURLString = nil
 					}), for: .primaryActionTriggered)
-					clearButton.accessibilityLabel = "Clear".localized
+					clearButton.accessibilityLabel = OCLocalizedString("Clear", nil)
 
 					containerView.embed(toFillWith: itemView, insets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
 					containerView.addSubview(clearButton)
@@ -79,7 +79,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 									baseName = drive.name
 								}
 							} else {
-								baseName = "Files".localized
+								baseName = OCLocalizedString("Files", nil)
 							}
 						}
 
@@ -101,7 +101,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 	}
 
 	lazy var pickAnItemAction: OCAction = {
-		return OCAction(title: "Pick file or folder".localized, icon: OCSymbol.icon(forSymbolName: "list.bullet.rectangle"), action: { [weak self] action, options, completion in
+		return OCAction(title: OCLocalizedString("Pick file or folder", nil), icon: OCSymbol.icon(forSymbolName: "list.bullet.rectangle"), action: { [weak self] action, options, completion in
 			self?.pickAnItem()
 			completion(nil)
 		})
@@ -130,8 +130,8 @@ class CreateShortcutFileViewController: CollectionViewController {
 		targetURLTextField.translatesAutoresizingMaskIntoConstraints = false
 		targetURLTextField.setContentHuggingPriority(.required, for: .vertical)
 		targetURLTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-		targetURLTextField.placeholder = "URL".localized
-		targetURLTextField.accessibilityLabel = "URL".localized
+		targetURLTextField.placeholder = OCLocalizedString("URL", nil)
+		targetURLTextField.accessibilityLabel = OCLocalizedString("URL", nil)
 		targetURLTextField.clearButtonMode = .always
 
 		self.targetURLTextField = targetURLTextField
@@ -143,7 +143,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 		// Target actions
 		let targetSection = CollectionViewSection(identifier: "target", dataSource: targetSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: controllerContext)
 		targetSection.boundarySupplementaryItems = [
-			.mediumTitle("URL of webpage or item".localized)
+			.mediumTitle(OCLocalizedString("URL of webpage or item", nil))
 		]
 
 		sections.append(targetSection)
@@ -153,8 +153,8 @@ class CreateShortcutFileViewController: CollectionViewController {
 		nameTextField.translatesAutoresizingMaskIntoConstraints = false
 		nameTextField.setContentHuggingPriority(.required, for: .vertical)
 		nameTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-		nameTextField.placeholder = "Name".localized
-		nameTextField.accessibilityLabel = "Name".localized
+		nameTextField.placeholder = OCLocalizedString("Name", nil)
+		nameTextField.accessibilityLabel = OCLocalizedString("Name", nil)
 		nameTextField.clearButtonMode = .always
 
 		self.nameTextField = nameTextField
@@ -166,7 +166,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 		let nameSectionDatasource = OCDataSourceArray(items: [nameSpacerView])
 		let nameSection = CollectionViewSection(identifier: "name", dataSource: nameSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: controllerContext)
 		nameSection.boundarySupplementaryItems = [
-			.mediumTitle("Name".localized)
+			.mediumTitle(OCLocalizedString("Name", nil))
 		]
 
 		sections.append(nameSection)
@@ -188,10 +188,10 @@ class CreateShortcutFileViewController: CollectionViewController {
 		super.viewDidLoad()
 
 		// Set navigation bar title
-		navigationItem.titleLabelText = "Create shortcut".localized
+		navigationItem.titleLabelText = OCLocalizedString("Create shortcut", nil)
 
 		// Add bottom button bar
-		bottomButtonBar = BottomButtonBar(selectButtonTitle: "Create shortcut".localized, cancelButtonTitle: "Cancel".localized, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
+		bottomButtonBar = BottomButtonBar(selectButtonTitle: OCLocalizedString("Create shortcut", nil), cancelButtonTitle: OCLocalizedString("Cancel", nil), hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
 			self?.createLink()
 		}), cancelAction: UIAction(handler: { [weak self] _ in
 			self?.completed()
@@ -223,7 +223,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 		guard let bookmark = clientContext?.core?.bookmark, let clientContext else {
 			return
 		}
-		let locationPicker = ClientLocationPicker(location: .account(bookmark), selectButtonTitle: "Select".localized, headerTitle: "Pick file or folder".localized, headerSubTitle: nil, requiredPermissions: [], avoidConflictsWith: nil, choiceHandler: { [weak self] (selectedItem, location, _, cancelled) in
+		let locationPicker = ClientLocationPicker(location: .account(bookmark), selectButtonTitle: OCLocalizedString("Select", nil), headerTitle: OCLocalizedString("Pick file or folder", nil), headerSubTitle: nil, requiredPermissions: [], avoidConflictsWith: nil, choiceHandler: { [weak self] (selectedItem, location, _, cancelled) in
 			guard !cancelled, let selectedItem else {
 				return
 			}
@@ -242,7 +242,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 		core.retrievePrivateLink(for: item, completionHandler: { [weak self] error, privateLinkURL in
 			if let error {
 				OnMainThread {
-					let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+					let alertController = ThemedAlertController(with: OCLocalizedString("Error", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 					self?.clientContext?.present(alertController, animated: true)
 				}
 				return
@@ -307,7 +307,7 @@ class CreateShortcutFileViewController: CollectionViewController {
 	func completed(with error: Error? = nil) {
 		OnMainThread(inline: true) {
 			if let error {
-				let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+				let alertController = ThemedAlertController(with: OCLocalizedString("Error", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 				self.clientContext?.present(alertController, animated: true)
 			} else if self.presentingViewController != nil {
 				self.dismiss(animated: true, completion: nil)

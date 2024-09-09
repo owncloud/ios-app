@@ -39,7 +39,7 @@ class HelpAndSupportViewController: CollectionViewController {
 
 		cssSelectors = [.modal]
 
-		navigationItem.title = "Help & Contact".localized
+		navigationItem.title = OCLocalizedString("Help & Contact", nil)
 		navigationItem.largeTitleDisplayMode = .always
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction(handler: { [weak self] _ in
@@ -52,11 +52,11 @@ class HelpAndSupportViewController: CollectionViewController {
 
 		if let documentationURL = VendorServices.shared.documentationURL {
 			elements.append(contentsOf: [
-				.title("Documentation".localized),
-				.text("Find information, answers and solutions in the detailed documentation.".localized, style: .informal, cssSelectors: [.message]),
+				.title(OCLocalizedString("Documentation", nil)),
+				.text(OCLocalizedString("Find information, answers and solutions in the detailed documentation.", nil), style: .informal, cssSelectors: [.message]),
 				.spacing(5),
 
-				.button("View documentation".localized, action: UIAction(handler: { [weak self] _ in
+				.button(OCLocalizedString("View documentation", nil), action: UIAction(handler: { [weak self] _ in
 					if let self {
 						VendorServices.shared.openSFWebView(on: self, for: documentationURL)
 					}
@@ -67,17 +67,17 @@ class HelpAndSupportViewController: CollectionViewController {
 		}
 
 		elements.append(contentsOf: [
-			.title("Help".localized),
-			.text("Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature.".localized, style: .informal, cssSelectors: [.message]),
+			.title(OCLocalizedString("Help", nil)),
+			.text(OCLocalizedString("Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature.", nil), style: .informal, cssSelectors: [.message]),
 			.spacing(5),
 
-			.button("File an issue".localized, action: UIAction(handler: { [weak self] _ in
+			.button(OCLocalizedString("File an issue", nil), action: UIAction(handler: { [weak self] _ in
 				if let self {
 					VendorServices.shared.openSFWebView(on: self, for: URL(string: "https://github.com/owncloud/ios-app/issues/new/choose")!)
 				}
 			}), image: nil, cssSelectors: [ .info ]),
 
-			.button("Visit the forums".localized, action: UIAction(handler: { [weak self] _ in
+			.button(OCLocalizedString("Visit the forums", nil), action: UIAction(handler: { [weak self] _ in
 				if let self {
 					VendorServices.shared.openSFWebView(on: self, for: URL(string: "https://central.owncloud.org/c/ios/")!)
 				}
@@ -88,12 +88,12 @@ class HelpAndSupportViewController: CollectionViewController {
 
 		if Branding.shared.feedbackURL != nil {
 			elements.append(contentsOf: [
-				.title("Feedback".localized),
+				.title(OCLocalizedString("Feedback", nil)),
 
-				.text("If you have a moment to give us your feedback, please take our survey.".localized, style: .informal, cssSelectors: [.message]),
+				.text(OCLocalizedString("If you have a moment to give us your feedback, please take our survey.", nil), style: .informal, cssSelectors: [.message]),
 				.spacing(5),
 
-				.button("Take survey".localized, action: UIAction(handler: { [weak self] _ in
+				.button(OCLocalizedString("Take survey", nil), action: UIAction(handler: { [weak self] _ in
 					if let self {
 						VendorServices.shared.sendFeedback(from: self)
 					}

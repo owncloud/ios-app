@@ -62,7 +62,7 @@ class OCItemPasteboardValue : NSObject, NSSecureCoding {
 class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Copy".localized }
+	override class var name : String? { return OCLocalizedString("Copy", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "C" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
@@ -88,17 +88,17 @@ class CopyAction : Action {
 			presentationStyle = .alert
 		}
 
-		let alertController = ThemedAlertController(title: "Copy".localized,
+		let alertController = ThemedAlertController(title: OCLocalizedString("Copy", nil),
 													message: nil,
 													preferredStyle: presentationStyle)
 
-		alertController.addAction(UIAlertAction(title: "Choose destination directory…".localized, style: .default) { (_) in
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Choose destination directory…", nil), style: .default) { (_) in
 			self.showDirectoryPicker()
 		})
-		alertController.addAction(UIAlertAction(title: "Copy to Clipboard".localized, style: .default) { (_) in
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Copy to Clipboard", nil), style: .default) { (_) in
 			self.copyToPasteboard()
 		})
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: nil))
 
 		viewController.present(alertController, animated: true, completion: nil)
 	}
@@ -119,12 +119,12 @@ class CopyAction : Action {
 		var titleText: String
 
 		if items.count > 1 {
-			titleText = "Copy {{itemCount}} items".localized(["itemCount" : "\(items.count)"])
+			titleText = OCLocalizedFormat("Copy {{itemCount}} items", ["itemCount" : "\(items.count)"])
 		} else {
-			titleText = "Copy \"{{itemName}}\"".localized(["itemName" : items.first?.name ?? "?"])
+			titleText = OCLocalizedFormat("Copy \"{{itemName}}\"", ["itemName" : items.first?.name ?? "?"])
 		}
 
-		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: "Copy here".localized, headerTitle: titleText, headerSubTitle: "Select target.".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
+		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: OCLocalizedString("Copy here", nil), headerTitle: titleText, headerSubTitle: OCLocalizedString("Select target.", nil), avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
 			guard !cancelled, let selectedDirectoryItem else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return
@@ -178,7 +178,7 @@ class CopyAction : Action {
 				}
 
 				let appName = VendorServices.shared.appName
-				let alertController = ThemedAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+				let alertController = ThemedAlertController(with: OCLocalizedString("Cannot connect to ", nil) + appName, message: appName + OCLocalizedString(" couldn't download file(s)", nil), okLabel: OCLocalizedString("OK", nil), action: nil)
 
 				viewController?.present(alertController, animated: true)
 			} else {
@@ -239,19 +239,19 @@ class CopyAction : Action {
 
 				globalPasteboard.itemProviders = itemProviderItems
 
-				var subtitle = "%ld Item was copied to the clipboard".localized
+				var subtitle = OCLocalizedString("%ld Item was copied to the clipboard", nil)
 				if itemProviderItems.count > 1 {
-					subtitle = "%ld Items were copied to the clipboard".localized
+					subtitle = OCLocalizedString("%ld Items were copied to the clipboard", nil)
 				}
 
 				if containsFolders {
-					let subtitleFolder = String(format:"Please note: Folders can only be pasted into the %@ app and the same account.".localized, VendorServices.shared.appName)
+					let subtitleFolder = String(format:OCLocalizedString("Please note: Folders can only be pasted into the %@ app and the same account.", nil), VendorServices.shared.appName)
 					subtitle = String(format: "%@\n\n%@", subtitle, subtitleFolder)
 				}
 
 				OnMainThread {
 					if let presentationViewController = self.context.clientContext?.presentationViewController {
-						_ = NotificationHUDViewController(on: presentationViewController, title: "Copy".localized, subtitle: String(format: subtitle, itemProviderItems.count))
+						_ = NotificationHUDViewController(on: presentationViewController, title: OCLocalizedString("Copy", nil), subtitle: String(format: subtitle, itemProviderItems.count))
 					}
 				}
 			}

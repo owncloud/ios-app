@@ -18,14 +18,15 @@
 
 import LocalAuthentication
 import UIKit
+import ownCloudSDK
 
 extension LAContext {
 	public func supportedBiometricsAuthenticationName() -> String? {
 		if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
 			switch self.biometryType {
-				case .faceID : return "Face ID".localized
-				case .touchID: return "Touch ID".localized
-				case .opticID: return "Optic ID".localized
+				case .faceID : return OCLocalizedString("Face ID", nil)
+				case .touchID: return OCLocalizedString("Touch ID", nil)
+				case .opticID: return OCLocalizedString("Optic ID", nil)
 				case .none: return nil
 				@unknown default: return nil
 			}

@@ -44,15 +44,15 @@ class AccountAuthenticationUpdaterPasswordPromptViewController: StaticTableViewC
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.navigationItem.title = "Sign in".localized
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(startValidation(_:)))
+		self.navigationItem.title = OCLocalizedString("Sign in", nil)
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: OCLocalizedString("Continue", nil), style: .done, target: self, action: #selector(startValidation(_:)))
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
 		self.navigationItem.rightBarButtonItem?.isEnabled = false
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, _) in
 			self?.navigationItem.rightBarButtonItem?.isEnabled = ((row.value as? String)?.count ?? 0) > 0
-		}, placeholder: "Password".localized, value: "", autocorrectionType: .no, autocapitalizationType: .none, enablesReturnKeyAutomatically: true, returnKeyType: .continue, identifier: "password", accessibilityLabel: "Password".localized)
+		}, placeholder: OCLocalizedString("Password", nil), value: "", autocorrectionType: .no, autocapitalizationType: .none, enablesReturnKeyAutomatically: true, returnKeyType: .continue, identifier: "password", accessibilityLabel: OCLocalizedString("Password", nil))
 
 		passwordRow?.textField?.delegate = self
 
@@ -77,7 +77,7 @@ class AccountAuthenticationUpdaterPasswordPromptViewController: StaticTableViewC
 
 	func validate(password: String) {
 		validationQueue.async { [weak self] (validationCompleted) in
-			self?.hud = ProgressHUDViewController(on: self, label: "Verifying password…".localized)
+			self?.hud = ProgressHUDViewController(on: self, label: OCLocalizedString("Verifying password…", nil))
 
 			let hudCompletion: (((() -> Void)?) -> Void) = { [weak self] (completion) in
 				OnMainThread {

@@ -17,18 +17,19 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class BookmarkSetupStepEnterUsernameViewController: BookmarkSetupStepViewController {
 	var usernameField: UITextField?
 
 	override func loadView() {
-		stepTitle = "Username".localized
+		stepTitle = OCLocalizedString("Username", nil)
 
 		super.loadView()
 
 		usernameField = buildTextField(withAction: UIAction(handler: { [weak self] _ in
 			self?.updateState()
-		}), autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Username".localized, borderStyle: .roundedRect)
+		}), autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: OCLocalizedString("Username", nil), borderStyle: .roundedRect)
 		usernameField?.textContentType = .username
 
 		focusTextFields = [ usernameField! ]

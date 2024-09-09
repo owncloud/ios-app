@@ -25,7 +25,7 @@ import UniformTypeIdentifiers
 class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Upload file".localized }
+	override class var name : String { return OCLocalizedString("Upload file", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "+" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }

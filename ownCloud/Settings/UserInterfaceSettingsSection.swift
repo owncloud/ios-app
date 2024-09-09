@@ -29,12 +29,12 @@ class UserInterfaceSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "User Interface".localized
+		self.headerTitle = OCLocalizedString("User Interface", nil)
 		self.identifier = "ui-section"
 
 		themeRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushThemeStyleSelector()
-			}, title: "Theme".localized, value: ThemeStyle.displayName, accessoryType: .disclosureIndicator, identifier: "theme")
+			}, title: OCLocalizedString("Theme", nil), value: ThemeStyle.displayName, accessoryType: .disclosureIndicator, identifier: "theme")
 
 		if Branding.shared.allowThemeSelection {
 			self.add(row: themeRow!)
@@ -42,7 +42,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 		loggingRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushLogSettings()
-			}, title: "Logging".localized, value: OCLogger.logLevel.label, accessoryType: .disclosureIndicator, identifier: "logging")
+			}, title: OCLocalizedString("Logging", nil), value: OCLogger.logLevel.label, accessoryType: .disclosureIndicator, identifier: "logging")
 
 		loggingNotificationObserverToken = NotificationCenter.default.addObserver(forName: LogSettingsViewController.logLevelChangedNotificationName, object: nil, queue: OperationQueue.main) { [weak loggingRow] (_) in
 			loggingRow?.cell?.detailTextLabel?.text = OCLogger.logLevel.label
@@ -59,18 +59,18 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 	func pushThemeStyleSelector() {
 		let styleSelectorViewController = StaticTableViewController(style: .insetGrouped)
-		styleSelectorViewController.navigationItem.title = "Theme".localized
+		styleSelectorViewController.navigationItem.title = OCLocalizedString("Theme", nil)
 
 		if let styleSelectorSection = styleSelectorViewController.sectionForIdentifier("theme-style-selection") {
 			styleSelectorViewController.removeSection(styleSelectorSection, animated: true)
 		}
-		let styleSelectorSection = StaticTableViewSection(headerTitle: "Theme".localized, footerTitle: nil, identifier: "theme-style-selection")
+		let styleSelectorSection = StaticTableViewSection(headerTitle: OCLocalizedString("Theme", nil), footerTitle: nil, identifier: "theme-style-selection")
 
 		if let availableStyles = ThemeStyle.availableStyles {
 			var themeIdentifiersByName : [[String:Any]] = []
 			var selectedValue = ThemeStyle.preferredStyle.identifier
 
-			themeIdentifiersByName = [["System Appeareance".localized : "com.owncloud.system"]]
+			themeIdentifiersByName = [[OCLocalizedString("System Appeareance", nil) : "com.owncloud.system"]]
 			if ThemeStyle.followSystemAppearance {
 				selectedValue = "com.owncloud.system"
 			}
@@ -82,7 +82,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 			styleSelectorSection.add(radioGroupWithArrayOfLabelValueDictionaries: themeIdentifiersByName, radioAction: { [weak themeRow] (row, _) in
 				if let styleIdentifier = row.value as? String, styleIdentifier == "com.owncloud.system" {
 					ThemeStyle.followSystemAppearance = true
-					themeRow?.cell?.detailTextLabel?.text = "System".localized
+					themeRow?.cell?.detailTextLabel?.text = OCLocalizedString("System", nil)
 				} else if let styleIdentifier = row.value as? String,
 					let style = ThemeStyle.forIdentifier(styleIdentifier) {
 						ThemeStyle.preferredStyle = style

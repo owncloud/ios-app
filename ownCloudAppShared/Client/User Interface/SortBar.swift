@@ -52,7 +52,7 @@ public class SortBar: ThemeCSSView {
 	}
 	public var multiselectActive: Bool = false {
 		didSet {
-			selectButton?.accessibilityLabel = multiselectActive ? "Exit multiple selection".localized : "Enter multiple selection".localized
+			selectButton?.accessibilityLabel = multiselectActive ? OCLocalizedString("Exit multiple selection", nil) : OCLocalizedString("Enter multiple selection", nil)
 		}
 	}
 	public var showSelectButton: Bool = false {
@@ -149,9 +149,9 @@ public class SortBar: ThemeCSSView {
 							if sortDescriptor.method == method {
 								// Show arrows and labels opposite to the current sort direction to show what choosing them will lead to
 								sortDirectionTitle = sortDescriptor.direction == .ascending ? " ↓" : " ↑"
-								sortDirectionLabel = sortDescriptor.direction == .ascending ? "descending".localized : "ascending".localized
+								sortDirectionLabel = sortDescriptor.direction == .ascending ? OCLocalizedString("descending", nil) : OCLocalizedString("ascending", nil)
 							} else {
-								sortDirectionLabel = sortDescriptor.direction == .ascending ? "ascending".localized : "descending".localized
+								sortDirectionLabel = sortDescriptor.direction == .ascending ? OCLocalizedString("ascending", nil) : OCLocalizedString("descending", nil)
 							}
 						}
 
@@ -159,7 +159,7 @@ public class SortBar: ThemeCSSView {
 							self?.userSelectedSortMethod(method)
 						}
 
-						menuItem.accessibilityLabel = "{{attribute}} {{direction}}".localized([
+						menuItem.accessibilityLabel = OCLocalizedFormat("{{attribute}} {{direction}}", [
 							"attribute" : method.localizedName,
 							"direction" : sortDirectionLabel
 						])
@@ -182,7 +182,7 @@ public class SortBar: ThemeCSSView {
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.cssSelector = .multiselect
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .primaryActionTriggered)
-			selectButton.accessibilityLabel = multiselectActive ? "Exit multiple selection".localized : "Enter multiple selection".localized
+			selectButton.accessibilityLabel = multiselectActive ? OCLocalizedString("Exit multiple selection", nil) : OCLocalizedString("Enter multiple selection", nil)
 			selectButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
@@ -194,7 +194,7 @@ public class SortBar: ThemeCSSView {
 
 			// Display Mode Button
 			changeItemLayoutButton.cssSelector = .itemLayout
-			changeItemLayoutButton.accessibilityLabel = "Toggle layout".localized
+			changeItemLayoutButton.accessibilityLabel = OCLocalizedString("Toggle layout", nil)
 			changeItemLayoutButton.isPointerInteractionEnabled = true
 			changeItemLayoutButton.showsMenuAsPrimaryAction = true
 			changeItemLayoutButton.menu = UIMenu(title: "", children: [
@@ -263,9 +263,9 @@ public class SortBar: ThemeCSSView {
 		let method = sortDescriptor.method
 		let sortButtonTitle = sortDirectionTitle(method.localizedName)
 		sortButton?.setTitle(sortButtonTitle, for: .normal)
-		sortButton?.accessibilityLabel = "Sort by {{attribute}} in {{direction}} order".localized([
+		sortButton?.accessibilityLabel = OCLocalizedFormat("Sort by {{attribute}} in {{direction}} order", [
 			"attribute" : method.localizedName,
-			"direction" : (sortDescriptor.direction == .ascending) ? "ascending".localized : "descending".localized
+			"direction" : (sortDescriptor.direction == .ascending) ? OCLocalizedString("ascending", nil) : OCLocalizedString("descending", nil)
 		])
 		sortButton?.sizeToFit()
 	}

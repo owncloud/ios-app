@@ -36,6 +36,7 @@
       }
     },
     "Log into your account in the app for more details." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

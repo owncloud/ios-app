@@ -83,7 +83,7 @@ extension ThemeStyle {
 
 	static public var displayName : String {
 		if ThemeStyle.followSystemAppearance {
-			return "System".localized
+			return OCLocalizedString("System", nil)
 		}
 
 		return ThemeStyle.preferredStyle.localizedName

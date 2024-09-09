@@ -26,11 +26,11 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 	init() {
 		super.init(style: .grouped)
 
-		self.navigationItem.title = "Pro Features".localized
+		self.navigationItem.title = OCLocalizedString("Pro Features", nil)
 
 		self.toolbarItems = [
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem(title: "Restore purchases".localized, style: .plain, target: self, action: #selector(restorePurchases)),
+			UIBarButtonItem(title: OCLocalizedString("Restore purchases", nil), style: .plain, target: self, action: #selector(restorePurchases)),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		]
 
@@ -70,7 +70,7 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		OCLicenseManager.appStoreProvider?.refreshProductsIfNeeded(completionHandler: { [weak self] (error) in
 			OnMainThread {
 				if error != nil {
-					let alertController = ThemedAlertController(with: "Error loading product info from App Store".localized, message: error!.localizedDescription, action: { [weak self] in
+					let alertController = ThemedAlertController(with: OCLocalizedString("Error loading product info from App Store", nil), message: error!.localizedDescription, action: { [weak self] in
 						self?.navigationController?.popViewController(animated: true)
 					})
 
@@ -90,7 +90,7 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 			if noBookmarksSection == nil {
 				let section = StaticTableViewSection(headerTitle: "", identifier: "no-bookmarks")
 
-				section.add(row: StaticTableViewRow(message: "In order to accurately determine your current licensing status, please add one or more accounts first.".localized, title: "No accounts found".localized, style: .warning))
+				section.add(row: StaticTableViewRow(message: OCLocalizedString("In order to accurately determine your current licensing status, please add one or more accounts first.", nil), title: OCLocalizedString("No accounts found", nil), style: .warning))
 
 				noBookmarksSection = section
 				self.addSection(section)
@@ -102,7 +102,7 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		}
 
 		if proFeaturesSection == nil {
-			let section = StaticTableViewSection(headerTitle: "Pro Features".localized, identifier: "pro-features")
+			let section = StaticTableViewSection(headerTitle: OCLocalizedString("Pro Features", nil), identifier: "pro-features")
 			let environment = OCLicenseEnvironment()
 
 			if let iapMessages = OCLicenseManager.shared.inAppPurchaseMessage(forFeature: nil) {

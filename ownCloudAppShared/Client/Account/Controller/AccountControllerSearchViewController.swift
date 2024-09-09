@@ -42,11 +42,11 @@ class AccountControllerSearchViewController: ClientItemViewController {
 	}
 
 	let quickAccessSuggestions: [OCSavedSearch] = [
-		OCSavedSearch(scope: .account, location: nil, name: "PDF Documents".localized, isTemplate: true, searchTerm: ":pdf").withCustomIcon(name: "doc.richtext").useNameAsTitle(true).isQuickAccess(true),
-		OCSavedSearch(scope: .account, location: nil, name: "Documents".localized, isTemplate: true, searchTerm: ":document").withCustomIcon(name: "doc").useNameAsTitle(true).isQuickAccess(true),
-		OCSavedSearch(scope: .account, location: nil, name: "Images".localized, isTemplate: true, searchTerm: ":image").withCustomIcon(name: "photo").useNameAsTitle(true).isQuickAccess(true),
-		OCSavedSearch(scope: .account, location: nil, name: "Videos".localized, isTemplate: true, searchTerm: ":video").withCustomIcon(name: "film").useNameAsTitle(true).isQuickAccess(true),
-		OCSavedSearch(scope: .account, location: nil, name: "Audios".localized, isTemplate: true, searchTerm: ":audio").withCustomIcon(name: "waveform").useNameAsTitle(true).isQuickAccess(true)
+		OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("PDF Documents", nil), isTemplate: true, searchTerm: ":pdf").withCustomIcon(name: "doc.richtext").useNameAsTitle(true).isQuickAccess(true),
+		OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("Documents", nil), isTemplate: true, searchTerm: ":document").withCustomIcon(name: "doc").useNameAsTitle(true).isQuickAccess(true),
+		OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("Images", nil), isTemplate: true, searchTerm: ":image").withCustomIcon(name: "photo").useNameAsTitle(true).isQuickAccess(true),
+		OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("Videos", nil), isTemplate: true, searchTerm: ":video").withCustomIcon(name: "film").useNameAsTitle(true).isQuickAccess(true),
+		OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("Audios", nil), isTemplate: true, searchTerm: ":audio").withCustomIcon(name: "waveform").useNameAsTitle(true).isQuickAccess(true)
 	]
 
 	override func composeSuggestionContents(from savedSearches: [OCSavedSearch]?, clientContext: ClientContext, includingFallbacks: Bool) -> [OCDataItem & OCDataItemVersioning] {
@@ -72,7 +72,7 @@ class AccountControllerSearchViewController: ClientItemViewController {
 		}
 
 		if thinnedQuickAccessSuggestions.count > 0 {
-			let headerView = ComposedMessageView.sectionHeader(titled: "Quick Access".localized)
+			let headerView = ComposedMessageView.sectionHeader(titled: OCLocalizedString("Quick Access", nil))
 			headerView.elementInsets = .zero
 			suggestions.insert(headerView, at: 0)
 

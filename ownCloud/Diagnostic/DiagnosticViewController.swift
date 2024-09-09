@@ -54,7 +54,7 @@ class DiagnosticViewController: StaticTableViewController {
 		self.navigationItem.title = node.label
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(self.shareAsMarkdown(_:)))
-		self.navigationItem.rightBarButtonItem?.accessibilityLabel = "Share Diagnostics".localized
+		self.navigationItem.rightBarButtonItem?.accessibilityLabel = OCLocalizedString("Share Diagnostics", nil)
 		self.nodes = node.children
 
 		rebuildTable()
@@ -93,7 +93,7 @@ class DiagnosticViewController: StaticTableViewController {
 						node.action?(self?.context)
 
 						if let self = self {
-							_ = NotificationHUDViewController(on: self, title: node.label ?? "", subtitle: "Action executed".localized, completion: {
+							_ = NotificationHUDViewController(on: self, title: node.label ?? "", subtitle: OCLocalizedString("Action executed", nil), completion: {
 							})
 						}
 					}, title: node.label ?? "", style: .plain))

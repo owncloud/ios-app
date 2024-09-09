@@ -27,9 +27,9 @@ public enum PasscodeAction {
 
 	var localizedDescription : String {
 		switch self {
-		case .setup: return "Enter code".localized
-		case .delete: return "Delete code".localized
-		case .upgrade: return String(format: "Enter a new code with %ld digits".localized, AppLockSettings.shared.requiredPasscodeDigits)
+		case .setup: return OCLocalizedString("Enter code", nil)
+		case .delete: return OCLocalizedString("Delete code", nil)
+		case .upgrade: return String(format: OCLocalizedString("Enter a new code with %ld digits", nil), AppLockSettings.shared.requiredPasscodeDigits)
 		}
 	}
 }
@@ -115,13 +115,13 @@ public class PasscodeSetupCoordinator {
 					})
 				} else {
 					// Entered passcode doesn't match saved ones
-					self.updateUI(with: self.action.localizedDescription, errorMessage: "Incorrect code".localized)
+					self.updateUI(with: self.action.localizedDescription, errorMessage: OCLocalizedString("Incorrect code", nil))
 				}
 			} else { // Setup or Upgrade
 				if self.passcodeFromFirstStep == nil {
 					// 1) Enter passcode
 					self.passcodeFromFirstStep = passcode
-					self.updateUI(with: "Repeat code".localized)
+					self.updateUI(with: OCLocalizedString("Repeat code", nil))
 				} else {
 					// 2) Confirm passcode
 					if self.passcodeFromFirstStep == passcode {
@@ -130,7 +130,7 @@ public class PasscodeSetupCoordinator {
 						self.showSuggestBiometricalUnlockUI()
 					} else {
 						//Passcode is not the same
-						self.updateUI(with: self.action.localizedDescription, errorMessage: "The entered codes are different".localized)
+						self.updateUI(with: self.action.localizedDescription, errorMessage: OCLocalizedString("The entered codes are different", nil))
 					}
 					self.passcodeFromFirstStep = nil
 				}
@@ -139,7 +139,7 @@ public class PasscodeSetupCoordinator {
 
 		passcodeViewController?.message = self.action.localizedDescription
 		if AppLockSettings.shared.isPasscodeEnforced {
-			passcodeViewController?.errorMessage = "You are required to set the passcode".localized
+			passcodeViewController?.errorMessage = OCLocalizedString("You are required to set the passcode", nil)
 		}
 
 		if parentViewController.presentedViewController != nil {
@@ -162,9 +162,9 @@ public class PasscodeSetupCoordinator {
 					AppLockManager.shared.showLockscreenIfNeeded(setupMode: true)
 				}
 			} else {
-				let alertController = ThemedAlertController(title: biometricalSecurityName, message: String(format:"Unlock using %@?".localized, biometricalSecurityName), preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: biometricalSecurityName, message: String(format:OCLocalizedString("Unlock using %@?", nil), biometricalSecurityName), preferredStyle: .alert)
 
-				alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { _ in
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("Enable", nil), style: .default, handler: { _ in
 					PasscodeSetupCoordinator.isBiometricalSecurityEnabled = true
 					self.passcodeViewController?.dismiss(animated: true, completion: {
 						self.completionHandler?(false)
@@ -174,7 +174,7 @@ public class PasscodeSetupCoordinator {
 					}
 				}))
 
-				alertController.addAction(UIAlertAction(title: "Disable".localized, style: .cancel, handler: { _ in
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("Disable", nil), style: .cancel, handler: { _ in
 					PasscodeSetupCoordinator.isBiometricalSecurityEnabled = false
 					self.passcodeViewController?.dismiss(animated: true, completion: {
 						self.completionHandler?(false)
@@ -192,12 +192,12 @@ public class PasscodeSetupCoordinator {
 	}
 
 	public func showDigitsCountSelectionUI() {
-		var title = "Passcode option".localized
-		var message = "Please choose how many digits you want to use for the passcode lock?".localized
+		var title = OCLocalizedString("Passcode option", nil)
+		var message = OCLocalizedString("Please choose how many digits you want to use for the passcode lock?", nil)
 
 		if AppLockSettings.shared.isPasscodeEnforced {
-			title = "Passcode setup".localized
-			message = "To use the app, you need to create a passcode.".localized + "\n\n" + message
+			title = OCLocalizedString("Passcode setup", nil)
+			message = OCLocalizedString("To use the app, you need to create a passcode.", nil) + "\n\n" + message
 		}
 
 		let alertController = ThemedAlertController(title: title, message: message, preferredStyle: .alert)
@@ -209,7 +209,7 @@ public class PasscodeSetupCoordinator {
 		}
 
 		if !AppLockSettings.shared.isPasscodeEnforced {
-			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+			alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: { _ in
 				self.completionHandler?(true)
 			}))
 		}
@@ -217,7 +217,7 @@ public class PasscodeSetupCoordinator {
 		var digit = self.maxPasscodeDigits
 		while digit >= self.minPasscodeDigits {
 			let currentDigit = digit
-				alertController.addAction(UIAlertAction(title: String(format: "%ld digit code".localized, currentDigit), style: .default, handler: { _ in
+				alertController.addAction(UIAlertAction(title: String(format: OCLocalizedString("%ld digit code", nil), currentDigit), style: .default, handler: { _ in
 					self.showPasscodeUI(requiredDigits: currentDigit)
 				}))
 			digit -= 2
@@ -241,7 +241,7 @@ public class PasscodeSetupCoordinator {
 				})
 			} else {
 				// Error
-				passcodeViewController.errorMessage = "Incorrect code".localized
+				passcodeViewController.errorMessage = OCLocalizedString("Incorrect code", nil)
 				passcodeViewController.passcode = nil
 			}
 		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)

@@ -137,7 +137,7 @@ class MessageGroupCell: ThemeTableViewCell {
 					applyAllLabel = ThemeCSSLabel()
 					applyAllLabel?.translatesAutoresizingMaskIntoConstraints = false
 					applyAllLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
-					applyAllLabel?.text = "Apply to all".localized
+					applyAllLabel?.text = OCLocalizedString("Apply to all", nil)
 					applyAllLabel?.lineBreakMode = .byTruncatingTail
 
 					applyAllContainer?.addSubview(applyAllLabel!)
@@ -146,7 +146,7 @@ class MessageGroupCell: ThemeTableViewCell {
 				if applyAllSwitch == nil {
 					applyAllSwitch = UISwitch()
 					applyAllSwitch?.translatesAutoresizingMaskIntoConstraints = false
-					applyAllSwitch?.accessibilityLabel = "Apply choice to all similar issues".localized
+					applyAllSwitch?.accessibilityLabel = OCLocalizedString("Apply choice to all similar issues", nil)
 					applyAllSwitch?.addTarget(self, action: #selector(applyAllSwitchChanged), for: .primaryActionTriggered)
 
 					applyAllContainer?.addSubview(applyAllSwitch!)
@@ -167,7 +167,7 @@ class MessageGroupCell: ThemeTableViewCell {
 					applyAllContainer?.addSubview(showAllButton!)
 				}
 
-				showAllButton?.setTitle("\("Show all".localized) (\(multiMessageCount))", for: .normal)
+				showAllButton?.setTitle("\(OCLocalizedString("Show all", nil)) (\(multiMessageCount))", for: .normal)
 
 				if setupLayout, let applyAllContainer = applyAllContainer, let applyAllSwitch = applyAllSwitch, let applyAllLabel = applyAllLabel, let showAllButton = showAllButton {
 					NSLayoutConstraint.activate([
@@ -230,7 +230,7 @@ class MessageGroupCell: ThemeTableViewCell {
 	}
 
 	@objc func applyAllSwitchChanged() {
-		badgeLabel?.labelText = NSString(format: "+ %ld more".localized as NSString, ((messageGroup?.messages.count ?? 0) - 1)) as String
+		badgeLabel?.labelText = NSString(format: OCLocalizedString("+ %ld more", nil) as NSString, ((messageGroup?.messages.count ?? 0) - 1)) as String
 
 		if let applyAllOn = self.applyAllSwitch?.isOn, let badgeLabel = badgeLabel, badgeLabel.isHidden != !applyAllOn {
 			badgeLabel.alpha = applyAllOn ? 0 : 1

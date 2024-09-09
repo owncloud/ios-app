@@ -55,7 +55,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 		switch category {
 			case .withMe:
 				let ownerName = owner?.displayName ?? owner?.userName ?? ""
-				detailText = "Shared by {{owner}}".localized([ "owner" : ownerName ])
+				detailText = OCLocalizedFormat("Shared by {{owner}}", [ "owner" : ownerName ])
 
 			case .byMe:
 				if showManagementView {
@@ -88,7 +88,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 						}
 					} else {
 						// Link shares
-						content.title = .text(name ?? token ??  "Link".localized)
+						content.title = .text(name ?? token ??  OCLocalizedString("Link", nil))
 
 						if let urlString = url?.absoluteString, urlString.count > 0 {
 							if let roleName = matchingRole?.localizedName {
@@ -110,9 +110,9 @@ extension OCShare: UniversalItemListCellContentProvider {
 									recipientNames.append(otherRecipientName)
 								}
 							}
-							recipients = "Shared with {{recipients}}".localized([ "recipients" : recipientNames.joined(separator: ", ") ])
+							recipients = OCLocalizedFormat("Shared with {{recipients}}", [ "recipients" : recipientNames.joined(separator: ", ") ])
 						} else {
-							recipients = "Shared with {{recipient}}".localized([ "recipient" : recipientName ])
+							recipients = OCLocalizedFormat("Shared with {{recipient}}", [ "recipient" : recipientName ])
 						}
 						detailText = recipients
 					} else {
@@ -133,7 +133,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 					let expirationDateIconSegment = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "calendar"))
 					expirationDateIconSegment.insets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
 
-					let expirationDateSegment = SegmentViewItem(with: nil, title: "Expires {{expirationDate}}".localized(["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote, accessibilityLabel: "Expires {{expirationDate}}".localized(["expirationDate" : accessibleExpirationDate]))
+					let expirationDateSegment = SegmentViewItem(with: nil, title: OCLocalizedFormat("Expires {{expirationDate}}", ["expirationDate" : prettyExpirationDate]), style: .plain, titleTextStyle: .footnote, accessibilityLabel: OCLocalizedFormat("Expires {{expirationDate}}", ["expirationDate" : accessibleExpirationDate]))
 					expirationDateSegment.insets = .zero
 
 					detailExtraItems = [
@@ -209,10 +209,10 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		if category == .byMe {
 			if type == .link {
-				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(accessibilityLabel: "Copy to clipboard".localized, cssSelectors: [.accessory, .copyToClipboard], provideAccessibilityCustomAction: true, action: OCAction(title: "Copy".localized, icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self, weak context] _, _, done in
+				let (_, copyToClipboardAccessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Copy to clipboard", nil), cssSelectors: [.accessory, .copyToClipboard], provideAccessibilityCustomAction: true, action: OCAction(title: OCLocalizedString("Copy", nil), icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self, weak context] _, _, done in
 					if let self {
 						if self.copyToClipboard(), let presentationViewController = context?.presentationViewController {
-							_ = NotificationHUDViewController(on: presentationViewController, title: self.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
+							_ = NotificationHUDViewController(on: presentationViewController, title: self.name ?? OCLocalizedString("Public Link", nil), subtitle: OCLocalizedString("URL was copied to the clipboard", nil))
 						}
 					}
 					done(nil)
@@ -256,7 +256,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 
 			if !omitLongActions, offerAcceptAction {
-				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: "Accept share".localized, cssSelectors: [.accessory, .accept], provideAccessibilityCustomAction: false, action: OCAction(title: "Accept".localized, icon: OCSymbol.icon(forSymbolName: "checkmark.circle"), action: { _, _, done in
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Accept share", nil), cssSelectors: [.accessory, .accept], provideAccessibilityCustomAction: false, action: OCAction(title: OCLocalizedString("Accept", nil), icon: OCSymbol.icon(forSymbolName: "checkmark.circle"), action: { _, _, done in
 					makeDecisionAction(true)
 					done(nil)
 				}))
@@ -265,7 +265,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 
 			if !omitLongActions, offerDeclineAction {
-				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: "Decline share".localized, cssSelectors: [.accessory, .decline], provideAccessibilityCustomAction: false, action: OCAction(title: "Decline".localized, icon: OCSymbol.icon(forSymbolName: "minus.circle"), action: { _, _, done in
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Decline share", nil), cssSelectors: [.accessory, .decline], provideAccessibilityCustomAction: false, action: OCAction(title: OCLocalizedString("Decline", nil), icon: OCSymbol.icon(forSymbolName: "minus.circle"), action: { _, _, done in
 					makeDecisionAction(false)
 					done(nil)
 				}))
@@ -275,7 +275,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 			if omitLongActions, let menuItems = composeContextMenuItems(in: nil, location: .contextMenuItem, with: context) {
 				let menu = UIMenu(children: menuItems)
-				let (_, accessory) = UICellAccessory.borderedButton(image: OCSymbol.icon(forSymbolName: "ellipsis.circle"), accessibilityLabel: "Accept or decline".localized, cssSelectors: [.accessory, .action], menu: menu)
+				let (_, accessory) = UICellAccessory.borderedButton(image: OCSymbol.icon(forSymbolName: "ellipsis.circle"), accessibilityLabel: OCLocalizedString("Accept or decline", nil), cssSelectors: [.accessory, .action], menu: menu)
 				accessories.append(accessory)
 			}
 

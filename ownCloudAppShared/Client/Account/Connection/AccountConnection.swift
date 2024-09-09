@@ -516,10 +516,10 @@ open class AccountConnection: NSObject {
 
 				case .connecting:
 					_authFailureStatus = nil
-					summary?.message = "Connecting…".localized
+					summary?.message = OCLocalizedString("Connecting…", nil)
 
 				case .offline, .unavailable:
-					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
+					summary?.message = String(format: "%@%@", connectionShortDescription!, OCLocalizedString("Contents from cache.", nil))
 					status = _authFailureStatus ?? .coreAvailable
 			}
 

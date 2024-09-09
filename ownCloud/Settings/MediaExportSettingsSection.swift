@@ -70,26 +70,26 @@ class MediaExportSettingsSection: SettingsSection {
 
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "Media Export".localized
+		self.headerTitle = OCLocalizedString("Media Export", nil)
 		self.identifier = "media-export"
 
 		convertPhotosSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let convertSwitch = sender as? UISwitch {
 				self?.userDefaults.convertHeic = convertSwitch.isOn
 			}
-			}, title: "Convert HEIC to JPEG".localized, value: self.userDefaults.convertHeic, identifier: "convert_heic_to_jpeg")
+			}, title: OCLocalizedString("Convert HEIC to JPEG", nil), value: self.userDefaults.convertHeic, identifier: "convert_heic_to_jpeg")
 
 		convertVideosSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let convertSwitch = sender as? UISwitch {
 				self?.userDefaults.convertVideosToMP4 = convertSwitch.isOn
 			}
-			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
+			}, title: OCLocalizedString("Convert videos to MP4", nil), value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
 
 		preserveMediaFileNamesSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let convertSwitch = sender as? UISwitch {
 				self?.userDefaults.preserveOriginalMediaFileNames = convertSwitch.isOn
 			}
-			}, title: "Preserve original media file names".localized, value: self.userDefaults.preserveOriginalMediaFileNames, identifier: "preserve_media_file_names")
+			}, title: OCLocalizedString("Preserve original media file names", nil), value: self.userDefaults.preserveOriginalMediaFileNames, identifier: "preserve_media_file_names")
 
 		self.add(row: convertPhotosSwitchRow!)
 		self.add(row: convertVideosSwitchRow!)

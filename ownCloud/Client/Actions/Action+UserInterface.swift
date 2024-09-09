@@ -60,7 +60,7 @@ extension Action {
 					OCLicenseManager.appStoreProvider?.refreshProductsIfNeeded(completionHandler: { (error) in
 						OnMainThread {
 							if error != nil {
-								let alertController = ThemedAlertController(with: "Error loading product info from App Store".localized, message: error!.localizedDescription)
+								let alertController = ThemedAlertController(with: OCLocalizedString("Error loading product info from App Store", nil), message: error!.localizedDescription)
 
 								viewController.present(alertController, animated: true)
 							} else {

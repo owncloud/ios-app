@@ -347,7 +347,7 @@ public class AppLockManager: NSObject {
 			self.attemptUnlock(with: passcode, passcodeViewController: viewController)
 		}, requiredLength: AppLockManager.shared.passcode?.count ?? AppLockSettings.shared.requiredPasscodeDigits)
 
-		passcodeViewController.message = "Enter code".localized
+		passcodeViewController.message = OCLocalizedString("Enter code", nil)
 		passcodeViewController.cancelButtonAvailable = false
 
 		passcodeViewController.screenBlurringEnabled = lockscreenOpenForced && !shouldDisplayLockscreen
@@ -390,7 +390,7 @@ public class AppLockManager: NSObject {
 		} else {
 			unlocked = false
 			lastApplicationBackgroundedDate = nil
-			passcodeViewController?.errorMessage = (customErrorMessage != nil) ? customErrorMessage! : "Incorrect code".localized
+			passcodeViewController?.errorMessage = (customErrorMessage != nil) ? customErrorMessage! : OCLocalizedString("Incorrect code", nil)
 
 			failedPasscodeAttempts += 1
 
@@ -534,7 +534,7 @@ public class AppLockManager: NSObject {
 				formattedTime = String(format: "%02d:%02d", remainingMinutes, remainingSeconds)
 			}
 
-			let timeoutMessage: String = NSString(format: "Please try again in %@".localized as NSString, formattedTime) as String
+			let timeoutMessage: String = NSString(format: OCLocalizedString("Please try again in %@", nil) as NSString, formattedTime) as String
 
 			performPasscodeViewControllerUpdates { (passcodeViewController) in
 				passcodeViewController.timeoutMessage = timeoutMessage
@@ -589,7 +589,7 @@ public class AppLockManager: NSObject {
 
 			// Check if the device can evaluate the policy.
 			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
-				let reason = NSString.init(format: "Unlock %@".localized as NSString, VendorServices.shared.appName) as String
+				let reason = NSString.init(format: OCLocalizedString("Unlock %@", nil) as NSString, VendorServices.shared.appName) as String
 
 				performPasscodeViewControllerUpdates { (passcodeViewController) in
 					OnMainThread {
@@ -597,7 +597,7 @@ public class AppLockManager: NSObject {
 					}
 				}
 
-				context.localizedCancelTitle = biometricCancelLabel ?? "Enter code".localized
+				context.localizedCancelTitle = biometricCancelLabel ?? OCLocalizedString("Enter code", nil)
 				context.localizedFallbackTitle = ""
 
 				biometricalAuthenticationInterfaceShown = true
@@ -636,7 +636,7 @@ public class AppLockManager: NSObject {
 
 								case LAError.authenticationFailed:
 									OnMainThread {
-										self.attemptUnlock(with: nil, customErrorMessage: "Biometric authentication failed".localized)
+										self.attemptUnlock(with: nil, customErrorMessage: OCLocalizedString("Biometric authentication failed", nil))
 									}
 
 								default: break
